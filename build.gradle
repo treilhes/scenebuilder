@@ -55,6 +55,16 @@ subprojects {
 
         testImplementation 'junit:junit:4.12'
         testImplementation 'org.assertj:assertj-core:3.2.0'
+        
+        implementation 'org.springframework.boot:spring-boot-starter:2.3.4.RELEASE'
+        
+        
+        // Lombok
+        // compileOnly 'org.projectlombok:lombok:1.18.16'
+		// annotationProcessor 'org.projectlombok:lombok:1.18.16'
+		// testCompileOnly 'org.projectlombok:lombok:1.18.16'
+		// testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+        
     }
 
     javafx {

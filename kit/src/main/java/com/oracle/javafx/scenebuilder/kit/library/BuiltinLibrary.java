@@ -39,13 +39,20 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import javafx.scene.layout.Region;
 
 /**
  *
  * @treatAsPrivate
  */
-public class BuiltinLibrary extends Library {
+@Component
+@Qualifier("builtin")
+public class BuiltinLibrary extends Library implements InitializingBean {
 
     public static final String GLUON_FILE_PREFIX  = "Gluon_";
     // In SB 1.1 the section names of the Library have been localized. We assume
@@ -78,6 +85,11 @@ public class BuiltinLibrary extends Library {
             + I18N.getString("label.qualifier.horizontal");
     private static final String VERTICAL_QUALIFIER = " " //NOI18N
             + I18N.getString("label.qualifier.vertical");
+    
+    @Override
+	public void afterPropertiesSet() throws Exception {
+    	library = this;
+    }
     
     /*
      * Public

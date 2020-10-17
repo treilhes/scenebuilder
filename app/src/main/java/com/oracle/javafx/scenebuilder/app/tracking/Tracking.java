@@ -31,7 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.app.tracking;
 
-import com.oracle.javafx.scenebuilder.app.SceneBuilderApp;
+import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.util.AppSettings;
 
 import java.io.DataInputStream;

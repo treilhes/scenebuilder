@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.app.menubar;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentControlAction;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentEditAction;
-import com.oracle.javafx.scenebuilder.app.SceneBuilderApp;
-import com.oracle.javafx.scenebuilder.app.SceneBuilderApp.ApplicationControlAction;
+import com.oracle.javafx.scenebuilder.app.MainController;
+import com.oracle.javafx.scenebuilder.app.MainController.ApplicationControlAction;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
@@ -66,6 +66,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.stereotype.Component;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -90,7 +94,9 @@ import javafx.scene.layout.StackPane;
 /**
  *
  */
-public class MenuBarController {
+@Component
+@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
+public class MenuBarController implements InitializingBean {
     
     private static MenuBarController systemMenuBarController; // For Mac only
 
@@ -469,11 +475,16 @@ public class MenuBarController {
         return result;
     }
     
+    @Override
+	public void afterPropertiesSet() throws Exception {
+    	systemMenuBarController = this;
+    }
     
     public static synchronized MenuBarController getSystemMenuBarController() {
-        if (systemMenuBarController == null) {
-            systemMenuBarController = new MenuBarController(null);
-        }
+    	assert systemMenuBarController != null;
+//        if (systemMenuBarController == null) {
+//            systemMenuBarController = new MenuBarController(null);
+//        }
         return systemMenuBarController;
     }
     
@@ -1318,7 +1329,7 @@ public class MenuBarController {
                     }
                     mi.setOnAction(t -> {
                         final File file = new File(recentItem);
-                        SceneBuilderApp.getSingleton().performOpenRecent(documentWindowController, file);
+                        MainController.getSingleton().performOpenRecent(documentWindowController, file);
                     });
                     mi.setMnemonicParsing(false);
                     menuItems.add(mi);
@@ -1522,7 +1533,7 @@ public class MenuBarController {
         windowMenu.getItems().clear();
 
         final List<DocumentWindowController> documentWindowControllers
-                = SceneBuilderApp.getSingleton().getDocumentWindowControllers();
+                = MainController.getSingleton().getDocumentWindowControllers();
         if (documentWindowControllers.isEmpty()) {
             // Adds the "No window" menu item
             windowMenu.getItems().add(makeWindowMenuItem(null));
@@ -1769,13 +1780,13 @@ public class MenuBarController {
 
         @Override
         public boolean canPerform() {
-            return SceneBuilderApp.getSingleton().canPerformControlAction(controlAction,
+            return MainController.getSingleton().canPerformControlAction(controlAction,
                     documentWindowController);
         }
 
         @Override
         public void perform() {
-            SceneBuilderApp.getSingleton().performControlAction(controlAction,
+            MainController.getSingleton().performControlAction(controlAction,
                     documentWindowController);
         }
 

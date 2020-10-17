@@ -32,7 +32,7 @@
 
 package com.oracle.javafx.scenebuilder.app.util;
 
-import com.oracle.javafx.scenebuilder.app.SceneBuilderApp;
+import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
@@ -52,8 +52,8 @@ import java.util.Properties;
 import java.util.function.Consumer;
 
 public class AppSettings {
-    public static final String APP_ICON_16 = SceneBuilderApp.class.getResource("SceneBuilderLogo_16.png").toString();
-    public static final String APP_ICON_32 = SceneBuilderApp.class.getResource("SceneBuilderLogo_32.png").toString();
+    public static final String APP_ICON_16 = MainController.class.getResource("SceneBuilderLogo_16.png").toString();
+    public static final String APP_ICON_32 = MainController.class.getResource("SceneBuilderLogo_32.png").toString();
 
     public static final String LATEST_VERSION_CHECK_URL = "http://download.gluonhq.com/scenebuilder/settings.properties";
     public static final String LATEST_VERSION_NUMBER_PROPERTY = "latestversion";

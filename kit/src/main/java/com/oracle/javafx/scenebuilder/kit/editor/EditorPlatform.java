@@ -43,6 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+
 import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -64,15 +68,45 @@ public class EditorPlatform {
     public static final boolean IS_LINUX = osName.contains("linux"); //NOI18N
 
     /**
+     * Spring bean condition, True if current platform is running Linux.
+     */
+    public static final class IS_LINUX_CONDITION implements Condition {
+		@Override
+		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			return EditorPlatform.IS_LINUX;
+		}
+   }
+    
+    /**
      * True if current platform is running Mac OS X.
      */
     public static final boolean IS_MAC = osName.contains("mac"); //NOI18N
-
+    
+    /**
+     * Spring bean condition, True if current platform is running Mac.
+     */
+    public static final class IS_MAC_CONDITION implements Condition {
+		@Override
+		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			return EditorPlatform.IS_MAC;
+		}
+   }
+    
     /**
      * True if current platform is running Windows.
      */
     public static final boolean IS_WINDOWS = osName.contains("windows"); //NOI18N
 
+    /**
+     * Spring bean condition, True if current platform is running Windows.
+     */
+    public static final class IS_WINDOWS_CONDITION implements Condition {
+		@Override
+		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			return EditorPlatform.IS_MAC;
+		}
+   }
+    
     /**
      * Gluon Glisten package
      */

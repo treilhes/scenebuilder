@@ -73,10 +73,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+
 /**
  *
  */
-public class Metadata {
+@Component
+public class Metadata implements InitializingBean {
     
     private static Metadata metadata = null;
     
@@ -91,10 +95,16 @@ public class Metadata {
     public final InspectorPathComparator INSPECTOR_PATH_COMPARATOR
             = new InspectorPathComparator(sectionNames, subSectionMap);
 
+    @Override
+	public void afterPropertiesSet() throws Exception {
+    	metadata = this;
+    }
+    
     public static synchronized Metadata getMetadata() {
-        if (metadata == null) {
-            metadata = new Metadata();
-        }
+    	assert metadata != null;
+//        if (metadata == null) {
+//            metadata = new Metadata();
+//        }
         return metadata;
     }
     

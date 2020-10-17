@@ -93,10 +93,10 @@ public class UpdateSceneBuilderDialog extends Dialog {
         ButtonType learnMore = new ButtonType(I18N.getString("download.scene.builder.learn.mode.label"));
         getDialogPane().getButtonTypes().addAll(learnMore, downloadButton, ignoreThisUpdate, remindLater);
 
-        getDialogPane().getStylesheets().add(SceneBuilderApp.class.getResource("css/UpdateSceneBuilderDialog.css").toString());
+        getDialogPane().getStylesheets().add(MainController.class.getResource("css/UpdateSceneBuilderDialog.css").toString());
 
         resultProperty().addListener((observable, oldValue, newValue) -> {
-            HostServices hostServices = SceneBuilderApp.getSingleton().getHostServices();
+            HostServices hostServices = MainController.getSingleton().getHostServices();
             if (newValue == downloadButton) {
                 hostServices.showDocument(AppSettings.DOWNLOAD_URL);
             } else if (newValue == remindLater) {

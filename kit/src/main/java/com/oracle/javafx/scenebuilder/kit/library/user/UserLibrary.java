@@ -53,6 +53,9 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.kit.library.Library;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
@@ -73,6 +76,8 @@ import javafx.collections.ObservableList;
  *
  * 
  */
+//@Component
+//@Qualifier("user")
 public class UserLibrary extends Library {
     
     public enum State { READY, WATCHING }

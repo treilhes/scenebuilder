@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.app.welcomedialog;
 
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.SceneBuilderApp;
+import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
@@ -67,14 +67,14 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 
     private static WelcomeDialogWindowController instance;
 
-    private SceneBuilderApp sceneBuilderApp;
+    private MainController sceneBuilderApp;
 
     private WelcomeDialogWindowController() {
         super(WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
                 null); // We want it to be a top level window so we're setting the owner to null.
 
-        sceneBuilderApp = SceneBuilderApp.getSingleton();
+        sceneBuilderApp = MainController.getSingleton();
     }
 
 
@@ -150,7 +150,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private void openDocument() {
         // Right now there is only one window open by default
         DocumentWindowController documentWC = sceneBuilderApp.getDocumentWindowControllers().get(0);
-        sceneBuilderApp.performControlAction(SceneBuilderApp.ApplicationControlAction.OPEN_FILE, documentWC);
+        sceneBuilderApp.performControlAction(MainController.ApplicationControlAction.OPEN_FILE, documentWC);
         getStage().hide();
     }
 }

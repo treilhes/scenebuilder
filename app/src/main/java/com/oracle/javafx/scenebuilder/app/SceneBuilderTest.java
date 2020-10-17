@@ -32,6 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
@@ -44,11 +50,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -87,7 +89,7 @@ public class SceneBuilderTest {
      */
     public static Scene newFxmlFile() {
         final DocumentWindowController newWindow 
-                = SceneBuilderApp.getSingleton().makeNewWindow();
+                = MainController.getSingleton().makeNewWindow();
         newWindow.openWindow();
         return newWindow.getScene();
     }
@@ -105,7 +107,7 @@ public class SceneBuilderTest {
         assert fxmlFile != null;
         
         final DocumentWindowController newWindow 
-                = SceneBuilderApp.getSingleton().makeNewWindow();
+                = MainController.getSingleton().makeNewWindow();
         newWindow.loadFromFile(fxmlFile);
         newWindow.openWindow();
         return newWindow.getScene();
@@ -434,7 +436,7 @@ public class SceneBuilderTest {
     private static DocumentWindowController lookupWindowController(Scene documentScene) {
         DocumentWindowController result = null;
         
-        final SceneBuilderApp app = SceneBuilderApp.getSingleton();
+        final MainController app = MainController.getSingleton();
         for (DocumentWindowController c : app.getDocumentWindowControllers()) {
             if (c.getScene() == documentScene) {
                 result = c;

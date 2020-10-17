@@ -33,7 +33,7 @@ package com.oracle.javafx.scenebuilder.app.menubar;
 
 import com.oracle.javafx.scenebuilder.app.AppPlatform;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.SceneBuilderApp;
+import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManager;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
@@ -98,11 +98,11 @@ class DebugMenuController {
          */
         final MenuItem useDefaultThemeMenuItem = new MenuItem();
         useDefaultThemeMenuItem.setText("Use Default Theme"); //NOI18N
-        useDefaultThemeMenuItem.setOnAction(t -> SceneBuilderApp.getSingleton().performControlAction(SceneBuilderApp.ApplicationControlAction.USE_DEFAULT_THEME, 
+        useDefaultThemeMenuItem.setOnAction(t -> MainController.getSingleton().performControlAction(MainController.ApplicationControlAction.USE_DEFAULT_THEME, 
                 DebugMenuController.this.documentWindowController));
         final MenuItem useDarkThemeMenuItem = new MenuItem();
         useDarkThemeMenuItem.setText("Use Dark Theme"); //NOI18N
-        useDarkThemeMenuItem.setOnAction(t -> SceneBuilderApp.getSingleton().performControlAction(SceneBuilderApp.ApplicationControlAction.USE_DARK_THEME, 
+        useDarkThemeMenuItem.setOnAction(t -> MainController.getSingleton().performControlAction(MainController.ApplicationControlAction.USE_DARK_THEME, 
                 DebugMenuController.this.documentWindowController));
         
         /*

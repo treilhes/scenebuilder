@@ -42,10 +42,14 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+
 /**
  * Defines preferences for Scene Builder App.
  */
-public class PreferencesController extends PreferencesControllerBase{
+@Component
+public class PreferencesController extends PreferencesControllerBase implements InitializingBean{
 
     /***************************************************************************
      *                                                                         *
@@ -131,6 +135,11 @@ public class PreferencesController extends PreferencesControllerBase{
 
     }
 
+    @Override
+	public void afterPropertiesSet() throws Exception {
+    	singleton = this;
+        getRecordGlobal().readFromJavaPreferences();
+    }
     /***************************************************************************
      *                                                                         *
      * Methods                                                                 *
@@ -138,10 +147,11 @@ public class PreferencesController extends PreferencesControllerBase{
      **************************************************************************/
 
     public static synchronized PreferencesController getSingleton() {
-        if (singleton == null) {
-            singleton = new PreferencesController();
-            singleton.getRecordGlobal().readFromJavaPreferences();
-        }
+    	assert singleton != null;
+//        if (singleton == null) {
+//        	singleton = new PreferencesController();
+//            singleton.getRecordGlobal().readFromJavaPreferences();
+//        }
         return singleton;
     }
 
@@ -180,4 +190,5 @@ public class PreferencesController extends PreferencesControllerBase{
     public PreferencesRecordGlobal getRecordGlobal() {
         return (PreferencesRecordGlobal) recordGlobal;
     }
+
 }
