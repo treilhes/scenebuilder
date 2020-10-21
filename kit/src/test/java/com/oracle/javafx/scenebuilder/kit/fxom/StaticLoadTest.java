@@ -31,21 +31,33 @@
  */
 package com.oracle.javafx.scenebuilder.kit.fxom;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import static org.junit.Assert.assertFalse;
+
 import java.io.IOException;
 import java.net.URL;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
-import static org.junit.Assert.assertFalse;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Unit test for {@link com.oracle.javafx.scenebuilder.kit.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
  */
+@ExtendWith(MockitoExtension.class)
 public class StaticLoadTest {
     
     private boolean thrown;
+    
+    @Mock
+    private BuiltinLibrary library;
     
     public static class DummyApp extends Application {
         @Override
@@ -54,7 +66,7 @@ public class StaticLoadTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void initJFX() {
         Thread t = new Thread("JavaFX Init Thread") {
             @Override
@@ -69,7 +81,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoadWithoutEventHandler() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController();
+        EditorController editorController = new EditorController(library);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoadWithoutEventHandler.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -84,7 +96,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoad() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController();
+        EditorController editorController = new EditorController(library);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoad.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);

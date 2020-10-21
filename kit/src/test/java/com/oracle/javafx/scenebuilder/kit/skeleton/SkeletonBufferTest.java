@@ -33,21 +33,30 @@ package com.oracle.javafx.scenebuilder.kit.skeleton;
 
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import org.junit.Test;
+import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 
 import java.io.IOException;
 import java.net.URL;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for {@link SkeletonBuffer#toString()}.
  */
+@ExtendWith(MockitoExtension.class)
 public class SkeletonBufferTest {
 
+	@Mock
+    private BuiltinLibrary library;
+	
     @Test
     public void testControllerWithoutPackageName() throws IOException {
-        EditorController editorController = new EditorController();
+        EditorController editorController = new EditorController(library);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithoutPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
@@ -61,7 +70,7 @@ public class SkeletonBufferTest {
 
     @Test
     public void testControllerWithSimplePackageName() throws IOException {
-        EditorController editorController = new EditorController();
+        EditorController editorController = new EditorController(library);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithSimplePackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
@@ -75,7 +84,7 @@ public class SkeletonBufferTest {
 
     @Test
     public void testControllerWithAdvancedPackageName() throws IOException {
-        EditorController editorController = new EditorController();
+        EditorController editorController = new EditorController(library);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithAdvancedPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
