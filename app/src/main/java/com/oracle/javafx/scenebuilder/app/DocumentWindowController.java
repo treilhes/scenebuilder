@@ -32,6 +32,30 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
@@ -51,8 +75,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelContr
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
@@ -74,29 +98,6 @@ import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
 import com.oracle.javafx.scenebuilder.kit.util.Utils;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -180,25 +181,24 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
         DONE
     }
     
-    private final EditorController editorController = new EditorController();
-    private final MenuBarController menuBarController = new MenuBarController(this);
-    private final ContentPanelController contentPanelController = new ContentPanelController(editorController);
-    private final AbstractHierarchyPanelController hierarchyPanelController = new HierarchyPanelController(editorController);
-    private final InfoPanelController infoPanelController = new InfoPanelController(editorController);
-    private final InspectorPanelController inspectorPanelController = new InspectorPanelController(editorController);
-    private final CssPanelDelegate cssPanelDelegate = new CssPanelDelegate(inspectorPanelController, this);
-    private final CssPanelController cssPanelController = new CssPanelController(editorController, cssPanelDelegate);
-    private final LibraryPanelController libraryPanelController = new LibraryPanelController(editorController,
-            PreferencesController.getSingleton().getMavenPreferences());
-    private final SelectionBarController selectionBarController = new SelectionBarController(editorController);
-    private final MessageBarController messageBarController = new MessageBarController(editorController);
-    private final SearchController librarySearchController = new SearchController(editorController);
-    private final SearchController inspectorSearchController = new SearchController(editorController);
-    private final SearchController cssPanelSearchController = new SearchController(editorController);;
-    private final SceneStyleSheetMenuController sceneStyleSheetMenuController = new SceneStyleSheetMenuController(this);
-    private final CssPanelMenuController cssPanelMenuController = new CssPanelMenuController(cssPanelController);
-    private final ResourceController resourceController = new ResourceController((this));
-    private final DocumentWatchingController watchingController = new DocumentWatchingController(this);
+    private final EditorController editorController;
+    private final MenuBarController menuBarController;
+    private final ContentPanelController contentPanelController;
+    private final AbstractHierarchyPanelController hierarchyPanelController;
+    private final InfoPanelController infoPanelController;
+    private final InspectorPanelController inspectorPanelController;
+    private final CssPanelDelegate cssPanelDelegate;
+    private final CssPanelController cssPanelController;
+    private final LibraryPanelController libraryPanelController;
+    private final SelectionBarController selectionBarController;
+    private final MessageBarController messageBarController;
+    private final SearchController librarySearchController;
+    private final SearchController inspectorSearchController;
+    private final SearchController cssPanelSearchController;
+    private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
+    private final CssPanelMenuController cssPanelMenuController;
+    private final ResourceController resourceController;
+    private final DocumentWatchingController watchingController;
     
     // The controller below are created lazily because they need an owner
     // and computing them here would be too costly (impact on start-up time):
@@ -250,79 +250,99 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
     private Job saveJob;
     private PreferencesRecordGlobal recordGlobal;
 
-    private final EventHandler<KeyEvent> mainKeyEventFilter = event -> {
-        //------------------------------------------------------------------
-        // TEXT INPUT CONTROL
-        //------------------------------------------------------------------
-        // Common editing actions handled natively and defined as application accelerators
-        // 
-        // The platform support is not mature/stable enough to rely on.
-        // Indeed, the behavior may differ :
-        // - when using system menu bar vs not using it
-        // - when using accelerators vs using menu items
-        // - depending on the focused control (TextField vs ComboBox)
-        // 
-        // On SB side, we decide for now to consume events that may be handled natively
-        // so ALL actions are defined in our ApplicationMenu class.
-        //
-        // This may be revisit when platform implementation will be more reliable.
-        //
-        final Node focusOwner = getScene().getFocusOwner();
-        final KeyCombination accelerator = getAccelerator(event);
-        if (isTextInputControlEditing(focusOwner) && accelerator != null) {
-
-//            focusOwner.getInputMap()
-//                      .lookupMapping(KeyBinding.toKeyBinding(event))
-//                      .ifPresent(mapping -> {
-//                          // The event is handled natively
-//                          if (mapping.getSpecificity(event) > 0) {
-//                              // When using system menu bar, the event is handled natively
-//                              // before the application receives it : we just consume the event
-//                              // so the editing action is not performed a second time by the app.
-//                              if (menuBarController.getMenuBar().isUseSystemMenuBar()) {
-//                                  event.consume();
-//                              }
-//                          }
-//                      });
-
-        }
-
-        //------------------------------------------------------------------
-        // Hierarchy TreeView + select all
-        //------------------------------------------------------------------
-        // Select all is handled natively by TreeView (= hierarchy panel control).
-        boolean modifierDown = (EditorPlatform.IS_MAC ? event.isMetaDown() : event.isControlDown());
-        boolean isSelectAll = KeyCode.A.equals(event.getCode()) && modifierDown;
-        if (getHierarchyPanelController().getPanelControl().isFocused() && isSelectAll) {
-            // Consume the event so the control action is not performed natively.
-            event.consume();
-            // When using system menu bar, the control action is performed by the app.
-            if (!menuBarController.getMenuBar().isUseSystemMenuBar()) {
-                if (canPerformControlAction(DocumentControlAction.SELECT_ALL)) {
-                    performControlAction(DocumentControlAction.SELECT_ALL);
-                }
-            }
-        }
-
-        // MenuItems define a single accelerator.
-        // BACK_SPACE key must be handled same way as DELETE key.
-        boolean isBackspace = KeyCode.BACK_SPACE.equals(event.getCode());
-        if (!isTextInputControlEditing(focusOwner) && isBackspace) {
-            if (canPerformEditAction(DocumentEditAction.DELETE)) {
-                performEditAction(DocumentEditAction.DELETE);
-            }
-            event.consume();
-        }
-    };
+    private final EventHandler<KeyEvent> mainKeyEventFilter;
     
     /*
      * DocumentWindowController
      */
     
-    public DocumentWindowController() {
+    public DocumentWindowController(@Autowired PreferencesController preferencesController, @Autowired MainController mainController, @Autowired EditorController editorController) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
-        editorController.setLibrary(MainController.getSingleton().getUserLibrary());
+        this.editorController = editorController;
+        menuBarController = new MenuBarController(this);
+        contentPanelController = new ContentPanelController(editorController);
+        hierarchyPanelController = new HierarchyPanelController(editorController);
+        infoPanelController = new InfoPanelController(editorController);
+        inspectorPanelController = new InspectorPanelController(editorController);
+        cssPanelDelegate = new CssPanelDelegate(inspectorPanelController, this);
+        cssPanelController = new CssPanelController(editorController, cssPanelDelegate);
+        libraryPanelController = new LibraryPanelController(editorController, preferencesController.getMavenPreferences());
+        selectionBarController = new SelectionBarController(editorController);
+        messageBarController = new MessageBarController(editorController);
+        librarySearchController = new SearchController(editorController);
+        inspectorSearchController = new SearchController(editorController);
+        cssPanelSearchController = new SearchController(editorController);;
+        sceneStyleSheetMenuController = new SceneStyleSheetMenuController(this);
+        cssPanelMenuController = new CssPanelMenuController(cssPanelController);
+        resourceController = new ResourceController((this));
+        watchingController = new DocumentWatchingController(this);
+        
+        this.editorController.setLibrary(mainController.getUserLibrary());
+        mainKeyEventFilter = event -> {
+            //------------------------------------------------------------------
+            // TEXT INPUT CONTROL
+            //------------------------------------------------------------------
+            // Common editing actions handled natively and defined as application accelerators
+            // 
+            // The platform support is not mature/stable enough to rely on.
+            // Indeed, the behavior may differ :
+            // - when using system menu bar vs not using it
+            // - when using accelerators vs using menu items
+            // - depending on the focused control (TextField vs ComboBox)
+            // 
+            // On SB side, we decide for now to consume events that may be handled natively
+            // so ALL actions are defined in our ApplicationMenu class.
+            //
+            // This may be revisit when platform implementation will be more reliable.
+            //
+            final Node focusOwner = getScene().getFocusOwner();
+            final KeyCombination accelerator = getAccelerator(event);
+            if (isTextInputControlEditing(focusOwner) && accelerator != null) {
+
+//                focusOwner.getInputMap()
+//                          .lookupMapping(KeyBinding.toKeyBinding(event))
+//                          .ifPresent(mapping -> {
+//                              // The event is handled natively
+//                              if (mapping.getSpecificity(event) > 0) {
+//                                  // When using system menu bar, the event is handled natively
+//                                  // before the application receives it : we just consume the event
+//                                  // so the editing action is not performed a second time by the app.
+//                                  if (menuBarController.getMenuBar().isUseSystemMenuBar()) {
+//                                      event.consume();
+//                                  }
+//                              }
+//                          });
+
+            }
+
+            //------------------------------------------------------------------
+            // Hierarchy TreeView + select all
+            //------------------------------------------------------------------
+            // Select all is handled natively by TreeView (= hierarchy panel control).
+            boolean modifierDown = (EditorPlatform.IS_MAC ? event.isMetaDown() : event.isControlDown());
+            boolean isSelectAll = KeyCode.A.equals(event.getCode()) && modifierDown;
+            if (getHierarchyPanelController().getPanelControl().isFocused() && isSelectAll) {
+                // Consume the event so the control action is not performed natively.
+                event.consume();
+                // When using system menu bar, the control action is performed by the app.
+                if (!menuBarController.getMenuBar().isUseSystemMenuBar()) {
+                    if (canPerformControlAction(DocumentControlAction.SELECT_ALL)) {
+                        performControlAction(DocumentControlAction.SELECT_ALL);
+                    }
+                }
+            }
+
+            // MenuItems define a single accelerator.
+            // BACK_SPACE key must be handled same way as DELETE key.
+            boolean isBackspace = KeyCode.BACK_SPACE.equals(event.getCode());
+            if (!isTextInputControlEditing(focusOwner) && isBackspace) {
+                if (canPerformEditAction(DocumentEditAction.DELETE)) {
+                    performEditAction(DocumentEditAction.DELETE);
+                }
+                event.consume();
+            }
+        };
     }
     
     public EditorController getEditorController() {

@@ -40,6 +40,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
@@ -52,7 +53,8 @@ import javafx.stage.Stage;
 				PreferencesController.class, 
 				Metadata.class, 
 				BuiltinLibrary.class,
-				MenuBarController.class
+				MenuBarController.class,
+				EditorController.class
 		}, 
 		basePackages = {
 				"com.oracle.javafx.scenebuilder.api",

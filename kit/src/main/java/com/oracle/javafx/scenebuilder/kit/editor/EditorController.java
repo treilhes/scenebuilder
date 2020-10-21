@@ -107,6 +107,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -139,6 +144,8 @@ import javafx.util.Callback;
  * Some panel controllers can be attached to an editor controller. They listen
  * to the editor and update their content accordingly.
  */
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EditorController {
     
     /**
@@ -257,12 +264,11 @@ public class EditorController {
     private double defaultRootContainerWidth = 600;
     private double defaultRootContainerHeight = 400;
     
+    private final ObjectProperty<Library> libraryProperty;
     private final ObjectProperty<FXOMDocument> fxomDocumentProperty 
             = new SimpleObjectProperty<>();
     private final ObjectProperty<URL> fxmlLocationProperty 
             = new SimpleObjectProperty<>();
-    private final ObjectProperty<Library> libraryProperty 
-            = new SimpleObjectProperty<>(BuiltinLibrary.getLibrary());
     private final ObjectProperty<Glossary> glossaryProperty 
             = new SimpleObjectProperty<>(new BuiltinGlossary());
     private final ObjectProperty<ResourceBundle> resourcesProperty
@@ -291,7 +297,8 @@ public class EditorController {
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
-    public EditorController() {
+    public EditorController(@Autowired BuiltinLibrary builtinLibrary) {
+    	libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
         jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
     }
 
