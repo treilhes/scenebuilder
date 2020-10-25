@@ -32,6 +32,11 @@
 
 package com.oracle.javafx.scenebuilder.app;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
@@ -41,6 +46,9 @@ import javafx.application.Platform;
 /**
  * Implements the interface with the css panel.
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
     private final InspectorPanelController inspectorController;

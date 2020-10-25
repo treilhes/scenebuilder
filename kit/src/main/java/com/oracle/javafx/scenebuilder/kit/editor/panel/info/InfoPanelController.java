@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.info;
 
 import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ToggleFxRootJob;
@@ -53,6 +54,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -71,6 +76,9 @@ import javafx.scene.layout.VBox;
 /**
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class InfoPanelController extends AbstractFxmlPanelController {
 
     @FXML private TableColumn<IndexEntry,String> leftTableColumn;
@@ -161,7 +169,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
      * AbstractFxmlPanelController
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         
         // Sanity checks
         assert leftTableColumn != null;

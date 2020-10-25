@@ -40,6 +40,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
@@ -85,6 +89,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.stage.Window;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
@@ -141,6 +146,9 @@ import javafx.scene.shape.QuadCurve;
  * This class creates and controls the <b>Content Panel</b> of Scene Builder Kit.
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class ContentPanelController extends AbstractFxmlPanelController 
                                     implements FXOMDocument.SceneGraphHolder {
     
@@ -834,7 +842,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate controller did load fxml
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         
         // Sanity checks
         assert scrollPane != null;

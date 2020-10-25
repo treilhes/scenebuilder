@@ -203,7 +203,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      *
      * @return the root TreeItem.
      */
-    public final TreeItem<HierarchyItem> getRoot() {
+    public TreeItem<HierarchyItem> getRoot() {
         return rootTreeItem;
     }
 
@@ -221,7 +221,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      *
      * @return the type of information displayed in the hierarchy.
      */
-    public final DisplayOption getDisplayOption() {
+    public DisplayOption getDisplayOption() {
         return displayOptionProperty.getValue();
     }
 
@@ -230,7 +230,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      *
      * @param displayOption the type of information displayed in the hierarchy.
      */
-    public final void setDisplayOption(DisplayOption displayOption) {
+    public void setDisplayOption(DisplayOption displayOption) {
         displayOptionProperty.setValue(displayOption);
     }
 
@@ -238,7 +238,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      * @return the DND controller
      * @treatAsPrivate
      */
-    public final HierarchyDNDController getDNDController() {
+    public HierarchyDNDController getDNDController() {
         return dndController;
     }
 
@@ -246,7 +246,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      * @return true if the timeline is running
      * @treatAsPrivate
      */
-    public final boolean isTimelineRunning() {
+    public boolean isTimelineRunning() {
         return animationScheduler.isTimelineRunning();
     }
 
@@ -545,7 +545,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      * @treatAsPrivate
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert getPanelControl() != null;
 
         // Initialize and configure the hierarchy panel

@@ -53,7 +53,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderFactory;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory.DocumentScope;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentsManager;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
@@ -124,7 +126,10 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     Parameters parameters;
     
     @Autowired
-    SceneBuilderFactory sceneBuilderFactory;
+    SceneBuilderBeanFactory sceneBuilderFactory;
+    
+    @Autowired
+    DocumentsManager documentsManager;
     
     private final ObservableList<DocumentWindowController> windowList = FXCollections.observableArrayList();
     private UserLibrary userLibrary;
@@ -544,8 +549,10 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
      * Private
      */
     public DocumentWindowController makeNewWindow() {
+    	DocumentScope.setCurrentScope(null);
+    	
         final DocumentWindowController result = sceneBuilderFactory.get(DocumentWindowController.class);
-
+        
         AppSettings.setWindowIcon(result.getStage());
 
         windowList.add(result);

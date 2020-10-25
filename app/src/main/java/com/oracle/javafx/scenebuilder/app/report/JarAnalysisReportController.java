@@ -97,6 +97,9 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
         getStage().close();
     }
     
+    @Override 
+    public void onFocus() {}
+    
     @Override
     public void openWindow() {
         super.openWindow();
@@ -113,7 +116,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert textFlow != null;
         assert timestampLabel != null;
                 

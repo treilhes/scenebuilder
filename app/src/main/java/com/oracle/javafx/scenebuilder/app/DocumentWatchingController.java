@@ -32,6 +32,7 @@
 
 package com.oracle.javafx.scenebuilder.app;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
@@ -44,12 +45,19 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class DocumentWatchingController implements FileWatcher.Delegate {
     
     private final DocumentWindowController documentWindowController;

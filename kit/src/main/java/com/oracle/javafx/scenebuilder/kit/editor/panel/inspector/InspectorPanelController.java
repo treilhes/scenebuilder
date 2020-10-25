@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
@@ -89,10 +90,17 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 /**
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class InspectorPanelController extends AbstractFxmlPanelController {
 
     @FXML
@@ -468,7 +476,7 @@ public class InspectorPanelController extends AbstractFxmlPanelController {
      * AbstractFxmlPanelController
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
 
         // Sanity checks
         assert propertiesTitledPane != null;

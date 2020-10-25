@@ -189,7 +189,10 @@ public final class PreviewWindowController extends AbstractWindowController {
         }
         getStage().close();
     }
-
+    
+    @Override 
+    public void onFocus() {}
+    
     @Override
     protected void controllerDidCreateStage() {
         updateWindowSize();
@@ -456,7 +459,7 @@ public final class PreviewWindowController extends AbstractWindowController {
         getStage().setTitle(Utils.makeTitle(fxomDocument));
     }
 
-    public final void setCameraType(PreviewWindowController.CameraType ct) {
+    public void setCameraType(PreviewWindowController.CameraType ct) {
         cameraType = ct;
         updateCamera();
     }

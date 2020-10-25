@@ -96,6 +96,9 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
         close();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     @Override
     public void openWindow() {
         super.openWindow();

@@ -82,6 +82,9 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     public void onCloseRequest(WindowEvent event) {
         getStage().hide();
     }
+    
+    @Override 
+    public void onFocus() {}
 
     /*
      * AbstractWindowController
@@ -97,7 +100,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert recentDocuments != null;
 

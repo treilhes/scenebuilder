@@ -32,12 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
@@ -61,7 +61,7 @@ import javafx.scene.Parent;
  * 
  * 
  */
-public abstract class AbstractPanelController {
+public abstract class AbstractPanelController  {
     
     private static final Logger LOG = Logger.getLogger(AbstractPanelController.class.getName());
     
@@ -194,7 +194,7 @@ public abstract class AbstractPanelController {
      * 
      * @param panelRoot the root panel (non null).
      */
-    protected  final void setPanelRoot(Parent panelRoot) {
+    public final void setPanelRoot(Parent panelRoot) {
         assert panelRoot != null;
         this.panelRoot = panelRoot;
     }

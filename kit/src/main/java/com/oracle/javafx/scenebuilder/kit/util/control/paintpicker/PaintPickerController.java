@@ -79,19 +79,19 @@ public class PaintPickerController {
     public final static RadialGradient DEFAULT_RADIAL
             = new RadialGradient(0.0, 0.0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE);
 
-    public final ObjectProperty<Paint> paintProperty() {
+    public ObjectProperty<Paint> paintProperty() {
         return paint;
     }
 
-    public final Paint getPaintProperty() {
+    public Paint getPaintProperty() {
         return paint.get();
     }
 
-    public final void setPaintProperty(Paint value) {
+    public void setPaintProperty(Paint value) {
         paint.setValue(value);
     }
 
-    public final BooleanProperty liveUpdateProperty() {
+    public BooleanProperty liveUpdateProperty() {
         return liveUpdate;
     }
 

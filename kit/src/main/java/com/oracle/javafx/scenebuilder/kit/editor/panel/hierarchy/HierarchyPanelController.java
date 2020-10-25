@@ -31,6 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview.HierarchyTreeViewController;
 
@@ -41,6 +47,9 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview.Hierar
  *
  * p
  */
+@Component
+@Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class HierarchyPanelController extends HierarchyTreeViewController {
 
     public HierarchyPanelController(EditorController editorController) {

@@ -80,6 +80,10 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
 
         event.consume();
     }
+    
+    @Override 
+    public void onFocus() {}
+    
 
     /*
      * AbstractWindowController
@@ -103,7 +107,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert lbAlert != null;
         assert tfEmail != null;

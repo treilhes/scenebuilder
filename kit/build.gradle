@@ -1,3 +1,7 @@
+dependencies {
+	implementation project(':api')
+}
+
 jar {
     baseName = 'scenebuilder-kit'
     manifest {

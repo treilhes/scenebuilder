@@ -31,6 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
+import com.oracle.javafx.scenebuilder.api.FxmlController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import java.io.IOException;
 import java.net.URL;
@@ -48,7 +49,7 @@ import javafx.scene.Parent;
  * 
  * 
  */
-public abstract class AbstractFxmlPanelController extends AbstractPanelController {
+public abstract class AbstractFxmlPanelController extends AbstractPanelController implements FxmlController {
     
     private final URL fxmlURL;
     private final ResourceBundle resources;
@@ -94,6 +95,16 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
         }
     }
     
+    @Override
+    public URL getFxmlURL() {
+		return fxmlURL;
+	}
+
+    @Override
+	public ResourceBundle getResources() {
+		return resources;
+	}
+    
     /*
      * Protected
      */
@@ -103,7 +114,7 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
      * the FXML file has been successfully loaded. 
      * Warning : this routine may be invoked outside of the event thread.
      */
-    protected abstract void controllerDidLoadFxml();
+    public abstract void controllerDidLoadFxml();
         
         // Note : remember that here:
         // 1) getHost() might be null

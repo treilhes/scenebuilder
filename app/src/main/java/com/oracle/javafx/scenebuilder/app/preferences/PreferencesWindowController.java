@@ -155,7 +155,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
      * AbstractModalDialog
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
 
         final PreferencesController preferencesController
@@ -281,6 +281,9 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         super.closeWindow();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     @FXML
     void resetToDefaultAction(ActionEvent event) {
         final PreferencesController preferencesController

@@ -98,7 +98,7 @@ public class InlineEditController {
      * @param initialValue
      * @return
      */
-    public final TextInputControl createTextInputControl(final Type type, final Node target, final String initialValue) {
+    public TextInputControl createTextInputControl(final Type type, final Node target, final String initialValue) {
 
         TextInputControl editor = null;
         double minHeight = 0;

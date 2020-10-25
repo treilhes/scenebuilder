@@ -108,15 +108,15 @@ public class EffectPickerController {
         selectionChevronImage = new Image(selectionChevronURL.toExternalForm());
     }
 
-    public final ObjectProperty<Effect> rootEffectProperty() {
+    public ObjectProperty<Effect> rootEffectProperty() {
         return rootEffect;
     }
 
-    public final Effect getRootEffectProperty() {
+    public Effect getRootEffectProperty() {
         return rootEffect.get();
     }
 
-    public final void setRootEffectProperty(Effect value) {
+    public void setRootEffectProperty(Effect value) {
         rootEffect.setValue(value);
     }
 
@@ -124,7 +124,7 @@ public class EffectPickerController {
         return revision;
     }
 
-    public final BooleanProperty liveUpdateProperty() {
+    public BooleanProperty liveUpdateProperty() {
         return liveUpdate;
     }
 

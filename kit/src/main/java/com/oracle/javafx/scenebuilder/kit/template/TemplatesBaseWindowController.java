@@ -82,7 +82,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert templateContainer != null;
 

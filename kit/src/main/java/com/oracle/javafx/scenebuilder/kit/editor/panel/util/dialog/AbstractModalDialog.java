@@ -279,7 +279,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
      */
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert contentPane != null;
         assert okButton != null;
         assert cancelButton != null;
@@ -316,6 +316,8 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         cancelButtonPressed(null);
     }
 
+    @Override 
+    public void onFocus() {}
     
     /*
      * Private

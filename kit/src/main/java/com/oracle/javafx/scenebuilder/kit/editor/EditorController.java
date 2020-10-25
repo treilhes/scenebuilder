@@ -32,14 +32,31 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddContextMenuToSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddTooltipToSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BringForwardJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BringToFrontJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.CutSelectionJob;
@@ -50,6 +67,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.IncludeFileJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.PasteIntoJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.PasteJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.SendBackwardJob;
@@ -68,19 +86,20 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.AbstractWrapInJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.UnwrapJob;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReport;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
+import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.glossary.Glossary;
 import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
+import com.oracle.javafx.scenebuilder.kit.glossary.Glossary;
+import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.Library;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
@@ -93,24 +112,6 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Acce
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -145,9 +146,10 @@ import javafx.util.Callback;
  * to the editor and update their content accordingly.
  */
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class EditorController {
-    
+	
     /**
      * An 'edit' action is an action which modifies the document associated
      * to this editor. It makes the document dirty and pushes a

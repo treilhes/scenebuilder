@@ -31,9 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -60,6 +63,11 @@ public abstract class AbstractWindowController {
     private final EventHandler<WindowEvent> closeRequestHandler = event -> {
         onCloseRequest(event);
         event.consume();
+    };
+    private final ChangeListener<Boolean> focusHandler = (ob,o,n) -> {
+    	if (n) {
+    		onFocus();
+    	}
     };
     
     public AbstractWindowController() {
@@ -127,6 +135,7 @@ public abstract class AbstractWindowController {
             stage = new Stage();
             stage.initOwner(owner);
             stage.setOnCloseRequest(closeRequestHandler);
+            stage.focusedProperty().addListener(focusHandler);
             stage.setScene(getScene());
             clampWindow();
             if (sizeToScene) {
@@ -196,6 +205,7 @@ public abstract class AbstractWindowController {
     protected abstract void makeRoot();
     
     public abstract void onCloseRequest(WindowEvent event);
+    public abstract void onFocus();
     
     protected void controllerDidCreateScene() {
         assert getRoot() != null;

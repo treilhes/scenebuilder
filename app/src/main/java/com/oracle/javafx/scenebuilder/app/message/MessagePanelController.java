@@ -112,7 +112,7 @@ public class MessagePanelController extends AbstractFxmlPanelController {
      * AbstractFxmlPanelController
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         
         // Sanity checks
         assert scrollPane != null;

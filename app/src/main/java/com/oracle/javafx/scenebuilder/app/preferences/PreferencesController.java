@@ -130,9 +130,6 @@ public class PreferencesController extends PreferencesControllerBase implements 
                 Logger.getLogger(PreferencesController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-
-
     }
 
     @Override

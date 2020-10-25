@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 
 import javafx.application.Platform;
@@ -54,7 +55,8 @@ import javafx.stage.Stage;
 				Metadata.class, 
 				BuiltinLibrary.class,
 				MenuBarController.class,
-				EditorController.class
+				EditorController.class,
+				SelectionBarController.class
 		}, 
 		basePackages = {
 				"com.oracle.javafx.scenebuilder.api",

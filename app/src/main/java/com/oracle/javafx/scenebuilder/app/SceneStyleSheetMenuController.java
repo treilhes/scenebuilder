@@ -31,6 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
@@ -40,6 +41,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
@@ -47,6 +52,9 @@ import javafx.stage.FileChooser;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class SceneStyleSheetMenuController {
     private final DocumentWindowController documentWindowController;
     

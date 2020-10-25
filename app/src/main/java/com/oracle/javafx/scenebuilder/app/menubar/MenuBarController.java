@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.app.menubar;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentControlAction;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentEditAction;
@@ -67,7 +69,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javafx.beans.value.ChangeListener;
@@ -90,14 +95,19 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
  */
 @Component
-@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
+//@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
+@RequiredArgsConstructor
 public class MenuBarController implements InitializingBean {
-    
+	
     private static MenuBarController systemMenuBarController; // For Mac only
 
     private Menu insertCustomMenu;
@@ -424,10 +434,6 @@ public class MenuBarController implements InitializingBean {
             // Should cover Windows, Solaris, Linux
             modifier = KeyCombination.CONTROL_DOWN;
         }
-    }
-
-    public MenuBarController(DocumentWindowController documentWindowController) {
-        this.documentWindowController = documentWindowController;
     }
 
     public MenuBar getMenuBar() {
@@ -1574,6 +1580,7 @@ public class MenuBarController implements InitializingBean {
 
         @Override
         public void handle(ActionEvent t) {
+        	DocumentScope.setCurrentScope(dwc);
             dwc.getStage().toFront();
         }
     }

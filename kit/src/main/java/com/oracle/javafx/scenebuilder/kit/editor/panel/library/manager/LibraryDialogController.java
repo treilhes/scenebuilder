@@ -111,7 +111,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
 
         this.classesLink.setTooltip(new Tooltip(I18N.getString("library.dialog.hyperlink.tooltip")));
@@ -134,6 +134,9 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
         close();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     @Override
     public void openWindow() {
         super.openWindow();
@@ -308,7 +311,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             if (Files.exists(item.getFilePath())) {
                 if (LibraryUtil.isJarPath(item.getFilePath()) || Files.isDirectory(item.getFilePath())) {
                     final ImportWindowController iwc = new ImportWindowController(
-                            new LibraryPanelController(editorController, preferencesControllerBase.getMavenPreferences()),
+                            new LibraryPanelController(editorController, preferencesControllerBase),
                             Arrays.asList(item.getFilePath().toFile()), preferencesControllerBase.getMavenPreferences(),
                             getStage());
                     iwc.setToolStylesheet(editorController.getToolStylesheet());
@@ -337,7 +340,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             List<String> filter = mavenPreferences.getArtifactFilter(mavenArtifact);
 
             final ImportWindowController iwc = new ImportWindowController(
-                        new LibraryPanelController(editorController, preferencesControllerBase.getMavenPreferences()),
+                        new LibraryPanelController(editorController, preferencesControllerBase),
                                 files, preferencesControllerBase.getMavenPreferences(), getStage(),
                     false, filter);
             iwc.setToolStylesheet(editorController.getToolStylesheet());

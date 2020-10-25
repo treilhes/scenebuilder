@@ -54,10 +54,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
@@ -76,6 +81,7 @@ import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -103,7 +109,10 @@ import javafx.util.Callback;
  * Kit.
  *
  */
-public class LibraryPanelController extends AbstractFxmlPanelController {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
+public class LibraryPanelController extends AbstractViewFxmlPanelController {
 
     private String searchPattern;
     ArrayList<LibraryItem> searchData = new ArrayList<>();
@@ -139,10 +148,10 @@ public class LibraryPanelController extends AbstractFxmlPanelController {
      *
      * @param c the editor controller (never null).
      */
-    public LibraryPanelController(EditorController c, MavenPreferences mavenPreferences) {
+    public LibraryPanelController(EditorController c, PreferencesControllerBase preferencesController) {
         super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), c); //NOI18N
         startListeningToLibrary();
-        this.mavenPreferences = mavenPreferences;
+        this.mavenPreferences = preferencesController.getMavenPreferences();
     }
 
     /**
@@ -247,7 +256,7 @@ public class LibraryPanelController extends AbstractFxmlPanelController {
      * @treatAsPrivate Controller did load fxml.
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert libAccordion != null;
         assert libPane != null;
         assert libList != null;
@@ -1111,4 +1120,5 @@ public class LibraryPanelController extends AbstractFxmlPanelController {
         
         return libList;
     }
+    
 }

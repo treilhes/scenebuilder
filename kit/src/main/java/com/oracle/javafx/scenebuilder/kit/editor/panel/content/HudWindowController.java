@@ -104,7 +104,7 @@ public class HudWindowController extends AbstractFxmlPopupController {
      */
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert gridPane != null;
         assert rowConstraint0 != null;
         

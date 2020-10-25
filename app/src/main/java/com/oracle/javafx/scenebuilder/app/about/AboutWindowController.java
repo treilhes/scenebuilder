@@ -97,6 +97,9 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
         closeWindow();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     /*
      * AbstractWindowController
      */
@@ -111,7 +114,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert vbox != null;
         assert textArea != null;

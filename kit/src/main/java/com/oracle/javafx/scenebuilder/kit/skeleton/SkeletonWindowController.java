@@ -107,6 +107,9 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
         getStage().close();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     @Override
     public void openWindow() {
         super.openWindow();
@@ -120,7 +123,7 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
      * AbstractFxmlWindowController
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert commentCheckBox != null;
         assert formatCheckBox != null;

@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
@@ -43,9 +44,16 @@ import java.nio.charset.Charset;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 class ResourceController {
 
     private final DocumentWindowController documentWindowController;

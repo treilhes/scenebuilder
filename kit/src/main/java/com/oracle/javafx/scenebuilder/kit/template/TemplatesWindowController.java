@@ -48,7 +48,7 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
 
         setupTemplateButtonHandlers();
@@ -60,6 +60,9 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
         getStage().hide();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     @Override
     protected void controllerDidCreateStage() {
         super.controllerDidCreateStage();

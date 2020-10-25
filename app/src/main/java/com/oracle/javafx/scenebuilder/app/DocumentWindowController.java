@@ -52,10 +52,15 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory.DocumentScope;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentsManager;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
@@ -133,10 +138,9 @@ import javafx.stage.WindowEvent;
  *
  */
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DocumentWindowController extends AbstractFxmlWindowController {
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+public class DocumentWindowController extends AbstractFxmlWindowController implements Document {
 
-    
     public enum DocumentControlAction {
         COPY,
         SELECT_ALL,
@@ -187,18 +191,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
     private final AbstractHierarchyPanelController hierarchyPanelController;
     private final InfoPanelController infoPanelController;
     private final InspectorPanelController inspectorPanelController;
-    private final CssPanelDelegate cssPanelDelegate;
     private final CssPanelController cssPanelController;
     private final LibraryPanelController libraryPanelController;
     private final SelectionBarController selectionBarController;
     private final MessageBarController messageBarController;
-    private final SearchController librarySearchController;
-    private final SearchController inspectorSearchController;
-    private final SearchController cssPanelSearchController;
+    private SearchController librarySearchController;
+    private SearchController inspectorSearchController;
+    private SearchController cssPanelSearchController;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
     private final CssPanelMenuController cssPanelMenuController;
     private final ResourceController resourceController;
     private final DocumentWatchingController watchingController;
+    //private final DocumentsManager documentManager;
     
     // The controller below are created lazily because they need an owner
     // and computing them here would be too costly (impact on start-up time):
@@ -250,34 +254,56 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
     private Job saveJob;
     private PreferencesRecordGlobal recordGlobal;
 
-    private final EventHandler<KeyEvent> mainKeyEventFilter;
+    private EventHandler<KeyEvent> mainKeyEventFilter;
     
+    @Autowired
+    ApplicationContext context;
     /*
      * DocumentWindowController
      */
     
-    public DocumentWindowController(@Autowired PreferencesController preferencesController, @Autowired MainController mainController, @Autowired EditorController editorController) {
+	public DocumentWindowController(
+			@Autowired PreferencesController preferencesController,
+			@Autowired MainController mainController, 
+			@Lazy @Autowired EditorController editorController,
+			//@Autowired DocumentsManager documentManager,
+			@Lazy @Autowired MenuBarController menuBarController,
+			
+			@Lazy @Autowired ContentPanelController contentPanelController,
+			@Lazy @Autowired HierarchyPanelController hierarchyPanelController,
+			@Lazy @Autowired InfoPanelController infoPanelController,
+			@Lazy @Autowired InspectorPanelController inspectorPanelController,
+			@Lazy @Autowired CssPanelController cssPanelController,
+			@Lazy @Autowired LibraryPanelController libraryPanelController,
+			@Lazy @Autowired SelectionBarController selectionBarController,
+			@Lazy @Autowired MessageBarController messageBarController,
+			@Lazy @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
+			@Lazy @Autowired CssPanelMenuController cssPanelMenuController,
+			@Lazy @Autowired ResourceController resourceController,
+			@Lazy @Autowired DocumentWatchingController watchingController) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
+        DocumentScope.setCurrentScope(this);
         this.editorController = editorController;
-        menuBarController = new MenuBarController(this);
-        contentPanelController = new ContentPanelController(editorController);
-        hierarchyPanelController = new HierarchyPanelController(editorController);
-        infoPanelController = new InfoPanelController(editorController);
-        inspectorPanelController = new InspectorPanelController(editorController);
-        cssPanelDelegate = new CssPanelDelegate(inspectorPanelController, this);
-        cssPanelController = new CssPanelController(editorController, cssPanelDelegate);
-        libraryPanelController = new LibraryPanelController(editorController, preferencesController.getMavenPreferences());
-        selectionBarController = new SelectionBarController(editorController);
-        messageBarController = new MessageBarController(editorController);
-        librarySearchController = new SearchController(editorController);
-        inspectorSearchController = new SearchController(editorController);
-        cssPanelSearchController = new SearchController(editorController);;
-        sceneStyleSheetMenuController = new SceneStyleSheetMenuController(this);
-        cssPanelMenuController = new CssPanelMenuController(cssPanelController);
-        resourceController = new ResourceController((this));
-        watchingController = new DocumentWatchingController(this);
+        this.menuBarController = menuBarController;
         
+        this.contentPanelController = contentPanelController;
+        this.hierarchyPanelController = hierarchyPanelController;
+        this.infoPanelController = infoPanelController;
+        this.inspectorPanelController = inspectorPanelController;
+        this.cssPanelController = cssPanelController;
+        this.libraryPanelController = libraryPanelController;
+        this.selectionBarController = selectionBarController;
+        this.messageBarController = messageBarController;
+        //this.librarySearchController = librarySearchController;
+        //this.inspectorSearchController = inspectorSearchController;
+        //this.cssPanelSearchController = cssPanelSearchController;
+        this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
+        this.cssPanelMenuController = cssPanelMenuController;
+        this.resourceController = resourceController;
+        this.watchingController = watchingController;
+        
+        //this.documentManager = documentManager;
         this.editorController.setLibrary(mainController.getUserLibrary());
         mainKeyEventFilter = event -> {
             //------------------------------------------------------------------
@@ -344,8 +370,28 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
             }
         };
     }
-    
-    public EditorController getEditorController() {
+	
+	
+	@Autowired
+	public void setLibrarySearchController(SearchController librarySearchController) {
+		this.librarySearchController = librarySearchController;
+	}
+
+
+	@Autowired
+	public void setInspectorSearchController(SearchController inspectorSearchController) {
+		this.inspectorSearchController = inspectorSearchController;
+	}
+
+
+	@Autowired
+	public void setCssPanelSearchController(SearchController cssPanelSearchController) {
+		this.cssPanelSearchController = cssPanelSearchController;
+	}
+
+
+
+	public EditorController getEditorController() {
         return editorController;
     }
     
@@ -1006,6 +1052,26 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
         return noFxmlText && clean && noName;
     }
     
+    public boolean isInited() {
+        return editorController != null;
+    }
+    
+    public boolean hasContent() {
+    	final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final boolean noFxmlText = (fxomDocument == null) || (fxomDocument.getFxomRoot() == null);
+        return noFxmlText;
+    }
+    public boolean hasName() {
+    	final FXOMDocument fxomDocument = editorController.getFxomDocument();
+    	final boolean hasName = (fxomDocument != null) && (fxomDocument.getLocation() != null);
+        return hasName;
+    }
+    public String getName() {
+    	final FXOMDocument fxomDocument = editorController.getFxomDocument();
+    	final String name = hasName() ? fxomDocument.getLocation().toExternalForm() : "";
+        return name;
+    }
+    
     public static class TitleComparator implements Comparator<DocumentWindowController> {
 
         @Override
@@ -1067,7 +1133,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
      */
     
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         
         assert libraryPanelHost != null;
         assert librarySearchPanelHost != null;
@@ -1224,8 +1290,14 @@ public class DocumentWindowController extends AbstractFxmlWindowController {
     @Override 
     public void onCloseRequest(WindowEvent event) {
         performCloseAction();
+        DocumentScope.removeScope(this);
     }
 
+    @Override 
+    public void onFocus() {
+        DocumentScope.setCurrentScope(this);
+    }
+    
     public boolean isFrontDocumentWindow() {
         return getStage().isFocused()
                 || (previewWindowController != null && previewWindowController.getStage().isFocused())

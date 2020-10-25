@@ -86,7 +86,7 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
      * To be implemented by subclasses
      */
     
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert getRoot() != null;
         assert getRoot().getScene() == null;
     }

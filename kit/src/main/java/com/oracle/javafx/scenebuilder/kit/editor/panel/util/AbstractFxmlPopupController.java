@@ -68,7 +68,7 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
      * To be implemented by subclasses
      */
     
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         assert getRoot() != null;
         assert getRoot().getScene() == null;
     }

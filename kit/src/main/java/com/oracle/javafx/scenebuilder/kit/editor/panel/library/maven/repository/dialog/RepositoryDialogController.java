@@ -211,6 +211,9 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
         cancel();
     }
 
+    @Override 
+    public void onFocus() {}
+    
     @Override
     public void openWindow() {
         super.openWindow();

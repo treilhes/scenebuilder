@@ -32,6 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.search;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlController;
 
@@ -47,6 +53,10 @@ import javafx.scene.layout.StackPane;
  *
  * 
  */
+@Component
+@Scope(
+		value = SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+//@Lazy
 public class SearchController extends AbstractFxmlController {
 
     @FXML
@@ -58,20 +68,18 @@ public class SearchController extends AbstractFxmlController {
 
     public SearchController(EditorController c) {
         super(SearchController.class.getResource("Search.fxml"), c); //NOI18N
-
-
     }
 
-    public final StringProperty textProperty() {
+	public StringProperty textProperty() {
         return searchField.textProperty();
     }
     
-    public void requestFocus() {
+	public void requestFocus() {
         searchField.requestFocus();
     }
 
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         if (searchField.getLength() == 0) {
             searchIcon.getStyleClass().add("search-magnifying-glass"); //NOI18N
         }

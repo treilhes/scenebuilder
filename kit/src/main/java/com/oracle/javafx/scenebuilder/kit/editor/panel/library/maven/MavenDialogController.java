@@ -187,7 +187,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
 
                     final ImportWindowController iwc
                             = new ImportWindowController(
-                            new LibraryPanelController(editorController, preferencesControllerBase.getMavenPreferences()),
+                            new LibraryPanelController(editorController, preferencesControllerBase),
                             files, preferencesControllerBase.getMavenPreferences(),
                             (Stage)installButton.getScene().getWindow(), false,
                                 preferencesControllerBase.getMavenPreferences().getArtifactsFilter());
@@ -223,7 +223,10 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     public void onCloseRequest(WindowEvent event) {
         cancel();
     }
-
+    
+    @Override 
+    public void onFocus() {}
+    
     @Override
     public void openWindow() {
         super.openWindow();

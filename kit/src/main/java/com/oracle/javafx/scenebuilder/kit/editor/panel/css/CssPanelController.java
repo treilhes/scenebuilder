@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.css;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
@@ -63,6 +64,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
@@ -103,6 +108,9 @@ import javafx.util.Duration;
  * Controller for the CSS Panel.
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class CssPanelController extends AbstractFxmlPanelController {
 
     @FXML
@@ -233,7 +241,7 @@ public class CssPanelController extends AbstractFxmlPanelController {
      *
      */
     @Override
-    protected void controllerDidLoadFxml() {
+    public void controllerDidLoadFxml() {
         // Remove scrollPane for rules
         root.getChildren().remove(rulesPane);
         root.getChildren().remove(textPane);
@@ -439,7 +447,7 @@ public class CssPanelController extends AbstractFxmlPanelController {
      * @return node.
      * @treatAsPrivate
      */
-    public final Node getRulesPane() {
+    public Node getRulesPane() {
         return rulesPane;
     }
 
@@ -448,7 +456,7 @@ public class CssPanelController extends AbstractFxmlPanelController {
      * @return node.
      * @treatAsPrivate
      */
-    public final Node getTextPane() {
+    public Node getTextPane() {
         return textPane;
     }
 
