@@ -32,10 +32,19 @@
 
 package com.oracle.javafx.scenebuilder.app;
 
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
-import com.oracle.javafx.scenebuilder.app.util.AppSettings;
+import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
+import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
+
 import javafx.application.HostServices;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -47,19 +56,28 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
-import java.time.LocalDate;
-
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class UpdateSceneBuilderDialog extends Dialog {
-
-    public UpdateSceneBuilderDialog(String latestVersion, String latestVersionTextString, String announcementURL, Window owner) {
-        initOwner(owner);
+	
+    private String latestVersion;
+    
+    public UpdateSceneBuilderDialog(
+    		@Autowired VersionSetting versionSetting,
+    		@Autowired WindowIconSetting windowIconSetting,
+    		@Autowired DocumentWindowController owner
+    		) {
+    	
+    	versionSetting.getLatestVersion((v) -> latestVersion = v);
+    	String latestVersionTextString = versionSetting.getLatestVersionText();
+    	String announcementURL = versionSetting.getLatestVersionAnnouncementURL();
+        initOwner(owner.getStage());
         setTitle(I18N.getString("download.scene.builder.title"));
         Label header = new Label(I18N.getString("download.scene.builder.header.label"));
         Label currentVersionTextLabel = new Label(I18N.getString("download.scene.builder.current.version.label"));
         Label latestVersionTextLabel = new Label(I18N.getString("download.scene.builder.last.version.number.label"));
-        Label currentVersionLabel = new Label(AppSettings.getSceneBuilderVersion());
+        Label currentVersionLabel = new Label(versionSetting.getSceneBuilderVersion());
         Label latestVersionLabel = new Label(latestVersion);
         GridPane gridPane = new GridPane();
         gridPane.add(currentVersionTextLabel, 0, 0);
@@ -98,7 +116,7 @@ public class UpdateSceneBuilderDialog extends Dialog {
         resultProperty().addListener((observable, oldValue, newValue) -> {
             HostServices hostServices = MainController.getSingleton().getHostServices();
             if (newValue == downloadButton) {
-                hostServices.showDocument(AppSettings.DOWNLOAD_URL);
+                hostServices.showDocument(versionSetting.DOWNLOAD_URL);
             } else if (newValue == remindLater) {
                 LocalDate now = LocalDate.now();
                 LocalDate futureDate = now.plusWeeks(1);
@@ -114,6 +132,6 @@ public class UpdateSceneBuilderDialog extends Dialog {
             }
         });
 
-        AppSettings.setWindowIcon((Stage)getDialogPane().getScene().getWindow());
+        windowIconSetting.setWindowIcon((Stage)getDialogPane().getScene().getWindow());
     }
 }

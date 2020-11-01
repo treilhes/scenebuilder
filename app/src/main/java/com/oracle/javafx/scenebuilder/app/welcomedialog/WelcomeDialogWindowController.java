@@ -32,14 +32,23 @@
 
 package com.oracle.javafx.scenebuilder.app.welcomedialog;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
+import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesBaseWindowController;
-import com.oracle.javafx.scenebuilder.app.util.AppSettings;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -48,14 +57,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
-
+@Component
+@Lazy
 public class WelcomeDialogWindowController extends TemplatesBaseWindowController {
 
     @FXML
@@ -64,17 +69,18 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private Button emptyApp;
 
-
-    private static WelcomeDialogWindowController instance;
-
-    private MainController sceneBuilderApp;
-
-    private WelcomeDialogWindowController() {
+    private final MainController sceneBuilderApp;
+    
+    private WelcomeDialogWindowController(
+    		@Autowired MainController sceneBuilderApp,
+    		@Autowired WindowIconSetting windowIconSetting) {
         super(WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
                 null); // We want it to be a top level window so we're setting the owner to null.
 
-        sceneBuilderApp = MainController.getSingleton();
+        this.sceneBuilderApp = sceneBuilderApp;
+        
+        windowIconSetting.setWindowIcon(this.getStage());
     }
 
 
@@ -136,13 +142,13 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         setupTemplateButtonHandlers();
     }
 
-    public static WelcomeDialogWindowController getInstance() {
-        if (instance == null){
-            instance = new WelcomeDialogWindowController();
-            AppSettings.setWindowIcon((Stage)instance.getStage());
-        }
-        return instance;
-    }
+//    public static WelcomeDialogWindowController getInstance() {
+//        if (instance == null){
+//            instance = new WelcomeDialogWindowController();
+//            windowIconSetting.setWindowIcon((Stage)instance.getStage());
+//        }
+//        return instance;
+//    }
 
     private void fireOpenRecentProject(ActionEvent event, String projectPath) {
         sceneBuilderApp.handleOpenFilesAction(Arrays.asList(projectPath));

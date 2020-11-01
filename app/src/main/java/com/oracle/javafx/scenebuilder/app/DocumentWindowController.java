@@ -66,7 +66,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordDocument;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.app.util.AppSettings;
+import com.oracle.javafx.scenebuilder.app.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -198,6 +198,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final CssPanelMenuController cssPanelMenuController;
     private final ResourceController resourceController;
     private final DocumentWatchingController watchingController;
+    
+    private final MavenSetting mavenSetting;
     //private final DocumentsManager documentManager;
     
     // The controller below are created lazily because they need an owner
@@ -265,6 +267,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	public DocumentWindowController(
 			@Autowired PreferencesController preferencesController,
 			@Autowired MainController mainController, 
+			@Autowired MavenSetting mavenSetting,
 			@Lazy @Autowired EditorController editorController,
 			//@Autowired DocumentsManager documentManager,
 			@Lazy @Autowired MenuBarController menuBarController,
@@ -288,6 +291,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         DocumentScope.setCurrentScope(this);
         this.editorController = editorController;
+        this.mavenSetting = mavenSetting;
         this.menuBarController = menuBarController;
         
         this.contentPanelController = contentPanelController;
@@ -1451,8 +1455,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //
     public void onManageJarFxml(ActionEvent event) {
         if(libraryDialogController==null){
-            libraryDialogController = new LibraryDialogController(editorController, AppSettings.getUserM2Repository(),
-                    AppSettings.getTempM2Repository(), PreferencesController.getSingleton(), getStage());
+            libraryDialogController = new LibraryDialogController(editorController, mavenSetting.getUserM2Repository(),
+            		mavenSetting.getTempM2Repository(), PreferencesController.getSingleton(), getStage());
             libraryDialogController.setOnAddJar(() -> onImportJarFxml(libraryDialogController.getStage()));
             libraryDialogController.setOnEditFXML(fxmlPath -> {
                     if (MainController.getSingleton().lookupUnusedDocumentWindowController() != null) {

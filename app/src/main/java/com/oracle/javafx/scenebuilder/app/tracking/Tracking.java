@@ -31,9 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.app.tracking;
 
-import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.util.AppSettings;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -41,11 +38,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
+
+@Component
 public class Tracking {
     public static final String SCENEBUILDER_TYPE = "scenebuilder";
     public static final String SCENEBUILDER_USAGE_TYPE = "scenebuilder-usage";
 
-    public static void sendTrackingInfo(String type, String hash, String email, boolean optIn, boolean update) {
+    @Autowired
+    private VersionSetting versionSetting;
+    
+    public Tracking() {}
+
+
+	public void sendTrackingInfo(String type, String hash, String email, boolean optIn, boolean update) {
         new Thread(() -> {
             try {
                 String java = System.getProperty("java.version");
@@ -56,7 +65,7 @@ public class Tracking {
                         + "&java=" + URLEncoder.encode(java, "UTF-8")
                         + "&type=" + type
                         + "&id=" + hash
-                        + "&version=" + AppSettings.getSceneBuilderVersion()
+                        + "&version=" + versionSetting.getSceneBuilderVersion()
                         + (update ? "&update=true" : "");
 
                 URL url = new URL("http://usage.gluonhq.com/ul/log?" + urlParameters);

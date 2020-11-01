@@ -32,29 +32,39 @@
  */
 package com.oracle.javafx.scenebuilder.app.registration;
 
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
-import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
-import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
-
-import java.net.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
+import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
+import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
+
 /**
  *
  */
+@Component
+@Lazy
 public class RegistrationWindowController extends AbstractFxmlWindowController {
 
     private static final Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+"); //NOI18N
@@ -67,11 +77,15 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     private CheckBox cbOptIn;
 
     final private Window owner;
-
-    public RegistrationWindowController(Stage owner) {
+    private final Tracking tracking;
+    
+    public RegistrationWindowController(
+    		@Autowired DocumentWindowController window,
+    		@Autowired Tracking tracking) {
         super(RegistrationWindowController.class.getResource("Registration.fxml"), //NOI18N
-                I18N.getBundle(), owner);
-        this.owner = owner;
+                I18N.getBundle(), window.getStage());
+        this.owner = window.getStage();
+        this.tracking = tracking;
     }
 
     @Override
@@ -126,7 +140,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
         if (recordGlobal.getRegistrationHash() == null) {
             String hash = getUniqueId();
             recordGlobal.updateRegistrationFields(hash, null, null);
-            Tracking.sendTrackingInfo(Tracking.SCENEBUILDER_TYPE, hash, "", false, false);
+            tracking.sendTrackingInfo(Tracking.SCENEBUILDER_TYPE, hash, "", false, false);
         }
 
         closeWindow();
@@ -150,7 +164,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
         // Update preferences
         recordGlobal.updateRegistrationFields(hash, email, optIn);
 
-        Tracking.sendTrackingInfo(Tracking.SCENEBUILDER_TYPE, hash, email, optIn, update);
+        tracking.sendTrackingInfo(Tracking.SCENEBUILDER_TYPE, hash, email, optIn, update);
 
         closeWindow();
     }

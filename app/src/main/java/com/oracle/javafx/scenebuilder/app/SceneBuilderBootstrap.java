@@ -40,13 +40,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
+import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowController;
+import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
+import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
@@ -60,6 +62,9 @@ import javafx.stage.Stage;
 
 @ComponentScan(
 		basePackageClasses = { 
+				Tracking.class,
+				RegistrationWindowController.class,
+				WelcomeDialogWindowController.class,
 				PreferencesController.class,
 				BuiltinLibrary.class,
 				Metadata.class, 
@@ -69,6 +74,7 @@ import javafx.stage.Stage;
 				SceneBuilderBeanFactory.class
 		}, 
 		basePackages = {
+				"com.oracle.javafx.scenebuilder.app.settings",
 				"com.oracle.javafx.scenebuilder.kit.library.user",
 				"com.oracle.javafx.scenebuilder.api.subjects",
 				"com.oracle.javafx.scenebuilder.app"

@@ -32,14 +32,19 @@
  */
 package com.oracle.javafx.scenebuilder.app.about;
 
-import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
-import com.oracle.javafx.scenebuilder.app.util.AppSettings;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.app.MainController;
+import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -50,6 +55,7 @@ import javafx.stage.WindowEvent;
 /**
  *
  */
+@Component
 public final class AboutWindowController extends AbstractFxmlWindowController {
 
     @FXML
@@ -64,11 +70,13 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     // The resource bundle contains two keys: about.copyright and about.copyright.open
     private String sbAboutCopyrightKeyName;
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
-    private final String LOG_FILE_NAME = "scenebuilder-" + AppSettings.getSceneBuilderVersion() + ".log"; //NOI18N
+    private final String LOG_FILE_NAME;
 
-    public AboutWindowController() {
+    public AboutWindowController(@Autowired VersionSetting versionSetting) {
         super(AboutWindowController.class.getResource("About.fxml"), //NOI18N
                 I18N.getBundle());
+        this.LOG_FILE_NAME = "scenebuilder-" + versionSetting.getSceneBuilderVersion() + ".log"; //NOI18N
+        
         try (InputStream in = getClass().getResourceAsStream("about.properties")) { //NOI18N
 
             if (in != null) {

@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
+import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractGenericHandles;
@@ -387,7 +388,7 @@ public class SceneBuilderTest {
      * 'UNSET'.
      */
     public static String getVersionString() {
-        AboutWindowController awc = new AboutWindowController();
+        AboutWindowController awc = new AboutWindowController(new VersionSetting());
         return awc.getBuildInfo();
     }
     

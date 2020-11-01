@@ -64,8 +64,9 @@ import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesWindowController;
 import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowController;
+import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
+import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
-import com.oracle.javafx.scenebuilder.app.util.AppSettings;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
@@ -77,7 +78,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.kit.template.Type;
@@ -133,6 +133,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     @Autowired
     private UserLibrary userLibrary;
     
+    @Autowired
+    private VersionSetting versionSetting;
+    
+    @Autowired
+    private WindowIconSetting windowIconSetting;
+    
+    @Autowired
+    private Tracking tracking;
+    
     private final ObservableList<DocumentWindowController> windowList = FXCollections.observableArrayList();
     
     //private UserLibrary userLibrary;
@@ -171,14 +180,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     public void performControlAction(ApplicationControlAction a, DocumentWindowController source) {
         switch (a) {
             case ABOUT:
-                AboutWindowController aboutWindowController = new AboutWindowController();
+                AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
                 aboutWindowController.setToolStylesheet(getToolStylesheet());
                 aboutWindowController.openWindow();
-                AppSettings.setWindowIcon(aboutWindowController.getStage());
+                windowIconSetting.setWindowIcon(aboutWindowController.getStage());
                 break;
 
             case REGISTER:
-                final RegistrationWindowController registrationWindowController = new RegistrationWindowController(source.getStage());
+                final RegistrationWindowController registrationWindowController = context.getBean(RegistrationWindowController.class);
                 registrationWindowController.openWindow();
                 break;
 
@@ -380,7 +389,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     public void handleLaunch(List<String> files) {
         boolean showWelcomeDialog = files.isEmpty();
 
-        MavenPreferences mavenPreferences = PreferencesController.getSingleton().getMavenPreferences();
+        //MavenPreferences mavenPreferences = PreferencesController.getSingleton().getMavenPreferences();
         // Creates the user library
 //        userLibrary = new UserLibrary(AppPlatform.getUserLibraryFolder(),
 //                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
@@ -407,9 +416,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                         dwc = sceneBuilderApp.getDocumentWindowControllers().get(0);
                     }
                     ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getStage());
-                    AppSettings.setWindowIcon(alert);
+                    windowIconSetting.setWindowIcon(alert);
                     if (showWelcomeDialog) {
-                        alert.initOwner(WelcomeDialogWindowController.getInstance().getStage());
+                        alert.initOwner(context.getBean(WelcomeDialogWindowController.class).getStage());
                     }
                     alert.showAndWait();
                 });
@@ -435,7 +444,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 Platform.runLater(new ScenicViewStarter(newWindow.getScene()));
             }
 
-            WelcomeDialogWindowController.getInstance().getStage().setOnHidden(event -> {
+            WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
+            
+            wdwc.getStage().setOnHidden(event -> {
                 showUpdateDialogIfRequired(newWindow, () -> {
                     if (!Platform.isFxApplicationThread()) {
                         Platform.runLater(() -> showRegistrationDialogIfRequired(newWindow));
@@ -448,7 +459,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
             // Unless we're on a Mac we're starting SB directly (fresh start)
             // so we're not opening any file and as such we should show the Welcome Dialog
-            WelcomeDialogWindowController.getInstance().getStage().show();
+            wdwc.getStage().show();
 
         } else {
             // Open files passed as arguments by the platform
@@ -469,7 +480,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             String email = recordGlobal.getRegistrationEmail();
             boolean optIn = recordGlobal.isRegistrationOptIn();
 
-            Tracking.sendTrackingInfo(Tracking.SCENEBUILDER_USAGE_TYPE, hash, email, optIn, update);
+            tracking.sendTrackingInfo(Tracking.SCENEBUILDER_USAGE_TYPE, hash, email, optIn, update);
         }
     }
 
@@ -559,7 +570,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     	
         final DocumentWindowController result = sceneBuilderFactory.get(DocumentWindowController.class);
         
-        AppSettings.setWindowIcon(result.getStage());
+        windowIconSetting.setWindowIcon(result.getStage());
 
         windowList.add(result);
         return result;
@@ -817,14 +828,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     
 
     private void showUpdateDialogIfRequired(DocumentWindowController dwc, Runnable runAfterUpdateDialog) {
-        AppSettings.getLatestVersion(latestVersion -> {
+    	versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 // This can be because the url was not reachable so we don't show the update dialog.
                 return;
             }
             try {
                 boolean showUpdateDialog = true;
-                if (AppSettings.isCurrentVersionLowerThan(latestVersion)) {
+                if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
                     PreferencesController pc = PreferencesController.getSingleton();
                     PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
 
@@ -840,11 +851,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 }
 
                 if (showUpdateDialog) {
-                    String latestVersionText = AppSettings.getLatestVersionText();
-                    String latestVersionAnnouncementURL = AppSettings.getLatestVersionAnnouncementURL();
                     Platform.runLater(() -> {
-                        UpdateSceneBuilderDialog dialog = new UpdateSceneBuilderDialog(latestVersion, latestVersionText,
-                                latestVersionAnnouncementURL, dwc.getStage());
+                        UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
                         dialog.setOnHidden(event -> runAfterUpdateDialog.run());
                         dialog.showAndWait();
                     });
@@ -858,7 +866,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     private void checkUpdates(DocumentWindowController source) {
-        AppSettings.getLatestVersion(latestVersion -> {
+    	versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 Platform.runLater(() -> {
                     SBAlert alert = new SBAlert(Alert.AlertType.ERROR, getFrontDocumentWindow().getStage());
@@ -869,12 +877,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 });
             }
             try {
-                if (AppSettings.isCurrentVersionLowerThan(latestVersion)) {
-                    String latestVersionText = AppSettings.getLatestVersionText();
-                    String latestVersionAnnouncementURL = AppSettings.getLatestVersionAnnouncementURL();
+                if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
                     Platform.runLater(() -> {
-                        UpdateSceneBuilderDialog dialog = new UpdateSceneBuilderDialog(latestVersion, latestVersionText,
-                                latestVersionAnnouncementURL, source.getStage());
+                        UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
                         dialog.showAndWait();
                     });
                 } else {
