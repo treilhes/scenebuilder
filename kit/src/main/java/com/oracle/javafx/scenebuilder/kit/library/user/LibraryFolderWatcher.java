@@ -72,12 +72,14 @@ import com.oracle.javafx.scenebuilder.kit.library.util.JarReportEntry;
  */
 class LibraryFolderWatcher implements Runnable {
     
+	private final BuiltinLibrary builtinLibrary;
     private final UserLibrary library;
 
     private enum FILE_TYPE {FXML, JAR, FOLDER_MARKER};
     
-    public LibraryFolderWatcher(UserLibrary library) {
+    public LibraryFolderWatcher(UserLibrary library, BuiltinLibrary builtinLibrary) {
         this.library = library;
+        this.builtinLibrary = builtinLibrary;
     }
 
     /*
@@ -103,7 +105,7 @@ class LibraryFolderWatcher implements Runnable {
      */
     private void runDiscovery() throws InterruptedException {
         // First put the builtin items in the library
-        library.setItems(BuiltinLibrary.getLibrary().getItems());
+        library.setItems(builtinLibrary.getItems());
 
         // Attempts to add the maven jars, including dependencies
         List<Path> additionalJars = library.getAdditionalJarPaths().get();
@@ -210,7 +212,7 @@ class LibraryFolderWatcher implements Runnable {
                             // First put the builtin items in the library
                         	library.setExploring(true);
                         	try {
-                        	    library.setItems(BuiltinLibrary.getLibrary().getItems());
+                        	    library.setItems(builtinLibrary.getItems());
 
                         	    // Now attempts to add the maven jars
                         	    List<Path> currentMavenJars = library.getAdditionalJarPaths().get();
@@ -390,7 +392,6 @@ class LibraryFolderWatcher implements Runnable {
                 .distinct()
                 .collect(Collectors.toList()));
         library.updateJarReports(new ArrayList<>(jarOrFolderReports));
-        library.getOnFinishedUpdatingJarReports().accept(jarOrFolderReports);
         library.updateExplorationDate(new Date());
         
         // 5

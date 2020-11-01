@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.util;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -17,8 +17,15 @@ import org.springframework.beans.factory.config.Scope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.ToggleGroup;
 
 @Component
 public class SceneBuilderBeanFactory {
@@ -84,7 +91,6 @@ public class SceneBuilderBeanFactory {
 	    }
 	}
 	
-	@Component
 	public static class FxmlControllerBeanPostProcessor implements BeanPostProcessor {
 
 		public FxmlControllerBeanPostProcessor() {
@@ -261,5 +267,25 @@ public class SceneBuilderBeanFactory {
 			}
 		}
 
+	}
+
+	public RadioMenuItem createViewRadioMenuItem(String label, ToggleGroup toggleGroup) {
+		RadioMenuItem r = new RadioMenuItem(label);
+		if (toggleGroup != null) {
+			r.setToggleGroup(toggleGroup);
+		}
+		return r;
+	}
+
+	public SeparatorMenuItem createSeparatorMenuItem() {
+		return new SeparatorMenuItem();
+	}
+
+	public MenuItem createViewMenuItem(String label) {
+		return new MenuItem(label);
+	}
+
+	public Menu createViewMenu(String label) {
+		return new Menu(label);
 	}
 }

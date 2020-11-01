@@ -50,7 +50,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;

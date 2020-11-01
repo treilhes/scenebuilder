@@ -43,7 +43,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="libPane" alignment="TOP_LEFT" prefHeight="-1.0" prefWidth="-1.0" styleClass="theme-presets, SBKIT-library-panel, search-pane-background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="libPane" alignment="TOP_LEFT" prefHeight="-1.0" prefWidth="-1.0" styleClass="theme-presets, SBKIT-library-panel, search-pane-background" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <ListView fx:id="libSearchList" prefHeight="-1.0" prefWidth="-1.0" />
     <ListView fx:id="libList" prefHeight="-1.0" prefWidth="-1.0" />

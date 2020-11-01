@@ -89,7 +89,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.stage.Window;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;

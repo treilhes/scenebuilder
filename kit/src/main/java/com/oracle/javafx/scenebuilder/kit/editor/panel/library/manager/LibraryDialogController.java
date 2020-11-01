@@ -46,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
@@ -311,7 +312,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             if (Files.exists(item.getFilePath())) {
                 if (LibraryUtil.isJarPath(item.getFilePath()) || Files.isDirectory(item.getFilePath())) {
                     final ImportWindowController iwc = new ImportWindowController(
-                            new LibraryPanelController(editorController, preferencesControllerBase),
+                            new LibraryPanelController(editorController, preferencesControllerBase, new SceneBuilderBeanFactory()),
                             Arrays.asList(item.getFilePath().toFile()), preferencesControllerBase.getMavenPreferences(),
                             getStage());
                     iwc.setToolStylesheet(editorController.getToolStylesheet());
@@ -339,8 +340,9 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             List<File> files = mavenPreferences.getArtifactFileWithDependencies(mavenArtifact);
             List<String> filter = mavenPreferences.getArtifactFilter(mavenArtifact);
 
+            //TODO remove this constructor call and use bean
             final ImportWindowController iwc = new ImportWindowController(
-                        new LibraryPanelController(editorController, preferencesControllerBase),
+                        new LibraryPanelController(editorController, preferencesControllerBase, new SceneBuilderBeanFactory()),
                                 files, preferencesControllerBase.getMavenPreferences(), getStage(),
                     false, filter);
             iwc.setToolStylesheet(editorController.getToolStylesheet());

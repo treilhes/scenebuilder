@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.info;
 
 import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ToggleFxRootJob;

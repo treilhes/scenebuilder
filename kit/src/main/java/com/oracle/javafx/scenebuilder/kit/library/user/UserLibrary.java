@@ -53,13 +53,13 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
+import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.kit.library.Library;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -69,20 +69,22 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
  *
  * 
  */
-//@Component
-//@Qualifier("user")
 public class UserLibrary extends Library {
     
     public enum State { READY, WATCHING }
 
     public static final String TAG_USER_DEFINED = "Custom"; //NOI18N
+    
+    private final BuiltinLibrary builtinLibrary;
     
     private final String path;
     private final BuiltinSectionComparator sectionComparator
@@ -99,7 +101,9 @@ public class UserLibrary extends Library {
 
     private State state = State.READY;
     private Exception exception;
+    
     private LibraryFolderWatcher watcher;
+    
     private Thread watcherThread;
     // Where we store canonical class names of items we want to exclude from
     // the user defined one displayed in the Library panel.
@@ -108,20 +112,29 @@ public class UserLibrary extends Library {
 
     private Supplier<List<Path>> additionalJarPaths;
     private Supplier<List<String>> additionalFilter;
-    private Consumer<List<JarReport>> onFinishedUpdatingJarReports;
+
+	private UILogger uiLogger;
 
     /*
      * Public
      */
-
+    // Constructor for test only
     public UserLibrary(String path) {
-        this(path, null, null);
+        this(path, null, null, null);
     }
 
-    public UserLibrary(String path, Supplier<List<Path>> additionalJarPaths, Supplier<List<String>> additionalFilter) {
+    public UserLibrary(String path, MavenPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) { 
         this.path = path;
-        this.additionalJarPaths = additionalJarPaths;
-        this.additionalFilter = additionalFilter;
+        this.uiLogger = uiLogger;
+        this.builtinLibrary = builtinLibrary;
+        if (preferences != null) {
+        	this.additionalJarPaths = () -> preferences.getArtifactsPathsWithDependencies();
+            this.additionalFilter = () -> preferences.getArtifactsFilter();
+        }
+        
+        explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
+
+        startWatching();
     }
 
     public void setAdditionalJarPaths(Supplier<List<Path>> additionalJarPaths)
@@ -164,7 +177,7 @@ public class UserLibrary extends Library {
             assert watcher == null;
             assert watcherThread == null;
 
-            watcher = new LibraryFolderWatcher(this);
+            watcher = new LibraryFolderWatcher(this, builtinLibrary);
             watcherThread = new Thread(watcher);
             watcherThread.setName(watcher.getClass().getSimpleName() + "(" + path  + ")"); //NOI18N
             watcherThread.setDaemon(true);
@@ -276,8 +289,20 @@ public class UserLibrary extends Library {
         return res;
     }
 
-    public void setOnUpdatedJarReports(Consumer<List<JarReport>> onFinishedUpdatingJarReports) {
-        this.onFinishedUpdatingJarReports = onFinishedUpdatingJarReports;
+    public void setOnUpdatedJarReports(Consumer<List<? extends JarReport>> onFinishedUpdatingJarReports) {
+        if (this.jarReports.size() > 0) {
+        	onFinishedUpdatingJarReports.accept(this.jarReports);
+        } else {
+        	this.jarReports.addListener(new ListChangeListener<JarReport>() {
+
+				@Override
+				public void onChanged(Change<? extends JarReport> c) {
+					onFinishedUpdatingJarReports.accept(c.getAddedSubList());
+					
+				}
+        		
+        	});
+        }
     }
 
     public final ReadOnlyBooleanProperty firstExplorationCompletedProperty() {
@@ -333,7 +358,9 @@ public class UserLibrary extends Library {
         if (Platform.isFxApplicationThread()) {
             itemsProperty.setAll(items);
         } else {
-            Platform.runLater(() -> itemsProperty.setAll(items));
+            Platform.runLater(() -> {
+            	itemsProperty.setAll(items);
+            });
         }
     }
     
@@ -385,9 +412,9 @@ public class UserLibrary extends Library {
         return additionalFilter;
     }
 
-    Consumer<List<JarReport>> getOnFinishedUpdatingJarReports() {
-        return onFinishedUpdatingJarReports;
-    }
+//    Consumer<List<JarReport>> getOnFinishedUpdatingJarReports() {
+//        return onFinishedUpdatingJarReports;
+//    }
 
     /*
      * Library
@@ -423,6 +450,62 @@ public class UserLibrary extends Library {
         classLoaderProperty.set(newClassLoader);
     }
     
+    private void userLibraryExplorationCountDidChange() {
+        // We can have 0, 1 or N FXML file, same for JAR one.
+        final int numOfFxmlFiles = getFxmlFileReports().size();
+        final int numOfJarFiles = getJarReports().size();
+        final int jarCount = getJarReports().size();
+        final int fxmlCount = getFxmlFileReports().size();
+
+        switch (numOfFxmlFiles + numOfJarFiles) {
+            case 0: // Case 0-0
+                final int previousNumOfJarFiles = getPreviousJarReports().size();
+                final int previousNumOfFxmlFiles = getPreviousFxmlFileReports().size();
+                if (previousNumOfFxmlFiles > 0 || previousNumOfJarFiles > 0) {
+                    uiLogger.logInfoMessage("log.user.exploration.0");
+                }
+                break;
+            case 1:
+                Path path;
+                if (numOfFxmlFiles == 1) { // Case 1-0
+                    path = getFxmlFileReports().get(0);
+                } else { // Case 0-1
+                    path = getJarReports().get(0).getJar();
+                }
+                uiLogger.logInfoMessage("log.user.exploration.1", path.getFileName());
+                break;
+            default:
+                switch (numOfFxmlFiles) {
+                    case 0: // Case 0-N
+                    	uiLogger.logInfoMessage("log.user.jar.exploration.n", jarCount);
+                        break;
+                    case 1:
+                        final Path fxmlName = getFxmlFileReports().get(0).getFileName();
+                        if (numOfFxmlFiles == numOfJarFiles) { // Case 1-1
+                            final Path jarName = getJarReports().get(0).getJar().getFileName();
+                            uiLogger.logInfoMessage("log.user.fxml.jar.exploration.1.1", fxmlName, jarName);
+                        } else { // Case 1-N
+                        	uiLogger.logInfoMessage("log.user.fxml.jar.exploration.1.n", fxmlName, jarCount);
+                        }
+                        break;
+                    default:
+                        switch (numOfJarFiles) {
+                            case 0: // Case N-0
+                            	uiLogger.logInfoMessage("log.user.fxml.exploration.n", fxmlCount);
+                                break;
+                            case 1: // Case N-1
+                                final Path jarName = getJarReports().get(0).getJar().getFileName();
+                                uiLogger.logInfoMessage("log.user.fxml.jar.exploration.n.1", fxmlCount, jarName);
+                                break;
+                            default: // Case N-N
+                            	uiLogger.logInfoMessage("log.user.fxml.jar.exploration.n.n", fxmlCount, jarCount);
+                                break;
+                        }
+                        break;
+                }
+                break;
+        }
+    }
     /*
      * Debug
      */

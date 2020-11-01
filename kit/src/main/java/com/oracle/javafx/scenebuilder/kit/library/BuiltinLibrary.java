@@ -68,7 +68,7 @@ public class BuiltinLibrary extends Library implements InitializingBean {
     public static final String TAG_3D             = "3D"; //NOI18N
 
     
-    private static BuiltinLibrary library = null;
+//    private static BuiltinLibrary library = null;
     
     private final BuiltinSectionComparator sectionComparator
             = new BuiltinSectionComparator();
@@ -88,19 +88,19 @@ public class BuiltinLibrary extends Library implements InitializingBean {
     
     @Override
 	public void afterPropertiesSet() throws Exception {
-    	library = this;
+//    	library = this;
     }
     
     /*
      * Public
      */
     
-    public static synchronized BuiltinLibrary getLibrary() {
-        if (library == null) {
-            library = new BuiltinLibrary();
-        }
-        return library;
-    }
+//    public static synchronized BuiltinLibrary getLibrary() {
+//        if (library == null) {
+//            library = new BuiltinLibrary();
+//        }
+//        return library;
+//    }
     
     public static String getFX8Qualifier() {
         return FX8_QUALIFIER;
@@ -124,7 +124,7 @@ public class BuiltinLibrary extends Library implements InitializingBean {
      */
     
     public static void main(String[] args) {
-        getLibrary();
+        new BuiltinLibrary();
     }
     
     /*

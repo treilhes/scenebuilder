@@ -32,8 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.app.menubar;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory.DocumentScope;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentControlAction;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentEditAction;
@@ -110,6 +110,9 @@ public class MenuBarController implements InitializingBean {
 	
     private static MenuBarController systemMenuBarController; // For Mac only
 
+    @Autowired
+    private BuiltinLibrary builtinLibrary;
+    
     private Menu insertCustomMenu;
     private final DocumentWindowController documentWindowController;
     // This member is null when this MenuBarController is used for
@@ -1443,7 +1446,7 @@ public class MenuBarController implements InitializingBean {
         final Map<String, Set<LibraryItem>> sectionMap
                 = new TreeMap<>(new BuiltinSectionComparator());
 
-        for (LibraryItem li : BuiltinLibrary.getLibrary().getItems()) {
+        for (LibraryItem li : builtinLibrary.getItems()) {
             Set<LibraryItem> sectionItems = sectionMap.get(li.getSection());
             if (sectionItems == null) {
                 sectionItems = new TreeSet<>(new LibraryItemNameComparator());

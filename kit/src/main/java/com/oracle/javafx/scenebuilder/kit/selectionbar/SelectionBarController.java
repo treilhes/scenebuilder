@@ -51,7 +51,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;

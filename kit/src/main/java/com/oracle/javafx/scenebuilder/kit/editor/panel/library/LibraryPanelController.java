@@ -54,11 +54,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
@@ -66,6 +67,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPane
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
+import com.oracle.javafx.scenebuilder.kit.editor.search.SearchController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMArchive;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
@@ -84,15 +86,26 @@ import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -138,7 +151,29 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     @FXML ListView<LibraryListItem> libList = null;
 
     @FXML StackPane libPane;
+	
+    private SceneBuilderBeanFactory sceneBuilderFactory;
+	
+    private RadioMenuItem viewAsList;
+    private RadioMenuItem viewAsSections;
+    private SeparatorMenuItem separator1;
+    private MenuItem manageJarFxml;
+    private MenuItem libraryImportSelection;
+    private SeparatorMenuItem separator2;
+    private Menu customLibraryMenu;
+    private MenuItem libraryReveal;
+    private MenuItem libraryReport;
+	//private final UserLibrary library;
 
+    private EventHandler<ActionEvent> onLibraryViewAsList;
+	private EventHandler<ActionEvent> onLibraryViewAsSections;
+	private EventHandler<ActionEvent> onManageJarFxml;
+	private EventHandler<ActionEvent> onLibraryImportSelection;
+	private EventHandler<ActionEvent> onLibraryRevealCustomFolder;
+	private EventHandler<ActionEvent> onLibraryShowJarAnalysisReport;
+    
+    
+    
     /*
      * Public
      */
@@ -148,8 +183,14 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
      *
      * @param c the editor controller (never null).
      */
-    public LibraryPanelController(EditorController c, PreferencesControllerBase preferencesController) {
+    //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty 
+    public LibraryPanelController(
+    		@Autowired EditorController c, 
+    		@Autowired PreferencesControllerBase preferencesController, 
+    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) { //, UserLibrary library) {
         super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), c); //NOI18N
+        this.sceneBuilderFactory = sceneBuilderFactory;
+        //this.library = library;
         startListeningToLibrary();
         this.mavenPreferences = preferencesController.getMavenPreferences();
     }
@@ -263,6 +304,12 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         assert noSearchResults != null;
         assert libSearchList != null;
         
+        getViewController().setSearchControl(getSearchController().getPanelRoot());
+		getViewController().setContent(super.getPanelRoot());
+		
+		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
+        createLibraryMenu();
+        
         startListeningToDrop();
         setDisplayMode(DISPLAY_MODE.SECTIONS);
         populateLibraryPanel();
@@ -358,7 +405,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         return currentDisplayMode;
     }
     
-    final ListChangeListener<LibraryItem> libraryItemListener = change -> libraryDidChange(null);
+    final ListChangeListener<LibraryItem> libraryItemListener = change -> libraryDidChange();
     
     private final ChangeListener<Library> libraryListener = (ov, t, t1) -> {
         // When a jar is imported this listener is called two times.
@@ -382,7 +429,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     };
     
     private void startListeningToLibrary() {
-        getEditorController().libraryProperty().addListener(libraryListener);
+       getEditorController().libraryProperty().addListener(libraryListener);
     }
     
     // For now there is no scenario where this method might be of some use.
@@ -390,7 +437,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
 //        getEditorController().libraryProperty().removeListener(libraryListener);
 //    }
 
-    void libraryDidChange(Library oldLib) {
+    void libraryDidChange() {
         if (libAccordion != null) {
             // Clear the content of the panel.
             libAccordion.getPanes().clear();
@@ -438,6 +485,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         LinkedHashMap<String, ArrayList<LibraryItem>> libData = new LinkedHashMap<>();
         TreeSet<String> sectionNames = new TreeSet<>(getEditorController().getLibrary().getSectionComparator());
         List<TitledPane> panes = libAccordion.getPanes();
+        
+        getEditorController().getLibrary().getItems().addListener(libraryItemListener);
         
         searchData.clear();
         getLibList().getItems().clear();
@@ -496,6 +545,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
             libSearchList.addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
             getLibList().addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
         }
+        
         // Update animation for all TitledPane
         libAccordion.getPanes().forEach(tp -> tp.setAnimated(animateAccordion));
     }
@@ -560,8 +610,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     
     private final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb
             = param -> new LibraryListCell(getEditorController());
-    
-    private void handleKeyEvent(KeyEvent e) {
+            
+	private void handleKeyEvent(KeyEvent e) {
         // On ENTER we try to insert the item which is selected within the Library.
         if (e.getCode() == KeyCode.ENTER) {
             // This way of doing things requires the use of an @SuppressWarnings("unchecked")
@@ -1120,5 +1170,104 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         
         return libList;
     }
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "XXX";
+	}
+    
+
+	@Override
+	public Parent getPanelRoot() {
+		return getViewController().getPanelRoot();
+	}
+	
+	public void createLibraryMenu() {
+		MenuButton menuButton = getViewController().getViewMenuButton();
+		
+        ToggleGroup libraryDisplayOptionTG = new ToggleGroup();
+        
+        viewAsList = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("library.panel.menu.view.list"), libraryDisplayOptionTG);
+        viewAsSections = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("library.panel.menu.view.sections"), libraryDisplayOptionTG);
+        separator1 = sceneBuilderFactory.createSeparatorMenuItem();
+        manageJarFxml = sceneBuilderFactory.createViewMenuItem(getResources().getString("library.panel.menu.manage.jar.fxml"));
+        libraryImportSelection = sceneBuilderFactory.createViewMenuItem(getResources().getString("library.panel.menu.import.selection"));
+        separator2 = sceneBuilderFactory.createSeparatorMenuItem();
+        customLibraryMenu = sceneBuilderFactory.createViewMenu(getResources().getString("library.panel.menu.custom"));
+        libraryReveal = sceneBuilderFactory.createViewMenuItem("Action 1");
+        libraryReport = sceneBuilderFactory.createViewMenuItem(getResources().getString("library.panel.menu.custom.report"));
+        
+        viewAsList.setOnAction((e) -> this.onLibraryViewAsList.handle(e));
+        viewAsSections.setOnAction((e) -> this.onLibraryViewAsSections.handle(e));
+        manageJarFxml.setOnAction((e) -> this.onManageJarFxml.handle(e));
+        libraryImportSelection.setOnAction((e) -> this.onLibraryImportSelection.handle(e));
+        libraryReveal.setOnAction((e) -> this.onLibraryRevealCustomFolder.handle(e));
+        libraryReport.setOnAction((e) -> this.onLibraryShowJarAnalysisReport.handle(e));
+        
+        customLibraryMenu.getItems().addAll(libraryReveal, libraryReport);
+        menuButton.getItems().addAll(viewAsList, viewAsSections, separator1, manageJarFxml, libraryImportSelection, separator2, customLibraryMenu);
+	}
+	
+
+    public void refreshLibraryDisplayOption(LibraryPanelController.DISPLAY_MODE option) {
+        switch (option) {
+            case LIST:
+                viewAsList.setSelected(true);
+                break;
+            case SECTIONS:
+                viewAsSections.setSelected(true);
+                break;
+            default:
+                assert false;
+                break;
+        }
+        setDisplayMode(option);
+    }
+    
+	public void setOnLibraryViewAsList(EventHandler<ActionEvent> action) {
+		this.onLibraryViewAsList = action;
+	}
+
+	public void setOnLibraryViewAsSections(EventHandler<ActionEvent> action) {
+		this.onLibraryViewAsSections = action;
+	}
+
+	public void setOnManageJarFxml(EventHandler<ActionEvent> action) {
+		this.onManageJarFxml = action;
+	}
+
+	public void setOnLibraryImportSelection(EventHandler<ActionEvent> action) {
+		this.onLibraryImportSelection = action;
+	}
+
+	public void setOnLibraryRevealCustomFolder(EventHandler<ActionEvent> action) {
+		this.onLibraryRevealCustomFolder = action;
+	}
+
+	public void setOnLibraryShowJarAnalysisReport(EventHandler<ActionEvent> action) {
+		this.onLibraryShowJarAnalysisReport = action;
+	}
+
+	public MenuItem getLibraryReveal() {
+		return libraryReveal;
+	}
+
+	public MenuButton getLibraryMenuButton() {
+		return getViewController().getViewMenuButton();
+	}
+
+	public MenuItem getLibraryImportSelection() {
+		return libraryImportSelection;
+	}
+
+	public Menu getCustomLibraryMenu() {
+		return customLibraryMenu;
+	}
+
+	public StringProperty getLibraryLabel() {
+		return getViewController().textProperty();
+	}
+
     
 }

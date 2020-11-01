@@ -52,15 +52,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory.DocumentScope;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentsManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
@@ -78,10 +76,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
@@ -91,7 +87,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModal
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.search.SearchController;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
@@ -112,20 +107,16 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -188,16 +179,21 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final EditorController editorController;
     private final MenuBarController menuBarController;
     private final ContentPanelController contentPanelController;
-    private final AbstractHierarchyPanelController hierarchyPanelController;
-    private final InfoPanelController infoPanelController;
+    
+    //private final AbstractHierarchyPanelController hierarchyPanelController;
+    //private final InfoPanelController infoPanelController;
+    private final DocumentPanelController documentPanelController;
+    
     private final InspectorPanelController inspectorPanelController;
     private final CssPanelController cssPanelController;
+    
     private final LibraryPanelController libraryPanelController;
+    
     private final SelectionBarController selectionBarController;
     private final MessageBarController messageBarController;
-    private SearchController librarySearchController;
-    private SearchController inspectorSearchController;
-    private SearchController cssPanelSearchController;
+    //private SearchController librarySearchController;
+    //private SearchController inspectorSearchController;
+    //private SearchController cssPanelSearchController;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
     private final CssPanelMenuController cssPanelMenuController;
     private final ResourceController resourceController;
@@ -214,35 +210,41 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private JarAnalysisReportController jarAnalysisReportController = null;
     private LibraryDialogController libraryDialogController = null;
     
-    @FXML private StackPane libraryPanelHost;
-    @FXML private StackPane librarySearchPanelHost;
-    @FXML private StackPane hierarchyPanelHost;
-    @FXML private StackPane infoPanelHost;
+    //@FXML private StackPane libraryPanelHost;
+    //@FXML private StackPane librarySearchPanelHost;
+    //@FXML private StackPane hierarchyPanelHost;
+    //@FXML private StackPane infoPanelHost;
     @FXML private StackPane contentPanelHost;
-    @FXML private StackPane inspectorPanelHost;
-    @FXML private StackPane inspectorSearchPanelHost;
-    @FXML private StackPane cssPanelHost;
-    @FXML private StackPane cssPanelSearchPanelHost;
+    //@FXML private StackPane inspectorPanelHost;
+    //@FXML private StackPane inspectorSearchPanelHost;
+    //@FXML private StackPane cssPanelHost;
+    //@FXML private StackPane cssPanelSearchPanelHost;
     @FXML private StackPane messageBarHost;
-    @FXML private Accordion documentAccordion;
+    //@FXML private Accordion documentAccordion;
     @FXML private SplitPane mainSplitPane;
     @FXML private SplitPane leftRightSplitPane;
     @FXML private SplitPane libraryDocumentSplitPane;
-    @FXML private Label libraryLabel;
     
-    @FXML private MenuButton libraryMenuButton;
-    @FXML private MenuItem libraryImportSelection;
-    @FXML private RadioMenuItem libraryViewAsList;
-    @FXML private RadioMenuItem libraryViewAsSections;
-    @FXML private MenuItem libraryReveal;
-    @FXML private Menu customLibraryMenu;
+    @FXML private VBox leftTopHost;
+    @FXML private VBox leftBottomHost;
+    @FXML private VBox rightHost;
+    @FXML private VBox bottomHost;
     
-    @FXML private MenuItem cssPanelShowStyledOnlyMi;
-    @FXML private MenuItem cssPanelSplitDefaultsMi;
+    //@FXML private Label libraryLabel;
     
-    @FXML private RadioMenuItem showInfoMenuItem;
-    @FXML private RadioMenuItem showFxIdMenuItem;
-    @FXML private RadioMenuItem showNodeIdMenuItem;
+    //@FXML private MenuButton libraryMenuButton;
+    //@FXML private MenuItem libraryImportSelection;
+    //@FXML private RadioMenuItem libraryViewAsList;
+    //@FXML private RadioMenuItem libraryViewAsSections;
+    //@FXML private MenuItem libraryReveal;
+    //@FXML private Menu customLibraryMenu;
+    
+    //@FXML private MenuItem cssPanelShowStyledOnlyMi;
+    //@FXML private MenuItem cssPanelSplitDefaultsMi;
+    
+//    @FXML private RadioMenuItem showInfoMenuItem;
+//    @FXML private RadioMenuItem showFxIdMenuItem;
+//    @FXML private RadioMenuItem showNodeIdMenuItem;
 
     private SplitController bottomSplitController;
     private SplitController leftSplitController;
@@ -256,8 +258,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     private EventHandler<KeyEvent> mainKeyEventFilter;
     
-    @Autowired
-    ApplicationContext context;
     /*
      * DocumentWindowController
      */
@@ -270,8 +270,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired MenuBarController menuBarController,
 			
 			@Lazy @Autowired ContentPanelController contentPanelController,
-			@Lazy @Autowired HierarchyPanelController hierarchyPanelController,
-			@Lazy @Autowired InfoPanelController infoPanelController,
+			
+			//@Lazy @Autowired HierarchyPanelController hierarchyPanelController,
+			//@Lazy @Autowired InfoPanelController infoPanelController,
+			@Lazy @Autowired DocumentPanelController documentPanelController,
+			
 			@Lazy @Autowired InspectorPanelController inspectorPanelController,
 			@Lazy @Autowired CssPanelController cssPanelController,
 			@Lazy @Autowired LibraryPanelController libraryPanelController,
@@ -288,8 +291,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.menuBarController = menuBarController;
         
         this.contentPanelController = contentPanelController;
-        this.hierarchyPanelController = hierarchyPanelController;
-        this.infoPanelController = infoPanelController;
+        
+        //this.hierarchyPanelController = hierarchyPanelController;
+        //this.infoPanelController = infoPanelController;
+        this.documentPanelController = documentPanelController;
+        
         this.inspectorPanelController = inspectorPanelController;
         this.cssPanelController = cssPanelController;
         this.libraryPanelController = libraryPanelController;
@@ -305,6 +311,32 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         
         //this.documentManager = documentManager;
         this.editorController.setLibrary(mainController.getUserLibrary());
+        
+        
+        libraryPanelController.setOnLibraryViewAsList(this::onLibraryViewAsList);
+        libraryPanelController.setOnLibraryViewAsSections(this::onLibraryViewAsSections);
+        libraryPanelController.setOnManageJarFxml(this::onManageJarFxml);
+        libraryPanelController.setOnLibraryImportSelection(this::onLibraryImportSelection);
+        libraryPanelController.setOnLibraryRevealCustomFolder(this::onLibraryRevealCustomFolder);
+        libraryPanelController.setOnLibraryShowJarAnalysisReport(this::onLibraryShowJarAnalysisReport);
+        
+        documentPanelController.setOnShowInfo(this::onHierarchyShowInfo);
+        documentPanelController.setOnShowFxId(this::onHierarchyShowFxId);
+        documentPanelController.setOnShowNodeId(this::onHierarchyShowNodeId);
+        
+        inspectorPanelController.setOnShowAll(this::onInspectorShowAllAction);
+        inspectorPanelController.setOnShowEdited(this::onInspectorShowEditedAction);
+        inspectorPanelController.setOnViewAsSections(this::onInspectorViewSectionsAction);
+        inspectorPanelController.setOnViewByPropName(this::onInspectorViewByPropertyNameAction);
+        inspectorPanelController.setOnViewByPropType(this::onInspectorViewByPropertyTypeAction);
+        
+        cssPanelController.setOnViewAsTable(this::onCssPanelViewTableAction);
+        cssPanelController.setOnViewAsRules(this::onCssPanelViewRulesAction);
+        cssPanelController.setOnViewAsText(this::onCssPanelViewTextAction);
+        cssPanelController.setOnCopyPath(this::onCssPanelCopyStyleablePathAction);
+        cssPanelController.setOnDefaultsSplit(this::onCssPanelSplitDefaultsAction);
+        cssPanelController.setOnHideDefaultValues(this::onCssPanelShowStyledOnlyAction);
+        
         mainKeyEventFilter = event -> {
             //------------------------------------------------------------------
             // TEXT INPUT CONTROL
@@ -348,7 +380,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             // Select all is handled natively by TreeView (= hierarchy panel control).
             boolean modifierDown = (EditorPlatform.IS_MAC ? event.isMetaDown() : event.isControlDown());
             boolean isSelectAll = KeyCode.A.equals(event.getCode()) && modifierDown;
-            if (getHierarchyPanelController().getPanelControl().isFocused() && isSelectAll) {
+            if (documentPanelController.getHierarchyPanelController().getPanelControl().isFocused() && isSelectAll) {
                 // Consume the event so the control action is not performed natively.
                 event.consume();
                 // When using system menu bar, the control action is performed by the app.
@@ -372,22 +404,22 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 	
 	
-	@Autowired
-	public void setLibrarySearchController(SearchController librarySearchController) {
-		this.librarySearchController = librarySearchController;
-	}
+//	@Autowired
+//	public void setLibrarySearchController(SearchController librarySearchController) {
+//		this.librarySearchController = librarySearchController;
+//	}
 
 
-	@Autowired
-	public void setInspectorSearchController(SearchController inspectorSearchController) {
-		this.inspectorSearchController = inspectorSearchController;
-	}
+//	@Autowired
+//	public void setInspectorSearchController(SearchController inspectorSearchController) {
+//		this.inspectorSearchController = inspectorSearchController;
+//	}
 
 
-	@Autowired
-	public void setCssPanelSearchController(SearchController cssPanelSearchController) {
-		this.cssPanelSearchController = cssPanelSearchController;
-	}
+//	@Autowired
+//	public void setCssPanelSearchController(SearchController cssPanelSearchController) {
+//		this.cssPanelSearchController = cssPanelSearchController;
+//	}
 
 
 
@@ -407,17 +439,21 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return inspectorPanelController;
     }
     
-    public CssPanelController getCssPanelController() {
+    public DocumentPanelController getDocumentPanelController() {
+		return documentPanelController;
+	}
+
+	public CssPanelController getCssPanelController() {
         return cssPanelController;
     }
     
-    public AbstractHierarchyPanelController getHierarchyPanelController() {
-        return hierarchyPanelController;
-    }
-    
-    public InfoPanelController getInfoPanelController() {
-        return infoPanelController;
-    }
+//    public AbstractHierarchyPanelController getHierarchyPanelController() {
+//        return hierarchyPanelController;
+//    }
+//    
+//    public InfoPanelController getInfoPanelController() {
+//        return infoPanelController;
+//    }
     
     public PreviewWindowController getPreviewWindowController() {
         return previewWindowController;
@@ -507,38 +543,23 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return editorController.getFxmlText(recordGlobal.isWildcardImports());
     }
 
-    public void refreshLibraryDisplayOption(LibraryPanelController.DISPLAY_MODE option) {
-        switch (option) {
-            case LIST:
-                libraryViewAsList.setSelected(true);
-                break;
-            case SECTIONS:
-                libraryViewAsSections.setSelected(true);
-                break;
-            default:
-                assert false;
-                break;
-        }
-        libraryPanelController.setDisplayMode(option);
-    }
-    
-    public void refreshHierarchyDisplayOption(DisplayOption option) {
-        switch(option) {
-            case INFO:
-                showInfoMenuItem.setSelected(true);
-                break;
-            case FXID:
-                showFxIdMenuItem.setSelected(true);
-                break;
-            case NODEID:
-                showNodeIdMenuItem.setSelected(true);
-                break;
-            default:
-                assert false;
-                break;
-        }
-        hierarchyPanelController.setDisplayOption(option);
-    }
+//    public void refreshHierarchyDisplayOption(DisplayOption option) {
+//        switch(option) {
+//            case INFO:
+//                showInfoMenuItem.setSelected(true);
+//                break;
+//            case FXID:
+//                showFxIdMenuItem.setSelected(true);
+//                break;
+//            case NODEID:
+//                showNodeIdMenuItem.setSelected(true);
+//                break;
+//            default:
+//                assert false;
+//                break;
+//        }
+//        hierarchyPanelController.setDisplayOption(option);
+//    }
 
     public void refreshCssTableColumnsOrderingReversed(boolean cssTableColumnsOrderingReversed) {
         cssPanelController.setTableColumnsOrderingReversed(cssTableColumnsOrderingReversed);
@@ -556,7 +577,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     public void animateAccordion(boolean animate) {
         libraryPanelController.animateAccordion(animate);
         inspectorPanelController.animateAccordion(animate);
-        documentAccordion.getPanes().forEach(tp -> tp.setAnimated(animate));
+        documentPanelController.getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(animate));
     }
 
     public void refreshBackgroundImage(PreferencesRecordGlobal preferences) {
@@ -583,18 +604,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public void refreshLibraryDisplayOption(PreferencesRecordGlobal preferences) {
-        refreshLibraryDisplayOption(preferences.getLibraryDisplayOption());
+    	libraryPanelController.refreshLibraryDisplayOption(preferences.getLibraryDisplayOption());
     }
 
     public void refreshHierarchyDisplayOption(PreferencesRecordGlobal preferences) {
-        refreshHierarchyDisplayOption(preferences.getHierarchyDisplayOption());
+        documentPanelController.refreshHierarchyDisplayOption(preferences.getHierarchyDisplayOption());
     }
 
     public void refreshParentRingColor(PreferencesRecordGlobal preferences) {
         Color parentRingColor = preferences.getParentRingColor();
         final ContentPanelController cpc = getContentPanelController();
         cpc.setPringColor(parentRingColor);
-        final AbstractHierarchyPanelController hpc = getHierarchyPanelController();
+        final AbstractHierarchyPanelController hpc = documentPanelController.getHierarchyPanelController();
         hpc.setParentRingColor(parentRingColor);
     }
 
@@ -1097,14 +1118,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
     
     public void initializeCssPanel() {
-        assert cssPanelHost != null;
-        assert cssPanelSearchPanelHost != null;
-        if (cssPanelHost.getChildren().isEmpty()) {
-            cssPanelHost.getChildren().add(cssPanelController.getPanelRoot());
-        }
-        if (cssPanelSearchPanelHost.getChildren().isEmpty()) {
-            cssPanelSearchPanelHost.getChildren().add(cssPanelSearchController.getPanelRoot());
-            addCssPanelSearchListener();
+        assert bottomHost != null;
+        if (!bottomHost.getChildren().contains(cssPanelController.getPanelRoot())) {
+        	bottomHost.getChildren().add(cssPanelController.getPanelRoot());
+        	VBox.setVgrow(cssPanelController.getPanelRoot(), Priority.ALWAYS);
         }
     }
 
@@ -1135,28 +1152,24 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void controllerDidLoadFxml() {
         
-        assert libraryPanelHost != null;
-        assert librarySearchPanelHost != null;
-        assert hierarchyPanelHost != null;
-        assert infoPanelHost != null;
+        assert leftTopHost != null;
+        assert leftBottomHost != null;
+        assert rightHost != null;
+        assert bottomHost != null;
+        
         assert contentPanelHost != null;
-        assert inspectorPanelHost != null;
-        assert inspectorSearchPanelHost != null;
+        //assert inspectorPanelHost != null;
+        //assert inspectorSearchPanelHost != null;
         assert messageBarHost != null;
         assert mainSplitPane != null;
         assert mainSplitPane.getItems().size() == 2;
         assert leftRightSplitPane != null;
-        assert leftRightSplitPane.getItems().size() == 3;
+        assert leftRightSplitPane.getItems().size() == 2;
         assert libraryDocumentSplitPane != null;
-        assert libraryDocumentSplitPane.getItems().size() == 2;
-        assert documentAccordion != null;
-        assert !documentAccordion.getPanes().isEmpty();
-        assert libraryViewAsList != null;
-        assert libraryViewAsSections != null;
-        assert libraryReveal != null;
-        assert libraryMenuButton != null;
-        assert libraryImportSelection != null;
-        assert customLibraryMenu != null;
+//        assert libraryDocumentSplitPane.getItems().size() == 2;
+//        assert documentAccordion != null;
+//        assert !documentAccordion.getPanes().isEmpty();
+        
         
         // Add a border to the Windows app, because of the specific window decoration on Windows.
         if (EditorPlatform.IS_WINDOWS) {
@@ -1170,21 +1183,27 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBarController.getMenuBar());
         
-        libraryPanelHost.getChildren().add(libraryPanelController.getPanelRoot());
-        librarySearchPanelHost.getChildren().add(librarySearchController.getPanelRoot());
-        hierarchyPanelHost.getChildren().add(hierarchyPanelController.getPanelRoot());
-        infoPanelHost.getChildren().add(infoPanelController.getPanelRoot());
+        leftTopHost.getChildren().add(libraryPanelController.getPanelRoot());
+        leftBottomHost.getChildren().add(documentPanelController.getPanelRoot());
+        rightHost.getChildren().add(inspectorPanelController.getPanelRoot());
+        
+        VBox.setVgrow(libraryPanelController.getPanelRoot(), Priority.ALWAYS);
+        VBox.setVgrow(documentPanelController.getPanelRoot(), Priority.ALWAYS);
+        VBox.setVgrow(inspectorPanelController.getPanelRoot(), Priority.ALWAYS);
+        
+        //bottomHost.getChildren().add(cssPanelController.getPanelRoot());
+        
         contentPanelHost.getChildren().add(contentPanelController.getPanelRoot());
-        inspectorPanelHost.getChildren().add(inspectorPanelController.getPanelRoot());
-        inspectorSearchPanelHost.getChildren().add(inspectorSearchController.getPanelRoot());
+        //inspectorPanelHost.getChildren().add(inspectorPanelController.getPanelRoot());
+        //inspectorSearchPanelHost.getChildren().add(inspectorSearchController.getPanelRoot());
         messageBarHost.getChildren().add(messageBarController.getPanelRoot());
         
         messageBarController.getSelectionBarHost().getChildren().add(
                 selectionBarController.getPanelRoot());
         
-        inspectorSearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> inspectorPanelController.setSearchPattern(newStr));
+        //inspectorSearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> inspectorPanelController.setSearchPattern(newStr));
         
-        librarySearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> libraryPanelController.setSearchPattern(newStr));
+        
         
         bottomSplitController = new SplitController(mainSplitPane, SplitController.Target.LAST);
         leftSplitController = new SplitController(leftRightSplitPane, SplitController.Target.FIRST);
@@ -1197,7 +1216,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             contentPanelHost.setPadding(new Insets(h, 0.0, 0.0, 0.0));
         });
         
-        documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
+        //documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
         
         // Monitor the status of the document to set status icon accordingly in message bar
         getEditorController().getJobManager().revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> messageBarController.setDocumentDirty(isDocumentDirty()));
@@ -1212,18 +1231,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             assert EditorPlatform.IS_LINUX;
             revealMenuKey = "menu.title.reveal.linux";
         }
-        libraryReveal.setText(I18N.getString(revealMenuKey));
+        libraryPanelController.getLibraryReveal().setText(I18N.getString(revealMenuKey));
         
         // We need to tune the content of the library menu according if there's
         // or not a selection likely to be dropped onto Library panel.
-        libraryMenuButton.showingProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
+        libraryPanelController.getLibraryMenuButton().showingProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
             if (t1) {
                 AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
-                libraryImportSelection.setDisable(true);
+                libraryPanelController.getLibraryImportSelection().setDisable(true);
 
                 if (asg instanceof ObjectSelectionGroup) {
                     if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
-                        libraryImportSelection.setDisable(false);
+                    	libraryPanelController.getLibraryImportSelection().setDisable(false);
                     }
                 }
                 
@@ -1233,15 +1252,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (lib instanceof UserLibrary) {
                     File userLibDir = new File(((UserLibrary)lib).getPath());
                     if (userLibDir.canRead()) {
-                        customLibraryMenu.setDisable(false);
+                    	libraryPanelController.getCustomLibraryMenu().setDisable(false);
                     } else {
-                        customLibraryMenu.setDisable(true);
+                    	libraryPanelController.getCustomLibraryMenu().setDisable(true);
                     }
                 }
             }
         });
         
-        libraryLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+        libraryPanelController.getLibraryLabel().bind(Bindings.createStringBinding(() -> {
 
             return MainController.getSingleton().getUserLibrary().isExploring() ? I18N.getString("library.exploring") : I18N.getString("library");
 
@@ -1273,8 +1292,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             getStage().setMaximized(true);
         }
         // Give focus to the library search TextField
-        assert librarySearchController != null;
-        librarySearchController.requestFocus();
+        assert libraryPanelController != null;
+        libraryPanelController.getSearchController().requestFocus();
     }
     
     @Override
@@ -1338,28 +1357,23 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //
     // Inspector menu
     //
-    @FXML
     void onInspectorShowAllAction(ActionEvent event) {
         inspectorPanelController.setShowMode(InspectorPanelController.ShowMode.ALL);
         
     }
     
-    @FXML
     void onInspectorShowEditedAction(ActionEvent event) {
         inspectorPanelController.setShowMode(InspectorPanelController.ShowMode.EDITED);
     }
     
-    @FXML
     void onInspectorViewSectionsAction(ActionEvent event) {
         inspectorPanelController.setViewMode(InspectorPanelController.ViewMode.SECTION);
     }
     
-    @FXML
     void onInspectorViewByPropertyNameAction(ActionEvent event) {
         inspectorPanelController.setViewMode(InspectorPanelController.ViewMode.PROPERTY_NAME);
     }
     
-    @FXML
     void onInspectorViewByPropertyTypeAction(ActionEvent event) {
         inspectorPanelController.setViewMode(InspectorPanelController.ViewMode.PROPERTY_TYPE);
     }
@@ -1368,65 +1382,59 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     // CSS menu
     //
     
-    @FXML
     void onCssPanelViewRulesAction(ActionEvent event) {
         cssPanelMenuController.viewRules();
-        cssPanelSplitDefaultsMi.setDisable(true);
-        cssPanelShowStyledOnlyMi.setDisable(true);
+        cssPanelController.getDefaultsSplit().setDisable(true);
+        cssPanelController.getHideDefaultValues().setDisable(true);
     }
 
-    @FXML
     void onCssPanelViewTableAction(ActionEvent event) {
         cssPanelMenuController.viewTable();
-        cssPanelSplitDefaultsMi.setDisable(false);
-        cssPanelShowStyledOnlyMi.setDisable(false);
+        cssPanelController.getDefaultsSplit().setDisable(false);
+        cssPanelController.getHideDefaultValues().setDisable(false);
     }
 
-    @FXML
     void onCssPanelViewTextAction(ActionEvent event) {
         cssPanelMenuController.viewText();
-        cssPanelSplitDefaultsMi.setDisable(true);
-        cssPanelShowStyledOnlyMi.setDisable(true);
+        cssPanelController.getDefaultsSplit().setDisable(true);
+        cssPanelController.getHideDefaultValues().setDisable(true);
     }
 
-    @FXML
     void onCssPanelCopyStyleablePathAction(ActionEvent event) {
         cssPanelMenuController.copyStyleablePath();
     }
 
-    @FXML
     void onCssPanelSplitDefaultsAction(ActionEvent event) {
-        cssPanelMenuController.splitDefaultsAction(cssPanelSplitDefaultsMi);
+        cssPanelMenuController.splitDefaultsAction(cssPanelController.getDefaultsSplit());
     }
 
-    @FXML
     void onCssPanelShowStyledOnlyAction(ActionEvent event) {
-        cssPanelMenuController.showStyledOnly(cssPanelShowStyledOnlyMi);
+        cssPanelMenuController.showStyledOnly(cssPanelController.getHideDefaultValues());
     }
     
     //
     // Hierarchy menu
     //
-    @FXML
     void onHierarchyShowInfo(ActionEvent event) {
-        hierarchyPanelController.setDisplayOption(AbstractHierarchyPanelController.DisplayOption.INFO);
-        documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
+    	documentPanelController.getHierarchyPanelController().setDisplayOption(AbstractHierarchyPanelController.DisplayOption.INFO);
+    	documentPanelController.getDocumentAccordion().setExpandedPane(
+    			documentPanelController.getDocumentAccordion().getPanes().get(0));
 
         updateHierarchyDisplayOption();
     }
     
-    @FXML
     void onHierarchyShowFxId(ActionEvent event) {
-        hierarchyPanelController.setDisplayOption(AbstractHierarchyPanelController.DisplayOption.FXID);
-        documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
+    	documentPanelController.getHierarchyPanelController().setDisplayOption(AbstractHierarchyPanelController.DisplayOption.FXID);
+    	documentPanelController.getDocumentAccordion().setExpandedPane(
+    			documentPanelController.getDocumentAccordion().getPanes().get(0));
 
         updateHierarchyDisplayOption();
     }
     
-    @FXML
     void onHierarchyShowNodeId(ActionEvent event) {
-        hierarchyPanelController.setDisplayOption(AbstractHierarchyPanelController.DisplayOption.NODEID);
-        documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
+    	documentPanelController.getHierarchyPanelController().setDisplayOption(AbstractHierarchyPanelController.DisplayOption.NODEID);
+    	documentPanelController.getDocumentAccordion().setExpandedPane(
+    			documentPanelController.getDocumentAccordion().getPanes().get(0));
 
         updateHierarchyDisplayOption();
     }
@@ -1434,13 +1442,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private void updateHierarchyDisplayOption() {
         // Update preferences
         var recordGlobal = getPreferencesRecordGlobal();
-        recordGlobal.updateHierarchyDisplayOption(hierarchyPanelController.getDisplayOption());
+        recordGlobal.updateHierarchyDisplayOption(
+        		documentPanelController.getHierarchyPanelController().getDisplayOption());
     }
 
     //
     // Library menu
     //
-    @FXML
     public void onManageJarFxml(ActionEvent event) {
         if(libraryDialogController==null){
             libraryDialogController = new LibraryDialogController(editorController, AppSettings.getUserM2Repository(),
@@ -1466,8 +1474,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     public void onImportFromFolder(Window owner) {
         libraryPanelController.performImportFromFolder(owner);
     }
-    
-    @FXML
+
     void onLibraryViewAsList(ActionEvent event) {
         if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
             libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
@@ -1478,7 +1485,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         updateLibraryDisplayOption();
     }
     
-    @FXML
     void onLibraryViewAsSections(ActionEvent event) {
         if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
             libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
@@ -1497,7 +1503,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     // This method cannot be called if there is not a valid selection, a selection
     // eligible for being dropped onto Library panel.
-    @FXML
     void onLibraryImportSelection(ActionEvent event) {
         AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
 
@@ -1509,7 +1514,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
     
-    @FXML
     void onLibraryRevealCustomFolder(ActionEvent event) {
         String userLibraryPath = ((UserLibrary) getEditorController().getLibrary()).getPath();
         try {
@@ -1523,7 +1527,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
     
-    @FXML
     void onLibraryShowJarAnalysisReport(ActionEvent event) {
         if (jarAnalysisReportController == null) {
             jarAnalysisReportController = new JarAnalysisReportController(getEditorController(), getStage());
@@ -1877,13 +1880,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     private void updateStageTitle() {
-        if (libraryPanelHost != null) {
+        if (contentPanelHost != null) {
             getStage().setTitle(Utils.makeTitle(editorController.getFxomDocument()));
         } // else controllerDidLoadFxml() will invoke me again
     }
     
     private void updateFromDocumentPreferences(boolean refreshTheme) {
-        if (libraryPanelHost != null) { // Layout is over
+        if (contentPanelHost != null) { // Layout is over
             // Refresh UI with preferences 
             final PreferencesController pc = PreferencesController.getSingleton();
             // Preferences global to the application
@@ -1937,10 +1940,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
         
         return result;
-    }
-    
-    private void addCssPanelSearchListener() {
-        cssPanelSearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> cssPanelController.setSearchPattern(newStr));
     }
     
     private void performGoToSection(SectionId sectionId) {

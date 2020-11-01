@@ -31,7 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
-import com.oracle.javafx.scenebuilder.api.FxmlController;
+import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import java.io.IOException;
 import java.net.URL;

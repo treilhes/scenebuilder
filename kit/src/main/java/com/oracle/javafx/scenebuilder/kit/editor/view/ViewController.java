@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2017 Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,88 +30,92 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.search;
+package com.oracle.javafx.scenebuilder.kit.editor.view;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
- *
+ * AbstractViewFxmlPanelController is the abstract base class for all the 
+ * view controller which build their UI components from an FXML file.
  * 
+ * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
+ * method in charge of finishing the initialization of the UI components
+ * loaded from the FXML file.
+ * 
+ * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-public class SearchController extends AbstractFxmlController {
+public class ViewController extends AbstractFxmlController {
 
-    @FXML
-    private TextField searchField;
+	@Autowired
+	private DockManager views;
+
+	@FXML private StackPane viewPanelHost;
+    @FXML private StackPane viewSearchPanelHost;
+    @FXML private Label viewLabel;
+    @FXML private MenuButton viewMenuButton;
     
-    // This StackPane contains the searchImage.
-    @FXML
-    private StackPane searchIcon;
-
-    public SearchController(@Autowired EditorController c) {
-        super(SearchController.class.getResource("Search.fxml"), c); //NOI18N
-    }
-
-	public StringProperty textProperty() {
-        return searchField.textProperty();
+    /*
+     * Public
+     */
+	/**
+     * Base constructor for invocation by the subclasses.
+     * 
+     * @param editorController  the editor controller (cannot be null)
+     */
+    public ViewController(@Autowired EditorController c) {
+        super(ViewController.class.getResource("View.fxml"), c);
     }
     
-	public void requestFocus() {
-        searchField.requestFocus();
+    public StringProperty textProperty() {
+        return viewLabel.textProperty();
     }
-
+    
+    public void setContent(Parent content) {
+        viewPanelHost.getChildren().add(content);
+    }
+    
+    public void setSearchControl(Parent searchControl) {
+        viewSearchPanelHost.getChildren().add(searchControl);
+    }
+    
     @Override
     public void controllerDidLoadFxml() {
-        if (searchField.getLength() == 0) {
-            searchIcon.getStyleClass().add("search-magnifying-glass"); //NOI18N
-        }
-        
-        // For SQE tests
-        searchField.setId("Search Text"); //NOI18N
-
-        searchField.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> {
-            if (newStr.isEmpty()) {
-                searchIcon.getStyleClass().clear();
-                searchIcon.getStyleClass().add("search-magnifying-glass"); //NOI18N
-            } else {
-                searchIcon.getStyleClass().clear();
-                searchIcon.getStyleClass().add("search-clear"); //NOI18N
-            }
-        });
-        
-        searchField.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                searchField.clear();
-            }
-        });
-
-        // Select all text when this editor is selected
-        searchField.setOnMousePressed(event -> searchField.selectAll());
-        searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue) {
-                searchField.selectAll();
-            }
-        }));
-        
-        searchIcon.setOnMouseClicked(t -> searchField.clear());
+    	assert viewPanelHost != null;
+        assert viewSearchPanelHost != null;
+        //views.showDockTarget().resubscribe(d -> )
     }
 
+	public MenuButton getViewMenuButton() {
+		return viewMenuButton;
+	}
+
+    
 }

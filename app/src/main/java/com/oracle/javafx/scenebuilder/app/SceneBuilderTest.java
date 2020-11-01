@@ -290,7 +290,7 @@ public class SceneBuilderTest {
             final EditorController ec = dwc.getEditorController();
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
 
-            final AbstractHierarchyPanelController hpc = dwc.getHierarchyPanelController();
+            final AbstractHierarchyPanelController hpc = dwc.getDocumentPanelController().getHierarchyPanelController();
             assert hpc != null;
             assert hpc.getPanelControl() != null;
             if (hpc.getPanelControl().isVisible()) {
@@ -325,7 +325,7 @@ public class SceneBuilderTest {
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
 
             final AbstractHierarchyPanelController hpc 
-                    = dwc.getHierarchyPanelController();
+                    = dwc.getDocumentPanelController().getHierarchyPanelController();
             assert hpc != null;
             assert hpc.getPanelControl() != null;
             // First expand the hierarchy tree

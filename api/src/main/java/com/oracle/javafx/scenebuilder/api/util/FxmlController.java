@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.util;
 
 import java.net.URL;
 import java.util.ResourceBundle;

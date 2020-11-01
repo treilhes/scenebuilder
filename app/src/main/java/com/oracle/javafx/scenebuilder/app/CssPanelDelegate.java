@@ -32,11 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.app;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
@@ -54,7 +55,9 @@ public class CssPanelDelegate extends CssPanelController.Delegate {
     private final InspectorPanelController inspectorController;
     private final DocumentWindowController documentWindowController;
 
-    public CssPanelDelegate(InspectorPanelController inspectorController, DocumentWindowController documentWindowController) {
+    public CssPanelDelegate(
+    		@Autowired InspectorPanelController inspectorController, 
+    		@Lazy @Autowired DocumentWindowController documentWindowController) {
         this.inspectorController = inspectorController;
         this.documentWindowController = documentWindowController;
     }

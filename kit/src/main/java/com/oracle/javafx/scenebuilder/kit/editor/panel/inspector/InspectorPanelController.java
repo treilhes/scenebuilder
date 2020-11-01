@@ -32,29 +32,114 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.Stack;
+import java.util.TreeMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.togglegroup.ModifySelectionToggleGroupJob;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.*;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.AnchorPaneConstraintsEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.BooleanEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.BoundedDoubleEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.ButtonTypeEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.CharsetEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.ColorPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.ColumnResizePolicyEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.CursorEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DividerPositionsEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DurationEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.Editor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EnumEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EventHandlerEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.FunctionalInterfaceEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.FxIdEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.GenericEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.I18nStringEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.ImageEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.IncludeFxmlEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.InsetsEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.IntegerEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.Point3DEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.PropertiesEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.PropertyEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.PropertyEditor.LayoutFormat;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.*;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.RotateEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.StringEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.StringListEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.StyleClassEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.StyleEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.StylesheetEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.TextAlignmentEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.BoundsPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.EffectPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.FontPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.KeyCombinationPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.PaintPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.Rectangle2DPopupEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.*;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMFxIdIndex;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.glossary.Glossary;
+import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.*;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.BooleanPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.BoundsPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.CursorPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoublePropertyMetadata.DoubleKind;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DurationPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EnumerationPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EventHandlerPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.FontPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.FunctionalInterfacePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ImagePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.InsetsPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.IntegerPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.Point3DPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.Rectangle2DPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.TableViewResizePolicyPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ToggleGroupPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.TreeTableViewResizePolicyPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.effect.EffectPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.keycombination.KeyCombinationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.ListValuePropertyMetadata;
@@ -67,11 +152,14 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.ValuePropertyMetadataCla
 import com.oracle.javafx.scenebuilder.kit.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
@@ -79,20 +167,25 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.Map.Entry;
-
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 /**
  *
@@ -101,7 +194,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class InspectorPanelController extends AbstractFxmlPanelController {
+public class InspectorPanelController extends AbstractViewFxmlPanelController {
 
     @FXML
     private TitledPane propertiesTitledPane;
@@ -235,13 +328,33 @@ public class InspectorPanelController extends AbstractFxmlPanelController {
     // Charsets for the properties of included elements
     private Map<String, Charset> availableCharsets;
 
+    private SceneBuilderBeanFactory sceneBuilderFactory;
+    
+    private RadioMenuItem showAll;
+    private RadioMenuItem showEdited;
+    private SeparatorMenuItem separator;
+    private RadioMenuItem viewAsSections;
+    private RadioMenuItem viewByPropName;
+    private RadioMenuItem viewByPropType;
+    
+    private EventHandler<ActionEvent> onShowAll;
+	private EventHandler<ActionEvent> onShowEdited;
+	private EventHandler<ActionEvent> onViewAsSections;
+	private EventHandler<ActionEvent> onViewByPropName;
+	private EventHandler<ActionEvent> onViewByPropType;
+    
+    
     /*
      * Public
      */
-    public InspectorPanelController(EditorController editorController) {
+    public InspectorPanelController(
+    		@Autowired EditorController editorController,
+    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) {
         super(InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
         this.editorController = editorController;
         this.availableCharsets = CharsetEditor.getStandardCharsets();
+        this.sceneBuilderFactory = sceneBuilderFactory;
+        
         viewModeProperty.setValue(ViewMode.SECTION);
         viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
 
@@ -496,6 +609,12 @@ public class InspectorPanelController extends AbstractFxmlPanelController {
         assert accordion != null;
         assert inspectorRoot != null;
 
+        getViewController().setSearchControl(getSearchController().getPanelRoot());
+		getViewController().setContent(super.getPanelRoot());
+		
+		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
+        createLibraryMenu();
+        
         propertiesTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.PROPERTIES));
         layoutTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.LAYOUT));
         codeTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.CODE));
@@ -533,7 +652,31 @@ public class InspectorPanelController extends AbstractFxmlPanelController {
         searchPatternDidChange();
     }
 
-    /*
+    private void createLibraryMenu() {
+    	MenuButton menuButton = getViewController().getViewMenuButton();
+		
+        ToggleGroup showTg = new ToggleGroup();
+        ToggleGroup viewTg = new ToggleGroup();
+        
+        getViewController().textProperty().set(getResources().getString("inspector"));
+        
+        showAll = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.all"), showTg);
+        showEdited = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.edited"), showTg);
+        separator = sceneBuilderFactory.createSeparatorMenuItem();
+        viewAsSections = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.view.sections"), viewTg);
+        viewByPropName = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.by.property.name"), viewTg);
+        viewByPropType = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.by.property.type"), viewTg);
+        
+        showAll.setOnAction((e) -> this.onShowAll.handle(e));
+        showEdited.setOnAction((e) -> this.onShowEdited.handle(e));
+        viewAsSections.setOnAction((e) -> this.onViewAsSections.handle(e));
+        viewByPropName.setOnAction((e) -> this.onViewByPropName.handle(e));
+        viewByPropType.setOnAction((e) -> this.onViewByPropType.handle(e));
+        
+        menuButton.getItems().addAll(showAll, showEdited, separator, viewAsSections, viewByPropName, viewByPropType);
+	}
+
+	/*
      * Private
      */
     private void updateInspector() {
@@ -2440,4 +2583,37 @@ public class InspectorPanelController extends AbstractFxmlPanelController {
         editorToFocus.requestFocus();
     }
 
+    
+	public void setOnShowAll(EventHandler<ActionEvent> onShowAll) {
+		this.onShowAll = onShowAll;
+	}
+
+	public void setOnShowEdited(EventHandler<ActionEvent> onShowEdited) {
+		this.onShowEdited = onShowEdited;
+	}
+
+	public void setOnViewAsSections(EventHandler<ActionEvent> onViewAsSections) {
+		this.onViewAsSections = onViewAsSections;
+	}
+
+	public void setOnViewByPropName(EventHandler<ActionEvent> onViewByPropName) {
+		this.onViewByPropName = onViewByPropName;
+	}
+
+	public void setOnViewByPropType(EventHandler<ActionEvent> onViewByPropType) {
+		this.onViewByPropType = onViewByPropType;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Parent getPanelRoot() {
+		return getViewController().getPanelRoot();
+	}
+
+	
 }

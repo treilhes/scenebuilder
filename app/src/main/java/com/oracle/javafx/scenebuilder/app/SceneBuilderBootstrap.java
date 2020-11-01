@@ -36,13 +36,22 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 
+import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
+import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 
@@ -51,16 +60,18 @@ import javafx.stage.Stage;
 
 @ComponentScan(
 		basePackageClasses = { 
-				PreferencesController.class, 
-				Metadata.class, 
+				PreferencesController.class,
 				BuiltinLibrary.class,
+				Metadata.class, 
 				MenuBarController.class,
 				EditorController.class,
-				SelectionBarController.class
+				SelectionBarController.class,
+				SceneBuilderBeanFactory.class
 		}, 
 		basePackages = {
-				"com.oracle.javafx.scenebuilder.api",
-				"com.oracle.javafx.scenebuilder.app",
+				"com.oracle.javafx.scenebuilder.kit.library.user",
+				"com.oracle.javafx.scenebuilder.api.subjects",
+				"com.oracle.javafx.scenebuilder.app"
 		})
 public class SceneBuilderBootstrap extends JavafxApplication {
 
@@ -156,4 +167,14 @@ public class SceneBuilderBootstrap extends JavafxApplication {
         EffectPicker.getEffectClasses();
     }
 
+    @Bean
+    @Qualifier("userlibrary")
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public UserLibrary getUserLibrary(@Autowired PreferencesController prefController, @Autowired UILogger logger, @Autowired BuiltinLibrary builtinLibrary) {
+    	MavenPreferences mavenPreferences = prefController.getMavenPreferences();
+        // Creates the user library
+        return new UserLibrary(AppPlatform.getUserLibraryFolder(), mavenPreferences, logger, builtinLibrary);
+//                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
+//                () -> mavenPreferences.getArtifactsFilter());
+    }
 }

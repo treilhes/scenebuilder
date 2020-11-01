@@ -31,6 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven;
 
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
@@ -187,7 +188,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
 
                     final ImportWindowController iwc
                             = new ImportWindowController(
-                            new LibraryPanelController(editorController, preferencesControllerBase),
+                            new LibraryPanelController(editorController, preferencesControllerBase, new SceneBuilderBeanFactory()),
                             files, preferencesControllerBase.getMavenPreferences(),
                             (Stage)installButton.getScene().getWindow(), false,
                                 preferencesControllerBase.getMavenPreferences().getArtifactsFilter());

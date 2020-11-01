@@ -32,30 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.css;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.BeanPropertyState;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState.CssStyle;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.PropertyState;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssValuePresenterFactory.CssValuePresenter;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.NodeCssState.CssProperty;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.SelectionPath.Item;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.SelectionPath.Path;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -63,11 +39,42 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
+import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.BeanPropertyState;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState.CssStyle;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.PropertyState;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssValuePresenterFactory.CssValuePresenter;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.NodeCssState.CssProperty;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.SelectionPath.Item;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.css.SelectionPath.Path;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
@@ -88,7 +95,28 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Separator;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Skin;
+import javafx.scene.control.Skinnable;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -111,7 +139,7 @@ import javafx.util.Duration;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class CssPanelController extends AbstractFxmlPanelController {
+public class CssPanelController extends AbstractViewFxmlPanelController {
 
     @FXML
     private StackPane cssPanelHost;
@@ -183,6 +211,24 @@ public class CssPanelController extends AbstractFxmlPanelController {
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
+    private SceneBuilderBeanFactory sceneBuilderFactory;
+    
+    private Menu viewAs;
+    private RadioMenuItem viewAsTable;
+    private RadioMenuItem viewAsRules;
+    private RadioMenuItem viewAsText;
+    private SeparatorMenuItem separator;
+    private MenuItem copyPath;
+    private MenuItem hideDefaultValues;
+    private MenuItem defaultsSplit;
+    
+    private EventHandler<ActionEvent> onViewAsTable;
+	private EventHandler<ActionEvent> onViewAsRules;
+	private EventHandler<ActionEvent> onViewAsText;
+	private EventHandler<ActionEvent> onCopyPath;
+	private EventHandler<ActionEvent> onHideDefaultValues;
+	private EventHandler<ActionEvent> onDefaultsSplit;
+	
     /**
      * Should be implemented by the application.
      *
@@ -242,6 +288,13 @@ public class CssPanelController extends AbstractFxmlPanelController {
      */
     @Override
     public void controllerDidLoadFxml() {
+    	
+    	getViewController().setSearchControl(getSearchController().getPanelRoot());
+		getViewController().setContent(super.getPanelRoot());
+		
+		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
+        createLibraryMenu();
+        
         // Remove scrollPane for rules
         root.getChildren().remove(rulesPane);
         root.getChildren().remove(textPane);
@@ -316,6 +369,40 @@ public class CssPanelController extends AbstractFxmlPanelController {
 
         editorSelectionDidChange();
     }
+    
+    private void createLibraryMenu() {
+    	MenuButton menuButton = getViewController().getViewMenuButton();
+		
+        ToggleGroup cssTableTg = new ToggleGroup();
+        
+        getViewController().textProperty().set(getResources().getString("csspanel"));
+        
+        viewAs = sceneBuilderFactory.createViewMenu(
+        		getResources().getString("csspanel.view.as"));
+    	viewAsTable = sceneBuilderFactory.createViewRadioMenuItem(
+    			getResources().getString("csspanel.table"), cssTableTg);
+    	viewAsRules = sceneBuilderFactory.createViewRadioMenuItem(
+    			getResources().getString("csspanel.rules"), cssTableTg);
+    	viewAsText = sceneBuilderFactory.createViewRadioMenuItem(
+    			getResources().getString("csspanel.text"), cssTableTg);
+        separator = sceneBuilderFactory.createSeparatorMenuItem();
+        copyPath = sceneBuilderFactory.createViewMenuItem(
+        		getResources().getString("csspanel.copy.path"));
+        hideDefaultValues = sceneBuilderFactory.createViewMenuItem(
+        		getResources().getString("csspanel.hide.default.values"));
+        defaultsSplit = sceneBuilderFactory.createViewMenuItem(
+        		getResources().getString("csspanel.defaults.split"));
+        
+        viewAsTable.setOnAction((e) -> this.onViewAsTable.handle(e));
+        viewAsRules.setOnAction((e) -> this.onViewAsRules.handle(e));
+        viewAsText.setOnAction((e) -> this.onViewAsText.handle(e));
+        copyPath.setOnAction((e) -> this.onCopyPath.handle(e));
+        hideDefaultValues.setOnAction((e) -> this.onHideDefaultValues.handle(e));
+        defaultsSplit.setOnAction((e) -> this.onDefaultsSplit.handle(e));
+        
+        viewAs.getItems().addAll(viewAsTable, viewAsRules, viewAsText);
+        menuButton.getItems().addAll(viewAs, separator, copyPath, hideDefaultValues, defaultsSplit);
+	}
 
     private static class ValueFactory implements Callback<TableColumn.CellDataFeatures<CssProperty, CssProperty>, ObservableValue<CssProperty>> {
 
@@ -389,10 +476,14 @@ public class CssPanelController extends AbstractFxmlPanelController {
      * Public
      *
      */
-    public CssPanelController(EditorController c, Delegate delegate) {
+    public CssPanelController(
+    		@Autowired EditorController c, 
+    		@Autowired Delegate delegate,
+    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) {
         super(CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), c);
         this.editorController = c;
         this.applicationDelegate = delegate;
+        this.sceneBuilderFactory = sceneBuilderFactory;
     }
 
     public String getSearchPattern() {
@@ -2168,4 +2259,48 @@ public class CssPanelController extends AbstractFxmlPanelController {
         parent.getChildren().add(item);
     }
 
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Parent getPanelRoot() {
+		return getViewController().getPanelRoot();
+	}
+
+	public void setOnViewAsTable(EventHandler<ActionEvent> onViewAsTable) {
+		this.onViewAsTable = onViewAsTable;
+	}
+
+	public void setOnViewAsRules(EventHandler<ActionEvent> onViewAsRules) {
+		this.onViewAsRules = onViewAsRules;
+	}
+
+	public void setOnViewAsText(EventHandler<ActionEvent> onViewAsText) {
+		this.onViewAsText = onViewAsText;
+	}
+
+	public void setOnCopyPath(EventHandler<ActionEvent> onCopyPath) {
+		this.onCopyPath = onCopyPath;
+	}
+
+	public void setOnHideDefaultValues(EventHandler<ActionEvent> onHideDefaultValues) {
+		this.onHideDefaultValues = onHideDefaultValues;
+	}
+
+	public void setOnDefaultsSplit(EventHandler<ActionEvent> onDefaultsSplit) {
+		this.onDefaultsSplit = onDefaultsSplit;
+	}
+
+	public MenuItem getHideDefaultValues() {
+		return hideDefaultValues;
+	}
+
+	public MenuItem getDefaultsSplit() {
+		return defaultsSplit;
+	}
+
+	
 }

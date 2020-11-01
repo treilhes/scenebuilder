@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -53,9 +52,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderBeanFactory.DocumentScope;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentsManager;
+import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.i18n.I18N;
@@ -87,7 +87,6 @@ import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -96,7 +95,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 @Component
-public class MainController implements AppPlatform.AppNotificationHandler, ApplicationListener<JavafxApplication.StageReadyEvent> {
+public class MainController implements AppPlatform.AppNotificationHandler, ApplicationListener<JavafxApplication.StageReadyEvent>, UILogger {
 
     public enum ApplicationControlAction {
 
@@ -129,10 +128,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     SceneBuilderBeanFactory sceneBuilderFactory;
     
     @Autowired
-    DocumentsManager documentsManager;
+    DocumentManager documentsManager;
+    
+    @Autowired
+    private UserLibrary userLibrary;
     
     private final ObservableList<DocumentWindowController> windowList = FXCollections.observableArrayList();
-    private UserLibrary userLibrary;
+    
+    //private UserLibrary userLibrary;
+    
     private ToolTheme toolTheme = ToolTheme.DEFAULT;
 
 
@@ -269,6 +273,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         closeWindow(fromWindow);
     }
 
+    //TODO comment this
     public UserLibrary getUserLibrary() {
         return userLibrary;
     }
@@ -377,10 +382,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         MavenPreferences mavenPreferences = PreferencesController.getSingleton().getMavenPreferences();
         // Creates the user library
-        userLibrary = new UserLibrary(AppPlatform.getUserLibraryFolder(),
-                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
-                () -> mavenPreferences.getArtifactsFilter());
+//        userLibrary = new UserLibrary(AppPlatform.getUserLibraryFolder(),
+//                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
+//                () -> mavenPreferences.getArtifactsFilter());
 
+        userLibrary = context.getBean(UserLibrary.class);
         userLibrary.setOnUpdatedJarReports(jarReports -> {
             boolean shouldShowImportGluonJarAlert = false;
             for (JarReport jarReport : jarReports) {
@@ -411,9 +417,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             updateImportedGluonJars(jarReports);
         });
 
-        userLibrary.explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
-
-        userLibrary.startWatching();
+//        userLibrary.explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
+//
+//        userLibrary.startWatching();
 
         sendTrackingStartupInfo();
 
@@ -808,62 +814,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     
     
 
-    private void userLibraryExplorationCountDidChange() {
-        // We can have 0, 1 or N FXML file, same for JAR one.
-        final int numOfFxmlFiles = userLibrary.getFxmlFileReports().size();
-        final int numOfJarFiles = userLibrary.getJarReports().size();
-        final int jarCount = userLibrary.getJarReports().size();
-        final int fxmlCount = userLibrary.getFxmlFileReports().size();
-
-        switch (numOfFxmlFiles + numOfJarFiles) {
-            case 0: // Case 0-0
-                final int previousNumOfJarFiles = userLibrary.getPreviousJarReports().size();
-                final int previousNumOfFxmlFiles = userLibrary.getPreviousFxmlFileReports().size();
-                if (previousNumOfFxmlFiles > 0 || previousNumOfJarFiles > 0) {
-                    logInfoMessage("log.user.exploration.0");
-                }
-                break;
-            case 1:
-                Path path;
-                if (numOfFxmlFiles == 1) { // Case 1-0
-                    path = userLibrary.getFxmlFileReports().get(0);
-                } else { // Case 0-1
-                    path = userLibrary.getJarReports().get(0).getJar();
-                }
-                logInfoMessage("log.user.exploration.1", path.getFileName());
-                break;
-            default:
-                switch (numOfFxmlFiles) {
-                    case 0: // Case 0-N
-                        logInfoMessage("log.user.jar.exploration.n", jarCount);
-                        break;
-                    case 1:
-                        final Path fxmlName = userLibrary.getFxmlFileReports().get(0).getFileName();
-                        if (numOfFxmlFiles == numOfJarFiles) { // Case 1-1
-                            final Path jarName = userLibrary.getJarReports().get(0).getJar().getFileName();
-                            logInfoMessage("log.user.fxml.jar.exploration.1.1", fxmlName, jarName);
-                        } else { // Case 1-N
-                            logInfoMessage("log.user.fxml.jar.exploration.1.n", fxmlName, jarCount);
-                        }
-                        break;
-                    default:
-                        switch (numOfJarFiles) {
-                            case 0: // Case N-0
-                                logInfoMessage("log.user.fxml.exploration.n", fxmlCount);
-                                break;
-                            case 1: // Case N-1
-                                final Path jarName = userLibrary.getJarReports().get(0).getJar().getFileName();
-                                logInfoMessage("log.user.fxml.jar.exploration.n.1", fxmlCount, jarName);
-                                break;
-                            default: // Case N-N
-                                logInfoMessage("log.user.fxml.jar.exploration.n.n", fxmlCount, jarCount);
-                                break;
-                        }
-                        break;
-                }
-                break;
-        }
-    }
+    
 
     private void showUpdateDialogIfRequired(DocumentWindowController dwc, Runnable runAfterUpdateDialog) {
         AppSettings.getLatestVersion(latestVersion -> {
@@ -979,19 +930,19 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
     }
 
-    private void logInfoMessage(String key) {
+    public void logInfoMessage(String key) {
         for (DocumentWindowController dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle());
         }
     }
 
-    private void logInfoMessage(String key, Object... args) {
+    public void logInfoMessage(String key, Object... args) {
         for (DocumentWindowController dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
         }
     }
 
-    private static void updateImportedGluonJars(List<JarReport> jars) {
+    private static void updateImportedGluonJars(List<? extends JarReport> jars) {
         PreferencesController pc = PreferencesController.getSingleton();
         PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
         List<String> jarReportCollection = new ArrayList<>();
