@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.fxom.sampledata;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -54,7 +55,7 @@ class TreeTableViewSampleData extends AbstractSampleData {
         sampleRoot.setExpanded(true);
         for (int j = 0; j<10; j++) {
             final Rectangle r = new Rectangle(10, 10);
-            r.setFill(TreeTableViewSampleData.color(i));
+            r.setFill(AbstractSampleData.color(i));
             TreeItem<SampleDataItem> child = new TreeItem<>(new SampleDataItem(i++));
             child.setExpanded(true);
             child.setGraphic(r);
@@ -62,7 +63,7 @@ class TreeTableViewSampleData extends AbstractSampleData {
                 final TreeItem<SampleDataItem> child2 = new TreeItem<>(new SampleDataItem(i++));
                 child2.setExpanded(true);
                 final Circle c = new Circle(5);
-                c.setFill(TreeTableViewSampleData.color(i));
+                c.setFill(AbstractSampleData.color(i));
                 child2.setGraphic(c);
                 child.getChildren().add(child2);
             }
@@ -163,7 +164,7 @@ class TreeTableViewSampleData extends AbstractSampleData {
         }
         
         public String getProp() {
-            return TreeTableViewSampleData.lorem(index);
+            return AbstractSampleData.lorem(index);
         }
     }
 }

@@ -31,15 +31,18 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import java.util.List;
+
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 
 /**
  *
@@ -67,16 +70,16 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         
         this.targetAccessory = targetAccessory;
         
-        topLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        topLabel.setMaxSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        bottomLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        bottomLabel.setMaxSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        leftLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        leftLabel.setMaxSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        rightLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        rightLabel.setMaxSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        centerLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-        centerLabel.setMaxSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
+        topLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        topLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        bottomLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        bottomLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        leftLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        leftLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        rightLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        rightLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        centerLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        centerLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         topLabel.setText(Accessory.TOP.toString());
         bottomLabel.setText(Accessory.BOTTOM.toString());
@@ -107,10 +110,10 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         borderPane.setLeft(leftLabel);
         borderPane.setRight(rightLabel);
         borderPane.setCenter(centerLabel);
-        borderPane.setMinWidth(BorderPane.USE_PREF_SIZE);
-        borderPane.setMinHeight(BorderPane.USE_PREF_SIZE);
-        borderPane.setMaxWidth(BorderPane.USE_PREF_SIZE);
-        borderPane.setMaxHeight(BorderPane.USE_PREF_SIZE);
+        borderPane.setMinWidth(Region.USE_PREF_SIZE);
+        borderPane.setMinHeight(Region.USE_PREF_SIZE);
+        borderPane.setMaxWidth(Region.USE_PREF_SIZE);
+        borderPane.setMaxHeight(Region.USE_PREF_SIZE);
         
         getRootNode().getChildren().add(0, borderPane);
     }

@@ -31,9 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+
 import javafx.stage.Window;
 
 /**

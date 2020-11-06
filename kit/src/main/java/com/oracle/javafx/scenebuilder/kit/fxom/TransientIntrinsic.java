@@ -31,10 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.fxom;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueElement;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueElement;
 
 /**
  *

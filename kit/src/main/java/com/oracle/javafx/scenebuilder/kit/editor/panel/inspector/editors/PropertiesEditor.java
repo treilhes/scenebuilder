@@ -31,10 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-
-import java.util.List;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;

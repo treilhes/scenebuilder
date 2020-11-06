@@ -32,18 +32,19 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
-import javafx.geometry.Point2D;
-import javafx.scene.shape.Line;
-
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Line;
 
 public class LineEditor extends AbstractCurveEditor<Line> {
 

@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.AbstractMouseDragGesture;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+
 import javafx.scene.input.MouseEvent;
 
 /**

@@ -32,9 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.css;
 
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
-import java.util.Set;
+
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableProperty;

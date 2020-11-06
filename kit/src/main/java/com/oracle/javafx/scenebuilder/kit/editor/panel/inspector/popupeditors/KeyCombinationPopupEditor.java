@@ -31,12 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.AutoSuggestEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +40,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.AutoSuggestEditor;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

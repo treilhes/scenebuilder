@@ -31,6 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +41,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;

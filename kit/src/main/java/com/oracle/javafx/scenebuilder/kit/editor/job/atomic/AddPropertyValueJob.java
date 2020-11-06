@@ -37,7 +37,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import javafx.stage.Stage;
 
 /**
  *
@@ -99,7 +98,7 @@ public class AddPropertyValueJob extends Job {
         value.addToParentProperty(targetIndex, targetProperty);
         getEditorController().getFxomDocument().endUpdate();
 
-        WarnThemeAlert.showAlertIfRequired(getEditorController(), value, (Stage)getEditorController().getOwnerWindow());
+        WarnThemeAlert.showAlertIfRequired(getEditorController(), value, getEditorController().getOwnerWindow());
 
         assert value.getParentProperty() == targetProperty;
         assert value.getParentCollection() == null;

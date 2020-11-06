@@ -32,13 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.library.util;
 
+import java.nio.file.Path;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

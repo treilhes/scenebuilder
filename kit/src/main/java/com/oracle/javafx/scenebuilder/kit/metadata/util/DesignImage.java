@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.kit.metadata.util;
 
 import java.net.URL;
+
 import javafx.scene.image.Image;
 
 /**

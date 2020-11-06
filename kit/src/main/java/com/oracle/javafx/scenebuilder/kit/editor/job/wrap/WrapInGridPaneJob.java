@@ -31,21 +31,24 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 
+import static com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.OVERLAP_FUZZ;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.JobUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.GridCourse;
-import static com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.OVERLAP_FUZZ;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;

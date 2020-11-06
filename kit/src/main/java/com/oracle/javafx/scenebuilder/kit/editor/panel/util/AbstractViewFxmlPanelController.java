@@ -43,7 +43,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.search.SearchController;
 import com.oracle.javafx.scenebuilder.kit.editor.view.ViewController;
 
-import javafx.scene.Parent;
 import lombok.Getter;
 
 /**

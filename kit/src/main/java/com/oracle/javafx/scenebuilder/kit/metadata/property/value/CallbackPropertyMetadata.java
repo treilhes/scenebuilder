@@ -31,6 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value;
 
+import java.util.Objects;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
@@ -39,7 +41,7 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.Objects;
+
 import javafx.util.Callback;
 
 /**

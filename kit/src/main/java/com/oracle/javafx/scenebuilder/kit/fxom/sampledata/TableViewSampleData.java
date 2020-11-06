@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.fxom.sampledata;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -145,7 +146,7 @@ class TableViewSampleData extends AbstractSampleData {
         }
         
         public String getProp() {
-            return TableViewSampleData.lorem(index);
+            return AbstractSampleData.lorem(index);
         }
     }
 }

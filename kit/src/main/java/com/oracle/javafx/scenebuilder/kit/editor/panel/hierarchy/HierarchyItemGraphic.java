@@ -31,12 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
+import java.net.URL;
+import java.util.Objects;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import java.net.URL;
-import java.util.Objects;
+
 import javafx.scene.image.Image;
 
 /**

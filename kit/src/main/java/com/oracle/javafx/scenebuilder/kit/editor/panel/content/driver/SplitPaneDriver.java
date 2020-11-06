@@ -38,6 +38,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.Ab
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.RegionResizer;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 

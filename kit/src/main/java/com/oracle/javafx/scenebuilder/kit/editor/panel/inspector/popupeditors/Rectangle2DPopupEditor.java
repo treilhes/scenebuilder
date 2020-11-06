@@ -31,12 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors;
 
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleField;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-
-import java.util.Set;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

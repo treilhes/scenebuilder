@@ -31,7 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,7 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.eclipse.aether.artifact.DefaultArtifact;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 
 public class LocalSearch implements Search {
             

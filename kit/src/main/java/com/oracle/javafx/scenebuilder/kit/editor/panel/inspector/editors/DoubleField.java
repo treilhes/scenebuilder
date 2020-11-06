@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
 import java.util.Locale;
+
 import javafx.scene.input.Clipboard;
 
 /**

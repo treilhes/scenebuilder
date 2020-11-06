@@ -31,14 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleField;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -47,8 +47,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Slider;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

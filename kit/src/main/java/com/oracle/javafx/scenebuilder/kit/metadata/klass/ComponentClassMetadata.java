@@ -32,11 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.klass;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.property.PropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 /**
  *

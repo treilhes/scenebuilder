@@ -32,10 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
-import javafx.scene.control.skin.TabPaneSkin;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

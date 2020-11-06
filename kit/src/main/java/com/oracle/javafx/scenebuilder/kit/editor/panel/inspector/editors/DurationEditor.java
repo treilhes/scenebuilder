@@ -32,9 +32,16 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.util.SBDuration;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -43,12 +50,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Editor for Duration properties.
@@ -217,7 +218,8 @@ public class DurationEditor extends AutoSuggestEditor{
         return convertedValue;
     }
 
-    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses) {
+    @Override
+	public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses) {
         super.reset(propMeta, selectedClasses, new ArrayList<>(constants.keySet()));
     }
 

@@ -31,8 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

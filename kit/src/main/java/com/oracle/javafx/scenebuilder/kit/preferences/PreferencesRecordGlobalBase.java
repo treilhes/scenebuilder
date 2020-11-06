@@ -1,13 +1,14 @@
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-
 import java.net.URL;
 import java.util.prefs.Preferences;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 public abstract class PreferencesRecordGlobalBase {
 

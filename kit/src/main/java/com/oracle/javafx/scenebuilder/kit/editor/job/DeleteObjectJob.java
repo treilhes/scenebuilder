@@ -31,14 +31,16 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.reference.ObjectDeleter;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.ArrayList;
-import java.util.List;
+
 import javafx.scene.Scene;
 import javafx.scene.chart.Axis;
 

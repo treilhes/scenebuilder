@@ -31,11 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;

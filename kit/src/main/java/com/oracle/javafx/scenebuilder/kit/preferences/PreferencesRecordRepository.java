@@ -31,11 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 /**
  * Defines repository preferences global to the application.

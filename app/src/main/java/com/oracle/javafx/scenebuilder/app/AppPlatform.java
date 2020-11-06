@@ -32,17 +32,20 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
-import com.oracle.javafx.scenebuilder.app.util.MessageBox;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import static com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.IS_LINUX;
 import static com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.IS_MAC;
 import static com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.IS_WINDOWS;
+
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.app.util.MessageBox;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 

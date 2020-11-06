@@ -32,15 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.fxom;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueInstruction;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueDocument;
+import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueInstruction;
 
 import javafx.fxml.FXMLLoader;
 

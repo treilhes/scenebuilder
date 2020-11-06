@@ -31,10 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.util;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *

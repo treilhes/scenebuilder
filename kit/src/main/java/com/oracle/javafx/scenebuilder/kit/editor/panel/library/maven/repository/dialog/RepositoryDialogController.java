@@ -31,14 +31,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.dialog;
 
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordRepository;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordRepository;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;

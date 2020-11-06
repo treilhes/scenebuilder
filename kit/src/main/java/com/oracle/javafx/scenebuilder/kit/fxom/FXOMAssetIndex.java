@@ -32,10 +32,6 @@
 
 package com.oracle.javafx.scenebuilder.kit.fxom;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.StringListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.URLUtils;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -45,6 +41,12 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.StringListPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.util.URLUtils;
+
 import javafx.fxml.FXMLLoader;
 
 /**

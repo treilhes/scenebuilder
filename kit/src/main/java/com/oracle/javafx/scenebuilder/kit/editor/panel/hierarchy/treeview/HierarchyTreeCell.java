@@ -32,6 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview;
 
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
@@ -39,21 +44,20 @@ import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AccessoryDropTarget
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyDNDController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyDNDController.DroppingMouseLocation;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
 import com.oracle.javafx.scenebuilder.kit.editor.report.CSSParsingReport;
-import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
-import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController.Type;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReport;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportEntry;
+import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
+import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController.Type;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
@@ -67,33 +71,28 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Set;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.CssParser;
 import javafx.event.EventHandler;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -101,6 +100,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -190,7 +190,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         displayInfoLabel.getStyleClass().add(HIERARCHY_READWRITE_LABEL);
         placeHolderLabel.getStyleClass().add(HIERARCHY_PLACE_HOLDER_LABEL);
         // Layout
-        classNameInfoLabel.setMinWidth(Control.USE_PREF_SIZE);
+        classNameInfoLabel.setMinWidth(Region.USE_PREF_SIZE);
         displayInfoLabel.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(displayInfoLabel, Priority.ALWAYS);
 

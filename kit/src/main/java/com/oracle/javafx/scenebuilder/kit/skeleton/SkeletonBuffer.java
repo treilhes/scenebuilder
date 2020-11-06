@@ -32,18 +32,23 @@
  */
 package com.oracle.javafx.scenebuilder.kit.skeleton;
 
+import java.lang.reflect.TypeVariable;
+import java.net.URL;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.util.eventnames.EventNames;
-import com.oracle.javafx.scenebuilder.kit.util.eventnames.ImportBuilder;
-import com.oracle.javafx.scenebuilder.kit.util.eventnames.FindEventNamesUtil;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
-import javafx.fxml.FXML;
+import com.oracle.javafx.scenebuilder.kit.util.eventnames.EventNames;
+import com.oracle.javafx.scenebuilder.kit.util.eventnames.FindEventNamesUtil;
+import com.oracle.javafx.scenebuilder.kit.util.eventnames.ImportBuilder;
 
-import java.lang.reflect.TypeVariable;
-import java.net.URL;
-import java.util.*;
+import javafx.fxml.FXML;
 
 /**
  *

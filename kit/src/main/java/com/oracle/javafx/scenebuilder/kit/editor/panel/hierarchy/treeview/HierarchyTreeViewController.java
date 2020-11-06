@@ -31,17 +31,18 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
+import static javafx.geometry.Orientation.HORIZONTAL;
 
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import static javafx.geometry.Orientation.HORIZONTAL;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Cell;

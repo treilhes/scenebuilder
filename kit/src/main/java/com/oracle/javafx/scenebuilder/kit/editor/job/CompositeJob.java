@@ -31,8 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 /**
  * This Job handles a list of sub jobs and a description.

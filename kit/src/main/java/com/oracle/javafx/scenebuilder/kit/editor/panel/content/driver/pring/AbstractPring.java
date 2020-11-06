@@ -35,6 +35,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoratio
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.Node;
 import javafx.scene.paint.Paint;
 

@@ -38,8 +38,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
 import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
@@ -116,7 +116,7 @@ public class UpdateSceneBuilderDialog extends Dialog {
         resultProperty().addListener((observable, oldValue, newValue) -> {
             HostServices hostServices = MainController.getSingleton().getHostServices();
             if (newValue == downloadButton) {
-                hostServices.showDocument(versionSetting.DOWNLOAD_URL);
+                hostServices.showDocument(VersionSetting.DOWNLOAD_URL);
             } else if (newValue == remindLater) {
                 LocalDate now = LocalDate.now();
                 LocalDate futureDate = now.plusWeeks(1);

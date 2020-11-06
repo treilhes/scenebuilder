@@ -33,11 +33,8 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.manager;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

@@ -32,18 +32,19 @@
 
 package com.oracle.javafx.scenebuilder.kit.template;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowController {
 

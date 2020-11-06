@@ -32,24 +32,26 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.drag.target;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ClearSelectionJob;
+import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
+import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.UpdateSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.GridSnapshot;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.InsertColumnJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.InsertRowJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.MoveCellContentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ClearSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.UpdateSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.util.GridBounds;
-import java.util.List;
+
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 

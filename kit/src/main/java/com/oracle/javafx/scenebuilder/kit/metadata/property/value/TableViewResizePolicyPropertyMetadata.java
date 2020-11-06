@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.kit.metadata.property.value;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 

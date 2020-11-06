@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ImagePropertyM
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.scene.effect.ImageInput;
 
 /**

@@ -32,11 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.util.GridBounds;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.kit.util.GridBounds;
 
 /**
  *

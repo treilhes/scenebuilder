@@ -31,8 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,7 +43,6 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferences;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.codehaus.plexus.util.FileUtils;
@@ -86,6 +83,10 @@ import org.eclipse.aether.util.artifact.JavaScopes;
 import org.eclipse.aether.util.filter.DependencyFilterUtils;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
+import com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferences;
 
 public class MavenRepositorySystem {
 

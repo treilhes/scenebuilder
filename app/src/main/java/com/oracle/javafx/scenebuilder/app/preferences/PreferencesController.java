@@ -32,9 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,6 +41,9 @@ import java.util.prefs.Preferences;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 
 /**
  * Defines preferences for Scene Builder App.

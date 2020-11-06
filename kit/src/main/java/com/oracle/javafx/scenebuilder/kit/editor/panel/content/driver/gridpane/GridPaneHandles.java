@@ -31,6 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane;
 
+import java.util.Collections;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractNodeHandles;
@@ -40,7 +42,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.Res
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import java.util.Collections;
+
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 

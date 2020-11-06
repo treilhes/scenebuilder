@@ -42,6 +42,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ButtonTypePropertyMetadata;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -55,9 +58,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
-
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ButtonTypePropertyMetadata;
 
 /**
  * Editor of the DialogPane.buttonTypes property. It may contain several
@@ -176,7 +176,8 @@ public class ButtonTypeEditor extends InlineListEditor {
         updateButtonLists();
     }
 
-    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses) {
+    @Override
+	public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses) {
         super.reset(propMeta, selectedClasses);
         buttonList.clear();
         buttonList.addAll(predefinedButtonsNames.values());
@@ -235,7 +236,8 @@ public class ButtonTypeEditor extends InlineListEditor {
 
             buttonTypeCb.setConverter(getButtonTypeConverter());
             buttonTypeCb.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ButtonType>() {
-                public void changed(javafx.beans.value.ObservableValue<? extends ButtonType> value,
+                @Override
+				public void changed(javafx.beans.value.ObservableValue<? extends ButtonType> value,
                         ButtonType prevValue, ButtonType newValue) {
                     editor.commit(ButtonTypeItem.this);
                     updatePlusMinusButtons();

@@ -32,6 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveFxControllerJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyJob;
@@ -40,8 +43,6 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

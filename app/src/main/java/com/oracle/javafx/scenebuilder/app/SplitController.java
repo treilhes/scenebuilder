@@ -33,6 +33,7 @@ package com.oracle.javafx.scenebuilder.app;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;

@@ -31,8 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;

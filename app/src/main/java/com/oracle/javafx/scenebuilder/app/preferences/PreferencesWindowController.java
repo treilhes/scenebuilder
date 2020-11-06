@@ -32,56 +32,52 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.kit.ToolTheme;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ALIGNMENT_GUIDES_COLOR;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.BACKGROUND_IMAGE;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_SWATCH;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_THEME;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ROOT_CONTAINER_HEIGHT;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ROOT_CONTAINER_WIDTH;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.HIERARCHY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.LIBRARY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.PARENT_RING_COLOR;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.THEME;
-
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.ACCORDION_ANIMATION;
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.CSS_TABLE_COLUMNS_ORDERING_REVERSED;
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RECENT_ITEMS;
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RECENT_ITEMS_SIZE;
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.TOOL_THEME;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.WILDCARD_IMPORT;
-
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ACCORDION_ANIMATION;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_HIERARCHY_DISPLAY_OPTION;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_LIBRARY_DISPLAY_OPTION;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_RECENT_ITEMS_SIZE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ROOT_CONTAINER_HEIGHT;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ROOT_CONTAINER_WIDTH;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_TOOL_THEME;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_WILDCARD_IMPORTS;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.recentItemsSizes;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ACCORDION_ANIMATION;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ALIGNMENT_GUIDES_COLOR;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.BACKGROUND_IMAGE;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_SWATCH;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_THEME;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.HIERARCHY_DISPLAY_OPTION;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.LIBRARY_DISPLAY_OPTION;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.PARENT_RING_COLOR;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ROOT_CONTAINER_HEIGHT;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ROOT_CONTAINER_WIDTH;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.THEME;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.WILDCARD_IMPORT;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_ALIGNMENT_GUIDES_COLOR;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_BACKGROUND_IMAGE;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_PARENT_RING_COLOR;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_SWATCH;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_THEME;
 
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_TOOL_THEME;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.recentItemsSizes;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_HIERARCHY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_LIBRARY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_RECENT_ITEMS_SIZE;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ROOT_CONTAINER_HEIGHT;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ROOT_CONTAINER_WIDTH;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ACCORDION_ANIMATION;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_WILDCARD_IMPORTS;
+import java.util.Arrays;
+import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.app.MainController;
+import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.CSSAnalyzerColumnsOrder;
+import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleField;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.BackgroundImage;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.CSSAnalyzerColumnsOrder;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
-
-import java.util.Arrays;
-import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

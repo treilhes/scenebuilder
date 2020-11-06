@@ -32,14 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.animation.FadeTransition;
 import javafx.application.ConditionalFeature;

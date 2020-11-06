@@ -31,16 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search;
 
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenRepositorySystem;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +39,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.version.Version;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenRepositorySystem;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
+import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordArtifact;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
@@ -67,12 +73,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.aether.version.Version;
 
 
 /**

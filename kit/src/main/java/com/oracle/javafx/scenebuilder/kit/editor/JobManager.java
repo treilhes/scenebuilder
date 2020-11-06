@@ -31,11 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor;
 
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
+
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 

@@ -31,9 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;

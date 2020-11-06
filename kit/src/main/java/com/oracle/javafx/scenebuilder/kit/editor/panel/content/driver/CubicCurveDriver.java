@@ -38,6 +38,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.Ab
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.CubicCurveHandles;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.shape.CubicCurve;
 
 /**

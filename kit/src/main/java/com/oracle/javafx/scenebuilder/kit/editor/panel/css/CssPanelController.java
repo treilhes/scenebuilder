@@ -51,6 +51,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
@@ -70,7 +71,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
@@ -802,7 +802,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 //            }
 //        } else {
         if (selectedRootNode instanceof Parent) {
-            addSubStructure(selectedRootNode, rootItem, (Parent) selectedRootNode);
+            addSubStructure(selectedRootNode, rootItem, selectedRootNode);
         }
 //        }
         Object selectedNode = CssUtils.getSelectedNode(selectedObject);
@@ -1727,7 +1727,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
             node.getStyleClass().add(styleclass);
         }
         if (!isApplied) {
-            node = createLine((Label) node);
+            node = createLine(node);
         }
         return node;
     }

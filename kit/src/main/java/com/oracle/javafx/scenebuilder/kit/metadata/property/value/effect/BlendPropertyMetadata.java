@@ -39,6 +39,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoubleProperty
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 

@@ -32,13 +32,15 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMAssetIndex;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.util.FileWatcher;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMAssetIndex;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.util.FileWatcher;
+
 import javafx.application.Platform;
 
 /**

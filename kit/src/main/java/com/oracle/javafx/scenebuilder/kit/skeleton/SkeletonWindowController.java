@@ -31,14 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.skeleton;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +47,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 /**

@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;

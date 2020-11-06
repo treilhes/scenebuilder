@@ -32,9 +32,12 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview;
 
 import static com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview.HierarchyTreeCell.HIERARCHY_TREE_CELL;
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
 import java.util.List;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;

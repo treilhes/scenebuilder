@@ -31,14 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.rudder;
 
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
-
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *

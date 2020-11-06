@@ -32,14 +32,15 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve;
 
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.EnumMap;
-import javafx.scene.Node;
 
-import java.util.List;
-import java.util.Map;
+import javafx.scene.Node;
 
 public abstract class AbstractCurveEditor<T extends Node> {
 

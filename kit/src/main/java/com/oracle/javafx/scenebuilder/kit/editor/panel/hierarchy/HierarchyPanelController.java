@@ -33,7 +33,6 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;

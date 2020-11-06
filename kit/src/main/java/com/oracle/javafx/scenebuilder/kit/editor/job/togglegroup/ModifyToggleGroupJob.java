@@ -32,6 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.togglegroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
@@ -48,8 +51,6 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ToggleGroupPro
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

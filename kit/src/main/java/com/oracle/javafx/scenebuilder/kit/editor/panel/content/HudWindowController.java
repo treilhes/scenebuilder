@@ -31,10 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPopupController;
-import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

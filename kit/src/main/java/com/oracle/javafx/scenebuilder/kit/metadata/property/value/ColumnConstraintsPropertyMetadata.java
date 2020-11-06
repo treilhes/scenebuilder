@@ -31,16 +31,18 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value;
 
+import java.util.Objects;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
-import java.util.Objects;
+
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
 
 /**
  *

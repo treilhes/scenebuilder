@@ -31,25 +31,25 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import java.util.stream.Collectors;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.dialog.RepositoryDialogController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
-
-import java.util.stream.Collectors;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Controller for the JAR/FXML Library dialog.

@@ -31,12 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors;
 
-import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController;
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController;
+import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

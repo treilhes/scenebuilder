@@ -31,13 +31,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value.list;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.RowConstraintsPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 import javafx.scene.layout.RowConstraints;
 
 /**

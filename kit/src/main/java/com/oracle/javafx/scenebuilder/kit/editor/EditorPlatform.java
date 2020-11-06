@@ -32,8 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor;
 
-import com.gluonhq.charm.glisten.visual.GlistenStyleClasses;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +45,9 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
+import com.gluonhq.charm.glisten.visual.GlistenStyleClasses;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;

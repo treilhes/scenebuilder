@@ -38,6 +38,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EnumerationPro
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.StringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCombination;
 

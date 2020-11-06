@@ -32,10 +32,18 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util;
 
-import javafx.css.Style;
-import javafx.scene.control.skin.MenuBarSkin;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
+import javafx.css.Style;
 import javafx.css.Styleable;
 import javafx.css.StyleableProperty;
 import javafx.fxml.FXMLLoader;
@@ -45,19 +53,9 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
-import javafx.scene.layout.GridPane;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.GridPane;
 
 @SuppressWarnings("deprecation")
 public class Deprecation {

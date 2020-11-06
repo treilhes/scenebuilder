@@ -32,8 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import java.util.Collections;
+
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 /**
  *

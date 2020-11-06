@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.kit.editor.search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;

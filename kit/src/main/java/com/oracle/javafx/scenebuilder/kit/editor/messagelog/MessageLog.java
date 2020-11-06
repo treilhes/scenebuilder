@@ -31,7 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.messagelog;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +38,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 

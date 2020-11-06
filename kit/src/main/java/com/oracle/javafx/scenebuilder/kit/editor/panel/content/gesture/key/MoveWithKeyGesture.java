@@ -32,6 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManager;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
@@ -41,8 +44,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.HashMap;
-import java.util.Map;
+
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;

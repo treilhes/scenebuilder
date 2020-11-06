@@ -31,8 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.util;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import java.util.Comparator;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 
 /**
  *

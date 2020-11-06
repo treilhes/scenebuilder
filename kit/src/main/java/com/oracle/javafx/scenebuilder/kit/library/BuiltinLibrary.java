@@ -32,10 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.library;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
@@ -43,6 +39,11 @@ import java.util.Comparator;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.scene.layout.Region;
 

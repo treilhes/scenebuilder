@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
 import java.util.List;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.shape.ClosePath;

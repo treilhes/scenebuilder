@@ -31,8 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.drag.source;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;

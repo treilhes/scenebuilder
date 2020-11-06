@@ -31,10 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value.list;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.List;
+
 import javafx.scene.paint.Color;
 
 /**

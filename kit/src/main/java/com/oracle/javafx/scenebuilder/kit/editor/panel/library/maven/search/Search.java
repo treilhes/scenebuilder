@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search;
 
 import java.util.List;
+
 import org.eclipse.aether.artifact.DefaultArtifact;
 
 public interface Search {

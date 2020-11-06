@@ -32,9 +32,11 @@
 
 package com.oracle.javafx.scenebuilder.kit.metadata.util;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMArchive;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.List;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;

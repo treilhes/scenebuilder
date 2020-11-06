@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;

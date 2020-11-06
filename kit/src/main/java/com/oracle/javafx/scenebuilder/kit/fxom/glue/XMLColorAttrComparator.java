@@ -41,7 +41,8 @@ import java.util.Map;
  */
 class XMLColorAttrComparator extends XMLAttrComparator {
 
-    protected int getAttrOrderIndex(Map.Entry<String,String> attr) {
+    @Override
+	protected int getAttrOrderIndex(Map.Entry<String,String> attr) {
         assert attr != null;
 
         final int result;

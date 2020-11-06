@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.TabT
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;

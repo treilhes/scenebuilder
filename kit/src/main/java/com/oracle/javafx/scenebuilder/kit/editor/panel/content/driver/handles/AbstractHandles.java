@@ -31,12 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
+import java.net.URL;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.DiscardGesture;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.net.URL;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 

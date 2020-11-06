@@ -31,8 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import java.util.Objects;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 /**
  *

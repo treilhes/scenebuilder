@@ -32,11 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 /**
  *

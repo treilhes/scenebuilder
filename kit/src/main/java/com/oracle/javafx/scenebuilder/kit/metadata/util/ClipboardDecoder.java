@@ -32,10 +32,6 @@
 
 package com.oracle.javafx.scenebuilder.kit.metadata.util;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMArchive;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -44,6 +40,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMArchive;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.input.Clipboard;
 
 /**

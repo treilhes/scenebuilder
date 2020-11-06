@@ -32,11 +32,13 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
-import java.util.HashMap;
-import java.util.Map;
+
 import javafx.geometry.Bounds;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;

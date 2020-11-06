@@ -31,12 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
+import java.util.Map;
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.CursorPropertyMetadata;
-
-import java.util.Map;
-import java.util.Set;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

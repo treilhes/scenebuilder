@@ -31,6 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.app.menubar;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.app.AppPlatform;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
@@ -43,10 +47,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJ
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

@@ -33,14 +33,15 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EnumerationPropertyMetadata;
+
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-
-import java.util.Set;
 
 public class EnumEditor extends PropertyEditor {
     private ComboBox<String> comboBox;

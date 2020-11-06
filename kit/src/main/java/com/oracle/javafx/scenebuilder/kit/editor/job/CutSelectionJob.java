@@ -31,11 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.ControlAction;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

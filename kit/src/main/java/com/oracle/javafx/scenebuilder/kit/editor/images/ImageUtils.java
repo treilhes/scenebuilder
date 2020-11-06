@@ -36,6 +36,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.WeakHashMap;
+
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.ImageCursor;

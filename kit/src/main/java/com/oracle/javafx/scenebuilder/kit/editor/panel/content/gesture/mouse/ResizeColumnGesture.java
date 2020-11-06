@@ -32,8 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane.GridPaneHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.GridPaneColumnResizer;
@@ -43,9 +47,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.ColumnCon
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;

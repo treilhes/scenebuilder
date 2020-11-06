@@ -32,13 +32,13 @@
 
 package com.oracle.javafx.scenebuilder.kit.template;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import static com.oracle.javafx.scenebuilder.kit.template.Type.DESKTOP;
+import static com.oracle.javafx.scenebuilder.kit.template.Type.PHONE;
 
 import java.net.URL;
 
-import static com.oracle.javafx.scenebuilder.kit.template.Type.DESKTOP;
-import static com.oracle.javafx.scenebuilder.kit.template.Type.PHONE;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 
 public enum Template {
 

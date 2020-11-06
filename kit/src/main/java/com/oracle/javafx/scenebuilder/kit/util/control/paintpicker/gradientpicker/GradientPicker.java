@@ -31,34 +31,38 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.gradientpicker;
 
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPickerController;
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.rotator.RotatorControl;
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.slider.SliderControl;
-
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
-import javafx.scene.shape.Rectangle;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
+import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPickerController;
+import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.rotator.RotatorControl;
+import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.slider.SliderControl;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Controller class for the gradient part of the paint editor.

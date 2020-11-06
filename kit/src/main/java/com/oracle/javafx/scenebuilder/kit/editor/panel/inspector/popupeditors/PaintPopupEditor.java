@@ -32,12 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors;
 
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
-
-import java.util.Set;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

@@ -31,11 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value.list;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.StringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.ArrayList;
-import java.util.List;
+
 import javafx.fxml.FXMLLoader;
 
 /**

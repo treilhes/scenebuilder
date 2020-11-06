@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.util.control.paintpicker;
 
 import java.util.Locale;
+
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 

@@ -32,9 +32,14 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -44,10 +49,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class FunctionalInterfaceEditor extends AutoSuggestEditor {
     private static final String HASH_STR = "#"; //NOI18N
@@ -83,7 +84,7 @@ public class FunctionalInterfaceEditor extends AutoSuggestEditor {
             }
             Object value = getValue();
             assert value instanceof String;
-            userUpdateValueProperty((String) value);
+            userUpdateValueProperty(value);
             getTextField().selectAll();
         };
         setTextEditorBehavior(this, getTextField(), onActionListener);

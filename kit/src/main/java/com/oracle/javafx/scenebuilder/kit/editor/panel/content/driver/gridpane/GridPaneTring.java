@@ -38,6 +38,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget.
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+
 import javafx.scene.layout.GridPane;
 
 /**

@@ -31,13 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -90,7 +90,7 @@ public class EventHandlerEditor extends AutoSuggestEditor {
             }
             Object value = getValue();
             assert value instanceof String;
-            userUpdateValueProperty((String) value);
+            userUpdateValueProperty(value);
             getTextField().selectAll();
         };
         setTextEditorBehavior(this, getTextField(), onActionListener);

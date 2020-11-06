@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.library.util;
 
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+
 import javafx.scene.Node;
 
 /**

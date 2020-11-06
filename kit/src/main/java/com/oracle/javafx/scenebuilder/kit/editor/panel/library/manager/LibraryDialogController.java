@@ -46,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
@@ -57,7 +58,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search.SearchMavenDialogController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
@@ -283,7 +283,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
                             List<String> lines = Files.readAllLines(foldersPath);
 
                             for (Iterator<String> it = lines.iterator(); it.hasNext();) {
-                                String line = (String) it.next();
+                                String line = it.next();
                                 if (line.equals(path.toString()))
                                     it.remove();
                             }

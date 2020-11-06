@@ -31,10 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+
 import javafx.application.Platform;
 import javafx.scene.control.Cell;
 import javafx.scene.control.TreeItem;

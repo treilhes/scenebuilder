@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+
 import javafx.scene.input.KeyEvent;
 
 /**

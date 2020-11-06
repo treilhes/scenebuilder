@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.kit.fxom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javafx.scene.control.ToggleGroup;
 
 /**

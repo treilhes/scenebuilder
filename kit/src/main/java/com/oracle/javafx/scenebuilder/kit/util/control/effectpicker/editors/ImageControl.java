@@ -32,9 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +42,11 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;

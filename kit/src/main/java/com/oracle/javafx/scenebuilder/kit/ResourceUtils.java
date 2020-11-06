@@ -32,13 +32,13 @@
 
 package com.oracle.javafx.scenebuilder.kit;
 
-import javafx.collections.ObservableList;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javafx.collections.ObservableList;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 public class ResourceUtils {
 

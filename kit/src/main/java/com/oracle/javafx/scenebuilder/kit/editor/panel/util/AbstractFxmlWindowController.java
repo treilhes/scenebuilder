@@ -34,10 +34,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 /**
  *

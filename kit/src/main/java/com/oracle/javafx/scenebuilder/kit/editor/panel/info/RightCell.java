@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.info;
 
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;

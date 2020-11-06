@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 
 import java.util.List;
+
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;

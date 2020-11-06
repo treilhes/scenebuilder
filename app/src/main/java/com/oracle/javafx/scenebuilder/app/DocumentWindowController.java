@@ -57,9 +57,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
@@ -1057,11 +1057,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         resourceController.setResourceFile(file);
     }
     
-    public boolean isDocumentDirty() {
+    @Override
+	public boolean isDocumentDirty() {
         return getEditorController().getJobManager().getCurrentJob() != saveJob;
     }
     
-    public boolean isUnused() {
+    @Override
+	public boolean isUnused() {
         /*
          * A document window controller is considered as "unused" if: //NOI18N
          *  1) it has not fxml text
@@ -1077,21 +1079,25 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return noFxmlText && clean && noName;
     }
     
-    public boolean isInited() {
+    @Override
+	public boolean isInited() {
         return editorController != null;
     }
     
-    public boolean hasContent() {
+    @Override
+	public boolean hasContent() {
     	final FXOMDocument fxomDocument = editorController.getFxomDocument();
         final boolean noFxmlText = (fxomDocument == null) || (fxomDocument.getFxomRoot() == null);
         return noFxmlText;
     }
-    public boolean hasName() {
+    @Override
+	public boolean hasName() {
     	final FXOMDocument fxomDocument = editorController.getFxomDocument();
     	final boolean hasName = (fxomDocument != null) && (fxomDocument.getLocation() != null);
         return hasName;
     }
-    public String getName() {
+    @Override
+	public String getName() {
     	final FXOMDocument fxomDocument = editorController.getFxomDocument();
     	final String name = hasName() ? fxomDocument.getLocation().toExternalForm() : "";
         return name;

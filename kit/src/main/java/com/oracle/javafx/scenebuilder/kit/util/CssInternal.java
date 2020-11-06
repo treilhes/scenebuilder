@@ -46,26 +46,26 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javafx.beans.property.ReadOnlyProperty;
-import javafx.collections.FXCollections;
-import javafx.css.CssMetaData;
-import javafx.css.StyleOrigin;
-import javafx.css.Styleable;
-import javafx.css.StyleableProperty;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.collections.FXCollections;
 import javafx.css.CompoundSelector;
+import javafx.css.CssMetaData;
+import javafx.css.CssParser;
 import javafx.css.Rule;
 import javafx.css.Selector;
 import javafx.css.SimpleSelector;
 import javafx.css.Style;
+import javafx.css.StyleOrigin;
+import javafx.css.Styleable;
+import javafx.css.StyleableProperty;
 import javafx.css.Stylesheet;
-import javafx.css.CssParser;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 
 /**
  *

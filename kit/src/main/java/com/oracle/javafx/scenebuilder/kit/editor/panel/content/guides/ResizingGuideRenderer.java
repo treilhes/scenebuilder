@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Paint;

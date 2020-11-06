@@ -32,6 +32,21 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+
 /*
  * THIS CODE IS AUTOMATICALLY GENERATED !
  */
@@ -43,7 +58,28 @@ import com.oracle.javafx.scenebuilder.kit.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.*;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.BooleanPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.BoundsPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.CursorPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoubleArrayPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EnumerationPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EventHandlerPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.FontPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ImagePropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.InsetsPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.IntegerPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ListCellPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.MaterialPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.MeshPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ObjectPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.Point3DPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.Rectangle2DPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.StringConverterPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.TableViewResizePolicyPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ToggleGroupPropertyMetadata;
+import com.oracle.javafx.scenebuilder.kit.metadata.property.value.TreeTableViewResizePolicyPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.effect.EffectPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.keycombination.KeyCombinationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.ButtonTypeListPropertyMetadata;
@@ -60,21 +96,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 
 /**
  *

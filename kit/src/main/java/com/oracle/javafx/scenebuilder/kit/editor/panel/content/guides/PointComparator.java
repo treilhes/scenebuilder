@@ -32,10 +32,11 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
-import javafx.geometry.Point2D;
-
 import java.util.Comparator;
+
+import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+
+import javafx.geometry.Point2D;
 
 class PointComparator implements Comparator<Point2D> {
     

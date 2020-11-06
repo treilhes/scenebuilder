@@ -33,6 +33,7 @@ package com.oracle.javafx.scenebuilder.kit.glossary;
 
 import java.net.URL;
 import java.util.List;
+
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 

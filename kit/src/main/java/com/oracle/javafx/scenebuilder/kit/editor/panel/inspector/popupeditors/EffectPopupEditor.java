@@ -31,14 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors;
 
+import java.util.List;
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
-
-import java.util.List;
-import java.util.Set;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

@@ -32,8 +32,11 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.togglegroup;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
@@ -41,8 +44,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.ArrayList;
-import java.util.List;
+
 import javafx.scene.control.ToggleGroup;
 
 /**

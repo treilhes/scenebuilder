@@ -57,6 +57,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.Node
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.SubScene;

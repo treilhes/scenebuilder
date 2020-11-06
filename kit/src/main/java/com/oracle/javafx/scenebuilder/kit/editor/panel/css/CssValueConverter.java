@@ -32,24 +32,26 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.css;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.ColorEncoder;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
-import javafx.css.Declaration;
-import javafx.css.Rule;
-import javafx.css.Size;
-import javafx.css.converter.PaintConverter;
-import javafx.css.converter.PaintConverter.LinearGradientConverter;
-import javafx.css.converter.DeriveColorConverter;
-import javafx.css.converter.DeriveSizeConverter;
-import javafx.css.converter.LadderConverter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.ColorEncoder;
+import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+
+import javafx.css.Declaration;
 import javafx.css.ParsedValue;
+import javafx.css.Rule;
+import javafx.css.Size;
+import javafx.css.converter.DeriveColorConverter;
+import javafx.css.converter.DeriveSizeConverter;
+import javafx.css.converter.LadderConverter;
+import javafx.css.converter.PaintConverter;
+import javafx.css.converter.PaintConverter.LinearGradientConverter;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.effect.Effect;

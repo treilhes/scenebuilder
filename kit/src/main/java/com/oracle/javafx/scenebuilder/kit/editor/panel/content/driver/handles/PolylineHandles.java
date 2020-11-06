@@ -31,19 +31,19 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.shape.Circle;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
+
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 
@@ -125,12 +125,12 @@ public class PolylineHandles extends AbstractCurveHandles<Polyline> {
     public AbstractGesture findGesture(Node node) {
         final EditCurveGesture result;
         
-        if (node instanceof Circle && verticesHandle.contains((Circle) node)) {
+        if (node instanceof Circle && verticesHandle.contains(node)) {
             result = new EditCurveGesture(getContentPanelController(), getFxomInstance(), EditCurveGesture.Tunable.VERTEX);
-            result.getTunableMap().put(EditCurveGesture.Tunable.VERTEX, verticesHandle.indexOf((Circle) node));
-        } else if (node instanceof Line && linesHandle.contains((Line) node)) {
+            result.getTunableMap().put(EditCurveGesture.Tunable.VERTEX, verticesHandle.indexOf(node));
+        } else if (node instanceof Line && linesHandle.contains(node)) {
             result = new EditCurveGesture(getContentPanelController(), getFxomInstance(), EditCurveGesture.Tunable.SIDE);
-            result.getTunableMap().put(EditCurveGesture.Tunable.SIDE, linesHandle.indexOf((Line) node));
+            result.getTunableMap().put(EditCurveGesture.Tunable.SIDE, linesHandle.indexOf(node));
         } else {
             result = null;
         }

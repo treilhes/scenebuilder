@@ -32,6 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveNodeJob;
@@ -44,8 +47,6 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  */

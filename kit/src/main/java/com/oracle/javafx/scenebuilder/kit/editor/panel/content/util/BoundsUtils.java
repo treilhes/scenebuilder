@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.util;
 
 import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

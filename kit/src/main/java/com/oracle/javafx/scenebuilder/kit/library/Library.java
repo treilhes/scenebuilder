@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.library;
 
 import java.util.Comparator;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;

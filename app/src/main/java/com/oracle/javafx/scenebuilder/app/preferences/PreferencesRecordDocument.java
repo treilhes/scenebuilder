@@ -32,34 +32,26 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.SplitController;
-
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.BOTTOM_DIVIDER_VPOS;
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.BOTTOM_VISIBLE;
 import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.DOCUMENT_VISIBLE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.INSPECTOR_SECTION_ID;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LEFT_DIVIDER_HPOS;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LEFT_DIVIDER_VPOS;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LEFT_VISIBLE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LIBRARY_VISIBLE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RIGHT_DIVIDER_HPOS;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RIGHT_VISIBLE;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_SWATCH;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_THEME;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.I18N_RESOURCE;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.STAGE_HEIGHT;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.INSPECTOR_SECTION_ID;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LEFT_VISIBLE;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LEFT_DIVIDER_HPOS;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LEFT_DIVIDER_VPOS;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LIBRARY_VISIBLE;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.PATH;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RIGHT_DIVIDER_HPOS;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RIGHT_VISIBLE;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.SCENE_STYLE_SHEETS;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.STAGE_HEIGHT;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.STAGE_WIDTH;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.THEME;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.X_POS;
 import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.Y_POS;
-
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -71,6 +63,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
+import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.app.SplitController;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

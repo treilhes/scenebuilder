@@ -32,6 +32,7 @@
 package com.oracle.javafx.scenebuilder.kit.util.control.paintpicker;
 
 import java.io.IOException;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.fxml.FXMLLoader;

@@ -158,9 +158,9 @@ public class PaintPickerController {
             if (value instanceof Color) {
                 colorPicker.updateUI((Color) value);
             } else if (value instanceof LinearGradient) {
-                gradientPicker.updateUI((LinearGradient) value);
+                gradientPicker.updateUI(value);
             } else if (value instanceof RadialGradient) {
-                gradientPicker.updateUI((RadialGradient) value);
+                gradientPicker.updateUI(value);
             } else {
                 // Case not yet handled
                 assert value instanceof ImagePattern;

@@ -36,14 +36,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TreeTableViewDesignInfoX;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+
 import javafx.geometry.Bounds;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.Region;
-
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TreeTableViewDesignInfoX;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 
 /**
  *
@@ -126,7 +126,7 @@ public class TreeTableColumnResizer {
         } else {
             if (treeTableColumn.getParentColumn() != null) {
                 final TableColumnBase<?,?> parentColumn 
-                        = (TableColumnBase<?,?>) this.treeTableColumn.getParentColumn();
+                        = this.treeTableColumn.getParentColumn();
                 assert parentColumn instanceof TreeTableColumn<?,?>;
                 final Bounds parentBounds = di.getColumnBounds((TreeTableColumn<?,?>)parentColumn);
                 x3 = parentBounds.getMaxX();

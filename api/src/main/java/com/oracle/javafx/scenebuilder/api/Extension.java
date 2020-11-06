@@ -1,6 +1,5 @@
 package com.oracle.javafx.scenebuilder.api;
 
-import java.util.List;
 import java.util.Map;
 
 import javafx.scene.effect.Effect;

@@ -47,7 +47,8 @@ public class I18N implements BundleProvider {
 
     private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
     
-    public synchronized ResourceBundle getBundle() {
+    @Override
+	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18N.class.getPackage().getName();
             bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderKit",utf8EncodingControl); //NOI18N

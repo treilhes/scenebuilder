@@ -37,6 +37,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ComplexPropert
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.IntegerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.scene.effect.FloatMap;
 
 /**

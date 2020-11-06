@@ -32,10 +32,20 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import com.oracle.javafx.scenebuilder.kit.ToolTheme;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.CSS_TABLE_COLUMNS_ORDERING_REVERSED;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.IGNORE_VERSION;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.IMPORTED_GLUON_JARS;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.LAST_SENT_TRACKING_INFO_DATE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RECENT_ITEMS;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RECENT_ITEMS_SIZE;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.REGISTRATION_EMAIL;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.REGISTRATION_HASH;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.REGISTRATION_OPT_IN;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.TOOL_THEME;
+import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.UPDATE_DIALOG_DATE;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ACCORDION_ANIMATION;
+import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.WILDCARD_IMPORT;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -45,9 +55,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.kit.ToolTheme;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.*;
 
 /**
  * Defines preferences global to the SB application.
@@ -385,7 +399,8 @@ public class PreferencesRecordGlobal extends PreferencesRecordGlobalBase {
     /**
      * Read data from the java preferences DB and initialize properties.
      */
-    public void readFromJavaPreferences() {
+    @Override
+	public void readFromJavaPreferences() {
         super.readFromJavaPreferences();
 
         // Document size
@@ -471,7 +486,8 @@ public class PreferencesRecordGlobal extends PreferencesRecordGlobalBase {
 
     }
 
-    public void writeToJavaPreferences(String key) {
+    @Override
+	public void writeToJavaPreferences(String key) {
 
         assert applicationRootPreferences != null;
         assert key != null;

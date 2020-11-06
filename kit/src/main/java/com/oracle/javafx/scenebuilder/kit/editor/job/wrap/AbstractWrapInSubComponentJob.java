@@ -31,6 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
@@ -38,9 +42,6 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Main class used for the wrap jobs using the new container SUB COMPONENT

@@ -32,18 +32,19 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture.Tunable;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import javafx.scene.shape.Polyline;
-
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture.Tunable;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.collections.ObservableList;
+import javafx.scene.shape.Polyline;
 
 public class PolylineEditor extends AbstractCurveEditor<Polyline> {
 

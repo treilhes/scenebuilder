@@ -33,8 +33,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.info;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import java.util.Objects;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *

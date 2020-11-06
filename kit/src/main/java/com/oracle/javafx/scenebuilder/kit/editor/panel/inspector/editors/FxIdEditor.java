@@ -31,11 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMFxIdIndex;
 import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
-import java.util.ArrayList;
-import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

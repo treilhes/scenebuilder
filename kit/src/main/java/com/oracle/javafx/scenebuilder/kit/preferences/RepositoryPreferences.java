@@ -31,13 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordRepository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 public class RepositoryPreferences {
     

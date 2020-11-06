@@ -31,7 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -40,16 +41,19 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.eclipse.aether.artifact.DefaultArtifact;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 
 public class JcenterSearch implements Search {
 

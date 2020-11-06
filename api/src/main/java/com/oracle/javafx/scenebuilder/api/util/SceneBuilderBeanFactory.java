@@ -188,7 +188,7 @@ public class SceneBuilderBeanFactory {
 				
 				
 				Document scopeDocument = (Document)objectFactory.getObject();
-				setCurrentScope((Document)scopeDocument);
+				setCurrentScope(scopeDocument);
 				Map<String, Object> scopedObjects = scopes.get(currentScope);
 				scopedObjects.put(name, scopeDocument);
 				return scopeDocument;
@@ -262,6 +262,7 @@ public class SceneBuilderBeanFactory {
 		}
 
 		class ScopedObjectsThreadLocal extends ThreadLocal<Map<String, Object>> {
+			@Override
 			protected Map<String, Object> initialValue() {
 				return Collections.synchronizedMap(new HashMap<String, Object>());
 			}

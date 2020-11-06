@@ -33,6 +33,7 @@ package com.oracle.javafx.scenebuilder.kit.fxom.sampledata;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 

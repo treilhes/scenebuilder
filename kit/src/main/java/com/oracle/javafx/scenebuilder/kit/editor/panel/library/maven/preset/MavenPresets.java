@@ -31,9 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 import java.util.Arrays;
 import java.util.List;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 public class MavenPresets {
     

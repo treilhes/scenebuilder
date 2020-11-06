@@ -31,10 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import java.util.List;
 
 /**
  * This Job updates the FXOM document AND the selection at execution time.

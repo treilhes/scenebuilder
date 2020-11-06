@@ -31,6 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
@@ -39,8 +42,6 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.URLUtils;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  *

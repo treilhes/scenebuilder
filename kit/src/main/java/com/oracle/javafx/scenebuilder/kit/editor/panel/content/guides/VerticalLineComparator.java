@@ -32,8 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 import java.util.Comparator;
+
+import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 
 /**
  *

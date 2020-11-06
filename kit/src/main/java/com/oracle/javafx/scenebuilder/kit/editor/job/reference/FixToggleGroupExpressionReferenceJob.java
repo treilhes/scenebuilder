@@ -32,6 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.InlineDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
@@ -46,8 +49,6 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  *

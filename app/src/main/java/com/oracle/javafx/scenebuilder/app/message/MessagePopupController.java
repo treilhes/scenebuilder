@@ -33,6 +33,7 @@ package com.oracle.javafx.scenebuilder.app.message;
 
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractPopupController;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.stage.WindowEvent;

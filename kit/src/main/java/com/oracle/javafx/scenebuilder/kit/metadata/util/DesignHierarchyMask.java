@@ -32,8 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.util;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.gluonhq.charm.glisten.control.BottomNavigation;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.gluonhq.charm.glisten.control.DropdownButton;
 import com.gluonhq.charm.glisten.control.ExpansionPanel;
 import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
@@ -51,13 +58,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Node;

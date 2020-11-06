@@ -31,9 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordArtifact;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -42,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 
 public class MavenPreferences {
 

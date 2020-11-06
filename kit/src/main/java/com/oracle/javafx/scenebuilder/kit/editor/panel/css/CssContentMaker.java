@@ -32,6 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.css;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState.CssStyle;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
@@ -42,14 +48,12 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadat
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
+import javafx.css.CssMetaData;
+import javafx.css.ParsedValue;
 import javafx.css.Rule;
 import javafx.css.Style;
 import javafx.css.StyleOrigin;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-import javafx.css.CssMetaData;
-import javafx.css.ParsedValue;
 import javafx.css.StyleableProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;

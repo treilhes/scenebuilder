@@ -32,6 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
@@ -41,8 +44,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.IntegerPropert
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.ArrayList;
-import java.util.List;
+
 import javafx.scene.layout.GridPane;
 
 /**

@@ -32,13 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
-import javafx.scene.control.skin.TableColumnHeader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -46,6 +47,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.skin.TableColumnHeader;
 
 /**
  * A temporary class that should extend TableViewDesignInfo and adds

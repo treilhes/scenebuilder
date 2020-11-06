@@ -31,9 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import java.util.List;
 import java.util.Map;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 

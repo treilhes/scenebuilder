@@ -31,12 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.drag.target;
 
+import java.util.Objects;
+
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.Objects;
 
 /**
  *

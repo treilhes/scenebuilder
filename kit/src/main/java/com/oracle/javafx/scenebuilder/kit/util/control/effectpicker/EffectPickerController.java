@@ -31,15 +31,17 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util.control.effectpicker;
 
+import java.net.URL;
+
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.CheckBoxControl;
+import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.DoubleTextFieldControl;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.EnumControl;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.ImageControl;
-import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.DoubleTextFieldControl;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.LightControl;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors.SliderControl;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
-import java.net.URL;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;

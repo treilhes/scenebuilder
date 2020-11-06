@@ -32,12 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditCurveGuideController {
 

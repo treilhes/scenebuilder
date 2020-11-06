@@ -32,10 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.outline;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import java.util.List;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.ClosePath;

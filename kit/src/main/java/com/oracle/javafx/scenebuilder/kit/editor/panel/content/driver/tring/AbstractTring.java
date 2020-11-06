@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+
 import javafx.scene.paint.Paint;
 
 /**

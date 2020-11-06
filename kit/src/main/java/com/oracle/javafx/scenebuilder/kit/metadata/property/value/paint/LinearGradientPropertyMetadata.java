@@ -31,6 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.metadata.property.value.paint;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.BooleanPropertyMetadata;
@@ -40,7 +42,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.property.value.EnumerationPro
 import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.StopListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import java.util.List;
+
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;

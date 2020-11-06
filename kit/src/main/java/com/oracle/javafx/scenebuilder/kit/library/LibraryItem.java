@@ -32,10 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.library;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+
+import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 /**
  *

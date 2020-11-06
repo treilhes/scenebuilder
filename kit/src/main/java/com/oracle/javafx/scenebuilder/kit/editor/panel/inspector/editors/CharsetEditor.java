@@ -31,13 +31,18 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /**
  * Editor for setting a charset property of an included element.
