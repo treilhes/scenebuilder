@@ -32,7 +32,7 @@
 
 package com.oracle.javafx.scenebuilder.kit;
 
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 public enum ToolTheme {
 

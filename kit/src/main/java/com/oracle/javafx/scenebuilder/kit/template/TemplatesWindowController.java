@@ -32,7 +32,7 @@
 
 package com.oracle.javafx.scenebuilder.kit.template;
 
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;

@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.app;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;

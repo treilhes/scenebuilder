@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
@@ -58,7 +59,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
@@ -95,6 +96,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 @Component
+@DependsOn("i18n")
 public class MainController implements AppPlatform.AppNotificationHandler, ApplicationListener<JavafxApplication.StageReadyEvent>, UILogger {
 
     public enum ApplicationControlAction {

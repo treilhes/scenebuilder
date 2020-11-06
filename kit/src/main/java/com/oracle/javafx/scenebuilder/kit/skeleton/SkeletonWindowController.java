@@ -38,7 +38,7 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

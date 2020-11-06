@@ -2,7 +2,7 @@ package com.oracle.javafx.scenebuilder.kit.preferences;
 
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 

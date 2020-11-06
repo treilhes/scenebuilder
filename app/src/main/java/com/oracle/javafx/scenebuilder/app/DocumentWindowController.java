@@ -59,7 +59,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;

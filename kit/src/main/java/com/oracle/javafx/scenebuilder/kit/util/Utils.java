@@ -1,7 +1,7 @@
 package com.oracle.javafx.scenebuilder.kit.util;
 
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import java.io.File;
 import java.net.URISyntaxException;

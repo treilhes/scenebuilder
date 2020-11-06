@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.editors;
 
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController;
 import java.io.File;
 import java.io.IOException;

@@ -43,6 +43,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Scope;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
@@ -61,7 +62,10 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 @ComponentScan(
-		basePackageClasses = { 
+		basePackageClasses = {
+				com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
+				com.oracle.javafx.scenebuilder.app.i18n.I18N.class,
+				I18N.class,
 				Tracking.class,
 				RegistrationWindowController.class,
 				WelcomeDialogWindowController.class,

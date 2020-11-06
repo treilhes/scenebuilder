@@ -33,7 +33,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository
 
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordRepository;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;

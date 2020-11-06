@@ -33,7 +33,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import java.io.IOException;
 import java.net.URL;

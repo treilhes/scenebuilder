@@ -39,7 +39,7 @@ import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentContr
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentEditAction;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.MainController.ApplicationControlAction;
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;

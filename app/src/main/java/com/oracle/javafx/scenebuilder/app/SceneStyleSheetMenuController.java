@@ -32,7 +32,7 @@
 package com.oracle.javafx.scenebuilder.app;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.app.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
@@ -73,7 +73,7 @@ public class SceneStyleSheetMenuController {
         // Open a file chooser for *.css & *.bss
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                com.oracle.javafx.scenebuilder.kit.i18n.I18N.getString("scenestylesheet.filechooser.filter.msg"),
+                I18N.getString("scenestylesheet.filechooser.filter.msg"),
                 "*.css", "*.bss")); //NOI18N
         fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(documentWindowController.getStage());

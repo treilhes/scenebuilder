@@ -31,33 +31,27 @@
  */
 package com.oracle.javafx.scenebuilder.kit.i18n;
 
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
+
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
 
 /**
  *
  */
-public class I18N {
+@Component("I18NKit")
+public class I18N implements BundleProvider {
     
     private static ResourceBundle bundle;
 
     private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
     
-    public static String getString(String key) {
-        return getBundle().getString(key);
-    }
-    
-    public static String getString(String key, Object... arguments) {
-        final String pattern = getString(key);
-        return MessageFormat.format(pattern, arguments);
-    }
-    
-    public static synchronized ResourceBundle getBundle() {
+    public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18N.class.getPackage().getName();
             bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderKit",utf8EncodingControl); //NOI18N
         }
-        
         return bundle;
     }
 }

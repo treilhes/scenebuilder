@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.skeleton;
 
-import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.util.eventnames.EventNames;
 import com.oracle.javafx.scenebuilder.kit.util.eventnames.ImportBuilder;
 import com.oracle.javafx.scenebuilder.kit.util.eventnames.FindEventNamesUtil;
