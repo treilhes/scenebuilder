@@ -336,7 +336,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             MavenPreferences mavenPreferences = preferencesControllerBase.getMavenPreferences();
             MavenArtifact mavenArtifact = mavenPreferences
                     .getRecordArtifact(((ArtifactDialogListItem) dialogListItem).getCoordinates())
-                    .getMavenArtifact();
+                    .getValue();
             List<File> files = mavenPreferences.getArtifactFileWithDependencies(mavenArtifact);
             List<String> filter = mavenPreferences.getArtifactFilter(mavenArtifact);
 

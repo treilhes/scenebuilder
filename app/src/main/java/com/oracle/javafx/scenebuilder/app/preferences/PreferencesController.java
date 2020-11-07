@@ -40,16 +40,20 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 
 /**
  * Defines preferences for Scene Builder App.
  */
 @Component
-public class PreferencesController extends PreferencesControllerBase implements InitializingBean{
+public class PreferencesController extends PreferencesControllerBase implements InitializingBean, RootPreferencesNode{
 
     /***************************************************************************
      *                                                                         *
@@ -106,8 +110,9 @@ public class PreferencesController extends PreferencesControllerBase implements 
      *                                                                         *
      **************************************************************************/
 
-    private PreferencesController() {
-        super(SB_RELEASE_NODE, new PreferencesRecordGlobal());
+    private PreferencesController(
+    		@Lazy @Autowired MavenPreferences mavenpreferences) {
+        super(mavenpreferences, SB_RELEASE_NODE, new PreferencesRecordGlobal());
 
         // Cleanup document preferences at start time : 
         final String items = applicationRootPreferences.get(RECENT_ITEMS, null); //NOI18N
@@ -187,5 +192,10 @@ public class PreferencesController extends PreferencesControllerBase implements 
     public PreferencesRecordGlobal getRecordGlobal() {
         return (PreferencesRecordGlobal) recordGlobal;
     }
+
+	@Override
+	public Preferences getNode() {
+		return applicationRootPreferences;
+	}
 
 }

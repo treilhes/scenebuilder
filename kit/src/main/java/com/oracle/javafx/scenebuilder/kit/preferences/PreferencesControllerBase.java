@@ -97,7 +97,7 @@ public abstract class PreferencesControllerBase {
      *                                                                         *
      **************************************************************************/
 
-    public PreferencesControllerBase(String basePrefNodeName, PreferencesRecordGlobalBase recordGlobal) {
+    public PreferencesControllerBase(MavenPreferences mavenPreferences, String basePrefNodeName, PreferencesRecordGlobalBase recordGlobal) {
         applicationRootPreferences = Preferences.userNodeForPackage(getClass()).node(basePrefNodeName);
 
         // Preferences global to the SB application
@@ -117,24 +117,7 @@ public abstract class PreferencesControllerBase {
         repositoriesRootPreferences = applicationRootPreferences.node(REPOSITORIES);
 
         // maven artifacts
-        mavenPreferences = new MavenPreferences();
-
-        // create initial map of existing artifacts
-        try {
-            final String[] childrenNames = artifactsRootPreferences.childrenNames();
-            for (String child : childrenNames) {
-                Preferences artifactPreferences = artifactsRootPreferences.node(child);
-                MavenArtifact mavenArtifact = new MavenArtifact(child);
-                mavenArtifact.setPath(artifactPreferences.get(PreferencesRecordArtifact.PATH, null));
-                mavenArtifact.setDependencies(artifactPreferences.get(PreferencesRecordArtifact.DEPENDENCIES, null));
-                mavenArtifact.setFilter(artifactPreferences.get(PreferencesRecordArtifact.FILTER, null));
-                final PreferencesRecordArtifact recordArtifact = new PreferencesRecordArtifact(
-                        artifactsRootPreferences, mavenArtifact);
-                mavenPreferences.addRecordArtifact(child, recordArtifact);
-            }
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesControllerBase.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.mavenPreferences = mavenPreferences;
 
         // repositories
         repositoryPreferences = new RepositoryPreferences();
@@ -174,25 +157,11 @@ public abstract class PreferencesControllerBase {
     }
 
     public PreferencesRecordArtifact getRecordArtifact(MavenArtifact mavenArtifact) {
-        PreferencesRecordArtifact recordArtifact = mavenPreferences.getRecordArtifact(mavenArtifact.getCoordinates());
-        if (recordArtifact == null) {
-            recordArtifact = new PreferencesRecordArtifact(artifactsRootPreferences, mavenArtifact);
-            mavenPreferences.addRecordArtifact(mavenArtifact.getCoordinates(), recordArtifact);
-        }
-        return recordArtifact;
+        return mavenPreferences.getRecordArtifact(mavenArtifact);
     }
 
     public void removeArtifact(String coordinates) {
-        if (coordinates != null && !coordinates.isEmpty() &&
-                mavenPreferences.getRecordArtifact(coordinates) != null) {
-            Preferences node = artifactsRootPreferences.node(coordinates);
-            try {
-                node.removeNode();
-                mavenPreferences.removeRecordArtifact(coordinates);
-            } catch (BackingStoreException ex) {
-                Logger.getLogger(PreferencesControllerBase.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    	mavenPreferences.removeArtifact(coordinates);
     }
 
     public RepositoryPreferences getRepositoryPreferences() {

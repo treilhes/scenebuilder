@@ -41,6 +41,9 @@ public class MavenArtifact {
     private String dependencies;
     private String filter;
 
+    public MavenArtifact() {
+    }
+    
     public MavenArtifact(String coordinates) {
         this.coordinates = coordinates;
     }

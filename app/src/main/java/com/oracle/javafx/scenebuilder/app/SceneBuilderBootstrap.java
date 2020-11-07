@@ -66,6 +66,7 @@ import javafx.stage.Stage;
 				com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
 				com.oracle.javafx.scenebuilder.app.i18n.I18N.class,
 				I18N.class,
+				MavenPreferences.class,
 				Tracking.class,
 				RegistrationWindowController.class,
 				WelcomeDialogWindowController.class,

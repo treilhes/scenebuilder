@@ -297,8 +297,9 @@ public class UserLibrary extends Library {
 
 				@Override
 				public void onChanged(Change<? extends JarReport> c) {
-					onFinishedUpdatingJarReports.accept(c.getAddedSubList());
-					
+					while (c.next()) {
+						onFinishedUpdatingJarReports.accept(c.getAddedSubList());
+					}
 				}
         		
         	});

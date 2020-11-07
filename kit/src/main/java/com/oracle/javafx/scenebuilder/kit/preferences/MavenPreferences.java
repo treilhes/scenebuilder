@@ -34,62 +34,37 @@ package com.oracle.javafx.scenebuilder.kit.preferences;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.preferences.AbstractListPreferences;
+import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 
-public class MavenPreferences {
-
-    /***************************************************************************
-     *                                                                         *
-     * Instance fields                                                         *
-     *                                                                         *
-     **************************************************************************/
-
-    private final Map<String, PreferencesRecordArtifact> recordArtifacts;
-
-    /***************************************************************************
-     *                                                                         *
-     * Support Classes                                                         *
-     *                                                                         *
-     **************************************************************************/
-
-    public MavenPreferences() {
-        this.recordArtifacts = new HashMap<>();
+@Component
+public class MavenPreferences extends AbstractListPreferences<PreferencesRecordArtifact, MavenArtifact> {
+	
+	private static final String ARTIFACTS = "ARTIFACTS"; //NOI18N
+	
+    public MavenPreferences(@Autowired RootPreferencesNode root) {
+    	super(root, ARTIFACTS, PreferencesRecordArtifact.keyProvider(), PreferencesRecordArtifact.defaultProvider());
     }
 
-    /***************************************************************************
-     *                                                                         *
-     * Methods                                                                 *
-     *                                                                         *
-     **************************************************************************/
-
-    public PreferencesRecordArtifact getRecordArtifact(String coordinates) {
-        return recordArtifacts.get(coordinates);
-    }
-    
-    public void addRecordArtifact(String key, PreferencesRecordArtifact object) {
-        recordArtifacts.put(key, object);
-    }
-    
-    public void removeRecordArtifact(String coordinates) {
-        recordArtifacts.remove(coordinates);
-    }
-    
     /*
      * Single Artifact
      */
-    
+
     private String getArtifactJarPath(MavenArtifact artifact) {
-        return recordArtifacts.get(artifact.getCoordinates()).getPath();
+        return getRecord(artifact).getPath();
     }
     
     private List<String> getArtifactJarDependencies(MavenArtifact artifact) {
-        String dep = recordArtifacts.get(artifact.getCoordinates()).getMavenArtifact().getDependencies();
+        String dep = getRecord(artifact).getDependencies();
         if (dep != null && !dep.isEmpty()) {
                 return Stream.of(dep.split(File.pathSeparator)).collect(Collectors.toList());
         } 
@@ -126,7 +101,7 @@ public class MavenPreferences {
     }
     
     public List<String> getArtifactFilter(MavenArtifact artifact) {
-        String filter = recordArtifacts.get(artifact.getCoordinates()).getMavenArtifact().getFilter();
+        String filter = getRecord(artifact).getFilter();
         if (filter != null && !filter.isEmpty()) {
                 return Stream.of(filter.split(File.pathSeparator)).collect(Collectors.toList());
         } 
@@ -138,7 +113,7 @@ public class MavenPreferences {
      */
     
     private List<String> getArtifactsJarsPaths() {
-        return recordArtifacts.values()
+        return getRecords().values()
                 .stream()
                 .map(PreferencesRecordArtifact::getPath)
                 .distinct()
@@ -146,9 +121,9 @@ public class MavenPreferences {
     }
     
     private List<String> getArtifactsJarsDependencies() {
-        return recordArtifacts.values()
+        return getRecords().values()
                 .stream()
-                .map(p -> p.getMavenArtifact().getDependencies())
+                .map(p -> p.getDependencies())
                 .filter(d -> d != null && !d.isEmpty())
                 .flatMap(d -> Stream.of(d.split(File.pathSeparator)))
                 .distinct()
@@ -187,9 +162,9 @@ public class MavenPreferences {
     }
     
     public List<String> getArtifactsFilter() {
-        return recordArtifacts.values()
+        return getRecords().values()
                 .stream()
-                .map(p -> p.getMavenArtifact().getFilter())
+                .map(p -> p.getFilter())
                 .filter(f -> f != null && !f.isEmpty())
                 .flatMap(f -> Stream.of(f.split(File.pathSeparator)))
                 .distinct()
@@ -197,10 +172,24 @@ public class MavenPreferences {
     }
     
     public List<String> getArtifactsCoordinates() {
-        return recordArtifacts.entrySet()
+        return getRecords().entrySet()
                 .stream()
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
+    
+
+    public PreferencesRecordArtifact getRecordArtifact(MavenArtifact mavenArtifact) {
+    	return getRecord(mavenArtifact);
+    }
+    
+    public PreferencesRecordArtifact getRecordArtifact(String key) {
+        return getRecord(key);
+    }
+
+    public void removeArtifact(String coordinates) {
+        removeRecord(coordinates);
+    }
+
     
 }
