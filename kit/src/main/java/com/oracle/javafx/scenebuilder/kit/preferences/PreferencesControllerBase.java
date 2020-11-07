@@ -97,7 +97,11 @@ public abstract class PreferencesControllerBase {
      *                                                                         *
      **************************************************************************/
 
-    public PreferencesControllerBase(MavenPreferences mavenPreferences, String basePrefNodeName, PreferencesRecordGlobalBase recordGlobal) {
+    public PreferencesControllerBase(
+    		String basePrefNodeName,
+    		MavenPreferences mavenPreferences, 
+    		RepositoryPreferences repositoryPreferences,
+    		PreferencesRecordGlobalBase recordGlobal) {
         applicationRootPreferences = Preferences.userNodeForPackage(getClass()).node(basePrefNodeName);
 
         // Preferences global to the SB application
@@ -120,25 +124,7 @@ public abstract class PreferencesControllerBase {
         this.mavenPreferences = mavenPreferences;
 
         // repositories
-        repositoryPreferences = new RepositoryPreferences();
-
-        // create initial map of existing repositories
-        try {
-            final String[] childrenNames = repositoriesRootPreferences.childrenNames();
-            for (String child : childrenNames) {
-                Preferences rp = repositoriesRootPreferences.node(child);
-                Repository repository = new Repository(rp.get(PreferencesRecordRepository.REPO_ID, null),
-                        rp.get(PreferencesRecordRepository.REPO_TYPE, null),
-                        rp.get(PreferencesRecordRepository.REPO_URL, null),
-                        rp.get(PreferencesRecordRepository.REPO_USER, null),
-                        rp.get(PreferencesRecordRepository.REPO_PASS, null));
-                final PreferencesRecordRepository recordRepository = new PreferencesRecordRepository(
-                        artifactsRootPreferences, repository);
-                repositoryPreferences.addRecordRepository(child, recordRepository);
-            }
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesControllerBase.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.repositoryPreferences = repositoryPreferences;
 
     }
 
@@ -169,25 +155,11 @@ public abstract class PreferencesControllerBase {
     }
 
     public PreferencesRecordRepository getRecordRepository(Repository repository) {
-        PreferencesRecordRepository recordRepository = repositoryPreferences.getRecordRepository(repository.getId());
-        if (recordRepository == null) {
-            recordRepository = new PreferencesRecordRepository(repositoriesRootPreferences, repository);
-            repositoryPreferences.addRecordRepository(repository.getId(), recordRepository);
-        }
-        return recordRepository;
+        return repositoryPreferences.getRecordRepository(repository);
     }
 
     public void removeRepository(String id) {
-        if (id != null && !id.isEmpty() &&
-                repositoryPreferences.getRecordRepository(id) != null) {
-            Preferences node = repositoriesRootPreferences.node(id);
-            try {
-                node.removeNode();
-                repositoryPreferences.removeRecordRepository(id);
-            } catch (BackingStoreException ex) {
-                Logger.getLogger(PreferencesControllerBase.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    	repositoryPreferences.removeRecordRepository(id);
     }
 
 }

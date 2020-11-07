@@ -31,37 +31,46 @@
  */
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.preferences.AbstractListPreferences;
+import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
-public class RepositoryPreferences {
+@Component
+public class RepositoryPreferences extends AbstractListPreferences<PreferencesRecordRepository, Repository> {
+	
+	// NODE
+    protected static final String NODE_NAME = "REPOSITORIES"; //NOI18N
+	
+    public RepositoryPreferences(@Autowired RootPreferencesNode root) {
+    	super(root, NODE_NAME, PreferencesRecordRepository.keyProvider(), PreferencesRecordRepository.defaultProvider());
+    }
     
-    private final Map<String, PreferencesRecordRepository> recordRepositories;
-
-    public RepositoryPreferences() {
-        this.recordRepositories = new HashMap<>();
+    public PreferencesRecordRepository getRecordRepository(Repository repository) {
+    	return getRecord(repository);
     }
     
     public PreferencesRecordRepository getRecordRepository(String id) {
-        return recordRepositories.get(id);
+        return getRecord(id);
     }
     
     public void addRecordRepository(String key, PreferencesRecordRepository object) {
-        recordRepositories.put(key, object);
+        addRecordRepository(key, object);
     }
     
     public void removeRecordRepository(String id) {
-        recordRepositories.remove(id);
+        removeRecord(id);
     }
     
     public List<Repository> getRepositories() {
-        return recordRepositories.values()
+        return getRecords().values()
                 .stream()
-                .map(p -> p.getRepository())
+                .map(p -> p.getValue())
                 .collect(Collectors.toList());
     }
     

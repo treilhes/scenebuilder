@@ -2,7 +2,6 @@ package com.oracle.javafx.scenebuilder.kit.preferences;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
@@ -18,8 +17,6 @@ public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
     public final static String DEPENDENCIES = "dependencies";
     public final static String FILTER = "filter";
     public final static String PATH = "path";
-    
-    private Preferences artifactNode;
 
 	public PreferencesRecordArtifact(Preferences node, MavenArtifact defaultValue) {
 		super(node, null, defaultValue);
@@ -32,63 +29,68 @@ public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
 	public static DefaultProvider<PreferencesRecordArtifact> defaultProvider() {
 		return (node) -> new PreferencesRecordArtifact(node, new MavenArtifact());
 	}
-	
-	@Override
-	public void writeToJavaPreferences() {
-		assert getNode() != null;
-        assert getValue().getCoordinates() != null;
-        
-        MavenArtifact mavenArtifact = getValue();
-        String key = keyProvider().newKey(mavenArtifact);
-        
-        if (artifactNode == null) {
-            try {
-            	
-                assert getNode().nodeExists(key) == false;
-                // Create a new document preference node under the document root node
-                artifactNode = getNode().node(key);
-            } catch(BackingStoreException ex) {
-                Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, null, ex);
-                return;
-            }
-        }
-        assert artifactNode != null;
-            
-        String[] items = mavenArtifact.getCoordinates().split(":");
-        artifactNode.put(GROUPID, items[0]);
-        artifactNode.put(ARTIFACTID, items[1]);
-        artifactNode.put(VERSION, items[2]);
-        artifactNode.put(DEPENDENCIES, mavenArtifact.getDependencies());
-        artifactNode.put(FILTER, mavenArtifact.getFilter());
-        artifactNode.put(PATH, mavenArtifact.getPath());
-	}
 
 	@Override
-	public void readFromJavaPreferences(String key) {
-		assert artifactNode == null;
+	public boolean isValid(MavenArtifact object) {
+		boolean valid = true;
+		
+		if (object == null) {
+			Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, "MavenArtifact can't be null");
+			return false;
+		}
+		if (object.getCoordinates() == null) {
+			Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, "MavenArtifact coordinates can't be null or empty");
+			valid &= false;
+		} else {
+			String[] items = object.getCoordinates().split(":");
+			if (items.length != 3) {
+				Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, 
+						"Wrong MavenArtifact coordinates format, it must be \"groupId:artifactId:version\" but it is \"{0}\"", 
+						object.getCoordinates());
+				valid &= false;
+			}
+		}
+		
+		if (object.getDependencies() == null || object.getFilter() == null || object.getPath() == null) {
+			Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, "MavenArtifact fields can't be null");
+			valid &= false;
+		}
+		return valid;
+	}
+	
+	@Override
+	public String computeKey(MavenArtifact object) {
+		return keyProvider().newKey(object);
+	}
+	
+	@Override
+	public void writeToNode(String key, Preferences node) {
+		assert key != null;
+		assert node != null;
+		assert getValue().getCoordinates() != null;
 
 		MavenArtifact mavenArtifact = getValue();
 		
-        // Check if there are some preferences for this artifact
-        try {
-            final String[] childrenNames = getNode().childrenNames();
-            for (String child : childrenNames) {
-                if (child.equals(key)) {
-                	artifactNode = getNode().node(child);
-                }
-            }
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-        if (artifactNode == null) {
-            return;
-        }
-        
-        mavenArtifact.setCoordinates(key);
-        mavenArtifact.setDependencies(artifactNode.get(DEPENDENCIES, null));
-        mavenArtifact.setFilter(artifactNode.get(FILTER, null));
-        mavenArtifact.setPath(artifactNode.get(PATH, null));
+		String[] items = mavenArtifact.getCoordinates().split(":");
+		node.put(GROUPID, items[0]);
+		node.put(ARTIFACTID, items[1]);
+		node.put(VERSION, items[2]);
+		node.put(DEPENDENCIES, mavenArtifact.getDependencies());
+		node.put(FILTER, mavenArtifact.getFilter());
+		node.put(PATH, mavenArtifact.getPath());
+	}
+	
+	@Override
+	public void readFromNode(String key, Preferences node) {
+		assert key != null;
+		assert node != null;
+				
+		MavenArtifact mavenArtifact = getValue();
+		
+		mavenArtifact.setCoordinates(key);
+        mavenArtifact.setDependencies(node.get(DEPENDENCIES, null));
+        mavenArtifact.setFilter(node.get(FILTER, null));
+        mavenArtifact.setPath(node.get(PATH, null));
 	}
 
 	public String getPath() {
@@ -106,6 +108,6 @@ public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
 	public String getFilter() {
 		return getValue().getFilter();
 	}
-	
+
 }
 

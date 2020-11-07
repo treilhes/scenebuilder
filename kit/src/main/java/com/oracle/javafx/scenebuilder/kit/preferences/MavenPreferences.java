@@ -49,10 +49,11 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifa
 @Component
 public class MavenPreferences extends AbstractListPreferences<PreferencesRecordArtifact, MavenArtifact> {
 	
-	private static final String ARTIFACTS = "ARTIFACTS"; //NOI18N
+	// NODE
+	protected static final String NODE_NAME = "ARTIFACTS"; //NOI18N
 	
     public MavenPreferences(@Autowired RootPreferencesNode root) {
-    	super(root, ARTIFACTS, PreferencesRecordArtifact.keyProvider(), PreferencesRecordArtifact.defaultProvider());
+    	super(root, NODE_NAME, PreferencesRecordArtifact.keyProvider(), PreferencesRecordArtifact.defaultProvider());
     }
 
     /*

@@ -33,92 +33,91 @@ package com.oracle.javafx.scenebuilder.kit.preferences;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
+import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
+import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 /**
  * Defines repository preferences global to the application.
  */
-public class PreferencesRecordRepository {
+public class PreferencesRecordRepository extends ObjectPreference<Repository> {
     
-    private final Preferences repositoriesRootPreferences;
-    private Preferences repositoryPreferences;
     public final static String REPO_ID  = "ID";
     public final static String REPO_TYPE  = "type";
     public final static String REPO_URL  = "URL";
     public final static String REPO_USER = "User";
     public final static String REPO_PASS = "Password";   
     
-    private final Repository repository;
+    public PreferencesRecordRepository(Preferences node, Repository defaultValue) {
+		super(node, null, defaultValue);
+	}
     
-    public PreferencesRecordRepository(Preferences artifactsRootPreferences, Repository repository) {
-        this.repositoriesRootPreferences = artifactsRootPreferences;
-        this.repository = repository;
-    }
-    
-    public Repository getRepository() {
-        return repository;
-    }
-    /**
-     * Read data from the java preferences DB and initialize properties.
-     */
-    public void readFromJavaPreferences() {
+    public static KeyProvider<Repository> keyProvider() {
+		return (r) -> r.getId();
+	}
+	
+	public static DefaultProvider<PreferencesRecordRepository> defaultProvider() {
+		return (node) -> new PreferencesRecordRepository(node, new Repository());
+	}
+	
+	@Override
+	public boolean isValid(Repository object) {
+		if (object == null) {
+			Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, "Repository can't be null");
+			return false;
+		}
+		if (object.getId() == null || object.getId().isEmpty()) {
+			Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, "Repository id can't be null or empty");
+			return false;
+		}
+		if (object.getType() == null || object.getURL() == null) {
+			Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, "Repository fields type and url can't be null");
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public String computeKey(Repository object) {
+		return keyProvider().newKey(object);
+	}
+	
+	@Override
+	public void writeToNode(String key, Preferences node) {
+		assert key != null;
+		assert node != null;
+		assert getValue().getId() != null;
 
-        assert repositoryPreferences == null;
-        
-        // Check if there are some preferences for this artifact
-        try {
-            final String[] childrenNames = repositoriesRootPreferences.childrenNames();
-            for (String child : childrenNames) {
-                if (child.equals(repository.getId())) {
-                    repositoryPreferences = repositoriesRootPreferences.node(child);
-                }
-            }
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-        if (repositoryPreferences == null) {
-            return;
-        }
-        
-        repository.setId(repositoryPreferences.get(REPO_ID, null));
-        repository.setType(repositoryPreferences.get(REPO_TYPE, null));
-        repository.setURL(repositoryPreferences.get(REPO_URL, null));
-        repository.setUser(repositoryPreferences.get(REPO_USER, null));
-        repository.setPassword(repositoryPreferences.get(REPO_PASS, null));
-    }
-    
-    /**
-     * Write the properties data to the java preferences DB.
-     */
-    public void writeToJavaPreferences() {
-        assert repositoriesRootPreferences != null;
-        assert repository.getId() != null;
-        
-        if (repositoryPreferences == null) {
-            try {
-                assert repositoriesRootPreferences.nodeExists(repository.getId()) == false;
-                // Create a new document preference node under the document root node
-                repositoryPreferences = repositoriesRootPreferences.node(repository.getId());
-            } catch(BackingStoreException ex) {
-                Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, null, ex);
-                return;
-            }
-        }
-        assert repositoryPreferences != null;
-            
-        repositoryPreferences.put(REPO_ID, repository.getId());
-        repositoryPreferences.put(REPO_TYPE, repository.getType());
-        repositoryPreferences.put(REPO_URL, repository.getURL());
+		Repository repository = getValue();
+		
+		node.put(REPO_ID, repository.getId());
+		node.put(REPO_TYPE, repository.getType());
+		node.put(REPO_URL, repository.getURL());
         if (repository.getUser() != null) {
-            repositoryPreferences.put(REPO_USER, repository.getUser());
+        	node.put(REPO_USER, repository.getUser());
         }
         if (repository.getPassword() != null) {
-            repositoryPreferences.put(REPO_PASS, repository.getPassword());
+        	node.put(REPO_PASS, repository.getPassword());
         }
-        
-    }
+	}
+	
+	@Override
+	public void readFromNode(String key, Preferences node) {
+		assert key != null;
+		assert node != null;
+				
+		Repository repository = getValue();
+		
+		repository.setId(node.get(REPO_ID, null));
+        repository.setType(node.get(REPO_TYPE, null));
+        repository.setURL(node.get(REPO_URL, null));
+        repository.setUser(node.get(REPO_USER, null));
+        repository.setPassword(node.get(REPO_PASS, null));
+		
+	}
+	
 }

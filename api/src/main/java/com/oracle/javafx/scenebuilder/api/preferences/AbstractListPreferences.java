@@ -114,7 +114,7 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
     	return Collections.unmodifiableMap(records);
     }
     
-    public String addRecord(T object) {
+    private String addRecord(T object) {
     	String key = keyProvider.newKey(object.getValue());
         records.put(key, object);
         return key;

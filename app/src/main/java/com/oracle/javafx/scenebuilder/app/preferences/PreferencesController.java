@@ -48,6 +48,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
+import com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferences;
 
 /**
  * Defines preferences for Scene Builder App.
@@ -111,8 +112,9 @@ public class PreferencesController extends PreferencesControllerBase implements 
      **************************************************************************/
 
     private PreferencesController(
-    		@Lazy @Autowired MavenPreferences mavenpreferences) {
-        super(mavenpreferences, SB_RELEASE_NODE, new PreferencesRecordGlobal());
+    		@Lazy @Autowired MavenPreferences mavenPreferences,
+    		@Lazy @Autowired RepositoryPreferences repositoryPreferences) {
+        super(SB_RELEASE_NODE, mavenPreferences, repositoryPreferences, new PreferencesRecordGlobal());
 
         // Cleanup document preferences at start time : 
         final String items = applicationRootPreferences.get(RECENT_ITEMS, null); //NOI18N
