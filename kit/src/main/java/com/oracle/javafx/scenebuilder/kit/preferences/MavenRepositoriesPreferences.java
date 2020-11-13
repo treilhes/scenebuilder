@@ -38,28 +38,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.AbstractListPreferences;
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 @Component
-public class RepositoryPreferences extends AbstractListPreferences<PreferencesRecordRepository, Repository> {
+public class MavenRepositoriesPreferences extends AbstractListPreferences<MavenRepositoryPreferences, Repository> {
 	
 	// NODE
     protected static final String NODE_NAME = "REPOSITORIES"; //NOI18N
 	
-    public RepositoryPreferences(@Autowired RootPreferencesNode root) {
-    	super(root, NODE_NAME, PreferencesRecordRepository.keyProvider(), PreferencesRecordRepository.defaultProvider());
+    public MavenRepositoriesPreferences(@Autowired PreferencesContext preferencesContext) {
+    	super(preferencesContext, NODE_NAME, MavenRepositoryPreferences.keyProvider(), MavenRepositoryPreferences.defaultProvider());
     }
     
-    public PreferencesRecordRepository getRecordRepository(Repository repository) {
+    public MavenRepositoryPreferences getRecordRepository(Repository repository) {
     	return getRecord(repository);
     }
     
-    public PreferencesRecordRepository getRecordRepository(String id) {
+    public MavenRepositoryPreferences getRecordRepository(String id) {
         return getRecord(id);
     }
     
-    public void addRecordRepository(String key, PreferencesRecordRepository object) {
+    public void addRecordRepository(String key, MavenRepositoryPreferences object) {
         addRecordRepository(key, object);
     }
     

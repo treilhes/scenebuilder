@@ -32,172 +32,57 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
+import java.util.List;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
-import com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferences;
+import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
+import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 
 /**
  * Defines preferences for Scene Builder App.
  */
 @Component
-public class PreferencesController extends PreferencesControllerBase implements InitializingBean, RootPreferencesNode{
+public class PreferencesController  {
 
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
+    private final List<ManagedGlobalPreference> preferences;
 
-    // PREFERENCES NODE NAME
-    static final String SB_RELEASE_NODE = "SB_2.0"; //NOI18N
-
-    // GLOBAL PREFERENCES
-    static final String TOOL_THEME = "TOOL_THEME"; //NOI18N
-    static final String CSS_TABLE_COLUMNS_ORDERING_REVERSED = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; //NOI18N
-
-    static final String RECENT_ITEMS = "RECENT_ITEMS"; //NOI18N
-    static final String RECENT_ITEMS_SIZE = "RECENT_ITEMS_SIZE"; //NOI18N
-
-    static final String REGISTRATION_HASH = "REGISTRATION_HASH"; //NOI18N
-    static final String REGISTRATION_EMAIL = "REGISTRATION_EMAIL"; //NOI18N
-    static final String REGISTRATION_OPT_IN = "REGISTRATION_OPT_IN"; //NOI18N
-
-    static final String UPDATE_DIALOG_DATE = "UPDATE_DIALOG_DATE";
-    static final String IGNORE_VERSION = "IGNORE_VERSION";
-
-    static final String IMPORTED_GLUON_JARS = "IMPORTED_GLUON_JARS";
-
-    static final String LAST_SENT_TRACKING_INFO_DATE = "LAST_SENT_TRACKING_INFO_DATE";
-
-    // DOCUMENT SPECIFIC PREFERENCES
-    static final String BOTTOM_VISIBLE = "bottomVisible";//NOI18N
-    static final String LEFT_VISIBLE = "leftVisible"; //NOI18N
-    static final String RIGHT_VISIBLE = "rightVisible"; //NOI18N
-    static final String LIBRARY_VISIBLE = "libraryVisible"; //NOI18N
-    static final String DOCUMENT_VISIBLE = "documentVisible"; //NOI18N
-    static final String INSPECTOR_SECTION_ID = "inspectorSectionId"; //NOI18N
-    static final String LEFT_DIVIDER_HPOS = "leftDividerHPos"; //NOI18N
-    static final String RIGHT_DIVIDER_HPOS = "rightDividerHPos"; //NOI18N
-    static final String BOTTOM_DIVIDER_VPOS = "bottomDividerVPos"; //NOI18N
-    static final String LEFT_DIVIDER_VPOS = "leftDividerVPos"; //NOI18N
-
-    private static PreferencesController singleton;
-
-    /***************************************************************************
-     *                                                                         *
-     * Instance fields                                                         *
-     *                                                                         *
-     **************************************************************************/
-
-    private final Map<DocumentWindowController, PreferencesRecordDocument> recordDocuments = new HashMap<>();
-
-    /***************************************************************************
+	/***************************************************************************
      *                                                                         *
      * Constructors                                                            *
      *                                                                         *
      **************************************************************************/
 
     private PreferencesController(
-    		@Lazy @Autowired MavenPreferences mavenPreferences,
-    		@Lazy @Autowired RepositoryPreferences repositoryPreferences) {
-        super(SB_RELEASE_NODE, mavenPreferences, repositoryPreferences, new PreferencesRecordGlobal());
-
-        // Cleanup document preferences at start time : 
-        final String items = applicationRootPreferences.get(RECENT_ITEMS, null); //NOI18N
-        if (items != null && items.isEmpty() == false) {
-            // Remove document preferences node if needed
-            try {
-                final String[] childrenNames = documentsRootPreferences.childrenNames();
-                // Check among the document root chidlren if there is a child
-                // which path matches the specified one
-                for (String child : childrenNames) {
-                    final Preferences documentPreferences = documentsRootPreferences.node(child);
-                    final String nodePath = documentPreferences.get(PATH, null);
-                    // Each document node defines a path
-                    // If path is null or empty, this means preferences DB has been corrupted
-                    if (nodePath == null || nodePath.isEmpty()) {
-                        documentPreferences.removeNode();
-                    }
-                }
-            } catch (BackingStoreException ex) {
-                Logger.getLogger(PreferencesController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    		@Autowired DocumentPreferencesNode documentPreferenceNode,
+    		@Autowired List<ManagedGlobalPreference> preferences
+    	) {
+    	this.preferences = preferences;
+    	
+        documentPreferenceNode.cleanupCorruptedNodes();
+        readFromJavaPreferences(); 
     }
-
-    @Override
-	public void afterPropertiesSet() throws Exception {
-    	singleton = this;
-        getRecordGlobal().readFromJavaPreferences();
+    
+    public void readFromJavaPreferences() {
+    	preferences.forEach((p) -> p.readFromJavaPreferences()); 
     }
-    /***************************************************************************
-     *                                                                         *
-     * Methods                                                                 *
-     *                                                                         *
-     **************************************************************************/
-
-    public static synchronized PreferencesController getSingleton() {
-    	assert singleton != null;
-//        if (singleton == null) {
-//        	singleton = new PreferencesController();
-//            singleton.getRecordGlobal().readFromJavaPreferences();
+    
+    public void writeToJavaPreferences() {
+    	preferences.forEach((p) -> p.writeToJavaPreferences());
+    }
+    
+    //TODO what to do with that?
+    public void temp() {
+        // Document size
+//        if (getRootContainerHeight() == -1) {
+//            setRootContainerHeight(DEFAULT_ROOT_CONTAINER_HEIGHT);
 //        }
-        return singleton;
+//
+//        if (getRootContainerWidth() == -1) {
+//            setRootContainerWidth(DEFAULT_ROOT_CONTAINER_WIDTH);
+//        }
+
     }
-
-
-    public PreferencesRecordDocument getRecordDocument(final DocumentWindowController dwc) {
-        final PreferencesRecordDocument recordDocument;
-        if (recordDocuments.containsKey(dwc)) {
-            recordDocument = recordDocuments.get(dwc);
-        } else {
-            recordDocument = new PreferencesRecordDocument(documentsRootPreferences, dwc);
-            recordDocuments.put(dwc, recordDocument);
-        }
-        return recordDocument;
-    }
-
-    public void clearRecentItems() {
-        // Clear RECENT ITEMS global preferences
-        getRecordGlobal().clearRecentItems();
-        // Clear individual DOCUMENTS preferences
-        try {
-            // Remove nodes from the DOCUMENTS root preference
-            for (String child : documentsRootPreferences.childrenNames()) {
-                final Preferences documentPreferences = documentsRootPreferences.node(child);
-                documentPreferences.removeNode();
-            }
-            // Reset the PreferencesRecordDocuments
-            for (PreferencesRecordDocument prd : recordDocuments.values()) {
-                prd.resetDocumentPreferences();
-            }
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public PreferencesRecordGlobal getRecordGlobal() {
-        return (PreferencesRecordGlobal) recordGlobal;
-    }
-
-	@Override
-	public Preferences getNode() {
-		return applicationRootPreferences;
-	}
 
 }

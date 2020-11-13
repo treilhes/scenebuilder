@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.kit.alert;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -64,7 +64,7 @@ public class WarnThemeAlert extends SBAlert {
 
         resultProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == setGluonTheme) {
-                editorController.setTheme(EditorPlatform.Theme.GLUON_MOBILE_LIGHT);
+                editorController.setTheme(Theme.GLUON_MOBILE_LIGHT);
             }
         });
 
@@ -72,15 +72,15 @@ public class WarnThemeAlert extends SBAlert {
     }
 
     public static void showAlertIfRequired(EditorController editorController, FXOMObject fxomObject, Stage owner) {
-        if (!hasBeenShown && fxomObject != null && fxomObject.isGluon() && (editorController.getTheme() != EditorPlatform.Theme.GLUON_MOBILE_LIGHT
-                && editorController.getTheme() != EditorPlatform.Theme.GLUON_MOBILE_DARK)) {
+        if (!hasBeenShown && fxomObject != null && fxomObject.isGluon() && (editorController.getTheme() != Theme.GLUON_MOBILE_LIGHT
+                && editorController.getTheme() != Theme.GLUON_MOBILE_DARK)) {
             new WarnThemeAlert(editorController, owner).showAndWait();
         }
     }
 
     public static void showAlertIfRequired(EditorController editorController, FXOMDocument fxomDocument, Stage owner) {
-        if (!hasBeenShown && fxomDocument != null && fxomDocument.hasGluonControls() && (editorController.getTheme() != EditorPlatform.Theme.GLUON_MOBILE_LIGHT
-                && editorController.getTheme() != EditorPlatform.Theme.GLUON_MOBILE_DARK)) {
+        if (!hasBeenShown && fxomDocument != null && fxomDocument.hasGluonControls() && (editorController.getTheme() != Theme.GLUON_MOBILE_LIGHT
+                && editorController.getTheme() != Theme.GLUON_MOBILE_DARK)) {
             new WarnThemeAlert(editorController, owner).showAndWait();
         }
     }

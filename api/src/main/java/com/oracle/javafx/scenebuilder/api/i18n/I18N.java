@@ -28,25 +28,16 @@ public class I18N {
 		
 	}
 	
-//    public ResourceBundle getBundle() {
-//		return combinedBundle;
-//	}
-//
-//	public String getString(String key) {
-//        return combinedBundle.getString(key);
-//    }
-//    
-//    public String getString(String key, Object... arguments) {
-//        final String pattern = getString(key);
-//        return MessageFormat.format(pattern, arguments);
-//    }
+	public String get(String key) {
+		return combinedBundle.getString(key);
+	}
     
     public static ResourceBundle getBundle() {
 		return instance.combinedBundle;
 	}
     
     public static String getString(String key) {
-        return instance.combinedBundle.getString(key);
+        return instance.get(key);
     }
     
     public static String getString(String key, Object... arguments) {

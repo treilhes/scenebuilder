@@ -1,26 +1,34 @@
 package com.oracle.javafx.scenebuilder.api.preferences.type;
 
-import java.util.prefs.Preferences;
-
 import com.oracle.javafx.scenebuilder.api.preferences.AbstractPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 
 import javafx.beans.property.SimpleStringProperty;
 
 public class StringPreference extends AbstractPreference<String> {
-
-	public StringPreference(Preferences node, String name, String defaultValue) {
-		super(node, name, defaultValue, new SimpleStringProperty());
+	
+	public StringPreference(PreferencesContext preferencesContext, String name, String defaultValue) {
+		super(preferencesContext, name, defaultValue, new SimpleStringProperty(), false);
 	}
 
 	@Override
 	public void writeToJavaPreferences() {
-		getNode().put(getName(), getValue());
+		if (isValid(getValue())) {
+			getNode().put(getName(), getValue());
+		} else {
+			getNode().remove(getName());
+		}
 	}
 
 	@Override
-	public void readFromJavaPreferences(String key) {
-		assert getName() == key;
-		setValue(getNode().get(getName(), getDefaultValue()));
+	public void readFromJavaPreferences() {
+		assert getName() != null;
+		setValue(getNode().get(getName(), getDefault()));
+	}
+
+	@Override
+	public boolean isValid(String value) {
+		return value != null && !value.isEmpty();
 	}
 
 }

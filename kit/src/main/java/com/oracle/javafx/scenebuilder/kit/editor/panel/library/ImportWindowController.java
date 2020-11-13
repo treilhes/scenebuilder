@@ -59,7 +59,7 @@ import com.oracle.javafx.scenebuilder.kit.library.util.FolderExplorer;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarExplorer;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReportEntry;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -114,7 +114,7 @@ public class ImportWindowController extends AbstractModalDialog {
     private List<String> alreadyExcludedItems = new ArrayList<>();
     private final List<String> artifactsFilter;
 
-    private final MavenPreferences mavenPreferences;
+    private final MavenArtifactsPreferences mavenPreferences;
     
     @FXML
     private VBox leftHandSidePart;
@@ -153,11 +153,11 @@ public class ImportWindowController extends AbstractModalDialog {
     ToggleButton checkAllUncheckAllToggle;
 
     
-    public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenPreferences mavenPreferences, Stage owner) {
+    public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
         this(lpc, files, mavenPreferences, owner, true, new ArrayList<>());
     }
     
-    public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenPreferences mavenPreferences, Stage owner,
+    public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
             boolean copyFilesToUserLibraryDir, List<String> artifactsFilter) {
         super(ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         libPanelController = lpc;

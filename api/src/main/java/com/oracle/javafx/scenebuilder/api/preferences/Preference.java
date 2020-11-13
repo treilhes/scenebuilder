@@ -4,15 +4,18 @@ import java.util.prefs.Preferences;
 
 import javafx.beans.value.ObservableValue;
 
-public interface Preference<T> {
+public interface Preference<T> extends ManagedPreference {
 	
 	Preferences getNode();
 	String getName();
-	void setValue(T value);
-	ObservableValue<T> getObservableValue();
+	
+	Preference<T> setValue(T value);
 	T getValue();
-	T getDefaultValue();
-	void writeToJavaPreferences();
-	void readFromJavaPreferences(String key);
+	T getDefault();
+	ObservableValue<T> getObservableValue();
+	
+	boolean isValid(T value);
+	
+	Preference<T> reset();
 	
 }

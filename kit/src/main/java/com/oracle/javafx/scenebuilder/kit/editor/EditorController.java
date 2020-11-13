@@ -50,11 +50,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddContextMenuToSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddTooltipToSelectionJob;
@@ -111,6 +111,13 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.preferences.document.SceneStyleSheetsPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 
 import javafx.beans.property.BooleanProperty;
@@ -124,6 +131,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableListValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -148,7 +156,7 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class EditorController {
+public class EditorController implements Editor {
 	
     /**
      * An 'edit' action is an action which modifies the document associated
@@ -269,15 +277,15 @@ public class EditorController {
     private final ObjectProperty<Library> libraryProperty;
     private final ObjectProperty<FXOMDocument> fxomDocumentProperty 
             = new SimpleObjectProperty<>();
-    private final ObjectProperty<URL> fxmlLocationProperty 
-            = new SimpleObjectProperty<>();
+    private final ObjectProperty<URL> fxmlLocationProperty; 
+            //= new SimpleObjectProperty<>();
     private final ObjectProperty<Glossary> glossaryProperty 
             = new SimpleObjectProperty<>(new BuiltinGlossary());
     private final ObjectProperty<ResourceBundle> resourcesProperty
             = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<EditorPlatform.GluonTheme> gluonThemeProperty
+    private final ObjectProperty<GluonTheme> gluonThemeProperty
             = new SimpleObjectProperty<>(EditorPlatform.DEFAULT_GLUON_THEME);
-    private final ObjectProperty<EditorPlatform.GluonSwatch> gluonSwatchProperty
+    private final ObjectProperty<GluonSwatch> gluonSwatchProperty
             = new SimpleObjectProperty<>(EditorPlatform.DEFAULT_SWATCH);
     private final ListProperty<File> sceneStyleSheetProperty
             = new SimpleListProperty<>();
@@ -291,17 +299,47 @@ public class EditorController {
     private Callback<Void, Boolean> requestTextEditingSessionEnd;
 
     private Stage ownerWindow;
-    
+	
     private static String builtinToolStylesheet;
     private static File nextInitialDirectory = new File(System.getProperty("user.home")); //NOI18N
     
+    private final SceneStyleSheetsPreference sceneStyleSheetsPreference;
+	private final ThemePreference themePreference;
+	private final GluonThemePreference gluonThemePreference;
+	private final GluonSwatchPreference gluonSwatchPreference;
     
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
-    public EditorController(@Autowired BuiltinLibrary builtinLibrary) {
+    public EditorController(
+    		@Autowired BuiltinLibrary builtinLibrary,
+    		@Autowired SceneStyleSheetsPreference sceneStyleSheets,
+    	    @Autowired ThemePreference theme,
+    	    @Autowired GluonSwatchPreference gluonSwatch,
+    	    @Autowired GluonThemePreference gluonTheme
+    		) {
+    	this.sceneStyleSheetsPreference = sceneStyleSheets;
+    	this.themePreference = theme;
+    	this.gluonSwatchPreference = gluonSwatch;
+    	this.gluonThemePreference = gluonTheme;
+    	
     	libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
-        jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
+    	fxmlLocationProperty = new SimpleObjectProperty<>();
+    	
+    	jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
+        
+        
+    }
+    
+    @FXML
+	public void initialize() {
+    	// init preferences
+    	// Add scene style sheets listener
+        sceneStyleSheetProperty().addListener((ov, t, t1) -> sceneStyleSheetsPreference.setValue(t1));
+        // Add theme and Gluon theme listener
+        themeProperty().addListener(((observable, oldValue, newValue) -> themePreference.setValue(newValue)));
+        gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> gluonSwatchPreference.setValue(newValue)));
+        gluonThemeProperty().addListener(((observable, oldValue, newValue) -> gluonThemePreference.setValue(newValue)));
     }
 
     /**
@@ -596,7 +634,7 @@ public class EditorController {
      *
      * @return the gluon theme used by this editor
      */
-    public EditorPlatform.GluonTheme getGluonTheme() {
+    public GluonTheme getGluonTheme() {
         return gluonThemeProperty.get();
     }
 
@@ -607,7 +645,7 @@ public class EditorController {
      *
      * @param theme the theme to be used in this editor
      */
-    public void setGluonTheme(EditorPlatform.GluonTheme theme) {
+    public void setGluonTheme(GluonTheme theme) {
         gluonThemeProperty.set(theme);
     }
 
@@ -616,7 +654,7 @@ public class EditorController {
      *
      * @return the property holding the gluon theme used by this editor.
      */
-    public ObjectProperty<EditorPlatform.GluonTheme> gluonThemeProperty() {
+    public ObjectProperty<GluonTheme> gluonThemeProperty() {
         return gluonThemeProperty;
     }
 
@@ -627,7 +665,7 @@ public class EditorController {
      *
      * @param swatch the swatch to be used in this editor
      */
-    public void setGluonSwatch(EditorPlatform.GluonSwatch swatch) {
+    public void setGluonSwatch(GluonSwatch swatch) {
         gluonSwatchProperty.set(swatch);
     }
 
@@ -636,7 +674,7 @@ public class EditorController {
      *
      * @return the gluon swatch used by this editor
      */
-    public EditorPlatform.GluonSwatch getGluonSwatch() {
+    public GluonSwatch getGluonSwatch() {
         return gluonSwatchProperty.get();
     }
 
@@ -645,7 +683,7 @@ public class EditorController {
      *
      * @return the property holding the gluon swatch used by this editor.
      */
-    public ObjectProperty<EditorPlatform.GluonSwatch> gluonSwatchProperty() {
+    public ObjectProperty<GluonSwatch> gluonSwatchProperty() {
         return gluonSwatchProperty;
     }
 
@@ -740,6 +778,7 @@ public class EditorController {
      * 
      * @return null or the location of the fxml being edited.
      */
+    @Override
     public URL getFxmlLocation() {
         return fxmlLocationProperty.getValue();
     }
@@ -2612,5 +2651,9 @@ public class EditorController {
 
     public Stage getOwnerWindow() {
         return ownerWindow;
+    }
+    
+    public EditorController getMe() {
+    	return this;
     }
 }

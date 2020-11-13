@@ -1,10 +1,8 @@
-package com.oracle.javafx.scenebuilder.app.settings;
+package com.oracle.javafx.scenebuilder.api.settings;
 
 import java.io.File;
 
 import org.springframework.stereotype.Component;
-
-import com.oracle.javafx.scenebuilder.api.settings.AbstractSetting;
 
 @Component
 public class MavenSetting extends AbstractSetting {

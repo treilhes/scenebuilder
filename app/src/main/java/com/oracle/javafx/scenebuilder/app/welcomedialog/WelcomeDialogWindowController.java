@@ -43,8 +43,8 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsSizePreference;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesBaseWindowController;
@@ -70,15 +70,23 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private Button emptyApp;
 
     private final MainController sceneBuilderApp;
+
+	private final RecentItemsPreference recentItemsPreference;
+
+	private final RecentItemsSizePreference recentItemsSizePreference;
     
     private WelcomeDialogWindowController(
     		@Autowired MainController sceneBuilderApp,
-    		@Autowired WindowIconSetting windowIconSetting) {
+    		@Autowired WindowIconSetting windowIconSetting,
+    		@Autowired RecentItemsPreference recentItemsPreference,
+    		@Autowired RecentItemsSizePreference recentItemsSizePreference) {
         super(WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
                 null); // We want it to be a top level window so we're setting the owner to null.
 
         this.sceneBuilderApp = sceneBuilderApp;
+        this.recentItemsPreference = recentItemsPreference;
+        this.recentItemsSizePreference = recentItemsSizePreference;
         
         windowIconSetting.setWindowIcon(this.getStage());
     }
@@ -110,15 +118,15 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         super.controllerDidLoadFxml();
         assert recentDocuments != null;
 
-        PreferencesRecordGlobal preferencesRecordGlobal = PreferencesController
-                .getSingleton().getRecordGlobal();
-        List<String> recentItems = preferencesRecordGlobal.getRecentItems();
+        List<String> recentItems = recentItemsPreference.getValue();
+        int recentItemsSize = recentItemsSizePreference.getValue();
+        
         if (recentItems.size() == 0) {
             Label noRecentItems = new Label(I18N.getString("welcome.recent.items.no.recent.items"));
             noRecentItems.getStyleClass().add("no-recent-items-label");
             recentDocuments.getChildren().add(noRecentItems);
         }
-        for (int row = 0; row < preferencesRecordGlobal.getRecentItemsSize(); ++row) {
+        for (int row = 0; row < recentItemsSize; ++row) {
             if (recentItems.size() < row + 1) {
                 break;
             }

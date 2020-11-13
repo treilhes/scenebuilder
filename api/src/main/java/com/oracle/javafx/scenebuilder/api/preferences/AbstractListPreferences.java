@@ -32,15 +32,18 @@
 package com.oracle.javafx.scenebuilder.api.preferences;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 
-public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
+
+public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends AbstractPreference<ObservableMap<String, T>>{
 	
 	/***************************************************************************
      *                                                                         *
@@ -49,8 +52,6 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
      **************************************************************************/
 	
 	private final Preferences recordsRootPreferences;
-	
-    private final Map<String, T> records;
 
 	private final KeyProvider<U> keyProvider;
 	
@@ -62,21 +63,22 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
      *                                                                         *
      **************************************************************************/
 
-    public AbstractListPreferences(RootPreferencesNode root, String listName, KeyProvider<U> keyProvider, DefaultProvider<T> defaultProvider) {
-    	
+    public AbstractListPreferences(PreferencesContext preferencesContext, String listName, KeyProvider<U> keyProvider, DefaultProvider<T> defaultProvider) {
+    	super(preferencesContext, listName, FXCollections.observableHashMap(), new SimpleObjectProperty<ObservableMap<String, T>>(), true); 
+				
     	this.keyProvider = keyProvider;
     	this.defaultProvider = defaultProvider;
     	// Preferences specific to the record
         // Create the root node for all artifacts preferences
-        this.recordsRootPreferences = root.getNode().node(listName);
-        this.records = new HashMap<>();
+        //this.recordsRootPreferences = root.getNode().node(listName);
+    	this.recordsRootPreferences = getNode();
 
         // create initial map of existing artifacts
         try {
             final String[] childrenNames = recordsRootPreferences.childrenNames();
             for (String child : childrenNames) {
-                T artifactPreference = defaultProvider.newDefault(recordsRootPreferences);
-                artifactPreference.readFromJavaPreferences(child);
+                T artifactPreference = defaultProvider.newDefault(getPreferencesContext(), child);
+                artifactPreference.readFromJavaPreferences();
                 addRecord(artifactPreference);
             }
         } catch (BackingStoreException ex) {
@@ -91,9 +93,9 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
      **************************************************************************/
 
     public T getRecord(String key) {
-    	T o = records.get(key);
+    	T o = getValue().get(key);
     	if (o == null) {
-    		o = defaultProvider.newDefault(recordsRootPreferences);
+    		o = defaultProvider.newDefault(getPreferencesContext(), key);
     		addRecord(o);
     	}
         return o;
@@ -101,9 +103,9 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
     
     public T getRecord(U record) {
     	String key = keyProvider.newKey(record);
-    	T o = records.get(key);
+    	T o = getValue().get(key);
     	if (o == null) {
-    		o = defaultProvider.newDefault(recordsRootPreferences);
+    		o = defaultProvider.newDefault(getPreferencesContext(), key);
     		o.setValue(record);
     		addRecord(o);
     	}
@@ -111,12 +113,12 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
     }
     
     public Map<String, T> getRecords() {
-    	return Collections.unmodifiableMap(records);
+    	return Collections.unmodifiableMap(getValue());
     }
     
     private String addRecord(T object) {
     	String key = keyProvider.newKey(object.getValue());
-        records.put(key, object);
+        getValue().put(key, object);
         return key;
     }
     
@@ -125,7 +127,7 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
             Preferences node = recordsRootPreferences.node(key);
             try {
                 node.removeNode();
-                records.remove(key);
+                getValue().remove(key);
             } catch (BackingStoreException ex) {
                 Logger.getLogger(AbstractListPreferences.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -138,6 +140,38 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> {
 
 	public DefaultProvider<T> getDefaultProvider() {
 		return defaultProvider;
+	}
+
+	@Override
+	public void writeToJavaPreferences() {
+		getValue().forEach((k,v) -> v.writeToJavaPreferences());
+	}
+
+	@Override
+	public void readFromJavaPreferences() {
+		getValue().forEach((k,v) -> {
+			v.setName(k);
+			v.readFromJavaPreferences();
+		});
+	}
+
+	@Override
+	public boolean isValid(ObservableMap<String, T> value) {
+		return value != null;
+	}
+
+	@Override
+	public Preference<ObservableMap<String, T>> reset() {
+		// create initial map of existing artifacts
+        try {
+            final String[] childrenNames = recordsRootPreferences.childrenNames();
+            for (String child : childrenNames) {
+                removeRecord(child);
+            }
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(AbstractListPreferences.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return super.reset();
 	}
     
 }

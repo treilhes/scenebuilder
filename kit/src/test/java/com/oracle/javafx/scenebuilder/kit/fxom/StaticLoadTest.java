@@ -35,6 +35,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 
@@ -53,6 +55,13 @@ import javafx.stage.Stage;
  */
 @ExtendWith(MockitoExtension.class)
 public class StaticLoadTest {
+	
+	private static I18N i18nTest = new I18N(new ArrayList<>()) {
+		@Override
+		public String get(String key) {
+			return "fake";
+		}
+	};
     
     private boolean thrown;
     
@@ -81,7 +90,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoadWithoutEventHandler() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(library);
+        EditorController editorController = new EditorController(library, null, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoadWithoutEventHandler.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -96,7 +105,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoad() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(library);
+        EditorController editorController = new EditorController(library, null, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoad.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);

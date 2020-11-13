@@ -31,12 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.skeleton;
 
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,12 +53,19 @@ import static org.junit.Assert.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class SkeletonBufferTest {
 
+	private static I18N i18nTest = new I18N(new ArrayList<>()) {
+		@Override
+		public String get(String key) {
+			return "fake";
+		}
+	};
+	
 	@Mock
     private BuiltinLibrary library;
 	
     @Test
     public void testControllerWithoutPackageName() throws IOException {
-        EditorController editorController = new EditorController(library);
+        EditorController editorController = new EditorController(library, null, null, null, null);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithoutPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
@@ -70,7 +79,7 @@ public class SkeletonBufferTest {
 
     @Test
     public void testControllerWithSimplePackageName() throws IOException {
-        EditorController editorController = new EditorController(library);
+        EditorController editorController = new EditorController(library, null, null, null, null);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithSimplePackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
@@ -84,7 +93,7 @@ public class SkeletonBufferTest {
 
     @Test
     public void testControllerWithAdvancedPackageName() throws IOException {
-        EditorController editorController = new EditorController(library);
+        EditorController editorController = new EditorController(library, null, null, null, null);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithAdvancedPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);

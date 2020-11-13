@@ -61,14 +61,15 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentS
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
+import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesWindowController;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowController;
 import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
+import com.oracle.javafx.scenebuilder.gluon.preferences.GluonPreferences;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.alert.ImportingGluonControlsAlert;
@@ -144,6 +145,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     @Autowired
     private Tracking tracking;
     
+    @Autowired
+    private GlobalPreferences preferences;
+    
+    @Autowired
+    private RecentItemsPreference recentItemsPreference;
+    
     private final ObservableList<DocumentWindowController> windowList = FXCollections.observableArrayList();
     
     //private UserLibrary userLibrary;
@@ -151,6 +158,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     private ToolTheme toolTheme = ToolTheme.DEFAULT;
 
 
+    //@Autowired
+    private GluonPreferences gluPref;
+    
     /*
      * Public
      * //TODO delete in favor of injection
@@ -159,7 +169,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return singleton;
     }
 
-    public MainController() {
+    public MainController(@Autowired GluonPreferences gluPref) {
         if (singleton != null) {
         	return;
         }
@@ -176,6 +186,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 }
             }
         });
+        
+        //PrefTests.doTest(gluPref);
         
     }
   
@@ -226,7 +238,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 break;
 
             case SHOW_PREFERENCES:
-                PreferencesWindowController preferencesWindowController = new PreferencesWindowController(source.getStage());
+                PreferencesWindowController preferencesWindowController = context.getBean(PreferencesWindowController.class);
                 preferencesWindowController.setToolStylesheet(getToolStylesheet());
                 preferencesWindowController.openWindow();
                 break;
@@ -404,7 +416,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 if (jarReport.hasGluonControls()) {
                     // We check if the jar has already been imported to avoid showing the import gluon jar
                     // alert every time Scene Builder starts for jars that have already been imported
-                    if (!hasGluonJarBeenImported(jarReport.getJar().getFileName().toString())) {
+                    if (!hasGluonJarBeenImported(preferences, jarReport.getJar().getFileName().toString())) {
                         shouldShowImportGluonJarAlert = true;
                     }
 
@@ -425,7 +437,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                     alert.showAndWait();
                 });
             }
-            updateImportedGluonJars(jarReports);
+            updateImportedGluonJars(preferences, jarReports);
         });
 
 //        userLibrary.explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
@@ -471,22 +483,19 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     private void sendTrackingStartupInfo() {
-        PreferencesController pc = PreferencesController.getSingleton();
-        PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-
-        boolean sendTrackingInfo = shouldSendTrackingInfo(recordGlobal);
+        boolean sendTrackingInfo = shouldSendTrackingInfo(preferences);
 
         if (sendTrackingInfo) {
             boolean update = false;
-            String hash = recordGlobal.getRegistrationHash();
-            String email = recordGlobal.getRegistrationEmail();
-            boolean optIn = recordGlobal.isRegistrationOptIn();
+            String hash = preferences.getRegistrationHash();
+            String email = preferences.getRegistrationEmail();
+            boolean optIn = preferences.isRegistrationOptIn();
 
             tracking.sendTrackingInfo(Tracking.SCENEBUILDER_USAGE_TYPE, hash, email, optIn, update);
         }
     }
 
-    private boolean shouldSendTrackingInfo(PreferencesRecordGlobal recordGlobal) {
+    private boolean shouldSendTrackingInfo(GlobalPreferences recordGlobal) {
         LocalDate date = recordGlobal.getLastSentTrackingInfoDate();
         boolean sendTrackingInfo = true;
         LocalDate now = LocalDate.now();
@@ -676,8 +685,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         switch (exceptions.size()) {
             case 0: { // Good
                 // Update recent items with opened files
-                final PreferencesController pc = PreferencesController.getSingleton();
-                pc.getRecordGlobal().addRecentItems(fxmlFiles);
+            	recentItemsPreference.addRecentItems(fxmlFiles);
                 break;
             }
             case 1: {
@@ -838,14 +846,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             try {
                 boolean showUpdateDialog = true;
                 if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
-                    PreferencesController pc = PreferencesController.getSingleton();
-                    PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-
-                    if (isVersionToBeIgnored(recordGlobal, latestVersion)) {
+                    if (isVersionToBeIgnored(preferences, latestVersion)) {
                         showUpdateDialog = false;
                     }
 
-                    if (!isUpdateDialogDateReached(recordGlobal)) {
+                    if (!isUpdateDialogDateReached(preferences)) {
                         showUpdateDialog = false;
                     }
                 } else {
@@ -907,12 +912,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         alert.showAndWait();
     }
 
-    private boolean isVersionToBeIgnored(PreferencesRecordGlobal recordGlobal, String latestVersion) {
+    private boolean isVersionToBeIgnored(GlobalPreferences recordGlobal, String latestVersion) {
         String ignoreVersion = recordGlobal.getIgnoreVersion();
         return latestVersion.equals(ignoreVersion);
     }
 
-    private boolean isUpdateDialogDateReached(PreferencesRecordGlobal recordGlobal) {
+    private boolean isUpdateDialogDateReached(GlobalPreferences recordGlobal) {
         LocalDate dialogDate = recordGlobal.getShowUpdateDialogDate();
         if (dialogDate == null) {
             return true;
@@ -924,13 +929,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     private void showRegistrationDialogIfRequired(DocumentWindowController dwc) {
-        PreferencesController pc = PreferencesController.getSingleton();
-        PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-        String registrationHash = recordGlobal.getRegistrationHash();
+        String registrationHash = preferences.getRegistrationHash();
         if (registrationHash == null) {
             performControlAction(ApplicationControlAction.REGISTER, dwc);
         } else {
-            String registrationEmail = recordGlobal.getRegistrationEmail();
+            String registrationEmail = preferences.getRegistrationEmail();
             if (registrationEmail == null && Math.random() > 0.8) {
                 performControlAction(ApplicationControlAction.REGISTER, dwc);
             }
@@ -951,9 +954,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
     }
 
-    private static void updateImportedGluonJars(List<? extends JarReport> jars) {
-        PreferencesController pc = PreferencesController.getSingleton();
-        PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
+    private static void updateImportedGluonJars(GlobalPreferences preferences, List<? extends JarReport> jars) {
         List<String> jarReportCollection = new ArrayList<>();
         for (JarReport jarReport : jars) {
             if (jarReport.hasGluonControls()) {
@@ -961,15 +962,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             }
         }
         if (jarReportCollection.isEmpty()) {
-            recordGlobal.setImportedGluonJars(new String[0]);
+        	preferences.setImportedGluonJars(new String[0]);
         } else {
-            recordGlobal.setImportedGluonJars(jarReportCollection.toArray(new String[0]));
+        	preferences.setImportedGluonJars(jarReportCollection.toArray(new String[0]));
         }
     }
 
-    private static boolean hasGluonJarBeenImported(String jar) {
-        PreferencesController pc = PreferencesController.getSingleton();
-        String[] importedJars = pc.getRecordGlobal().getImportedGluonJars();
+    private static boolean hasGluonJarBeenImported(GlobalPreferences preferences, String jar) {
+        String[] importedJars = preferences.getImportedGluonJars();
         if (importedJars == null) {
             return false;
         }
@@ -983,6 +983,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     public static void applyToAllDocumentWindows(Consumer<DocumentWindowController> consumer) {
+    	//TODO check if this is realy working, cause i've some doubts
         for (DocumentWindowController dwc : getSingleton().getDocumentWindowControllers()) {
             consumer.accept(dwc);
         }

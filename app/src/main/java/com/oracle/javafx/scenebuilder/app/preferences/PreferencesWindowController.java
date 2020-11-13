@@ -32,50 +32,47 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.CSS_TABLE_COLUMNS_ORDERING_REVERSED;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RECENT_ITEMS;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.RECENT_ITEMS_SIZE;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesController.TOOL_THEME;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ACCORDION_ANIMATION;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_HIERARCHY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_LIBRARY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_RECENT_ITEMS_SIZE;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ROOT_CONTAINER_HEIGHT;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_ROOT_CONTAINER_WIDTH;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_TOOL_THEME;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.DEFAULT_WILDCARD_IMPORTS;
-import static com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.recentItemsSizes;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ACCORDION_ANIMATION;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ALIGNMENT_GUIDES_COLOR;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.BACKGROUND_IMAGE;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_SWATCH;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.GLUON_THEME;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.HIERARCHY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.LIBRARY_DISPLAY_OPTION;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.PARENT_RING_COLOR;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ROOT_CONTAINER_HEIGHT;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.ROOT_CONTAINER_WIDTH;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.THEME;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase.WILDCARD_IMPORT;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_ALIGNMENT_GUIDES_COLOR;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_BACKGROUND_IMAGE;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_PARENT_RING_COLOR;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_SWATCH;
-import static com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.DEFAULT_THEME;
+import static com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences.DEFAULT_ROOT_CONTAINER_HEIGHT;
+import static com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences.DEFAULT_ROOT_CONTAINER_WIDTH;
+import static com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences.recentItemsSizes;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal.CSSAnalyzerColumnsOrder;
+import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences.CSSAnalyzerColumnsOrder;
+import com.oracle.javafx.scenebuilder.app.preferences.global.AccordionAnimationPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.CssTableColumnsOrderingReversedPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.DisplayModePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.DisplayOptionPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsSizePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.ToolThemePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleField;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordGlobalBase.BackgroundImage;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference.BackgroundImage;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
 
@@ -97,6 +94,8 @@ import javafx.stage.WindowEvent;
 /**
  * Preferences window controller.
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class PreferencesWindowController extends AbstractFxmlWindowController {
 
     @FXML
@@ -128,9 +127,9 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     @FXML
     private ChoiceBox<Integer> recentItemsSize;
     @FXML
-    private ChoiceBox<EditorPlatform.Theme> themes;
+    private ChoiceBox<Theme> themes;
     @FXML
-    private ChoiceBox<EditorPlatform.GluonSwatch> gluonSwatch;
+    private ChoiceBox<GluonSwatch> gluonSwatch;
     @FXML
     private CheckBox animateAccordion;
     @FXML
@@ -139,12 +138,76 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     private PaintPicker alignmentColorPicker;
     private PaintPicker parentRingColorPicker;
 
-    private Stage ownerWindow;
+    private final Stage ownerWindow;
+    private final GlobalPreferences recordGlobal;
+    private final RootContainerHeightPreference rootContainerHeightPreference;
+	private final RootContainerWidthPreference rootContainerWidthPreference;
+	private final BackgroundImagePreference backgroundImagePreference;
+	private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
+	private final ParentRingColorPreference parentRingColorPreference;
+	private final ToolThemePreference toolThemePreference;
+	private final DisplayModePreference displayModePreference;
+	
+	//private final CssAnalyzerColumnsOrderPreference cssAnalyzerColumnsOrderPreference;
+	private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
+	
+	private final ThemePreference themePreference;
+	private final GluonSwatchPreference gluonSwatchPreference;
+	private final RecentItemsSizePreference recentItemsSizePreference;
+	private final RecentItemsPreference recentItemsPreference;
+	private final AccordionAnimationPreference accordionAnimationPreference;
+	private final WildcardImportsPreference wildcardImportsPreference;
+	private final DisplayOptionPreference displayOptionPreference;
+	private final GluonThemePreference gluonThemePreference;
+	
 
-    public PreferencesWindowController(Stage ownerWindow) {
+    public PreferencesWindowController(
+    		@Autowired DocumentWindowController documentWindowController,
+    		@Autowired GlobalPreferences recordGlobal,
+    		@Autowired RootContainerHeightPreference rootContainerHeightPreference,
+    		@Autowired RootContainerWidthPreference rootContainerWidthPreference,
+    		@Autowired BackgroundImagePreference backgroundImagePreference,
+    		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
+    		@Autowired ParentRingColorPreference parentRingColorPreference,
+    		@Autowired ToolThemePreference toolThemePreference,
+    		@Autowired DisplayModePreference displayModePreference,
+    		@Autowired DisplayOptionPreference displayOptionPreference,
+    		
+    		//@Autowired CssAnalyzerColumnsOrderPreference cssAnalyzerColumnsOrderPreference,
+    		@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
+    		
+    		@Autowired ThemePreference themePreference,
+    		@Autowired GluonSwatchPreference gluonSwatchPreference,
+    		@Autowired GluonThemePreference gluonThemePreference,
+    		@Autowired RecentItemsSizePreference recentItemsSizePreference,
+    		@Autowired RecentItemsPreference recentItemsPreference,
+    		@Autowired AccordionAnimationPreference accordionAnimationPreference,
+    		@Autowired WildcardImportsPreference wildcardImportsPreference
+    		) {
         super(PreferencesWindowController.class.getResource("Preferences.fxml"), //NOI18N
-                I18N.getBundle(), ownerWindow);
-        this.ownerWindow = ownerWindow;
+                I18N.getBundle(), documentWindowController.getStage());
+        this.ownerWindow = documentWindowController.getStage();
+        this.recordGlobal = recordGlobal;
+        this.rootContainerHeightPreference = rootContainerHeightPreference;
+        this.rootContainerWidthPreference = rootContainerWidthPreference;
+        this.backgroundImagePreference = backgroundImagePreference;
+        this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
+        this.parentRingColorPreference = parentRingColorPreference;
+        this.toolThemePreference = toolThemePreference;
+        this.displayModePreference = displayModePreference;
+        this.displayOptionPreference = displayOptionPreference;
+        
+        //this.cssAnalyzerColumnsOrderPreference = cssAnalyzerColumnsOrderPreference;
+        this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
+        
+        this.themePreference = themePreference;
+        this.gluonSwatchPreference = gluonSwatchPreference;
+        this.gluonThemePreference = gluonThemePreference;
+        this.recentItemsSizePreference = recentItemsSizePreference;
+        this.recentItemsPreference = recentItemsPreference;
+        this.accordionAnimationPreference = accordionAnimationPreference;
+        this.wildcardImportsPreference = wildcardImportsPreference;
+
     }
 
     /*
@@ -154,30 +217,21 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
 
-        final PreferencesController preferencesController
-                = PreferencesController.getSingleton();
-        final PreferencesRecordGlobal recordGlobal
-                = preferencesController.getRecordGlobal();
-
+        
         // Root container size
-        rootContainerHeight.setText(String.valueOf(recordGlobal.getRootContainerHeight()));
+        rootContainerHeight.setText(String.valueOf(rootContainerHeightPreference.getValue()));
         rootContainerHeight.setOnAction(t -> {
             final String value = rootContainerHeight.getText();
-            recordGlobal.setRootContainerHeight(Double.valueOf(value));
+			rootContainerHeightPreference.setValue(Double.valueOf(value)).writeToJavaPreferences();
             rootContainerHeight.selectAll();
-            // Update preferences
-            recordGlobal.writeToJavaPreferences(ROOT_CONTAINER_HEIGHT);
             // Update UI
-//            recordGlobal.refreshRootContainerHeight();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshRootContainerHeight(recordGlobal));
         });
-        rootContainerWidth.setText(String.valueOf(recordGlobal.getRootContainerWidth()));
+        rootContainerWidth.setText(String.valueOf(rootContainerWidthPreference.getValue()));
         rootContainerWidth.setOnAction(t -> {
             final String value = rootContainerWidth.getText();
-            recordGlobal.setRootContainerWidth(Double.valueOf(value));
+            rootContainerWidthPreference.setValue(Double.valueOf(value)).writeToJavaPreferences();
             rootContainerWidth.selectAll();
-            // Update preferences
-            recordGlobal.writeToJavaPreferences(ROOT_CONTAINER_WIDTH);
             // Update UI
 //            recordGlobal.refreshRootContainerWidth();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshRootContainerWidth(recordGlobal));
@@ -185,7 +239,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
 
         // Background image
         backgroundImage.getItems().setAll(Arrays.asList(BackgroundImage.class.getEnumConstants()));
-        backgroundImage.setValue(recordGlobal.getBackgroundImage());
+        backgroundImage.setValue(backgroundImagePreference.getValue());
         backgroundImage.getSelectionModel().selectedItemProperty().addListener(new BackgroundImageListener());
 
         // PaintPicker delegate shared by alignmentColorPicker and parentRingColorPicker
@@ -232,11 +286,11 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         cssAnalyzerColumnsOrder.getSelectionModel().selectedItemProperty().addListener(new ColumnOrderListener());
 
         // Theme and Gluon Theme
-        themes.getItems().setAll(Arrays.asList(EditorPlatform.Theme.class.getEnumConstants()));
+        themes.getItems().setAll(Arrays.asList(Theme.class.getEnumConstants()));
         themes.setValue(recordGlobal.getTheme());
         themes.getSelectionModel().selectedItemProperty().addListener(new ThemesListener());
 
-        List<EditorPlatform.GluonSwatch> gluonSwatches = Arrays.asList(EditorPlatform.GluonSwatch.class.getEnumConstants());
+        List<GluonSwatch> gluonSwatches = Arrays.asList(GluonSwatch.class.getEnumConstants());
         // Sort alphabetically
         gluonSwatches.sort((s1, s2) -> s1.toString().compareTo(s2.toString()));
         gluonSwatch.getItems().setAll(gluonSwatches);
@@ -282,10 +336,6 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     
     @FXML
     void resetToDefaultAction(ActionEvent event) {
-        final PreferencesController preferencesController
-                = PreferencesController.getSingleton();
-        final PreferencesRecordGlobal recordGlobal
-                = preferencesController.getRecordGlobal();
 
         // Root container size
         rootContainerHeight.setText(String.valueOf(DEFAULT_ROOT_CONTAINER_HEIGHT));
@@ -294,40 +344,40 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         rootContainerWidth.getOnAction().handle(new ActionEvent());
 
         // Background image
-        backgroundImage.setValue(DEFAULT_BACKGROUND_IMAGE);
+        backgroundImage.setValue(BackgroundImagePreference.PREFERENCE_DEFAULT_VALUE);
 
         // Alignment guides color
-        alignmentColorPicker.setPaintProperty(DEFAULT_ALIGNMENT_GUIDES_COLOR);
+        alignmentColorPicker.setPaintProperty(AlignmentGuidesColorPreference.PREFERENCE_DEFAULT_VALUE);
 
         // Parent ring color
-        parentRingColorPicker.setPaintProperty(DEFAULT_PARENT_RING_COLOR);
+        parentRingColorPicker.setPaintProperty(ParentRingColorPreference.PREFERENCE_DEFAULT_VALUE);
 
         // SceneBuilder theme
-        scenebuilderTheme.setValue(DEFAULT_TOOL_THEME);
+        scenebuilderTheme.setValue(ToolThemePreference.PREFERENCE_DEFAULT_VALUE);
 
         // Library view option
-        libraryDisplayOption.setValue(DEFAULT_LIBRARY_DISPLAY_OPTION);
+        libraryDisplayOption.setValue(DisplayModePreference.PREFERENCE_DEFAULT_VALUE);
 
         // Hierarchy display option
-        hierarchyDisplayOption.setValue(DEFAULT_HIERARCHY_DISPLAY_OPTION);
+        hierarchyDisplayOption.setValue(DisplayOptionPreference.PREFERENCE_DEFAULT_VALUE);
 
         // CSS analyzer column order
         cssAnalyzerColumnsOrder.setValue(recordGlobal.getDefaultCSSAnalyzerColumnsOrder());
 
         // Number of open recent items
-        recentItemsSize.setValue(DEFAULT_RECENT_ITEMS_SIZE);
+        recentItemsSize.setValue(RecentItemsSizePreference.PREFERENCE_DEFAULT_VALUE);
 
         // Default theme
-        themes.setValue(DEFAULT_THEME);
+        themes.setValue(ThemePreference.PREFERENCE_DEFAULT_VALUE);
 
         // Default Gluon swatch
-        gluonSwatch.setValue(DEFAULT_SWATCH);
+        gluonSwatch.setValue(GluonSwatchPreference.PREFERENCE_DEFAULT_VALUE);
 
         // Default Accordion Animation
-        animateAccordion.setSelected(DEFAULT_ACCORDION_ANIMATION);
+        animateAccordion.setSelected(AccordionAnimationPreference.PREFERENCE_DEFAULT_VALUE);
 
         // Default Wildcard import
-        wildcardImports.setSelected(DEFAULT_WILDCARD_IMPORTS);
+        wildcardImports.setSelected(WildcardImportsPreference.PREFERENCE_DEFAULT_VALUE);
     }
 
     /**
@@ -335,160 +385,118 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
      * Static inner class
      * *************************************************************************
      */
-    private static class BackgroundImageListener implements ChangeListener<BackgroundImage> {
+    private class BackgroundImageListener implements ChangeListener<BackgroundImage> {
 
         @Override
         public void changed(ObservableValue<? extends BackgroundImage> observable,
                 BackgroundImage oldValue, BackgroundImage newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setBackgroundImage(newValue);
-            recordGlobal.writeToJavaPreferences(BACKGROUND_IMAGE);
+            backgroundImagePreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshBackgroundImage();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshBackgroundImage(recordGlobal));
         }
     }
 
-    private static class ToolThemeListener implements ChangeListener<ToolTheme> {
+    private class ToolThemeListener implements ChangeListener<ToolTheme> {
 
         @Override
         public void changed(ObservableValue<? extends ToolTheme> observable,
                 ToolTheme oldValue, ToolTheme newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setToolTheme(newValue);
-            recordGlobal.writeToJavaPreferences(TOOL_THEME);
+            toolThemePreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshToolTheme();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshToolTheme(recordGlobal));
         }
     }
 
-    private static class LibraryOptionListener implements ChangeListener<DISPLAY_MODE> {
+    private class LibraryOptionListener implements ChangeListener<DISPLAY_MODE> {
 
         @Override
         public void changed(ObservableValue<? extends DISPLAY_MODE> ov, DISPLAY_MODE oldValue, DISPLAY_MODE newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setLibraryDisplayOption(newValue);
-            recordGlobal.writeToJavaPreferences(LIBRARY_DISPLAY_OPTION);
+            displayModePreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshLibraryDisplayOption();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshLibraryDisplayOption(recordGlobal));
         }
     }
 
-    private static class DisplayOptionListener implements ChangeListener<DisplayOption> {
+    private class DisplayOptionListener implements ChangeListener<DisplayOption> {
 
         @Override
         public void changed(ObservableValue<? extends DisplayOption> observable,
                 DisplayOption oldValue, DisplayOption newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setHierarchyDisplayOption(newValue);
-            recordGlobal.writeToJavaPreferences(HIERARCHY_DISPLAY_OPTION);
+            displayOptionPreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshHierarchyDisplayOption();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshHierarchyDisplayOption(recordGlobal));
         }
     }
 
-    private static class ColumnOrderListener implements ChangeListener<CSSAnalyzerColumnsOrder> {
+    private class ColumnOrderListener implements ChangeListener<CSSAnalyzerColumnsOrder> {
 
         @Override
         public void changed(ObservableValue<? extends CSSAnalyzerColumnsOrder> observable,
                 CSSAnalyzerColumnsOrder oldValue, CSSAnalyzerColumnsOrder newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
+        	//TODO replace indirect call to cssTableColumnsOrderingReversedPreference with cssAnalyzerColumnsOrderPreference
             recordGlobal.setCSSAnalyzerColumnsOrder(newValue);
-            recordGlobal.writeToJavaPreferences(CSS_TABLE_COLUMNS_ORDERING_REVERSED);
+            cssTableColumnsOrderingReversedPreference.writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshCSSAnalyzerColumnsOrder();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshCssTableColumnsOrderingReversed(recordGlobal));
         }
     }
 
-    private static class ThemesListener implements ChangeListener<EditorPlatform.Theme> {
+    private class ThemesListener implements ChangeListener<Theme> {
         @Override
-        public void changed(ObservableValue<? extends EditorPlatform.Theme> observable, EditorPlatform.Theme oldValue, EditorPlatform.Theme newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
+        public void changed(ObservableValue<? extends Theme> observable, Theme oldValue, Theme newValue) {
             // Update preferences
-            recordGlobal.setTheme(newValue);
-            recordGlobal.writeToJavaPreferences(THEME);
+            themePreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshTheme();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshTheme(recordGlobal));
         }
     }
 
-    private static class SwatchListener implements ChangeListener<EditorPlatform.GluonSwatch> {
+    private class SwatchListener implements ChangeListener<GluonSwatch> {
         @Override
-        public void changed(ObservableValue<? extends EditorPlatform.GluonSwatch> observable, EditorPlatform.GluonSwatch oldValue, EditorPlatform.GluonSwatch newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
+        public void changed(ObservableValue<? extends GluonSwatch> observable, GluonSwatch oldValue, GluonSwatch newValue) {
             // Update preferences
-            recordGlobal.setSwatch(newValue);
-            recordGlobal.writeToJavaPreferences(GLUON_SWATCH);
+            gluonSwatchPreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshSwatch();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshSwatch(recordGlobal));
         }
     }
 
-    private static class GluonThemeListener implements ChangeListener<EditorPlatform.GluonTheme> {
+    private class GluonThemeListener implements ChangeListener<GluonTheme> {
         @Override
-        public void changed(ObservableValue<? extends EditorPlatform.GluonTheme> observable, EditorPlatform.GluonTheme oldValue, EditorPlatform.GluonTheme newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
+        public void changed(ObservableValue<? extends GluonTheme> observable, GluonTheme oldValue, GluonTheme newValue) {
             // Update preferences
-            recordGlobal.setGluonTheme(newValue);
-            recordGlobal.writeToJavaPreferences(GLUON_THEME);
+            gluonThemePreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshGluonTheme();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshGluonTheme(recordGlobal));
         }
     }
 
-    private static class RecentItemsSizeListener implements ChangeListener<Integer> {
+    private class RecentItemsSizeListener implements ChangeListener<Integer> {
 
         @Override
         public void changed(ObservableValue<? extends Integer> observable,
                 Integer oldValue, Integer newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
             recordGlobal.setRecentItemsSize(newValue);
-            recordGlobal.writeToJavaPreferences(RECENT_ITEMS_SIZE);
-            recordGlobal.writeToJavaPreferences(RECENT_ITEMS);
+            recentItemsSizePreference.writeToJavaPreferences();
+            recentItemsPreference.writeToJavaPreferences();
         }
     }
 
-    private static class AlignmentGuidesColorListener implements ChangeListener<Paint> {
+    private class AlignmentGuidesColorListener implements ChangeListener<Paint> {
 
         private final Rectangle graphic;
 
@@ -499,13 +507,8 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         @Override
         public void changed(ObservableValue<? extends Paint> ov, Paint oldValue, Paint newValue) {
             assert newValue instanceof Color;
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setAlignmentGuidesColor((Color) newValue);
-            recordGlobal.writeToJavaPreferences(ALIGNMENT_GUIDES_COLOR);
+            alignmentGuidesColorPreference.setValue((Color)newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshAlignmentGuidesColor();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshAlignmentGuidesColor(recordGlobal));
@@ -513,7 +516,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         }
     }
 
-    private static class ParentRingColorListener implements ChangeListener<Paint> {
+    private class ParentRingColorListener implements ChangeListener<Paint> {
 
         private final Rectangle graphic;
 
@@ -524,13 +527,8 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         @Override
         public void changed(ObservableValue<? extends Paint> ov, Paint oldValue, Paint newValue) {
             assert newValue instanceof Color;
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setParentRingColor((Color) newValue);
-            recordGlobal.writeToJavaPreferences(PARENT_RING_COLOR);
+            parentRingColorPreference.setValue((Color)newValue).writeToJavaPreferences();
             // Update UI
 //            recordGlobal.refreshParentRingColor();
             MainController.applyToAllDocumentWindows(dwc -> dwc.refreshParentRingColor(recordGlobal));
@@ -546,33 +544,23 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         }
     }
 
-    private static class AnimationListener implements ChangeListener<Boolean> {
+    private class AnimationListener implements ChangeListener<Boolean> {
 
         @Override
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setAccordionAnimation(newValue);
-            recordGlobal.writeToJavaPreferences(ACCORDION_ANIMATION);
+            accordionAnimationPreference.setValue(newValue).writeToJavaPreferences();
             // Update UI
             MainController.applyToAllDocumentWindows(dwc -> dwc.animateAccordion(newValue));
         }
     }
 
-    private static class WildcardImportListener implements ChangeListener<Boolean> {
+    private class WildcardImportListener implements ChangeListener<Boolean> {
 
         @Override
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-            final PreferencesController preferencesController
-                    = PreferencesController.getSingleton();
-            final PreferencesRecordGlobal recordGlobal
-                    = preferencesController.getRecordGlobal();
             // Update preferences
-            recordGlobal.setWildcardImports(newValue);
-            recordGlobal.writeToJavaPreferences(WILDCARD_IMPORT);
+            wildcardImportsPreference.setValue(newValue).writeToJavaPreferences();
         }
     }
 }

@@ -43,17 +43,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.AbstractListPreferences;
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 
 @Component
-public class MavenPreferences extends AbstractListPreferences<PreferencesRecordArtifact, MavenArtifact> {
+public class MavenArtifactsPreferences extends AbstractListPreferences<MavenArtifactPreferences, MavenArtifact> {
 	
 	// NODE
 	protected static final String NODE_NAME = "ARTIFACTS"; //NOI18N
 	
-    public MavenPreferences(@Autowired RootPreferencesNode root) {
-    	super(root, NODE_NAME, PreferencesRecordArtifact.keyProvider(), PreferencesRecordArtifact.defaultProvider());
+    public MavenArtifactsPreferences(@Autowired PreferencesContext preferencesContext) {
+    	super(preferencesContext, NODE_NAME, MavenArtifactPreferences.keyProvider(), MavenArtifactPreferences.defaultProvider());
     }
 
     /*
@@ -116,7 +116,7 @@ public class MavenPreferences extends AbstractListPreferences<PreferencesRecordA
     private List<String> getArtifactsJarsPaths() {
         return getRecords().values()
                 .stream()
-                .map(PreferencesRecordArtifact::getPath)
+                .map(MavenArtifactPreferences::getPath)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -180,11 +180,11 @@ public class MavenPreferences extends AbstractListPreferences<PreferencesRecordA
     }
     
 
-    public PreferencesRecordArtifact getRecordArtifact(MavenArtifact mavenArtifact) {
+    public MavenArtifactPreferences getRecordArtifact(MavenArtifact mavenArtifact) {
     	return getRecord(mavenArtifact);
     }
     
-    public PreferencesRecordArtifact getRecordArtifact(String key) {
+    public MavenArtifactPreferences getRecordArtifact(String key) {
         return getRecord(key);
     }
 

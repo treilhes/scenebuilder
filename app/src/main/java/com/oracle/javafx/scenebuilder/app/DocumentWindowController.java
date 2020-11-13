@@ -51,22 +51,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordDocument;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
+import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferences;
+import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
+import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
+import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.RightDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.app.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.gluon.preferences.GluonDocumentPreferences;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -94,6 +106,8 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.library.Library;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
@@ -122,6 +136,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
@@ -130,7 +145,7 @@ import javafx.stage.WindowEvent;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class DocumentWindowController extends AbstractFxmlWindowController implements Document {
+public class DocumentWindowController extends AbstractFxmlWindowController implements Document, InitializingBean {
 
     public enum DocumentControlAction {
         COPY,
@@ -175,8 +190,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         CANCELLED,
         DONE
     }
+    private final ApplicationContext context;
     
-    private final EditorController editorController;
+    private EditorController editorController;
     private final MenuBarController menuBarController;
     private final ContentPanelController contentPanelController;
     
@@ -200,6 +216,26 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final DocumentWatchingController watchingController;
     
     private final MavenSetting mavenSetting;
+    private final MavenArtifactsPreferences mavenPreferences;
+    private final MavenRepositoriesPreferences repositoryPreferences;
+    private final GlobalPreferences preferences;
+    private final DocumentPreferences documentPreferences;
+    private final GluonDocumentPreferences gluonDocumentPreferences;
+    
+    private final RecentItemsPreference recentItemsPreference;
+    
+    private final DocumentPreferencesController documentPreferencesController;
+    
+    //PREFERENCES
+    private final XPosPreference xPos;
+	private final YPosPreference yPos;
+	private final StageHeightPreference stageHeight;
+	private final StageWidthPreference stageWidth;
+	private final LeftDividerHPosPreference leftDividerHPos;
+	private final RightDividerHPosPreference rightDividerHPos;
+	private final BottomDividerVPosPreference bottomDividerVPos;
+	private final LeftDividerVPosPreference leftDividerVPos;
+	
     //private final DocumentsManager documentManager;
     
     // The controller below are created lazily because they need an owner
@@ -256,8 +292,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     
     private FileTime loadFileTime;
     private Job saveJob;
-    private PreferencesRecordGlobal recordGlobal;
-
     private EventHandler<KeyEvent> mainKeyEventFilter;
     
     /*
@@ -265,9 +299,16 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
      */
     
 	public DocumentWindowController(
-			@Autowired PreferencesController preferencesController,
-			@Autowired MainController mainController, 
+			@Autowired ApplicationContext context,
+			@Autowired MainController mainController,
+			@Autowired GlobalPreferences preferences,
 			@Autowired MavenSetting mavenSetting,
+			@Autowired MavenArtifactsPreferences mavenPreferences,
+			@Autowired MavenRepositoriesPreferences repositoryPreferences,
+			@Autowired RecentItemsPreference recentItemsPreference,
+			
+			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
+			
 			@Lazy @Autowired EditorController editorController,
 			//@Autowired DocumentsManager documentManager,
 			@Lazy @Autowired MenuBarController menuBarController,
@@ -286,16 +327,34 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
 			@Lazy @Autowired CssPanelMenuController cssPanelMenuController,
 			@Lazy @Autowired ResourceController resourceController,
-			@Lazy @Autowired DocumentWatchingController watchingController) {
+			@Lazy @Autowired DocumentWatchingController watchingController,
+			
+			@Lazy @Autowired DocumentPreferences documentPreferences,
+			@Lazy @Autowired GluonDocumentPreferences docPref,
+			@Lazy @Autowired XPosPreference xPos,
+			@Lazy @Autowired YPosPreference yPos,
+			@Lazy @Autowired StageHeightPreference stageHeight,
+			@Lazy @Autowired StageWidthPreference stageWidth,
+			
+			@Lazy @Autowired LeftDividerHPosPreference leftDividerHPos,
+			@Lazy @Autowired RightDividerHPosPreference rightDividerHPos,
+			@Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
+			@Lazy @Autowired LeftDividerVPosPreference leftDividerVPos
+			) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         DocumentScope.setCurrentScope(this);
+        this.context = context;
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;
+        this.mavenPreferences = mavenPreferences;
+        this.repositoryPreferences = repositoryPreferences;
+        this.recentItemsPreference = recentItemsPreference;
+        
         this.menuBarController = menuBarController;
         
         this.contentPanelController = contentPanelController;
-        
+        this.documentPreferencesController = documentPreferencesController;
         //this.hierarchyPanelController = hierarchyPanelController;
         //this.infoPanelController = infoPanelController;
         this.documentPanelController = documentPanelController;
@@ -312,6 +371,27 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.cssPanelMenuController = cssPanelMenuController;
         this.resourceController = resourceController;
         this.watchingController = watchingController;
+        
+        this.preferences = preferences;
+        this.documentPreferences = documentPreferences;
+        this.gluonDocumentPreferences = docPref;
+        
+        // preferences
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.stageHeight = stageHeight;
+        this.stageWidth = stageWidth;
+        this.leftDividerHPos = leftDividerHPos;
+        this.rightDividerHPos = rightDividerHPos;
+        this.bottomDividerVPos = bottomDividerVPos;
+        this.leftDividerVPos = leftDividerVPos;
+        
+        
+        
+        documentPreferencesController.readFromJavaPreferences();
+        
+        //PrefTests.doDocTest(docPref);
+        
         
         //this.documentManager = documentManager;
         this.editorController.setLibrary(mainController.getUserLibrary());
@@ -406,7 +486,31 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             }
         };
     }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		
+	}
 	
+	@FXML
+	public void initialize() {
+		// initialize preference binding
+		final Stage stage = getStage();
+        assert stage != null;
+        // Add stage x and y listeners
+        stage.xProperty().addListener((ov, t, t1) -> xPos.setValue(t1.doubleValue()));
+        stage.yProperty().addListener((ov, t, t1) -> yPos.setValue(t1.doubleValue()));
+
+        // Add stage height and width listeners
+        stage.heightProperty().addListener((ov, t, t1) -> stageHeight.setValue(t1.doubleValue()));
+        stage.widthProperty().addListener((ov, t, t1) -> stageWidth.setValue(t1.doubleValue()));
+        
+        //split containers
+        // Add dividers position listeners
+        leftSplitController.position().addListener((ov, t, t1) -> leftDividerHPos.setValue(t1.doubleValue()));
+        rightSplitController.position().addListener((ov, t, t1) -> rightDividerHPos.setValue(t1.doubleValue()));
+        bottomSplitController.position().addListener((ov, t, t1) -> bottomDividerVPos.setValue(t1.doubleValue()));
+        librarySplitController.position().addListener((ov, t, t1) -> leftDividerVPos.setValue(t1.doubleValue()));
+	}
 	
 //	@Autowired
 //	public void setLibrarySearchController(SearchController librarySearchController) {
@@ -543,8 +647,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
     
     public String getFxmlText() {
-        var recordGlobal = getPreferencesRecordGlobal();
-        return editorController.getFxmlText(recordGlobal.isWildcardImports());
+        return editorController.getFxmlText(preferences.isWildcardImports());
     }
 
 //    public void refreshHierarchyDisplayOption(DisplayOption option) {
@@ -569,11 +672,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         cssPanelController.setTableColumnsOrderingReversed(cssTableColumnsOrderingReversed);
     }
 
-    public void refreshCssTableColumnsOrderingReversed(PreferencesRecordGlobal preferences) {
+    public void refreshCssTableColumnsOrderingReversed(GlobalPreferences preferences) {
         refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
     }
 
-    public void refreshAlignmentGuidesColor(PreferencesRecordGlobal preferences) {
+    public void refreshAlignmentGuidesColor(GlobalPreferences preferences) {
         final ContentPanelController cpc = getContentPanelController();
         cpc.setGuidesColor(preferences.getAlignmentGuidesColor());
     }
@@ -582,14 +685,16 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         libraryPanelController.animateAccordion(animate);
         inspectorPanelController.animateAccordion(animate);
         documentPanelController.getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(animate));
+        
+        //PrefTests.doDocTest(gluonDocumentPreferences);
     }
 
-    public void refreshBackgroundImage(PreferencesRecordGlobal preferences) {
+    public void refreshBackgroundImage(GlobalPreferences preferences) {
         // Background images
         getContentPanelController().setWorkspaceBackground(preferences.getBackgroundImageImage());
     }
 
-    public void refreshToolTheme(PreferencesRecordGlobal preferences) {
+    public void refreshToolTheme(GlobalPreferences preferences) {
         final MainController app = MainController.getSingleton();
         final MainController.ApplicationControlAction aca;
         switch(preferences.getToolTheme()) {
@@ -607,15 +712,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         app.performControlAction(aca, this);
     }
 
-    public void refreshLibraryDisplayOption(PreferencesRecordGlobal preferences) {
+    public void refreshLibraryDisplayOption(GlobalPreferences preferences) {
     	libraryPanelController.refreshLibraryDisplayOption(preferences.getLibraryDisplayOption());
     }
 
-    public void refreshHierarchyDisplayOption(PreferencesRecordGlobal preferences) {
+    public void refreshHierarchyDisplayOption(GlobalPreferences preferences) {
         documentPanelController.refreshHierarchyDisplayOption(preferences.getHierarchyDisplayOption());
     }
 
-    public void refreshParentRingColor(PreferencesRecordGlobal preferences) {
+    public void refreshParentRingColor(GlobalPreferences preferences) {
         Color parentRingColor = preferences.getParentRingColor();
         final ContentPanelController cpc = getContentPanelController();
         cpc.setPringColor(parentRingColor);
@@ -623,32 +728,32 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         hpc.setParentRingColor(parentRingColor);
     }
 
-    public void refreshRootContainerHeight(PreferencesRecordGlobal preferencesRecordGlobal) {
+    public void refreshRootContainerHeight(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
         ec.setDefaultRootContainerHeight(preferencesRecordGlobal.getRootContainerHeight());
     }
 
-    public void refreshRootContainerWidth(PreferencesRecordGlobal preferencesRecordGlobal) {
+    public void refreshRootContainerWidth(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
         ec.setDefaultRootContainerWidth(preferencesRecordGlobal.getRootContainerWidth());
     }
 
-    public void refreshTheme(PreferencesRecordGlobal preferencesRecordGlobal) {
+    public void refreshTheme(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
         ec.setTheme(preferencesRecordGlobal.getTheme());
     }
 
-    public void refreshSwatch(PreferencesRecordGlobal preferencesRecordGlobal) {
+    public void refreshSwatch(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
         ec.setGluonSwatch(preferencesRecordGlobal.getSwatch());
     }
 
-    public void refreshGluonTheme(PreferencesRecordGlobal preferencesRecordGlobal) {
+    public void refreshGluonTheme(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
         ec.setGluonTheme(preferencesRecordGlobal.getGluonTheme());
     }
 
-    public void refreshAccordionAnimation(PreferencesRecordGlobal preferencesRecordGlobal) {
+    public void refreshAccordionAnimation(GlobalPreferences preferencesRecordGlobal) {
         animateAccordion(preferencesRecordGlobal.isAccordionAnimation());
     }
 
@@ -748,9 +853,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     public void performControlAction(DocumentControlAction controlAction) {
         assert canPerformControlAction(controlAction);
         
-        final PreferencesController pc = PreferencesController.getSingleton();
-        final PreferencesRecordDocument recordDocument = pc.getRecordDocument(this);
-        
         switch(controlAction) {
             case COPY:
                 performCopy();
@@ -838,15 +940,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     libraryDocumentSplitPane.setDividerPositions(0.5);
                 }
                 // Update preferences
-                recordDocument.setLibraryVisible(librarySplitController.isTargetVisible());
-                recordDocument.setDocumentVisible(documentSplitController.isTargetVisible());
-                recordDocument.setLeftVisible(leftSplitController.isTargetVisible());
+                documentPreferences.setLibraryVisible(librarySplitController.isTargetVisible());
+                documentPreferences.setDocumentVisible(documentSplitController.isTargetVisible());
+                documentPreferences.setLeftVisible(leftSplitController.isTargetVisible());
                 break;
 
             case TOGGLE_RIGHT_PANEL:
                 rightSplitController.toggleTarget();
                 // Update preferences
-                recordDocument.setRightVisible(rightSplitController.isTargetVisible());
+                documentPreferences.setRightVisible(rightSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_CSS_PANEL:
@@ -856,8 +958,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (bottomSplitController.isTargetVisible()) {
                     // CSS panel is built lazely
                     // Need to update its table column ordering with preference value
-                    final PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-                    refreshCssTableColumnsOrderingReversed(recordGlobal.isCssTableColumnsOrderingReversed());
+                    refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
                     // Enable pick mode
                     editorController.setPickModeEnabled(true);
                 } else {
@@ -865,7 +966,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     editorController.setPickModeEnabled(false);
                 }
                 // Update preferences
-                recordDocument.setBottomVisible(bottomSplitController.isTargetVisible());
+                documentPreferences.setBottomVisible(bottomSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_LIBRARY_PANEL:
@@ -882,8 +983,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     librarySplitController.showTarget();
                 }
                 // Update preferences
-                recordDocument.setLibraryVisible(librarySplitController.isTargetVisible());
-                recordDocument.setLeftVisible(leftSplitController.isTargetVisible());
+                documentPreferences.setLibraryVisible(librarySplitController.isTargetVisible());
+                documentPreferences.setLeftVisible(leftSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_DOCUMENT_PANEL:
@@ -900,8 +1001,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     documentSplitController.showTarget();
                 }
                 // Update preferences
-                recordDocument.setDocumentVisible(documentSplitController.isTargetVisible());
-                recordDocument.setLeftVisible(leftSplitController.isTargetVisible());
+                documentPreferences.setDocumentVisible(documentSplitController.isTargetVisible());
+                documentPreferences.setLeftVisible(leftSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_OUTLINES_VISIBILITY:
@@ -921,13 +1022,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             case SET_RESOURCE:
                 resourceController.performSetResource();
                 // Update preferences
-                recordDocument.setI18NResourceFile(getResourceFile());
+                documentPreferences.setI18NResourceFile(getResourceFile());
                 break;
                 
             case REMOVE_RESOURCE:
                 resourceController.performRemoveResource();
                 // Update preferences
-                recordDocument.setI18NResourceFile(getResourceFile());
+                documentPreferences.setI18NResourceFile(getResourceFile());
                 break;
                 
             case REVEAL_RESOURCE:
@@ -1136,23 +1237,27 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public void updatePreferences() {
-        final PreferencesController pc = PreferencesController.getSingleton();
+        
         final URL fxmlLocation = getEditorController().getFxmlLocation();
         if (fxmlLocation == null) {
             // Document has not been saved => nothing to write
             // This is the case with initial empty document 
             return;
         }
-        // Update record document
-        final PreferencesRecordDocument recordDocument = pc.getRecordDocument(this);
-        recordDocument.writeToJavaPreferences();
-        // Update record global
-        final PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
+        try {
+			documentPreferences.setPath(new File(fxmlLocation.toURI()).getPath());
+		} catch (URISyntaxException e) {
+			//TODO log something here
+			e.printStackTrace();
+		}
+        
         // recentItems may not contain the current document
         // if the Open Recent -> Clear menu has been invoked
-        if (!recordGlobal.containsRecentItem(fxmlLocation)) {
-            recordGlobal.addRecentItem(fxmlLocation);
+        if (!recentItemsPreference.containsRecentItem(fxmlLocation)) {
+        	recentItemsPreference.addRecentItem(fxmlLocation);
         }
+        
+        documentPreferencesController.writeToJavaPreferences();
     }
 
     /*
@@ -1451,8 +1556,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     private void updateHierarchyDisplayOption() {
         // Update preferences
-        var recordGlobal = getPreferencesRecordGlobal();
-        recordGlobal.updateHierarchyDisplayOption(
+    	preferences.updateHierarchyDisplayOption(
         		documentPanelController.getHierarchyPanelController().getDisplayOption());
     }
 
@@ -1461,8 +1565,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //
     public void onManageJarFxml(ActionEvent event) {
         if(libraryDialogController==null){
-            libraryDialogController = new LibraryDialogController(editorController, mavenSetting.getUserM2Repository(),
-            		mavenSetting.getTempM2Repository(), PreferencesController.getSingleton(), getStage());
+            libraryDialogController = new LibraryDialogController(editorController, 
+            		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
             libraryDialogController.setOnAddJar(() -> onImportJarFxml(libraryDialogController.getStage()));
             libraryDialogController.setOnEditFXML(fxmlPath -> {
                     if (MainController.getSingleton().lookupUnusedDocumentWindowController() != null) {
@@ -1507,8 +1611,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     private void updateLibraryDisplayOption() {
         // Update preferences
-        var recordGlobal = getPreferencesRecordGlobal();
-        recordGlobal.updateLibraryDisplayOption(libraryPanelController.getDisplayMode());
+        preferences.updateLibraryDisplayOption(libraryPanelController.getDisplayMode());
     }
 
     // This method cannot be called if there is not a valid selection, a selection
@@ -1898,20 +2001,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private void updateFromDocumentPreferences(boolean refreshTheme) {
         if (contentPanelHost != null) { // Layout is over
             // Refresh UI with preferences 
-            final PreferencesController pc = PreferencesController.getSingleton();
-            // Preferences global to the application
-            final PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-//            recordGlobal.refresh(this, refreshTheme);
-            refreshFromPreferencesRecordGlobal(recordGlobal, refreshTheme);
+            refreshFromPreferencesRecordGlobal(preferences, refreshTheme);
             // Preferences specific to the document
-            final PreferencesRecordDocument recordDocument = pc.getRecordDocument(this);
-            recordDocument.readFromJavaPreferences();
+            documentPreferences.readFromJavaPreferences();
             // Update UI accordingly
-            recordDocument.refresh();
+            documentPreferences.refresh();
         }
     }
 
-    public void refreshFromPreferencesRecordGlobal(PreferencesRecordGlobal recordGlobal, boolean refreshTheme) {
+    public void refreshFromPreferencesRecordGlobal(GlobalPreferences recordGlobal, boolean refreshTheme) {
         refreshAlignmentGuidesColor(recordGlobal);
         refreshBackgroundImage(recordGlobal);
         refreshCssTableColumnsOrderingReversed(recordGlobal);
@@ -1929,12 +2027,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         refreshAccordionAnimation(recordGlobal);
     }
 
-    private void resetDocumentPreferences() {
-        final PreferencesController pc = PreferencesController.getSingleton();
-        final PreferencesRecordDocument recordDocument = pc.getRecordDocument(this);
-        recordDocument.resetDocumentPreferences();
-    }
-    
     ActionStatus performSaveOrSaveAsAction() {
         final ActionStatus result;
         
@@ -1994,8 +2086,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (saveConfirmed) {
                     try {
                         watchingController.removeDocumentTarget();
-                        var recordGlobal = getPreferencesRecordGlobal();
-                        final byte[] fxmlBytes = editorController.getFxmlText(recordGlobal.isWildcardImports()).getBytes(StandardCharsets.UTF_8); //NOI18N
+                        final byte[] fxmlBytes = editorController.getFxmlText(preferences.isWildcardImports()).getBytes(StandardCharsets.UTF_8); //NOI18N
                         Files.write(fxmlPath, fxmlBytes);
                         updateLoadFileTime();
                         watchingController.update();
@@ -2116,9 +2207,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     editorController.setFxmlLocation(newLocation);
                     updateLoadFileTime();
                     updateStageTitle();
+                    
+                    //TODO this case is not handled for using spring, need to take an extra look at this
+                    //TODO this method do nothing for now
+                    //TODO more generaly, what to do when using save as ? keep the same beans? something else 
                     // We use same DocumentWindowController BUT we change its fxml :
                     // => reset document preferences
-                    resetDocumentPreferences();
+                    //resetDocumentPreferences();
                     
                     watchingController.update();
 
@@ -2133,8 +2228,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     EditorController.updateNextInitialDirectory(fxmlFile);
 
                     // Update recent items with just saved file
-                    var recordGlobal = getPreferencesRecordGlobal();
-                    recordGlobal.addRecentItem(fxmlFile);
+                    recentItemsPreference.addRecentItem(fxmlFile);
                 }
             }
         } else {
@@ -2325,13 +2419,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
 
-    private PreferencesRecordGlobal getPreferencesRecordGlobal() {
-        if (recordGlobal == null) {
-            final PreferencesController preferencesController = PreferencesController.getSingleton();
-            recordGlobal = preferencesController.getRecordGlobal();
-        }
-        return recordGlobal;
-    }
+
+
 }
 
 ///**

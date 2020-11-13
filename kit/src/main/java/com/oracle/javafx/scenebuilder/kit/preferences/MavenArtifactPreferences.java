@@ -6,10 +6,11 @@ import java.util.prefs.Preferences;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 
-public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
+public class MavenArtifactPreferences extends ObjectPreference<MavenArtifact> {
 	
 	private final static String GROUPID  = "groupID";
     private final static String ARTIFACTID  = "artifactId";
@@ -18,16 +19,16 @@ public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
     public final static String FILTER = "filter";
     public final static String PATH = "path";
 
-	public PreferencesRecordArtifact(Preferences node, MavenArtifact defaultValue) {
-		super(node, null, defaultValue);
+	public MavenArtifactPreferences(PreferencesContext preferencesContext, String name, MavenArtifact defaultValue) {
+		super(preferencesContext, name, defaultValue);
 	}
 
 	public static KeyProvider<MavenArtifact> keyProvider() {
 		return (m) -> m.getCoordinates();
 	}
 	
-	public static DefaultProvider<PreferencesRecordArtifact> defaultProvider() {
-		return (node) -> new PreferencesRecordArtifact(node, new MavenArtifact());
+	public static DefaultProvider<MavenArtifactPreferences> defaultProvider() {
+		return (pc, name) -> new MavenArtifactPreferences(pc, name, new MavenArtifact());
 	}
 
 	@Override
@@ -35,16 +36,16 @@ public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
 		boolean valid = true;
 		
 		if (object == null) {
-			Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, "MavenArtifact can't be null");
+			Logger.getLogger(MavenArtifactPreferences.class.getName()).log(Level.SEVERE, "MavenArtifact can't be null");
 			return false;
 		}
 		if (object.getCoordinates() == null) {
-			Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, "MavenArtifact coordinates can't be null or empty");
+			Logger.getLogger(MavenArtifactPreferences.class.getName()).log(Level.SEVERE, "MavenArtifact coordinates can't be null or empty");
 			valid &= false;
 		} else {
 			String[] items = object.getCoordinates().split(":");
 			if (items.length != 3) {
-				Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, 
+				Logger.getLogger(MavenArtifactPreferences.class.getName()).log(Level.SEVERE, 
 						"Wrong MavenArtifact coordinates format, it must be \"groupId:artifactId:version\" but it is \"{0}\"", 
 						object.getCoordinates());
 				valid &= false;
@@ -52,7 +53,7 @@ public class PreferencesRecordArtifact extends ObjectPreference<MavenArtifact> {
 		}
 		
 		if (object.getDependencies() == null || object.getFilter() == null || object.getPath() == null) {
-			Logger.getLogger(PreferencesRecordArtifact.class.getName()).log(Level.SEVERE, "MavenArtifact fields can't be null");
+			Logger.getLogger(MavenArtifactPreferences.class.getName()).log(Level.SEVERE, "MavenArtifact fields can't be null");
 			valid &= false;
 		}
 		return valid;

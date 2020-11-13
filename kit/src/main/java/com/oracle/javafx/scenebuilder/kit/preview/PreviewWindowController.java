@@ -45,9 +45,11 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.util.Utils;
 
@@ -84,9 +86,9 @@ public final class PreviewWindowController extends AbstractWindowController {
     private CameraType cameraType;
     private boolean autoResize3DContent = true;
     private static final String NID_PREVIEW_ROOT = "previewRoot"; //NOI18N
-    private EditorPlatform.Theme editorControllerTheme;
-    private EditorPlatform.GluonTheme editorControllerGluonTheme;
-    private EditorPlatform.GluonSwatch editorControllerGluonSwatch;
+    private Theme editorControllerTheme;
+    private GluonTheme editorControllerGluonTheme;
+    private GluonSwatch editorControllerGluonSwatch;
     private ObservableList<File> sceneStyleSheet;
     private Size currentSize = Size.SIZE_PREFERRED;
     private boolean sizeChangedFromMenu = false;

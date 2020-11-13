@@ -40,6 +40,9 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.animation.FadeTransition;
 import javafx.application.ConditionalFeature;
@@ -163,7 +166,7 @@ class WorkspaceController {
         return Collections.unmodifiableList(themeStylesheets);
     }
     
-    public void setThemeStyleSheet(String themeStyleSheet, EditorPlatform.Theme theme, EditorPlatform.GluonSwatch gluonSwatch, EditorPlatform.GluonTheme gluonTheme) {
+    public void setThemeStyleSheet(String themeStyleSheet, Theme theme, GluonSwatch gluonSwatch, GluonTheme gluonTheme) {
         assert themeStyleSheet != null;
         assert theme != null;
         assert gluonSwatch != null;
@@ -173,8 +176,8 @@ class WorkspaceController {
         String gluonThemeStylesheet = gluonTheme.getStylesheetURL();
         String previousGluonSwatchStylesheet = editorController.getGluonSwatch().getStylesheetURL();
         String previousGluonThemeStylesheet = editorController.getGluonTheme().getStylesheetURL();
-        if (theme == EditorPlatform.Theme.GLUON_MOBILE_LIGHT || theme == EditorPlatform.Theme.GLUON_MOBILE_DARK) {
-            contentSubScene.setUserAgentStylesheet(EditorPlatform.Theme.MODENA.getStylesheetURL());
+        if (theme == Theme.GLUON_MOBILE_LIGHT || theme == Theme.GLUON_MOBILE_DARK) {
+            contentSubScene.setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
             ObservableList<String> currentStyleSheets = FXCollections.observableArrayList(contentGroup.getStylesheets());
             currentStyleSheets.remove(previousGluonSwatchStylesheet);
             currentStyleSheets.remove(previousGluonThemeStylesheet);
@@ -197,7 +200,7 @@ class WorkspaceController {
         } else {
             contentSubScene.setUserAgentStylesheet(themeStyleSheet);
 
-            String gluonMobileStyleSheet = EditorPlatform.Theme.GLUON_MOBILE_LIGHT.getStylesheetURL(); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
+            String gluonMobileStyleSheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL(); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
             themeStylesheets.remove(gluonMobileStyleSheet);
             themeStylesheets.remove(gluonDocumentStylesheet);
             themeStylesheets.remove(previousGluonSwatchStylesheet);
@@ -212,11 +215,11 @@ class WorkspaceController {
     }
     
     public void setPreviewStyleSheets(List<String> previewStyleSheets) {
-        EditorPlatform.Theme currentTheme = editorController.getTheme();
+        Theme currentTheme = editorController.getTheme();
         themeStylesheets.clear();
         themeStylesheets.addAll(previewStyleSheets);
-        if (currentTheme == EditorPlatform.Theme.GLUON_MOBILE_LIGHT || currentTheme == EditorPlatform.Theme.GLUON_MOBILE_DARK) {
-            themeStylesheets.add(EditorPlatform.Theme.GLUON_MOBILE_LIGHT.getStylesheetURL()); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
+        if (currentTheme == Theme.GLUON_MOBILE_LIGHT || currentTheme == Theme.GLUON_MOBILE_DARK) {
+            themeStylesheets.add(Theme.GLUON_MOBILE_LIGHT.getStylesheetURL()); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
             themeStylesheets.add(editorController.getGluonSwatch().getStylesheetURL());
             themeStylesheets.add(editorController.getGluonTheme().getStylesheetURL());
             themeStylesheets.add(EditorPlatform.getGluonDocumentStylesheetURL());

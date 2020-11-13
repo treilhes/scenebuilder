@@ -53,13 +53,15 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.springframework.beans.factory.InitializingBean;
+
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.kit.library.Library;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -78,7 +80,7 @@ import javafx.collections.ObservableList;
  *
  * 
  */
-public class UserLibrary extends Library {
+public class UserLibrary extends Library implements InitializingBean{
     
     public enum State { READY, WATCHING }
 
@@ -115,6 +117,8 @@ public class UserLibrary extends Library {
 
 	private UILogger uiLogger;
 
+	private final MavenArtifactsPreferences preferences;
+
     /*
      * Public
      */
@@ -123,11 +127,17 @@ public class UserLibrary extends Library {
         this(path, null, null, null);
     }
 
-    public UserLibrary(String path, MavenPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) { 
+    public UserLibrary(String path, MavenArtifactsPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) { 
         this.path = path;
         this.uiLogger = uiLogger;
         this.builtinLibrary = builtinLibrary;
-        if (preferences != null) {
+        this.preferences = preferences;
+        
+    }
+    
+    @Override
+	public void afterPropertiesSet() throws Exception {
+    	if (preferences != null) {
         	this.additionalJarPaths = () -> preferences.getArtifactsPathsWithDependencies();
             this.additionalFilter = () -> preferences.getArtifactsFilter();
         }
@@ -135,7 +145,7 @@ public class UserLibrary extends Library {
         explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
 
         startWatching();
-    }
+	}
 
     public void setAdditionalJarPaths(Supplier<List<Path>> additionalJarPaths)
     {
@@ -522,4 +532,6 @@ public class UserLibrary extends Library {
         Thread.sleep(20 * 1000);
         System.out.println("Exiting"); //NOI18N
     }
+
+	
 }

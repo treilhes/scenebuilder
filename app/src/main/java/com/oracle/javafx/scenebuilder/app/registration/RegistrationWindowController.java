@@ -47,8 +47,9 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesRecordGlobal;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationEmailPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationHashPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationOptInPreference;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 
@@ -78,14 +79,26 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
 
     final private Window owner;
     private final Tracking tracking;
+
+	private final RegistrationHashPreference registrationHashPreference;
+
+	private final RegistrationEmailPreference registrationEmailPreference;
+
+	private final RegistrationOptInPreference registrationOptInPreference;
     
     public RegistrationWindowController(
     		@Autowired DocumentWindowController window,
-    		@Autowired Tracking tracking) {
+    		@Autowired Tracking tracking,
+    		@Autowired RegistrationHashPreference registrationHashPreference,
+    		@Autowired RegistrationEmailPreference registrationEmailPreference,
+    		@Autowired RegistrationOptInPreference registrationOptInPreference) {
         super(RegistrationWindowController.class.getResource("Registration.fxml"), //NOI18N
                 I18N.getBundle(), window.getStage());
         this.owner = window.getStage();
         this.tracking = tracking;
+        this.registrationHashPreference = registrationHashPreference;
+        this.registrationEmailPreference = registrationEmailPreference;
+        this.registrationOptInPreference = registrationOptInPreference;
     }
 
     @Override
@@ -135,11 +148,9 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
 
     @FXML
     public void cancelUserRegistration() {
-        PreferencesController pc = PreferencesController.getSingleton();
-        PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-        if (recordGlobal.getRegistrationHash() == null) {
+        if (registrationHashPreference.getValue() == null) {
             String hash = getUniqueId();
-            recordGlobal.updateRegistrationFields(hash, null, null);
+            registrationHashPreference.setValue(hash).writeToJavaPreferences();
             tracking.sendTrackingInfo(Tracking.SCENEBUILDER_TYPE, hash, "", false, false);
         }
 
@@ -153,16 +164,15 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
             return;
         }
 
-        PreferencesController pc = PreferencesController.getSingleton();
-        PreferencesRecordGlobal recordGlobal = pc.getRecordGlobal();
-        
-        boolean update = recordGlobal.getRegistrationHash() != null;
-        String hash = update ? recordGlobal.getRegistrationHash() : getUniqueId();
+        boolean update = registrationHashPreference.getValue() != null;
+        String hash = update ? registrationHashPreference.getValue() : getUniqueId();
         String email = tfEmail.getText();
         boolean optIn = cbOptIn.isSelected();
                 
         // Update preferences
-        recordGlobal.updateRegistrationFields(hash, email, optIn);
+        registrationHashPreference.setValue(hash).writeToJavaPreferences();
+        registrationEmailPreference.setValue(email).writeToJavaPreferences();
+        registrationOptInPreference.setValue(optIn).writeToJavaPreferences();
 
         tracking.sendTrackingInfo(Tracking.SCENEBUILDER_TYPE, hash, email, optIn, update);
 

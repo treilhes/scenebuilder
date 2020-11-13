@@ -150,6 +150,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.ValuePropertyMetadataNameComparator;
+import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 
@@ -321,14 +322,12 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
 
     // Inspector state
     private SelectionState selectionState;
-    private final EditorController editorController;
-
     private double searchResultDividerPosition;
 
     // Charsets for the properties of included elements
     private Map<String, Charset> availableCharsets;
 
-    private SceneBuilderBeanFactory sceneBuilderFactory;
+    
     
     private RadioMenuItem showAll;
     private RadioMenuItem showEdited;
@@ -343,17 +342,22 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
 	private EventHandler<ActionEvent> onViewByPropName;
 	private EventHandler<ActionEvent> onViewByPropType;
     
+	private final EditorController editorController;
+    private final SceneBuilderBeanFactory sceneBuilderFactory;
+    private final InspectorSectionIdPreference inspectorSectionIdPreference;
     
     /*
      * Public
      */
     public InspectorPanelController(
     		@Autowired EditorController editorController,
+    		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) {
         super(InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
         this.editorController = editorController;
         this.availableCharsets = CharsetEditor.getStandardCharsets();
         this.sceneBuilderFactory = sceneBuilderFactory;
+        this.inspectorSectionIdPreference = inspectorSectionIdPreference;
         
         viewModeProperty.setValue(ViewMode.SECTION);
         viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
@@ -403,6 +407,14 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
         editorPools.put(ColorPopupEditor.class, colorEditorPool);
 
         // ...
+    }
+    
+    @FXML
+    protected void initialize() {
+    	// init preferences
+    	// Add inspector accordion expanded pane listener
+    	accordion.expandedPaneProperty().addListener(
+    			(ov, t, t1) -> inspectorSectionIdPreference.setValue(getExpandedSectionId()));
     }
 
     public Accordion getAccordion() {

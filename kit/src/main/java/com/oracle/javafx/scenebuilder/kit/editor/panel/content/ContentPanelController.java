@@ -47,8 +47,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform.Theme;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
@@ -91,6 +89,9 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -1079,9 +1080,9 @@ public class ContentPanelController extends AbstractFxmlPanelController
     
     private void themeDidChange() {
         if (contentGroup != null) {
-            final EditorPlatform.Theme theme = getEditorController().getTheme();
-            final EditorPlatform.GluonSwatch gluonSwatch = getEditorController().getGluonSwatch();
-            final EditorPlatform.GluonTheme gluonTheme = getEditorController().getGluonTheme();
+            final Theme theme = getEditorController().getTheme();
+            final GluonSwatch gluonSwatch = getEditorController().getGluonSwatch();
+            final GluonTheme gluonTheme = getEditorController().getGluonTheme();
             final String themeStyleSheet = theme.getStylesheetURL();
             workspaceController.setThemeStyleSheet(themeStyleSheet, theme, gluonSwatch, gluonTheme);
         }

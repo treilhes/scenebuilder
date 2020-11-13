@@ -7,26 +7,48 @@ import javafx.beans.value.ObservableValue;
 
 public abstract class AbstractPreference<T> implements Preference<T> {
 
-	private final String name;
-	private final Preferences node;
+	private String name;
 	private final T defaultValue;
 	private final Property<T> value;
-	
-	public AbstractPreference(Preferences node, String name, T defaultValue, Property<T> propertyHolder) {
-		this.node = node;
-		this.name = name;
+	private PreferencesContext preferencesContext;
+		
+	public AbstractPreference(PreferencesContext preferencesContext, String name, T defaultValue, Property<T> propertyHolder, boolean isNode) {
+		this.name = name == null ? "" : name;
 		this.value = propertyHolder;
 		this.defaultValue = defaultValue;
+		this.preferencesContext = preferencesContext;
+
+		// handle document scoped value 
+		if (preferencesContext.isDocumentScope(getClass()) && !preferencesContext.isDocumentAlreadyInPathScope()) {
+			this.preferencesContext = this.preferencesContext.nodeContext(this, preferencesContext.computeDocumentNodeName());
+		}
+		if (isNode) {
+			this.preferencesContext = this.preferencesContext.nodeContext(this, this.name);
+		}
+		
 		setValue(defaultValue);
 	}
 	
 	@Override
 	public Preferences getNode() {
-		return node;
+		if (preferencesContext.isDocumentScope(getClass())) {
+			return preferencesContext.getDocumentsNode().getNode();
+		} else {
+			return preferencesContext.getRootNode().getNode();
+		}
 	}
 	
+	@Override
 	public String getName() {
 		return name;
+	}
+	
+	protected void setName(String name) {
+		this.name = name;
+	}
+
+	protected PreferencesContext getPreferencesContext() {
+		return preferencesContext;
 	}
 
 	@Override
@@ -35,8 +57,9 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 	}
 
 	@Override
-	public void setValue(T newValue) {
+	public Preference<T> setValue(T newValue) {
 		this.value.setValue(newValue);
+		return this;
 	}
 
 	@Override
@@ -45,7 +68,15 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 	}
 
 	@Override
-	public T getDefaultValue() {
+	public T getDefault() {
 		return defaultValue;
 	}
+
+	@Override
+	public Preference<T> reset() {
+		setValue(getDefault());
+		return this;
+	}
+	
+	
 }

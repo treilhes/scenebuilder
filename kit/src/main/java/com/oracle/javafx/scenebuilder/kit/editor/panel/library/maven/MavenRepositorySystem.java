@@ -84,9 +84,10 @@ import org.eclipse.aether.util.filter.DependencyFilterUtils;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
 
+import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
-import com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
 
 public class MavenRepositorySystem {
 
@@ -105,15 +106,18 @@ public class MavenRepositorySystem {
     
     private BasicRepositoryConnectorFactory basicRepositoryConnectorFactory;
 
+    private final MavenRepositoriesPreferences repositoryPreferences;
     private final String userM2Repository;
     private final String tempM2Repository;
-    private final RepositoryPreferences repositoryPreferences;
     
-    public MavenRepositorySystem(boolean onlyReleases, String userM2Repository, String tempM2Repository,
-                                 RepositoryPreferences repositoryPreferences) {
+    
+    public MavenRepositorySystem(
+    		boolean onlyReleases, 
+    		MavenSetting mavenSetting,
+    		MavenRepositoriesPreferences repositoryPreferences) {
         this.onlyReleases = onlyReleases;
-        this.userM2Repository = userM2Repository;
-        this.tempM2Repository = tempM2Repository;
+        this.userM2Repository = mavenSetting.getUserM2Repository();
+        this.tempM2Repository = mavenSetting.getTempM2Repository();
         this.repositoryPreferences = repositoryPreferences;
         initRepositorySystem();
     }

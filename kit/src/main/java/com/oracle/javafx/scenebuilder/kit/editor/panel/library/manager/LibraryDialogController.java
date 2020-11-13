@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
@@ -59,9 +60,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.search.Sear
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesRecordArtifact;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -95,20 +95,23 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     private Runnable onAddFolder;
     private Consumer<Path> onEditFXML;
 
-    private String userM2Repository;
-    private String tempM2Repository;
+    private final MavenArtifactsPreferences mavenPreferences;
+    private final MavenRepositoriesPreferences repositoryPreferences;
+    private final MavenSetting mavenSetting;
 
-    private final PreferencesControllerBase preferencesControllerBase;
-    
-    public LibraryDialogController(EditorController editorController, String userM2Repository, String tempM2Repository,
-                                   PreferencesControllerBase preferencesController, Stage owner) {
+    public LibraryDialogController(
+    		EditorController editorController, 
+    		MavenSetting mavenSetting,
+    		MavenArtifactsPreferences mavenPreferences,
+    		MavenRepositoriesPreferences repositoryPreferences, 
+            Stage owner) {
         super(LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.owner = owner;
         this.editorController = editorController;
         this.userLibrary = (UserLibrary) editorController.getLibrary();
-        this.userM2Repository = userM2Repository;
-        this.tempM2Repository = tempM2Repository;
-        this.preferencesControllerBase = preferencesController;
+        this.mavenPreferences = mavenPreferences;
+        this.repositoryPreferences = repositoryPreferences;
+        this.mavenSetting = mavenSetting;
     }
 
     @Override
@@ -175,7 +178,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
         }
         
         // main artifacts
-        listItems.addAll(preferencesControllerBase.getMavenPreferences().getArtifactsCoordinates()
+        listItems.addAll(mavenPreferences.getArtifactsCoordinates()
                 .stream()
                 .map(c -> new ArtifactDialogListItem(this, c))
                 .collect(Collectors.toList()));
@@ -189,8 +192,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
     @FXML
     private void manage() {
-        RepositoryManagerController repositoryDialogController = new RepositoryManagerController(editorController,
-                userM2Repository, tempM2Repository, preferencesControllerBase, getStage());
+        RepositoryManagerController repositoryDialogController = new RepositoryManagerController(
+        		editorController, mavenSetting, repositoryPreferences, getStage());
         repositoryDialogController.openWindow();
     }
     
@@ -214,7 +217,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     @FXML
     private void addRelease() {
         SearchMavenDialogController mavenDialogController = new SearchMavenDialogController(editorController,
-                userM2Repository, tempM2Repository, preferencesControllerBase, getStage());
+                mavenSetting, mavenPreferences, repositoryPreferences, getStage());
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override
@@ -229,8 +232,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     
     @FXML
     private void addManually() {
-        MavenDialogController mavenDialogController = new MavenDialogController(editorController, userM2Repository,
-                tempM2Repository, preferencesControllerBase, getStage());
+        MavenDialogController mavenDialogController = new MavenDialogController(editorController, 
+        		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override
@@ -297,7 +300,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
                     }
                 }
             } else if (dialogListItem instanceof ArtifactDialogListItem) {
-                preferencesControllerBase.removeArtifact(((ArtifactDialogListItem) dialogListItem).getCoordinates());
+                mavenPreferences.removeArtifact(((ArtifactDialogListItem) dialogListItem).getCoordinates());
                 listItems.remove(dialogListItem);
             }
         } catch (IOException x) {
@@ -312,8 +315,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             if (Files.exists(item.getFilePath())) {
                 if (LibraryUtil.isJarPath(item.getFilePath()) || Files.isDirectory(item.getFilePath())) {
                     final ImportWindowController iwc = new ImportWindowController(
-                            new LibraryPanelController(editorController, preferencesControllerBase, new SceneBuilderBeanFactory()),
-                            Arrays.asList(item.getFilePath().toFile()), preferencesControllerBase.getMavenPreferences(),
+                            new LibraryPanelController(editorController, mavenPreferences, new SceneBuilderBeanFactory()),
+                            Arrays.asList(item.getFilePath().toFile()), mavenPreferences,
                             getStage());
                     iwc.setToolStylesheet(editorController.getToolStylesheet());
                     // See comment in OnDragDropped handle set in method startListeningToDrop.
@@ -333,7 +336,6 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
                 } 
             }
         } else if (dialogListItem instanceof ArtifactDialogListItem) {
-            MavenPreferences mavenPreferences = preferencesControllerBase.getMavenPreferences();
             MavenArtifact mavenArtifact = mavenPreferences
                     .getRecordArtifact(((ArtifactDialogListItem) dialogListItem).getCoordinates())
                     .getValue();
@@ -342,8 +344,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
             //TODO remove this constructor call and use bean
             final ImportWindowController iwc = new ImportWindowController(
-                        new LibraryPanelController(editorController, preferencesControllerBase, new SceneBuilderBeanFactory()),
-                                files, preferencesControllerBase.getMavenPreferences(), getStage(),
+                        new LibraryPanelController(editorController, mavenPreferences, new SceneBuilderBeanFactory()),
+                                files, mavenPreferences, getStage(),
                     false, filter);
             iwc.setToolStylesheet(editorController.getToolStylesheet());
             AbstractModalDialog.ButtonID userChoice = iwc.showAndWait();
@@ -367,9 +369,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
         userLibrary.stopWatching();
         
         // Update record artifact
-        final PreferencesRecordArtifact recordArtifact = preferencesControllerBase.
-                getRecordArtifact(mavenArtifact);
-        recordArtifact.writeToJavaPreferences();
+        mavenPreferences.getRecordArtifact(mavenArtifact).writeToJavaPreferences();
 
         userLibrary.startWatching();
         

@@ -81,8 +81,7 @@ import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferences;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
+import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -136,7 +135,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     boolean initiateImportDialog = false;
     final List<File> jarAndFxmlFiles = new ArrayList<>();
     private String userLibraryPathString = null;
-    private final MavenPreferences mavenPreferences;
+    private final MavenArtifactsPreferences mavenPreferences;
     private boolean animateAccordion;
 
     @FXML
@@ -183,13 +182,13 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty 
     public LibraryPanelController(
     		@Autowired EditorController c, 
-    		@Autowired PreferencesControllerBase preferencesController, 
+    		@Autowired MavenArtifactsPreferences mavenPreferences, 
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) { //, UserLibrary library) {
         super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), c); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
         //this.library = library;
         startListeningToLibrary();
-        this.mavenPreferences = preferencesController.getMavenPreferences();
+        this.mavenPreferences = mavenPreferences;
     }
 
     /**

@@ -46,7 +46,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyPanelC
 import com.oracle.javafx.scenebuilder.kit.editor.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferencesControllerBase;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -101,7 +100,6 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty 
     public DocumentPanelController(
     		@Autowired EditorController c, 
-    		@Autowired PreferencesControllerBase preferencesController, 
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired HierarchyPanelController hierarchyPanelController,
     		@Autowired InfoPanelController infoPanelController

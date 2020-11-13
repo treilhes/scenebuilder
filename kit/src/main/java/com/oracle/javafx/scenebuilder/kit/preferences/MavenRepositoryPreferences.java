@@ -37,6 +37,7 @@ import java.util.prefs.Preferences;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
@@ -44,7 +45,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.
 /**
  * Defines repository preferences global to the application.
  */
-public class PreferencesRecordRepository extends ObjectPreference<Repository> {
+public class MavenRepositoryPreferences extends ObjectPreference<Repository> {
     
     public final static String REPO_ID  = "ID";
     public final static String REPO_TYPE  = "type";
@@ -52,30 +53,30 @@ public class PreferencesRecordRepository extends ObjectPreference<Repository> {
     public final static String REPO_USER = "User";
     public final static String REPO_PASS = "Password";   
     
-    public PreferencesRecordRepository(Preferences node, Repository defaultValue) {
-		super(node, null, defaultValue);
+    public MavenRepositoryPreferences(PreferencesContext preferencesContext, String name, Repository defaultValue) {
+		super(preferencesContext, name, defaultValue);
 	}
     
     public static KeyProvider<Repository> keyProvider() {
 		return (r) -> r.getId();
 	}
 	
-	public static DefaultProvider<PreferencesRecordRepository> defaultProvider() {
-		return (node) -> new PreferencesRecordRepository(node, new Repository());
+	public static DefaultProvider<MavenRepositoryPreferences> defaultProvider() {
+		return (pc, name) -> new MavenRepositoryPreferences(pc, name, new Repository());
 	}
 	
 	@Override
 	public boolean isValid(Repository object) {
 		if (object == null) {
-			Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, "Repository can't be null");
+			Logger.getLogger(MavenRepositoryPreferences.class.getName()).log(Level.SEVERE, "Repository can't be null");
 			return false;
 		}
 		if (object.getId() == null || object.getId().isEmpty()) {
-			Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, "Repository id can't be null or empty");
+			Logger.getLogger(MavenRepositoryPreferences.class.getName()).log(Level.SEVERE, "Repository id can't be null or empty");
 			return false;
 		}
 		if (object.getType() == null || object.getURL() == null) {
-			Logger.getLogger(PreferencesRecordRepository.class.getName()).log(Level.SEVERE, "Repository fields type and url can't be null");
+			Logger.getLogger(MavenRepositoryPreferences.class.getName()).log(Level.SEVERE, "Repository fields type and url can't be null");
 			return false;
 		}
 		return true;
