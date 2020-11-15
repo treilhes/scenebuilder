@@ -37,12 +37,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.AbstractListPreferences;
+import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 @Component
-public class MavenRepositoriesPreferences extends AbstractListPreferences<MavenRepositoryPreferences, Repository> {
+public class MavenRepositoriesPreferences extends ListPreferences<MavenRepositoryPreferences, Repository> {
 	
 	// NODE
     protected static final String NODE_NAME = "REPOSITORIES"; //NOI18N

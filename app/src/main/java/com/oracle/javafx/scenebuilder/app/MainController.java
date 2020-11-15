@@ -627,6 +627,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     private void loadTemplateInWindow(Template template, DocumentWindowController documentWindowController) {
         final URL url = template.getFXMLURL();
         if (url != null) {
+        	// TODO How to pass this boolean into the new Pref API ?
+        	// template.getType() != Type.PHONE ? reload theme : do not reload
             documentWindowController.loadFromURL(url, template.getType() != Type.PHONE);
         }
         Template.prepareDocument(documentWindowController.getEditorController(), template);

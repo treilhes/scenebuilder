@@ -43,7 +43,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
 
-public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends AbstractPreference<ObservableMap<String, T>>{
+public abstract class ListPreferences<T extends AbstractPreference<U>, U> extends AbstractPreference<ObservableMap<String, T>>{
 	
 	/***************************************************************************
      *                                                                         *
@@ -63,7 +63,7 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends
      *                                                                         *
      **************************************************************************/
 
-    public AbstractListPreferences(PreferencesContext preferencesContext, String listName, KeyProvider<U> keyProvider, DefaultProvider<T> defaultProvider) {
+    public ListPreferences(PreferencesContext preferencesContext, String listName, KeyProvider<U> keyProvider, DefaultProvider<T> defaultProvider) {
     	super(preferencesContext, listName, FXCollections.observableHashMap(), new SimpleObjectProperty<ObservableMap<String, T>>(), true); 
 				
     	this.keyProvider = keyProvider;
@@ -82,7 +82,7 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends
                 addRecord(artifactPreference);
             }
         } catch (BackingStoreException ex) {
-            Logger.getLogger(AbstractListPreferences.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ListPreferences.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -129,7 +129,7 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends
                 node.removeNode();
                 getValue().remove(key);
             } catch (BackingStoreException ex) {
-                Logger.getLogger(AbstractListPreferences.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ListPreferences.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -143,12 +143,12 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
+	public void write() {
 		getValue().forEach((k,v) -> v.writeToJavaPreferences());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		getValue().forEach((k,v) -> {
 			v.setName(k);
 			v.readFromJavaPreferences();
@@ -169,7 +169,7 @@ public class AbstractListPreferences<T extends AbstractPreference<U>, U> extends
                 removeRecord(child);
             }
         } catch (BackingStoreException ex) {
-            Logger.getLogger(AbstractListPreferences.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ListPreferences.class.getName()).log(Level.SEVERE, null, ex);
         }
         return super.reset();
 	}

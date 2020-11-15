@@ -37,11 +37,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.app.preferences.global.AccordionAnimationPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.CssTableColumnsOrderingReversedPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.DisplayModePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.ImportedGluonJarsPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.LastSentTrackingInfoDatePreference;
@@ -57,8 +52,13 @@ import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.preferences.GlobalKitPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference.CSSAnalyzerColumnsOrder;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
@@ -71,30 +71,6 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
  */
 @Component
 public class GlobalPreferences extends GlobalKitPreferences {
-
-    /***************************************************************************
-     *                                                                         *
-     * Support Classes                                                         *
-     *                                                                         *
-     **************************************************************************/
-
-    public enum CSSAnalyzerColumnsOrder {
-
-        DEFAULTS_FIRST {
-
-            @Override
-            public String toString() {
-                return I18N.getString("prefs.cssanalyzer.columns.defaults.first");
-            }
-        },
-        DEFAULTS_LAST {
-
-            @Override
-            public String toString() {
-                return I18N.getString("prefs.cssanalyzer.columns.defaults.last");
-            }
-        }
-    }
 
     /***************************************************************************
      *                                                                         *
@@ -136,7 +112,7 @@ public class GlobalPreferences extends GlobalKitPreferences {
 
     private final LastSentTrackingInfoDatePreference lastSentTrackingInfoDate;
 
-    final static Integer[] recentItemsSizes = {5, 10, 15, 20};
+    //final static Integer[] recentItemsSizes = {5, 10, 15, 20};
 
     /***************************************************************************
      *                                                                         *

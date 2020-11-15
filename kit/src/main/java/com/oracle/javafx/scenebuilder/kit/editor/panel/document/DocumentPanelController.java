@@ -46,6 +46,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyPanelC
 import com.oracle.javafx.scenebuilder.kit.editor.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -71,6 +73,9 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
 
 	private final AbstractHierarchyPanelController hierarchyPanelController;
 	private final InfoPanelController infoPanelController;
+	private final DisplayOptionPreference displayOptionPreference;
+	private final SceneBuilderBeanFactory sceneBuilderFactory;
+	private final AccordionAnimationPreference accordionAnimationPreference;
 
 	@FXML private StackPane hierarchyPanelHost;
 	@FXML private StackPane infoPanelHost;
@@ -81,12 +86,9 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
     private RadioMenuItem showFxIdMenuItem;
     private RadioMenuItem showNodeIdMenuItem;
     
-	private SceneBuilderBeanFactory sceneBuilderFactory;
-	
 	private EventHandler<ActionEvent> onShowInfo;
 	private EventHandler<ActionEvent> onShowFxId;
 	private EventHandler<ActionEvent> onShowNodeId;
-	
 	
     /*
      * Public
@@ -102,15 +104,31 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
     		@Autowired EditorController c, 
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired HierarchyPanelController hierarchyPanelController,
-    		@Autowired InfoPanelController infoPanelController
+    		@Autowired InfoPanelController infoPanelController,
+    		@Autowired DisplayOptionPreference displayOptionPreference,
+    		@Autowired AccordionAnimationPreference accordionAnimationPreference
     		) { //, UserLibrary library) {
         super(DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle(), c); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
-        //this.library = library;
-        //this.mavenPreferences = preferencesController.getMavenPreferences();
+        this.displayOptionPreference = displayOptionPreference;
+        this.accordionAnimationPreference = accordionAnimationPreference;
     }
+    
+    @FXML
+    public void initialize() {
+    	createLibraryMenu();
+    	
+    	getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(accordionAnimationPreference.getValue()));
+    	refreshHierarchyDisplayOption(displayOptionPreference.getValue());
+    	
+    	accordionAnimationPreference.getObservableValue().addListener(
+    			(ob, o, n) -> getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(n)));
+    	displayOptionPreference.getObservableValue().addListener(
+    			(ob, o, n) -> refreshHierarchyDisplayOption(n));
+    }
+   
     
     /**
      * @treatAsPrivate Controller did load fxml.
@@ -129,8 +147,6 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
         infoPanelHost.getChildren().add(infoPanelController.getPanelRoot());
         
         documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
-        
-        createLibraryMenu();
         
     }
     

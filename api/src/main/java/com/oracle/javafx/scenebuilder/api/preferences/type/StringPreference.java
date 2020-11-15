@@ -12,16 +12,12 @@ public class StringPreference extends AbstractPreference<String> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().put(getName(), getValue());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().put(getName(), getValue());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		setValue(getNode().get(getName(), getDefault()));
 	}

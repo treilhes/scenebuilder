@@ -108,6 +108,7 @@ import com.oracle.javafx.scenebuilder.kit.library.Library;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
@@ -293,6 +294,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private FileTime loadFileTime;
     private Job saveJob;
     private EventHandler<KeyEvent> mainKeyEventFilter;
+
     
     /*
      * DocumentWindowController
@@ -339,7 +341,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired LeftDividerHPosPreference leftDividerHPos,
 			@Lazy @Autowired RightDividerHPosPreference rightDividerHPos,
 			@Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
-			@Lazy @Autowired LeftDividerVPosPreference leftDividerVPos
+			@Lazy @Autowired LeftDividerVPosPreference leftDividerVPos,
+			
+			@Lazy @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference
 			) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
@@ -385,8 +389,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDividerHPos = rightDividerHPos;
         this.bottomDividerVPos = bottomDividerVPos;
         this.leftDividerVPos = leftDividerVPos;
-        
-        
         
         documentPreferencesController.readFromJavaPreferences();
         
@@ -493,9 +495,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	
 	@FXML
 	public void initialize() {
+		editorController.initialize();
+		
+		bottomSplitController = new SplitController(mainSplitPane, SplitController.Target.LAST);
+        leftSplitController = new SplitController(leftRightSplitPane, SplitController.Target.FIRST);
+        rightSplitController = new SplitController(leftRightSplitPane, SplitController.Target.LAST);
+        librarySplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.FIRST);
+        documentSplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.LAST);
+        
 		// initialize preference binding
 		final Stage stage = getStage();
         assert stage != null;
+        
         // Add stage x and y listeners
         stage.xProperty().addListener((ov, t, t1) -> xPos.setValue(t1.doubleValue()));
         stage.yProperty().addListener((ov, t, t1) -> yPos.setValue(t1.doubleValue()));
@@ -668,30 +679,30 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //        hierarchyPanelController.setDisplayOption(option);
 //    }
 
-    public void refreshCssTableColumnsOrderingReversed(boolean cssTableColumnsOrderingReversed) {
-        cssPanelController.setTableColumnsOrderingReversed(cssTableColumnsOrderingReversed);
-    }
+//    public void refreshCssTableColumnsOrderingReversed(boolean cssTableColumnsOrderingReversed) {
+//        cssPanelController.setTableColumnsOrderingReversed(cssTableColumnsOrderingReversed);
+//    }
 
     public void refreshCssTableColumnsOrderingReversed(GlobalPreferences preferences) {
-        refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
+        //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
     }
 
     public void refreshAlignmentGuidesColor(GlobalPreferences preferences) {
         final ContentPanelController cpc = getContentPanelController();
-        cpc.setGuidesColor(preferences.getAlignmentGuidesColor());
+        //cpc.setGuidesColor(preferences.getAlignmentGuidesColor());
     }
 
     public void animateAccordion(boolean animate) {
-        libraryPanelController.animateAccordion(animate);
-        inspectorPanelController.animateAccordion(animate);
-        documentPanelController.getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(animate));
+        //libraryPanelController.animateAccordion(animate);
+    	//inspectorPanelController.animateAccordion(animate);
+    	//documentPanelController.getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(animate));
         
         //PrefTests.doDocTest(gluonDocumentPreferences);
     }
 
     public void refreshBackgroundImage(GlobalPreferences preferences) {
         // Background images
-        getContentPanelController().setWorkspaceBackground(preferences.getBackgroundImageImage());
+        //getContentPanelController().setWorkspaceBackground(preferences.getBackgroundImageImage());
     }
 
     public void refreshToolTheme(GlobalPreferences preferences) {
@@ -713,48 +724,48 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public void refreshLibraryDisplayOption(GlobalPreferences preferences) {
-    	libraryPanelController.refreshLibraryDisplayOption(preferences.getLibraryDisplayOption());
+    	//libraryPanelController.refreshLibraryDisplayOption(preferences.getLibraryDisplayOption());
     }
 
     public void refreshHierarchyDisplayOption(GlobalPreferences preferences) {
-        documentPanelController.refreshHierarchyDisplayOption(preferences.getHierarchyDisplayOption());
+        //documentPanelController.refreshHierarchyDisplayOption(preferences.getHierarchyDisplayOption());
     }
 
     public void refreshParentRingColor(GlobalPreferences preferences) {
         Color parentRingColor = preferences.getParentRingColor();
         final ContentPanelController cpc = getContentPanelController();
-        cpc.setPringColor(parentRingColor);
+        //cpc.setPringColor(parentRingColor);
         final AbstractHierarchyPanelController hpc = documentPanelController.getHierarchyPanelController();
-        hpc.setParentRingColor(parentRingColor);
+        //hpc.setParentRingColor(parentRingColor);
     }
 
     public void refreshRootContainerHeight(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
-        ec.setDefaultRootContainerHeight(preferencesRecordGlobal.getRootContainerHeight());
+        //ec.setDefaultRootContainerHeight(preferencesRecordGlobal.getRootContainerHeight());
     }
 
     public void refreshRootContainerWidth(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
-        ec.setDefaultRootContainerWidth(preferencesRecordGlobal.getRootContainerWidth());
+        //ec.setDefaultRootContainerWidth(preferencesRecordGlobal.getRootContainerWidth());
     }
 
     public void refreshTheme(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
-        ec.setTheme(preferencesRecordGlobal.getTheme());
+        //ec.setTheme(preferencesRecordGlobal.getTheme());
     }
 
     public void refreshSwatch(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
-        ec.setGluonSwatch(preferencesRecordGlobal.getSwatch());
+        //ec.setGluonSwatch(preferencesRecordGlobal.getSwatch());
     }
 
     public void refreshGluonTheme(GlobalPreferences preferencesRecordGlobal) {
         final EditorController ec = getEditorController();
-        ec.setGluonTheme(preferencesRecordGlobal.getGluonTheme());
+        //ec.setGluonTheme(preferencesRecordGlobal.getGluonTheme());
     }
 
     public void refreshAccordionAnimation(GlobalPreferences preferencesRecordGlobal) {
-        animateAccordion(preferencesRecordGlobal.isAccordionAnimation());
+        //animateAccordion(preferencesRecordGlobal.isAccordionAnimation());
     }
 
     public boolean canPerformControlAction(DocumentControlAction controlAction) {
@@ -958,7 +969,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (bottomSplitController.isTargetVisible()) {
                     // CSS panel is built lazely
                     // Need to update its table column ordering with preference value
-                    refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
+                    //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
                     // Enable pick mode
                     editorController.setPickModeEnabled(true);
                 } else {
@@ -1318,14 +1329,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         
         //inspectorSearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> inspectorPanelController.setSearchPattern(newStr));
         
-        
-        
-        bottomSplitController = new SplitController(mainSplitPane, SplitController.Target.LAST);
-        leftSplitController = new SplitController(leftRightSplitPane, SplitController.Target.FIRST);
-        rightSplitController = new SplitController(leftRightSplitPane, SplitController.Target.LAST);
-        librarySplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.FIRST);
-        documentSplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.LAST);
-        
         messageBarHost.heightProperty().addListener((InvalidationListener) o -> {
             final double h = messageBarHost.getHeight();
             contentPanelHost.setPadding(new Insets(h, 0.0, 0.0, 0.0));
@@ -1565,7 +1568,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //
     public void onManageJarFxml(ActionEvent event) {
         if(libraryDialogController==null){
-            libraryDialogController = new LibraryDialogController(editorController, 
+            libraryDialogController = new LibraryDialogController(editorController, libraryPanelController,
             		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
             libraryDialogController.setOnAddJar(() -> onImportJarFxml(libraryDialogController.getStage()));
             libraryDialogController.setOnEditFXML(fxmlPath -> {
@@ -2010,21 +2013,21 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public void refreshFromPreferencesRecordGlobal(GlobalPreferences recordGlobal, boolean refreshTheme) {
-        refreshAlignmentGuidesColor(recordGlobal);
-        refreshBackgroundImage(recordGlobal);
-        refreshCssTableColumnsOrderingReversed(recordGlobal);
+    	//refreshAlignmentGuidesColor(recordGlobal);//done
+    	//refreshBackgroundImage(recordGlobal);//done
+    	//refreshCssTableColumnsOrderingReversed(recordGlobal);//done
         refreshToolTheme(recordGlobal);
-        refreshLibraryDisplayOption(recordGlobal);
-        refreshHierarchyDisplayOption(recordGlobal);
-        refreshParentRingColor(recordGlobal);
-        refreshRootContainerHeight(recordGlobal);
-        refreshRootContainerWidth(recordGlobal);
+        //refreshLibraryDisplayOption(recordGlobal);//done
+        //refreshHierarchyDisplayOption(recordGlobal);//done
+        //refreshParentRingColor(recordGlobal);
+        //refreshRootContainerHeight(recordGlobal);
+        //refreshRootContainerWidth(recordGlobal);
         if (refreshTheme) {
             refreshTheme(recordGlobal);
             refreshSwatch(recordGlobal);
             refreshGluonTheme(recordGlobal);
         }
-        refreshAccordionAnimation(recordGlobal);
+        //refreshAccordionAnimation(recordGlobal);
     }
 
     ActionStatus performSaveOrSaveAsAction() {

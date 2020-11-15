@@ -151,6 +151,7 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 
@@ -345,6 +346,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
 	private final EditorController editorController;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
+    private final AccordionAnimationPreference accordionAnimationPreference;
     
     /*
      * Public
@@ -352,12 +354,14 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
     public InspectorPanelController(
     		@Autowired EditorController editorController,
     		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) {
+    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+    		@Autowired AccordionAnimationPreference accordionAnimationPreference) {
         super(InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
         this.editorController = editorController;
         this.availableCharsets = CharsetEditor.getStandardCharsets();
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
+        this.accordionAnimationPreference = accordionAnimationPreference;
         
         viewModeProperty.setValue(ViewMode.SECTION);
         viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
@@ -412,6 +416,10 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
     @FXML
     protected void initialize() {
     	// init preferences
+    	animateAccordion(accordionAnimationPreference.getValue());
+    	
+    	accordionAnimationPreference.getObservableValue().addListener(
+    			(ob, o, n) -> animateAccordion(n));
     	// Add inspector accordion expanded pane listener
     	accordion.expandedPaneProperty().addListener(
     			(ov, t, t1) -> inspectorSectionIdPreference.setValue(getExpandedSectionId()));

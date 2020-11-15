@@ -82,6 +82,8 @@ import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
 
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -135,7 +137,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     boolean initiateImportDialog = false;
     final List<File> jarAndFxmlFiles = new ArrayList<>();
     private String userLibraryPathString = null;
-    private final MavenArtifactsPreferences mavenPreferences;
+    
     private boolean animateAccordion;
 
     @FXML
@@ -147,8 +149,6 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     @FXML ListView<LibraryListItem> libList = null;
 
     @FXML StackPane libPane;
-	
-    private SceneBuilderBeanFactory sceneBuilderFactory;
 	
     private RadioMenuItem viewAsList;
     private RadioMenuItem viewAsSections;
@@ -167,8 +167,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
 	private EventHandler<ActionEvent> onLibraryImportSelection;
 	private EventHandler<ActionEvent> onLibraryRevealCustomFolder;
 	private EventHandler<ActionEvent> onLibraryShowJarAnalysisReport;
-    
-    
+	
+	private final MavenArtifactsPreferences mavenPreferences;
+    private final DisplayModePreference displayModePreference;
+    private final SceneBuilderBeanFactory sceneBuilderFactory;
+    private final AccordionAnimationPreference accordionAnimationPreference;
     
     /*
      * Public
@@ -183,12 +186,29 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     public LibraryPanelController(
     		@Autowired EditorController c, 
     		@Autowired MavenArtifactsPreferences mavenPreferences, 
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) { //, UserLibrary library) {
+    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+    		@Autowired DisplayModePreference displayModePreference,
+    		@Autowired AccordionAnimationPreference accordionAnimationPreference) { //, UserLibrary library) {
         super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), c); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
-        //this.library = library;
-        startListeningToLibrary();
         this.mavenPreferences = mavenPreferences;
+        this.displayModePreference = displayModePreference;
+        this.accordionAnimationPreference = accordionAnimationPreference;
+        
+        startListeningToLibrary();
+        
+    }
+    
+    @FXML
+    public void initialize() {
+    	createLibraryMenu();
+    	animateAccordion(accordionAnimationPreference.getValue());
+    	refreshLibraryDisplayOption(displayModePreference.getValue());
+    	
+    	accordionAnimationPreference.getObservableValue().addListener(
+    			(ob, o, n) -> animateAccordion(n));
+    	displayModePreference.getObservableValue().addListener(
+    			(ob, o, n) -> refreshLibraryDisplayOption(n));
     }
 
     /**
@@ -304,10 +324,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
 		getViewController().setContent(super.getPanelRoot());
 		
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
-        createLibraryMenu();
         
         startListeningToDrop();
-        setDisplayMode(DISPLAY_MODE.SECTIONS);
         populateLibraryPanel();
         setUserLibraryPathString();
     }

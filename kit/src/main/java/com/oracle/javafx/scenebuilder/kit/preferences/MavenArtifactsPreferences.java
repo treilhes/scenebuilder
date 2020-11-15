@@ -42,12 +42,12 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.AbstractListPreferences;
+import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 
 @Component
-public class MavenArtifactsPreferences extends AbstractListPreferences<MavenArtifactPreferences, MavenArtifact> {
+public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, MavenArtifact> {
 	
 	// NODE
 	protected static final String NODE_NAME = "ARTIFACTS"; //NOI18N

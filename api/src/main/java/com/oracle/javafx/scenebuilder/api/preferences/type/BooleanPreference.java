@@ -12,16 +12,12 @@ public class BooleanPreference extends AbstractPreference<Boolean> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().putBoolean(getName(), getValue());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().putBoolean(getName(), getValue());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		setValue(getNode().getBoolean(getName(), getDefault()));
 	}

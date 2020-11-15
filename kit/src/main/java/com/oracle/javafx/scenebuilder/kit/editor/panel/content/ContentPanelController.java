@@ -33,13 +33,13 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,6 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.AbstractDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.BorderPaneDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.CubicCurveDriver;
@@ -89,8 +88,11 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.beans.value.ChangeListener;
@@ -182,6 +184,9 @@ public class ContentPanelController extends AbstractFxmlPanelController
     
     private final Picker picker = new Picker();
     private final List<NodeOutline> outlines = new ArrayList<>();
+	private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
+	private final BackgroundImagePreference backgroundImagePreference;
+	private final ParentRingColorPreference parentRingColorPreference;
     
     /*
      * Public
@@ -192,11 +197,20 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * 
      * @param editorController the editor controller (never null).
      */
-    public ContentPanelController(EditorController editorController) {
+    public ContentPanelController(
+    		@Autowired EditorController editorController,
+    		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
+    		@Autowired BackgroundImagePreference backgroundImagePreference,
+    		@Autowired ParentRingColorPreference parentRingColorPreference
+    		) {
         super(ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.editModeController = new EditModeController(this);
         this.pickModeController = new PickModeController(this);
         this.workspaceController = new WorkspaceController(editorController);
+        
+        this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
+        this.backgroundImagePreference = backgroundImagePreference;
+        this.parentRingColorPreference = parentRingColorPreference;
         
         editorController.getDragController().dragSourceProperty().addListener((ChangeListener<AbstractDragSource>) (ov, t, t1) -> dragSourceDidChange()
         );
@@ -217,6 +231,17 @@ public class ContentPanelController extends AbstractFxmlPanelController
         );
     }
 
+    @FXML
+    public void initialize() {
+    	setGuidesColor(alignmentGuidesColorPreference.getValue());
+    	setWorkspaceBackground(backgroundImagePreference.getBackgroundImageImage());
+    	setPringColor(parentRingColorPreference.getValue());
+    	
+    	alignmentGuidesColorPreference.getObservableValue().addListener((ob,o,n) -> setGuidesColor(n));
+    	backgroundImagePreference.getObservableValue().addListener(
+    			(ob,o,n) -> setWorkspaceBackground(BackgroundImagePreference.getImage(n)));
+    	parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setPringColor(n));
+    }
     /**
      * Returns true if this content panel displays outlines.
      * 
@@ -373,10 +398,10 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * 
      * @return URL of the default workspace background (never null).
      */
-    public static URL getDefaultWorkspaceBackgroundURL() {
-        assert ImageUtils.getUIURL("Background-Neutral-Uniform.png") != null;
-        return ImageUtils.getUIURL("Background-Neutral-Uniform.png"); //NOI18N
-    }
+//    public static URL getDefaultWorkspaceBackgroundURL() {
+//        assert ImageUtils.getUIURL("Background-Neutral-Uniform.png") != null;
+//        return ImageUtils.getUIURL("Background-Neutral-Uniform.png"); //NOI18N
+//    }
     
     /**
      * Scrolls this content panel so that the selected objects are visible.
@@ -919,7 +944,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         scrollPane.setContextMenu(contextMenuController.getContextMenu());
         
         // Setup default workspace background
-        setWorkspaceBackground(ImageUtils.getImage(getDefaultWorkspaceBackgroundURL()));
+        //setWorkspaceBackground(ImageUtils.getImage(getDefaultWorkspaceBackgroundURL()));
     }
     
     /*

@@ -1,16 +1,21 @@
 package com.oracle.javafx.scenebuilder.app.preferences.global;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
+import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.IntegerPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+
+import javafx.scene.Parent;
 
 @Component
-public class RecentItemsSizePreference extends IntegerPreference implements ManagedGlobalPreference {
+public class RecentItemsSizePreference extends IntegerPreference implements ManagedGlobalPreference, UserPreference<Integer> {
 	    
     /***************************************************************************
      *                                                                         *
@@ -19,6 +24,7 @@ public class RecentItemsSizePreference extends IntegerPreference implements Mana
      **************************************************************************/
     public static final String PREFERENCE_KEY = "RECENT_ITEMS_SIZE"; //NOI18N
     public static final int PREFERENCE_DEFAULT_VALUE = 15;
+    public static final Integer[] RECENT_ITEMS_SIZE = {5, 10, 15, 20};
     
 	private final RecentItemsPreference recentItems;
 
@@ -42,6 +48,26 @@ public class RecentItemsSizePreference extends IntegerPreference implements Mana
 		}
         
 		return that;
+	}
+
+	@Override
+	public String getLabelI18NKey() {
+		return "prefs.recent.items";
+	}
+
+	@Override
+	public Parent getEditor() {
+		return PreferenceEditorFactory.newChoiceFieldEditor(this, RECENT_ITEMS_SIZE);
+	}
+
+	@Override
+	public PreferenceGroup getGroup() {
+		return DefaultPreferenceGroups.GLOBAL_GROUP_E;
+	}
+
+	@Override
+	public String getOrderKey() {
+		return getGroup().getOrderKey() + "_A";
 	}
 
 }

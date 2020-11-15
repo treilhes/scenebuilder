@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -111,12 +112,14 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.preferences.document.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.document.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.SceneStyleSheetsPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 
@@ -131,7 +134,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableListValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -307,19 +309,25 @@ public class EditorController implements Editor {
 	private final ThemePreference themePreference;
 	private final GluonThemePreference gluonThemePreference;
 	private final GluonSwatchPreference gluonSwatchPreference;
+	private final RootContainerHeightPreference rootContainerHeightPreference;
+	private final RootContainerWidthPreference rootContainerWidthPreference;
     
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
     public EditorController(
     		@Autowired BuiltinLibrary builtinLibrary,
-    		@Autowired SceneStyleSheetsPreference sceneStyleSheets,
-    	    @Autowired ThemePreference theme,
-    	    @Autowired GluonSwatchPreference gluonSwatch,
-    	    @Autowired GluonThemePreference gluonTheme
+    		@Autowired RootContainerHeightPreference rootContainerHeightPreference,
+    	    @Autowired RootContainerWidthPreference rootContainerWidthPreference,
+    	    @Lazy @Autowired SceneStyleSheetsPreference sceneStyleSheets,
+    	    @Lazy @Autowired ThemePreference theme,
+    	    @Lazy @Autowired GluonSwatchPreference gluonSwatch,
+    	    @Lazy @Autowired GluonThemePreference gluonTheme
     		) {
     	this.sceneStyleSheetsPreference = sceneStyleSheets;
     	this.themePreference = theme;
+    	this.rootContainerHeightPreference = rootContainerHeightPreference;
+    	this.rootContainerWidthPreference = rootContainerWidthPreference;
     	this.gluonSwatchPreference = gluonSwatch;
     	this.gluonThemePreference = gluonTheme;
     	
@@ -331,15 +339,33 @@ public class EditorController implements Editor {
         
     }
     
-    @FXML
+//	@Override
+//	public void afterPropertiesSet() throws Exception {
+//		initialize();
+//	}
+    
 	public void initialize() {
+    	setDefaultRootContainerHeight(rootContainerHeightPreference.getValue());
+    	setDefaultRootContainerWidth(rootContainerWidthPreference.getValue());
+    	setTheme(themePreference.getValue());
+    	setGluonSwatch(gluonSwatchPreference.getValue());
+    	setGluonTheme(gluonThemePreference.getValue());
+    	//setSceneStyleSheets(FXCollections.observableList(sceneStyleSheetsPreference.getValue()));
+    	
     	// init preferences
+    	rootContainerHeightPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerHeight(n));
+        rootContainerWidthPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerWidth(n));
+        themePreference.getObservableValue().addListener((ob, o, n) -> setTheme(n));
+        gluonSwatchPreference.getObservableValue().addListener((ob, o, n) -> setGluonSwatch(n));
+        gluonThemePreference.getObservableValue().addListener((ob, o, n) -> setGluonTheme(n));
+        
+        
     	// Add scene style sheets listener
         sceneStyleSheetProperty().addListener((ov, t, t1) -> sceneStyleSheetsPreference.setValue(t1));
         // Add theme and Gluon theme listener
-        themeProperty().addListener(((observable, oldValue, newValue) -> themePreference.setValue(newValue)));
-        gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> gluonSwatchPreference.setValue(newValue)));
-        gluonThemeProperty().addListener(((observable, oldValue, newValue) -> gluonThemePreference.setValue(newValue)));
+        themeProperty().addListener((observable, oldValue, newValue) -> themePreference.setValue(newValue));
+        gluonSwatchProperty().addListener((observable, oldValue, newValue) -> gluonSwatchPreference.setValue(newValue));
+        gluonThemeProperty().addListener((observable, oldValue, newValue) -> gluonThemePreference.setValue(newValue));
     }
 
     /**
@@ -2656,4 +2682,6 @@ public class EditorController implements Editor {
     public EditorController getMe() {
     	return this;
     }
+
+
 }

@@ -40,7 +40,7 @@ public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {
                 }
             }
         } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DocumentPreferencesNodeImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
 	
@@ -52,7 +52,7 @@ public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {
                 getNode().node(child).removeNode();
             }
         } catch (BackingStoreException ex) {
-            Logger.getLogger(PreferencesController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DocumentPreferencesNodeImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
 

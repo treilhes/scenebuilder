@@ -12,16 +12,12 @@ public class DoublePreference extends AbstractPreference<Double> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().putDouble(getName(), getValue());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().putDouble(getName(), getValue());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		setValue(getNode().getDouble(getName(), getDefault()));
 	}

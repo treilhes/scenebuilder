@@ -73,6 +73,7 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 
@@ -211,7 +212,8 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
-    private SceneBuilderBeanFactory sceneBuilderFactory;
+    private final SceneBuilderBeanFactory sceneBuilderFactory;
+    private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
     
     private Menu viewAs;
     private RadioMenuItem viewAsTable;
@@ -479,12 +481,29 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
     public CssPanelController(
     		@Autowired EditorController c, 
     		@Autowired Delegate delegate,
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory) {
+    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+    		@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference
+    		) {
         super(CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), c);
         this.editorController = c;
         this.applicationDelegate = delegate;
         this.sceneBuilderFactory = sceneBuilderFactory;
+        this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
     }
+    
+	/*
+	 *
+	 * FXML methods.
+	 *
+	 * @treatAsPrivate
+	 */
+	@FXML
+	public void initialize() {
+		setTableColumnsOrderingReversed(cssTableColumnsOrderingReversedPreference.getValue());
+
+		cssTableColumnsOrderingReversedPreference.getObservableValue()
+				.addListener((ob, o, n) -> setTableColumnsOrderingReversed(n));
+	}
 
     public String getSearchPattern() {
         return searchPattern;
@@ -679,16 +698,6 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 
     /*
      *
-     * FXML methods.
-     *
-     * @treatAsPrivate
-     */
-    public void initialize() {
-
-    }
-
-    /*
-     *
      * Private
      *
      */
@@ -759,7 +768,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
     }
 
     private boolean isMultipleSelection() {
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
+        if (selection != null && selection.getGroup() instanceof ObjectSelectionGroup) {
             return ((ObjectSelectionGroup) selection.getGroup()).getItems().size() > 1;
         } else {
             // GridSelectionGroup: consider the GridPane only

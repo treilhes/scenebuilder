@@ -25,7 +25,7 @@ public abstract class ObjectPreference<T> extends AbstractPreference<T> {
 	public abstract void readFromNode(String key, Preferences node);
 	
 	@Override
-	public void writeToJavaPreferences() {
+	public void write() {
 		assert getNode() != null;
         
         T value = getValue();
@@ -58,7 +58,7 @@ public abstract class ObjectPreference<T> extends AbstractPreference<T> {
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 //		assert valueNode == null;
 		String key = getName();
 //        // Check if there are some preferences for this artifact

@@ -13,16 +13,12 @@ public class ColorPreference extends AbstractPreference<Color> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().put(getName(), getValue().toString());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().put(getName(), getValue().toString());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		String colorDefault = (getDefault() == null) ? null : getDefault().toString();
 		String colorString = getNode().get(getName(), colorDefault);

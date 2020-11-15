@@ -31,6 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview.HierarchyTreeViewController;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 
 /**
  * Concrete class to create and control the Hierarchy Panel of Scene Builder
@@ -50,8 +52,10 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview.Hierar
 @Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class HierarchyPanelController extends HierarchyTreeViewController {
-
-    public HierarchyPanelController(EditorController editorController) {
-        super(editorController);
+	
+    public HierarchyPanelController(
+    		@Autowired EditorController editorController,
+    		@Autowired ParentRingColorPreference parentRingColorPreference) {
+        super(editorController, parentRingColorPreference);
     }
 }

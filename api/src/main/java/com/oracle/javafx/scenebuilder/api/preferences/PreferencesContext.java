@@ -22,7 +22,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 public class PreferencesContext {
 
 	private static final String HASH_PATH_SEPARATOR = "-"; //NOI18N
-	private static final String DEFAULT_DOCUMENT_NODE = "<<<empty>>>"; //NOI18N
+	public static final String DEFAULT_DOCUMENT_NODE = "<<<empty>>>"; //NOI18N
 	
 	private final GenericApplicationContext context;
 		
@@ -64,6 +64,10 @@ public class PreferencesContext {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public boolean isDocumentNameDefined() {
+		return getCurrentFilePath() != null;
 	}
 	
 	public String computeDocumentNodeName() {

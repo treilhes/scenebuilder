@@ -15,20 +15,15 @@ public class EnumPreference<T extends Enum<T>> extends AbstractPreference<T> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().put(getName(), getValue().name());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().put(getName(), getValue().name());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		String enumDefault = (getDefault() == null) ? null : getDefault().name();
 		String enumString = getNode().get(getName(), enumDefault);
-		
 		try {
 			setValue(Enum.valueOf(enumClass, enumString));
 		} catch (Exception e) {
@@ -41,4 +36,8 @@ public class EnumPreference<T extends Enum<T>> extends AbstractPreference<T> {
 		return value != null;
 	}
 
+	public Class<T> getEnumClass() {
+		return enumClass;
+	}
+	
 }

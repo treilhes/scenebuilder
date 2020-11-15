@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import javafx.collections.ObservableList;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class SceneStyleSheetsPreference extends ListOfStringPreference implements ManagedDocumentPreference {
 	    
     /***************************************************************************

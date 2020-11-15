@@ -12,16 +12,12 @@ public class IntegerPreference extends AbstractPreference<Integer> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().putInt(getName(), getValue());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().putInt(getName(), getValue());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		setValue(getNode().getInt(getName(), getDefault()));
 	}

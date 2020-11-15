@@ -73,9 +73,8 @@ import javafx.stage.Stage;
 		SceneBuilderBeanFactory.class }, basePackages = { "com.oracle.javafx.scenebuilder.app.settings",
 				"com.oracle.javafx.scenebuilder.api.preferences", "com.oracle.javafx.scenebuilder.app.preferences",
 				"com.oracle.javafx.scenebuilder.kit.preferences", "com.oracle.javafx.scenebuilder.kit.library.user",
-				"com.oracle.javafx.scenebuilder.api.subjects", "com.oracle.javafx.scenebuilder.app"//,
-				//"com.oracle.javafx.scenebuilder.gluon.preferences",
-				//"com.oracle.javafx.scenebuilder.gluon.preferences.items" 
+				"com.oracle.javafx.scenebuilder.api.subjects", "com.oracle.javafx.scenebuilder.app",
+				"com.oracle.javafx.scenebuilder.gluon.preferences" 
 				})
 public class SceneBuilderBootstrap extends JavafxApplication {
 

@@ -44,7 +44,6 @@ import org.eclipse.aether.version.Version;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
@@ -116,6 +115,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
 
     public MavenDialogController(
     		EditorController editorController, 
+    		LibraryPanelController libraryPanelController,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences, 
     		MavenRepositoriesPreferences repositoryPreferences, 
@@ -125,7 +125,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
         this.owner = owner;
         this.editorController = editorController;
         this.mavenPreferences = mavenPreferences;
-        
+
         maven = new MavenRepositorySystem(false, mavenSetting, repositoryPreferences);
         
         versionsService = new Service<ObservableList<Version>>() {
@@ -193,11 +193,8 @@ public class MavenDialogController extends AbstractFxmlWindowController {
                     }
 
                     final ImportWindowController iwc
-                            = new ImportWindowController(
-                            new LibraryPanelController(editorController, mavenPreferences, new SceneBuilderBeanFactory()),
-                            files, mavenPreferences,
-                            (Stage)installButton.getScene().getWindow(), false,
-                            mavenPreferences.getArtifactsFilter());
+                            = new ImportWindowController(libraryPanelController,files, mavenPreferences,
+                            (Stage)installButton.getScene().getWindow(), false,mavenPreferences.getArtifactsFilter());
                     iwc.setToolStylesheet(editorController.getToolStylesheet());
                     ButtonID userChoice = iwc.showAndWait();
                     if (userChoice == ButtonID.OK) {

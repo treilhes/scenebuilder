@@ -28,6 +28,9 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 		
 		setValue(defaultValue);
 	}
+
+	protected abstract void write();
+	protected abstract void read();
 	
 	@Override
 	public Preferences getNode() {
@@ -57,8 +60,8 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 	}
 
 	@Override
-	public Preference<T> setValue(T newValue) {
-		this.value.setValue(newValue);
+	public Preference<T> setValue(T value) {
+		this.value.setValue(value);
 		return this;
 	}
 
@@ -78,5 +81,20 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 		return this;
 	}
 	
+	@Override
+	public void writeToJavaPreferences() {
+		if (isValid(getValue()) 
+				&& (!preferencesContext.isDocumentScope(this.getClass()) || preferencesContext.isDocumentNameDefined())) {
+			write();
+		} else {
+			getNode().remove(getName());
+		}
+	}
+
+	@Override
+	public void readFromJavaPreferences() {
+		assert getName() != null;
+		read();
+	}
 	
 }

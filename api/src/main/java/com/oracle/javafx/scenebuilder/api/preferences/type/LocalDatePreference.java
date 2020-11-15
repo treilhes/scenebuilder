@@ -14,16 +14,12 @@ public class LocalDatePreference extends AbstractPreference<LocalDate> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().put(getName(), getValue().toString());
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().put(getName(), getValue().toString());
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		String dateDefault = (getDefault() == null) ? null : getDefault().toString();
 		String dateString = getNode().get(getName(), dateDefault);

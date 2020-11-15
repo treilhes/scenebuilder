@@ -48,7 +48,6 @@ import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
@@ -98,9 +97,12 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     private final MavenArtifactsPreferences mavenPreferences;
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final MavenSetting mavenSetting;
+    //TODO may be replaced by editorcontroller after moving libraryPanelController.copyFilesToUserLibraryDir(files)
+	private final LibraryPanelController libraryPanelController;
 
     public LibraryDialogController(
     		EditorController editorController, 
+    		LibraryPanelController libraryPanelController,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences, 
@@ -108,6 +110,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
         super(LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.owner = owner;
         this.editorController = editorController;
+        this.libraryPanelController = libraryPanelController;
         this.userLibrary = (UserLibrary) editorController.getLibrary();
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
@@ -217,7 +220,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     @FXML
     private void addRelease() {
         SearchMavenDialogController mavenDialogController = new SearchMavenDialogController(editorController,
-                mavenSetting, mavenPreferences, repositoryPreferences, getStage());
+        		libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences, getStage());
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override
@@ -232,7 +235,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     
     @FXML
     private void addManually() {
-        MavenDialogController mavenDialogController = new MavenDialogController(editorController, 
+        MavenDialogController mavenDialogController = new MavenDialogController(
+        		editorController,libraryPanelController, 
         		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -315,9 +319,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             if (Files.exists(item.getFilePath())) {
                 if (LibraryUtil.isJarPath(item.getFilePath()) || Files.isDirectory(item.getFilePath())) {
                     final ImportWindowController iwc = new ImportWindowController(
-                            new LibraryPanelController(editorController, mavenPreferences, new SceneBuilderBeanFactory()),
-                            Arrays.asList(item.getFilePath().toFile()), mavenPreferences,
-                            getStage());
+                    		libraryPanelController,Arrays.asList(item.getFilePath().toFile()), mavenPreferences,getStage());
                     iwc.setToolStylesheet(editorController.getToolStylesheet());
                     // See comment in OnDragDropped handle set in method startListeningToDrop.
                     AbstractModalDialog.ButtonID userChoice = iwc.showAndWait();
@@ -344,9 +346,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
             //TODO remove this constructor call and use bean
             final ImportWindowController iwc = new ImportWindowController(
-                        new LibraryPanelController(editorController, mavenPreferences, new SceneBuilderBeanFactory()),
-                                files, mavenPreferences, getStage(),
-                    false, filter);
+            		libraryPanelController,files, mavenPreferences, getStage(),false, filter);
             iwc.setToolStylesheet(editorController.getToolStylesheet());
             AbstractModalDialog.ButtonID userChoice = iwc.showAndWait();
             if (userChoice == AbstractModalDialog.ButtonID.OK) {

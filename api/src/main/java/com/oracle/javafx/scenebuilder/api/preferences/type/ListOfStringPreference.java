@@ -19,16 +19,12 @@ public class ListOfStringPreference extends AbstractPreference<List<String>> {
 	}
 
 	@Override
-	public void writeToJavaPreferences() {
-		if (isValid(getValue())) {
-			getNode().put(getName(), String.join(JOIN_SEPARATOR, getValue()));
-		} else {
-			getNode().remove(getName());
-		}
+	public void write() {
+		getNode().put(getName(), String.join(JOIN_SEPARATOR, getValue()));
 	}
 
 	@Override
-	public void readFromJavaPreferences() {
+	public void read() {
 		assert getName() != null;
 		String defaultValue = getDefault() == null || getDefault().isEmpty() ? "" : String.join(JOIN_SEPARATOR, getDefault());
 		String value = getNode().get(getName(), defaultValue);
