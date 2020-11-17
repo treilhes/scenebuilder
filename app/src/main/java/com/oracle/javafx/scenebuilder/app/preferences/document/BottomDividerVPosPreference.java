@@ -19,4 +19,10 @@ public class BottomDividerVPosPreference extends DoublePreference implements Man
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 	}
 
+	@Override
+	public boolean isValid() {
+		return super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE);
+	}
+
+    
 }

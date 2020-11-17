@@ -31,8 +31,8 @@ public class LocalDatePreference extends AbstractPreference<LocalDate> {
 	}
 
 	@Override
-	public boolean isValid(LocalDate value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

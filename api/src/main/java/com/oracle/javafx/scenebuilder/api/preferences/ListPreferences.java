@@ -156,8 +156,8 @@ public abstract class ListPreferences<T extends AbstractPreference<U>, U> extend
 	}
 
 	@Override
-	public boolean isValid(ObservableMap<String, T> value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 	@Override

@@ -39,7 +39,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 /**
@@ -65,8 +64,7 @@ public class MavenRepositoryPreferences extends ObjectPreference<Repository> {
 		return (pc, name) -> new MavenRepositoryPreferences(pc, name, new Repository());
 	}
 	
-	@Override
-	public boolean isValid(Repository object) {
+	public static boolean isValid(Repository object) {
 		if (object == null) {
 			Logger.getLogger(MavenRepositoryPreferences.class.getName()).log(Level.SEVERE, "Repository can't be null");
 			return false;
@@ -80,6 +78,11 @@ public class MavenRepositoryPreferences extends ObjectPreference<Repository> {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean isValid() {
+		return MavenRepositoryPreferences.isValid(getValue());
 	}
 	
 	@Override

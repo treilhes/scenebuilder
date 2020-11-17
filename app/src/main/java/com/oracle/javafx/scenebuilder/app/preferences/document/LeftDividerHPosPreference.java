@@ -19,4 +19,8 @@ public class LeftDividerHPosPreference extends DoublePreference implements Manag
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 	}
 
+    @Override
+	public boolean isValid() {
+		return super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE);
+	}
 }

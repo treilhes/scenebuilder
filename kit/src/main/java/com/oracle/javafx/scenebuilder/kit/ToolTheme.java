@@ -33,19 +33,28 @@
 package com.oracle.javafx.scenebuilder.kit;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
-public enum ToolTheme {
+public enum ToolTheme implements StylesheetProvider {
 
-    DEFAULT {
-        @Override
-        public String toString() {
-            return I18N.getString("prefs.tool.theme.default");
-        }
-    },
-    DARK {
-        @Override
-        public String toString() {
-            return I18N.getString("prefs.tool.theme.dark");
-        }
+    DEFAULT("prefs.tool.theme.default", "css/ThemeDefault.css"),
+    DARK("prefs.tool.theme.dark", "css/ThemeDark.css");
+    
+    final String labelKey;
+    final String cssResource;
+
+    private ToolTheme(String labelKey, String cssResource) {
+		this.labelKey = labelKey;
+		this.cssResource = cssResource;
+	}
+
+	@Override
+    public String toString() {
+        return I18N.getString(labelKey);
+    }
+
+    @Override
+    public String getStylesheetURL() {
+        return ToolTheme.class.getResource(cssResource).toExternalForm();
     }
 }

@@ -31,8 +31,7 @@ public class MavenArtifactPreferences extends ObjectPreference<MavenArtifact> {
 		return (pc, name) -> new MavenArtifactPreferences(pc, name, new MavenArtifact());
 	}
 
-	@Override
-	public boolean isValid(MavenArtifact object) {
+	public static boolean isValid(MavenArtifact object) {
 		boolean valid = true;
 		
 		if (object == null) {
@@ -57,6 +56,11 @@ public class MavenArtifactPreferences extends ObjectPreference<MavenArtifact> {
 			valid &= false;
 		}
 		return valid;
+	}
+	
+	@Override
+	public boolean isValid() {
+		return MavenArtifactPreferences.isValid(getValue());
 	}
 	
 	@Override

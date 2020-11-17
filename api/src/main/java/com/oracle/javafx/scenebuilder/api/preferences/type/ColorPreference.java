@@ -31,8 +31,8 @@ public class ColorPreference extends AbstractPreference<Color> {
 	}
 
 	@Override
-	public boolean isValid(Color value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

@@ -49,7 +49,7 @@ public class RecentItemsPreference extends ListOfStringPreference implements Man
             fxmlFile = new File(url.toURI());
             return containsRecentItem(fxmlFile);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(GlobalPreferences.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RecentItemsPreference.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -66,7 +66,7 @@ public class RecentItemsPreference extends ListOfStringPreference implements Man
             fxmlFile = new File(url.toURI());
             addRecentItem(fxmlFile);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(GlobalPreferences.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RecentItemsPreference.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

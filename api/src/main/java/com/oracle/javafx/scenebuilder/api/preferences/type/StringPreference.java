@@ -23,8 +23,8 @@ public class StringPreference extends AbstractPreference<String> {
 	}
 
 	@Override
-	public boolean isValid(String value) {
-		return value != null && !value.isEmpty();
+	public boolean isValid() {
+		return getValue() != null && !getValue().isEmpty();
 	}
 
 }

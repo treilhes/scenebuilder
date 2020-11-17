@@ -80,6 +80,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.kit.template.Type;
@@ -116,7 +117,6 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     private static MainController singleton;
-    private static String darkToolStylesheet;
 
     @Autowired
     ApplicationContext context;
@@ -160,6 +160,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     //@Autowired
     private GluonPreferences gluPref;
+
+	private final ToolThemePreference toolThemePreference;
     
     /*
      * Public
@@ -169,7 +171,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return singleton;
     }
 
-    public MainController(@Autowired GluonPreferences gluPref) {
+    public MainController(
+    		@Autowired ToolThemePreference toolThemePreference, 
+    		@Autowired GluonPreferences gluPref
+    		) {
+    	this.toolThemePreference = toolThemePreference;
         if (singleton != null) {
         	return;
         }
@@ -229,13 +235,13 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 performCloseFrontWindow();
                 break;
 
-            case USE_DEFAULT_THEME:
-                performUseToolTheme(ToolTheme.DEFAULT);
-                break;
-
-            case USE_DARK_THEME:
-                performUseToolTheme(ToolTheme.DARK);
-                break;
+//            case USE_DEFAULT_THEME:
+//                performUseToolTheme(ToolTheme.DEFAULT);
+//                break;
+//
+//            case USE_DARK_THEME:
+//                performUseToolTheme(ToolTheme.DARK);
+//                break;
 
             case SHOW_PREFERENCES:
                 PreferencesWindowController preferencesWindowController = context.getBean(PreferencesWindowController.class);
@@ -356,13 +362,6 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         if (EditorPlatform.IS_MAC) {
             MenuBarController.getSystemMenuBarController().setDebugMenuVisible(!visible);
         }
-    }
-
-    public static synchronized String getDarkToolStylesheet() {
-        if (darkToolStylesheet == null) {
-            darkToolStylesheet = ResourceUtils.THEME_DARK_STYLESHEET;
-        }
-        return darkToolStylesheet;
     }
 
     @Override
@@ -819,19 +818,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
     }
 
-    private void performUseToolTheme(ToolTheme toolTheme) {
-        this.toolTheme = toolTheme;
-
-        final String toolStylesheet = getToolStylesheet();
-
-        for (DocumentWindowController dwc : windowList) {
-            dwc.setToolStylesheet(toolStylesheet);
-        }
-    }
-
-
     private String getToolStylesheet() {
-        return ResourceUtils.getToolStylesheet(toolTheme);
+        return toolThemePreference.getValue().getStylesheetURL();
     }
     
     

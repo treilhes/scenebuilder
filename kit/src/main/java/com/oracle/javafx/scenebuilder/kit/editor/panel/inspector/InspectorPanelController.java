@@ -417,10 +417,13 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
     protected void initialize() {
     	// init preferences
     	animateAccordion(accordionAnimationPreference.getValue());
-    	
     	accordionAnimationPreference.getObservableValue().addListener(
     			(ob, o, n) -> animateAccordion(n));
+    	
     	// Add inspector accordion expanded pane listener
+    	setExpandedSection(inspectorSectionIdPreference.getValue());
+    	inspectorSectionIdPreference.getObservableValue().addListener(
+    			(ob, o, n) -> setExpandedSection(n));
     	accordion.expandedPaneProperty().addListener(
     			(ov, t, t1) -> inspectorSectionIdPreference.setValue(getExpandedSectionId()));
     }

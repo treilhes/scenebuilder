@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.app.preferences.global;
+package com.oracle.javafx.scenebuilder.kit.preferences.global;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import javafx.scene.Parent;
 
 @Component
 public class ToolThemePreference extends EnumPreference<ToolTheme> implements ManagedGlobalPreference, UserPreference<ToolTheme> {
-	    
+	private static ToolThemePreference instance = null;
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -24,9 +24,17 @@ public class ToolThemePreference extends EnumPreference<ToolTheme> implements Ma
      **************************************************************************/
     public static final String PREFERENCE_KEY = "TOOL_THEME"; //NOI18N
     public static final ToolTheme PREFERENCE_DEFAULT_VALUE = ToolTheme.DEFAULT;
+    
+    //TODO bad bad bad, but PropertyEditors need this instance and i don't want to change editors constructors
+    //TODO editors musn't use dialogs internaly, change this later
+    //TODO same problem for FXOMLoadr
+    public static ToolThemePreference getInstance() {
+    	return instance;
+    }
 
 	public ToolThemePreference(@Autowired PreferencesContext preferencesContext) {
 		super(preferencesContext, PREFERENCE_KEY, ToolTheme.class, PREFERENCE_DEFAULT_VALUE);
+		instance = this;
 	}
 
 	@Override

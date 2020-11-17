@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.app.preferences;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.SplitController;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
@@ -58,8 +56,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPrefer
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.GluonSwatchPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.GluonThemePreference;
@@ -68,10 +64,6 @@ import com.oracle.javafx.scenebuilder.kit.preferences.document.SceneStyleSheetsP
 import com.oracle.javafx.scenebuilder.kit.preferences.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Defines preferences specific to a document.
@@ -80,8 +72,6 @@ import javafx.collections.ObservableList;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DocumentPreferences {
 	
-	private static final double UNDEFINED_POS = -1.0;
-
     // Document preferences
     private final XPosPreference xPos;
     private final YPosPreference yPos;
@@ -275,8 +265,6 @@ public class DocumentPreferences {
         return sceneStyleSheets.getValue();
     }
 
-    
-
     public String getI18NResource() {
         return I18NResource.getValue();
     }
@@ -289,17 +277,6 @@ public class DocumentPreferences {
         if (file != null) {
             I18NResource.setValue(file.getPath());
         }
-    }
-
-    private void setTheme(Theme theme) {
-        this.theme.setValue(theme);
-    }
-
-    private Theme getTheme() {
-        if (theme.getValue() == null) {
-            theme.setValue(documentWindowController.getEditorController().getTheme());
-        }
-        return theme.getValue();
     }
 
     public void setGluonSwatch(GluonSwatch gluonSwatch) {
@@ -323,243 +300,5 @@ public class DocumentPreferences {
         }
         return gluonTheme.getValue();
     }
-
-    public void refreshXPos() {
-        if (xPos.getValue() != UNDEFINED_POS) {
-            documentWindowController.getStage().setX(xPos.getValue());
-        }
-    }
-
-    public void refreshYPos() {
-        if (yPos.getValue() != UNDEFINED_POS) {
-            documentWindowController.getStage().setY(yPos.getValue());
-        }
-    }
-
-    public void refreshStageHeight() {
-        documentWindowController.getStage().setHeight(stageHeight.getValue());
-    }
-
-    public void refreshStageWidth() {
-        documentWindowController.getStage().setWidth(stageWidth.getValue());
-    }
-
-    public void refreshInspectorSectionId() {
-        final InspectorPanelController ipc = documentWindowController.getInspectorPanelController();
-        ipc.setExpandedSection(inspectorSectionId.getValue());
-    }
-
-    public void refreshBottomVisible() {
-        final SplitController sc = documentWindowController.getBottomSplitController();
-        if (bottomVisible.getValue()) {
-            // CSS panel is built lazely : initialize the CSS panel first
-            documentWindowController.initializeCssPanel();
-        }
-        sc.setTargetVisible(bottomVisible.getValue());
-    }
-
-    public void refreshLeftVisible() {
-        final SplitController sc = documentWindowController.getLeftSplitController();
-        sc.setTargetVisible(leftVisible.getValue());
-    }
-
-    public void refreshRightVisible() {
-        final SplitController sc = documentWindowController.getRightSplitController();
-        sc.setTargetVisible(rightVisible.getValue());
-    }
-
-    public void refreshLibraryVisible() {
-        final SplitController sc = documentWindowController.getLibrarySplitController();
-        sc.setTargetVisible(libraryVisible.getValue());
-    }
-
-    public void refreshDocumentVisible() {
-        final SplitController sc = documentWindowController.getDocumentSplitController();
-        sc.setTargetVisible(documentVisible.getValue());
-    }
-
-    public void refreshLeftDividerHPos() {
-        final SplitController sc = documentWindowController.getLeftSplitController();
-        if (leftDividerHPos.getValue() != UNDEFINED_POS) {
-            sc.setPosition(leftDividerHPos.getValue());
-        }
-    }
-
-    public void refreshRightDividerHPos() {
-        final SplitController sc = documentWindowController.getRightSplitController();
-        if (rightDividerHPos.getValue() != UNDEFINED_POS) {
-            sc.setPosition(rightDividerHPos.getValue());
-        }
-    }
-
-    public void refreshBottomDividerVPos() {
-        final SplitController sc = documentWindowController.getBottomSplitController();
-        if (bottomDividerVPos.getValue() != UNDEFINED_POS) {
-            sc.setPosition(bottomDividerVPos.getValue());
-        }
-    }
-
-    public void refreshLeftDividerVPos() {
-        final SplitController sc = documentWindowController.getLibrarySplitController();
-        if (leftDividerVPos.getValue() != UNDEFINED_POS) {
-            sc.setPosition(leftDividerVPos.getValue());
-        }
-    }
-
-    public void refreshSceneStyleSheets() {
-        if (sceneStyleSheets.getValue().isEmpty() == false) {
-            final ObservableList<File> files = FXCollections.observableArrayList();
-            final List<String> filePathsToRemove = new ArrayList<>();
-            for (String sceneStyleSheet : sceneStyleSheets.getValue()) {
-                final File file = new File(sceneStyleSheet);
-                if (file.exists()) {
-                    files.add(file);
-                } else {
-                    // File is still in preferences DB but has been removed from disk
-                    filePathsToRemove.add(sceneStyleSheet);
-                }
-            }
-            final EditorController ec = documentWindowController.getEditorController();
-            ec.setSceneStyleSheets(files);
-            // Cleanup style sheets preferences if needed
-            if (filePathsToRemove.isEmpty() == false) {
-            	sceneStyleSheets.removeSceneStyleSheet(filePathsToRemove);
-            }
-        }
-    }
-
-    public void refreshI18NResource() {
-        if (I18NResource.getValue() != null) {
-            final File file = new File(I18NResource.getValue());
-            if (file.exists()) {
-                documentWindowController.setResourceFile(file);
-            } else {
-                // File is still in preferences DB but has been removed from disk
-                setI18NResource(null);
-            }
-        }
-    }
-
-    public void refreshTheme() {
-        if (theme.getValue() == null) {
-            return;
-        }
-
-        EditorController editorController = documentWindowController.getEditorController();
-        editorController.setTheme(theme.getValue());
-    }
-
-    public void refreshGluonSwatch() {
-        if (gluonSwatch.getValue() == null) {
-            return;
-        }
-
-        EditorController editorController = documentWindowController.getEditorController();
-        editorController.setGluonSwatch(gluonSwatch.getValue());
-    }
-
-    public void refreshGluonTheme() {
-        if (gluonTheme.getValue() == null) {
-            return;
-        }
-
-        EditorController editorController = documentWindowController.getEditorController();
-        editorController.setGluonTheme(gluonTheme.getValue());
-    }
-
-    public void refresh() {
-        refreshXPos();
-        refreshYPos();
-        refreshStageHeight();
-        refreshStageWidth();
-        refreshInspectorSectionId();
-        refreshBottomVisible();
-        refreshLeftVisible();
-        refreshRightVisible();
-        refreshLibraryVisible();
-        refreshDocumentVisible();
-        refreshLeftDividerHPos();
-        refreshRightDividerHPos();
-        refreshBottomDividerVPos();
-        refreshLeftDividerVPos();
-        refreshSceneStyleSheets();
-        refreshI18NResource();
-        refreshTheme();
-        refreshGluonSwatch();
-        refreshGluonTheme();
-    }
-
-    /**
-     * Read data from the java preferences DB and initialize properties.
-     */
-    public void readFromJavaPreferences() {
-    	path.readFromJavaPreferences();
-        // Window position
-        xPos.readFromJavaPreferences();
-        if (xPos.getValue() < 0) {
-        	xPos.reset();
-        }
-        yPos.readFromJavaPreferences();
-        if (yPos.getValue() < 0) {
-        	yPos.reset();
-        }
-
-        // Window size
-        stageHeight.readFromJavaPreferences();
-        if (stageHeight.getValue() < 0) {
-        	stageHeight.reset();
-        }
-        stageWidth.readFromJavaPreferences();
-        if (stageWidth.getValue() < 0) {
-        	stageWidth.reset();
-        }
-        
-        // Panel visibility
-        bottomVisible.readFromJavaPreferences();
-        leftVisible.readFromJavaPreferences();
-        rightVisible.readFromJavaPreferences();
-        
-        libraryVisible.readFromJavaPreferences();
-        documentVisible.readFromJavaPreferences();
-
-        // Since SB 2.0 b11, the visibility of Library and Document was handled
-        // independently from the Left visibility.
-        // Starting from SB 2.0 b12, the visibility of Library and Document is
-        // linked to the Left visibility. 
-        // We need to handle new preferences as well as old ones :
-        // hence the value set for Library and Document visible property.
-        libraryVisible.setValue(libraryVisible.getValue() && leftVisible.getValue());
-        documentVisible.setValue(documentVisible.getValue() && leftVisible.getValue());
-
-        // Inspector expanded TitledPane
-        inspectorSectionId.readFromJavaPreferences();
-
-        // Dividers position
-        leftDividerHPos.readFromJavaPreferences();
-        rightDividerHPos.readFromJavaPreferences();
-        bottomDividerVPos.readFromJavaPreferences();
-        leftDividerVPos.readFromJavaPreferences();
-
-        // Scene style sheets
-        sceneStyleSheets.readFromJavaPreferences();
-
-        // I18NResource
-        I18NResource.readFromJavaPreferences();
-
-        // Theme and Gluon Theme
-        theme.readFromJavaPreferences();
-        if (theme.getValue() == null) {
-            setTheme(documentWindowController.getEditorController().getTheme());
-        }
-        
-        gluonSwatch.readFromJavaPreferences();
-        if (gluonSwatch.getValue() == null) {
-            setGluonSwatch(documentWindowController.getEditorController().getGluonSwatch());
-        }
-
-        gluonTheme.readFromJavaPreferences();
-        if (gluonTheme == null) {
-            setGluonTheme(documentWindowController.getEditorController().getGluonTheme());
-        }
-    }
+    
 }

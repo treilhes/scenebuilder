@@ -23,8 +23,8 @@ public class IntegerPreference extends AbstractPreference<Integer> {
 	}
 
 	@Override
-	public boolean isValid(Integer value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

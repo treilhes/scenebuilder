@@ -32,8 +32,8 @@ public class EnumPreference<T extends Enum<T>> extends AbstractPreference<T> {
 	}
 
 	@Override
-	public boolean isValid(T value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 	public Class<T> getEnumClass() {

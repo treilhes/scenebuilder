@@ -35,8 +35,8 @@ public class ListOfStringPreference extends AbstractPreference<List<String>> {
 	}
 
 	@Override
-	public boolean isValid(List<String> value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

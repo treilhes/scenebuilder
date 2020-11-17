@@ -19,4 +19,8 @@ public class YPosPreference extends DoublePreference implements ManagedDocumentP
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 	}
 
+    @Override
+	public boolean isValid() {
+		return super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE);
+	}
 }

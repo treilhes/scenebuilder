@@ -65,20 +65,25 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
-import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferences;
 import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LeftVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LibraryVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.RightDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.RightVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.gluon.preferences.GluonDocumentPreferences;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -109,6 +114,7 @@ import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
@@ -134,7 +140,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -191,7 +196,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         CANCELLED,
         DONE
     }
-    private final ApplicationContext context;
     
     private EditorController editorController;
     private final MenuBarController menuBarController;
@@ -220,10 +224,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final MavenArtifactsPreferences mavenPreferences;
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final GlobalPreferences preferences;
-    private final DocumentPreferences documentPreferences;
-    private final GluonDocumentPreferences gluonDocumentPreferences;
     
     private final RecentItemsPreference recentItemsPreference;
+    private final ToolThemePreference toolThemePreference;
     
     private final DocumentPreferencesController documentPreferencesController;
     
@@ -236,6 +239,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final RightDividerHPosPreference rightDividerHPos;
 	private final BottomDividerVPosPreference bottomDividerVPos;
 	private final LeftDividerVPosPreference leftDividerVPos;
+	
+	private final I18NResourcePreference i18NResourcePreference;
 	
     //private final DocumentsManager documentManager;
     
@@ -295,6 +300,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private Job saveJob;
     private EventHandler<KeyEvent> mainKeyEventFilter;
 
+	private final LeftVisiblePreference leftVisiblePreference;
+	private final RightVisiblePreference rightVisiblePreference;
+	private final BottomVisiblePreference bottomVisiblePreference;
+	private final DocumentVisiblePreference documentVisiblePreference;
+	private final LibraryVisiblePreference libraryVisiblePreference;
+	private final PathPreference pathPreference;
+
     
     /*
      * DocumentWindowController
@@ -308,6 +320,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Autowired MavenArtifactsPreferences mavenPreferences,
 			@Autowired MavenRepositoriesPreferences repositoryPreferences,
 			@Autowired RecentItemsPreference recentItemsPreference,
+			@Autowired ToolThemePreference toolThemePreference,
+			@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
+			@Lazy @Autowired PathPreference pathPreference,
 			
 			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
 			
@@ -331,8 +346,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired ResourceController resourceController,
 			@Lazy @Autowired DocumentWatchingController watchingController,
 			
-			@Lazy @Autowired DocumentPreferences documentPreferences,
-			@Lazy @Autowired GluonDocumentPreferences docPref,
 			@Lazy @Autowired XPosPreference xPos,
 			@Lazy @Autowired YPosPreference yPos,
 			@Lazy @Autowired StageHeightPreference stageHeight,
@@ -343,18 +356,25 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
 			@Lazy @Autowired LeftDividerVPosPreference leftDividerVPos,
 			
+			@Lazy @Autowired LeftVisiblePreference leftVisiblePreference,
+			@Lazy @Autowired RightVisiblePreference rightVisiblePreference,
+			@Lazy @Autowired BottomVisiblePreference bottomVisiblePreference,
+			
+			@Lazy @Autowired DocumentVisiblePreference documentVisiblePreference,
+			@Lazy @Autowired LibraryVisiblePreference libraryVisiblePreference,
+			
 			@Lazy @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference
 			) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         DocumentScope.setCurrentScope(this);
-        this.context = context;
+
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
         this.recentItemsPreference = recentItemsPreference;
-        
+        this.toolThemePreference = toolThemePreference;
         this.menuBarController = menuBarController;
         
         this.contentPanelController = contentPanelController;
@@ -377,9 +397,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.watchingController = watchingController;
         
         this.preferences = preferences;
-        this.documentPreferences = documentPreferences;
-        this.gluonDocumentPreferences = docPref;
-        
+        this.i18NResourcePreference = i18NResourcePreference;
+        this.pathPreference = pathPreference;
         // preferences
         this.xPos = xPos;
         this.yPos = yPos;
@@ -389,6 +408,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDividerHPos = rightDividerHPos;
         this.bottomDividerVPos = bottomDividerVPos;
         this.leftDividerVPos = leftDividerVPos;
+        
+        
+        this.leftVisiblePreference=leftVisiblePreference;
+        this.rightVisiblePreference=rightVisiblePreference;
+        this.bottomVisiblePreference=bottomVisiblePreference;
+        this.documentVisiblePreference=documentVisiblePreference;
+        this.libraryVisiblePreference=libraryVisiblePreference;
         
         documentPreferencesController.readFromJavaPreferences();
         
@@ -503,24 +529,61 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         librarySplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.FIRST);
         documentSplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.LAST);
         
+		setToolStylesheet(toolThemePreference.getValue().getStylesheetURL());
+		toolThemePreference.getObservableValue().addListener((ob, o, n) -> setToolStylesheet(n.getStylesheetURL()));
+		
 		// initialize preference binding
 		final Stage stage = getStage();
         assert stage != null;
         
         // Add stage x and y listeners
-        stage.xProperty().addListener((ov, t, t1) -> xPos.setValue(t1.doubleValue()));
+        if (xPos.isValid()) {stage.setX(xPos.getValue());}
+        stage.xProperty().addListener((ob, o, n) -> xPos.setValue(n.doubleValue()));
+        xPos.getObservableValue().addListener((ob, o, n) -> stage.setX(n));
+        
+        if (yPos.isValid()) {stage.setY(yPos.getValue());}
         stage.yProperty().addListener((ov, t, t1) -> yPos.setValue(t1.doubleValue()));
+        yPos.getObservableValue().addListener((ob, o, n) -> stage.setY(n));
 
         // Add stage height and width listeners
+        if (stageHeight.isValid()) {stage.setHeight(stageHeight.getValue());}
         stage.heightProperty().addListener((ov, t, t1) -> stageHeight.setValue(t1.doubleValue()));
+        stageHeight.getObservableValue().addListener((ob, o, n) -> stage.setHeight(n));
+        
+        if (stageWidth.isValid()) {stage.setWidth(stageWidth.getValue());}
         stage.widthProperty().addListener((ov, t, t1) -> stageWidth.setValue(t1.doubleValue()));
+        stageWidth.getObservableValue().addListener((ob, o, n) -> stage.setWidth(n));
         
         //split containers
         // Add dividers position listeners
+        if (leftDividerHPos.isValid()) {leftSplitController.setPosition(leftDividerHPos.getValue());}
         leftSplitController.position().addListener((ov, t, t1) -> leftDividerHPos.setValue(t1.doubleValue()));
+        leftDividerHPos.getObservableValue().addListener((ob, o, n) -> leftSplitController.setPosition(n));
+        
+        if (rightDividerHPos.isValid()) {rightSplitController.setPosition(rightDividerHPos.getValue());}
         rightSplitController.position().addListener((ov, t, t1) -> rightDividerHPos.setValue(t1.doubleValue()));
+        rightDividerHPos.getObservableValue().addListener((ob, o, n) -> rightSplitController.setPosition(n));
+        
+        if (bottomDividerVPos.isValid()) { bottomSplitController.setPosition(bottomDividerVPos.getValue());}
         bottomSplitController.position().addListener((ov, t, t1) -> bottomDividerVPos.setValue(t1.doubleValue()));
+        bottomDividerVPos.getObservableValue().addListener((ob, o, n) -> bottomSplitController.setPosition(n));
+        
+        if (leftDividerVPos.isValid()) { librarySplitController.setPosition(leftDividerVPos.getValue());}
         librarySplitController.position().addListener((ov, t, t1) -> leftDividerVPos.setValue(t1.doubleValue()));
+        leftDividerVPos.getObservableValue().addListener((ob, o, n) -> librarySplitController.setPosition(n));
+        
+        // TODO only restoring values but update from user still missing
+        leftSplitController.setTargetVisible(leftVisiblePreference.getValue());
+        rightSplitController.setTargetVisible(rightVisiblePreference.getValue());
+        librarySplitController.setTargetVisible(libraryVisiblePreference.getValue() && leftVisiblePreference.getValue());
+        documentSplitController.setTargetVisible(documentVisiblePreference.getValue() && leftVisiblePreference.getValue());
+        
+        if (bottomVisiblePreference.getValue()) { initializeCssPanel(); }
+        bottomSplitController.setTargetVisible(bottomVisiblePreference.getValue());
+        
+        if (i18NResourcePreference.isValid()) {
+        	setResourceFile(new File(i18NResourcePreference.getValue()));
+        }
 	}
 	
 //	@Autowired
@@ -614,9 +677,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final URL fxmlURL = fxmlFile.toURI().toURL();
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
+        System.out.println("OPEN" + editorController);
         updateLoadFileTime();
         updateStageTitle(); // No-op if fxml has not been loaded yet
-        updateFromDocumentPreferences(true);
+        documentPreferencesController.readFromJavaPreferences();
         watchingController.update();
 
         WarnThemeAlert.showAlertIfRequired(editorController, editorController.getFxomDocument(), getStage());
@@ -629,7 +693,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             editorController.setFxmlTextAndLocation(fxmlText, null, false);
             updateLoadFileTime();
             updateStageTitle(); // No-op if fxml has not been loaded yet
-            updateFromDocumentPreferences(refreshThemeFromDocumentPreferences);
+            documentPreferencesController.readFromJavaPreferences();
             watchingController.update();
         } catch(IOException x) {
             throw new IllegalStateException(x);
@@ -659,113 +723,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     
     public String getFxmlText() {
         return editorController.getFxmlText(preferences.isWildcardImports());
-    }
-
-//    public void refreshHierarchyDisplayOption(DisplayOption option) {
-//        switch(option) {
-//            case INFO:
-//                showInfoMenuItem.setSelected(true);
-//                break;
-//            case FXID:
-//                showFxIdMenuItem.setSelected(true);
-//                break;
-//            case NODEID:
-//                showNodeIdMenuItem.setSelected(true);
-//                break;
-//            default:
-//                assert false;
-//                break;
-//        }
-//        hierarchyPanelController.setDisplayOption(option);
-//    }
-
-//    public void refreshCssTableColumnsOrderingReversed(boolean cssTableColumnsOrderingReversed) {
-//        cssPanelController.setTableColumnsOrderingReversed(cssTableColumnsOrderingReversed);
-//    }
-
-    public void refreshCssTableColumnsOrderingReversed(GlobalPreferences preferences) {
-        //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
-    }
-
-    public void refreshAlignmentGuidesColor(GlobalPreferences preferences) {
-        final ContentPanelController cpc = getContentPanelController();
-        //cpc.setGuidesColor(preferences.getAlignmentGuidesColor());
-    }
-
-    public void animateAccordion(boolean animate) {
-        //libraryPanelController.animateAccordion(animate);
-    	//inspectorPanelController.animateAccordion(animate);
-    	//documentPanelController.getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(animate));
-        
-        //PrefTests.doDocTest(gluonDocumentPreferences);
-    }
-
-    public void refreshBackgroundImage(GlobalPreferences preferences) {
-        // Background images
-        //getContentPanelController().setWorkspaceBackground(preferences.getBackgroundImageImage());
-    }
-
-    public void refreshToolTheme(GlobalPreferences preferences) {
-        final MainController app = MainController.getSingleton();
-        final MainController.ApplicationControlAction aca;
-        switch(preferences.getToolTheme()) {
-            case DEFAULT:
-                aca = MainController.ApplicationControlAction.USE_DEFAULT_THEME;
-                break;
-            case DARK:
-                aca = MainController.ApplicationControlAction.USE_DARK_THEME;
-                break;
-            default:
-                assert false;
-                aca = null;
-                break;
-        }
-        app.performControlAction(aca, this);
-    }
-
-    public void refreshLibraryDisplayOption(GlobalPreferences preferences) {
-    	//libraryPanelController.refreshLibraryDisplayOption(preferences.getLibraryDisplayOption());
-    }
-
-    public void refreshHierarchyDisplayOption(GlobalPreferences preferences) {
-        //documentPanelController.refreshHierarchyDisplayOption(preferences.getHierarchyDisplayOption());
-    }
-
-    public void refreshParentRingColor(GlobalPreferences preferences) {
-        Color parentRingColor = preferences.getParentRingColor();
-        final ContentPanelController cpc = getContentPanelController();
-        //cpc.setPringColor(parentRingColor);
-        final AbstractHierarchyPanelController hpc = documentPanelController.getHierarchyPanelController();
-        //hpc.setParentRingColor(parentRingColor);
-    }
-
-    public void refreshRootContainerHeight(GlobalPreferences preferencesRecordGlobal) {
-        final EditorController ec = getEditorController();
-        //ec.setDefaultRootContainerHeight(preferencesRecordGlobal.getRootContainerHeight());
-    }
-
-    public void refreshRootContainerWidth(GlobalPreferences preferencesRecordGlobal) {
-        final EditorController ec = getEditorController();
-        //ec.setDefaultRootContainerWidth(preferencesRecordGlobal.getRootContainerWidth());
-    }
-
-    public void refreshTheme(GlobalPreferences preferencesRecordGlobal) {
-        final EditorController ec = getEditorController();
-        //ec.setTheme(preferencesRecordGlobal.getTheme());
-    }
-
-    public void refreshSwatch(GlobalPreferences preferencesRecordGlobal) {
-        final EditorController ec = getEditorController();
-        //ec.setGluonSwatch(preferencesRecordGlobal.getSwatch());
-    }
-
-    public void refreshGluonTheme(GlobalPreferences preferencesRecordGlobal) {
-        final EditorController ec = getEditorController();
-        //ec.setGluonTheme(preferencesRecordGlobal.getGluonTheme());
-    }
-
-    public void refreshAccordionAnimation(GlobalPreferences preferencesRecordGlobal) {
-        //animateAccordion(preferencesRecordGlobal.isAccordionAnimation());
     }
 
     public boolean canPerformControlAction(DocumentControlAction controlAction) {
@@ -951,15 +908,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     libraryDocumentSplitPane.setDividerPositions(0.5);
                 }
                 // Update preferences
-                documentPreferences.setLibraryVisible(librarySplitController.isTargetVisible());
-                documentPreferences.setDocumentVisible(documentSplitController.isTargetVisible());
-                documentPreferences.setLeftVisible(leftSplitController.isTargetVisible());
+                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
+                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
+                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
                 break;
 
             case TOGGLE_RIGHT_PANEL:
                 rightSplitController.toggleTarget();
                 // Update preferences
-                documentPreferences.setRightVisible(rightSplitController.isTargetVisible());
+                rightVisiblePreference.setValue(rightSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_CSS_PANEL:
@@ -977,7 +934,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     editorController.setPickModeEnabled(false);
                 }
                 // Update preferences
-                documentPreferences.setBottomVisible(bottomSplitController.isTargetVisible());
+                bottomVisiblePreference.setValue(bottomSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_LIBRARY_PANEL:
@@ -994,8 +951,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     librarySplitController.showTarget();
                 }
                 // Update preferences
-                documentPreferences.setLibraryVisible(librarySplitController.isTargetVisible());
-                documentPreferences.setLeftVisible(leftSplitController.isTargetVisible());
+                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
+                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_DOCUMENT_PANEL:
@@ -1012,8 +969,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     documentSplitController.showTarget();
                 }
                 // Update preferences
-                documentPreferences.setDocumentVisible(documentSplitController.isTargetVisible());
-                documentPreferences.setLeftVisible(leftSplitController.isTargetVisible());
+                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
+                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
                 break;
                 
             case TOGGLE_OUTLINES_VISIBILITY:
@@ -1033,13 +990,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             case SET_RESOURCE:
                 resourceController.performSetResource();
                 // Update preferences
-                documentPreferences.setI18NResourceFile(getResourceFile());
+                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
                 break;
                 
             case REMOVE_RESOURCE:
                 resourceController.performRemoveResource();
                 // Update preferences
-                documentPreferences.setI18NResourceFile(getResourceFile());
+                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
                 break;
                 
             case REVEAL_RESOURCE:
@@ -1256,7 +1213,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             return;
         }
         try {
-			documentPreferences.setPath(new File(fxmlLocation.toURI()).getPath());
+			pathPreference.setValue(new File(fxmlLocation.toURI()).getPath());
 		} catch (URISyntaxException e) {
 			//TODO log something here
 			e.printStackTrace();
@@ -1388,7 +1345,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     protected void controllerDidCreateStage() {
         updateStageTitle();
-        updateFromDocumentPreferences(true);
         editorController.setOwnerWindow(getStage());
     }
     
@@ -1407,7 +1363,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         
         super.openWindow();
         if (!EditorPlatform.IS_MAC) {
-            getStage().setMaximized(true);
+            //getStage().setMaximized(true);
         }
         // Give focus to the library search TextField
         assert libraryPanelController != null;
@@ -1416,6 +1372,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     
     @Override
     public void closeWindow() {
+    	// Write java preferences at close time but before losing the current document scope
+        updatePreferences();
         
         super.closeWindow();
         
@@ -2000,35 +1958,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             getStage().setTitle(Utils.makeTitle(editorController.getFxomDocument()));
         } // else controllerDidLoadFxml() will invoke me again
     }
-    
-    private void updateFromDocumentPreferences(boolean refreshTheme) {
-        if (contentPanelHost != null) { // Layout is over
-            // Refresh UI with preferences 
-            refreshFromPreferencesRecordGlobal(preferences, refreshTheme);
-            // Preferences specific to the document
-            documentPreferences.readFromJavaPreferences();
-            // Update UI accordingly
-            documentPreferences.refresh();
-        }
-    }
-
-    public void refreshFromPreferencesRecordGlobal(GlobalPreferences recordGlobal, boolean refreshTheme) {
-    	//refreshAlignmentGuidesColor(recordGlobal);//done
-    	//refreshBackgroundImage(recordGlobal);//done
-    	//refreshCssTableColumnsOrderingReversed(recordGlobal);//done
-        refreshToolTheme(recordGlobal);
-        //refreshLibraryDisplayOption(recordGlobal);//done
-        //refreshHierarchyDisplayOption(recordGlobal);//done
-        //refreshParentRingColor(recordGlobal);
-        //refreshRootContainerHeight(recordGlobal);
-        //refreshRootContainerWidth(recordGlobal);
-        if (refreshTheme) {
-            refreshTheme(recordGlobal);
-            refreshSwatch(recordGlobal);
-            refreshGluonTheme(recordGlobal);
-        }
-        //refreshAccordionAnimation(recordGlobal);
-    }
 
     ActionStatus performSaveOrSaveAsAction() {
         final ActionStatus result;
@@ -2318,8 +2247,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         if (closeConfirmed) {
             MainController.getSingleton().documentWindowRequestClose(this);
             
-            // Write java preferences at close time
-            updatePreferences();
+            
         }
                 
         return closeConfirmed ? ActionStatus.DONE : ActionStatus.CANCELLED;

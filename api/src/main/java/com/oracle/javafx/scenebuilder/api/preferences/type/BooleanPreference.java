@@ -23,8 +23,8 @@ public class BooleanPreference extends AbstractPreference<Boolean> {
 	}
 
 	@Override
-	public boolean isValid(Boolean value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

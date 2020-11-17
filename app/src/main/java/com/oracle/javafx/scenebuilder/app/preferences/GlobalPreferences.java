@@ -46,7 +46,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationEmailPr
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationOptInPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.ShowUpdateDialogDatePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
@@ -65,6 +64,7 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPref
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
+import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 
 /**
  * Defines preferences global to the SB application.

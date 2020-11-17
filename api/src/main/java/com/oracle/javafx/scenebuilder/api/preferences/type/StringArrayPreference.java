@@ -28,8 +28,8 @@ public class StringArrayPreference extends AbstractPreference<String[]> {
 	}
 
 	@Override
-	public boolean isValid(String[] value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

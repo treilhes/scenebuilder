@@ -42,10 +42,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -54,7 +55,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
+import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddContextMenuToSelectionJob;
@@ -133,6 +134,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableListValue;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -346,26 +348,34 @@ public class EditorController implements Editor {
     
 	public void initialize() {
     	setDefaultRootContainerHeight(rootContainerHeightPreference.getValue());
-    	setDefaultRootContainerWidth(rootContainerWidthPreference.getValue());
-    	setTheme(themePreference.getValue());
-    	setGluonSwatch(gluonSwatchPreference.getValue());
-    	setGluonTheme(gluonThemePreference.getValue());
-    	//setSceneStyleSheets(FXCollections.observableList(sceneStyleSheetsPreference.getValue()));
-    	
-    	// init preferences
     	rootContainerHeightPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerHeight(n));
-        rootContainerWidthPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerWidth(n));
-        themePreference.getObservableValue().addListener((ob, o, n) -> setTheme(n));
+        
+    	setDefaultRootContainerWidth(rootContainerWidthPreference.getValue());
+    	rootContainerWidthPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerWidth(n));
+        
+    	setTheme(themePreference.getValue());
+    	themePreference.getObservableValue().addListener((ob, o, n) -> setTheme(n));
+    	themeProperty().addListener((observable, oldValue, newValue) -> themePreference.setValue(newValue));
+        
+    	setGluonSwatch(gluonSwatchPreference.getValue());
         gluonSwatchPreference.getObservableValue().addListener((ob, o, n) -> setGluonSwatch(n));
+    	gluonSwatchProperty().addListener((observable, oldValue, newValue) -> gluonSwatchPreference.setValue(newValue));
+        
+    	setGluonTheme(gluonThemePreference.getValue());
         gluonThemePreference.getObservableValue().addListener((ob, o, n) -> setGluonTheme(n));
+    	gluonThemeProperty().addListener((observable, oldValue, newValue) -> gluonThemePreference.setValue(newValue));
+    	
+
+    	if (sceneStyleSheetsPreference.isValid()) {
+    		Map<Boolean, List<String>> sceneStyleSheets = sceneStyleSheetsPreference.getValue().stream()
+        			.collect(Collectors.groupingBy((s) -> new File(s).exists(), Collectors.toList()));
+        	List<File> toInsert = sceneStyleSheets.containsKey(Boolean.TRUE) ? sceneStyleSheets.get(Boolean.TRUE).stream().map(File::new).collect(Collectors.toList()) : new ArrayList<>();
+        	setSceneStyleSheets(FXCollections.observableList(toInsert));
+        	sceneStyleSheetsPreference.getValue().removeAll(sceneStyleSheets.containsKey(Boolean.FALSE) ? sceneStyleSheets.get(Boolean.FALSE) : new ArrayList<>());
+            sceneStyleSheetProperty().addListener((ov, t, t1) -> sceneStyleSheetsPreference.setValue(t1));
+    	}
+    	
         
-        
-    	// Add scene style sheets listener
-        sceneStyleSheetProperty().addListener((ov, t, t1) -> sceneStyleSheetsPreference.setValue(t1));
-        // Add theme and Gluon theme listener
-        themeProperty().addListener((observable, oldValue, newValue) -> themePreference.setValue(newValue));
-        gluonSwatchProperty().addListener((observable, oldValue, newValue) -> gluonSwatchPreference.setValue(newValue));
-        gluonThemeProperty().addListener((observable, oldValue, newValue) -> gluonThemePreference.setValue(newValue));
     }
 
     /**
@@ -927,7 +937,7 @@ public class EditorController implements Editor {
      */
     public static synchronized String getBuiltinToolStylesheet() {
         if (builtinToolStylesheet == null) {
-            builtinToolStylesheet = ResourceUtils.THEME_DEFAULT_STYLESHEET;
+            builtinToolStylesheet = ToolTheme.DEFAULT.getStylesheetURL();
         }
         return builtinToolStylesheet;
     }

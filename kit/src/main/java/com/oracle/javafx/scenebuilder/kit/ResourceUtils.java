@@ -42,41 +42,41 @@ import javafx.scene.Scene;
 
 public class ResourceUtils {
 
-    public static final String BASE = ResourceUtils.class.getResource("css/Base.css").toExternalForm();
-    public static final String THEME_DARK_STYLESHEET = ResourceUtils.class.getResource("css/ThemeDark.css").toExternalForm();
-    public static final String THEME_DEFAULT_STYLESHEET = ResourceUtils.class.getResource("css/ThemeDefault.css").toExternalForm();
+    //public static final String BASE = ResourceUtils.class.getResource("css/Base.css").toExternalForm();
+	//public static final String THEME_DARK_STYLESHEET = ResourceUtils.class.getResource("css/ThemeDark.css").toExternalForm();
+	//public static final String THEME_DEFAULT_STYLESHEET = ResourceUtils.class.getResource("css/ThemeDefault.css").toExternalForm();
     private static List<String> imageExtensions;
     private static List<String> audioExtensions;
     private static List<String> videoExtensions;
     private static List<String> mediaExtensions;
 
-    public static String getToolStylesheet(ToolTheme theme) {
-        switch(theme) {
-            case DARK:
-                return THEME_DARK_STYLESHEET;
-            case DEFAULT:
-                return THEME_DEFAULT_STYLESHEET;
-        }
-        return null;
-    }
-
-    public static void setToolTheme(ToolTheme theme, Scene scene) {
-        setToolTheme(theme, scene.getStylesheets());
-    }
-
-    public static void setToolTheme(ToolTheme theme, Parent parent) {
-        setToolTheme(theme, parent.getStylesheets());
-    }
-
-    private static void setToolTheme(ToolTheme theme, ObservableList<String> stylesheets) {
-        if (!stylesheets.contains(BASE)) {
-            stylesheets.add(BASE);
-        }
-        String themeStylesheet = getToolStylesheet(theme);
-        if (!stylesheets.contains(themeStylesheet)) {
-            stylesheets.add(themeStylesheet);
-        }
-    }
+//    public static String getToolStylesheet(ToolTheme theme) {
+//        switch(theme) {
+//            case DARK:
+//                return THEME_DARK_STYLESHEET;
+//            case DEFAULT:
+//                return THEME_DEFAULT_STYLESHEET;
+//        }
+//        return null;
+//    }
+//
+//    public static void setToolTheme(ToolTheme theme, Scene scene) {
+//        setToolTheme(theme, scene.getStylesheets());
+//    }
+//
+//    public static void setToolTheme(ToolTheme theme, Parent parent) {
+//        setToolTheme(theme, parent.getStylesheets());
+//    }
+//
+//    private static void setToolTheme(ToolTheme theme, ObservableList<String> stylesheets) {
+//        if (!stylesheets.contains(BASE)) {
+//            stylesheets.add(BASE);
+//        }
+//        String themeStylesheet = getToolStylesheet(theme);
+//        if (!stylesheets.contains(themeStylesheet)) {
+//            stylesheets.add(themeStylesheet);
+//        }
+//    }
 
     public static List<String> getSupportedImageExtensions() {
         if (imageExtensions == null) {

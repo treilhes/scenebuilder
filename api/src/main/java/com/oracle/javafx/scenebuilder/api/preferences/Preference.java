@@ -14,7 +14,7 @@ public interface Preference<T> extends ManagedPreference {
 	T getDefault();
 	ObservableValue<T> getObservableValue();
 	
-	boolean isValid(T value);
+	boolean isValid();
 	
 	Preference<T> reset();
 	

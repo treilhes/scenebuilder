@@ -83,7 +83,7 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 	
 	@Override
 	public void writeToJavaPreferences() {
-		if (isValid(getValue()) 
+		if (isValid()
 				&& (!preferencesContext.isDocumentScope(this.getClass()) || preferencesContext.isDocumentNameDefined())) {
 			write();
 		} else {

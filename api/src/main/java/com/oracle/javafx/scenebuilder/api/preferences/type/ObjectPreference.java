@@ -31,7 +31,7 @@ public abstract class ObjectPreference<T> extends AbstractPreference<T> {
         T value = getValue();
         String key = computeKey(value);
         
-        if (isValid(value)) {
+        if (isValid()) {
 //	        if (valueNode == null) {
 //	            try {
 //	                assert getNode().nodeExists(key) == false;

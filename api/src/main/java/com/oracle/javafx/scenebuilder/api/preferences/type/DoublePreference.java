@@ -23,8 +23,8 @@ public class DoublePreference extends AbstractPreference<Double> {
 	}
 
 	@Override
-	public boolean isValid(Double value) {
-		return value != null;
+	public boolean isValid() {
+		return getValue() != null;
 	}
 
 }

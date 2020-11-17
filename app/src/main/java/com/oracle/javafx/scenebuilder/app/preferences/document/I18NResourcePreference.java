@@ -1,5 +1,7 @@
 package com.oracle.javafx.scenebuilder.app.preferences.document;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,5 +26,11 @@ public class I18NResourcePreference extends StringPreference implements ManagedD
 	public I18NResourcePreference(@Autowired PreferencesContext preferencesContext) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 	}
+
+	@Override
+	public boolean isValid() {
+		return super.isValid() && new File(getValue()).exists();
+	}
+	
 	
 }
