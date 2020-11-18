@@ -55,10 +55,13 @@ import java.util.TimerTask;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -66,6 +69,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
+import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMArchive;
@@ -89,7 +94,6 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -161,13 +165,14 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     private MenuItem libraryReport;
 	//private final UserLibrary library;
 
-    private EventHandler<ActionEvent> onLibraryViewAsList;
-	private EventHandler<ActionEvent> onLibraryViewAsSections;
-	private EventHandler<ActionEvent> onManageJarFxml;
-	private EventHandler<ActionEvent> onLibraryImportSelection;
-	private EventHandler<ActionEvent> onLibraryRevealCustomFolder;
-	private EventHandler<ActionEvent> onLibraryShowJarAnalysisReport;
+    private final Action viewAsListAction;
+    private final Action viewAsSectionsAction;
+    private final Action manageJarFxmlAction;
+    private final Action importSelectionAction;
+    private final Action revealCustomFolderAction;
+    private final Action showJarAnalysisReportAction;
 	
+    private final UserLibrary userLibrary;
 	private final MavenArtifactsPreferences mavenPreferences;
     private final DisplayModePreference displayModePreference;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
@@ -184,16 +189,32 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty 
     public LibraryPanelController(
-    		@Autowired EditorController c, 
+    		@Autowired EditorController editorController, 
     		@Autowired MavenArtifactsPreferences mavenPreferences, 
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired DisplayModePreference displayModePreference,
-    		@Autowired AccordionAnimationPreference accordionAnimationPreference) { //, UserLibrary library) {
-        super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), c); //NOI18N
+    		@Autowired AccordionAnimationPreference accordionAnimationPreference,
+    		@Autowired UserLibrary userLibrary,
+    		@Autowired @Qualifier("libraryPanelActions.ViewAsListAction") Action viewAsListAction,
+    		@Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction,
+    		@Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
+    		@Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction,
+    		@Autowired @Qualifier("libraryPanelActions.RevealCustomFolder") Action revealCustomFolderAction,
+    		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReport") Action showJarAnalysisReportAction
+    		) { //, UserLibrary library) {
+        super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
+        this.userLibrary = userLibrary;
         this.mavenPreferences = mavenPreferences;
         this.displayModePreference = displayModePreference;
         this.accordionAnimationPreference = accordionAnimationPreference;
+        
+        this.viewAsListAction = viewAsListAction;
+        this.viewAsSectionsAction = viewAsSectionsAction;
+        this.manageJarFxmlAction = manageJarFxmlAction;
+        this.importSelectionAction = importSelectionAction;
+        this.revealCustomFolderAction = revealCustomFolderAction;
+        this.showJarAnalysisReportAction = showJarAnalysisReportAction;
         
         startListeningToLibrary();
         
@@ -1212,12 +1233,24 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         libraryReveal = sceneBuilderFactory.createViewMenuItem("Action 1");
         libraryReport = sceneBuilderFactory.createViewMenuItem(getResources().getString("library.panel.menu.custom.report"));
         
-        viewAsList.setOnAction((e) -> this.onLibraryViewAsList.handle(e));
-        viewAsSections.setOnAction((e) -> this.onLibraryViewAsSections.handle(e));
-        manageJarFxml.setOnAction((e) -> this.onManageJarFxml.handle(e));
-        libraryImportSelection.setOnAction((e) -> this.onLibraryImportSelection.handle(e));
-        libraryReveal.setOnAction((e) -> this.onLibraryRevealCustomFolder.handle(e));
-        libraryReport.setOnAction((e) -> this.onLibraryShowJarAnalysisReport.handle(e));
+        // Setup title of the Library Reveal menu item according the underlying o/s.
+        final String revealMenuKey;
+        if (EditorPlatform.IS_MAC) {
+            revealMenuKey = "menu.title.reveal.mac";
+        } else if (EditorPlatform.IS_WINDOWS) {
+            revealMenuKey = "menu.title.reveal.win";
+        } else {
+            assert EditorPlatform.IS_LINUX;
+            revealMenuKey = "menu.title.reveal.linux";
+        }
+        libraryReveal.setText(I18N.getString(revealMenuKey));
+        
+        viewAsList.setOnAction((e) -> viewAsListAction.checkAndPerform());
+        viewAsSections.setOnAction((e) -> viewAsSectionsAction.checkAndPerform());
+        manageJarFxml.setOnAction((e) -> manageJarFxmlAction.checkAndPerform());
+        libraryImportSelection.setOnAction((e) -> importSelectionAction.checkAndPerform());
+        libraryReveal.setOnAction((e) -> revealCustomFolderAction.checkAndPerform());
+        libraryReport.setOnAction((e) -> showJarAnalysisReportAction.checkAndPerform());
         
         customLibraryMenu.getItems().addAll(libraryReveal, libraryReport);
         menuButton.getItems().addAll(viewAsList, viewAsSections, separator1, manageJarFxml, libraryImportSelection, separator2, customLibraryMenu);
@@ -1238,37 +1271,37 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         }
         setDisplayMode(option);
     }
-    
-	public void setOnLibraryViewAsList(EventHandler<ActionEvent> action) {
-		this.onLibraryViewAsList = action;
-	}
 
-	public void setOnLibraryViewAsSections(EventHandler<ActionEvent> action) {
-		this.onLibraryViewAsSections = action;
-	}
+	public void tuneLibraryMenuButton() {
+		
+		MenuButton libraryMenuButton = getViewController().getViewMenuButton();
+		// We need to tune the content of the library menu according if there's
+        // or not a selection likely to be dropped onto Library panel.
+        libraryMenuButton.showingProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
+            if (t1) {
+                AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
+                libraryImportSelection.setDisable(true);
 
-	public void setOnManageJarFxml(EventHandler<ActionEvent> action) {
-		this.onManageJarFxml = action;
-	}
+                if (asg instanceof ObjectSelectionGroup) {
+                    if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
+                    	libraryImportSelection.setDisable(false);
+                    }
+                }
+                
+                // DTL-6439. The custom library menu shall be enabled only
+                // in the case there is a user library directory on disk.
+                Library lib = getEditorController().getLibrary();
+                if (lib instanceof UserLibrary) {
+                    File userLibDir = new File(((UserLibrary)lib).getPath());
+                    if (userLibDir.canRead()) {
+                    	customLibraryMenu.setDisable(false);
+                    } else {
+                    	customLibraryMenu.setDisable(true);
+                    }
+                }
+            }
+        });
 
-	public void setOnLibraryImportSelection(EventHandler<ActionEvent> action) {
-		this.onLibraryImportSelection = action;
-	}
-
-	public void setOnLibraryRevealCustomFolder(EventHandler<ActionEvent> action) {
-		this.onLibraryRevealCustomFolder = action;
-	}
-
-	public void setOnLibraryShowJarAnalysisReport(EventHandler<ActionEvent> action) {
-		this.onLibraryShowJarAnalysisReport = action;
-	}
-
-	public MenuItem getLibraryReveal() {
-		return libraryReveal;
-	}
-
-	public MenuButton getLibraryMenuButton() {
-		return getViewController().getViewMenuButton();
 	}
 
 	public MenuItem getLibraryImportSelection() {

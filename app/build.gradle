@@ -10,6 +10,7 @@ mainClassName = 'com.oracle.javafx.scenebuilder.app.SceneBuilderApp'
 dependencies {
 	implementation project(':api')
     implementation project(':kit')
+    implementation project(':gluon')
 }
 
 run {

@@ -1,5 +1,7 @@
 package com.oracle.javafx.scenebuilder.api;
 
+import javafx.stage.Stage;
+
 public interface Document {
 	boolean isInited();
 	boolean isUnused();
@@ -7,4 +9,5 @@ public interface Document {
 	boolean hasContent();
 	boolean hasName();
 	String getName();
+	Stage getStage();
 }

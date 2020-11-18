@@ -46,8 +46,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.ImportWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
@@ -77,6 +84,9 @@ import javafx.stage.WindowEvent;
 /**
  * Controller for the JAR/FXML Library dialog.
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class LibraryDialogController extends AbstractFxmlWindowController {
 
     @FXML
@@ -101,17 +111,18 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 	private final LibraryPanelController libraryPanelController;
 
     public LibraryDialogController(
-    		EditorController editorController, 
-    		LibraryPanelController libraryPanelController,
-    		MavenSetting mavenSetting,
-    		MavenArtifactsPreferences mavenPreferences,
-    		MavenRepositoriesPreferences repositoryPreferences, 
-            Stage owner) {
-        super(LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.owner = owner;
+    		@Autowired EditorController editorController, 
+    		@Autowired LibraryPanelController libraryPanelController,
+    		@Autowired MavenSetting mavenSetting,
+    		@Autowired MavenArtifactsPreferences mavenPreferences,
+    		@Autowired MavenRepositoriesPreferences repositoryPreferences, 
+    		@Autowired Document document,
+    		@Autowired UserLibrary userLibrary) {
+        super(LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(), document.getStage()); //NOI18N
+        this.owner = document.getStage();
         this.editorController = editorController;
         this.libraryPanelController = libraryPanelController;
-        this.userLibrary = (UserLibrary) editorController.getLibrary();
+        this.userLibrary = userLibrary;
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
         this.mavenSetting = mavenSetting;

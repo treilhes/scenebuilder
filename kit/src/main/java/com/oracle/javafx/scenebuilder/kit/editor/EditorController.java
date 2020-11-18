@@ -53,6 +53,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
@@ -288,9 +289,9 @@ public class EditorController implements Editor {
     private final ObjectProperty<ResourceBundle> resourcesProperty
             = new SimpleObjectProperty<>(null);
     private final ObjectProperty<GluonTheme> gluonThemeProperty
-            = new SimpleObjectProperty<>(EditorPlatform.DEFAULT_GLUON_THEME);
+            = new SimpleObjectProperty<>();
     private final ObjectProperty<GluonSwatch> gluonSwatchProperty
-            = new SimpleObjectProperty<>(EditorPlatform.DEFAULT_SWATCH);
+            = new SimpleObjectProperty<>();
     private final ListProperty<File> sceneStyleSheetProperty
             = new SimpleListProperty<>();
     private final BooleanProperty pickModeEnabledProperty
@@ -299,6 +300,17 @@ public class EditorController implements Editor {
             = new SimpleBooleanProperty(false);
     private final SimpleStringProperty toolStylesheetProperty
             = new SimpleStringProperty(getBuiltinToolStylesheet());
+ // -- Theme property
+    private final ObjectProperty<Theme> themeProperty
+            = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            FXOMDocument fxomDocument = getFxomDocument();
+            if (fxomDocument != null) {
+                fxomDocument.refreshSceneGraph();
+            }
+        }
+    };
     
     private Callback<Void, Boolean> requestTextEditingSessionEnd;
 
@@ -623,18 +635,6 @@ public class EditorController implements Editor {
     public ObservableValue<ResourceBundle> resourcesProperty() {
         return resourcesProperty;
     }
-
-    // -- Theme property
-    private final ObjectProperty<Theme> themeProperty
-            = new SimpleObjectProperty<>(EditorPlatform.DEFAULT_THEME) {
-        @Override
-        protected void invalidated() {
-            FXOMDocument fxomDocument = getFxomDocument();
-            if (fxomDocument != null) {
-                fxomDocument.refreshSceneGraph();
-            }
-        }
-    };
 
     /**
      * Returns the theme used by this editor.

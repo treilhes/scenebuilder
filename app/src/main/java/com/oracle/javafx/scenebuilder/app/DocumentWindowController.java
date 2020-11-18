@@ -44,7 +44,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +58,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -89,7 +89,6 @@ import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.ControlAction;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
@@ -98,19 +97,14 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarc
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.manager.LibraryDialogController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.library.Library;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
@@ -143,7 +137,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 /**
@@ -252,7 +245,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private PreviewWindowController previewWindowController = null;
     private SkeletonWindowController skeletonWindowController = null;
     private JarAnalysisReportController jarAnalysisReportController = null;
-    private LibraryDialogController libraryDialogController = null;
     
     //@FXML private StackPane libraryPanelHost;
     //@FXML private StackPane librarySearchPanelHost;
@@ -363,7 +355,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired DocumentVisiblePreference documentVisiblePreference,
 			@Lazy @Autowired LibraryVisiblePreference libraryVisiblePreference,
 			
-			@Lazy @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference
+			@Lazy @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
+			
+			//@Lazy @Autowired PreviewWindowController previewWindowController,
+			//@Lazy @Autowired SkeletonWindowController skeletonWindowController,
+			@Lazy @Autowired JarAnalysisReportController jarAnalysisReportController
 			) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
@@ -416,6 +412,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.documentVisiblePreference=documentVisiblePreference;
         this.libraryVisiblePreference=libraryVisiblePreference;
         
+        this.jarAnalysisReportController = jarAnalysisReportController;
         documentPreferencesController.readFromJavaPreferences();
         
         //PrefTests.doDocTest(docPref);
@@ -423,14 +420,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         
         //this.documentManager = documentManager;
         this.editorController.setLibrary(mainController.getUserLibrary());
-        
-        
-        libraryPanelController.setOnLibraryViewAsList(this::onLibraryViewAsList);
-        libraryPanelController.setOnLibraryViewAsSections(this::onLibraryViewAsSections);
-        libraryPanelController.setOnManageJarFxml(this::onManageJarFxml);
-        libraryPanelController.setOnLibraryImportSelection(this::onLibraryImportSelection);
-        libraryPanelController.setOnLibraryRevealCustomFolder(this::onLibraryRevealCustomFolder);
-        libraryPanelController.setOnLibraryShowJarAnalysisReport(this::onLibraryShowJarAnalysisReport);
         
         documentPanelController.setOnShowInfo(this::onHierarchyShowInfo);
         documentPanelController.setOnShowFxId(this::onHierarchyShowFxId);
@@ -1296,45 +1285,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         // Monitor the status of the document to set status icon accordingly in message bar
         getEditorController().getJobManager().revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> messageBarController.setDocumentDirty(isDocumentDirty()));
         
-        // Setup title of the Library Reveal menu item according the underlying o/s.
-        final String revealMenuKey;
-        if (EditorPlatform.IS_MAC) {
-            revealMenuKey = "menu.title.reveal.mac";
-        } else if (EditorPlatform.IS_WINDOWS) {
-            revealMenuKey = "menu.title.reveal.win";
-        } else {
-            assert EditorPlatform.IS_LINUX;
-            revealMenuKey = "menu.title.reveal.linux";
-        }
-        libraryPanelController.getLibraryReveal().setText(I18N.getString(revealMenuKey));
-        
-        // We need to tune the content of the library menu according if there's
-        // or not a selection likely to be dropped onto Library panel.
-        libraryPanelController.getLibraryMenuButton().showingProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
-            if (t1) {
-                AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
-                libraryPanelController.getLibraryImportSelection().setDisable(true);
-
-                if (asg instanceof ObjectSelectionGroup) {
-                    if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
-                    	libraryPanelController.getLibraryImportSelection().setDisable(false);
-                    }
-                }
                 
-                // DTL-6439. The custom library menu shall be enabled only
-                // in the case there is a user library directory on disk.
-                Library lib = getEditorController().getLibrary();
-                if (lib instanceof UserLibrary) {
-                    File userLibDir = new File(((UserLibrary)lib).getPath());
-                    if (userLibDir.canRead()) {
-                    	libraryPanelController.getCustomLibraryMenu().setDisable(false);
-                    } else {
-                    	libraryPanelController.getCustomLibraryMenu().setDisable(true);
-                    }
-                }
-            }
-        });
-        
         libraryPanelController.getLibraryLabel().bind(Bindings.createStringBinding(() -> {
 
             return MainController.getSingleton().getUserLibrary().isExploring() ? I18N.getString("library.exploring") : I18N.getString("library");
@@ -1519,94 +1470,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         // Update preferences
     	preferences.updateHierarchyDisplayOption(
         		documentPanelController.getHierarchyPanelController().getDisplayOption());
-    }
-
-    //
-    // Library menu
-    //
-    public void onManageJarFxml(ActionEvent event) {
-        if(libraryDialogController==null){
-            libraryDialogController = new LibraryDialogController(editorController, libraryPanelController,
-            		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
-            libraryDialogController.setOnAddJar(() -> onImportJarFxml(libraryDialogController.getStage()));
-            libraryDialogController.setOnEditFXML(fxmlPath -> {
-                    if (MainController.getSingleton().lookupUnusedDocumentWindowController() != null) {
-                        libraryDialogController.closeWindow();
-                    }
-                    MainController.getSingleton().performOpenRecent(this,
-                            fxmlPath.toFile());
-            });
-            libraryDialogController.setOnAddFolder(() -> onImportFromFolder(libraryDialogController.getStage()));
-        }
-
-        libraryDialogController.openWindow();
-    }
-    
-    public void onImportJarFxml(Window owner) {
-        libraryPanelController.performImportJarFxml(owner);
-    }
-    
-    public void onImportFromFolder(Window owner) {
-        libraryPanelController.performImportFromFolder(owner);
-    }
-
-    void onLibraryViewAsList(ActionEvent event) {
-        if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
-            libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
-        } else {
-            libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
-        }
-
-        updateLibraryDisplayOption();
-    }
-    
-    void onLibraryViewAsSections(ActionEvent event) {
-        if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
-            libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
-        } else {
-            libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
-        }
-
-        updateLibraryDisplayOption();
-    }
-
-    private void updateLibraryDisplayOption() {
-        // Update preferences
-        preferences.updateLibraryDisplayOption(libraryPanelController.getDisplayMode());
-    }
-
-    // This method cannot be called if there is not a valid selection, a selection
-    // eligible for being dropped onto Library panel.
-    void onLibraryImportSelection(ActionEvent event) {
-        AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
-
-        if (asg instanceof ObjectSelectionGroup) {
-            ObjectSelectionGroup osg = (ObjectSelectionGroup)asg;
-            assert !osg.getItems().isEmpty();
-            List<FXOMObject> selection = new ArrayList<>(osg.getItems());
-            libraryPanelController.performImportSelection(selection);
-        }
-    }
-    
-    void onLibraryRevealCustomFolder(ActionEvent event) {
-        String userLibraryPath = ((UserLibrary) getEditorController().getLibrary()).getPath();
-        try {
-            EditorPlatform.revealInFileBrowser(new File(userLibraryPath));
-        } catch(IOException x) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setMessage(I18N.getString("alert.reveal.failure.message", getStage().getTitle()));
-            errorDialog.setDetails(I18N.getString("alert.reveal.failure.details"));
-            errorDialog.setDebugInfoWithThrowable(x);
-            errorDialog.showAndWait();
-        }
-    }
-    
-    void onLibraryShowJarAnalysisReport(ActionEvent event) {
-        if (jarAnalysisReportController == null) {
-            jarAnalysisReportController = new JarAnalysisReportController(getEditorController(), getStage());
-            jarAnalysisReportController.setToolStylesheet(getToolStylesheet());
-        }
-        jarAnalysisReportController.openWindow();
     }
     
     /*

@@ -50,6 +50,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
@@ -65,13 +67,13 @@ import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.ControlAction;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
+import com.oracle.javafx.scenebuilder.kit.preferences.ThemeUtils;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
@@ -431,17 +433,8 @@ public class MenuBarController implements InitializingBean {
     @FXML
     private MenuItem checkUpdatesMenuItem;
 
-    private static final KeyCombination.Modifier modifier;
+    private static final KeyCombination.Modifier modifier = KeyboardModifier.control();
     private final Map<KeyCombination, MenuItem> keyToMenu = new HashMap<>();
-
-    static {
-        if (EditorPlatform.IS_MAC) {
-            modifier = KeyCombination.META_DOWN;
-        } else {
-            // Should cover Windows, Solaris, Linux
-            modifier = KeyCombination.CONTROL_DOWN;
-        }
-    }
 
     public MenuBar getMenuBar() {
 
@@ -2028,19 +2021,19 @@ public class MenuBarController implements InitializingBean {
                 // MODENA_HIGH_CONTRAST_<*> can be selected only if another MODENA
                 // theme is active.
                 if (theme == Theme.CASPIAN_HIGH_CONTRAST
-                        && EditorPlatform.isModena(currentTheme)) {
+                        && ThemeUtils.isModena(currentTheme)) {
                     res = false;
                     caspianHighContrastThemeMenuItem.setSelected(false);
                 } else if (theme == Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE
-                        && EditorPlatform.isCaspian(currentTheme)) {
+                        && ThemeUtils.isCaspian(currentTheme)) {
                     res = false;
                     modenaHighContrastBlackonwhiteThemeMenuItem.setSelected(false);
                 } else if (theme == Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK
-                        && EditorPlatform.isCaspian(currentTheme)) {
+                        && ThemeUtils.isCaspian(currentTheme)) {
                     res = false;
                     modenaHighContrastWhiteonblackThemeMenuItem.setSelected(false);
                 } else if (theme == Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK
-                        && EditorPlatform.isCaspian(currentTheme)) {
+                        && ThemeUtils.isCaspian(currentTheme)) {
                     res = false;
                     modenaHighContrastYellowonblackThemeMenuItem.setSelected(false);
                 }
@@ -2273,15 +2266,15 @@ public class MenuBarController implements InitializingBean {
 
                 switch (theme) {
                     case GLUON_MOBILE_LIGHT:
-                        res = EditorPlatform.isGluonMobileLight(currentTheme);
+                        res = ThemeUtils.isGluonMobileLight(currentTheme);
                         break;
                     case GLUON_MOBILE_DARK:
-                        res = EditorPlatform.isGluonMobileDark(currentTheme);
+                        res = ThemeUtils.isGluonMobileDark(currentTheme);
                         break;
                     // CASPIAN_HIGH_CONTRAST can be selected only if another CASPIAN
                     // theme is active.
                     case CASPIAN_HIGH_CONTRAST:
-                        res = EditorPlatform.isCaspian(currentTheme);
+                        res = ThemeUtils.isCaspian(currentTheme);
                         break;
                     case CASPIAN:
                         res = (currentTheme == theme || currentTheme == Theme.CASPIAN_HIGH_CONTRAST);
@@ -2293,24 +2286,24 @@ public class MenuBarController implements InitializingBean {
                         res = (currentTheme == theme || currentTheme == Theme.CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST);
                         break;
                     case MODENA_HIGH_CONTRAST_BLACK_ON_WHITE:
-                        res = EditorPlatform.isModenaBlackonwhite(currentTheme)
-                                && EditorPlatform.isModenaHighContrast(currentTheme);
+                        res = ThemeUtils.isModenaBlackonwhite(currentTheme)
+                                && ThemeUtils.isModenaHighContrast(currentTheme);
                         break;
                     case MODENA_HIGH_CONTRAST_WHITE_ON_BLACK:
-                        res = EditorPlatform.isModenaWhiteonblack(currentTheme)
-                                && EditorPlatform.isModenaHighContrast(currentTheme);
+                        res = ThemeUtils.isModenaWhiteonblack(currentTheme)
+                                && ThemeUtils.isModenaHighContrast(currentTheme);
                         break;
                     case MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                        res = EditorPlatform.isModenaYellowonblack(currentTheme)
-                                && EditorPlatform.isModenaHighContrast(currentTheme);
+                        res = ThemeUtils.isModenaYellowonblack(currentTheme)
+                                && ThemeUtils.isModenaHighContrast(currentTheme);
                         break;
                     case MODENA:
                         res = (currentTheme == theme
-                                || (EditorPlatform.isModenaHighContrast(currentTheme)
-                                    && !EditorPlatform.isModenaTouch(currentTheme)));
+                                || (ThemeUtils.isModenaHighContrast(currentTheme)
+                                    && !ThemeUtils.isModenaTouch(currentTheme)));
                         break;
                     case MODENA_TOUCH:
-                        res = (currentTheme == theme || EditorPlatform.isModenaTouchHighContrast(currentTheme));
+                        res = (currentTheme == theme || ThemeUtils.isModenaTouchHighContrast(currentTheme));
                         break;
                     default:
                         assert false;

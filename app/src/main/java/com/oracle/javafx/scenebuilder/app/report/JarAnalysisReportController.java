@@ -38,7 +38,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
@@ -54,12 +61,14 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class JarAnalysisReportController extends AbstractFxmlWindowController {
     
     @FXML
@@ -67,6 +76,19 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     @FXML
     Label timestampLabel;
 
+    private final EditorController editorController;
+    private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; //NOI18N
+    private final SimpleDateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(TIMESTAMP_PATTERN);
+    private int prefixCounter = 0;
+    private boolean dirty = false;
+
+    public JarAnalysisReportController(
+    		@Autowired EditorController editorController, 
+    		@Autowired DocumentWindowController document) {
+        super(JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"), I18N.getBundle(), document.getStage()); //NOI18N
+        this.editorController = editorController;
+    }
+    
     @FXML
     void onCopyAction(ActionEvent event) {
         final Map<DataFormat, Object> content = new HashMap<>();
@@ -80,17 +102,6 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
         
         content.put(DataFormat.PLAIN_TEXT, sb.toString());
         Clipboard.getSystemClipboard().setContent(content);
-    }
-
-    private final EditorController editorController;
-    private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; //NOI18N
-    private final SimpleDateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(TIMESTAMP_PATTERN);
-    private int prefixCounter = 0;
-    private boolean dirty = false;
-
-    public JarAnalysisReportController(EditorController editorController, Stage owner) {
-        super(JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.editorController = editorController;
     }
 
     @Override

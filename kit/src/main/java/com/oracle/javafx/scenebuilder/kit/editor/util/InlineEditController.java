@@ -31,8 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.util;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractPopupController;
 import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 

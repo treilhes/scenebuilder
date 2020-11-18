@@ -36,10 +36,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.preferences.ThemeUtils;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
@@ -171,7 +172,7 @@ class WorkspaceController {
         assert theme != null;
         assert gluonSwatch != null;
         assert gluonTheme != null;
-        String gluonDocumentStylesheet = EditorPlatform.getGluonDocumentStylesheetURL();
+        String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
         String gluonSwatchStylesheet = gluonSwatch.getStylesheetURL();
         String gluonThemeStylesheet = gluonTheme.getStylesheetURL();
         String previousGluonSwatchStylesheet = editorController.getGluonSwatch().getStylesheetURL();
@@ -222,7 +223,7 @@ class WorkspaceController {
             themeStylesheets.add(Theme.GLUON_MOBILE_LIGHT.getStylesheetURL()); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
             themeStylesheets.add(editorController.getGluonSwatch().getStylesheetURL());
             themeStylesheets.add(editorController.getGluonTheme().getStylesheetURL());
-            themeStylesheets.add(EditorPlatform.getGluonDocumentStylesheetURL());
+            themeStylesheets.add(ThemeUtils.getGluonDocumentStylesheetURL());
         }
         contentGroupApplyCss();
     }

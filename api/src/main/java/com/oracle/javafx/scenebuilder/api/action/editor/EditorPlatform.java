@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor;
+package com.oracle.javafx.scenebuilder.api.action.editor;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,10 +41,6 @@ import java.util.Locale;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
-
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.scene.input.MouseEvent;
 
@@ -126,75 +122,6 @@ public class EditorPlatform {
      * scene builder specific tweaks to Gluon theme
      */
     public static final String GLUON_DOCUMENT_STYLESHEET = "com/oracle/javafx/scenebuilder/app/css/GluonDocument.css";
-
-    /**
-     * Default theme
-     */
-    public static final Theme DEFAULT_THEME = Theme.MODENA;
-
-    /**
-     * Default Gluon Swatch
-     */
-    public static final GluonSwatch DEFAULT_SWATCH = GluonSwatch.BLUE;
-
-    /**
-     * Default Gluon Theme
-     */
-    public static final GluonTheme DEFAULT_GLUON_THEME = GluonTheme.LIGHT;
-
-    public static String getPlatformThemeStylesheetURL() {
-        // Return USER_AGENT css, which is Modena for fx 8.0
-        return Theme.MODENA.getStylesheetURL();
-    }
-
-    public static String getGluonDocumentStylesheetURL() {
-        return GLUON_DOCUMENT_STYLESHEET;
-    }
-
-    public static boolean isModena(Theme theme) {
-        return theme.toString().startsWith("MODENA");
-    }
-    
-    public static boolean isModenaBlackonwhite(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("BLACK_ON_WHITE");
-    }
-    
-    public static boolean isModenaWhiteonblack(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("WHITE_ON_BLACK");
-    }
-    
-    public static boolean isModenaYellowonblack(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("YELLOW_ON_BLACK");
-    }
-    
-    public static boolean isModenaHighContrast(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("HIGH_CONTRAST");
-    }
-    
-    public static boolean isModenaTouch(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("TOUCH");
-    }
-    
-    public static boolean isModenaTouchHighContrast(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("HIGH_CONTRAST")
-                && theme.toString().contains("TOUCH");
-    }
-    
-    public static boolean isCaspian(Theme theme) {
-        return theme.toString().startsWith("CASPIAN");
-    }
-
-    public static boolean isGluonMobileLight(Theme theme) { return theme == Theme.GLUON_MOBILE_LIGHT; }
-
-    public static boolean isGluonMobileDark(Theme theme) {
-        return theme == Theme.GLUON_MOBILE_DARK;
-    }
 
     /**
      * Requests the underlying platform to open a given file. On Linux, it runs

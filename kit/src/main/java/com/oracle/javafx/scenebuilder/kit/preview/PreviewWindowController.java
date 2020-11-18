@@ -44,9 +44,9 @@ import java.util.TimerTask;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.kit.preferences.ThemeUtils;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
@@ -344,7 +344,7 @@ public final class PreviewWindowController extends AbstractWindowController {
 
                 getScene().setRoot(getRoot());
                 if (themeStyleSheetString != null) {
-                    String gluonDocumentStylesheet = EditorPlatform.getGluonDocumentStylesheetURL();
+                    String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
                     String gluonSwatchStylesheet = editorControllerGluonSwatch.getStylesheetURL();
                     String gluonThemeStylesheet = editorControllerGluonTheme.getStylesheetURL();
                     if (editorControllerTheme == Theme.GLUON_MOBILE_LIGHT || editorControllerTheme == Theme.GLUON_MOBILE_DARK) {
