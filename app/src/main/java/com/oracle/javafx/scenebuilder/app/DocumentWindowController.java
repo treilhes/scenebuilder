@@ -414,6 +414,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         
         this.jarAnalysisReportController = jarAnalysisReportController;
         documentPreferencesController.readFromJavaPreferences();
+//        pathPreference.readFromJavaPreferences();
         
         //PrefTests.doDocTest(docPref);
         
@@ -1324,6 +1325,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void closeWindow() {
     	// Write java preferences at close time but before losing the current document scope
+    	onFocus();
         updatePreferences();
         
         super.closeWindow();
