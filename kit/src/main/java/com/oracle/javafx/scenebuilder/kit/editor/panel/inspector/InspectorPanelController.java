@@ -54,10 +54,12 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -337,11 +339,11 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
     private RadioMenuItem viewByPropName;
     private RadioMenuItem viewByPropType;
     
-    private EventHandler<ActionEvent> onShowAll;
-	private EventHandler<ActionEvent> onShowEdited;
-	private EventHandler<ActionEvent> onViewAsSections;
-	private EventHandler<ActionEvent> onViewByPropName;
-	private EventHandler<ActionEvent> onViewByPropType;
+    private Action showAllAction;
+	private Action showEditedAction;
+	private Action viewBySectionsAction;
+	private Action viewByPropertyNameAction;
+	private Action viewByPropertyTypeAction;
     
 	private final EditorController editorController;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
@@ -355,22 +357,26 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
     		@Autowired EditorController editorController,
     		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-    		@Autowired AccordionAnimationPreference accordionAnimationPreference) {
+    		@Autowired AccordionAnimationPreference accordionAnimationPreference,
+    		@Autowired @Qualifier("inspectorPanelActions.ShowAllAction") Action showAllAction,
+    		@Autowired @Qualifier("inspectorPanelActions.ShowEditedAction") Action showEditedAction,
+    		@Autowired @Qualifier("inspectorPanelActions.ViewBySectionsAction") Action viewBySectionsAction,
+    		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
+    		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction
+    		) {
         super(InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
         this.editorController = editorController;
         this.availableCharsets = CharsetEditor.getStandardCharsets();
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
         this.accordionAnimationPreference = accordionAnimationPreference;
-        
-        viewModeProperty.setValue(ViewMode.SECTION);
-        viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
-
-        showModeProperty.setValue(ShowMode.ALL);
-        showModeProperty.addListener((obv, previousMode, mode) -> showModeChanged());
-
-        expandedSectionProperty.setValue(SectionId.PROPERTIES);
-        expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
+    
+        this.showAllAction = showAllAction;
+    	this.showEditedAction = showEditedAction;
+    	this.viewBySectionsAction = viewBySectionsAction;
+    	this.viewByPropertyNameAction = viewByPropertyNameAction;
+    	this.viewByPropertyTypeAction = viewByPropertyTypeAction;
+    	
 
         // Editor pools init
         editorPools.put(I18nStringEditor.class, i18nStringEditorPool);
@@ -411,10 +417,22 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
         editorPools.put(ColorPopupEditor.class, colorEditorPool);
 
         // ...
+        
+        viewModeProperty.setValue(ViewMode.SECTION);
+        viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
+        
+        showModeProperty.setValue(ShowMode.ALL);
+        showModeProperty.addListener((obv, previousMode, mode) -> showModeChanged());
+        
+        expandedSectionProperty.setValue(SectionId.PROPERTIES);
+        expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
+        
     }
     
     @FXML
     protected void initialize() {
+    	createLibraryMenu();
+    	
     	// init preferences
     	animateAccordion(accordionAnimationPreference.getValue());
     	accordionAnimationPreference.getObservableValue().addListener(
@@ -636,7 +654,6 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
 		getViewController().setContent(super.getPanelRoot());
 		
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
-        createLibraryMenu();
         
         propertiesTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.PROPERTIES));
         layoutTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.LAYOUT));
@@ -684,17 +701,20 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
         getViewController().textProperty().set(getResources().getString("inspector"));
         
         showAll = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.all"), showTg);
+        showAll.setSelected(true);
+        
         showEdited = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.edited"), showTg);
         separator = sceneBuilderFactory.createSeparatorMenuItem();
         viewAsSections = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.view.sections"), viewTg);
+        viewAsSections.setSelected(true);
         viewByPropName = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.by.property.name"), viewTg);
         viewByPropType = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.by.property.type"), viewTg);
         
-        showAll.setOnAction((e) -> this.onShowAll.handle(e));
-        showEdited.setOnAction((e) -> this.onShowEdited.handle(e));
-        viewAsSections.setOnAction((e) -> this.onViewAsSections.handle(e));
-        viewByPropName.setOnAction((e) -> this.onViewByPropName.handle(e));
-        viewByPropType.setOnAction((e) -> this.onViewByPropType.handle(e));
+        showAll.setOnAction((e) -> showAllAction.checkAndPerform());
+        showEdited.setOnAction((e) -> showEditedAction.checkAndPerform());
+        viewAsSections.setOnAction((e) -> viewBySectionsAction.checkAndPerform());
+        viewByPropName.setOnAction((e) -> viewByPropertyNameAction.checkAndPerform());
+        viewByPropType.setOnAction((e) -> viewByPropertyTypeAction.checkAndPerform());
         
         menuButton.getItems().addAll(showAll, showEdited, separator, viewAsSections, viewByPropName, viewByPropType);
 	}
@@ -2605,27 +2625,6 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController {
         // Set the focus to the editor
         editorToFocus.requestFocus();
     }
-
-    
-	public void setOnShowAll(EventHandler<ActionEvent> onShowAll) {
-		this.onShowAll = onShowAll;
-	}
-
-	public void setOnShowEdited(EventHandler<ActionEvent> onShowEdited) {
-		this.onShowEdited = onShowEdited;
-	}
-
-	public void setOnViewAsSections(EventHandler<ActionEvent> onViewAsSections) {
-		this.onViewAsSections = onViewAsSections;
-	}
-
-	public void setOnViewByPropName(EventHandler<ActionEvent> onViewByPropName) {
-		this.onViewByPropName = onViewByPropName;
-	}
-
-	public void setOnViewByPropType(EventHandler<ActionEvent> onViewByPropType) {
-		this.onViewByPropType = onViewByPropType;
-	}
 
 	@Override
 	public String getName() {

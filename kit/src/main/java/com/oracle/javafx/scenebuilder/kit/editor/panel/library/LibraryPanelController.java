@@ -69,10 +69,10 @@ import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
+import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMArchive;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
@@ -199,8 +199,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     		@Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction,
     		@Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
     		@Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction,
-    		@Autowired @Qualifier("libraryPanelActions.RevealCustomFolder") Action revealCustomFolderAction,
-    		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReport") Action showJarAnalysisReportAction
+    		@Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
+    		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
     		) { //, UserLibrary library) {
         super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;

@@ -48,7 +48,7 @@ import javafx.scene.control.MenuItem;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-class CssPanelMenuController {
+public class CssPanelMenuController {
      private boolean showStyledOnly = false;
     private boolean splitDefaults = false;
     private final CssPanelController cssPanelController;

@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.app.message.actions;
+package com.oracle.javafx.scenebuilder.app.actions;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class LibraryPanelActions {
 			nameKey = "action.name.show.jar.analysis.report",
 			descriptionKey = "action.description.show.jar.analysis.report",
 			accelerator = "CTRL+J")
-	public static class ShowJarAnalysisReport extends AbstractAction {
+	public static class ShowJarAnalysisReportAction extends AbstractAction {
 		
 		@Autowired @Lazy private DocumentWindowController documentWindowController;
 		@Autowired @Lazy private JarAnalysisReportController jarAnalysisReportController;
@@ -63,7 +63,7 @@ public class LibraryPanelActions {
 	@ActionMeta(
 			nameKey = "action.name.reveal.custom.folder",
 			descriptionKey = "action.description.reveal.custom.folder")
-	public static class RevealCustomFolder extends AbstractAction {
+	public static class RevealCustomFolderAction extends AbstractAction {
 		
 		@Autowired @Lazy private DocumentWindowController documentWindowController;
 		@Autowired @Lazy private UserLibrary userLibrary;

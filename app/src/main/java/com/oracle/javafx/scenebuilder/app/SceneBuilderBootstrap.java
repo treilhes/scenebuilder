@@ -65,17 +65,36 @@ import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-@ComponentScan(basePackageClasses = { com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
-		com.oracle.javafx.scenebuilder.app.i18n.I18N.class, I18N.class, PreferencesContext.class,
-		MavenArtifactsPreferences.class, MavenSetting.class, Tracking.class, RegistrationWindowController.class,
-		WelcomeDialogWindowController.class, PreferencesController.class, BuiltinLibrary.class, Metadata.class,
-		MenuBarController.class, EditorController.class, SelectionBarController.class,
-		SceneBuilderBeanFactory.class }, basePackages = { "com.oracle.javafx.scenebuilder.app.settings",
-				"com.oracle.javafx.scenebuilder.api.preferences", "com.oracle.javafx.scenebuilder.app.preferences",
-				"com.oracle.javafx.scenebuilder.kit.preferences", "com.oracle.javafx.scenebuilder.kit.library.user",
-				"com.oracle.javafx.scenebuilder.api.subjects", "com.oracle.javafx.scenebuilder.app",
-				"com.oracle.javafx.scenebuilder.gluon.preferences" 
-				})
+@ComponentScan(
+	basePackageClasses = { 
+		com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
+		com.oracle.javafx.scenebuilder.app.i18n.I18N.class, 
+		I18N.class, 
+		PreferencesContext.class,
+		MavenArtifactsPreferences.class, 
+		MavenSetting.class, 
+		Tracking.class, 
+		RegistrationWindowController.class,
+		WelcomeDialogWindowController.class, 
+		PreferencesController.class, 
+		BuiltinLibrary.class, 
+		Metadata.class,
+		MenuBarController.class, 
+		EditorController.class, 
+		SelectionBarController.class,
+		SceneBuilderBeanFactory.class 
+		}, 
+	basePackages = { 
+			"com.oracle.javafx.scenebuilder.app.settings",
+			"com.oracle.javafx.scenebuilder.api.preferences", 
+			"com.oracle.javafx.scenebuilder.app.preferences",
+			"com.oracle.javafx.scenebuilder.kit.preferences", 
+			"com.oracle.javafx.scenebuilder.kit.library.user",
+			"com.oracle.javafx.scenebuilder.api.subjects", 
+			"com.oracle.javafx.scenebuilder.app",
+			"com.oracle.javafx.scenebuilder.gluon.preferences",
+			"com.oracle.javafx.scenebuilder.app.actions"
+			})
 public class SceneBuilderBootstrap extends JavafxApplication {
 
 	private static final CountDownLatch launchLatch = new CountDownLatch(1);

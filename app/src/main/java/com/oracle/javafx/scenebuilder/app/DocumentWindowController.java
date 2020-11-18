@@ -60,7 +60,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
@@ -83,6 +82,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPrefere
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
@@ -105,8 +105,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
@@ -213,11 +211,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final ResourceController resourceController;
     private final DocumentWatchingController watchingController;
     
-    private final MavenSetting mavenSetting;
-    private final MavenArtifactsPreferences mavenPreferences;
-    private final MavenRepositoriesPreferences repositoryPreferences;
     private final GlobalPreferences preferences;
-    
+    private final WildcardImportsPreference wildcardImportsPreference;
     private final RecentItemsPreference recentItemsPreference;
     private final ToolThemePreference toolThemePreference;
     
@@ -308,11 +303,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Autowired ApplicationContext context,
 			@Autowired MainController mainController,
 			@Autowired GlobalPreferences preferences,
-			@Autowired MavenSetting mavenSetting,
-			@Autowired MavenArtifactsPreferences mavenPreferences,
-			@Autowired MavenRepositoriesPreferences repositoryPreferences,
 			@Autowired RecentItemsPreference recentItemsPreference,
 			@Autowired ToolThemePreference toolThemePreference,
+			@Autowired WildcardImportsPreference wildcardImportsPreference,
 			@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
 			@Lazy @Autowired PathPreference pathPreference,
 			
@@ -366,11 +359,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         DocumentScope.setCurrentScope(this);
 
         this.editorController = editorController;
-        this.mavenSetting = mavenSetting;
-        this.mavenPreferences = mavenPreferences;
-        this.repositoryPreferences = repositoryPreferences;
         this.recentItemsPreference = recentItemsPreference;
         this.toolThemePreference = toolThemePreference;
+        this.wildcardImportsPreference = wildcardImportsPreference;
         this.menuBarController = menuBarController;
         
         this.contentPanelController = contentPanelController;
@@ -421,23 +412,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         
         //this.documentManager = documentManager;
         this.editorController.setLibrary(mainController.getUserLibrary());
-        
-        documentPanelController.setOnShowInfo(this::onHierarchyShowInfo);
-        documentPanelController.setOnShowFxId(this::onHierarchyShowFxId);
-        documentPanelController.setOnShowNodeId(this::onHierarchyShowNodeId);
-        
-        inspectorPanelController.setOnShowAll(this::onInspectorShowAllAction);
-        inspectorPanelController.setOnShowEdited(this::onInspectorShowEditedAction);
-        inspectorPanelController.setOnViewAsSections(this::onInspectorViewSectionsAction);
-        inspectorPanelController.setOnViewByPropName(this::onInspectorViewByPropertyNameAction);
-        inspectorPanelController.setOnViewByPropType(this::onInspectorViewByPropertyTypeAction);
-        
-        cssPanelController.setOnViewAsTable(this::onCssPanelViewTableAction);
-        cssPanelController.setOnViewAsRules(this::onCssPanelViewRulesAction);
-        cssPanelController.setOnViewAsText(this::onCssPanelViewTextAction);
-        cssPanelController.setOnCopyPath(this::onCssPanelCopyStyleablePathAction);
-        cssPanelController.setOnDefaultsSplit(this::onCssPanelSplitDefaultsAction);
-        cssPanelController.setOnHideDefaultValues(this::onCssPanelShowStyledOnlyAction);
         
         mainKeyEventFilter = event -> {
             //------------------------------------------------------------------
@@ -712,7 +686,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
     
     public String getFxmlText() {
-        return editorController.getFxmlText(preferences.isWildcardImports());
+        return editorController.getFxmlText(wildcardImportsPreference.getValue());
     }
 
     public boolean canPerformControlAction(DocumentControlAction controlAction) {
@@ -1381,99 +1355,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             jarAnalysisReportController.setToolStylesheet(getToolStylesheet());
         }
     }
-    
-    
-    //
-    // Inspector menu
-    //
-    void onInspectorShowAllAction(ActionEvent event) {
-        inspectorPanelController.setShowMode(InspectorPanelController.ShowMode.ALL);
-        
-    }
-    
-    void onInspectorShowEditedAction(ActionEvent event) {
-        inspectorPanelController.setShowMode(InspectorPanelController.ShowMode.EDITED);
-    }
-    
-    void onInspectorViewSectionsAction(ActionEvent event) {
-        inspectorPanelController.setViewMode(InspectorPanelController.ViewMode.SECTION);
-    }
-    
-    void onInspectorViewByPropertyNameAction(ActionEvent event) {
-        inspectorPanelController.setViewMode(InspectorPanelController.ViewMode.PROPERTY_NAME);
-    }
-    
-    void onInspectorViewByPropertyTypeAction(ActionEvent event) {
-        inspectorPanelController.setViewMode(InspectorPanelController.ViewMode.PROPERTY_TYPE);
-    }
-    
-    //
-    // CSS menu
-    //
-    
-    void onCssPanelViewRulesAction(ActionEvent event) {
-        cssPanelMenuController.viewRules();
-        cssPanelController.getDefaultsSplit().setDisable(true);
-        cssPanelController.getHideDefaultValues().setDisable(true);
-    }
 
-    void onCssPanelViewTableAction(ActionEvent event) {
-        cssPanelMenuController.viewTable();
-        cssPanelController.getDefaultsSplit().setDisable(false);
-        cssPanelController.getHideDefaultValues().setDisable(false);
-    }
-
-    void onCssPanelViewTextAction(ActionEvent event) {
-        cssPanelMenuController.viewText();
-        cssPanelController.getDefaultsSplit().setDisable(true);
-        cssPanelController.getHideDefaultValues().setDisable(true);
-    }
-
-    void onCssPanelCopyStyleablePathAction(ActionEvent event) {
-        cssPanelMenuController.copyStyleablePath();
-    }
-
-    void onCssPanelSplitDefaultsAction(ActionEvent event) {
-        cssPanelMenuController.splitDefaultsAction(cssPanelController.getDefaultsSplit());
-    }
-
-    void onCssPanelShowStyledOnlyAction(ActionEvent event) {
-        cssPanelMenuController.showStyledOnly(cssPanelController.getHideDefaultValues());
-    }
-    
-    //
-    // Hierarchy menu
-    //
-    void onHierarchyShowInfo(ActionEvent event) {
-    	documentPanelController.getHierarchyPanelController().setDisplayOption(AbstractHierarchyPanelController.DisplayOption.INFO);
-    	documentPanelController.getDocumentAccordion().setExpandedPane(
-    			documentPanelController.getDocumentAccordion().getPanes().get(0));
-
-        updateHierarchyDisplayOption();
-    }
-    
-    void onHierarchyShowFxId(ActionEvent event) {
-    	documentPanelController.getHierarchyPanelController().setDisplayOption(AbstractHierarchyPanelController.DisplayOption.FXID);
-    	documentPanelController.getDocumentAccordion().setExpandedPane(
-    			documentPanelController.getDocumentAccordion().getPanes().get(0));
-
-        updateHierarchyDisplayOption();
-    }
-    
-    void onHierarchyShowNodeId(ActionEvent event) {
-    	documentPanelController.getHierarchyPanelController().setDisplayOption(AbstractHierarchyPanelController.DisplayOption.NODEID);
-    	documentPanelController.getDocumentAccordion().setExpandedPane(
-    			documentPanelController.getDocumentAccordion().getPanes().get(0));
-
-        updateHierarchyDisplayOption();
-    }
-
-    private void updateHierarchyDisplayOption() {
-        // Update preferences
-    	preferences.updateHierarchyDisplayOption(
-        		documentPanelController.getHierarchyPanelController().getDisplayOption());
-    }
-    
     /*
      * Private
      */
@@ -1883,7 +1765,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (saveConfirmed) {
                     try {
                         watchingController.removeDocumentTarget();
-                        final byte[] fxmlBytes = editorController.getFxmlText(preferences.isWildcardImports()).getBytes(StandardCharsets.UTF_8); //NOI18N
+                        final byte[] fxmlBytes = editorController.getFxmlText(wildcardImportsPreference.getValue()).getBytes(StandardCharsets.UTF_8); //NOI18N
                         Files.write(fxmlPath, fxmlBytes);
                         updateLoadFileTime();
                         watchingController.update();

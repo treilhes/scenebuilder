@@ -47,10 +47,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -224,12 +226,12 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
     private MenuItem hideDefaultValues;
     private MenuItem defaultsSplit;
     
-    private EventHandler<ActionEvent> onViewAsTable;
-	private EventHandler<ActionEvent> onViewAsRules;
-	private EventHandler<ActionEvent> onViewAsText;
-	private EventHandler<ActionEvent> onCopyPath;
-	private EventHandler<ActionEvent> onHideDefaultValues;
-	private EventHandler<ActionEvent> onDefaultsSplit;
+    private Action viewTableAction;
+	private Action viewRulesAction;
+	private Action viewTextAction;
+	private Action copyStyleablePathAction;
+	private Action showStyledOnlyAction;
+	private Action splitDefaultsAction;
 	
     /**
      * Should be implemented by the application.
@@ -240,6 +242,50 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 
         public abstract void revealInspectorEditor(ValuePropertyMetadata propMeta);
     }
+    
+    /*
+    *
+    * Public
+    *
+    */
+	public CssPanelController(
+			@Autowired EditorController c, 
+			@Autowired Delegate delegate,
+			@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+			@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
+			@Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
+			@Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction,
+			@Autowired @Qualifier("cssPanelActions.ViewTextAction") Action viewTextAction,
+			@Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction,
+			@Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction,
+			@Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction) {
+		super(CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), c);
+		this.editorController = c;
+		this.applicationDelegate = delegate;
+		this.sceneBuilderFactory = sceneBuilderFactory;
+		this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
+
+		this.viewTableAction = viewTableAction;
+		this.viewRulesAction = viewRulesAction;
+		this.viewTextAction = viewTextAction;
+		this.copyStyleablePathAction = copyStyleablePathAction;
+		this.showStyledOnlyAction = showStyledOnlyAction;
+		this.splitDefaultsAction = splitDefaultsAction;
+	}
+   
+	/*
+	 *
+	 * FXML methods.
+	 *
+	 * @treatAsPrivate
+	 */
+	@FXML
+	public void initialize() {
+		setTableColumnsOrderingReversed(cssTableColumnsOrderingReversedPreference.getValue());
+
+		cssTableColumnsOrderingReversedPreference.getObservableValue()
+				.addListener((ob, o, n) -> setTableColumnsOrderingReversed(n));
+	}
 
     /*
      * AbstractPanelController
@@ -395,12 +441,12 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
         defaultsSplit = sceneBuilderFactory.createViewMenuItem(
         		getResources().getString("csspanel.defaults.split"));
         
-        viewAsTable.setOnAction((e) -> this.onViewAsTable.handle(e));
-        viewAsRules.setOnAction((e) -> this.onViewAsRules.handle(e));
-        viewAsText.setOnAction((e) -> this.onViewAsText.handle(e));
-        copyPath.setOnAction((e) -> this.onCopyPath.handle(e));
-        hideDefaultValues.setOnAction((e) -> this.onHideDefaultValues.handle(e));
-        defaultsSplit.setOnAction((e) -> this.onDefaultsSplit.handle(e));
+        viewAsTable.setOnAction((e) -> viewTableAction.checkAndPerform());
+        viewAsRules.setOnAction((e) -> viewRulesAction.checkAndPerform());
+        viewAsText.setOnAction((e) -> viewTextAction.checkAndPerform());
+        copyPath.setOnAction((e) -> copyStyleablePathAction.checkAndPerform());
+        hideDefaultValues.setOnAction((e) -> showStyledOnlyAction.checkAndPerform());
+        defaultsSplit.setOnAction((e) -> splitDefaultsAction.checkAndPerform());
         
         viewAs.getItems().addAll(viewAsTable, viewAsRules, viewAsText);
         menuButton.getItems().addAll(viewAs, separator, copyPath, hideDefaultValues, defaultsSplit);
@@ -472,38 +518,6 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
             return new DefaultValueTableCell();
         }
     }
-
-    /*
-     *
-     * Public
-     *
-     */
-    public CssPanelController(
-    		@Autowired EditorController c, 
-    		@Autowired Delegate delegate,
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-    		@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference
-    		) {
-        super(CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), c);
-        this.editorController = c;
-        this.applicationDelegate = delegate;
-        this.sceneBuilderFactory = sceneBuilderFactory;
-        this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
-    }
-    
-	/*
-	 *
-	 * FXML methods.
-	 *
-	 * @treatAsPrivate
-	 */
-	@FXML
-	public void initialize() {
-		setTableColumnsOrderingReversed(cssTableColumnsOrderingReversedPreference.getValue());
-
-		cssTableColumnsOrderingReversedPreference.getObservableValue()
-				.addListener((ob, o, n) -> setTableColumnsOrderingReversed(n));
-	}
 
     public String getSearchPattern() {
         return searchPattern;
@@ -2277,30 +2291,6 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 	@Override
 	public Parent getPanelRoot() {
 		return getViewController().getPanelRoot();
-	}
-
-	public void setOnViewAsTable(EventHandler<ActionEvent> onViewAsTable) {
-		this.onViewAsTable = onViewAsTable;
-	}
-
-	public void setOnViewAsRules(EventHandler<ActionEvent> onViewAsRules) {
-		this.onViewAsRules = onViewAsRules;
-	}
-
-	public void setOnViewAsText(EventHandler<ActionEvent> onViewAsText) {
-		this.onViewAsText = onViewAsText;
-	}
-
-	public void setOnCopyPath(EventHandler<ActionEvent> onCopyPath) {
-		this.onCopyPath = onCopyPath;
-	}
-
-	public void setOnHideDefaultValues(EventHandler<ActionEvent> onHideDefaultValues) {
-		this.onHideDefaultValues = onHideDefaultValues;
-	}
-
-	public void setOnDefaultsSplit(EventHandler<ActionEvent> onDefaultsSplit) {
-		this.onDefaultsSplit = onDefaultsSplit;
 	}
 
 	public MenuItem getHideDefaultValues() {
