@@ -1,5 +1,7 @@
 package com.oracle.javafx.scenebuilder.api.action;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import javafx.scene.input.KeyCombination;
@@ -9,14 +11,14 @@ public abstract class AbstractAction implements Action {
 	private final String nameI18nKey;
 	private final String descriptionI18nKey;
 	private final String rawAccelerator;
-	
+
 	public AbstractAction() {
 		ActionMeta actionMeta = this.getClass().getAnnotation(ActionMeta.class);
-		
+
 		if (actionMeta == null) {
 			throw new RuntimeException("Class inheriting AbstractAction class must be annotated with @ActionMeta");
 		}
-		
+
 		nameI18nKey = actionMeta.nameKey();
 		descriptionI18nKey = actionMeta.descriptionKey();
 		rawAccelerator = actionMeta.accelerator();
@@ -39,7 +41,15 @@ public abstract class AbstractAction implements Action {
 
 	@Override
 	public KeyCombination getWishedAccelerator() {
-		return rawAccelerator == null ? null : KeyCombination.valueOf(rawAccelerator);
+		if (rawAccelerator == null) {
+			return null;
+		}
+
+		if (EditorPlatform.IS_MAC) {
+			return KeyCombination.valueOf(KeyboardModifier.toMacAcceleratorString(rawAccelerator));
+		} else {
+			return KeyCombination.valueOf(rawAccelerator);
+		}
 	}
 
 	@Override
@@ -48,5 +58,5 @@ public abstract class AbstractAction implements Action {
 			perform();
 		}
 	}
-	
+
 }

@@ -13,5 +13,11 @@ public class KeyboardModifier {
 	    	return KeyCombination.CONTROL_DOWN;
 	    }
 	}
-	
+
+	public static String toMacAcceleratorString(String rawAccelerator) {
+		if (EditorPlatform.IS_MAC) {
+			rawAccelerator = rawAccelerator.toLowerCase().replace("ctrl", "meta");
+	    }
+		return rawAccelerator;
+	}
 }
