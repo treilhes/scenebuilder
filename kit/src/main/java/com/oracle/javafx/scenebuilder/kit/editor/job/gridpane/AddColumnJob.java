@@ -39,18 +39,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup.Type;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup.Type;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  * Job invoked when adding columns.
@@ -70,12 +72,12 @@ public class AddColumnJob extends BatchSelectionJob {
     private final Map<FXOMObject, Set<Integer>> targetGridPanes = new HashMap<>();
     private final Position position;
 
-    public AddColumnJob(EditorController editorController, Position position) {
-        super(editorController);
+    public AddColumnJob(ApplicationContext context, Editor editor, Position position) {
+        super(context, editor);
         assert position == Position.BEFORE || position == Position.AFTER;
         this.position = position;
     }
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
@@ -94,8 +96,8 @@ public class AddColumnJob extends BatchSelectionJob {
 
             // Add sub jobs
             // First add the new column constraints
-            final Job addConstraints = new AddColumnConstraintsJob(
-                    getEditorController(), position, targetGridPanes);
+            final Job addConstraints = new AddColumnConstraintsJob(getContext(),
+                    getEditorController(), position, targetGridPanes).extend();
             result.add(addConstraints);
             // Then move the column content
             result.addAll(moveColumnContent());
@@ -125,7 +127,7 @@ public class AddColumnJob extends BatchSelectionJob {
             assert targetIndexes.size() >= 1;
             final Set<Integer> addedIndexes
                     = GridPaneJobUtils.getAddedIndexes(targetIndexes, position);
-            
+
             asg = new GridSelectionGroup(targetGridPane, Type.COLUMN, addedIndexes);
         }
         return asg;
@@ -147,7 +149,7 @@ public class AddColumnJob extends BatchSelectionJob {
             int targetIndex = iterator.next();
             while (targetIndex != -1) {
                 // Move the columns content :
-                // - from the target index 
+                // - from the target index
                 // - to the next target index if any or the last column index otherwise
                 int fromIndex, toIndex;
 
@@ -181,14 +183,14 @@ public class AddColumnJob extends BatchSelectionJob {
                         return result;
                 }
 
-                // If fromIndex >= columnsSize, we are below the last existing column 
+                // If fromIndex >= columnsSize, we are below the last existing column
                 // => no column content to move
                 if (fromIndex < columnsSize) {
                     final int offset = 1 + shiftIndex;
                     final List<Integer> indexes
                             = GridPaneJobUtils.getIndexes(fromIndex, toIndex);
-                    final ReIndexColumnContentJob reIndexJob = new ReIndexColumnContentJob(
-                            getEditorController(), offset, targetGridPane, indexes);
+                    final Job reIndexJob = new ReIndexColumnContentJob(getContext(),
+                            getEditorController(), offset, targetGridPane, indexes).extend();
                     result.add(reIndexJob);
                 }
 
@@ -205,10 +207,10 @@ public class AddColumnJob extends BatchSelectionJob {
      * @return the list of target indexes
      */
     private Set<Integer> getTargetColumnIndexes(
-            final EditorController editorController,
+            final Editor editor,
             final FXOMObject targetGridPane) {
 
-        final Selection selection = editorController.getSelection();
+        final Selection selection = editor.getSelection();
         final AbstractSelectionGroup asg = selection.getGroup();
 
         final Set<Integer> result = new LinkedHashSet<>();

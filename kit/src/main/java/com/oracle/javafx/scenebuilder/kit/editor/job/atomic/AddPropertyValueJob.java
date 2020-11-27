@@ -32,11 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 
 /**
  *
@@ -46,15 +47,15 @@ public class AddPropertyValueJob extends Job {
     private final FXOMObject value;
     private final FXOMPropertyC targetProperty;
     private final int targetIndex;
-    
-    public AddPropertyValueJob(FXOMObject value, FXOMPropertyC targetProperty, 
-            int targetIndex, EditorController editorController) {
-        super(editorController);
-        
+
+    public AddPropertyValueJob(ApplicationContext context, FXOMObject value, FXOMPropertyC targetProperty,
+            int targetIndex, Editor editor) {
+        super(context, editor);
+
         assert value != null;
         assert targetProperty != null;
         assert targetIndex >= -1;
-        
+
         this.value = value;
         this.targetProperty = targetProperty;
         this.targetIndex = targetIndex;
@@ -63,7 +64,7 @@ public class AddPropertyValueJob extends Job {
     /*
      * AddPropertyValueJob
      */
-    
+
     @Override
     public boolean isExecutable() {
         return (value.getParentProperty() == null)
@@ -80,11 +81,11 @@ public class AddPropertyValueJob extends Job {
     public void undo() {
         assert value.getParentProperty() == targetProperty;
         assert value.getParentCollection() == null;
-        
+
         getEditorController().getFxomDocument().beginUpdate();
         value.removeFromParentProperty();
         getEditorController().getFxomDocument().endUpdate();
-        
+
         assert value.getParentProperty() == null;
         assert value.getParentCollection() == null;
     }
@@ -93,12 +94,13 @@ public class AddPropertyValueJob extends Job {
     public void redo() {
         assert value.getParentProperty() == null;
         assert value.getParentCollection() == null;
-        
+
         getEditorController().getFxomDocument().beginUpdate();
         value.addToParentProperty(targetIndex, targetProperty);
         getEditorController().getFxomDocument().endUpdate();
 
-        WarnThemeAlert.showAlertIfRequired(getEditorController(), value, getEditorController().getOwnerWindow());
+        //TODO ensure the new framework execute the following alert
+        //WarnThemeAlert.showAlertIfRequired(getEditorController(), value, getEditorController().getOwnerWindow());
 
         assert value.getParentProperty() == targetProperty;
         assert value.getParentCollection() == null;
@@ -109,5 +111,18 @@ public class AddPropertyValueJob extends Job {
         // Should normally not reach the user
         return getClass().getSimpleName();
     }
-    
+
+	public FXOMObject getValue() {
+		return value;
+	}
+
+	public FXOMPropertyC getTargetProperty() {
+		return targetProperty;
+	}
+
+	public int getTargetIndex() {
+		return targetIndex;
+	}
+
+
 }

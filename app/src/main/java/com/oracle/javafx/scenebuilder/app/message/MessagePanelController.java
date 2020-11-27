@@ -31,11 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.app.message;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -51,34 +53,34 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 /**
- * 
+ *
  */
 public class MessagePanelController extends AbstractFxmlPanelController {
 
     private double panelWidth;
-    
+
     @FXML private ScrollPane scrollPane;
     @FXML private GridPane gridPane;
     @FXML private Button clearButton;
-    
+
     @FXML
     public void onClear(ActionEvent event) {
         getEditorController().getMessageLog().clear();
     }
-    
-    public MessagePanelController(EditorController editorController) {
+
+    public MessagePanelController(Editor editorController) {
         super(MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle(), editorController); //NOI18N
     }
-    
-    
+
+
     public void setPanelWidth(double panelWidth) {
         this.panelWidth = panelWidth;
         if (scrollPane != null) {
             updateScrollPaneWidth();
         }
     }
-    
-    
+
+
     /*
      * AbstractPanelController
      */
@@ -113,32 +115,32 @@ public class MessagePanelController extends AbstractFxmlPanelController {
      */
     @Override
     public void controllerDidLoadFxml() {
-        
+
         // Sanity checks
         assert scrollPane != null;
         assert gridPane != null;
         assert clearButton != null;
-                
-        // Listens to the message log 
+
+        // Listens to the message log
         getEditorController().getMessageLog().revisionProperty().addListener(
                 (ChangeListener<Number>) (ov, t, t1) -> messageLogDidChange());
-        
+
         updateScrollPaneWidth();
         messageLogDidChange();
     }
-    
-    
-    
+
+
+
     /*
      * Private
      */
-    
+
     private void messageLogDidChange() {
         assert gridPane != null;
         gridPane.getChildren().clear();
         int rowIndex = 0;
         int columnIndex = 0;
-        for (MessageLogEntry mle : getEditorController().getMessageLog().getEntries()) {
+        for (MessageEntry mle : getEditorController().getMessageLog().getEntries()) {
             if (mle.getType() == MessageLogEntry.Type.WARNING) {
                 Button dismissButton = new Button("x"); //NOI18N
                 dismissButton.addEventHandler(MouseEvent.MOUSE_RELEASED, t -> getEditorController().getMessageLog().clearEntry(mle));
@@ -165,8 +167,8 @@ public class MessagePanelController extends AbstractFxmlPanelController {
             }
         }
     }
-    
-    
+
+
     private void updateScrollPaneWidth() {
         assert scrollPane != null;
         scrollPane.setPrefWidth(panelWidth);

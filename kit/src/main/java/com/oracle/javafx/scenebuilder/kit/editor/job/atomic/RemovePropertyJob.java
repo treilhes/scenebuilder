@@ -31,10 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
  *
@@ -42,30 +44,30 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
 public class RemovePropertyJob extends Job {
 
     private final FXOMProperty targetProperty;
-    
+
     private FXOMInstance parentInstance;
     private int indexInParentInstance;
-    
-    public RemovePropertyJob(FXOMProperty targetProperty, EditorController editorController) {
-        super(editorController);
-        
+
+    public RemovePropertyJob(ApplicationContext context, FXOMProperty targetProperty, Editor editor) {
+        super(context, editor);
+
         assert targetProperty != null;
         this.targetProperty = targetProperty;
     }
-    
+
     public FXOMProperty getTargetProperty() {
         return targetProperty;
     }
 
     public Job makeMirrorJob(FXOMProperty anotherProperty) {
-        return new AddPropertyJob(anotherProperty, parentInstance, 
-                indexInParentInstance, getEditorController());
+        return new AddPropertyJob(getContext(), anotherProperty, parentInstance,
+                indexInParentInstance, getEditorController()).extend();
     }
 
     /*
      * Job
      */
-    
+
     @Override
     public boolean isExecutable() {
         return targetProperty.getParentInstance() != null;
@@ -75,7 +77,7 @@ public class RemovePropertyJob extends Job {
     public void execute() {
         assert parentInstance == null;
         assert isExecutable();
-        
+
         parentInstance = targetProperty.getParentInstance();
         indexInParentInstance = targetProperty.getIndexInParentInstance();
         redo();
@@ -84,11 +86,11 @@ public class RemovePropertyJob extends Job {
     @Override
     public void undo() {
         assert targetProperty.getParentInstance() == null;
-        
+
         getEditorController().getFxomDocument().beginUpdate();
         targetProperty.addToParentInstance(indexInParentInstance, parentInstance);
         getEditorController().getFxomDocument().endUpdate();
-        
+
         assert targetProperty.getParentInstance() == parentInstance;
         assert targetProperty.getIndexInParentInstance() == indexInParentInstance;
     }
@@ -97,21 +99,21 @@ public class RemovePropertyJob extends Job {
     public void redo() {
         assert targetProperty.getParentInstance() == parentInstance;
         assert targetProperty.getIndexInParentInstance() == indexInParentInstance;
-        
+
         getEditorController().getFxomDocument().beginUpdate();
         targetProperty.removeFromParentInstance();
         getEditorController().getFxomDocument().endUpdate();
-        
+
         assert targetProperty.getParentInstance() == null;
     }
 
     @Override
     public String getDescription() {
         // Should normally not reach the user
-        return getClass().getSimpleName() 
-                + "[" 
+        return getClass().getSimpleName()
+                + "["
                 + targetProperty.getName()
                 + "]";
     }
-    
+
 }

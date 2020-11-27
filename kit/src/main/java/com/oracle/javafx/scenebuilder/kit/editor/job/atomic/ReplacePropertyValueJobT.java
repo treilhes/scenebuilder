@@ -32,35 +32,37 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
  *
  */
 public class ReplacePropertyValueJobT extends Job {
-    
+
     private final FXOMPropertyT hostProperty;
     private final FXOMObject newValue;
-    
+
     private FXOMInstance hostInstance;
     private FXOMPropertyC newProperty;
 
-    public ReplacePropertyValueJobT(FXOMPropertyT hostProperty, FXOMObject newValue, EditorController editorController) {
-        super(editorController);
-        
+    public ReplacePropertyValueJobT(ApplicationContext context, FXOMPropertyT hostProperty, FXOMObject newValue, Editor editor) {
+        super(context, editor);
+
         assert hostProperty != null;
         assert newValue != null;
-        
+
         this.hostProperty = hostProperty;
         this.newValue = newValue;
     }
 
-    
+
     /*
      * Job
      */
@@ -73,7 +75,7 @@ public class ReplacePropertyValueJobT extends Job {
     public void execute() {
         hostInstance = hostProperty.getParentInstance();
         newProperty = new FXOMPropertyC(hostProperty.getFxomDocument(), hostProperty.getName());
-        
+
         // Now same as redo()
         redo();
     }
@@ -82,7 +84,7 @@ public class ReplacePropertyValueJobT extends Job {
     public void undo() {
         assert hostProperty.getParentInstance() == null;
         assert newProperty.getParentInstance() == hostInstance;
-        
+
         newProperty.removeFromParentInstance();
         newValue.removeFromParentProperty();
         hostProperty.addToParentInstance(-1, hostInstance);
@@ -92,7 +94,7 @@ public class ReplacePropertyValueJobT extends Job {
     public void redo() {
         assert hostProperty.getParentInstance() == hostInstance;
         assert newProperty.getParentInstance() == null;
-        
+
         hostProperty.removeFromParentInstance();
         newValue.addToParentProperty(-1, newProperty);
         newProperty.addToParentInstance(-1, hostInstance);
@@ -102,7 +104,7 @@ public class ReplacePropertyValueJobT extends Job {
     public String getDescription() {
         return getClass().getSimpleName();
     }
-    
-    
-    
+
+
+
 }

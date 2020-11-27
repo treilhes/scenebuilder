@@ -33,10 +33,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -47,7 +50,7 @@ import javafx.scene.shape.QuadCurve;
 
 /**
  *
- * 
+ *
  */
 public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
 
@@ -56,24 +59,28 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     private final Circle endHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);
     private final Line leftHandle = new Line();
     private final Line rightHandle = new Line();
+	private final ApplicationContext context;
 
-    
-    public QuadCurveHandles(ContentPanelController contentPanelController,
+
+    public QuadCurveHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, QuadCurve.class);
-        
+        this.context = context;
+
         setupHandleState(startHandle);
         setupHandleState(controlHandle);
         setupHandleState(endHandle);
         leftHandle.getStyleClass().add(SELECTION_WIRE);
         rightHandle.getStyleClass().add(SELECTION_WIRE);
-        
+
         setupHandles(startHandle);
         setupHandles(controlHandle);
         setupHandles(endHandle);
         setupHandles(leftHandle);
         setupHandles(rightHandle);
-        
+
         final List<Node> rootNodeChildren = getRootNode().getChildren();
         rootNodeChildren.add(leftHandle);
         rootNodeChildren.add(rightHandle);
@@ -81,18 +88,18 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
         rootNodeChildren.add(controlHandle);
         rootNodeChildren.add(endHandle);
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
-    
+
     /*
      * AbstractCurveHandles
      */
     @Override
     protected void layoutDecoration() {
         final QuadCurve l = getSceneGraphObject();
-        
+
         final boolean snapToPixel = true;
         final Point2D s = sceneGraphObjectToDecoration(l.getStartX(), l.getStartY(), snapToPixel);
         final Point2D c = sceneGraphObjectToDecoration(l.getControlX(), l.getControlY(), snapToPixel);
@@ -104,7 +111,7 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
         controlHandle.setCenterY(c.getY());
         endHandle.setCenterX(e.getX());
         endHandle.setCenterY(e.getY());
-        
+
         leftHandle.setStartX(s.getX());
         leftHandle.setStartY(s.getY());
         leftHandle.setEndX(c.getX());
@@ -118,7 +125,7 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     @Override
     protected void startListeningToSceneGraphObject() {
         super.startListeningToSceneGraphObject();
-        
+
         final QuadCurve l = getSceneGraphObject();
         l.startXProperty().addListener(coordinateListener);
         l.startYProperty().addListener(coordinateListener);
@@ -131,7 +138,7 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     @Override
     protected void stopListeningToSceneGraphObject() {
         super.stopListeningToSceneGraphObject();
-        
+
         final QuadCurve l = getSceneGraphObject();
         l.startXProperty().removeListener(coordinateListener);
         l.startYProperty().removeListener(coordinateListener);
@@ -144,20 +151,20 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     @Override
     public AbstractGesture findGesture(Node node) {
         final AbstractGesture result;
-        
+
         if (node == startHandle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.START);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.START);
         } else if (node == controlHandle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.CONTROL1);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.CONTROL1);
         } else if (node == endHandle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.END);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.END);
         } else {
             result = null;
         }
-        
+
         return result;
     }
 
@@ -167,22 +174,22 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
         setupHandleState(controlHandle);
         setupHandleState(endHandle);
     }
-    
+
     /*
      * Private
      */
-    
+
     private void setupHandleState(Circle handleCircle) {
-        
+
         final String styleClass = isEnabled() ? SELECTION_HANDLES : SELECTION_HANDLES_DIM;
         final Cursor cursor = isEnabled() ? Cursor.OPEN_HAND : Cursor.DEFAULT;
-        
+
         handleCircle.getStyleClass().add(styleClass);
         handleCircle.setCursor(cursor);
     }
-    
-    
-    /* 
+
+
+    /*
      * Wraper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void setupHandles(Node node) {

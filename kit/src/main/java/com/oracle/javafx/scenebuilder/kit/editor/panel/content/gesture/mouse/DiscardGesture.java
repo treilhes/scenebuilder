@@ -31,24 +31,24 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
 
 import javafx.scene.input.KeyEvent;
 
 /**
  *
- * 
+ *
  */
 public class DiscardGesture extends AbstractMouseGesture {
 
-    public DiscardGesture(ContentPanelController contentPanelController) {
+    public DiscardGesture(Content contentPanelController) {
         super(contentPanelController);
     }
 
     /*
      * AbstractMouseGesture
      */
-    
+
     @Override
     protected void mousePressed() {
     }

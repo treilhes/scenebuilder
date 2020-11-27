@@ -31,6 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
@@ -42,8 +47,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.Tree
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.TreeTableColumnTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -55,21 +58,24 @@ import javafx.scene.control.TreeTableView;
  */
 public class TreeTableColumnDriver extends AbstractDriver {
 
-    public TreeTableColumnDriver(ContentPanelController contentPanelController) {
+	private final ApplicationContext context;
+
+    public TreeTableColumnDriver(ApplicationContext context, ContentPanelController contentPanelController) {
         super(contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof TreeTableColumn;
         assert fxomObject instanceof FXOMInstance;
-        return new TreeTableColumnHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new TreeTableColumnHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
-    
+
     @Override
     public AbstractPring<?> makePring(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof TreeTableColumn;
@@ -78,11 +84,11 @@ public class TreeTableColumnDriver extends AbstractDriver {
     }
 
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
+    public AbstractTring<?> makeTring(DropTarget dropTarget) {
         assert dropTarget != null;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
         assert dropTarget.getTargetObject().getSceneGraphObject() instanceof TreeTableColumn;
-        
+
         return new TreeTableColumnTring(contentPanelController, (FXOMInstance) dropTarget.getTargetObject());
     }
 
@@ -95,7 +101,7 @@ public class TreeTableColumnDriver extends AbstractDriver {
     public AbstractCurveEditor<?> makeCurveEditor(FXOMObject fxomObject) {
         return null;
     }
-    
+
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
         // TODO(elp) : implement TableColumnDriver.refinePick()
@@ -120,16 +126,16 @@ public class TreeTableColumnDriver extends AbstractDriver {
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof TreeTableColumn;
-        
-        final TreeTableColumn<?,?> tc 
+
+        final TreeTableColumn<?,?> tc
                 = (TreeTableColumn<?,?>) fxomObject.getSceneGraphObject();
-        final TreeTableView<?> tv 
+        final TreeTableView<?> tv
                 = tc.getTreeTableView();
-        final TreeTableViewDesignInfoX di 
+        final TreeTableViewDesignInfoX di
                 = new TreeTableViewDesignInfoX();
-        final Bounds tcBounds 
+        final Bounds tcBounds
                 = tv.localToScene(di.getColumnBounds(tc), true /* rootScene */);
-        
+
         return tcBounds.intersects(bounds);
     }
 }

@@ -39,11 +39,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
@@ -275,15 +275,15 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
         // Since we only have one case of this, the generic case
         // (bounds=properties) has not been implemented.
         // (to avoid to add complexity for a single case)
-        String[] scrollBarPropsArray = { Editor.hValuePropName, Editor.vValuePropName };
-        String[] scrollBarHprops = { Editor.hMinPropName, Editor.hMaxPropName };
-        String[] scrollBarVprops = { Editor.vMinPropName, Editor.vMaxPropName };
+        String[] scrollBarPropsArray = { AbstractEditor.hValuePropName, AbstractEditor.vValuePropName };
+        String[] scrollBarHprops = { AbstractEditor.hMinPropName, AbstractEditor.hMaxPropName };
+        String[] scrollBarVprops = { AbstractEditor.vMinPropName, AbstractEditor.vMaxPropName };
         List<String> scrollBarProps = Arrays.asList(scrollBarPropsArray);
         if (!scrollBarProps.contains(propMeta.getName().toString())) {
             return;
         }
         String[] minMaxProps;
-        if (propMeta.getName().toString().equals(Editor.hValuePropName)) {
+        if (propMeta.getName().toString().equals(AbstractEditor.hValuePropName)) {
             minMaxProps = scrollBarHprops;
         } else {
             minMaxProps = scrollBarVprops;

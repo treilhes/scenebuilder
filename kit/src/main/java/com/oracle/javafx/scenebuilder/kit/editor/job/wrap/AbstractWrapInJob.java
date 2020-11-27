@@ -36,29 +36,31 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.JobUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxControllerJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -77,57 +79,61 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected Class<?> newContainerClass;
     protected FXOMInstance oldContainer, newContainer;
 
-    public AbstractWrapInJob(EditorController editorController) {
-        super(editorController);
+    public AbstractWrapInJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
+    //TODO find who use this method and make them extend the result
+    //TODO remove "ToExtend" to get the original method name (was added to generate compilation errors and find users)
+    //TODO or delete if not used
     public static AbstractWrapInJob getWrapInJob(
-            EditorController editorController,
+    		ApplicationContext context,
+            Editor editor,
             Class<?> wrappingClass) {
 
         assert EditorController.getClassesSupportingWrapping().contains(wrappingClass);
         final AbstractWrapInJob job;
         if (wrappingClass == javafx.scene.layout.AnchorPane.class) {
-            job = new WrapInAnchorPaneJob(editorController);
+            job = new WrapInAnchorPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.BorderPane.class) {
-            job = new WrapInBorderPaneJob(editorController);
+            job = new WrapInBorderPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.ButtonBar.class) {
-            job = new WrapInButtonBarJob(editorController);
+            job = new WrapInButtonBarJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.DialogPane.class) {
-            job = new WrapInDialogPaneJob(editorController);
+            job = new WrapInDialogPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.FlowPane.class) {
-            job = new WrapInFlowPaneJob(editorController);
+            job = new WrapInFlowPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.GridPane.class) {
-            job = new WrapInGridPaneJob(editorController);
+            job = new WrapInGridPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.Group.class) {
-            job = new WrapInGroupJob(editorController);
+            job = new WrapInGroupJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.HBox.class) {
-            job = new WrapInHBoxJob(editorController);
+            job = new WrapInHBoxJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.Pane.class) {
-            job = new WrapInPaneJob(editorController);
+            job = new WrapInPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.ScrollPane.class) {
-            job = new WrapInScrollPaneJob(editorController);
+            job = new WrapInScrollPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.SplitPane.class) {
-            job = new WrapInSplitPaneJob(editorController);
+            job = new WrapInSplitPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.StackPane.class) {
-            job = new WrapInStackPaneJob(editorController);
+            job = new WrapInStackPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.TabPane.class) {
-            job = new WrapInTabPaneJob(editorController);
+            job = new WrapInTabPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.text.TextFlow.class) {
-            job = new WrapInTextFlowJob(editorController);
+            job = new WrapInTextFlowJob(context, editor);
         } else if (wrappingClass == javafx.scene.layout.TilePane.class) {
-            job = new WrapInTilePaneJob(editorController);
+            job = new WrapInTilePaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.TitledPane.class) {
-            job = new WrapInTitledPaneJob(editorController);
+            job = new WrapInTitledPaneJob(context, editor);
         } else if (wrappingClass == javafx.scene.control.ToolBar.class) {
-            job = new WrapInToolBarJob(editorController);
+            job = new WrapInToolBarJob(context, editor);
         } else if (wrappingClass == javafx.scene.Scene.class) {
-            job = new WrapInSceneJob(editorController);
+            job = new WrapInSceneJob(context, editor);
         } else if (wrappingClass == javafx.stage.Stage.class) {
-            job = new WrapInStageJob(editorController);
+            job = new WrapInStageJob(context, editor);
         } else {
             assert wrappingClass == javafx.scene.layout.VBox.class; // Because of (1)
-            job = new WrapInVBoxJob(editorController);
+            job = new WrapInVBoxJob(context, editor);
         }
         return job;
     }
@@ -209,10 +215,10 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
 
                 // Add the new container to the old container
                 final int newContainerIndex = getIndex(oldContainer, children);
-                final Job newContainerAddValueJob = new AddPropertyValueJob(
+                final Job newContainerAddValueJob = new AddPropertyValueJob(getContext(),
                         newContainer,
                         oldContainerProperty,
-                        newContainerIndex, getEditorController());
+                        newContainerIndex, getEditorController()).extend();
                 result.add(newContainerAddValueJob);
 
                 // Remove children from the old container
@@ -231,26 +237,26 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 final String fxController = rootObject.getFxController();
                 // First remove the fx:controller/fx:root from the old root object
                 if (isFxRoot) {
-                    final ToggleFxRootJob fxRootJob = new ToggleFxRootJob(getEditorController());
+                    final Job fxRootJob = new ToggleFxRootJob(getContext(), getEditorController()).extend();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final ModifyFxControllerJob fxControllerJob
-                            = new ModifyFxControllerJob(rootObject, null, getEditorController());
+                    final Job fxControllerJob
+                            = new ModifyFxControllerJob(getContext(), rootObject, null, getEditorController()).extend();
                     result.add(fxControllerJob);
                 }
                 // Then set the new container as root object
-                final Job setDocumentRoot = new SetDocumentRootJob(
-                        newContainer, getEditorController());
+                final Job setDocumentRoot = new SetDocumentRootJob(getContext(),
+                        newContainer, getEditorController()).extend();
                 result.add(setDocumentRoot);
                 // Finally add the fx:controller/fx:root to the new root object
                 if (isFxRoot) {
-                    final ToggleFxRootJob fxRootJob = new ToggleFxRootJob(getEditorController());
+                    final Job fxRootJob = new ToggleFxRootJob(getContext(), getEditorController()).extend();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final ModifyFxControllerJob fxControllerJob
-                            = new ModifyFxControllerJob(newContainer, fxController, getEditorController());
+                    final Job fxControllerJob
+                            = new ModifyFxControllerJob(getContext(), newContainer, fxController, getEditorController()).extend();
                     result.add(fxControllerJob);
                 }
             }
@@ -258,7 +264,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             //==================================================================
             // STEP #2
             //==================================================================
-            // This step depends on the new container property 
+            // This step depends on the new container property
             // (either either the SUB COMPONENT or the CONTENT property)
             //------------------------------------------------------------------
             result.addAll(wrapChildrenJobs(children));
@@ -296,11 +302,11 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         int index = 0;
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final Job addValueJob = new AddPropertyValueJob(
+            final Job addValueJob = new AddPropertyValueJob(getContext(),
                     child,
                     containerProperty,
                     index++,
-                    getEditorController());
+                    getEditorController()).extend();
             jobs.add(addValueJob);
         }
         return jobs;
@@ -313,9 +319,9 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         final List<Job> jobs = new ArrayList<>();
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final Job removeValueJob = new RemovePropertyValueJob(
+            final Job removeValueJob = new RemovePropertyValueJob(getContext(),
                     child,
-                    getEditorController());
+                    getEditorController()).extend();
             jobs.add(removeValueJob);
         }
         return jobs;
@@ -345,19 +351,19 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                         childBounds.getMinX(), childBounds.getMinY());
                 double layoutX = point.getX() - unionOfBounds.getMinX();
                 double layoutY = point.getY() - unionOfBounds.getMinY();
-                final ModifyObjectJob modifyLayoutX = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutX = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutX", layoutX, getEditorController());
                 jobs.add(modifyLayoutX);
-                final ModifyObjectJob modifyLayoutY = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutY = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutY", layoutY, getEditorController());
                 jobs.add(modifyLayoutY);
             } else {
                 assert child.getSceneGraphObject() instanceof Node;
 
-                final ModifyObjectJob modifyLayoutX = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutX = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutX", 0.0, getEditorController());
                 jobs.add(modifyLayoutX);
-                final ModifyObjectJob modifyLayoutY = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutY = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutY", 0.0, getEditorController());
                 jobs.add(modifyLayoutY);
             }
@@ -368,7 +374,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 for (FXOMProperty p : fxomInstance.getProperties().values()) {
                     final Class<?> residentClass = p.getName().getResidenceClass();
                     if (residentClass != null) {
-                        jobs.add(new RemovePropertyJob(p, getEditorController()));
+                        jobs.add(new RemovePropertyJob(getContext(), p, getEditorController()).extend());
                     }
                 }
             }

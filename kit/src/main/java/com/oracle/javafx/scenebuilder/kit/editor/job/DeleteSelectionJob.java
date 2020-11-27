@@ -31,10 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 
 /**
  * This job manages either an ObjectSelectionGroup or a GridSelectionGroup
@@ -44,8 +47,8 @@ public class DeleteSelectionJob extends Job {
 
     private Job subJob;
 
-    public DeleteSelectionJob(EditorController editorController) {
-        super(editorController);
+    public DeleteSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         buildSubJobs();
     }
 
@@ -88,9 +91,9 @@ public class DeleteSelectionJob extends Job {
 
         final Selection selection = getEditorController().getSelection();
         if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            subJob = new DeleteObjectSelectionJob(getEditorController());
+            subJob = new DeleteObjectSelectionJob(getContext(), getEditorController()).extend();
         } else if (selection.getGroup() instanceof GridSelectionGroup) {
-            subJob = new DeleteGridSelectionJob(getEditorController());
+            subJob = new DeleteGridSelectionJob(getContext(), getEditorController()).extend();
         } else {
             assert selection.getGroup() == null : "Add implementation for " + selection.getGroup();
         }

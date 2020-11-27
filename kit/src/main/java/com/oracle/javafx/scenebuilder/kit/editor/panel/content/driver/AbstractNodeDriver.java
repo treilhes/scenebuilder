@@ -31,17 +31,23 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.CurveEditor;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.api.Pring;
+import com.oracle.javafx.scenebuilder.api.Resizer;
+import com.oracle.javafx.scenebuilder.api.Tring;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerXYDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.AbstractCurveEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.NodeHandles;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.NodePring;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.CanvasResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.ImageViewResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.RegionResizer;
@@ -52,11 +58,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.sh
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.shape.EllipseResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.shape.RectangleResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.shape.TextResizer;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.NodeTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -80,30 +82,35 @@ import javafx.scene.web.WebView;
  */
 public abstract class AbstractNodeDriver extends AbstractDriver {
 
-    public AbstractNodeDriver(ContentPanelController contentPanelController) {
+    private ApplicationContext context;
+
+	public AbstractNodeDriver(
+    		ApplicationContext context,
+    		Content contentPanelController) {
         super(contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
-    public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
+    public Handles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Node;
         assert fxomObject instanceof FXOMInstance;
-        return new NodeHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new NodeHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
-    
+
     @Override
-    public AbstractPring<?> makePring(FXOMObject fxomObject) {
+    public Pring<?> makePring(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Node;
         assert fxomObject instanceof FXOMInstance;
         return new NodePring(contentPanelController, (FXOMInstance)fxomObject);
     }
 
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
+    public Tring<?> makeTring(DropTarget dropTarget) {
         assert dropTarget != null;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
         assert dropTarget.getTargetObject().getSceneGraphObject() instanceof Node;
@@ -111,14 +118,14 @@ public abstract class AbstractNodeDriver extends AbstractDriver {
     }
 
     @Override
-    public AbstractResizer<?> makeResizer(FXOMObject fxomObject) {
-        final AbstractResizer<?> result;
-        
+    public Resizer<?> makeResizer(FXOMObject fxomObject) {
+        final Resizer<?> result;
+
         /*
-         * To avoid creating one driver for each resizer, 
+         * To avoid creating one driver for each resizer,
          * we make the dispatch here:
          */
-        
+
         final Object sceneGraphObject = fxomObject.getSceneGraphObject();
         if (sceneGraphObject instanceof ImageView) {
             result = new ImageViewResizer((ImageView) sceneGraphObject);
@@ -143,27 +150,27 @@ public abstract class AbstractNodeDriver extends AbstractDriver {
         } else {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     @Override
-    public AbstractCurveEditor<?> makeCurveEditor(FXOMObject fxomObject) {
+    public CurveEditor<?> makeCurveEditor(FXOMObject fxomObject) {
         return null;
     }
-    
+
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
         return fxomObject;
     }
 
     @Override
-    public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
+    public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject() != null; // Because mouse cannot be above a unresolved component
-        
-        final AbstractDropTarget result;
-        
+
+        final DropTarget result;
+
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
         final DesignHierarchyMask mask = new DesignHierarchyMask(fxomObject);
         if (mask.isFreeChildPositioning()) {
@@ -175,14 +182,14 @@ public abstract class AbstractNodeDriver extends AbstractDriver {
                 result = new ContainerZDropTarget(fxomInstance, null);
             }
         }
-        
+
         return result;
     }
 
     @Override
     public Node getInlineEditorBounds(FXOMObject fxomObject) {
         final Node result;
-        
+
         final Object sceneGraphObject = fxomObject.getSceneGraphObject();
         if (sceneGraphObject instanceof ComboBox) {
             result = (ComboBox<?>) sceneGraphObject;
@@ -197,21 +204,21 @@ public abstract class AbstractNodeDriver extends AbstractDriver {
         } else {
             result = null;
         }
-        
+
         return result;
     }
 
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Node;
-        
+
         // Note: bounds are in root scene coordinates
-        final Node sceneGraphNode 
+        final Node sceneGraphNode
                 = (Node) fxomObject.getSceneGraphObject();
-        final Bounds sceneGraphNodeBounds 
+        final Bounds sceneGraphNodeBounds
                 = sceneGraphNode.localToScene(sceneGraphNode.getLayoutBounds(), true /* rootScene */);
 
         return sceneGraphNodeBounds.intersects(bounds);
     }
-    
+
 }

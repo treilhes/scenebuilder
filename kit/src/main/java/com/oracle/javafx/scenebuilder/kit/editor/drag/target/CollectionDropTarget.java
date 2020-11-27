@@ -33,17 +33,19 @@ package com.oracle.javafx.scenebuilder.kit.editor.drag.target;
 
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
  */
 public class CollectionDropTarget extends AbstractDropTarget {
-    
+
     private final FXOMCollection targetCollection;
     private final int targetIndex;
 
@@ -59,7 +61,7 @@ public class CollectionDropTarget extends AbstractDropTarget {
     public int getTargetIndex() {
         return targetIndex;
     }
-    
+
     /*
      * AbstractDropTarget
      */
@@ -69,23 +71,23 @@ public class CollectionDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public boolean acceptDragSource(AbstractDragSource dragSource) {
+    public boolean acceptDragSource(DragSource dragSource) {
         assert dragSource != null;
-        
+
         // TODO(elp) : can we really put any kind of FXOMObject in a collection ?
         return dragSource.getDraggedObjects().isEmpty() == false;
     }
 
     @Override
-    public Job makeDropJob(AbstractDragSource dragSource, EditorController editorController) {
+    public Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController) {
         throw new UnsupportedOperationException("To be implemented"); //NOI18N
     }
-    
+
     @Override
     public boolean isSelectRequiredAfterDrop() {
         return true;
     }
-    
+
     /*
      * Object
      */
@@ -119,6 +121,6 @@ public class CollectionDropTarget extends AbstractDropTarget {
     public String toString() {
         return "CollectionDropTarget{" + "targetCollection=" + targetCollection + ", targetIndex=" + targetIndex + '}'; //NOI18N
     }
-    
-    
+
+
 }

@@ -47,6 +47,9 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationHashPre
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationOptInPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
+import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
@@ -58,12 +61,9 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrde
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference.CSSAnalyzerColumnsOrder;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 
 /**
@@ -92,10 +92,10 @@ public class GlobalPreferences extends GlobalKitPreferences {
     private final ToolThemePreference toolTheme;
     private final DisplayModePreference libraryDisplayOption;
     private final DisplayOptionPreference hierarchyDisplayOption;
-    
+
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversed;
     //private final CssAnalyzerColumnsOrderPreference cssAnalyzerColumnsOrder;
-    
+
     private final RecentItemsSizePreference recentItemsSize;
     private final AccordionAnimationPreference accordionAnimation;
     private final WildcardImportsPreference wildcardImports;
@@ -126,25 +126,27 @@ public class GlobalPreferences extends GlobalKitPreferences {
 			ThemePreference theme, GluonSwatchPreference gluonSwatch, GluonThemePreference gluonTheme,
 			ToolThemePreference toolTheme, DisplayModePreference libraryDisplayOption,
 			DisplayOptionPreference hierarchyDisplayOption,
-			
+
 			CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversed,
 			//CssAnalyzerColumnsOrderPreference cssAnalyzerColumnsOrder,
-			
+
 			RecentItemsSizePreference recentItemsSize, AccordionAnimationPreference accordionAnimation,
 			WildcardImportsPreference wildcardImports, RecentItemsPreference recentItems,
 			ShowUpdateDialogDatePreference showUpdateDialogDate, IgnoreVersionPreference ignoreVersion,
 			ImportedGluonJarsPreference importedGluonJars, RegistrationHashPreference registrationHash,
 			RegistrationEmailPreference registrationEmail, RegistrationOptInPreference registrationOptIn,
 			LastSentTrackingInfoDatePreference lastSentTrackingInfoDate) {
-		super(rootContainerHeight, rootContainerWidth, backgroundImage, alignmentGuidesColor, parentRingColor, theme,
-				gluonSwatch, gluonTheme);
+		super(
+				rootContainerHeight, rootContainerWidth, backgroundImage, alignmentGuidesColor, parentRingColor, theme
+				//,gluonSwatch, gluonTheme
+				);
 		this.toolTheme = toolTheme;
 		this.libraryDisplayOption = libraryDisplayOption;
 		this.hierarchyDisplayOption = hierarchyDisplayOption;
-		
+
 		this.cssTableColumnsOrderingReversed = cssTableColumnsOrderingReversed;
 		//this.cssAnalyzerColumnsOrder = cssAnalyzerColumnsOrder;
-		
+
 		this.recentItemsSize = recentItemsSize;
 		this.accordionAnimation = accordionAnimation;
 		this.wildcardImports = wildcardImports;
@@ -171,7 +173,7 @@ public class GlobalPreferences extends GlobalKitPreferences {
 	public void setToolTheme(ToolTheme value) {
         toolTheme.setValue(value);
     }
-    
+
     public DISPLAY_MODE getLibraryDisplayOption() {
         return libraryDisplayOption.getValue();
     }
@@ -203,7 +205,7 @@ public class GlobalPreferences extends GlobalKitPreferences {
             return CSSAnalyzerColumnsOrder.DEFAULTS_FIRST;
         }
     }
-    
+
     public CSSAnalyzerColumnsOrder getCSSAnalyzerColumnsOrder() {
         if (isCssTableColumnsOrderingReversed()) {
             return CSSAnalyzerColumnsOrder.DEFAULTS_LAST;
@@ -232,11 +234,11 @@ public class GlobalPreferences extends GlobalKitPreferences {
     public void setCssTableColumnsOrderingReversed(boolean value) {
         cssTableColumnsOrderingReversed.setValue(value);
     }
-    
+
 //    public CSSAnalyzerColumnsOrder getCssAnalyzerColumnsOrder() {
 //		return cssAnalyzerColumnsOrder.getValue();
 //	}
-//    
+//
 //    public void setCssAnalyzerColumnOrder(CSSAnalyzerColumnsOrder value) {
 //		cssAnalyzerColumnsOrder.setValue(value);
 //	}
@@ -248,11 +250,11 @@ public class GlobalPreferences extends GlobalKitPreferences {
     public void setRecentItems(List<String> value) {
 		recentItems.setValue(value);
 	}
-    
+
     public int getRecentItemsSize() {
         return recentItemsSize.getValue();
     }
-    
+
 	public void setRecentItemsSize(int value) {
         recentItemsSize.setValue(value);
     }

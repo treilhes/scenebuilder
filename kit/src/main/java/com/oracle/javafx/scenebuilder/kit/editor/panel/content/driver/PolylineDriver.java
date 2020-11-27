@@ -31,13 +31,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.AbstractCurveEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.PolylineEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.PolylineHandles;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.shape.Polyline;
 
@@ -46,19 +48,24 @@ import javafx.scene.shape.Polyline;
  */
 public class PolylineDriver extends AbstractNodeDriver {
 
-    public PolylineDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+	private final ApplicationContext context;
+
+    public PolylineDriver(
+    		ApplicationContext context,
+    		Content contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Polyline;
         assert fxomObject instanceof FXOMInstance;
-        return new PolylineHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new PolylineHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
 
     @Override
@@ -69,5 +76,5 @@ public class PolylineDriver extends AbstractNodeDriver {
         final Polyline polygon = (Polyline) fxomObject.getSceneGraphObject();
         return new PolylineEditor(polygon);
     }
-    
+
 }

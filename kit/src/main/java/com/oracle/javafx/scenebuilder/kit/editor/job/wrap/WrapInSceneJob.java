@@ -3,24 +3,26 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ReplaceObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 /**
  * Job used to wrap selection in a Scene using its ROOT property.
  */
 public class WrapInSceneJob extends AbstractWrapInJob {
-    public WrapInSceneJob(EditorController editorController) {
-        super(editorController);
+    public WrapInSceneJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = javafx.scene.Scene.class;
     }
 
@@ -64,7 +66,7 @@ public class WrapInSceneJob extends AbstractWrapInJob {
         // Replace the dummyPane with the new child
         assert children.size() == 1;
         final FXOMObject child = children.iterator().next();
-        jobs.add(new ReplaceObjectJob(dummyPane, child, getEditorController()));
+        jobs.add(new ReplaceObjectJob(getContext(), dummyPane, child, getEditorController()).extend());
 
         return jobs;
     }

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;

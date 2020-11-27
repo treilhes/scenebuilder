@@ -34,20 +34,23 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  * Delete job for ObjectSelectionGroup.
  */
 public class DeleteObjectSelectionJob extends BatchSelectionJob {
 
-    public DeleteObjectSelectionJob(EditorController editorController) {
-        super(editorController);
+    public DeleteObjectSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -56,25 +59,25 @@ public class DeleteObjectSelectionJob extends BatchSelectionJob {
         assert selection.getGroup() instanceof ObjectSelectionGroup;
         final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
         final List<Job> result = new ArrayList<>();
-        
+
         // Next we make one DeleteObjectJob for each selected objects
         int cannotDeleteCount = 0;
         for (FXOMObject candidate : osg.getFlattenItems()) {
-            final DeleteObjectJob subJob
-                    = new DeleteObjectJob(candidate, getEditorController());
+            final Job subJob
+                    = new DeleteObjectJob(getContext(), candidate, getEditorController()).extend();
             if (subJob.isExecutable()) {
                 result.add(subJob);
             } else {
                 cannotDeleteCount++;
             }
         }
-        
+
         // If some objects cannot be deleted, then we clear all to
         // make this job not executable.
         if (cannotDeleteCount >= 1) {
             result.clear();
         }
-        
+
         return result;
     }
 
@@ -82,7 +85,7 @@ public class DeleteObjectSelectionJob extends BatchSelectionJob {
     protected String makeDescription() {
         final String result;
         final int subJobCount = getSubJobs().size();
-        
+
         switch (subJobCount) {
             case 0:
                 result = "Unexecutable Delete"; // NO18N
@@ -94,7 +97,7 @@ public class DeleteObjectSelectionJob extends BatchSelectionJob {
                 result = I18N.getString("label.action.edit.delete.n", subJobCount);
                 break;
         }
-        
+
         return result;
     }
 

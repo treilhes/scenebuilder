@@ -36,14 +36,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup.Type;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup.Type;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 import javafx.scene.layout.GridPane;
 
@@ -63,9 +63,9 @@ public class GridPaneJobUtils {
      * @return the list of target GridPane objects
      */
     static List<FXOMObject> getTargetGridPanes(
-            final EditorController editorController) {
+            final Editor editor) {
 
-        final Selection selection = editorController.getSelection();
+        final Selection selection = editor.getSelection();
         final AbstractSelectionGroup asg = selection.getGroup();
         assert asg instanceof ObjectSelectionGroup
                 || asg instanceof GridSelectionGroup;
@@ -132,13 +132,13 @@ public class GridPaneJobUtils {
      * - either 1 or more GridPanes
      * - or 1 or more rows/columns within a single GridPane
      *
-     * @param editorController
+     * @param editor
      * @return
      */
-    static boolean canPerformAdd(final EditorController editorController) {
+    static boolean canPerformAdd(final Editor editor) {
 
         boolean result;
-        final Selection selection = editorController.getSelection();
+        final Selection selection = editor.getSelection();
         final AbstractSelectionGroup asg = selection.getGroup();
 
         if (asg instanceof ObjectSelectionGroup) {
@@ -160,12 +160,12 @@ public class GridPaneJobUtils {
      * Returns true if the selection is 1 or more rows/columns
      * within a single GridPane
      *
-     * @param editorController
+     * @param editor
      * @return
      */
-    static boolean canPerformRemove(final EditorController editorController) {
+    static boolean canPerformRemove(final Editor editor) {
 
-        final Selection selection = editorController.getSelection();
+        final Selection selection = editor.getSelection();
         final AbstractSelectionGroup asg = selection.getGroup();
 
         return asg instanceof GridSelectionGroup;
@@ -175,15 +175,15 @@ public class GridPaneJobUtils {
      * Returns true if the selection is 1 or more rows/columns
      * within a single GridPane
      *
-     * @param editorController
+     * @param editor
      * @return
      */
     static boolean canPerformMove(
-            final EditorController editorController,
+            final Editor editor,
             final Position position) {
 
         boolean result;
-        final Selection selection = editorController.getSelection();
+        final Selection selection = editor.getSelection();
         final AbstractSelectionGroup asg = selection.getGroup();
 
         if (asg instanceof GridSelectionGroup) {

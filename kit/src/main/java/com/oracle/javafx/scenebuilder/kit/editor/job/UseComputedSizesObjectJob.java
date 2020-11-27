@@ -34,13 +34,16 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.image.ImageView;
@@ -56,8 +59,8 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
 
     private final FXOMInstance fxomInstance;
 
-    public UseComputedSizesObjectJob(FXOMInstance fxomInstance, EditorController editorController) {
-        super(editorController);
+    public UseComputedSizesObjectJob(ApplicationContext context, FXOMInstance fxomInstance, Editor editor) {
+        super(context, editor);
         assert fxomInstance != null;
         this.fxomInstance = fxomInstance;
     }
@@ -128,8 +131,8 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
                 topAnchorVPM, rightAnchorVPM, bottomAnchorVPM, leftAnchorVPM}) {
 
                 if (vpm.getValueObject(fxomInstance) != null) {
-                    final ModifyObjectJob subJob = new ModifyObjectJob(
-                            fxomInstance, vpm, null, getEditorController());
+                    final Job subJob = new ModifyObjectJob(getContext(),
+                            fxomInstance, vpm, null, getEditorController()).extend();
                     result.add(subJob);
                 }
             }
@@ -151,12 +154,12 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         final ValuePropertyMetadata prefHeightVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, prefHeight);
 
-        final ModifyObjectJob maxHeightJob = new ModifyObjectJob(
-                candidate, maxHeightVPM, -1.0, getEditorController());
-        final ModifyObjectJob minHeightJob = new ModifyObjectJob(
-                candidate, minHeightVPM, -1.0, getEditorController());
-        final ModifyObjectJob prefHeightJob = new ModifyObjectJob(
-                candidate, prefHeightVPM, -1.0, getEditorController());
+        final Job maxHeightJob = new ModifyObjectJob(getContext(),
+                candidate, maxHeightVPM, -1.0, getEditorController()).extend();
+        final Job minHeightJob = new ModifyObjectJob(getContext(),
+                candidate, minHeightVPM, -1.0, getEditorController()).extend();
+        final Job prefHeightJob = new ModifyObjectJob(getContext(),
+                candidate, prefHeightVPM, -1.0, getEditorController()).extend();
 
         if (maxHeightJob.isExecutable()) {
             result.add(maxHeightJob);
@@ -184,12 +187,12 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         final ValuePropertyMetadata prefWidthVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, prefWidth);
 
-        final ModifyObjectJob maxWidthJob = new ModifyObjectJob(
-                candidate, maxWidthVPM, -1.0, getEditorController());
-        final ModifyObjectJob minWidthJob = new ModifyObjectJob(
-                candidate, minWidthVPM, -1.0, getEditorController());
-        final ModifyObjectJob prefWidthJob = new ModifyObjectJob(
-                candidate, prefWidthVPM, -1.0, getEditorController());
+        final Job maxWidthJob = new ModifyObjectJob(getContext(),
+                candidate, maxWidthVPM, -1.0, getEditorController()).extend();
+        final Job minWidthJob = new ModifyObjectJob(getContext(),
+                candidate, minWidthVPM, -1.0, getEditorController()).extend();
+        final Job prefWidthJob = new ModifyObjectJob(getContext(),
+                candidate, prefWidthVPM, -1.0, getEditorController()).extend();
 
         if (maxWidthJob.isExecutable()) {
             result.add(maxWidthJob);
@@ -209,8 +212,8 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         final PropertyName fitHeight = new PropertyName("fitHeight");
         final ValuePropertyMetadata fitHeightVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, fitHeight);
-        final ModifyObjectJob fitHeightJob = new ModifyObjectJob(
-                candidate, fitHeightVPM, 0.0, getEditorController());
+        final Job fitHeightJob = new ModifyObjectJob(getContext(),
+                candidate, fitHeightVPM, 0.0, getEditorController()).extend();
 
         if (fitHeightJob.isExecutable()) {
             result.add(fitHeightJob);
@@ -224,8 +227,8 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         final PropertyName fitWidth = new PropertyName("fitWidth");
         final ValuePropertyMetadata fitWidthVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, fitWidth);
-        final ModifyObjectJob fitWidthJob = new ModifyObjectJob(
-                candidate, fitWidthVPM, 0.0, getEditorController());
+        final Job fitWidthJob = new ModifyObjectJob(getContext(),
+                candidate, fitWidthVPM, 0.0, getEditorController()).extend();
 
         if (fitWidthJob.isExecutable()) {
             result.add(fitWidthJob);

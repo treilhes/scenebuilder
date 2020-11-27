@@ -32,12 +32,13 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview.HierarchyTreeViewController;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 
@@ -52,10 +53,11 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPref
 @Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class HierarchyPanelController extends HierarchyTreeViewController {
-	
+
     public HierarchyPanelController(
-    		@Autowired EditorController editorController,
+    		@Autowired ApplicationContext context,
+    		@Autowired Editor editorController,
     		@Autowired ParentRingColorPreference parentRingColorPreference) {
-        super(editorController, parentRingColorPreference);
+        super(context, editorController, parentRingColorPreference);
     }
 }

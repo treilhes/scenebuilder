@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.ColorEncoder;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 
 import javafx.css.Declaration;
 import javafx.css.ParsedValue;

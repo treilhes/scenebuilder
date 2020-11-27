@@ -1,9 +1,11 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -15,9 +17,11 @@ public class WindowHandles extends AbstractGenericHandles<Window> {
     private final Pane dummyPane = new Pane();
     private Node sceneGraphObject;
 
-    public WindowHandles(ContentPanelController contentPanelController,
-                         FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Window.class);
+    public WindowHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
+            FXOMInstance fxomInstance) {
+        super(context, contentPanelController, fxomInstance, Window.class);
 
         final DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomInstance);
         FXOMObject scene = designHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.SCENE);

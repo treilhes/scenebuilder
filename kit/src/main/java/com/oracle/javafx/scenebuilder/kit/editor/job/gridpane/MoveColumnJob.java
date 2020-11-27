@@ -36,22 +36,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.layout.ColumnConstraints;
 
@@ -64,8 +66,8 @@ public class MoveColumnJob extends BatchSelectionJob {
     private final List<Integer> targetIndexes = new ArrayList<>();
     private final GridPaneJobUtils.Position position;
 
-    public MoveColumnJob(final EditorController editorController, final Position position) {
-        super(editorController);
+    public MoveColumnJob(ApplicationContext context, final Editor editor, final Position position) {
+        super(context, editor);
         assert position == Position.BEFORE || position == Position.AFTER;
         this.position = position;
     }
@@ -148,19 +150,19 @@ public class MoveColumnJob extends BatchSelectionJob {
             // The target index is associated to an existing constraints value :
             // we remove the target constraints and add it back at new position
             // No need to move the constraints of the column before/after :
-            // indeed, they are automatically shifted while updating the target ones 
+            // indeed, they are automatically shifted while updating the target ones
             if (targetConstraints != null) {
                 // First remove current target constraints
-                final Job removeValueJob = new RemoveObjectJob(
+                final Job removeValueJob = new RemoveObjectJob(getContext(),
                         targetConstraints,
-                        getEditorController());
+                        getEditorController()).extend();
                 result.add(removeValueJob);
 
                 // Then add the target constraints at new positionIndex
-                final Job addValueJob = new AddPropertyValueJob(
+                final Job addValueJob = new AddPropertyValueJob(getContext(),
                         targetConstraints,
                         (FXOMPropertyC) constraintsProperty,
-                        positionIndex, getEditorController());
+                        positionIndex, getEditorController()).extend();
                 result.add(addValueJob);
             }//
             // The target index is not associated to an existing constraints value :
@@ -175,10 +177,10 @@ public class MoveColumnJob extends BatchSelectionJob {
                 if (beforeConstraints != null) {
                     // Create new empty constraints for the target column
                     final FXOMInstance addedConstraints = makeColumnConstraintsInstance();
-                    final Job addValueJob = new AddPropertyValueJob(
+                    final Job addValueJob = new AddPropertyValueJob(getContext(),
                             addedConstraints,
                             (FXOMPropertyC) constraintsProperty,
-                            positionIndex, getEditorController());
+                            positionIndex, getEditorController()).extend();
                     result.add(addValueJob);
                 }
             }
@@ -195,9 +197,9 @@ public class MoveColumnJob extends BatchSelectionJob {
             switch (position) {
                 case BEFORE:
                     // First move the target column content
-                    result.add(new ReIndexColumnContentJob(
+                    result.add(new ReIndexColumnContentJob(getContext(),
                             getEditorController(),
-                            -1, targetGridPane, targetIndex));
+                            -1, targetGridPane, targetIndex).extend());
                     int beforeIndex = targetIndex - 1;
                     // Then move the content of the column before the target one
                     // If the index before is not part of the target indexes (selected indexes),
@@ -207,16 +209,16 @@ public class MoveColumnJob extends BatchSelectionJob {
                         while (targetIndexes.contains(targetIndex + shiftIndex)) {
                             shiftIndex++;
                         }
-                        result.add(new ReIndexColumnContentJob(
+                        result.add(new ReIndexColumnContentJob(getContext(),
                                 getEditorController(),
-                                shiftIndex, targetGridPane, beforeIndex));
+                                shiftIndex, targetGridPane, beforeIndex).extend());
                     }
                     break;
                 case AFTER:
                     // First move the target column content
-                    result.add(new ReIndexColumnContentJob(
+                    result.add(new ReIndexColumnContentJob(getContext(),
                             getEditorController(),
-                            +1, targetGridPane, targetIndex));
+                            +1, targetGridPane, targetIndex).extend());
                     int afterIndex = targetIndex + 1;
                     // Then move the content of the column after the target one
                     // If the index after is not part of the target indexes (selected indexes),
@@ -226,9 +228,9 @@ public class MoveColumnJob extends BatchSelectionJob {
                         while (targetIndexes.contains(targetIndex + shiftIndex)) {
                             shiftIndex--;
                         }
-                        result.add(new ReIndexColumnContentJob(
+                        result.add(new ReIndexColumnContentJob(getContext(),
                                 getEditorController(),
-                                shiftIndex, targetGridPane, afterIndex));
+                                shiftIndex, targetGridPane, afterIndex).extend());
                     }
                     break;
                 default:

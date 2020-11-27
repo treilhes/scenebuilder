@@ -31,12 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
@@ -47,25 +49,25 @@ public class ReIndexObjectJob extends Job {
     private final FXOMObject beforeObject;
     private final FXOMObject oldBeforeObject;
     private String description;
-    
 
-    public ReIndexObjectJob(
-            FXOMObject reindexedObject, 
-            FXOMObject beforeObject, 
-            EditorController editorController) {
-        super(editorController);
+
+    public ReIndexObjectJob(ApplicationContext context, 
+            FXOMObject reindexedObject,
+            FXOMObject beforeObject,
+            Editor editor) {
+        super(context, editor);
         assert reindexedObject != null;
-        
+
         this.reindexedObject = reindexedObject;
         this.beforeObject = beforeObject;
         this.oldBeforeObject = reindexedObject.getNextSlibing();
     }
-    
-    
+
+
     /*
      * Job
      */
-    
+
     @Override
     public boolean isExecutable() {
         return (beforeObject != oldBeforeObject);
@@ -120,5 +122,5 @@ public class ReIndexObjectJob extends Job {
         }
         return description;
     }
-    
+
 }

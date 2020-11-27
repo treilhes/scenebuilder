@@ -36,34 +36,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
  *
  */
 public class UpdateReferencesJob extends Job {
-    
+
     private final Job subJob;
     private final List<Job> fixJobs = new ArrayList<>();
-    
-    public UpdateReferencesJob(Job subJob) {
-        super(subJob.getEditorController());
+
+    public UpdateReferencesJob(ApplicationContext context, Job subJob) {
+        super(context, subJob.getEditorController());
         this.subJob = subJob;
     }
-    
+
     public Job getSubJob() {
         return subJob;
     }
-    
+
     public List<Job> getFixJobs() {
         return Collections.unmodifiableList(fixJobs);
     }
-    
+
     /*
      * Job
      */
-    
+
     @Override
     public boolean isExecutable() {
         return subJob.isExecutable();
@@ -72,24 +74,24 @@ public class UpdateReferencesJob extends Job {
     @Override
     public void execute() {
         final FXOMDocument fxomDocument = getEditorController().getFxomDocument();
-        
+
         fxomDocument.beginUpdate();
-        
+
         // First executes the subjob => references may become valid
         subJob.execute();
-        
+
         // Now sorts the reference in the document and archives the sorting jobs
-        final ReferencesUpdater updater = new ReferencesUpdater(getEditorController());
+        final ReferencesUpdater updater = new ReferencesUpdater(getContext(), getEditorController());
         updater.update();
         fixJobs.addAll(updater.getExecutedJobs());
-        
+
         fxomDocument.endUpdate();
     }
 
     @Override
     public void undo() {
         final FXOMDocument fxomDocument = getEditorController().getFxomDocument();
-        
+
         fxomDocument.beginUpdate();
         for (int i = fixJobs.size() - 1; i >= 0; i--) {
             fixJobs.get(i).undo();
@@ -101,7 +103,7 @@ public class UpdateReferencesJob extends Job {
     @Override
     public void redo() {
         final FXOMDocument fxomDocument = getEditorController().getFxomDocument();
-        
+
         fxomDocument.beginUpdate();
         subJob.redo();
         for (Job fixJob : fixJobs) {

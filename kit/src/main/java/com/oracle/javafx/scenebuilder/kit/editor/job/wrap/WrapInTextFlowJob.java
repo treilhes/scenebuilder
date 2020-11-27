@@ -31,7 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
 
 import javafx.scene.text.TextFlow;
 
@@ -40,8 +42,8 @@ import javafx.scene.text.TextFlow;
  */
 public class WrapInTextFlowJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInTextFlowJob(EditorController editorController) {
-        super(editorController);
+    public WrapInTextFlowJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = TextFlow.class;
     }
 }

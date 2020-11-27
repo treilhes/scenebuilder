@@ -7,10 +7,10 @@ import java.util.prefs.Preferences;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenArtifact;
 
-public class MavenArtifactPreferences extends ObjectPreference<MavenArtifact> {
+public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArtifact> {
 	
 	private final static String GROUPID  = "groupID";
     private final static String ARTIFACTID  = "artifactId";

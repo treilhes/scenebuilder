@@ -36,9 +36,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Orientation;
 import javafx.scene.layout.HBox;
@@ -48,8 +50,8 @@ import javafx.scene.layout.HBox;
  */
 public class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInHBoxJob(EditorController editorController) {
-        super(editorController);
+    public WrapInHBoxJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = HBox.class;
     }
 

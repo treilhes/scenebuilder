@@ -36,18 +36,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RelocateNodeJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.scene.Node;
 
@@ -59,8 +62,8 @@ public class DuplicateSelectionJob extends BatchSelectionJob {
     private final static double offset = 10;
     final Map<FXOMObject, FXOMObject> newFxomObjects = new LinkedHashMap<>();
 
-    public DuplicateSelectionJob(EditorController editorController) {
-        super(editorController);
+    public DuplicateSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class DuplicateSelectionJob extends BatchSelectionJob {
         final List<Job> result = new LinkedList<>();
 
         if (canDuplicate()) { // (1)
-            
+
             final Selection selection = getEditorController().getSelection();
             final AbstractSelectionGroup asg = selection.getGroup();
             assert asg instanceof ObjectSelectionGroup; // Because of (1)
@@ -93,11 +96,11 @@ public class DuplicateSelectionJob extends BatchSelectionJob {
                 for (Map.Entry<FXOMObject, FXOMObject> entry : newFxomObjects.entrySet()) {
                     final FXOMObject selectedFxomObject = entry.getKey();
                     final FXOMObject newFxomObject = entry.getValue();
-                    final InsertAsSubComponentJob insertSubJob = new InsertAsSubComponentJob(
+                    final Job insertSubJob = new InsertAsSubComponentJob(getContext(),
                             newFxomObject,
                             targetObject,
                             targetMask.getSubComponentCount() + index++,
-                            getEditorController());
+                            getEditorController()).extend();
                     result.add(insertSubJob);
                     final Object selectedSceneGraphObject = selectedFxomObject.getSceneGraphObject();
                     // Relocate duplicated objects if needed
@@ -106,11 +109,11 @@ public class DuplicateSelectionJob extends BatchSelectionJob {
                         final double newLayoutX = Math.round(selectedNode.getLayoutX() + offset);
                         final double newLayoutY = Math.round(selectedNode.getLayoutY() + offset);
                         assert newFxomObject instanceof FXOMInstance;
-                        final RelocateNodeJob relocateSubJob = new RelocateNodeJob(
+                        final Job relocateSubJob = new RelocateNodeJob(getContext(),
                                 (FXOMInstance) newFxomObject,
                                 newLayoutX,
                                 newLayoutY,
-                                getEditorController());
+                                getEditorController()).extend();
                         result.add(relocateSubJob);
                     }
                 }

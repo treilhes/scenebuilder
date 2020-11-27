@@ -35,15 +35,18 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.JobManager;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.RelocateSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -53,32 +56,36 @@ import javafx.scene.input.InputEvent;
  *
  */
 public class MoveWithKeyGesture extends AbstractKeyGesture {
-    
+
     private double vectorX;
     private double vectorY;
+	private final ApplicationContext context;
 
-    public MoveWithKeyGesture(ContentPanelController contentPanelController) {
+    public MoveWithKeyGesture(
+    		ApplicationContext context,
+    		Content contentPanelController) {
         super(contentPanelController);
+        this.context = context;
         assert RelocateSelectionJob.isSelectionMovable(contentPanelController.getEditorController()); // (1)
     }
-    
+
     /*
      * AbstractKeyGesture
      */
-    
+
     @Override
     protected void keyPressed() {
-        
+
         final double extend = getLastKeyEvent().isShiftDown() ? 10.0 : 1.0;
         final double moveX = extend * vectorX;
         final double moveY = extend * vectorY;
 
-        final Selection selection 
+        final Selection selection
                 = contentPanelController.getEditorController().getSelection();
         assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
         final ObjectSelectionGroup osg
                 = (ObjectSelectionGroup) selection.getGroup();
-        
+
         /*
          * Updates layoutX/layoutY of the selected scene graph objects.
          */
@@ -93,44 +100,50 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
     @Override
     protected void keyReleased() {
         keyPressed();
-        
-        final EditorController editorController
+
+        final Editor editorController
                 = contentPanelController.getEditorController();
-        final Selection selection 
+        final Selection selection
                 = editorController.getSelection();
         assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
-        
+
         final ObjectSelectionGroup osg
                 = (ObjectSelectionGroup) selection.getGroup();
-        
+
         // Builds a RelocateSelectionJob
         final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
         for (FXOMObject selectedObject : osg.getItems()) {
             assert selectedObject.isNode(); // Because (1)
             assert selectedObject instanceof FXOMInstance;
-            
+
             final Node node = (Node) selectedObject.getSceneGraphObject();
             final Point2D layoutXY = new Point2D(node.getLayoutX(), node.getLayoutY());
             locationMap.put(selectedObject, layoutXY);
         }
         final RelocateSelectionJob newRelocateJob
-                = new RelocateSelectionJob(locationMap, editorController);
-        
+                = new RelocateSelectionJob(context, locationMap, editorController);
+
         // ... and pushes it
         // If the current job is already a RelocateSelectionJob,
         // then we see if the new job can be merged with it.
         final JobManager jobManager = editorController.getJobManager();
-        final Job currentJob = jobManager.getCurrentJob();
+        Job currentJob = jobManager.getCurrentJob();
+
+        if (currentJob instanceof ExtendedJob) {
+        	ExtendedJob<?> extendedJob = (ExtendedJob<?>)currentJob;
+        	currentJob = extendedJob.getExtendedJob();
+        }
+
         if (currentJob instanceof RelocateSelectionJob) {
             final RelocateSelectionJob currentRelocateJob = (RelocateSelectionJob) currentJob;
             if (currentRelocateJob.canBeMergedWith(newRelocateJob)) {
                 newRelocateJob.execute();
                 currentRelocateJob.mergeWith(newRelocateJob);
             } else {
-                jobManager.push(newRelocateJob);
+                jobManager.push(newRelocateJob.extend());
             }
         } else {
-            jobManager.push(newRelocateJob);
+            jobManager.push(newRelocateJob.extend());
         }
     }
 
@@ -165,6 +178,6 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
                 break;
         }
     }
-    
-    
+
+
 }

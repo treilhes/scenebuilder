@@ -32,32 +32,34 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
  */
 public class RemoveObjectJob extends Job {
-    
+
     private final Job subJob;
-    
-    public RemoveObjectJob(FXOMObject targetObject, EditorController editorController) {
-        super(editorController);
-        
+
+    public RemoveObjectJob(ApplicationContext context, FXOMObject targetObject, Editor editor) {
+        super(context, editor);
+
         assert targetObject != null;
         assert (targetObject.getParentProperty() != null) || (targetObject.getParentCollection() != null);
-        
+
         if (targetObject.getParentProperty() != null) {
-            subJob = new RemovePropertyValueJob(targetObject, editorController);
+            subJob = new RemovePropertyValueJob(getContext(), targetObject, editor).extend();
         } else {
             assert targetObject.getParentCollection() != null;
-            subJob = new RemoveCollectionItemJob(targetObject, editorController);
+            subJob = new RemoveCollectionItemJob(getContext(), targetObject, editor).extend();
         }
     }
-    
-    
+
+
     /*
      * Job
      */
@@ -86,5 +88,5 @@ public class RemoveObjectJob extends Job {
     public String getDescription() {
         return getClass().getSimpleName(); // Should not reach end user
     }
-    
+
 }

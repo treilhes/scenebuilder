@@ -39,18 +39,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup.Type;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup.Type;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  * Job invoked when adding rows.
@@ -70,8 +72,8 @@ public class AddRowJob extends BatchSelectionJob {
     private final Map<FXOMObject, Set<Integer>> targetGridPanes = new HashMap<>();
     private final Position position;
 
-    public AddRowJob(final EditorController editorController, final Position position) {
-        super(editorController);
+    public AddRowJob(ApplicationContext context, final Editor editor, final Position position) {
+        super(context, editor);
         assert position == Position.ABOVE || position == Position.BELOW;
         this.position = position;
     }
@@ -95,8 +97,8 @@ public class AddRowJob extends BatchSelectionJob {
 
             // Add sub jobs
             // First add the new row constraints
-            final Job addConstraints = new AddRowConstraintsJob(
-                    getEditorController(), position, targetGridPanes);
+            final Job addConstraints = new AddRowConstraintsJob(getContext(),
+                    getEditorController(), position, targetGridPanes).extend();
             result.add(addConstraints);
             // Then move the row content
             result.addAll(moveRowContent());
@@ -148,7 +150,7 @@ public class AddRowJob extends BatchSelectionJob {
             int targetIndex = iterator.next();
             while (targetIndex != -1) {
                 // Move the rows content :
-                // - from the target index 
+                // - from the target index
                 // - to the next target index if any or the last row index otherwise
                 int fromIndex, toIndex;
 
@@ -182,14 +184,14 @@ public class AddRowJob extends BatchSelectionJob {
                         return result;
                 }
 
-                // If fromIndex >= rowsSize, we are below the last existing row 
+                // If fromIndex >= rowsSize, we are below the last existing row
                 // => no row content to move
                 if (fromIndex < rowsSize) {
                     final int offset = 1 + shiftIndex;
                     final List<Integer> indexes
                             = GridPaneJobUtils.getIndexes(fromIndex, toIndex);
-                    final ReIndexRowContentJob reIndexJob = new ReIndexRowContentJob(
-                            getEditorController(), offset, targetGridPane, indexes);
+                    final Job reIndexJob = new ReIndexRowContentJob(getContext(),
+                            getEditorController(), offset, targetGridPane, indexes).extend();
                     result.add(reIndexJob);
                 }
 
@@ -206,10 +208,10 @@ public class AddRowJob extends BatchSelectionJob {
      * @return the list of target indexes
      */
     private Set<Integer> getTargetIndexes(
-            final EditorController editorController,
+            final Editor editor,
             final FXOMObject targetGridPane) {
 
-        final Selection selection = editorController.getSelection();
+        final Selection selection = editor.getSelection();
         final AbstractSelectionGroup asg = selection.getGroup();
 
         final Set<Integer> result = new LinkedHashSet<>();

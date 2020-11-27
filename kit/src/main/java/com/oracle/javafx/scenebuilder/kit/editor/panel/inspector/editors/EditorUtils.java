@@ -43,17 +43,17 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.PropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.PopupEditor;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;

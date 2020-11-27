@@ -44,6 +44,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 
@@ -51,7 +52,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * Unit test for {@link com.oracle.javafx.scenebuilder.kit.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
+ * Unit test for {@link com.oracle.javafx.scenebuilder.core.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
  */
 @ExtendWith(MockitoExtension.class)
 public class StaticLoadTest {

@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +52,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.action.editor.KeyboardModifier;
+import com.oracle.javafx.scenebuilder.api.ControlAction;
+import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
@@ -60,34 +64,28 @@ import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentContr
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentEditAction;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.MainController.ApplicationControlAction;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.ControlAction;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.kit.library.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.preferences.ThemeUtils;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -109,18 +107,19 @@ import lombok.RequiredArgsConstructor;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
+//TODO Add generation of theme menus
 @RequiredArgsConstructor
 public class MenuBarController implements InitializingBean {
-	
+
     private static MenuBarController systemMenuBarController; // For Mac only
 
     @Autowired
     private BuiltinLibrary builtinLibrary;
-    
+
     private Menu insertCustomMenu;
     private final DocumentWindowController documentWindowController;
     private final RecentItemsPreference recentItemsPreference;
-    
+
     // This member is null when this MenuBarController is used for
     // managing the menu bar passed to MenuBarSkin.setDefaultSystemMenu().
 
@@ -337,28 +336,6 @@ public class MenuBarController implements InitializingBean {
     @FXML
     private MenuItem showPreviewInDialogMenuItem;
     @FXML
-    private RadioMenuItem gluonMobileLightThemeMenuItem;
-    @FXML
-    private RadioMenuItem gluonMobileDarkThemeMenuItem;
-    @FXML
-    private RadioMenuItem modenaThemeMenuItem;
-    @FXML
-    private RadioMenuItem modenaTouchThemeMenuItem;
-    @FXML
-    private RadioMenuItem modenaHighContrastBlackonwhiteThemeMenuItem;
-    @FXML
-    private RadioMenuItem modenaHighContrastWhiteonblackThemeMenuItem;
-    @FXML
-    private RadioMenuItem modenaHighContrastYellowonblackThemeMenuItem;
-    @FXML
-    private RadioMenuItem caspianThemeMenuItem;
-    @FXML
-    private CheckMenuItem caspianHighContrastThemeMenuItem;
-    @FXML
-    private RadioMenuItem caspianEmbeddedThemeMenuItem;
-    @FXML
-    private RadioMenuItem caspianEmbeddedQVGAThemeMenuItem;
-    @FXML
     private MenuItem addSceneStyleSheetMenuItem;
     @FXML
     private Menu removeSceneStyleSheetMenu;
@@ -385,44 +362,6 @@ public class MenuBarController implements InitializingBean {
     @FXML
     private RadioMenuItem preferredPreviewSizeMenuItem;
 
-    @FXML
-    private RadioMenuItem blueSwatch;
-    @FXML
-    private RadioMenuItem cyanSwatch;
-    @FXML
-    private RadioMenuItem deepOrangeSwatch;
-    @FXML
-    private RadioMenuItem deepPurpleSwatch;
-    @FXML
-    private RadioMenuItem greenSwatch;
-    @FXML
-    private RadioMenuItem indigoSwatch;
-    @FXML
-    private RadioMenuItem lightBlueSwatch;
-    @FXML
-    private RadioMenuItem pinkSwatch;
-    @FXML
-    private RadioMenuItem purpleSwatch;
-    @FXML
-    private RadioMenuItem redSwatch;
-    @FXML
-    private RadioMenuItem tealSwatch;
-    @FXML
-    private RadioMenuItem lightGreenSwatch;
-    @FXML
-    private RadioMenuItem limeSwatch;
-    @FXML
-    private RadioMenuItem yellowSwatch;
-    @FXML
-    private RadioMenuItem amberSwatch;
-    @FXML
-    private RadioMenuItem orangeSwatch;
-    @FXML
-    private RadioMenuItem brownSwatch;
-    @FXML
-    private RadioMenuItem greySwatch;
-    @FXML
-    private RadioMenuItem blueGreySwatch;
 
     // Window
     // Help
@@ -435,6 +374,108 @@ public class MenuBarController implements InitializingBean {
 
     private static final KeyCombination.Modifier modifier = KeyboardModifier.control();
     private final Map<KeyCombination, MenuItem> keyToMenu = new HashMap<>();
+
+    @Autowired(required = false)
+    List<MenuItemProvider> menuItemProviders;
+
+    Map<String, MenuItem> menuMap = null;
+
+    public void buildMenuMap(MenuBar menuBar) {
+    	if (menuMap != null) {
+    		return;
+    	}
+    	menuMap = new HashMap<>();
+        menuBar.getMenus().forEach(m -> {
+        	addToMenuMap(m);
+            m.getItems().forEach(mi -> {
+            	addToMenuMap(mi);
+            });
+        });
+    }
+
+    public void addToMenuMap(MenuItem m) {
+    	if (m.getId() != null && !m.getId().isEmpty()) {
+            if (menuMap.containsKey(m.getId())) {
+            	Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, "Duplicate id in menu map : {0}", m.getId());
+            } else {
+            	menuMap.put(m.getId(), m);
+            }
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        systemMenuBarController = this;
+
+        MenuBar menuBar = getMenuBar();
+        buildMenuMap(menuBar);
+
+        if (menuItemProviders != null && !menuItemProviders.isEmpty()) {
+            menuItemProviders.stream()
+                .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
+                .flatMap(mip -> mip.menuItems().stream())
+                .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
+                .forEach(ma -> {
+                MenuItem target = menuMap.get(ma.getTargetId());
+
+                if (target != null) {
+
+                	ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                	int index = items.indexOf(target);
+
+                	if (ma.getMenuItem().getId() != null && !ma.getMenuItem().getId().isEmpty()) {
+                		menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
+                	}
+
+                    switch (ma.getPositionRequest()) {
+                        case AsFirstSibling: {
+                        	items.add(0, ma.getMenuItem());
+                            break;
+                        }
+                        case AsLastSibling: {
+                        	items.add(ma.getMenuItem());
+                            break;
+                        }
+                        case AsPreviousSibling: {
+                        	items.add(index, ma.getMenuItem());
+                            break;
+                        }
+                        case AsNextSibling: {
+                        	items.add(index + 1, ma.getMenuItem());
+                            break;
+                        }
+                        case AfterPreviousSeparator: {
+                        	int insertAt = 0;
+                        	for (int i=index; i >= 0;i--) {
+                        		if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                        			insertAt = i + 1;
+                        			break;
+                        		}
+                        	}
+                        	items.add(insertAt, ma.getMenuItem());
+                            break;
+                        }
+                        case BeforeNextSeparator: {
+                        	int insertAt = items.size();
+                        	for (int i=index; i < items.size();i++) {
+                        		if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                        			insertAt = i;
+                        			break;
+                        		}
+                        	}
+                        	items.add(insertAt, ma.getMenuItem());
+                            break;
+                        }
+
+                    }
+                } else {
+                	Logger.getLogger(MenuBarController.class.getName())
+                		.log(Level.SEVERE, "Unable to find this id in the menuBar: {0}", ma.getTargetId());
+                }
+
+            });
+        }
+    }
 
     public MenuBar getMenuBar() {
 
@@ -480,20 +521,15 @@ public class MenuBarController implements InitializingBean {
         }
         return result;
     }
-    
-    @Override
-	public void afterPropertiesSet() throws Exception {
-    	systemMenuBarController = this;
-    }
-    
+
     public static synchronized MenuBarController getSystemMenuBarController() {
-    	assert systemMenuBarController != null;
+        assert systemMenuBarController != null;
 //        if (systemMenuBarController == null) {
 //            systemMenuBarController = new MenuBarController(null);
 //        }
         return systemMenuBarController;
     }
-    
+
     /*
      * Private
      */
@@ -605,17 +641,6 @@ public class MenuBarController implements InitializingBean {
 
         assert showPreviewInWindowMenuItem != null;
         assert showPreviewInDialogMenuItem != null;
-        assert gluonMobileLightThemeMenuItem != null;
-        assert gluonMobileDarkThemeMenuItem != null;
-        assert modenaThemeMenuItem != null;
-        assert modenaTouchThemeMenuItem != null;
-        assert modenaHighContrastBlackonwhiteThemeMenuItem != null;
-        assert modenaHighContrastWhiteonblackThemeMenuItem != null;
-        assert modenaHighContrastYellowonblackThemeMenuItem != null;
-        assert caspianThemeMenuItem != null;
-        assert caspianHighContrastThemeMenuItem != null;
-        assert caspianEmbeddedThemeMenuItem != null;
-        assert caspianEmbeddedQVGAThemeMenuItem != null;
         assert addSceneStyleSheetMenuItem != null;
         assert removeSceneStyleSheetMenu != null;
         assert openSceneStyleSheetMenu != null;
@@ -634,7 +659,7 @@ public class MenuBarController implements InitializingBean {
         assert aboutMenuItem != null;
         assert checkUpdatesMenuItem != null;
 
-        /* 
+        /*
          * To make MenuBar.fxml editable with SB 1.1, the menu bar is enclosed
          * in a StackPane. This stack pane is useless now.
          * So we unwrap the menu bar and make it the panel root.
@@ -1023,68 +1048,18 @@ public class MenuBarController implements InitializingBean {
         showPreviewInWindowMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SHOW_PREVIEW_WINDOW));
         showPreviewInWindowMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, modifier));
         showPreviewInDialogMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SHOW_PREVIEW_DIALOG));
-        caspianHighContrastThemeMenuItem.setUserData(new SetThemeActionController(Theme.CASPIAN_HIGH_CONTRAST));
-        caspianThemeMenuItem.setUserData(new SetThemeActionController(Theme.CASPIAN));
-        caspianEmbeddedThemeMenuItem.setUserData(new SetThemeActionController(Theme.CASPIAN_EMBEDDED));
-        caspianEmbeddedQVGAThemeMenuItem.setUserData(new SetThemeActionController(Theme.CASPIAN_EMBEDDED_QVGA));
-
-        gluonMobileLightThemeMenuItem.setUserData(new SetThemeActionController(Theme.GLUON_MOBILE_LIGHT));
-        gluonMobileDarkThemeMenuItem.setUserData(new SetThemeActionController(Theme.GLUON_MOBILE_DARK));
-        modenaThemeMenuItem.setUserData(new SetThemeActionController(Theme.MODENA));
-        modenaTouchThemeMenuItem.setUserData(new SetThemeActionController(Theme.MODENA_TOUCH));
-        modenaHighContrastBlackonwhiteThemeMenuItem.setUserData(new SetThemeActionController(Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE));
-        modenaHighContrastWhiteonblackThemeMenuItem.setUserData(new SetThemeActionController(Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK));
-        modenaHighContrastYellowonblackThemeMenuItem.setUserData(new SetThemeActionController(Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK));
-
-        blueSwatch.setUserData(new GluonActionController(GluonSwatch.BLUE));
-        addSwatchGraphic(blueSwatch);
-        cyanSwatch.setUserData(new GluonActionController(GluonSwatch.CYAN));
-        addSwatchGraphic(cyanSwatch);
-        deepOrangeSwatch.setUserData(new GluonActionController(GluonSwatch.DEEP_ORANGE));
-        addSwatchGraphic(deepOrangeSwatch);
-        deepPurpleSwatch.setUserData(new GluonActionController(GluonSwatch.DEEP_PURPLE));
-        addSwatchGraphic(deepPurpleSwatch);
-        greenSwatch.setUserData(new GluonActionController(GluonSwatch.GREEN));
-        addSwatchGraphic(greenSwatch);
-        indigoSwatch.setUserData(new GluonActionController(GluonSwatch.INDIGO));
-        addSwatchGraphic(indigoSwatch);
-        lightBlueSwatch.setUserData(new GluonActionController(GluonSwatch.LIGHT_BLUE));
-        addSwatchGraphic(lightBlueSwatch);
-        pinkSwatch.setUserData(new GluonActionController(GluonSwatch.PINK));
-        addSwatchGraphic(pinkSwatch);
-        purpleSwatch.setUserData(new GluonActionController(GluonSwatch.PURPLE));
-        addSwatchGraphic(purpleSwatch);
-        redSwatch.setUserData(new GluonActionController(GluonSwatch.RED));
-        addSwatchGraphic(redSwatch);
-        tealSwatch.setUserData(new GluonActionController(GluonSwatch.TEAL));
-        addSwatchGraphic(tealSwatch);
-        lightGreenSwatch.setUserData(new GluonActionController(GluonSwatch.LIGHT_GREEN));
-        addSwatchGraphic(lightGreenSwatch);
-        limeSwatch.setUserData(new GluonActionController(GluonSwatch.LIME));
-        addSwatchGraphic(limeSwatch);
-        yellowSwatch.setUserData(new GluonActionController(GluonSwatch.YELLOW));
-        addSwatchGraphic(yellowSwatch);
-        amberSwatch.setUserData(new GluonActionController(GluonSwatch.AMBER));
-        addSwatchGraphic(amberSwatch);
-        orangeSwatch.setUserData(new GluonActionController(GluonSwatch.ORANGE));
-        addSwatchGraphic(orangeSwatch);
-        brownSwatch.setUserData(new GluonActionController(GluonSwatch.BROWN));
-        addSwatchGraphic(brownSwatch);
-        greySwatch.setUserData(new GluonActionController(GluonSwatch.GREY));
-        addSwatchGraphic(greySwatch);
-        blueGreySwatch.setUserData(new GluonActionController(GluonSwatch.BLUE_GREY));
-        addSwatchGraphic(blueGreySwatch);
 
         addSceneStyleSheetMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.ADD_SCENE_STYLE_SHEET));
         updateOpenAndRemoveSceneStyleSheetMenus();
         if (documentWindowController != null) {
-            this.documentWindowController.getEditorController().sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
-                if (t1 != null) {
-                    updateOpenAndRemoveSceneStyleSheetMenus();
-                    setupMenuItemHandlers(removeSceneStyleSheetMenu);
-                    setupMenuItemHandlers(openSceneStyleSheetMenu);
-                }
-            });
+            //TODO uncomment and fix for full theme support
+//            this.documentWindowController.getEditorController().sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
+//                if (t1 != null) {
+//                    updateOpenAndRemoveSceneStyleSheetMenus();
+//                    setupMenuItemHandlers(removeSceneStyleSheetMenu);
+//                    setupMenuItemHandlers(openSceneStyleSheetMenu);
+//                }
+//            });
         }
 
         setResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SET_RESOURCE));
@@ -1126,7 +1101,7 @@ public class MenuBarController implements InitializingBean {
         /*
          * Window menu : it is setup after the other menus
          */
-        
+
         /*
          * Help menu
          */
@@ -1142,22 +1117,19 @@ public class MenuBarController implements InitializingBean {
         for (Menu m : menuBar.getMenus()) {
             setupMenuItemHandlers(m);
         }
-        
+
         /*
          * Insert menu: we set what is statically known.
          */
         constructBuiltinPartOfInsertMenu();
         constructCustomPartOfInsertMenu();
-        
+
         // The handler for Insert menu deals only with Custom sub-menu.
         insertMenu.setOnMenuValidation(onCustomPartOfInsertMenuValidationHandler);
-        
+
         windowMenu.setOnMenuValidation(onWindowMenuValidationHandler);
     }
 
-    private void addSwatchGraphic(RadioMenuItem swatchMenuItem) {
-        swatchMenuItem.setGraphic(((GluonActionController)swatchMenuItem.getUserData()).getSwatch().createGraphic());
-    }
 
     /*
      * Generic menu and item handlers
@@ -1197,8 +1169,8 @@ public class MenuBarController implements InitializingBean {
                     // It avoids to block all the items in the menu in case
                     // of crash in canPerform() (see DTL-6164).
                     canPerform = false;
-                    final Exception xx 
-                            = new Exception(c.getClass().getSimpleName() 
+                    final Exception xx
+                            = new Exception(c.getClass().getSimpleName()
                             + ".canPerform() did break for menu item " + i, x); //NOI18N
                     xx.printStackTrace();
                 }
@@ -1238,13 +1210,13 @@ public class MenuBarController implements InitializingBean {
         final MenuItemController c = (MenuItemController) i.getUserData();
         c.perform();
     }
-    
+
     /*
      * Private (zoom menu)
      */
-    
+
     final static double[] scalingTable = {0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0};
-    
+
     private void updateZoomMenu() {
         final double[] scalingTable = {0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0};
 
@@ -1252,14 +1224,14 @@ public class MenuBarController implements InitializingBean {
         zoomInMenuItem.setUserData(new ZoomInActionController());
         zoomInMenuItem.setAccelerator(new KeyCharacterCombination("+", modifier)); //NOI18N
         zoomMenu.getItems().add(zoomInMenuItem);
-        
+
         final MenuItem zoomOutMenuItem = new MenuItem(I18N.getString("menu.title.zoom.out"));
         zoomOutMenuItem.setUserData(new ZoomOutActionController());
         zoomOutMenuItem.setAccelerator(new KeyCharacterCombination("/", modifier));  //NOI18N
         zoomMenu.getItems().add(zoomOutMenuItem);
-        
+
         zoomMenu.getItems().add(new SeparatorMenuItem());
-        
+
         for (int i = 0; i < scalingTable.length; i++) {
             final double scaling = scalingTable[i];
             final String title = String.format("%.0f%%", scaling * 100); //NOI18N
@@ -1269,20 +1241,20 @@ public class MenuBarController implements InitializingBean {
         }
     }
 
-    
+
     private static int findZoomScaleIndex(double zoomScale) {
         int result = -1;
-        
+
         for (int i = 0; i < scalingTable.length; i++) {
             if (MathUtils.equals(zoomScale, scalingTable[i])) {
                 result = i;
                 break;
             }
         }
-        
+
         return result;
     }
-    
+
     private void updateOpenRecentMenuItems() {
 
         final List<MenuItem> menuItems = new ArrayList<>();
@@ -1339,10 +1311,10 @@ public class MenuBarController implements InitializingBean {
                     menuItems.add(mi);
                 }
             }
-            
+
             // Cleanup recent items preferences if needed
             if (recentItemsToRemove.isEmpty() == false) {
-            	recentItemsPreference.removeRecentItems(recentItemsToRemove);
+                recentItemsPreference.removeRecentItems(recentItemsToRemove);
             }
 
             menuItems.add(new SeparatorMenuItem());
@@ -1352,35 +1324,37 @@ public class MenuBarController implements InitializingBean {
         openRecentMenu.getItems().setAll(menuItems);
     }
 
+  //TODO uncomment and fix for full theme support
     private void updateOpenAndRemoveSceneStyleSheetMenus() {
-        assert removeSceneStyleSheetMenu != null;
-
-        if (documentWindowController != null) {
-            ObservableList<File> sceneStyleSheets = documentWindowController.getEditorController().getSceneStyleSheets();
-
-            if (sceneStyleSheets != null) {
-                removeSceneStyleSheetMenu.getItems().clear();
-                openSceneStyleSheetMenu.getItems().clear();
-
-                if (sceneStyleSheets.size() == 0) {
-                    MenuItem mi = new MenuItem(I18N.getString("scenestylesheet.none"));
-                    mi.setDisable(true);
-                    removeSceneStyleSheetMenu.getItems().add(mi);
-                    MenuItem mi2 = new MenuItem(I18N.getString("scenestylesheet.none"));
-                    mi2.setDisable(true);
-                    openSceneStyleSheetMenu.getItems().add(mi2);
-                } else {
-                    for (File f : sceneStyleSheets) {
-                        MenuItem mi = new MenuItem(f.getName());
-                        mi.setUserData(new RemoveSceneStyleSheetActionController(f));
-                        removeSceneStyleSheetMenu.getItems().add(mi);
-                        MenuItem mi2 = new MenuItem(f.getName());
-                        mi2.setUserData(new OpenSceneStyleSheetActionController(f));
-                        openSceneStyleSheetMenu.getItems().add(mi2);
-                    }
-                }
-            }
-        }
+//        assert removeSceneStyleSheetMenu != null;
+//
+//        if (documentWindowController != null) {
+//
+//            ObservableList<File> sceneStyleSheets = documentWindowController.getEditorController().getSceneStyleSheets();
+//
+//            if (sceneStyleSheets != null) {
+//                removeSceneStyleSheetMenu.getItems().clear();
+//                openSceneStyleSheetMenu.getItems().clear();
+//
+//                if (sceneStyleSheets.size() == 0) {
+//                    MenuItem mi = new MenuItem(I18N.getString("scenestylesheet.none"));
+//                    mi.setDisable(true);
+//                    removeSceneStyleSheetMenu.getItems().add(mi);
+//                    MenuItem mi2 = new MenuItem(I18N.getString("scenestylesheet.none"));
+//                    mi2.setDisable(true);
+//                    openSceneStyleSheetMenu.getItems().add(mi2);
+//                } else {
+//                    for (File f : sceneStyleSheets) {
+//                        MenuItem mi = new MenuItem(f.getName());
+//                        mi.setUserData(new RemoveSceneStyleSheetActionController(f));
+//                        removeSceneStyleSheetMenu.getItems().add(mi);
+//                        MenuItem mi2 = new MenuItem(f.getName());
+//                        mi2.setUserData(new OpenSceneStyleSheetActionController(f));
+//                        openSceneStyleSheetMenu.getItems().add(mi2);
+//                    }
+//                }
+//            }
+//        }
     }
 
     /*
@@ -1391,17 +1365,17 @@ public class MenuBarController implements InitializingBean {
         assert t.getSource() == insertMenu;
         updateCustomPartOfInsertMenu();
     };
-    
+
     private void updateCustomPartOfInsertMenu() {
         assert insertMenu != null;
-        assert insertCustomMenu != null;        
+        assert insertCustomMenu != null;
 
         if (documentWindowController != null) {
             final EditorController editorController = documentWindowController.getEditorController();
             assert editorController.getLibrary() != null;
 
             Set<LibraryItem> sectionItems = new TreeSet<>(new LibraryItemNameComparator());
-            
+
             // Collect custom items
             for (LibraryItem li : editorController.getLibrary().getItems()) {
                 if (li.getSection().equals(UserLibrary.TAG_USER_DEFINED)) {
@@ -1412,18 +1386,18 @@ public class MenuBarController implements InitializingBean {
             // Make custom items visible and accessible via custom menu.
             if (sectionItems.size() > 0) {
                 insertCustomMenu.getItems().clear();
-                
+
                 for (LibraryItem li : sectionItems) {
                     insertCustomMenu.getItems().add(makeMenuItemForLibraryItem(li));
                 }
-                
+
                 insertCustomMenu.setVisible(true);
             } else {
                 insertCustomMenu.setVisible(false);
             }
         }
     }
-    
+
     // At constructing time we dunno if we've custom items then we keep it hidden.
     private void constructCustomPartOfInsertMenu() {
         assert insertMenu != null;
@@ -1431,7 +1405,7 @@ public class MenuBarController implements InitializingBean {
         insertMenu.getItems().add(0, insertCustomMenu);
         insertCustomMenu.setVisible(false);
     }
-    
+
     // We consider the content of built-in library is static: it cannot change
     // unless its implementation is modified.
     private void constructBuiltinPartOfInsertMenu() {
@@ -1482,8 +1456,8 @@ public class MenuBarController implements InitializingBean {
         if (documentWindowController != null && documentWindowController.getStage().isFocused()) {
             final EditorController editorController = documentWindowController.getEditorController();
             for (MenuItem menuItem : sectionMenu.getItems()) {
-                assert menuItem.getUserData() instanceof LibraryItem;
-                final LibraryItem li = (LibraryItem) menuItem.getUserData();
+                assert menuItem.getUserData() instanceof LibraryItemImpl;
+                final LibraryItemImpl li = (LibraryItemImpl) menuItem.getUserData();
                 final boolean enabled = editorController.canPerformInsert(li);
                 menuItem.setDisable(!enabled);
             }
@@ -1494,7 +1468,7 @@ public class MenuBarController implements InitializingBean {
             // window is opened (Preferences, Skeleton, Preview) one has to give
             // focus to the document window to become able to open the Insert menu.
             for (MenuItem menuItem : sectionMenu.getItems()) {
-                assert menuItem.getUserData() instanceof LibraryItem;
+                assert menuItem.getUserData() instanceof LibraryItemImpl;
                 menuItem.setDisable(true);
             }
         }
@@ -1578,28 +1552,11 @@ public class MenuBarController implements InitializingBean {
 
         @Override
         public void handle(ActionEvent t) {
-        	DocumentScope.setCurrentScope(dwc);
+            DocumentScope.setCurrentScope(dwc);
             dwc.getStage().toFront();
         }
     }
 
-    /*
-     * Private (MenuItemController)
-     */
-    abstract class MenuItemController {
-
-        public abstract boolean canPerform();
-
-        public abstract void perform();
-
-        public String getTitle() {
-            return null;
-        }
-
-        public boolean isSelected() {
-            return false;
-        }
-    }
 
     class UndoActionController extends MenuItemController {
 
@@ -1863,7 +1820,7 @@ public class MenuBarController implements InitializingBean {
         }
 
     }
-    
+
     class ZoomInActionController extends MenuItemController {
 
         @Override
@@ -1893,7 +1850,7 @@ public class MenuBarController implements InitializingBean {
         }
 
     }
-    
+
 
     class ZoomOutActionController extends MenuItemController {
 
@@ -1924,7 +1881,7 @@ public class MenuBarController implements InitializingBean {
         }
 
     }
-    
+
     private void updatePreviewWindowSize(Size size) {
         if (documentWindowController != null
                 && documentWindowController.getPreviewWindowController() != null
@@ -1973,19 +1930,19 @@ public class MenuBarController implements InitializingBean {
                         && ! documentWindowController.getEditorController().is3D()
                         && documentWindowController.getEditorController().isNode();
             }
-            
+
             return res;
         }
-        
+
         @Override
         public String getTitle() {
             if (documentWindowController == null) {
                 return null;
             }
-            
+
             if (size == EditorController.Size.SIZE_PREFERRED) {
                 String title = I18N.getString("menu.title.size.preferred");
-                
+
                 if (documentWindowController.getPreviewWindowController() != null
                         && documentWindowController.getPreviewWindowController().getStage().isShowing()
                         && ! documentWindowController.getEditorController().is3D()
@@ -1994,361 +1951,11 @@ public class MenuBarController implements InitializingBean {
                                 getStringFromDouble(documentWindowController.getPreviewWindowController().getRoot().prefWidth(-1)),
                                 getStringFromDouble(documentWindowController.getPreviewWindowController().getRoot().prefHeight(-1)));
                 }
-                
+
                 return title;
             } else {
                 return null;
             }
-        }
-    }
-
-    class SetThemeActionController extends MenuItemController {
-
-        private final Theme theme;
-
-        public SetThemeActionController(Theme theme) {
-            this.theme = theme;
-        }
-
-        @Override
-        public boolean canPerform() {
-            boolean res = documentWindowController != null;
-            if (res) {
-                final Theme currentTheme
-                        = documentWindowController.getEditorController().getTheme();
-                // CASPIAN_HIGH_CONTRAST can be selected only if another CASPIAN
-                // theme is active.
-                // MODENA_HIGH_CONTRAST_<*> can be selected only if another MODENA
-                // theme is active.
-                if (theme == Theme.CASPIAN_HIGH_CONTRAST
-                        && ThemeUtils.isModena(currentTheme)) {
-                    res = false;
-                    caspianHighContrastThemeMenuItem.setSelected(false);
-                } else if (theme == Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE
-                        && ThemeUtils.isCaspian(currentTheme)) {
-                    res = false;
-                    modenaHighContrastBlackonwhiteThemeMenuItem.setSelected(false);
-                } else if (theme == Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK
-                        && ThemeUtils.isCaspian(currentTheme)) {
-                    res = false;
-                    modenaHighContrastWhiteonblackThemeMenuItem.setSelected(false);
-                } else if (theme == Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK
-                        && ThemeUtils.isCaspian(currentTheme)) {
-                    res = false;
-                    modenaHighContrastYellowonblackThemeMenuItem.setSelected(false);
-                }
-            }
-            
-            return res;
-        }
-
-        @Override
-        public void perform() {
-            assert documentWindowController != null;
-            Theme currentTheme
-                            = documentWindowController.getEditorController().getTheme();
-            Theme overridingTheme = theme;
-
-            switch (theme) {
-                case CASPIAN:
-                    if (caspianHighContrastThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.CASPIAN_HIGH_CONTRAST;
-                    }
-                    break;
-                case CASPIAN_EMBEDDED:
-                    if (caspianHighContrastThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.CASPIAN_EMBEDDED_HIGH_CONTRAST;
-                    }
-                    break;
-                case CASPIAN_EMBEDDED_QVGA:
-                    if (caspianHighContrastThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST;
-                    }
-                    break;
-                case CASPIAN_HIGH_CONTRAST:
-                    switch (currentTheme) {
-                        case CASPIAN:
-                            if (caspianHighContrastThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.CASPIAN_HIGH_CONTRAST;
-                            }
-                            break;
-                        case CASPIAN_EMBEDDED:
-                            if (caspianHighContrastThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.CASPIAN_EMBEDDED_HIGH_CONTRAST;
-                            }
-                            break;
-                        case CASPIAN_EMBEDDED_QVGA:
-                            if (caspianHighContrastThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST;
-                            }
-                            break;
-                        case CASPIAN_HIGH_CONTRAST:
-                            if (!caspianHighContrastThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.CASPIAN;
-                            }
-                            break;
-                        case CASPIAN_EMBEDDED_HIGH_CONTRAST:
-                            if (!caspianHighContrastThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.CASPIAN_EMBEDDED;
-                            }
-                            break;
-                        case CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST:
-                            if (!caspianHighContrastThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.CASPIAN_EMBEDDED_QVGA;
-                            }
-                            break;
-                        default:
-                            // All known 6 Caspian cases are handled above.
-                            assert false;
-                            break;
-                    }
-                    break;
-                case MODENA:
-                    if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE;
-                    } else if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK;
-                    } else if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK;
-                    }
-                    break;
-                case MODENA_TOUCH:
-                    if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE;
-                    } else if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK;
-                    } else if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                        overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK;
-                    }
-                    break;
-                case MODENA_HIGH_CONTRAST_BLACK_ON_WHITE:
-                    switch (currentTheme) {
-                        case MODENA:
-                            if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE;
-                            }
-                            break;
-                        case MODENA_TOUCH:
-                            if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE;
-                            }
-                            break;
-                        case MODENA_HIGH_CONTRAST_BLACK_ON_WHITE:
-                            if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA;
-                            }
-                            break;
-                        case MODENA_HIGH_CONTRAST_WHITE_ON_BLACK:
-                            break;
-                        case MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE:
-                            if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK:
-                            if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                            if (modenaHighContrastBlackonwhiteThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                break;
-                case MODENA_HIGH_CONTRAST_WHITE_ON_BLACK:
-                    switch (currentTheme) {
-                        case MODENA:
-                                if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_TOUCH:
-                                if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_HIGH_CONTRAST_BLACK_ON_WHITE:
-                            break;
-                        case MODENA_HIGH_CONTRAST_WHITE_ON_BLACK:
-                            if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA;
-                            }
-                            break;
-                        case MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE:
-                            if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK:
-                            if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                            if (modenaHighContrastWhiteonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                break;
-                case MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                    switch (currentTheme) {
-                        case MODENA:
-                            if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_TOUCH:
-                            if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_HIGH_CONTRAST_BLACK_ON_WHITE:
-                            break;
-                        case MODENA_HIGH_CONTRAST_WHITE_ON_BLACK:
-                            break;
-                        case MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                            if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE:
-                            if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK:
-                            if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK;
-                            }
-                            break;
-                        case MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                            if (modenaHighContrastYellowonblackThemeMenuItem.isSelected()) {
-                                overridingTheme = Theme.MODENA_TOUCH;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                break;
-                default:
-                    assert false;
-                    break;
-            }
-
-            documentWindowController.getEditorController().setTheme(overridingTheme);
-            if (overridingTheme == Theme.GLUON_MOBILE_LIGHT) {
-                documentWindowController.getEditorController().setGluonTheme(GluonTheme.LIGHT);
-            } else if (overridingTheme == Theme.GLUON_MOBILE_DARK) {
-                documentWindowController.getEditorController().setGluonTheme(GluonTheme.DARK);
-            }
-        }
-
-        @Override
-        public boolean isSelected() {
-            boolean res;
-
-            if (documentWindowController == null) {
-                res = false;
-            } else {
-                final Theme currentTheme
-                        = documentWindowController.getEditorController().getTheme();
-
-                switch (theme) {
-                    case GLUON_MOBILE_LIGHT:
-                        res = ThemeUtils.isGluonMobileLight(currentTheme);
-                        break;
-                    case GLUON_MOBILE_DARK:
-                        res = ThemeUtils.isGluonMobileDark(currentTheme);
-                        break;
-                    // CASPIAN_HIGH_CONTRAST can be selected only if another CASPIAN
-                    // theme is active.
-                    case CASPIAN_HIGH_CONTRAST:
-                        res = ThemeUtils.isCaspian(currentTheme);
-                        break;
-                    case CASPIAN:
-                        res = (currentTheme == theme || currentTheme == Theme.CASPIAN_HIGH_CONTRAST);
-                        break;
-                    case CASPIAN_EMBEDDED:
-                        res = (currentTheme == theme || currentTheme == Theme.CASPIAN_EMBEDDED_HIGH_CONTRAST);
-                        break;
-                    case CASPIAN_EMBEDDED_QVGA:
-                        res = (currentTheme == theme || currentTheme == Theme.CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST);
-                        break;
-                    case MODENA_HIGH_CONTRAST_BLACK_ON_WHITE:
-                        res = ThemeUtils.isModenaBlackonwhite(currentTheme)
-                                && ThemeUtils.isModenaHighContrast(currentTheme);
-                        break;
-                    case MODENA_HIGH_CONTRAST_WHITE_ON_BLACK:
-                        res = ThemeUtils.isModenaWhiteonblack(currentTheme)
-                                && ThemeUtils.isModenaHighContrast(currentTheme);
-                        break;
-                    case MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK:
-                        res = ThemeUtils.isModenaYellowonblack(currentTheme)
-                                && ThemeUtils.isModenaHighContrast(currentTheme);
-                        break;
-                    case MODENA:
-                        res = (currentTheme == theme
-                                || (ThemeUtils.isModenaHighContrast(currentTheme)
-                                    && !ThemeUtils.isModenaTouch(currentTheme)));
-                        break;
-                    case MODENA_TOUCH:
-                        res = (currentTheme == theme || ThemeUtils.isModenaTouchHighContrast(currentTheme));
-                        break;
-                    default:
-                        assert false;
-                        res = false;
-                        break;
-                }
-            }
-
-            return res;
-        }
-    }
-
-    class GluonActionController extends MenuItemController {
-
-        private GluonSwatch gluonSwatch;
-
-        public GluonActionController(GluonSwatch gluonSwatch) {
-            this.gluonSwatch = gluonSwatch;
-        }
-
-        public GluonSwatch getSwatch() {
-            return gluonSwatch;
-        }
-
-        @Override
-        public boolean canPerform() {
-            Theme currentTheme
-                    = documentWindowController.getEditorController().getTheme();
-            return currentTheme.equals(Theme.GLUON_MOBILE_LIGHT) || currentTheme.equals(Theme.GLUON_MOBILE_DARK);
-        }
-
-        @Override
-        public void perform() {
-            documentWindowController.getEditorController().setGluonSwatch(gluonSwatch);
-        }
-
-        @Override
-        public boolean isSelected() {
-            boolean res = false;
-            if (documentWindowController == null) {
-                res = false;
-            } else if (gluonSwatch != null) {
-                res = gluonSwatch == documentWindowController.getEditorController().getGluonSwatch();
-            }
-            return res;
         }
     }
 
@@ -2409,7 +2016,7 @@ public class MenuBarController implements InitializingBean {
     public Set<KeyCombination> getAccelerators() {
         return keyToMenu.keySet();
     }
-    
+
     // Returns a String with no trailing zero; if decimal part is non zero then
     // it is kept.
     private String getStringFromDouble(double value) {

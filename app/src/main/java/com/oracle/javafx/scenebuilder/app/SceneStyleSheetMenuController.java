@@ -39,9 +39,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 
@@ -57,55 +57,58 @@ import javafx.stage.FileChooser;
 @Lazy
 public class SceneStyleSheetMenuController {
     private final DocumentWindowController documentWindowController;
-    
+
     public SceneStyleSheetMenuController(DocumentWindowController dwc) {
         this.documentWindowController = dwc;
     }
 
+    //TODO uncomment and fix for full theme support
     void performAddSceneStyleSheet() {
-        boolean knownFilesModified = false;
-        ObservableList<File> knownFiles = documentWindowController.getEditorController().getSceneStyleSheets();
-        
-        if (knownFiles == null) {
-            knownFiles = FXCollections.observableArrayList();
-        }
-        
-        // Open a file chooser for *.css & *.bss
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                I18N.getString("scenestylesheet.filechooser.filter.msg"),
-                "*.css", "*.bss")); //NOI18N
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(documentWindowController.getStage());
-        
-        if (selectedFiles != null) {
-            assert selectedFiles.isEmpty() == false;
-            // Keep track of the user choice for next time
-            EditorController.updateNextInitialDirectory(selectedFiles.get(0));
-            for (File f : selectedFiles) {
-                if (!knownFiles.contains(f)) {
-                    knownFiles.add(f);
-                    knownFilesModified = true;
-                }
-            }
-        }
 
-        // Update sceneStyleSheet property so that listeners will react accordingly
-        if (knownFilesModified) {
-            documentWindowController.getEditorController().setSceneStyleSheets(knownFiles);
-        }
+
+//        boolean knownFilesModified = false;
+//        ObservableList<File> knownFiles = documentWindowController.getEditorController().getSceneStyleSheets();
+//
+//        if (knownFiles == null) {
+//            knownFiles = FXCollections.observableArrayList();
+//        }
+//
+//        // Open a file chooser for *.css & *.bss
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+//                I18N.getString("scenestylesheet.filechooser.filter.msg"),
+//                "*.css", "*.bss")); //NOI18N
+//        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+//        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(documentWindowController.getStage());
+//
+//        if (selectedFiles != null) {
+//            assert selectedFiles.isEmpty() == false;
+//            // Keep track of the user choice for next time
+//            EditorController.updateNextInitialDirectory(selectedFiles.get(0));
+//            for (File f : selectedFiles) {
+//                if (!knownFiles.contains(f)) {
+//                    knownFiles.add(f);
+//                    knownFilesModified = true;
+//                }
+//            }
+//        }
+//
+//        // Update sceneStyleSheet property so that listeners will react accordingly
+//        if (knownFilesModified) {
+//            documentWindowController.getEditorController().setSceneStyleSheets(knownFiles);
+//        }
     }
-    
+  //TODO uncomment and fix for full theme support
     public void performRemoveSceneStyleSheet(File toRemove) {
-        ObservableList<File> knownFiles = documentWindowController.getEditorController().getSceneStyleSheets();
-        assert knownFiles != null;
-        
-        if (knownFiles.contains(toRemove)) {
-            knownFiles.remove(toRemove);
-            documentWindowController.getEditorController().setSceneStyleSheets(knownFiles);
-        }
+//        ObservableList<File> knownFiles = documentWindowController.getEditorController().getSceneStyleSheets();
+//        assert knownFiles != null;
+//
+//        if (knownFiles.contains(toRemove)) {
+//            knownFiles.remove(toRemove);
+//            documentWindowController.getEditorController().setSceneStyleSheets(knownFiles);
+//        }
     }
-    
+
     public void performOpenSceneStyleSheet(File toOpen) {
         try {
             EditorPlatform.open(toOpen.getPath());
@@ -118,5 +121,5 @@ public class SceneStyleSheetMenuController {
             errorDialog.showAndWait();
         }
     }
-    
+
 }

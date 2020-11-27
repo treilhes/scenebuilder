@@ -34,12 +34,15 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.reference.ObjectDeleter;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.Axis;
@@ -51,8 +54,8 @@ public class DeleteObjectJob extends InlineDocumentJob {
 
     private final FXOMObject targetFxomObject;
 
-    public DeleteObjectJob(FXOMObject fxomObject, EditorController editorController) {
-        super(editorController);
+    public DeleteObjectJob(ApplicationContext context, FXOMObject fxomObject, Editor editor) {
+        super(context, editor);
 
         assert fxomObject != null;
 
@@ -90,23 +93,23 @@ public class DeleteObjectJob extends InlineDocumentJob {
              * targetFxomObject is the root object
              * => we reset the root object to null
              */
-            final Job setRootJob = new SetDocumentRootJob(null, getEditorController());
+            final Job setRootJob = new SetDocumentRootJob(getContext(), null, getEditorController()).extend();
             setRootJob.execute();
             result.add(setRootJob);
 
         } else {
-            
+
             /*
              * targetFxomObject is not the root object
              * => we delegate to ObjectDeleter
              * => this class will take care of references
              */
-            
-            final ObjectDeleter deleter = new ObjectDeleter(getEditorController());
+
+            final ObjectDeleter deleter = new ObjectDeleter(getContext(), getEditorController());
             deleter.delete(targetFxomObject);
             result.addAll(deleter.getExecutedJobs());
         }
-        
+
         return result;
     }
 
@@ -134,7 +137,7 @@ public class DeleteObjectJob extends InlineDocumentJob {
 
         return sb.toString();
     }
-    
+
     FXOMObject getTargetFxomObject() {
         return targetFxomObject;
     }

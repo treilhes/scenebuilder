@@ -36,9 +36,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.ButtonBar;
@@ -48,8 +50,8 @@ import javafx.scene.control.ButtonBar;
  */
 public class WrapInButtonBarJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInButtonBarJob(EditorController editorController) {
-        super(editorController);
+    public WrapInButtonBarJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = ButtonBar.class;
     }
 

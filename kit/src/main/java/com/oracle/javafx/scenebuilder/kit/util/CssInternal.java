@@ -45,11 +45,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
+import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
 
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.FXCollections;
@@ -75,22 +80,22 @@ import javafx.scene.Parent;
  */
 public class CssInternal {
 
-    private final static String[] themeUrls = {
-        Theme.CASPIAN_EMBEDDED_HIGH_CONTRAST.getStylesheetURL(),
-        Theme.CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST.getStylesheetURL(),
-        Theme.CASPIAN_EMBEDDED_QVGA.getStylesheetURL(),
-        Theme.CASPIAN_EMBEDDED.getStylesheetURL(),
-        Theme.CASPIAN_HIGH_CONTRAST.getStylesheetURL(),
-        Theme.CASPIAN.getStylesheetURL(),
-        Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE.getStylesheetURL(),
-        Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK.getStylesheetURL(),
-        Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK.getStylesheetURL(),
-        Theme.MODENA.getStylesheetURL(),
-        Theme.MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE.getStylesheetURL(),
-        Theme.MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK.getStylesheetURL(),
-        Theme.MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK.getStylesheetURL(),
-        Theme.MODENA_TOUCH.getStylesheetURL()
-    };
+//    private final static String[] themeUrls = {
+//        Theme.CASPIAN_EMBEDDED_HIGH_CONTRAST.getStylesheetURL(),
+//        Theme.CASPIAN_EMBEDDED_QVGA_HIGH_CONTRAST.getStylesheetURL(),
+//        Theme.CASPIAN_EMBEDDED_QVGA.getStylesheetURL(),
+//        Theme.CASPIAN_EMBEDDED.getStylesheetURL(),
+//        Theme.CASPIAN_HIGH_CONTRAST.getStylesheetURL(),
+//        Theme.CASPIAN.getStylesheetURL(),
+//        Theme.MODENA_HIGH_CONTRAST_BLACK_ON_WHITE.getStylesheetURL(),
+//        Theme.MODENA_HIGH_CONTRAST_WHITE_ON_BLACK.getStylesheetURL(),
+//        Theme.MODENA_HIGH_CONTRAST_YELLOW_ON_BLACK.getStylesheetURL(),
+//        Theme.MODENA.getStylesheetURL(),
+//        Theme.MODENA_TOUCH_HIGH_CONTRAST_BLACK_ON_WHITE.getStylesheetURL(),
+//        Theme.MODENA_TOUCH_HIGH_CONTRAST_WHITE_ON_BLACK.getStylesheetURL(),
+//        Theme.MODENA_TOUCH_HIGH_CONTRAST_YELLOW_ON_BLACK.getStylesheetURL(),
+//        Theme.MODENA_TOUCH.getStylesheetURL()
+//    };
 
     /**
      * Check if the input style is from a theme stylesheet (caspian or modena).
@@ -102,14 +107,25 @@ public class CssInternal {
         return isThemeRule(style.getDeclaration().getRule());
     }
 
+//    public static boolean isCaspianTheme(Style style) {
+//        return style.getDeclaration().getRule().getStylesheet().getUrl()
+//                .endsWith(Theme.CASPIAN.getStylesheetURL());
+//    }
+//
+//    public static boolean isModenaTheme(Style style) {
+//        return style.getDeclaration().getRule().getStylesheet().getUrl()
+//                .endsWith(Theme.MODENA.getStylesheetURL());
+//    }
+
+//  TODO why those methods, they are breaking theme encapsulation
     public static boolean isCaspianTheme(Style style) {
         return style.getDeclaration().getRule().getStylesheet().getUrl()
-                .endsWith(Theme.CASPIAN.getStylesheetURL());
+                .endsWith(new DefaultThemesList.Caspian().getUserAgentStylesheet());
     }
 
     public static boolean isModenaTheme(Style style) {
         return style.getDeclaration().getRule().getStylesheet().getUrl()
-                .endsWith(Theme.MODENA.getStylesheetURL());
+                .endsWith(new DefaultThemesList.Modena().getUserAgentStylesheet());
     }
 
     public static String getThemeDisplayName(Style style) {
@@ -130,9 +146,26 @@ public class CssInternal {
         return themeName;
     }
 
+//  TODO why those methods, they are breaking theme encapsulation
     public static boolean isThemeRule(Rule rule) {
         String stylePath = rule.getStylesheet().getUrl();
         assert stylePath != null;
+
+        //FIXME temp fix to remove, worst: gluon is not event present
+
+        List<String> themeUrls = new ArrayList<>();
+        new DefaultThemesList().themes().forEach(t -> {
+        	try {
+				themeUrls.add(t.newInstance().getUserAgentStylesheet());
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        });
+
         for (String themeUrl : themeUrls) {
             if (stylePath.endsWith(themeUrl)) {
                 return true;
@@ -145,8 +178,18 @@ public class CssInternal {
         return getThemeStyleClasses(theme).contains(styleClass);
     }
 
-    public static List<String> getThemeStyleClasses(Theme theme) {
-        String themeStyleSheet = theme.getStylesheetURL();
+//    public static List<String> getThemeStyleClasses(Theme theme) {
+//        String themeStyleSheet = theme.getStylesheetURL();
+//        Set<String> themeClasses = new HashSet<>();
+//        // For Theme css, we need to get the text css (.css) to be able to parse it.
+//        // (instead of the default binary format .bss)
+//        themeClasses.addAll(getStyleClasses(Deprecation.getThemeTextStylesheet(themeStyleSheet)));
+//        return new ArrayList<>(themeClasses);
+//    }
+
+    public static List<String> getThemeStyleClasses(StylesheetProvider2 theme) {
+    	//TODO maybe some other css are needed here
+        String themeStyleSheet = theme.getUserAgentStylesheet();
         Set<String> themeClasses = new HashSet<>();
         // For Theme css, we need to get the text css (.css) to be able to parse it.
         // (instead of the default binary format .bss)
@@ -160,11 +203,11 @@ public class CssInternal {
         return styleClassMap.get(styleClass);
     }
 
-    public static List<String> getStyleClasses(EditorController editorController, Set<FXOMInstance> instances) {
-        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
-    }
+//    public static List<String> getStyleClasses(EditorController editorController, Set<FXOMInstance> instances) {
+//        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
+//    }
 
-    public static Map<String, String> getStyleClassesMap(EditorController editorController, Set<FXOMInstance> instances) {
+    public static Map<String, String> getStyleClassesMap(StylesheetConfigManager stylesheetConfigManager, Editor editorController, Set<FXOMInstance> instances) {
         Map<String, String> classesMap = new TreeMap<>();
         Object fxRoot = null;
         for (FXOMInstance instance : instances) {
@@ -176,19 +219,31 @@ public class CssInternal {
         }
 
         // Handle the Scene stylesheets (if any)
-        List<File> sceneStyleSheets = editorController.getSceneStyleSheets();
-        if (sceneStyleSheets != null) {
-            for (File stylesheet : sceneStyleSheets) {
-                try {
-                    URL stylesheetUrl = stylesheet.toURI().toURL();
-                    for (String styleClass : getStyleClasses(stylesheetUrl)) {
-                        classesMap.put(styleClass, stylesheetUrl.toExternalForm());
+        //List<File> sceneStyleSheets = editorController.getSceneStyleSheets();
+
+    //  TODO check if it is a bad fix
+        //StylesheetProvider2 sp = stylesheetConfigManager.configUpdated().blockingMostRecent(new StylesheetConfig()).iterator().next();
+        StylesheetProvider2 sp = null;
+
+        if (sp != null) {
+        	List<File> sceneStyleSheets = sp
+            		.getStylesheets().stream().map(s -> new File(s)).filter(f -> f.exists())
+            		.collect(Collectors.toList());
+
+            if (sceneStyleSheets != null) {
+                for (File stylesheet : sceneStyleSheets) {
+                    try {
+                        URL stylesheetUrl = stylesheet.toURI().toURL();
+                        for (String styleClass : getStyleClasses(stylesheetUrl)) {
+                            classesMap.put(styleClass, stylesheetUrl.toExternalForm());
+                        }
+                    } catch (MalformedURLException ex) {
+                        return classesMap;
                     }
-                } catch (MalformedURLException ex) {
-                    return classesMap;
                 }
             }
         }
+
         return classesMap;
     }
 
@@ -321,7 +376,7 @@ public class CssInternal {
                 continue;
             }
             if (name.equals(prop.getName().getName())) {
-                // If the value has an origin of Author or Inline 
+                // If the value has an origin of Author or Inline
                 // then we have a property ruled by CSS, otherwise return null
                 // This is in sync because the map is not empty
                 StyleOrigin origin = beanProp.getStyleOrigin();

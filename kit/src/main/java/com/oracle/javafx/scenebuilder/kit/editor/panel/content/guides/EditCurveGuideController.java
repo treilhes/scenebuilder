@@ -35,20 +35,22 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.EditCurveGuide;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 
-public class EditCurveGuideController {
+public class EditCurveGuideController implements EditCurveGuide{
 
     private final double MATCH_DISTANCE = 6.0;
 
     private final List<Point2D> curvePoints = new ArrayList<>();
-    
+
     private final PointIndex pointIndex = new PointIndex();
     private final HorizontalLineIndex horizontalLineIndex = new HorizontalLineIndex();
     private final VerticalLineIndex verticalLineIndex = new VerticalLineIndex();
-    
+
     public EditCurveGuideController() {
     }
 
@@ -77,7 +79,7 @@ public class EditCurveGuideController {
         pointIndex.addPoint(new Point2D(minX, maxY));
         pointIndex.addPoint(new Point2D(maxX, minY));
         pointIndex.addPoint(new Point2D(maxX, maxY));
-        
+
         if (addMiddle) {
             final double midX = (minX + maxX) / 2.0;
             final double midY = (minY + maxY) / 2.0;
@@ -97,14 +99,14 @@ public class EditCurveGuideController {
 
     public Point2D correct(Point2D point) {
         assert point != null;
-        
+
         double x = point.getX();
         double y = point.getY();
 
         final List<Point2D> matchedPoints = pointIndex.match(point, MATCH_DISTANCE);
         final List<HorizontalSegment> horizontalMatchingLines = horizontalLineIndex.matchPoint(point, MATCH_DISTANCE);
         final List<VerticalSegment> verticalMatchedLines = verticalLineIndex.matchPoint(point, MATCH_DISTANCE);
-        
+
         if (!matchedPoints.isEmpty()) {
             return matchedPoints.get(0);
         }
@@ -143,5 +145,5 @@ public class EditCurveGuideController {
         }
         return new Point2D(x, y);
     }
-    
+
 }

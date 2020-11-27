@@ -31,14 +31,16 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.relocater.AnchorPaneRelocater;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -56,31 +58,31 @@ public class RelocateNodeJob extends Job {
     private Double oldRightAnchor;
     private Double oldTopAnchor;
     private Double oldBottomAnchor;
-    
+
     private double newLayoutX;
     private double newLayoutY;
     private Double newLeftAnchor;
     private Double newRightAnchor;
     private Double newTopAnchor;
     private Double newBottomAnchor;
-    
+
     private final DoublePropertyMetadata layoutXMeta;
     private final DoublePropertyMetadata layoutYMeta;
     private final DoublePropertyMetadata leftAnchorMeta;
     private final DoublePropertyMetadata rightAnchorMeta;
     private final DoublePropertyMetadata topAnchorMeta;
     private final DoublePropertyMetadata bottomAnchorMeta;
-    
-    public RelocateNodeJob(FXOMInstance fxomInstance, double newLayoutX, double newLayoutY, EditorController editorController) {
-        super(editorController);
-        
+
+    public RelocateNodeJob(ApplicationContext context, FXOMInstance fxomInstance, double newLayoutX, double newLayoutY, Editor editor) {
+        super(context, editor);
+
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject() instanceof Node;
-        
+
         this.fxomInstance = fxomInstance;
         this.newLayoutX = newLayoutX; // Root scene coordinates
         this.newLayoutY = newLayoutY; // Root scene coordinates
-        
+
         final Metadata metadata = Metadata.getMetadata();
         final Class<?> sgoClass = fxomInstance.getSceneGraphObject().getClass();
         final PropertyName layoutXName = new PropertyName("layoutX"); //NOI18N
@@ -108,15 +110,15 @@ public class RelocateNodeJob extends Job {
     public double getNewLayoutY() {
         return newLayoutY;
     }
-    
+
     public void mergeWith(RelocateNodeJob youngerJob) {
-        assert ! (MathUtils.equals(this.newLayoutX, youngerJob.newLayoutX) 
+        assert ! (MathUtils.equals(this.newLayoutX, youngerJob.newLayoutX)
                && MathUtils.equals(this.newLayoutY, youngerJob.newLayoutY));
         this.newLayoutX = youngerJob.newLayoutX;
         this.newLayoutY = youngerJob.newLayoutY;
         updateNewAnchors();
     }
-    
+
     /*
      * Job
      */
@@ -133,9 +135,9 @@ public class RelocateNodeJob extends Job {
         this.oldRightAnchor  = rightAnchorMeta.getValue(fxomInstance);
         this.oldTopAnchor    = topAnchorMeta.getValue(fxomInstance);
         this.oldBottomAnchor = bottomAnchorMeta.getValue(fxomInstance);
-        
+
         updateNewAnchors();
-        
+
         redo();
     }
 
@@ -179,12 +181,12 @@ public class RelocateNodeJob extends Job {
     public String getDescription() {
         return getClass().getSimpleName(); // Not expected to reach the user
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void updateNewAnchors() {
         if ((this.oldLeftAnchor == null) && (this.oldRightAnchor == null)) {
             this.newLeftAnchor = null;

@@ -36,16 +36,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.RowConstraintsListPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.RowConstraintsListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.layout.GridPane;
 
@@ -65,16 +67,16 @@ public class InsertRowJob extends BatchSelectionJob {
     private final int rowIndex;
     private final int insertCount;
 
-    public InsertRowJob(FXOMObject gridPaneObject, 
-            int rowIndex, int insertCount, EditorController editorController) {
-        super(editorController);
-        
+    public InsertRowJob(ApplicationContext context, FXOMObject gridPaneObject,
+            int rowIndex, int insertCount, Editor editor) {
+        super(context, editor);
+
         assert gridPaneObject instanceof FXOMInstance;
         assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
         assert rowIndex >= 0;
         assert rowIndex <= rowContraintsMeta.getValue((FXOMInstance)gridPaneObject).size();
         assert insertCount >= 1;
-        
+
         this.gridPaneObject = (FXOMInstance)gridPaneObject;
         this.rowIndex = rowIndex;
         this.insertCount = insertCount;
@@ -83,24 +85,24 @@ public class InsertRowJob extends BatchSelectionJob {
     /*
      * CompositeJob
      */
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
-        
-        final Job insertJob 
-                = new InsertRowConstraintsJob(gridPaneObject, rowIndex, insertCount, getEditorController());
+
+        final Job insertJob
+                = new InsertRowConstraintsJob(getContext(), gridPaneObject, rowIndex, insertCount, getEditorController()).extend();
         result.add(insertJob);
-        
+
         final int lastRowIndex = rowContraintsMeta.getValue(gridPaneObject).size()-1;
         for (int r = lastRowIndex; r >= rowIndex; r--) {
             final Job moveJob
-                    = new MoveRowContentJob(gridPaneObject, r, +insertCount, getEditorController());
+                    = new MoveRowContentJob(getContext(), gridPaneObject, r, +insertCount, getEditorController()).extend();
             if (moveJob.isExecutable()) {
                 result.add(moveJob);
             } // else column is empty : no children to move
         }
-        
+
         return result;
     }
 

@@ -33,9 +33,9 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.PaintPopupEditor;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
 
 /**
@@ -44,11 +44,11 @@ import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
  */
 public class ColorPopupEditor extends PaintPopupEditor {
 
-    private EditorController editorController;
+    private Editor editorController;
 
-    public ColorPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
-        super(propMeta, selectedClasses, editorController);
-        this.editorController = editorController;
+    public ColorPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
+        super(propMeta, selectedClasses, editor);
+        this.editorController = editor;
     }
 
     @Override

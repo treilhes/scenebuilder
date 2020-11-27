@@ -37,18 +37,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  *
@@ -58,13 +61,13 @@ public class ModifySelectionJob extends BatchDocumentJob {
     protected final ValuePropertyMetadata propertyMetadata;
     protected final Object newValue;
 
-    public ModifySelectionJob(ValuePropertyMetadata propertyMetadata,
-            Object newValue, EditorController editorController) {
-        super(editorController);
+    public ModifySelectionJob(ApplicationContext context, ValuePropertyMetadata propertyMetadata,
+            Object newValue, Editor editor) {
+        super(context, editor);
         this.propertyMetadata = propertyMetadata;
         this.newValue = newValue;
     }
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
@@ -79,8 +82,8 @@ public class ModifySelectionJob extends BatchDocumentJob {
         }
         // Add ModifyObject jobs
         for (FXOMInstance fxomInstance : candidates) {
-            final ModifyObjectJob subJob = new ModifyObjectJob(
-                    fxomInstance, propertyMetadata, newValue, getEditorController());
+            final Job subJob = new ModifyObjectJob(getContext(),
+                    fxomInstance, propertyMetadata, newValue, getEditorController()).extend();
             if (subJob.isExecutable()) {
                 result.add(subJob);
             }
@@ -153,7 +156,7 @@ public class ModifySelectionJob extends BatchDocumentJob {
                         subJobCount);
                 break;
         }
-        
+
         return result;
     }
 }

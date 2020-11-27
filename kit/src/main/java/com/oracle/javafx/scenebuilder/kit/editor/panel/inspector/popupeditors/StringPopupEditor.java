@@ -33,8 +33,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors;
 
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;

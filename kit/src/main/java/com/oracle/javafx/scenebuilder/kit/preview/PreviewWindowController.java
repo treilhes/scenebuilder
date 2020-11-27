@@ -42,15 +42,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractWindowController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.preferences.ThemeUtils;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.util.Utils;
 
 import javafx.application.Platform;
@@ -86,9 +84,9 @@ public final class PreviewWindowController extends AbstractWindowController {
     private CameraType cameraType;
     private boolean autoResize3DContent = true;
     private static final String NID_PREVIEW_ROOT = "previewRoot"; //NOI18N
-    private Theme editorControllerTheme;
-    private GluonTheme editorControllerGluonTheme;
-    private GluonSwatch editorControllerGluonSwatch;
+//    private Theme editorControllerTheme;
+//    private GluonTheme editorControllerGluonTheme;
+//    private GluonSwatch editorControllerGluonSwatch;
     private ObservableList<File> sceneStyleSheet;
     private Size currentSize = Size.SIZE_PREFERRED;
     private boolean sizeChangedFromMenu = false;
@@ -102,6 +100,8 @@ public final class PreviewWindowController extends AbstractWindowController {
     private boolean isDirty = false;
     private final long IMMEDIATE = 0; // milliseconds
     private final long DELAYED = 1000; // milliseconds
+	private final StylesheetConfigManager stylesheetConfigManager;
+	private StylesheetProvider2 stylesheetConfig;
 
     /**
      * The type of Camera used by the Preview panel.
@@ -111,9 +111,13 @@ public final class PreviewWindowController extends AbstractWindowController {
         PARALLEL, PERSPECTIVE
     }
 
-    public PreviewWindowController(EditorController editorController, Stage owner) {
+    public PreviewWindowController(
+    		EditorController editorController,
+    		StylesheetConfigManager stylesheetConfigManager,
+    		Stage owner) {
         super(owner);
         this.editorController = editorController;
+        this.stylesheetConfigManager = stylesheetConfigManager;
         this.editorController.fxomDocumentProperty().addListener(
                 (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
                     assert editorController.getFxomDocument() == nd;
@@ -133,37 +137,41 @@ public final class PreviewWindowController extends AbstractWindowController {
             editorController.getFxomDocument().cssRevisionProperty().addListener(cssRevisionListener);
         }
 
-        this.editorControllerTheme = editorController.getTheme();
-        this.editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> {
-            if (t1 != null) {
-                editorControllerTheme = t1;
-                requestUpdate(DELAYED);
-            }
+        stylesheetConfigManager.configUpdated().subscribe(s -> {
+        	stylesheetConfig = s;
+        	requestUpdate(DELAYED);
         });
-
-        this.editorControllerGluonSwatch = editorController.getGluonSwatch();
-        this.editorController.gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                editorControllerGluonSwatch = newValue;
-                requestUpdate(DELAYED);
-            }
-        }));
-
-        this.editorControllerGluonTheme = editorController.getGluonTheme();
-        this.editorController.gluonThemeProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                editorControllerGluonTheme = newValue;
-                requestUpdate(DELAYED);
-            }
-        }));
-
-        this.sceneStyleSheet = editorController.getSceneStyleSheets();
-        this.editorController.sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
-            if (t1 != null) {
-                sceneStyleSheet = t1;
-                requestUpdate(DELAYED);
-            }
-        });
+//        this.editorControllerTheme = editorController.getTheme();
+//        this.editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> {
+//            if (t1 != null) {
+//                editorControllerTheme = t1;
+//                requestUpdate(DELAYED);
+//            }
+//        });
+//
+//        this.editorControllerGluonSwatch = editorController.getGluonSwatch();
+//        this.editorController.gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                editorControllerGluonSwatch = newValue;
+//                requestUpdate(DELAYED);
+//            }
+//        }));
+//
+//        this.editorControllerGluonTheme = editorController.getGluonTheme();
+//        this.editorController.gluonThemeProperty().addListener(((observable, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                editorControllerGluonTheme = newValue;
+//                requestUpdate(DELAYED);
+//            }
+//        }));
+//
+//        this.sceneStyleSheet = editorController.getSceneStyleSheets();
+//        this.editorController.sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
+//            if (t1 != null) {
+//                sceneStyleSheet = t1;
+//                requestUpdate(DELAYED);
+//            }
+//        });
 
         this.editorController.resourcesProperty().addListener((ChangeListener<ResourceBundle>) (ov, t, t1) -> requestUpdate(DELAYED));
         this.editorController.sampleDataEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
@@ -191,10 +199,10 @@ public final class PreviewWindowController extends AbstractWindowController {
         }
         getStage().close();
     }
-    
-    @Override 
+
+    @Override
     public void onFocus() {}
-    
+
     @Override
     protected void controllerDidCreateStage() {
         updateWindowSize();
@@ -248,7 +256,7 @@ public final class PreviewWindowController extends AbstractWindowController {
         // Preview window ignores the tool style sheet.
         // Unlike other windows, its styling is driven by the user design.
     }
-    
+
     /*
      * Private
      */
@@ -292,7 +300,7 @@ public final class PreviewWindowController extends AbstractWindowController {
                     }
 
                     Object sceneGraphRoot = clone.getDisplayNodeOrSceneGraphRoot();
-                    themeStyleSheetString = editorControllerTheme.getStylesheetURL();
+                    themeStyleSheetString = stylesheetConfig.getUserAgentStylesheet();
 
                     if (sceneGraphRoot instanceof Parent) {
                         ((Parent) sceneGraphRoot).setId(NID_PREVIEW_ROOT);
@@ -344,35 +352,41 @@ public final class PreviewWindowController extends AbstractWindowController {
 
                 getScene().setRoot(getRoot());
                 if (themeStyleSheetString != null) {
-                    String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
-                    String gluonSwatchStylesheet = editorControllerGluonSwatch.getStylesheetURL();
-                    String gluonThemeStylesheet = editorControllerGluonTheme.getStylesheetURL();
-                    if (editorControllerTheme == Theme.GLUON_MOBILE_LIGHT || editorControllerTheme == Theme.GLUON_MOBILE_DARK) {
-                        ObservableList<String> newStylesheets = FXCollections.observableArrayList(getScene().getStylesheets());
-
-                        if (!newStylesheets.contains(themeStyleSheetString)) {
-                            newStylesheets.add(themeStyleSheetString);
-                        }
-                        if (!newStylesheets.contains(gluonDocumentStylesheet)) {
-                            newStylesheets.add(gluonDocumentStylesheet);
-                        }
-                        if (!newStylesheets.contains(gluonSwatchStylesheet)) {
-                            newStylesheets.add(gluonSwatchStylesheet);
-                        }
-                        if (!newStylesheets.contains(gluonThemeStylesheet)) {
-                            newStylesheets.add(gluonThemeStylesheet);
-                        }
-                        getScene().setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
-                        getScene().getStylesheets().clear();
-                        getScene().getStylesheets().addAll(newStylesheets);
-                    } else {
-                        String gluonStylesheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL();
-                        getScene().setUserAgentStylesheet(themeStyleSheetString);
-                        getScene().getStylesheets().remove(gluonStylesheet);
-                        getScene().getStylesheets().remove(gluonDocumentStylesheet);
-                        getScene().getStylesheets().remove(gluonSwatchStylesheet);
-                        getScene().getStylesheets().remove(gluonThemeStylesheet);
-                    }
+                	ObservableList<String> newStylesheets = FXCollections.observableArrayList(getScene().getStylesheets());
+                	getScene().setUserAgentStylesheet(themeStyleSheetString);// OR stylesheetConfig.getUserAgentStylesheet()
+                	getScene().getStylesheets().clear();
+                    getScene().getStylesheets().addAll(newStylesheets);
+                    getScene().getStylesheets().addAll(stylesheetConfig.getStylesheets());
+//
+//                    String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
+//                    String gluonSwatchStylesheet = editorControllerGluonSwatch.getStylesheetURL();
+//                    String gluonThemeStylesheet = editorControllerGluonTheme.getStylesheetURL();
+//                    if (editorControllerTheme == Theme.GLUON_MOBILE_LIGHT || editorControllerTheme == Theme.GLUON_MOBILE_DARK) {
+//
+//
+//                        if (!newStylesheets.contains(themeStyleSheetString)) {
+//                            newStylesheets.add(themeStyleSheetString);
+//                        }
+//                        if (!newStylesheets.contains(gluonDocumentStylesheet)) {
+//                            newStylesheets.add(gluonDocumentStylesheet);
+//                        }
+//                        if (!newStylesheets.contains(gluonSwatchStylesheet)) {
+//                            newStylesheets.add(gluonSwatchStylesheet);
+//                        }
+//                        if (!newStylesheets.contains(gluonThemeStylesheet)) {
+//                            newStylesheets.add(gluonThemeStylesheet);
+//                        }
+//                        getScene().setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
+//                        getScene().getStylesheets().clear();
+//                        getScene().getStylesheets().addAll(newStylesheets);
+//                    } else {
+//                        String gluonStylesheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL();
+//                        getScene().setUserAgentStylesheet(themeStyleSheetString);
+//                        getScene().getStylesheets().remove(gluonStylesheet);
+//                        getScene().getStylesheets().remove(gluonDocumentStylesheet);
+//                        getScene().getStylesheets().remove(gluonSwatchStylesheet);
+//                        getScene().getStylesheets().remove(gluonThemeStylesheet);
+//                    }
                 }
                 updateWindowSize();
                 updateWindowTitle();

@@ -38,10 +38,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
+import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.QuadCurve;
@@ -54,7 +54,7 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
     private final double originalControlY;
     private final double originalEndX;
     private final double originalEndY;
-    
+
     private final PropertyName startXName = new PropertyName("startX"); //NOI18N
     private final PropertyName startYName = new PropertyName("startY"); //NOI18N
     private final PropertyName controlXName = new PropertyName("controlX"); //NOI18N
@@ -80,23 +80,23 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
         propertyNames.add(endXName);
         propertyNames.add(endYName);
     }
-    
+
     @Override
-    public EditCurveGuideController createController(EnumMap<EditCurveGesture.Tunable, Integer> tunableMap) {
+    public EditCurveGuideController createController(EnumMap<Tunable, Integer> tunableMap) {
         final EditCurveGuideController result;
-        if (tunableMap.containsKey(EditCurveGesture.Tunable.START)) {
+        if (tunableMap.containsKey(Tunable.START)) {
             result = new EditCurveGuideController();
             Point2D point = sceneGraphObject.localToScene(sceneGraphObject.getControlX(), sceneGraphObject.getControlY(), true);
             result.addCurvePoint(point);
             point = sceneGraphObject.localToScene(sceneGraphObject.getEndX(), sceneGraphObject.getEndY(), true);
             result.addCurvePoint(point);
-        } else if (tunableMap.containsKey(EditCurveGesture.Tunable.CONTROL1)) {
+        } else if (tunableMap.containsKey(Tunable.CONTROL1)) {
             result = new EditCurveGuideController();
             Point2D point = sceneGraphObject.localToScene(sceneGraphObject.getStartX(), sceneGraphObject.getStartY(), true);
             result.addCurvePoint(point);
             point = sceneGraphObject.localToScene(sceneGraphObject.getEndX(), sceneGraphObject.getEndY(), true);
             result.addCurvePoint(point);
-        } else if (tunableMap.containsKey(EditCurveGesture.Tunable.END)) {
+        } else if (tunableMap.containsKey(Tunable.END)) {
             result = new EditCurveGuideController();
             Point2D point = sceneGraphObject.localToScene(sceneGraphObject.getStartX(), sceneGraphObject.getStartY(), true);
             result.addCurvePoint(point);
@@ -109,18 +109,18 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
 
         return result;
     }
-    
+
     @Override
-    public void moveTunable(EnumMap<EditCurveGesture.Tunable, Integer> tunableMap, double newX, double newY) {
-        if (tunableMap.containsKey(EditCurveGesture.Tunable.START)) {
+    public void moveTunable(EnumMap<Tunable, Integer> tunableMap, double newX, double newY) {
+        if (tunableMap.containsKey(Tunable.START)) {
             sceneGraphObject.setStartX(newX);
-            sceneGraphObject.setStartY(newY);            
-        } else if (tunableMap.containsKey(EditCurveGesture.Tunable.CONTROL1)) {
+            sceneGraphObject.setStartY(newY);
+        } else if (tunableMap.containsKey(Tunable.CONTROL1)) {
             sceneGraphObject.setControlX(newX);
-            sceneGraphObject.setControlY(newY);            
-        } else if (tunableMap.containsKey(EditCurveGesture.Tunable.END)) {
+            sceneGraphObject.setControlY(newY);
+        } else if (tunableMap.containsKey(Tunable.END)) {
             sceneGraphObject.setEndX(newX);
-            sceneGraphObject.setEndY(newY);            
+            sceneGraphObject.setEndY(newY);
         }
     }
 
@@ -195,11 +195,11 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
     }
 
     @Override
-    public void addPoint(EnumMap<EditCurveGesture.Tunable, Integer> tunableMap, double newX, double newY) {
+    public void addPoint(EnumMap<Tunable, Integer> tunableMap, double newX, double newY) {
     }
 
     @Override
-    public void removePoint(EnumMap<EditCurveGesture.Tunable, Integer> tunableMap) {
+    public void removePoint(EnumMap<Tunable, Integer> tunableMap) {
     }
 
 }

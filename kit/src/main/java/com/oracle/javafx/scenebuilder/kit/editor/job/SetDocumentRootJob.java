@@ -34,12 +34,16 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.SetFxomRootJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  *
@@ -50,24 +54,24 @@ public class SetDocumentRootJob extends BatchSelectionJob {
     private final boolean usePredefinedSize;
     private final String description;
 
-    public SetDocumentRootJob(FXOMObject newRoot, 
-            boolean usePredefinedSize, 
+    public SetDocumentRootJob(ApplicationContext context, FXOMObject newRoot,
+            boolean usePredefinedSize,
             String description,
-            EditorController editorController) {
-        super(editorController);
+            Editor editor) {
+        super(context, editor);
 
-        assert editorController.getFxomDocument() != null;
-        assert (newRoot == null) || (newRoot.getFxomDocument() == editorController.getFxomDocument());
+        assert editor.getFxomDocument() != null;
+        assert (newRoot == null) || (newRoot.getFxomDocument() == editor.getFxomDocument());
         assert description != null;
 
         this.newRoot = newRoot;
         this.usePredefinedSize = usePredefinedSize;
         this.description = description;
     }
-    
-    public SetDocumentRootJob(FXOMObject newRoot, EditorController editorController) {
-        this(newRoot, false /* usePredefinedSize */, 
-                SetDocumentRootJob.class.getSimpleName(), editorController);
+
+    public SetDocumentRootJob(ApplicationContext context, FXOMObject newRoot, Editor editor) {
+        this(context, newRoot, false /* usePredefinedSize */,
+                SetDocumentRootJob.class.getSimpleName(), editor);
     }
 
     public FXOMObject getNewRoot() {
@@ -82,18 +86,18 @@ public class SetDocumentRootJob extends BatchSelectionJob {
             // we must remove its static properties.
             // We create a RemovePropertyJob for each existing static property
             if (newRoot != null) {
-                result.add(new PrunePropertiesJob(newRoot, null, getEditorController()));
+                result.add(new PrunePropertiesJob(getContext(), newRoot, null, getEditorController()).extend());
             }
-            
+
             // Adds job that effectively modifes the root
-            result.add(new SetFxomRootJob(newRoot, getEditorController()));
-            
+            result.add(new SetFxomRootJob(getContext(), newRoot, getEditorController()).extend());
+
             // If need, we add a job for resizing the root object
             if ((newRoot != null) && usePredefinedSize) {
                 final DesignHierarchyMask mask = new DesignHierarchyMask(newRoot);
                 if (mask.needResizeWhenTopElement()) {
-                    result.add(new UsePredefinedSizeJob(getEditorController(), 
-                            EditorController.Size.SIZE_DEFAULT, newRoot));
+                    result.add(new UsePredefinedSizeJob(getContext(), getEditorController(),
+                            EditorController.Size.SIZE_DEFAULT, newRoot).extend());
                 }
             }
         }

@@ -31,19 +31,23 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.scene.Node;
 
 /**
  *
- * 
+ *
  */
 public class NodeHandles extends AbstractNodeHandles<Node> {
-    
-    public NodeHandles(ContentPanelController contentPanelController,
+
+    public NodeHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Node.class);
+        super(context, contentPanelController, fxomInstance, Node.class);
     }
 }

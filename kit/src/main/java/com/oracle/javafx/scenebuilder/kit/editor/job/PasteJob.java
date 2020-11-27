@@ -34,18 +34,21 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardDecoder;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RelocateNodeJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.ClipboardDecoder;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.scene.Node;
 import javafx.scene.input.Clipboard;
@@ -54,18 +57,18 @@ import javafx.scene.input.Clipboard;
  *
  */
 public class PasteJob extends BatchSelectionJob {
-    
+
     private FXOMObject targetObject;
     private List<FXOMObject> newObjects;
 
-    public PasteJob(EditorController editorController) {
-        super(editorController);
+    public PasteJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
-        
+
         final FXOMDocument fxomDocument = getEditorController().getFxomDocument();
         if (fxomDocument != null) {
 
@@ -76,9 +79,9 @@ public class PasteJob extends BatchSelectionJob {
             assert newObjects != null; // But possible empty
 
             if (newObjects.isEmpty() == false) {
-                
+
                 // Retrieve the target FXOMObject :
-                // If the document is empty (root object is null), then the target 
+                // If the document is empty (root object is null), then the target
                 // object is null.
                 // If the selection is root or is empty, the target object is
                 // the root object.
@@ -100,16 +103,16 @@ public class PasteJob extends BatchSelectionJob {
                     // Document is empty : only one object can be inserted
                     if (newObjects.size() == 1) {
                         final FXOMObject newObject0 = newObjects.get(0);
-                        final SetDocumentRootJob subJob = new SetDocumentRootJob(
+                        final Job subJob = new SetDocumentRootJob(getContext(),
                                 newObject0,
-                                getEditorController());
+                                getEditorController()).extend();
                         result.add(subJob);
                     }
                 } else {
                     // Build InsertAsSubComponent jobs
                     final DesignHierarchyMask targetMask = new DesignHierarchyMask(targetObject);
                     if (targetMask.isAcceptingSubComponent(newObjects)) {
-                        
+
                         final double relocateDelta;
                         if (targetMask.isFreeChildPositioning()) {
                             final int pasteJobCount = countPasteJobs();
@@ -118,20 +121,20 @@ public class PasteJob extends BatchSelectionJob {
                             relocateDelta = 0.0;
                         }
                         for (FXOMObject newObject : newObjects) {
-                            final InsertAsSubComponentJob subJob = new InsertAsSubComponentJob(
+                            final Job subJob = new InsertAsSubComponentJob(getContext(),
                                     newObject,
                                     targetObject,
                                     targetMask.getSubComponentCount(),
-                                    getEditorController());
+                                    getEditorController()).extend();
                             result.add(0, subJob);
                             if ((relocateDelta != 0.0) && newObject.isNode()) {
                                 final Node sceneGraphNode = (Node) newObject.getSceneGraphObject();
-                                final RelocateNodeJob relocateJob = new RelocateNodeJob(
+                                final Job relocateJob = new RelocateNodeJob(getContext(),
                                         (FXOMInstance) newObject,
                                         sceneGraphNode.getLayoutX() + relocateDelta,
                                         sceneGraphNode.getLayoutY() + relocateDelta,
                                         getEditorController()
-                                );
+                                ).extend();
                                 result.add(relocateJob);
                             }
                         }
@@ -139,21 +142,21 @@ public class PasteJob extends BatchSelectionJob {
                 }
             }
         }
-        
+
         return result;
     }
 
-    
+
     @Override
     protected String makeDescription() {
         final String result;
-        
+
         if (newObjects.size() == 1) {
             result = makeSingleSelectionDescription();
         } else {
             result = makeMultipleSelectionDescription();
         }
-        
+
         return result;
     }
 
@@ -196,10 +199,10 @@ public class PasteJob extends BatchSelectionJob {
         final int objectCount = newObjects.size();
         return I18N.getString("label.action.edit.paste.n", objectCount);
     }
-    
+
     private int countPasteJobs() {
         int result = 0;
-        
+
         final List<Job> undoStack = getEditorController().getJobManager().getUndoStack();
         for (Job job : undoStack) {
             if (job instanceof PasteJob) {
@@ -213,7 +216,7 @@ public class PasteJob extends BatchSelectionJob {
                 break;
             }
         }
-        
+
         return result;
     }
 }

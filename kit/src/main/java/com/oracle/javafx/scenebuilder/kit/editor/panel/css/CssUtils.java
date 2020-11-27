@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.css;
 
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 
 import javafx.css.CssMetaData;

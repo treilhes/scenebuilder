@@ -34,23 +34,26 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.HudWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.SplitPaneDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyEvent;
 
 /**
  *
- * 
+ *
  */
 public class AdjustDividerGesture extends AbstractMouseGesture {
 
@@ -58,14 +61,18 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     private final int dividerIndex;
     private final SplitPaneDesignInfoX di = new SplitPaneDesignInfoX();
     private double[] originalDividerPositions;
-    
-    private static final PropertyName dividerPositionsName 
+	private final ApplicationContext context;
+
+    private static final PropertyName dividerPositionsName
             = new PropertyName("dividerPositions"); //NOI18N
 
-    public AdjustDividerGesture(ContentPanelController contentPanelController,
+    public AdjustDividerGesture(
+    		ApplicationContext context,
+    		Content content,
             FXOMInstance splitPaneInstance, int dividerIndex) {
-        super(contentPanelController);
-        
+        super(content);
+        this.context = context;
+
         assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
         this.splitPaneInstance = splitPaneInstance;
         this.dividerIndex = dividerIndex;
@@ -74,7 +81,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     /*
      * AbstractMouseGesture
      */
-    
+
     @Override
     protected void mousePressed() {
         // Everthing is done in mouseDragStarted
@@ -94,7 +101,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         final SplitPane splitPane = (SplitPane)splitPaneInstance.getSceneGraphObject();
         final double sceneX = getLastMouseEvent().getSceneX();
         final double sceneY = getLastMouseEvent().getSceneY();
-        final double[] newDividerPositions 
+        final double[] newDividerPositions
                 = di.simulateDividerMove(splitPane, dividerIndex, sceneX, sceneY);
         splitPane.setDividerPositions(newDividerPositions);
         splitPane.layout();
@@ -106,33 +113,33 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     protected void mouseDragEnded() {
         /*
          * Three steps
-         * 
+         *
          * 1) Copy the updated divider positions
          * 2) Reverts to initial divider positions
          *    => this step is equivalent to userDidCancel()
          * 3) Push a BatchModifyObjectJob to officially update dividers
          */
-        
+
         // Step #1
         final List<Double> newDividerPositions = new ArrayList<>();
         for (double p : getSplitPane().getDividerPositions()) {
             newDividerPositions.add(Double.valueOf(p));
         }
-        
+
         // Step #2
         userDidCancel();
-        
+
         // Step #3
         final Metadata metadata = Metadata.getMetadata();
-        final EditorController editorController 
+        final Editor editorController
                 = contentPanelController.getEditorController();
-        final ValuePropertyMetadata dividerPositionsMeta 
+        final ValuePropertyMetadata dividerPositionsMeta
                 = metadata.queryValueProperty(splitPaneInstance, dividerPositionsName);
-        final ModifyObjectJob j = new ModifyObjectJob(
-                splitPaneInstance, 
+        final Job j = new ModifyObjectJob(context,
+                splitPaneInstance,
                 dividerPositionsMeta,
                 newDividerPositions,
-                editorController);
+                editorController).extend();
         if (j.isExecutable()) {
             editorController.getJobManager().push(j);
         } // else divider has been release to its original position
@@ -154,25 +161,25 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         contentPanelController.getHandleLayer().setVisible(true);
         getSplitPane().layout();
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private SplitPane getSplitPane() {
         assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
         return (SplitPane) splitPaneInstance.getSceneGraphObject();
     }
-    
+
     private void setupAndOpenHudWindow() {
-        final HudWindowController hudWindowController
+        final HudWindow hudWindowController
                 = contentPanelController.getHudWindowController();
-        
+
         hudWindowController.setRowCount(1);
         hudWindowController.setNameAtRowIndex("dividerPosition", 0); //NOI18N
         updateHudWindow();
-        
+
         final CardinalPoint cp;
         switch(getSplitPane().getOrientation()) {
             default:
@@ -186,11 +193,11 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         hudWindowController.setRelativePosition(cp);
         hudWindowController.openWindow(getSplitPane());
     }
-    
+
     private void updateHudWindow() {
-        final HudWindowController hudWindowController
+        final HudWindow hudWindowController
                 = contentPanelController.getHudWindowController();
-        
+
         double dividerPosition = getSplitPane().getDividerPositions()[dividerIndex];
         String str = String.format("%.2f %%", dividerPosition * 100); //NOI18N
         hudWindowController.setValueAtRowIndex(str, 0);

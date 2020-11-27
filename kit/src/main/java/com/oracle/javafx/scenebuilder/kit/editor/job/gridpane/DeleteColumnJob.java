@@ -35,14 +35,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  * Job invoked when removing columns.
@@ -52,8 +54,8 @@ public class DeleteColumnJob extends BatchSelectionJob {
     private FXOMObject targetGridPane;
     private final List<Integer> targetIndexes = new ArrayList<>();
 
-    public DeleteColumnJob(EditorController editorController) {
-        super(editorController);
+    public DeleteColumnJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -74,12 +76,12 @@ public class DeleteColumnJob extends BatchSelectionJob {
 
             // Add sub jobs
             // First remove the column constraints
-            final Job removeConstraints = new RemoveColumnConstraintsJob(
-                    getEditorController(), targetGridPane, targetIndexes);
+            final Job removeConstraints = new RemoveColumnConstraintsJob(getContext(),
+                    getEditorController(), targetGridPane, targetIndexes).extend();
             result.add(removeConstraints);
             // Then remove the column content
-            final Job removeContent = new RemoveColumnContentJob(
-                    getEditorController(), targetGridPane, targetIndexes);
+            final Job removeContent = new RemoveColumnContentJob(getContext(),
+                    getEditorController(), targetGridPane, targetIndexes).extend();
             result.add(removeContent);
             // Finally shift the column content
             result.addAll(moveColumnContent());
@@ -124,7 +126,7 @@ public class DeleteColumnJob extends BatchSelectionJob {
         targetIndex = iterator.next();
         while (targetIndex != -1) {
             // Move the columns content :
-            // - from the target index 
+            // - from the target index
             // - to the next target index if any or the last column index otherwise
             int fromIndex, toIndex;
 
@@ -139,17 +141,17 @@ public class DeleteColumnJob extends BatchSelectionJob {
                 toIndex = columnsSize - 1;
             }
 
-            // When we delete 2 consecutive columns 
+            // When we delete 2 consecutive columns
             // => no content to move between the 2 columns
-            // When we delete the last column 
+            // When we delete the last column
             // => no column content to move after the last column
             if (nextTargetIndex != (targetIndex + 1)
                     && fromIndex < columnsSize) {
                 final int offset = -1 + shiftIndex;
                 final List<Integer> indexes
                         = GridPaneJobUtils.getIndexes(fromIndex, toIndex);
-                final ReIndexColumnContentJob reIndexJob = new ReIndexColumnContentJob(
-                        getEditorController(), offset, targetGridPane, indexes);
+                final Job reIndexJob = new ReIndexColumnContentJob(getContext(),
+                        getEditorController(), offset, targetGridPane, indexes).extend();
                 result.add(reIndexJob);
             }
 

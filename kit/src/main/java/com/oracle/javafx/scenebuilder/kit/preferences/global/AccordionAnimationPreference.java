@@ -9,13 +9,14 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Parent;
 
 @Component
 public class AccordionAnimationPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean> {
-	    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -24,8 +25,13 @@ public class AccordionAnimationPreference extends BooleanPreference implements M
     public static final String PREFERENCE_KEY = "ACCORDION_ANIMATION"; //NOI18N
     public static final boolean PREFERENCE_DEFAULT_VALUE = true;
 
-	public AccordionAnimationPreference(@Autowired PreferencesContext preferencesContext) {
+	private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public AccordionAnimationPreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	@Override
@@ -35,7 +41,7 @@ public class AccordionAnimationPreference extends BooleanPreference implements M
 
 	@Override
 	public Parent getEditor() {
-		return PreferenceEditorFactory.newBooleanFieldEditor(this);
+		return preferenceEditorFactory.newBooleanFieldEditor(this);
 	}
 
 

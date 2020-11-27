@@ -31,18 +31,18 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.rudder;
 
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *
- * 
+ *
  */
 public abstract class AbstractRudder<T> extends AbstractDecoration<T> {
 
-    public AbstractRudder(ContentPanelController contentPanelController, FXOMObject fxomObject, Class<T> sceneGraphClass) {
+    public AbstractRudder(Content contentPanelController, FXOMObject fxomObject, Class<T> sceneGraphClass) {
         super(contentPanelController, fxomObject, sceneGraphClass);
     }
-    
+
 }

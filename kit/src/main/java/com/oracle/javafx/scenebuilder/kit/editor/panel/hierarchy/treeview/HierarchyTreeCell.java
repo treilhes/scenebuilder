@@ -36,15 +36,35 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Drag;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.ErrorReport;
+import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry;
+import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry.CSSParsingReport;
+import com.oracle.javafx.scenebuilder.api.Glossary;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
+import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
@@ -53,23 +73,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarc
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyDNDController.DroppingMouseLocation;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
-import com.oracle.javafx.scenebuilder.kit.editor.report.CSSParsingReport;
-import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReport;
-import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
-import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController.Type;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.kit.glossary.Glossary;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
@@ -134,12 +138,12 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     private final ImageView includedFileImageView = new ImageView();
     // Stack used to add badges over the top of the node icon
     private final StackPane iconsStack = new StackPane();
-    // We use a label to set a tooltip over the node icon 
+    // We use a label to set a tooltip over the node icon
     // (StackPane does not allow to set tooltips)
     private final Label iconsLabel = new Label();
     private final Tooltip warningBadgeTooltip = new Tooltip();
 
-    // Vertical line used when inserting an item in order to indicate 
+    // Vertical line used when inserting an item in order to indicate
     // the parent into which the item will be inserted.
     // Horizontal lines are handled directly by the cell and are built using CSS only.
     //
@@ -158,18 +162,23 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         }
     };
 
-    public HierarchyTreeCell(final AbstractHierarchyPanelController c) {
+	private final ApplicationContext context;
+
+    public HierarchyTreeCell(
+    		ApplicationContext context,
+    		final AbstractHierarchyPanelController c) {
         super();
+        this.context = context;
         this.panelController = c;
 
         iconsStack.getChildren().setAll(
                 classNameImageView,
                 warningBadgeImageView);
         iconsLabel.setGraphic(iconsStack);
-        // RT-31645 : we cannot dynamically update the HBox graphic children 
+        // RT-31645 : we cannot dynamically update the HBox graphic children
         // in the cell.updateItem method.
         // We set once the graphic children, then we update the managed property
-        // of the children depending on the cell item. 
+        // of the children depending on the cell item.
         graphic.getChildren().setAll(
                 includedFileImageView,
                 placeHolderImageView,
@@ -251,7 +260,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         setOnDragOver(event -> {
             final TreeItem<HierarchyItem> treeItem
                     = HierarchyTreeCell.this.getTreeItem();
-            final DragController dragController
+            final Drag dragController
                     = panelController.getEditorController().getDragController();
             final DroppingMouseLocation location = getDroppingMouseLocation(event);
 
@@ -265,7 +274,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             // Remove insert line indicator
             panelController.removeFromPanelControlSkin(insertLineIndicator);
 
-            // If an animation timeline is running 
+            // If an animation timeline is running
             // (auto-scroll when DND to the top or bottom of the Hierarchy),
             // we do not display insert indicators.
             if (panelController.isTimelineRunning()) {
@@ -275,7 +284,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             // Drop target has been updated because of (1)
             if (dragController.isDropAccepted()) {
 
-                final AbstractDropTarget dropTarget = dragController.getDropTarget();
+                final DropTarget dropTarget = dragController.getDropTarget();
                 final FXOMObject dropTargetObject = dropTarget.getTargetObject();
                 final TreeItem<?> rootTreeItem = getTreeView().getRoot();
 
@@ -371,9 +380,9 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                             // To avoid visual movement of the horizontal border when
                             // dragging from one cell to another,
                             // we always set the border on the cell bottom location :
-                            // - if we handle REORDER BELOW gesture, just set the bottom 
+                            // - if we handle REORDER BELOW gesture, just set the bottom
                             // border on the current cell
-                            // - if we handle REORDER ABOVE gesture, we set the bottom 
+                            // - if we handle REORDER ABOVE gesture, we set the bottom
                             // border on the previous cell
                             //
                             switch (location) {
@@ -385,7 +394,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                                     } else {
                                         final int index = getIndex();
                                         // Retrieve the previous cell
-                                        // Note : we set the border on the bottom of the previous cell 
+                                        // Note : we set the border on the bottom of the previous cell
                                         // instead of using the top of the current cell in order to avoid
                                         // visual gap when DND from one cell to another
                                         final TreeCell<?> previousCell
@@ -459,7 +468,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     public void updateItem(HierarchyItem item, boolean empty) {
         super.updateItem(item, empty);
 
-        // The cell is not empty (TreeItem is not null) 
+        // The cell is not empty (TreeItem is not null)
         // AND the TreeItem value is not null
         if (!empty && item != null) {
             updateLayout(item);
@@ -533,7 +542,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             // scene may be null when tree view is collapsed
             return;
         }
-        // When another window is focused (just like the preview window), 
+        // When another window is focused (just like the preview window),
         // we use default cursor
         if (!getScene().getWindow().isFocused()) {
             scene.setCursor(Cursor.DEFAULT);
@@ -587,7 +596,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
      */
     public void startEditingDisplayInfo() {
         assert getItem().hasDisplayInfo(panelController.getDisplayOption());
-        final InlineEditController inlineEditController
+        final InlineEdit inlineEditController
                 = panelController.getEditorController().getInlineEditController();
         final TextInputControl editor;
         final Type type;
@@ -623,7 +632,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
         // 2) Build the COMMIT Callback
         // This callback will be invoked to commit the new value
-        // It returns true if the value is unchanged or if the commit succeeded, 
+        // It returns true if the value is unchanged or if the commit succeeded,
         // false otherwise
         //----------------------------------------------------------------------
         final Callback<String, Boolean> requestCommit = newValue -> {
@@ -635,7 +644,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             if (item != null) {
                 final FXOMObject fxomObject = item.getFxomObject();
                 final DisplayOption option = panelController.getDisplayOption();
-                final EditorController editorController = panelController.getEditorController();
+                final Editor editorController = panelController.getEditorController();
                 switch (option) {
                     case INFO:
                     case NODEID:
@@ -645,8 +654,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                             assert propertyName != null;
                             final ValuePropertyMetadata vpm
                                     = Metadata.getMetadata().queryValueProperty(fxomInstance, propertyName);
-                            final ModifyObjectJob job1
-                                    = new ModifyObjectJob(fxomInstance, vpm, newValue, editorController);
+                            final Job job1
+                                    = new ModifyObjectJob(context, fxomInstance, vpm, newValue, editorController).extend();
                             if (job1.isExecutable()) {
                                 editorController.getJobManager().push(job1);
                             }
@@ -655,11 +664,11 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                     case FXID:
                         assert newValue != null;
                         final String fxId = newValue.isEmpty() ? null : newValue;
-                        final ModifyFxIdJob job2
-                                = new ModifyFxIdJob(fxomObject, fxId, editorController);
+                        final Job job2
+                                = new ModifyFxIdJob(context, fxomObject, fxId, editorController).extend();
                         if (job2.isExecutable()) {
 
-                            // If a controller class has been defined, 
+                            // If a controller class has been defined,
                             // check if the fx id is an injectable field
                             final String controllerClass
                                     = editorController.getFxomDocument().getFxomRoot().getFxController();
@@ -682,7 +691,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                                 editorController.getMessageLog().logWarningMessage(
                                         "log.warning.duplicate.fxid", fxId);
                             }
-                            
+
                             editorController.getJobManager().push(job2);
 
                         } else if (fxId != null) {
@@ -776,13 +785,13 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         if (item == null || item.isEmpty()) {
             return null;
         }
-        final EditorController editorController = panelController.getEditorController();
+        final Editor editorController = panelController.getEditorController();
         final ErrorReport errorReport = editorController.getErrorReport();
         final FXOMObject fxomObject = item.getFxomObject();
         assert fxomObject != null;
         return errorReport.query(fxomObject, !getTreeItem().isExpanded());
     }
-    
+
     public String getErrorReport(final ErrorReportEntry entry) {
 
         final StringBuilder result = new StringBuilder();
@@ -822,7 +831,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
         return result.toString();
     }
-    
+
     private void updateInsertLineIndicator(
             final TreeCell<?> startTreeCell,
             final TreeCell<?> stopTreeCell) {
@@ -902,10 +911,10 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         }
         return location;
     }
-    
+
     private String makeCssParsingErrorString(CSSParsingReport r) {
         final StringBuilder result = new StringBuilder();
-        
+
         if (r.getIOException() != null) {
             result.append(r.getIOException());
         } else {
@@ -922,8 +931,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 }
             }
         }
-        
+
         return result.toString();
     }
-    
+
 }

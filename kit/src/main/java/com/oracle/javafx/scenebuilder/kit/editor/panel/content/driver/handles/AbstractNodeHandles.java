@@ -31,27 +31,31 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 /**
  *
- * 
+ *
  */
 public abstract class AbstractNodeHandles<T extends Node> extends AbstractGenericHandles<T> {
-    
-    public AbstractNodeHandles(ContentPanelController contentPanelController,
+
+    public AbstractNodeHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance, Class<T> sceneGraphObjectClass) {
-        super(contentPanelController, fxomInstance, sceneGraphObjectClass);
+        super(context, contentPanelController, fxomInstance, sceneGraphObjectClass);
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
-    
+
     /*
      * AbstractGenericHandles
      */

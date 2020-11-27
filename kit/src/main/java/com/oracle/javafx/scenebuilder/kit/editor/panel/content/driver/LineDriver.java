@@ -32,13 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.AbstractCurveEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.LineEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.LineHandles;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.shape.Line;
 
@@ -47,21 +49,26 @@ import javafx.scene.shape.Line;
  */
 public class LineDriver extends AbstractNodeDriver {
 
-    public LineDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    private final ApplicationContext context;
+
+	public LineDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Line;
         assert fxomObject instanceof FXOMInstance;
-        return new LineHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new LineHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
-    
+
     @Override
     public AbstractCurveEditor<?> makeCurveEditor(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Line;
@@ -70,5 +77,5 @@ public class LineDriver extends AbstractNodeDriver {
         final Line line = (Line) fxomObject.getSceneGraphObject();
         return new LineEditor(line);
     }
-    
+
 }

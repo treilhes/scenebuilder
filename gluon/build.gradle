@@ -1,3 +1,7 @@
 dependencies {
-	implementation project(':api')
+	implementation project(':core')
+	implementation project(':default')
+
+	//temp
+	implementation project(':kit')
 }

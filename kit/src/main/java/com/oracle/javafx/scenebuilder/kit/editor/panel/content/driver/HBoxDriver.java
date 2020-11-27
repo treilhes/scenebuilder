@@ -31,14 +31,17 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.HBoxTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -49,8 +52,10 @@ import javafx.scene.layout.HBox;
  */
 public class HBoxDriver extends AbstractNodeDriver {
 
-    public HBoxDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    public HBoxDriver(
+    		ApplicationContext context,
+    		Content contentPanelController) {
+        super(context, contentPanelController);
     }
 
     /*
@@ -58,24 +63,24 @@ public class HBoxDriver extends AbstractNodeDriver {
      */
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
-        
+
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject() instanceof HBox;
-        
+
         final HBox hbox = (HBox) fxomObject.getSceneGraphObject();
         assert hbox.getScene() != null;
-        
+
         final double localX = hbox.sceneToLocal(sceneX, sceneY, true /* rootScene */).getX();
         final int childCount = hbox.getChildrenUnmodifiable().size();
-        
+
         final int targetIndex;
         if (childCount == 0) {
             // No children : we append
             targetIndex = -1;
-            
+
         } else {
             assert childCount >= 1;
-            
+
             int childIndex = 0;
             Node child = hbox.getChildrenUnmodifiable().get(childIndex++);
             Bounds childBounds = child.getBoundsInParent();
@@ -92,7 +97,7 @@ public class HBoxDriver extends AbstractNodeDriver {
                 targetIndex = -1;
             }
         }
-        
+
         final FXOMObject beforeChild;
         if (targetIndex == -1) {
             beforeChild = null;
@@ -104,17 +109,17 @@ public class HBoxDriver extends AbstractNodeDriver {
                 beforeChild = null;
             }
         }
-        
+
         return new ContainerZDropTarget((FXOMInstance)fxomObject, beforeChild);
     }
-    
-    
+
+
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
-        assert dropTarget instanceof ContainerZDropTarget; 
+    public AbstractTring<?> makeTring(DropTarget dropTarget) {
+        assert dropTarget instanceof ContainerZDropTarget;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
         assert dropTarget.getTargetObject().getSceneGraphObject() instanceof HBox;
-        
+
         final ContainerZDropTarget zDropTarget = (ContainerZDropTarget) dropTarget;
         final int targetIndex;
         if (zDropTarget.getBeforeChild() == null) {
@@ -122,7 +127,7 @@ public class HBoxDriver extends AbstractNodeDriver {
         } else {
             targetIndex = zDropTarget.getBeforeChild().getIndexInParentProperty();
         }
-        return new HBoxTring(contentPanelController, 
+        return new HBoxTring(contentPanelController,
                 (FXOMInstance) dropTarget.getTargetObject(),
                 targetIndex);
     }

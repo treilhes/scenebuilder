@@ -8,8 +8,9 @@ plugins {
 mainClassName = 'com.oracle.javafx.scenebuilder.app.SceneBuilderApp'
 
 dependencies {
-	implementation project(':api')
+	implementation project(':core')
     implementation project(':kit')
+    implementation project(':default')
     implementation project(':gluon')
 }
 

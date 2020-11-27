@@ -1,5 +1,11 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
@@ -10,9 +16,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.Abst
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.NodePring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -21,19 +24,23 @@ import javafx.stage.Window;
 
 public class WindowDriver extends AbstractDriver {
 
-    public WindowDriver(ContentPanelController contentPanelController) {
+	private final ApplicationContext context;
+
+    public WindowDriver(ApplicationContext context, ContentPanelController contentPanelController) {
         super(contentPanelController);
+        this.context = context;
     }
 
     @Override
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
         assert fxomObject instanceof FXOMInstance;
-        return new WindowHandles(contentPanelController, (FXOMInstance) fxomObject);
+        return new WindowHandles(context, contentPanelController, (FXOMInstance) fxomObject);
+
     }
 
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
+    public AbstractTring<?> makeTring(DropTarget dropTarget) {
         return null;
     }
 

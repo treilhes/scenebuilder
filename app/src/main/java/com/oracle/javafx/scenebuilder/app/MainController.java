@@ -54,7 +54,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -70,11 +70,9 @@ import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
-import com.oracle.javafx.scenebuilder.gluon.preferences.GluonPreferences;
-import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
-import com.oracle.javafx.scenebuilder.kit.alert.ImportingGluonControlsAlert;
-import com.oracle.javafx.scenebuilder.kit.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
@@ -120,49 +118,45 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     @Autowired
     ApplicationContext context;
-    
-    @Autowired 
+
+    @Autowired
     HostServices hostServices;
-    
+
     @Autowired
     Parameters parameters;
-    
+
     @Autowired
     SceneBuilderBeanFactory sceneBuilderFactory;
-    
+
     @Autowired
     DocumentManager documentsManager;
-    
+
     @Autowired
     private UserLibrary userLibrary;
-    
+
     @Autowired
     private VersionSetting versionSetting;
-    
+
     @Autowired
     private WindowIconSetting windowIconSetting;
-    
+
     @Autowired
     private Tracking tracking;
-    
+
     @Autowired
     private GlobalPreferences preferences;
-    
+
     @Autowired
     private RecentItemsPreference recentItemsPreference;
-    
+
     private final ObservableList<DocumentWindowController> windowList = FXCollections.observableArrayList();
-    
+
     //private UserLibrary userLibrary;
-    
+
     private ToolTheme toolTheme = ToolTheme.DEFAULT;
 
-
-    //@Autowired
-    private GluonPreferences gluPref;
-
 	private final ToolThemePreference toolThemePreference;
-    
+
     /*
      * Public
      * //TODO delete in favor of injection
@@ -172,15 +166,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     public MainController(
-    		@Autowired ToolThemePreference toolThemePreference, 
-    		@Autowired GluonPreferences gluPref
+    		@Autowired ToolThemePreference toolThemePreference
     		) {
     	this.toolThemePreference = toolThemePreference;
         if (singleton != null) {
         	return;
         }
         singleton = this;
-        
+
         // SB-270
         windowList.addListener((ListChangeListener.Change<? extends DocumentWindowController> c) -> {
             while (c.next()) {
@@ -192,11 +185,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 }
             }
         });
-        
-        //PrefTests.doTest(gluPref);
-        
+
     }
-  
+
     public void performControlAction(ApplicationControlAction a, DocumentWindowController source) {
         switch (a) {
             case ABOUT:
@@ -368,7 +359,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     public void onApplicationEvent(JavafxApplication.StageReadyEvent stageReadyEvent) {
     	start(stageReadyEvent.getStage());
     }
-    
+
     /*
      * Application
      */
@@ -394,7 +385,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             Platform.exit();
         }
     }
-    
+
     /*
      * AppPlatform.AppNotificationHandler
      */
@@ -458,7 +449,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             }
 
             WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
-            
+
             wdwc.getStage().setOnHidden(event -> {
                 showUpdateDialogIfRequired(newWindow, () -> {
                     if (!Platform.isFxApplicationThread()) {
@@ -521,7 +512,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
 
         EditorController.updateNextInitialDirectory(fileObjs.get(0));
-        
+
         // Fix for #45
         if (userLibrary.isFirstExplorationCompleted()) {
             performOpenFiles(fileObjs, null);
@@ -555,14 +546,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         /*
          * Note : this callback is called on Mac OS X only when the user
          * selects the 'Quit App' command in the Application menu.
-         * 
+         *
          * Before calling this callback, FX automatically sends a close event
          * to each open window ie DocumentWindowController.performCloseAction()
          * is invoked for each open window.
-         * 
+         *
          * When we arrive here, windowList is empty if the user has confirmed
          * the close operation for each window : thus exit operation can
-         * be performed. If windowList is not empty,  this means the user has 
+         * be performed. If windowList is not empty,  this means the user has
          * cancelled at least one close operation : in that case, exit operation
          * should be not be executed.
          */
@@ -577,9 +568,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
      */
     public DocumentWindowController makeNewWindow() {
     	DocumentScope.setCurrentScope(null);
-    	
+
         final DocumentWindowController result = sceneBuilderFactory.get(DocumentWindowController.class);
-        
+
         windowIconSetting.setWindowIcon(result.getStage());
 
         windowList.add(result);
@@ -821,11 +812,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     private String getToolStylesheet() {
         return toolThemePreference.getValue().getStylesheetURL();
     }
-    
-    
-    
 
-    
+
+
+
+
 
     private void showUpdateDialogIfRequired(DocumentWindowController dwc, Runnable runAfterUpdateDialog) {
     	versionSetting.getLatestVersion(latestVersion -> {

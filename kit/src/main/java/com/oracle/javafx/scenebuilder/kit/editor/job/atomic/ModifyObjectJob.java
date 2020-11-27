@@ -33,11 +33,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
 import java.util.Objects;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 /**
  *
@@ -50,12 +52,12 @@ public class ModifyObjectJob extends Job {
     private final Object oldValue;
     private final String description;
 
-    public ModifyObjectJob(
-            FXOMInstance fxomInstance, 
-            ValuePropertyMetadata propertyMetadata, 
-            Object newValue, 
-            EditorController editorController) {
-        super(editorController);
+    public ModifyObjectJob(ApplicationContext context,
+            FXOMInstance fxomInstance,
+            ValuePropertyMetadata propertyMetadata,
+            Object newValue,
+            Editor editor) {
+        super(context, editor);
 
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject() != null;
@@ -70,13 +72,13 @@ public class ModifyObjectJob extends Job {
                 fxomInstance.getSceneGraphObject().getClass().getSimpleName());
     }
 
-    public ModifyObjectJob(
+    public ModifyObjectJob(ApplicationContext context,
             FXOMInstance fxomInstance,
             ValuePropertyMetadata propertyMetadata,
             Object newValue,
-            EditorController editorController,
+            Editor editor,
             String description) {
-        super(editorController);
+        super(context, editor);
 
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject() != null;

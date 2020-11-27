@@ -34,13 +34,15 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.DeleteObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  * Job invoked when removing column content.
@@ -50,11 +52,11 @@ public class RemoveColumnContentJob extends BatchDocumentJob {
     private final FXOMObject targetGridPane;
     private final List<Integer> targetIndexes;
 
-    public RemoveColumnContentJob(
-            final EditorController editorController,
+    public RemoveColumnContentJob(ApplicationContext context, 
+            final Editor editor,
             final FXOMObject targetGridPane,
             final List<Integer> targetIndexes) {
-        super(editorController);
+        super(context, editor);
 
         assert targetGridPane != null;
         assert targetIndexes != null;
@@ -76,9 +78,9 @@ public class RemoveColumnContentJob extends BatchDocumentJob {
             final List<FXOMObject> children
                     = targetGridPaneMask.getColumnContentAtIndex(targetIndex);
             for (FXOMObject child : children) {
-                final Job removeChildJob = new DeleteObjectJob(
+                final Job removeChildJob = new DeleteObjectJob(getContext(), 
                         child,
-                        getEditorController());
+                        getEditorController()).extend();
                 result.add(removeChildJob);
             }
         }

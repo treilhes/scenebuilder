@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

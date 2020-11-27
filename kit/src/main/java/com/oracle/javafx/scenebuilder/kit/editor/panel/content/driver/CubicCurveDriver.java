@@ -31,13 +31,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.CurveEditor;
+import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.AbstractCurveEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.CubicCurveEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.CubicCurveHandles;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.shape.CubicCurve;
 
@@ -46,28 +48,33 @@ import javafx.scene.shape.CubicCurve;
  */
 public class CubicCurveDriver extends AbstractNodeDriver {
 
-    public CubicCurveDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    private final ApplicationContext context;
+
+	public CubicCurveDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
-    public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
+    public Handles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof CubicCurve;
         assert fxomObject instanceof FXOMInstance;
-        return new CubicCurveHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new CubicCurveHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
 
     @Override
-    public AbstractCurveEditor<?> makeCurveEditor(FXOMObject fxomObject) {
+    public CurveEditor<?> makeCurveEditor(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof CubicCurve;
         assert fxomObject instanceof FXOMInstance;
 
         final CubicCurve cubicCurve = (CubicCurve) fxomObject.getSceneGraphObject();
         return new CubicCurveEditor(cubicCurve);
     }
-    
+
 }

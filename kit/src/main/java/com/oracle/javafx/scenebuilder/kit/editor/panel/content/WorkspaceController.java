@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,22 +40,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.Workspace;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.preferences.ThemeUtils;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.animation.FadeTransition;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -84,7 +77,7 @@ import javafx.util.Duration;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class WorkspaceController {
+public class WorkspaceController implements Workspace{
 
     private static final double AUTORESIZE_SIZE = 500.0;
 
@@ -174,69 +167,70 @@ public class WorkspaceController {
     }
 
     public List<String> getThemeStyleSheets() {
-        return Collections.unmodifiableList(themeStylesheets);
+        return themeStylesheets;
+    	//return new ArrayList<>();
     }
 
-    public void setThemeStyleSheet(String themeStyleSheet, Theme theme, GluonSwatch gluonSwatch, GluonTheme gluonTheme) {
-        assert themeStyleSheet != null;
-        assert theme != null;
-        assert gluonSwatch != null;
-        assert gluonTheme != null;
-        String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
-        String gluonSwatchStylesheet = gluonSwatch.getStylesheetURL();
-        String gluonThemeStylesheet = gluonTheme.getStylesheetURL();
-        String previousGluonSwatchStylesheet = editorController.getGluonSwatch().getStylesheetURL();
-        String previousGluonThemeStylesheet = editorController.getGluonTheme().getStylesheetURL();
-        if (theme == Theme.GLUON_MOBILE_LIGHT || theme == Theme.GLUON_MOBILE_DARK) {
-            contentSubScene.setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
-            ObservableList<String> currentStyleSheets = FXCollections.observableArrayList(contentGroup.getStylesheets());
-            currentStyleSheets.remove(previousGluonSwatchStylesheet);
-            currentStyleSheets.remove(previousGluonThemeStylesheet);
-            if (!currentStyleSheets.contains(themeStyleSheet)) {
-                currentStyleSheets.add(themeStyleSheet);
-            }
-            if (!currentStyleSheets.contains(gluonDocumentStylesheet)) {
-                currentStyleSheets.add(gluonDocumentStylesheet);
-            }
-            if (!currentStyleSheets.contains(gluonSwatchStylesheet)) {
-                currentStyleSheets.add(gluonSwatchStylesheet);
-            }
-            if (!currentStyleSheets.contains(gluonThemeStylesheet)) {
-                currentStyleSheets.add(gluonThemeStylesheet);
-            }
-            themeStylesheets.clear();
-            themeStylesheets.addAll(currentStyleSheets);
-            contentGroupApplyCss();
-//            setPreviewStyleSheets(Arrays.asList(themeStyleSheet));
-        } else {
-            contentSubScene.setUserAgentStylesheet(themeStyleSheet);
+//    public void setThemeStyleSheet(String themeStyleSheet, Theme theme, GluonSwatch gluonSwatch, GluonTheme gluonTheme) {
+//        assert themeStyleSheet != null;
+//        assert theme != null;
+//        assert gluonSwatch != null;
+//        assert gluonTheme != null;
+//        String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
+//        String gluonSwatchStylesheet = gluonSwatch.getStylesheetURL();
+//        String gluonThemeStylesheet = gluonTheme.getStylesheetURL();
+//        String previousGluonSwatchStylesheet = editorController.getGluonSwatch().getStylesheetURL();
+//        String previousGluonThemeStylesheet = editorController.getGluonTheme().getStylesheetURL();
+//        if (theme == Theme.GLUON_MOBILE_LIGHT || theme == Theme.GLUON_MOBILE_DARK) {
+//            contentSubScene.setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
+//            ObservableList<String> currentStyleSheets = FXCollections.observableArrayList(contentGroup.getStylesheets());
+//            currentStyleSheets.remove(previousGluonSwatchStylesheet);
+//            currentStyleSheets.remove(previousGluonThemeStylesheet);
+//            if (!currentStyleSheets.contains(themeStyleSheet)) {
+//                currentStyleSheets.add(themeStyleSheet);
+//            }
+//            if (!currentStyleSheets.contains(gluonDocumentStylesheet)) {
+//                currentStyleSheets.add(gluonDocumentStylesheet);
+//            }
+//            if (!currentStyleSheets.contains(gluonSwatchStylesheet)) {
+//                currentStyleSheets.add(gluonSwatchStylesheet);
+//            }
+//            if (!currentStyleSheets.contains(gluonThemeStylesheet)) {
+//                currentStyleSheets.add(gluonThemeStylesheet);
+//            }
+//            themeStylesheets.clear();
+//            themeStylesheets.addAll(currentStyleSheets);
+//            contentGroupApplyCss();
+////            setPreviewStyleSheets(Arrays.asList(themeStyleSheet));
+//        } else {
+//            contentSubScene.setUserAgentStylesheet(themeStyleSheet);
+//
+//            String gluonMobileStyleSheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL(); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
+//            themeStylesheets.remove(gluonMobileStyleSheet);
+//            themeStylesheets.remove(gluonDocumentStylesheet);
+//            themeStylesheets.remove(previousGluonSwatchStylesheet);
+//            themeStylesheets.remove(previousGluonThemeStylesheet);
+//        }
+//
+//        // Update scenegraph layout, etc
+//        FXOMDocument fxomDocument = editorController.getFxomDocument();
+//        if (fxomDocument != null) {
+//            fxomDocument.refreshSceneGraph();
+//        }
+//    }
 
-            String gluonMobileStyleSheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL(); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
-            themeStylesheets.remove(gluonMobileStyleSheet);
-            themeStylesheets.remove(gluonDocumentStylesheet);
-            themeStylesheets.remove(previousGluonSwatchStylesheet);
-            themeStylesheets.remove(previousGluonThemeStylesheet);
-        }
-
-        // Update scenegraph layout, etc
-        FXOMDocument fxomDocument = editorController.getFxomDocument();
-        if (fxomDocument != null) {
-            fxomDocument.refreshSceneGraph();
-        }
-    }
-
-    public void setPreviewStyleSheets(List<String> previewStyleSheets) {
-        Theme currentTheme = editorController.getTheme();
-        themeStylesheets.clear();
-        themeStylesheets.addAll(previewStyleSheets);
-        if (currentTheme == Theme.GLUON_MOBILE_LIGHT || currentTheme == Theme.GLUON_MOBILE_DARK) {
-            themeStylesheets.add(Theme.GLUON_MOBILE_LIGHT.getStylesheetURL()); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
-            themeStylesheets.add(editorController.getGluonSwatch().getStylesheetURL());
-            themeStylesheets.add(editorController.getGluonTheme().getStylesheetURL());
-            themeStylesheets.add(ThemeUtils.getGluonDocumentStylesheetURL());
-        }
-        contentGroupApplyCss();
-    }
+//    public void setPreviewStyleSheets(List<String> previewStyleSheets) {
+//        Theme currentTheme = editorController.getTheme();
+//        themeStylesheets.clear();
+//        themeStylesheets.addAll(previewStyleSheets);
+//        if (currentTheme == Theme.GLUON_MOBILE_LIGHT || currentTheme == Theme.GLUON_MOBILE_DARK) {
+//            themeStylesheets.add(Theme.GLUON_MOBILE_LIGHT.getStylesheetURL()); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
+//            themeStylesheets.add(editorController.getGluonSwatch().getStylesheetURL());
+//            themeStylesheets.add(editorController.getGluonTheme().getStylesheetURL());
+//            themeStylesheets.add(ThemeUtils.getGluonDocumentStylesheetURL());
+//        }
+//        contentGroupApplyCss();
+//    }
 
     public void layoutContent(boolean applyCSS) {
         if (scrollPane != null) {

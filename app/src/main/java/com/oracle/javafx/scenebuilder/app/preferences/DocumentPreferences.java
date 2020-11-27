@@ -56,14 +56,14 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPrefer
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonThemePreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
+import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
-import com.oracle.javafx.scenebuilder.kit.preferences.document.GluonSwatchPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.document.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.SceneStyleSheetsPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.document.ThemePreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
 
 /**
  * Defines preferences specific to a document.
@@ -71,7 +71,7 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreferenc
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DocumentPreferences {
-	
+
     // Document preferences
     private final XPosPreference xPos;
     private final YPosPreference yPos;
@@ -87,7 +87,7 @@ public class DocumentPreferences {
     private final RightDividerHPosPreference rightDividerHPos;
     private final BottomDividerVPosPreference bottomDividerVPos;
     private final LeftDividerVPosPreference leftDividerVPos;
-    
+
     private final SceneStyleSheetsPreference sceneStyleSheets;
     private final I18NResourcePreference I18NResource;
     private final ThemePreference theme;
@@ -97,7 +97,7 @@ public class DocumentPreferences {
 
     private final DocumentWindowController documentWindowController;
 
-    
+
     public DocumentPreferences(
     		DocumentWindowController dwc,
     		@Autowired PathPreference path,
@@ -144,7 +144,7 @@ public class DocumentPreferences {
         this.gluonTheme = gluonTheme;
 
     }
-    
+
     public String getPath() {
 		return path.getValue();
 	}
@@ -279,26 +279,26 @@ public class DocumentPreferences {
         }
     }
 
-    public void setGluonSwatch(GluonSwatch gluonSwatch) {
-        this.gluonSwatch.setValue(gluonSwatch);
-    }
+//    public void setGluonSwatch(GluonSwatch gluonSwatch) {
+//        this.gluonSwatch.setValue(gluonSwatch);
+//    }
+//
+//    public GluonSwatch getGluonSwatch() {
+//        if (gluonSwatch.getValue() == null) {
+//            return documentWindowController.getEditorController().getGluonSwatch();
+//        }
+//        return gluonSwatch.getValue();
+//    }
+//
+//    public void setGluonTheme(GluonTheme gluonTheme) {
+//        this.gluonTheme.setValue(gluonTheme);
+//    }
+//
+//    public GluonTheme getGluonTheme() {
+//        if (gluonTheme.getValue() == null) {
+//            return documentWindowController.getEditorController().getGluonTheme();
+//        }
+//        return gluonTheme.getValue();
+//    }
 
-    public GluonSwatch getGluonSwatch() {
-        if (gluonSwatch.getValue() == null) {
-            return documentWindowController.getEditorController().getGluonSwatch();
-        }
-        return gluonSwatch.getValue();
-    }
-
-    public void setGluonTheme(GluonTheme gluonTheme) {
-        this.gluonTheme.setValue(gluonTheme);
-    }
-
-    public GluonTheme getGluonTheme() {
-        if (gluonTheme.getValue() == null) {
-            return documentWindowController.getEditorController().getGluonTheme();
-        }
-        return gluonTheme.getValue();
-    }
-    
 }

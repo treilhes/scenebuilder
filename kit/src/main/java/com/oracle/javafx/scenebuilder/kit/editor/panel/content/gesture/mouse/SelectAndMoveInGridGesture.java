@@ -31,31 +31,31 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.scene.input.MouseEvent;
 
 /**
  *
- * 
+ *
  */
 public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     private final FXOMInstance gridPaneInstance;
     private final GridSelectionGroup.Type feature;
     private final int featureIndex;
-    
-    
-    public SelectAndMoveInGridGesture(ContentPanelController contentPanelController,
-            FXOMInstance gridPaneInstance, GridSelectionGroup.Type feature, 
+
+
+    public SelectAndMoveInGridGesture(Content content,
+            FXOMInstance gridPaneInstance, GridSelectionGroup.Type feature,
             int featureIndex) {
-        super(contentPanelController);
-        
+        super(content);
+
         this.gridPaneInstance = gridPaneInstance;
         this.feature = feature;
         this.featureIndex = featureIndex;
@@ -73,15 +73,15 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
         return featureIndex;
     }
 
-    
-    
+
+
     /*
      * AbstractMouseDragGesture
      */
 
     @Override
     protected void mousePressed(MouseEvent e) {
-        
+
         /*
          *             |        Object      |                      GridSelectionGroup                      |
          *             |      Selection     |                                                              |
@@ -91,7 +91,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
          *             |                    +--------------------+--------------------+                    |
          *             |                    |       feature      |       feature      |                    |
          *             |                    |  not yet selected  |  already selected  |                    |
-         * ------------+--------------------+--------------------+--------------------+--------------------+ 
+         * ------------+--------------------+--------------------+--------------------+--------------------+
          *             |                    |                    |                    |                    |
          *             |   select feature   |   select feature   |                    |   select feature   |
          *   shift up  | start drag gesture | start drag gesture | start drag gesture | start drag gesture |
@@ -105,13 +105,13 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
          *             |         (C)        |       (D.1.1)      |       (D.1.2)      |       (D.2)        |
          * ------------+--------------------+--------------------+--------------------+--------------------+
          */
-        
-        final Selection selection 
+
+        final Selection selection
                 = contentPanelController.getEditorController().getSelection();
         final boolean extendKeyDown
-                = EditorPlatform.isContinuousSelectKeyDown(e) 
+                = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);
-        
+
         if (selection.getGroup() instanceof GridSelectionGroup) {
             if (extendKeyDown) { // Case D.1.* and D.2
                 selection.toggleSelection(gridPaneInstance, feature, featureIndex);
@@ -126,9 +126,9 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     @Override
     protected void mouseDragDetected(MouseEvent e) {
-        final Selection selection 
+        final Selection selection
                 = contentPanelController.getEditorController().getSelection();
-        
+
         /*
          *             |        Object      |                      GridSelectionGroup                      |
          *             |      Selection     |                                                              |
@@ -138,7 +138,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
          *             |                    +--------------------+--------------------+                    |
          *             |                    |       feature      |       feature      |                    |
          *             |                    |  not yet selected  |  already selected  |                    |
-         * ------------+--------------------+--------------------+--------------------+--------------------+ 
+         * ------------+--------------------+--------------------+--------------------+--------------------+
          *             |                    |                    |                    |                    |
          *             |   select feature   |   select feature   |                    |   select feature   |
          *   shift up  | start drag gesture | start drag gesture | start drag gesture | start drag gesture |
@@ -152,11 +152,11 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
          *             |         (C)        |       (D.1.1)      |       (D.1.2)      |       (D.2)        |
          * ------------+--------------------+--------------------+--------------------+--------------------+
          */
-        
+
 
         if (selection.isSelected(gridPaneInstance, feature, featureIndex)) {
             // Case A, B.*.*, C, D.1.1 and D.2
-            
+
 //            final EditorController editorController
 //                    = contentPanelController.getEditorController();
 //            final Window ownerWindow
@@ -171,9 +171,9 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 //            assert editorController.getDragController().getDragSource() == null;
 //            editorController.getDragController().begin(dragSource);
             System.out.println("SelectAndMoveInGridGesture.mouseDragDetected: will start column/row drag...");
-        } 
+        }
         // else Case D.1.2 : drag gesture is ignored
-        
+
     }
 
     @Override
@@ -187,5 +187,5 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
         // during this gesture
 //        assert false;
     }
-    
+
 }

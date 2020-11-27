@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.manager;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

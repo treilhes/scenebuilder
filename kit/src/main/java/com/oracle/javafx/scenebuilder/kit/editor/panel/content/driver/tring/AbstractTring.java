@@ -31,26 +31,27 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Tring;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.paint.Paint;
 
 /**
  *
- * 
+ *
  */
-public abstract class AbstractTring<T> extends AbstractDecoration<T> {
-    
+public abstract class AbstractTring<T> extends AbstractDecoration<T> implements Tring<T> {
+
     public static final String TARGET_RING_CLASS = "target-ring"; //NOI18N
     public static final String TARGET_CRACK_CLASS = "target-crack"; //NOI18N
-    
-    public AbstractTring(ContentPanelController contentPanelController,
+
+    public AbstractTring(Content contentPanelController,
             FXOMObject fxomObject, Class<T> sceneGraphClass) {
         super(contentPanelController, fxomObject, sceneGraphClass);
     }
-    
+
     public abstract void changeStroke(Paint stroke);
-    
+
 }

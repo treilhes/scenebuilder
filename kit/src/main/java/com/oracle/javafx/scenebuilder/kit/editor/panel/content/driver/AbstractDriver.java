@@ -32,14 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.AbstractCurveEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.AbstractResizer;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.CurveEditor;
+import com.oracle.javafx.scenebuilder.api.Driver;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.api.Pring;
+import com.oracle.javafx.scenebuilder.api.Resizer;
+import com.oracle.javafx.scenebuilder.api.Tring;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -47,22 +48,22 @@ import javafx.scene.Node;
 /**
  *
  */
-public abstract class AbstractDriver {
-    
-    protected final ContentPanelController contentPanelController;
-    
-    public AbstractDriver(ContentPanelController contentPanelController) {
+public abstract class AbstractDriver implements Driver {
+
+    protected final Content contentPanelController;
+
+    public AbstractDriver(Content contentPanelController) {
         assert contentPanelController != null;
         this.contentPanelController = contentPanelController;
-    } 
-    
-    public abstract AbstractHandles<?> makeHandles(FXOMObject fxomObject);
-    public abstract AbstractPring<?> makePring(FXOMObject fxomObject);
-    public abstract AbstractTring<?> makeTring(AbstractDropTarget dropTarget);
-    public abstract AbstractResizer<?> makeResizer(FXOMObject fxomObject);
-    public abstract AbstractCurveEditor<?> makeCurveEditor(FXOMObject fxomObject);
+    }
+
+    public abstract Handles<?> makeHandles(FXOMObject fxomObject);
+    public abstract Pring<?> makePring(FXOMObject fxomObject);
+    public abstract Tring<?> makeTring(DropTarget dropTarget);
+    public abstract Resizer<?> makeResizer(FXOMObject fxomObject);
+    public abstract CurveEditor<?> makeCurveEditor(FXOMObject fxomObject);
     public abstract FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject);
-    public abstract AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY);
+    public abstract DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY);
     public abstract Node getInlineEditorBounds(FXOMObject fxomObject);
     public abstract boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds);
 }

@@ -32,8 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -42,25 +42,25 @@ import javafx.scene.Node;
 
 /**
  *
- * 
+ *
  */
 public abstract class AbstractCurveHandles<T extends Node> extends AbstractHandles<T> {
 
-    public AbstractCurveHandles(ContentPanelController contentPanelController,
+    public AbstractCurveHandles(Content contentPanelController,
             FXOMObject fxomObject, Class<T> sceneGraphClass) {
         super(contentPanelController, fxomObject, sceneGraphClass);
     }
 
     protected final ChangeListener<Number> coordinateListener
         = (ov, v1, v2) -> layoutDecoration();
-    
-    protected final ListChangeListener<Number> pointsListener = 
+
+    protected final ListChangeListener<Number> pointsListener =
             (ListChangeListener.Change<? extends Number> c) -> layoutDecoration();
-    
+
     /*
      * AbstractHandles
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return getSceneGraphObject().getLayoutBounds();

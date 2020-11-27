@@ -32,13 +32,15 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -47,7 +49,7 @@ import javafx.scene.layout.GridPane;
  *
  */
 public class MoveCellContentJob extends Job {
-    
+
     private static final IntegerPropertyMetadata columnIndexMeta =
             new IntegerPropertyMetadata(
                 new PropertyName("columnIndex", GridPane.class), //NOI18N
@@ -60,20 +62,20 @@ public class MoveCellContentJob extends Job {
                 true, /* readWrite */
                 0, /* defaultValue */
                 InspectorPath.UNUSED);
-    
+
     private final FXOMInstance fxomObject;
     private final int columnIndexDelta;
     private final int rowIndexDelta;
     private int oldColumnIndex = -1;
     private int oldRowIndex = -1;
 
-    public MoveCellContentJob(FXOMInstance fxomObject, 
-            int columnIndexDelta, int rowIndexDelta, 
-            EditorController editorController) {
-        super(editorController);
+    public MoveCellContentJob(ApplicationContext context, FXOMInstance fxomObject,
+            int columnIndexDelta, int rowIndexDelta,
+            Editor editor) {
+        super(context, editor);
         assert fxomObject != null;
         assert fxomObject.getSceneGraphObject() instanceof Node;
-        
+
         this.fxomObject = fxomObject;
         this.columnIndexDelta = columnIndexDelta;
         this.rowIndexDelta = rowIndexDelta;
@@ -82,7 +84,7 @@ public class MoveCellContentJob extends Job {
     /*
      * Job
      */
-    
+
     @Override
     public boolean isExecutable() {
         return true;
@@ -92,10 +94,10 @@ public class MoveCellContentJob extends Job {
     public void execute() {
         oldColumnIndex = columnIndexMeta.getValue(fxomObject);
         oldRowIndex = rowIndexMeta.getValue(fxomObject);
-        
+
         assert oldColumnIndex + columnIndexDelta >= 0;
         assert oldRowIndex + rowIndexDelta >= 0;
-        
+
         // Now same as redo()
         redo();
     }
@@ -126,5 +128,5 @@ public class MoveCellContentJob extends Job {
     public String getDescription() {
         return getClass().getSimpleName();
     }
-    
+
 }

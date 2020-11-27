@@ -34,26 +34,29 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMFxIdIndex;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMFxIdIndex;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *
  */
 public class TrimSelectionJob extends BatchSelectionJob {
 
-    public TrimSelectionJob(EditorController editorController) {
-        super(editorController);
+    public TrimSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -85,29 +88,29 @@ public class TrimSelectionJob extends BatchSelectionJob {
             final String fxController = oldRoot.getFxController();
             // First remove the fx:controller/fx:root from the old root object
             if (isFxRoot) {
-                final ToggleFxRootJob fxRootJob = new ToggleFxRootJob(getEditorController());
+                final Job fxRootJob = new ToggleFxRootJob(getContext(), getEditorController()).extend();
                 result.add(fxRootJob);
             }
             if (fxController != null) {
-                final ModifyFxControllerJob fxControllerJob
-                        = new ModifyFxControllerJob(oldRoot, null, getEditorController());
+                final Job fxControllerJob
+                        = new ModifyFxControllerJob(getContext(), oldRoot, null, getEditorController()).extend();
                 result.add(fxControllerJob);
             }
 
-            final Job deleteNewRoot = new RemoveObjectJob(candidateRoot, getEditorController());
+            final Job deleteNewRoot = new RemoveObjectJob(getContext(), candidateRoot, getEditorController()).extend();
             result.add(deleteNewRoot);
 
-            final Job setDocumentRoot = new SetDocumentRootJob(candidateRoot, getEditorController());
+            final Job setDocumentRoot = new SetDocumentRootJob(getContext(), candidateRoot, getEditorController()).extend();
             result.add(setDocumentRoot);
 
             // Finally add the fx:controller/fx:root to the new root object
             if (isFxRoot) {
-                final ToggleFxRootJob fxRootJob = new ToggleFxRootJob(getEditorController());
+                final Job fxRootJob = new ToggleFxRootJob(getContext(), getEditorController()).extend();
                 result.add(fxRootJob);
             }
             if (fxController != null) {
-                final ModifyFxControllerJob fxControllerJob
-                        = new ModifyFxControllerJob(candidateRoot, fxController, getEditorController());
+                final Job fxControllerJob
+                        = new ModifyFxControllerJob(getContext(), candidateRoot, fxController, getEditorController()).extend();
                 result.add(fxControllerJob);
             }
         }

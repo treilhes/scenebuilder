@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture.Tunable;
+import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.collections.ObservableList;
 import javafx.scene.shape.Polyline;
@@ -49,17 +49,17 @@ import javafx.scene.shape.Polyline;
 public class PolylineEditor extends AbstractCurveEditor<Polyline> {
 
     private final List<Double> originalPoints;
-    
+
     private final List<PropertyName> propertyNames = new ArrayList<>();
 
     private int vertexIndex = -1;
-    
+
     public PolylineEditor(Polyline sceneGraphObject) {
         super(sceneGraphObject);
 
         originalPoints = new ArrayList<>(sceneGraphObject.getPoints());
     }
-    
+
     @Override
     public EditCurveGuideController createController(EnumMap<Tunable, Integer> tunableMap) {
         final EditCurveGuideController result = new EditCurveGuideController();
@@ -75,7 +75,7 @@ public class PolylineEditor extends AbstractCurveEditor<Polyline> {
                 .forEach(result::addCurvePoint);
         return result;
     }
-    
+
     @Override
     public void moveTunable(EnumMap<Tunable, Integer> tunableMap, double newX, double newY) {
         Integer index = tunableMap.get(Tunable.VERTEX);
@@ -106,7 +106,7 @@ public class PolylineEditor extends AbstractCurveEditor<Polyline> {
     public Map<PropertyName, Object> getChangeMap() {
         return new HashMap<>();
     }
-    
+
     @Override
     public List<Double> getPoints() {
         return sceneGraphObject.getPoints();

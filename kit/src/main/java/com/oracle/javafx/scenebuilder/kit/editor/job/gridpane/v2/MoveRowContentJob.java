@@ -35,15 +35,17 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.layout.GridPane;
 
@@ -51,7 +53,7 @@ import javafx.scene.layout.GridPane;
  *
  */
 public class MoveRowContentJob extends BatchDocumentJob {
-    
+
     private final IntegerPropertyMetadata rowIndexMeta =
             new IntegerPropertyMetadata(
                 new PropertyName("rowIndex", GridPane.class), //NOI18N
@@ -63,42 +65,42 @@ public class MoveRowContentJob extends BatchDocumentJob {
     private final int movingRowIndex;
     private final int rowIndexDelta;
 
-    public MoveRowContentJob(FXOMObject gridPaneObject, int movingRowIndex, int rowIndexDelta, EditorController editorController) {
-        super(editorController);
+    public MoveRowContentJob(ApplicationContext context, FXOMObject gridPaneObject, int movingRowIndex, int rowIndexDelta, Editor editor) {
+        super(context, editor);
         assert gridPaneObject instanceof FXOMInstance;
         assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
         assert movingRowIndex >= 0;
-        
+
         this.gridPaneObject = (FXOMInstance)gridPaneObject;
         this.movingRowIndex = movingRowIndex;
         this.rowIndexDelta = rowIndexDelta;
     }
 
 
-    
-    
+
+
     /*
      * CompositeJob
      */
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
-        
+
         final DesignHierarchyMask m = new DesignHierarchyMask(gridPaneObject);
         assert m.isAcceptingSubComponent();
-        
+
         for (int i = 0, count = m.getSubComponentCount(); i <  count; i++) {
             assert m.getSubComponentAtIndex(i) instanceof FXOMInstance; // Because children of GridPane are nodes
             final FXOMInstance child = (FXOMInstance) m.getSubComponentAtIndex(i);
             if (rowIndexMeta.getValue(child) == movingRowIndex) {
                 // child belongs to column at movingRowIndex
-                final MoveCellContentJob subJob 
-                        = new MoveCellContentJob(child, 0, rowIndexDelta, getEditorController());
+                final Job subJob
+                        = new MoveCellContentJob(getContext(), child, 0, rowIndexDelta, getEditorController()).extend();
                 result.add(subJob);
             }
         }
-        
+
         return result;
     }
 
@@ -106,5 +108,5 @@ public class MoveRowContentJob extends BatchDocumentJob {
     protected String makeDescription() {
         return getClass().getSimpleName();
     }
-    
+
 }

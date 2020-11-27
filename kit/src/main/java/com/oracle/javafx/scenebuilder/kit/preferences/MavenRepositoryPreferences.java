@@ -38,13 +38,13 @@ import java.util.prefs.Preferences;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
 
 /**
  * Defines repository preferences global to the application.
  */
-public class MavenRepositoryPreferences extends ObjectPreference<Repository> {
+public class MavenRepositoryPreferences extends ListItemObjectPreference<Repository> {
     
     public final static String REPO_ID  = "ID";
     public final static String REPO_TYPE  = "type";

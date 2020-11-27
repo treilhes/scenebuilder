@@ -32,33 +32,35 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCloner;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
  *
  */
 public class ExpandReferenceJob  extends Job {
-    
+
     private final Job subJob;
-    
-    public ExpandReferenceJob(FXOMNode reference, FXOMCloner cloner, EditorController editorController) {
-        super(editorController);
+
+    public ExpandReferenceJob(ApplicationContext context, FXOMNode reference, FXOMCloner cloner, Editor editor) {
+        super(context, editor);
         if (reference instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) reference;
-            subJob = new ExpandIntrinsicReferenceJob(fxomIntrinsic, cloner, getEditorController());
+            subJob = new ExpandIntrinsicReferenceJob(getContext(), fxomIntrinsic, cloner, getEditorController()).extend();
         } else if (reference instanceof FXOMPropertyT) {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) reference;
-            subJob = new ExpandExpressionReferenceJob(fxomProperty, cloner, getEditorController());
+            subJob = new ExpandExpressionReferenceJob(getContext(), fxomProperty, cloner, getEditorController()).extend();
         } else {
             throw new RuntimeException("Bug"); //NOI18N
         }
     }
-    
+
     /*
      * Job
      */
@@ -88,5 +90,5 @@ public class ExpandReferenceJob  extends Job {
     }
 
 
-    
+
 }

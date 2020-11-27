@@ -36,7 +36,7 @@ import static com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.treeview
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;

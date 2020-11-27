@@ -1,5 +1,6 @@
 package com.oracle.javafx.scenebuilder.kit.preferences.global;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
@@ -8,7 +9,8 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.DoublePreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Parent;
 
@@ -17,9 +19,14 @@ public class RootContainerWidthPreference extends DoublePreference implements Ma
 
 	public static final String PREFERENCE_KEY = "ROOT_CONTAINER_WIDTH"; //NOI18N
 	public static final Double PREFERENCE_DEFAULT_VALUE = 600.0; //NOI18N
-    
-    public RootContainerWidthPreference(PreferencesContext preferencesContext) {
+
+	private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public RootContainerWidthPreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	@Override
@@ -29,7 +36,7 @@ public class RootContainerWidthPreference extends DoublePreference implements Ma
 
 	@Override
 	public Parent getEditor() {
-		return PreferenceEditorFactory.newDoubleFieldEditor(this);
+		return preferenceEditorFactory.newDoubleFieldEditor(this);
 	}
 
 	@Override

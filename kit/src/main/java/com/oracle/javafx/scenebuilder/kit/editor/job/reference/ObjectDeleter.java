@@ -35,65 +35,69 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveNodeJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
 
 /**
  */
 
 public class ObjectDeleter {
-    
-    private final EditorController editorController;
+
+    private final Editor editor;
+    private final ApplicationContext context;
     private final FXOMDocument fxomDocument;
     private final List<Job> executedJobs = new LinkedList<>();
-    
-    public ObjectDeleter(EditorController editorController) {
-        assert editorController != null;
-        assert editorController.getFxomDocument() != null;
-        this.editorController = editorController;
-        this.fxomDocument = editorController.getFxomDocument();
+
+    public ObjectDeleter(ApplicationContext context, Editor editor) {
+        assert editor != null;
+        assert editor.getFxomDocument() != null;
+        this.context = context;
+        this.editor = editor;
+        this.fxomDocument = editor.getFxomDocument();
     }
-    
+
     public void delete(FXOMObject target) {
         final FXOMNode node = prepareDeleteObject(target, target);
-        
+
         if (node == target) {
-            final RemoveObjectJob removeJob = new RemoveObjectJob(target, editorController);
+            final Job removeJob = new RemoveObjectJob(context, target, editor).extend();
             removeJob.execute();
             executedJobs.add(removeJob);
         }
     }
-    
+
     public void prepareDelete(FXOMObject target) {
         assert target != null;
         assert target.getFxomDocument() == fxomDocument;
         assert fxomDocument.getFxomRoot() != null; // At least target
-        
+
         prepareDeleteObject(target, target);
     }
-    
+
     public List<Job> getExecutedJobs() {
         return new LinkedList<>(executedJobs);
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private FXOMNode prepareDeleteObject(FXOMObject node, FXOMObject target) {
         final FXOMNode result;
-        
+
         final String nodeFxId = node.getFxId();
         if (nodeFxId == null) {
             // node has no fx:id : it can be deleted safely
@@ -115,7 +119,7 @@ public class ObjectDeleter {
                     if (FXOMNodes.isWeakReference(r)) {
                         // This weak reference will become a forward reference
                         // after the deletion => we remove it.
-                        final Job clearJob = new RemoveNodeJob(r, editorController);
+                        final Job clearJob = new RemoveNodeJob(context, r, editor).extend();
                         clearJob.execute();
                         executedJobs.add(clearJob);
                     } else {
@@ -123,23 +127,23 @@ public class ObjectDeleter {
                         break;
                     }
                 }
-                
+
                 if (firstReference == null) {
                     // node has only weak references ; those references have
                     // been removed => node can be delete safely
                     result = node;
                 } else {
-                    // we combine firstReference with node ie node is 
+                    // we combine firstReference with node ie node is
                     // disconnected from its parent and put in place of
                     // firstReference
-                    final Job combineJob = new CombineReferenceJob(firstReference, editorController);
+                    final Job combineJob = new CombineReferenceJob(context, firstReference, editor).extend();
                     combineJob.execute();
                     executedJobs.add(combineJob);
                     result = null;
                 }
             }
         }
-        
+
         if (result == node) {
             if (node instanceof FXOMInstance) {
                 final FXOMInstance fxomInstance = (FXOMInstance) node;
@@ -158,7 +162,7 @@ public class ObjectDeleter {
                 }
             } // else no prework needed
         }
-        
+
         return result;
     }
 }

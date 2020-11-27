@@ -9,14 +9,15 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Parent;
 
 @Component
 public class DisplayModePreference extends EnumPreference<DISPLAY_MODE> implements ManagedGlobalPreference, UserPreference<DISPLAY_MODE> {
-	    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -25,8 +26,13 @@ public class DisplayModePreference extends EnumPreference<DISPLAY_MODE> implemen
     public static final String PREFERENCE_KEY = "LIBRARY_DISPLAY_OPTION"; //NOI18N
     public static final DISPLAY_MODE PREFERENCE_DEFAULT_VALUE = DISPLAY_MODE.SECTIONS;
 
-	public DisplayModePreference(@Autowired PreferencesContext preferencesContext) {
+    private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public DisplayModePreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, DISPLAY_MODE.class, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	@Override
@@ -36,7 +42,7 @@ public class DisplayModePreference extends EnumPreference<DISPLAY_MODE> implemen
 
 	@Override
 	public Parent getEditor() {
-		return PreferenceEditorFactory.newEnumFieldEditor(this);
+		return preferenceEditorFactory.newEnumFieldEditor(this);
 	}
 
 

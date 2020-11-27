@@ -31,13 +31,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.SplitPaneHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.RegionResizer;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
@@ -47,14 +49,19 @@ import javafx.scene.layout.Region;
  */
 public class SplitPaneDriver extends AbstractNodeDriver {
 
-    public SplitPaneDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+	private final ApplicationContext context;
+
+    public SplitPaneDriver(
+    		ApplicationContext context,
+    		Content contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
     public AbstractResizer<?> makeResizer(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof SplitPane;
@@ -65,7 +72,7 @@ public class SplitPaneDriver extends AbstractNodeDriver {
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject() instanceof SplitPane;
-        return new SplitPaneHandles(contentPanelController, (FXOMInstance) fxomObject);
+        return new SplitPaneHandles(context, contentPanelController, (FXOMInstance) fxomObject);
     }
-    
+
 }

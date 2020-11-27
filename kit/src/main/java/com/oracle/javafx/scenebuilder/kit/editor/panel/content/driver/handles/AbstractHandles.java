@@ -33,36 +33,37 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
 import java.net.URL;
 
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.DiscardGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 
 /**
  *
- * 
+ *
  */
-public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
-    
+public abstract class AbstractHandles<T> extends AbstractDecoration<T> implements Handles<T> {
+
     public static final String SELECTION_RECT = "selection-rect"; //NOI18N
     public static final String SELECTION_WIRE = "selection-wire"; //NOI18N
     public static final String SELECTION_PIPE = "selection-pipe"; //NOI18N
     public static final String SELECTION_HANDLES = "selection-handles"; //NOI18N
     public static final String SELECTION_HANDLES_DIM = "selection-handles-dim"; //NOI18N
     public static final double SELECTION_HANDLES_SIZE = 10.0; // pixels
-    
+
     private static Image squareHandleImage = null;
     private static Image sideHandleImage = null;
     private static Image squareHandleDimImage = null;
     private static Image sideHandleDimImage = null;
-    
+
     private boolean enabled = true;
-    
-    public AbstractHandles(ContentPanelController contentPanelController,
+
+    public AbstractHandles(Content contentPanelController,
             FXOMObject fxomObject, Class<T> sceneGraphClass) {
         super(contentPanelController, fxomObject, sceneGraphClass);
     }
@@ -75,28 +76,28 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
         this.enabled = enabled;
         enabledDidChange();
     }
-   
+
     public AbstractGesture findEnabledGesture(Node node) {
         final AbstractGesture result;
-        
+
         if (enabled) {
             result = findGesture(node);
         } else {
             result = new DiscardGesture(getContentPanelController());
         }
-        
+
         return result;
     }
-    
+
     public abstract AbstractGesture findGesture(Node node);
     public abstract void enabledDidChange();
-    
+
     private static final String HANDLES = "HANDLES";
-    
+
     public static AbstractHandles<?> lookupHandles(Node node) {
         assert node != null;
         assert node.isMouseTransparent() == false;
-        
+
         final AbstractHandles<?> result;
         final Object value = node.getProperties().get(HANDLES);
         if (value instanceof AbstractHandles) {
@@ -105,22 +106,22 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
             assert value == null;
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public static void attachHandles(Node node, AbstractHandles<?> handles) {
         assert node != null;
         assert node.isMouseTransparent() == false;
         assert lookupHandles(node) == null;
-        
+
         if (handles == null) {
             node.getProperties().remove(HANDLES);
         } else {
             node.getProperties().put(HANDLES, handles);
         }
     }
-    
+
     public synchronized static Image getCornerHandleImage() {
         if (squareHandleImage == null) {
             final URL url = AbstractHandles.class.getResource("corner-handle.png");
@@ -128,7 +129,7 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
         }
         return squareHandleImage;
     }
-    
+
     public synchronized static Image getSideHandleImage() {
         if (sideHandleImage == null) {
             final URL url = AbstractHandles.class.getResource("side-handle.png");
@@ -136,7 +137,7 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
         }
         return sideHandleImage;
     }
-    
+
     public synchronized static Image getCornerHandleDimImage() {
         if (squareHandleDimImage == null) {
             final URL url = AbstractHandles.class.getResource("corner-handle-dim.png");
@@ -144,7 +145,7 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
         }
         return squareHandleDimImage;
     }
-    
+
     public synchronized static Image getSideHandleDimImage() {
         if (sideHandleDimImage == null) {
             final URL url = AbstractHandles.class.getResource("side-handle-dim.png");
@@ -152,5 +153,5 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> {
         }
         return sideHandleDimImage;
     }
-    
+
 }

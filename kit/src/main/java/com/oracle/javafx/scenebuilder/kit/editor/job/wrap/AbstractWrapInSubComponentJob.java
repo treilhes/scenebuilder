@@ -35,13 +35,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 /**
  * Main class used for the wrap jobs using the new container SUB COMPONENT
@@ -49,8 +51,8 @@ import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
  */
 public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
 
-    public AbstractWrapInSubComponentJob(EditorController editorController) {
-        super(editorController);
+    public AbstractWrapInSubComponentJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -79,10 +81,10 @@ public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
 
         // Add the new container property to the new container instance
         assert newContainerProperty.getParentInstance() == null;
-        final Job addPropertyJob = new AddPropertyJob(
+        final Job addPropertyJob = new AddPropertyJob(getContext(), 
                 newContainerProperty,
                 newContainer,
-                -1, getEditorController());
+                -1, getEditorController()).extend();
         jobs.add(addPropertyJob);
 
         return jobs;

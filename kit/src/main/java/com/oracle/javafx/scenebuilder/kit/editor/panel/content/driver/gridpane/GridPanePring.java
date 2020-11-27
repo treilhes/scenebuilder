@@ -32,12 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -50,14 +50,14 @@ import javafx.scene.paint.Paint;
  */
 public class GridPanePring extends AbstractPring<GridPane> {
 
-    private final GridPaneMosaic mosaic 
+    private final GridPaneMosaic mosaic
             = new GridPaneMosaic("pring", //NOI18N
                     true /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
-    
-    public GridPanePring(ContentPanelController contentPanelController, FXOMInstance fxomInstance) {
+
+    public GridPanePring(Content contentPanelController, FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, GridPane.class);
-        
+
         assert fxomInstance.getSceneGraphObject() instanceof GridPane;
         getRootNode().getChildren().add(mosaic.getTopGroup());
     }
@@ -65,7 +65,7 @@ public class GridPanePring extends AbstractPring<GridPane> {
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
-    
+
     /*
      * AbstractDecoration
      */
@@ -90,16 +90,16 @@ public class GridPanePring extends AbstractPring<GridPane> {
         stopListeningToLayoutBounds(getSceneGraphObject());
         stopListeningToLocalToSceneTransform(getSceneGraphObject());
     }
-    
+
     @Override
     protected void layoutDecoration() {
-        
+
         if (mosaic.getGridPane() != getSceneGraphObject()) {
             mosaic.setGridPane(getSceneGraphObject());
         } else {
             mosaic.update();
         }
-        
+
         // Mosaic update may have created new trays. Attach this pring to them.
         for (Node node : this.mosaic.getNorthTrayNodes()) {
             attachPring(node);
@@ -113,7 +113,7 @@ public class GridPanePring extends AbstractPring<GridPane> {
         for (Node node : this.mosaic.getWestTrayNodes()) {
             attachPring(node);
         }
-        
+
         // Update mosaic transform
         mosaic.getTopGroup().getTransforms().clear();
         mosaic.getTopGroup().getTransforms().add(getSceneGraphObjectToDecorationTransform());
@@ -122,7 +122,7 @@ public class GridPanePring extends AbstractPring<GridPane> {
     /*
      * AbstractPring
      */
-    
+
     @Override
     public void changeStroke(Paint stroke) {
         assert stroke instanceof Color;
@@ -131,9 +131,9 @@ public class GridPanePring extends AbstractPring<GridPane> {
 
     @Override
     public AbstractGesture findGesture(Node node) {
-        
+
         final GridSelectionGroup.Type feature;
-        
+
         int trayIndex = mosaic.getNorthTrayNodes().indexOf(node);
         if (trayIndex != -1) {
             feature = GridSelectionGroup.Type.COLUMN;
@@ -151,7 +151,7 @@ public class GridPanePring extends AbstractPring<GridPane> {
                 }
             }
         }
-        
+
         final AbstractGesture result;
         if (trayIndex == -1) {
             result = null;
@@ -159,15 +159,15 @@ public class GridPanePring extends AbstractPring<GridPane> {
             result = new SelectAndMoveInGridGesture(getContentPanelController(),
                     getFxomInstance(), feature, trayIndex);
         }
-        
+
         return result;
     }
-    
+
     /*
      * Private
      */
-    
-    /* 
+
+    /*
      * Wraper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void attachPring(Node node) {
@@ -175,5 +175,5 @@ public class GridPanePring extends AbstractPring<GridPane> {
             attachPring(node, this);
         }
     }
-    
+
 }

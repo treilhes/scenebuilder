@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
@@ -52,7 +52,7 @@ public class EffectPopupEditor extends PopupEditor {
 
     private EffectPicker effectPicker;
     private List<MenuItem> effectMenuItems;
-    private EditorController editorController;
+    private Editor editorController;
 
     private final ChangeListener<Number> effectRevisionChangeListener = (ov, t, t1) -> {
         final Effect rootEffect = effectPicker.getRootEffectProperty();
@@ -79,12 +79,12 @@ public class EffectPopupEditor extends PopupEditor {
         }
     };
 
-    public EffectPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public EffectPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
         super(propMeta, selectedClasses);
-        initialize(editorController);
+        initialize(editor);
     }
-    
-    private void initialize(EditorController editorController) {
+
+    private void initialize(Editor editorController) {
         this.editorController = editorController;
     }
 

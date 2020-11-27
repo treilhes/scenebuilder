@@ -31,7 +31,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.drag.source;
 
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;

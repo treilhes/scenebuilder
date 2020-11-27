@@ -34,16 +34,18 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.control.DialogPane;
 
@@ -52,8 +54,8 @@ import javafx.scene.control.DialogPane;
  */
 public class WrapInDialogPaneJob extends AbstractWrapInJob {
 
-    public WrapInDialogPaneJob(EditorController editorController) {
-        super(editorController);
+    public WrapInDialogPaneJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = DialogPane.class;
     }
 
@@ -71,7 +73,7 @@ public class WrapInDialogPaneJob extends AbstractWrapInJob {
         }
         return result;
     }
-    
+
     @Override
     protected List<Job> wrapChildrenJobs(final List<FXOMObject> children) {
 
@@ -97,10 +99,10 @@ public class WrapInDialogPaneJob extends AbstractWrapInJob {
 
         // Add the new container property to the new container instance
         assert newContainerProperty.getParentInstance() == null;
-        final Job addPropertyJob = new AddPropertyJob(
+        final Job addPropertyJob = new AddPropertyJob(getContext(), 
                 newContainerProperty,
                 newContainer,
-                -1, getEditorController());
+                -1, getEditorController()).extend();
         jobs.add(addPropertyJob);
 
         return jobs;

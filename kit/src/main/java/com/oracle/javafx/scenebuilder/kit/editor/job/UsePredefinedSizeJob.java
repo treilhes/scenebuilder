@@ -34,17 +34,20 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -59,28 +62,28 @@ import javafx.scene.web.WebView;
  */
 public class UsePredefinedSizeJob extends Job {
 
-    private final List<ModifyObjectJob> subJobs = new ArrayList<>();
+    private final List<Job> subJobs = new ArrayList<>();
     private String description; // final but initialized lazily
     private final Size size;
-    private final EditorController editorController;
+    private final Editor editor;
     private final FXOMObject fxomObject;
 
-    public UsePredefinedSizeJob(EditorController editorController, Size size, FXOMObject fxomObject) {
-        super(editorController);
-        this.editorController = editorController;
+    public UsePredefinedSizeJob(ApplicationContext context, Editor editor, Size size, FXOMObject fxomObject) {
+        super(context, editor);
+        this.editor = editor;
         this.size = size;
         this.fxomObject = fxomObject;
         buildSubJobs();
     }
 
-    public UsePredefinedSizeJob(EditorController editorController, Size size) {
-        super(editorController);
-        this.editorController = editorController;
+    public UsePredefinedSizeJob(ApplicationContext context, Editor editor, Size size) {
+        super(context, editor);
+        this.editor = editor;
         this.size = size;
-        if (editorController.getFxomDocument() == null) {
+        if (editor.getFxomDocument() == null) {
             this.fxomObject = null;
         } else {
-            FXOMObject fxomObject = editorController.getFxomDocument().getFxomRoot();
+            FXOMObject fxomObject = editor.getFxomDocument().getFxomRoot();
 
             if (fxomObject != null && fxomObject.getSceneGraphObject() instanceof Scene) {
                 // Set the size of the scene's root
@@ -93,7 +96,7 @@ public class UsePredefinedSizeJob extends Job {
         }
         buildSubJobs();
     }
-    
+
     /*
      * Job
      */
@@ -104,9 +107,9 @@ public class UsePredefinedSizeJob extends Job {
 
     @Override
     public void execute() {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = editor.getFxomDocument();
         fxomDocument.beginUpdate();
-        for (ModifyObjectJob subJob : subJobs) {
+        for (Job subJob : subJobs) {
             subJob.execute();
         }
         fxomDocument.endUpdate();
@@ -114,7 +117,7 @@ public class UsePredefinedSizeJob extends Job {
 
     @Override
     public void undo() {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = editor.getFxomDocument();
         fxomDocument.beginUpdate();
         for (int i = subJobs.size() - 1; i >= 0; i--) {
             subJobs.get(i).undo();
@@ -124,9 +127,9 @@ public class UsePredefinedSizeJob extends Job {
 
     @Override
     public void redo() {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = editor.getFxomDocument();
         fxomDocument.beginUpdate();
-        for (ModifyObjectJob subJob : subJobs) {
+        for (Job subJob : subJobs) {
             subJob.redo();
         }
         fxomDocument.endUpdate();
@@ -144,10 +147,10 @@ public class UsePredefinedSizeJob extends Job {
 
     private void buildSubJobs() {
 
-        if (editorController.getFxomDocument() != null && (fxomObject instanceof FXOMInstance)) {
+        if (editor.getFxomDocument() != null && (fxomObject instanceof FXOMInstance)) {
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
             final Object sceneGraphObject = fxomInstance.getSceneGraphObject();
-            
+
             if (sceneGraphObject instanceof WebView
                     || sceneGraphObject instanceof Region) {
                 subJobs.addAll(modifyHeightJobs(fxomInstance));
@@ -156,8 +159,8 @@ public class UsePredefinedSizeJob extends Job {
         }
     }
 
-    private List<ModifyObjectJob> modifyHeightJobs(final FXOMInstance candidate) {
-        final List<ModifyObjectJob> result = new ArrayList<>();
+    private List<Job> modifyHeightJobs(final FXOMInstance candidate) {
+        final List<Job> result = new ArrayList<>();
 
         final PropertyName maxHeight = new PropertyName("maxHeight"); //NOI18N
         final PropertyName minHeight = new PropertyName("minHeight"); //NOI18N
@@ -170,12 +173,12 @@ public class UsePredefinedSizeJob extends Job {
         final ValuePropertyMetadata prefHeightVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, prefHeight);
 
-        final ModifyObjectJob maxHeightJob = new ModifyObjectJob(
-                candidate, maxHeightVPM, Region.USE_PREF_SIZE, editorController);
-        final ModifyObjectJob minHeightJob = new ModifyObjectJob(
-                candidate, minHeightVPM, Region.USE_PREF_SIZE, editorController);
-        final ModifyObjectJob prefHeightJob = new ModifyObjectJob(
-                candidate, prefHeightVPM, getHeightFromSize(size), editorController);
+        final Job maxHeightJob = new ModifyObjectJob(getContext(),
+                candidate, maxHeightVPM, Region.USE_PREF_SIZE, editor).extend();
+        final Job minHeightJob = new ModifyObjectJob(getContext(),
+                candidate, minHeightVPM, Region.USE_PREF_SIZE, editor).extend();
+        final Job prefHeightJob = new ModifyObjectJob(getContext(),
+                candidate, prefHeightVPM, getHeightFromSize(size), editor).extend();
 
         if (maxHeightJob.isExecutable()) {
             result.add(maxHeightJob);
@@ -189,8 +192,8 @@ public class UsePredefinedSizeJob extends Job {
         return result;
     }
 
-    private List<ModifyObjectJob> modifyWidthJobs(final FXOMInstance candidate) {
-        final List<ModifyObjectJob> result = new ArrayList<>();
+    private List<Job> modifyWidthJobs(final FXOMInstance candidate) {
+        final List<Job> result = new ArrayList<>();
 
         final PropertyName maxWidth = new PropertyName("maxWidth"); //NOI18N
         final PropertyName minWidth = new PropertyName("minWidth"); //NOI18N
@@ -203,12 +206,12 @@ public class UsePredefinedSizeJob extends Job {
         final ValuePropertyMetadata prefWidthVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, prefWidth);
 
-        final ModifyObjectJob maxWidthJob = new ModifyObjectJob(
-                candidate, maxWidthVPM, Region.USE_PREF_SIZE, editorController);
-        final ModifyObjectJob minWidthJob = new ModifyObjectJob(
-                candidate, minWidthVPM, Region.USE_PREF_SIZE, editorController);
-        final ModifyObjectJob prefWidthJob = new ModifyObjectJob(
-                candidate, prefWidthVPM, getWidthFromSize(size), editorController);
+        final Job maxWidthJob = new ModifyObjectJob(getContext(),
+                candidate, maxWidthVPM, Region.USE_PREF_SIZE, editor).extend();
+        final Job minWidthJob = new ModifyObjectJob(getContext(),
+                candidate, minWidthVPM, Region.USE_PREF_SIZE, editor).extend();
+        final Job prefWidthJob = new ModifyObjectJob(getContext(),
+                candidate, prefWidthVPM, getWidthFromSize(size), editor).extend();
 
         if (maxWidthJob.isExecutable()) {
             result.add(maxWidthJob);
@@ -221,25 +224,25 @@ public class UsePredefinedSizeJob extends Job {
         }
         return result;
     }
-    
+
     private double getWidthFromSize(Size size) {
         assert size != Size.SIZE_PREFERRED;
-        
+
         if (size == Size.SIZE_DEFAULT) {
-            return editorController.getDefaultRootContainerWidth();
+            return editor.getDefaultRootContainerWidth();
         }
 
         String sizeString = size.toString();
         return Double.parseDouble(sizeString.substring(5, sizeString.indexOf('x'))); //NOI18N
     }
-    
+
     private double getHeightFromSize(Size size) {
         assert size != Size.SIZE_PREFERRED;
-        
+
         if (size == Size.SIZE_DEFAULT) {
-            return editorController.getDefaultRootContainerHeight();
+            return editor.getDefaultRootContainerHeight();
         }
-        
+
         String sizeString = size.toString();
         return Double.parseDouble(sizeString.substring(sizeString.indexOf('x') + 1, sizeString.length())); //NOI18N
     }

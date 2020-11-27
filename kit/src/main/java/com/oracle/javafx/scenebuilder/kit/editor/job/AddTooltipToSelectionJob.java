@@ -40,27 +40,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Library;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.Library;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  *
  */
 public class AddTooltipToSelectionJob extends BatchSelectionJob {
-    
+
     private Map<FXOMObject, FXOMObject> tooltipMap; // Initialized lazily
 
-    public AddTooltipToSelectionJob(EditorController editorController) {
-        super(editorController);
+    public AddTooltipToSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
-    
+
     public Collection<FXOMObject> getTooltips() {
         constructTooltipMap();
         return tooltipMap.values();
@@ -72,20 +75,20 @@ public class AddTooltipToSelectionJob extends BatchSelectionJob {
 
     @Override
     protected List<Job> makeSubJobs() {
-        
+
         constructTooltipMap();
-        
+
         final List<Job> result = new LinkedList<>();
         for (Map.Entry<FXOMObject, FXOMObject> e : tooltipMap.entrySet()) {
             final FXOMObject fxomObject = e.getKey();
             final FXOMObject tooltipObject = e.getValue();
-            final Job insertJob = new InsertAsAccessoryJob(
-                    tooltipObject, fxomObject, 
-                    DesignHierarchyMask.Accessory.TOOLTIP, 
-                    getEditorController());
+            final Job insertJob = new InsertAsAccessoryJob(getContext(),
+                    tooltipObject, fxomObject,
+                    DesignHierarchyMask.Accessory.TOOLTIP,
+                    getEditorController()).extend();
             result.add(insertJob);
         }
-        
+
         return result;
     }
 
@@ -94,31 +97,31 @@ public class AddTooltipToSelectionJob extends BatchSelectionJob {
         final Collection<FXOMObject> contextMenus = tooltipMap.values();
         assert contextMenus.isEmpty() == false;
         final FXOMObject hitMenu = contextMenus.iterator().next();
-        
+
         return new ObjectSelectionGroup(contextMenus, hitMenu, null);
     }
 
     /*
      * CompositeJob
      */
-    
+
     @Override
     protected String makeDescription() {
         return I18N.getString("label.action.edit.add.tooltip");
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void constructTooltipMap() {
         if (tooltipMap == null) {
             tooltipMap = new LinkedHashMap<>();
-            
+
             // Build the ContextMenu item from the library builtin items
             final String tooltipFxmlPath = "builtin/Tooltip.fxml"; //NOI18N
-            final URL tooltipFxmlURL 
+            final URL tooltipFxmlURL
                     = BuiltinLibrary.class.getResource(tooltipFxmlPath);
             assert tooltipFxmlURL != null;
 

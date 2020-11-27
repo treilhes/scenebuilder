@@ -31,47 +31,52 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.drag;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 
 /**
  *
  */
 class LiveUpdater {
-    
-    private final AbstractDragSource dragSource;
-    private final EditorController editorController;
-    private AbstractDropTarget dropTarget;
+
+    private final DragSource dragSource;
+    private final Editor editorController;
+    private DropTarget dropTarget;
     private Job dropTargetMoveJob;
-    
-    public LiveUpdater(AbstractDragSource dragSource, EditorController editorController) {
+	private final ApplicationContext context;
+
+    public LiveUpdater(ApplicationContext context, DragSource dragSource, Editor editorController) {
         assert dragSource != null;
         assert editorController != null;
-        
+
+        this.context = context;
         this.dragSource = dragSource;
         this.editorController = editorController;
     }
-    
-    public void setDropTarget(AbstractDropTarget newDropTarget) {
+
+    public void setDropTarget(DropTarget newDropTarget) {
         assert (newDropTarget == null) || (this.dropTarget != newDropTarget);
-        
+
         /*
          *   \ newDropTarget |                     |
          * this.dropTarget   |        null         |        non null
          * ------------------+---------------------+------------------------
          *                   |                     |          (A)
          *       null        |        nop          | move to new drop target
-         *                   |                     |           
+         *                   |                     |
          * ------------------+---------------------+------------------------
          *                   |        (B)          |          (C)
          *     not null      |    undo last move   |     undo last move
          *                   |                     | move to new drop target
          * ------------------+---------------------+------------------------
-         * 
+         *
          */
-        
+
         if (this.dropTarget != null) {
             assert this.dropTargetMoveJob != null;
             this.dropTargetMoveJob.undo();
@@ -79,12 +84,12 @@ class LiveUpdater {
         this.dropTarget = newDropTarget;
         this.dropTargetMoveJob = null;
         if (this.dropTarget != null) {
-            this.dropTargetMoveJob = this.dropTarget.makeDropJob(dragSource, editorController);
+            this.dropTargetMoveJob = this.dropTarget.makeDropJob(context, dragSource, editorController).extend();
             this.dropTargetMoveJob.execute();
         }
     }
-    
-    public AbstractDropTarget getDropTarget() {
+
+    public DropTarget getDropTarget() {
         return dropTarget;
     }
 }

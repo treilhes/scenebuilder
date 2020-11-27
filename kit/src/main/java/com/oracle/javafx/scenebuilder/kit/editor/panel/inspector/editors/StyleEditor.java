@@ -38,9 +38,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 
 import javafx.beans.value.ChangeListener;
@@ -74,14 +74,14 @@ public class StyleEditor extends InlineListEditor {
 
     private List<String> cssProperties;
     private Set<Class<?>> selectedClasses;
-    private EditorController editorController;
+    private Editor editorController;
 
-    public StyleEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public StyleEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editorController) {
         super(propMeta, selectedClasses);
         initialize(selectedClasses, editorController);
     }
-    
-    private void initialize(Set<Class<?>> selectedClasses, EditorController editorController) {
+
+    private void initialize(Set<Class<?>> selectedClasses, Editor editorController) {
         this.selectedClasses = selectedClasses;
         this.editorController = editorController;
         setLayoutFormat(LayoutFormat.DOUBLE_LINE);
@@ -178,7 +178,7 @@ public class StyleEditor extends InlineListEditor {
         }
 
         if (value != null) {
-            // Compare the values without spaces, since the fxml file could have 
+            // Compare the values without spaces, since the fxml file could have
             // a different formatting than the one we generate.
             assert value instanceof String;
             assert valueProperty().getValue() instanceof String;
@@ -191,10 +191,10 @@ public class StyleEditor extends InlineListEditor {
         return false;
     }
 
-    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
         super.reset(propMeta, selectedClasses);
         this.selectedClasses = selectedClasses;
-        this.editorController = editorController;
+        this.editorController = editor;
         cssProperties = null;
         // add an empty item
         addItem(getNewStyleItem());

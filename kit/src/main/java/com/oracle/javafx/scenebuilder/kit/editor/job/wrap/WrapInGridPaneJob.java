@@ -39,15 +39,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.JobUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.GridCourse;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -67,8 +68,8 @@ public class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
     // Value = 2 dimensions integer array for the COLUMN and ROW index
     private final Map<FXOMObject, int[]> indices = new HashMap<>();
 
-    public WrapInGridPaneJob(EditorController editorController) {
-        super(editorController);
+    public WrapInGridPaneJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = GridPane.class;
     }
 
@@ -80,14 +81,14 @@ public class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
             int[] childIndices = indices.get(child);
 
             // Modify child column index
-            final ModifyObjectJob modifyColumnIndex = WrapJobUtils.modifyObjectJob(
+            final Job modifyColumnIndex = WrapJobUtils.modifyObjectJob(getContext(),
                     (FXOMInstance) child, GridPane.class, "columnIndex", //NOI18N
                     childIndices[GridCourse.COL_BY_COL.index()],
                     getEditorController());
             jobs.add(modifyColumnIndex);
 
             // Modify child row index
-            final ModifyObjectJob modifyRowIndex = WrapJobUtils.modifyObjectJob(
+            final Job modifyRowIndex = WrapJobUtils.modifyObjectJob(getContext(),
                     (FXOMInstance) child, GridPane.class, "rowIndex", //NOI18N
                     childIndices[GridCourse.ROW_BY_ROW.index()],
                     getEditorController());

@@ -33,10 +33,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -46,10 +46,10 @@ import javafx.scene.layout.Region;
 
 /**
  *
- * 
+ *
  */
 public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
-    
+
     private final Accessory targetAccessory;
     private final BorderPane borderPane = new BorderPane();
     private final Label topLabel = new Label();
@@ -57,9 +57,9 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
     private final Label leftLabel = new Label();
     private final Label rightLabel = new Label();
     private final Label centerLabel = new Label();
-    
 
-    public BorderPaneTring(ContentPanelController contentPanelController, 
+
+    public BorderPaneTring(Content contentPanelController,
             FXOMInstance fxomInstance, DesignHierarchyMask.Accessory targetAccessory) {
         super(contentPanelController, fxomInstance, BorderPane.class);
         assert (targetAccessory == Accessory.TOP)
@@ -67,9 +67,9 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
                 || (targetAccessory == Accessory.LEFT)
                 || (targetAccessory == Accessory.RIGHT)
                 || (targetAccessory == Accessory.CENTER);
-        
+
         this.targetAccessory = targetAccessory;
-        
+
         topLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         topLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         bottomLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -86,7 +86,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         leftLabel.setText(Accessory.LEFT.toString());
         rightLabel.setText(Accessory.RIGHT.toString());
         centerLabel.setText(Accessory.CENTER.toString());
-        
+
         topLabel.getStyleClass().add(TARGET_RING_CLASS);
         topLabel.getStyleClass().add(BorderPane.class.getSimpleName());
         bottomLabel.getStyleClass().add(TARGET_RING_CLASS);
@@ -97,14 +97,14 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         rightLabel.getStyleClass().add(BorderPane.class.getSimpleName());
         centerLabel.getStyleClass().add(TARGET_RING_CLASS);
         centerLabel.getStyleClass().add(BorderPane.class.getSimpleName());
-        
+
         final DesignHierarchyMask m = new DesignHierarchyMask(fxomInstance);
         topLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.TOP) == null);
         bottomLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.BOTTOM) == null);
         leftLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.LEFT) == null);
         rightLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.RIGHT) == null);
         centerLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.CENTER) == null);
-        
+
         borderPane.setTop(topLabel);
         borderPane.setBottom(bottomLabel);
         borderPane.setLeft(leftLabel);
@@ -114,19 +114,19 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         borderPane.setMinHeight(Region.USE_PREF_SIZE);
         borderPane.setMaxWidth(Region.USE_PREF_SIZE);
         borderPane.setMaxHeight(Region.USE_PREF_SIZE);
-        
+
         getRootNode().getChildren().add(0, borderPane);
     }
 
-    
+
     public static Bounds computeCenterBounds(BorderPane sceneGraphObject) {
         final Bounds b = sceneGraphObject.getLayoutBounds();
-        
+
         final double x0 = b.getMinX();
         final double x3 = b.getMaxX();
         final double x1 = x0 + (x3 - x0) * 0.25;
         final double x2 = x0 + (x3 - x0) * 0.75;
-        
+
         final double y0 = b.getMinY();
         final double y3 = b.getMaxY();
         final double y1 = y0 + (y3 - y0) * 0.25;
@@ -134,18 +134,18 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
         return new BoundingBox(x1, y1, x2 - x1, y2 - y1);
     }
-    
 
-    
+
+
     public static Bounds computeAreaBounds(Bounds lb, Bounds cb, Accessory area) {
         assert lb != null;
         assert cb != null;
-        
-        /*                       
+
+        /*
          *      lb.minx                                    lb.maxx
          *              cb.minx                   cb.maxx
          *  lb.miny o----------------------------------------o
-         *          |                  Top                   | 
+         *          |                  Top                   |
          *  cb.miny o-----o-------------------------o--------o
          *          |     |                         |        |
          *          |     |                         |        |
@@ -156,12 +156,12 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
          *          |     |                         |        |
          *  cb.maxy o-----o-------------------------o--------o
          *          |                                        |
-         *          |                 Bottom                 | 
+         *          |                 Bottom                 |
          *          |                                        |
          *  lb.maxy o----------------------------------------o
-         * 
+         *
          */
-        
+
         final double xmin, ymin, xmax, ymax;
         switch(area) {
             case TOP:
@@ -203,40 +203,40 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
                 ymax = cb.getMaxY();
                 break;
         }
-        
+
         return new BoundingBox(xmin, ymin, xmax - xmin, ymax - ymin);
     }
-    
-    
+
+
     /*
      * AbstractGenericTring
      */
-        
+
     @Override
     protected void layoutDecoration() {
-        
+
         super.layoutDecoration();
-        
+
         final Bounds layoutBounds = getSceneGraphObject().getLayoutBounds();
         borderPane.setPrefWidth(layoutBounds.getWidth());
         borderPane.setPrefHeight(layoutBounds.getHeight());
 
-        
+
         final Bounds centerBounds = computeCenterBounds(getSceneGraphObject());
         centerLabel.setPrefSize(centerBounds.getWidth(), centerBounds.getHeight());
-        
+
         final Bounds topBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.TOP);
         topLabel.setPrefSize(topBounds.getWidth(), topBounds.getHeight());
-        
+
         final Bounds bottomBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.BOTTOM);
         bottomLabel.setPrefSize(bottomBounds.getWidth(), bottomBounds.getHeight());
-        
+
         final Bounds leftBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.LEFT);
         leftLabel.setPrefSize(leftBounds.getWidth(), leftBounds.getHeight());
-        
+
         final Bounds rightBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.RIGHT);
         rightLabel.setPrefSize(rightBounds.getWidth(), rightBounds.getHeight());
-        
+
         final Label targetLabel;
         switch(targetAccessory) {
             case TOP:
@@ -260,27 +260,27 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
                 targetLabel = centerLabel;
                 break;
         }
-                
+
         setupSelectedStyleClass(topLabel, topLabel == targetLabel);
         setupSelectedStyleClass(bottomLabel, bottomLabel == targetLabel);
         setupSelectedStyleClass(leftLabel, leftLabel == targetLabel);
         setupSelectedStyleClass(rightLabel, rightLabel == targetLabel);
         setupSelectedStyleClass(centerLabel, centerLabel == targetLabel);
-        
-        
+
+
         // Update (decoration) border pane transform
         borderPane.getTransforms().clear();
         borderPane.getTransforms().add(getSceneGraphObjectToDecorationTransform());
     }
 
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private static final String SELECTED = "selected"; //NOI18N
-    
+
     private static void setupSelectedStyleClass(Label label, boolean selected) {
             final List<String> styleClass = label.getStyleClass();
         if (selected) {

@@ -39,14 +39,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RelocateNodeJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Point2D;
 
@@ -54,27 +58,27 @@ import javafx.geometry.Point2D;
  *
  */
 public class RelocateSelectionJob extends BatchDocumentJob {
-    
+
     private static final long MERGE_PERIOD = 1000; //  milliseconds
-    
+
     private final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
     private long time = System.currentTimeMillis();
 
-    public RelocateSelectionJob(Map<FXOMObject, Point2D> locationMap,
-            EditorController editorController) {
-        super(editorController);
+    public RelocateSelectionJob(ApplicationContext context, Map<FXOMObject, Point2D> locationMap,
+            Editor editor) {
+        super(context, editor);
         this.locationMap.putAll(locationMap);
     }
-    
+
     public boolean canBeMergedWith(Job other) {
-        
+
         /*
          * This job is collapsible with other if:
          *      0) other is a RelocateSelectionJob instance
          *      1) other is younger than this of 1000 ms no more
          *      2) other and this have the same location map keys
          */
-        
+
         final boolean result;
         if (other instanceof RelocateSelectionJob) {
             final RelocateSelectionJob otherRelocate = (RelocateSelectionJob)other;
@@ -89,33 +93,40 @@ public class RelocateSelectionJob extends BatchDocumentJob {
         } else {
             result = false;
         }
-        
+
         return result;
     }
-    
-    
+
+
     public void mergeWith(Job younger) {
         assert canBeMergedWith(younger); // (1)
         assert younger instanceof RelocateSelectionJob; // Because (1)
-        
+
         final RelocateSelectionJob youngerSelection = (RelocateSelectionJob) younger;
         for (Job subJob : getSubJobs()) {
+        	if (subJob instanceof ExtendedJob) {
+        		subJob = ((ExtendedJob<?>)subJob).getExtendedJob();
+        	}
             assert subJob instanceof RelocateNodeJob;
-            final RelocateNodeJob thisRelocateJob 
+            final RelocateNodeJob thisRelocateJob
                     = (RelocateNodeJob) subJob;
-            final RelocateNodeJob youngerRelocateJob 
+            final RelocateNodeJob youngerRelocateJob
                     = youngerSelection.lookupSubJob(thisRelocateJob.getFxomInstance());
             thisRelocateJob.mergeWith(youngerRelocateJob);
         }
-        
+
         this.time = youngerSelection.time;
     }
-    
-    
+
+
     public RelocateNodeJob lookupSubJob(FXOMObject fxomObject) {
         RelocateNodeJob result = null;
-        
+
         for (Job subJob : getSubJobs()) {
+
+        	if (subJob instanceof ExtendedJob) {
+        		subJob = ((ExtendedJob<?>)subJob).getExtendedJob();
+        	}
             assert subJob instanceof RelocateNodeJob;
             final RelocateNodeJob relocateJob = (RelocateNodeJob) subJob;
             if (relocateJob.getFxomInstance() == fxomObject) {
@@ -123,23 +134,23 @@ public class RelocateSelectionJob extends BatchDocumentJob {
                 break;
             }
         }
-        
+
         return result;
     }
-    
-    public static boolean isSelectionMovable(EditorController editorController) {
+
+    public static boolean isSelectionMovable(Editor editor) {
         /*
          * Selection can be moved if:
          * 1) it's an object selection (group instanceof ObjectSelectionGroup)
          * 2) selected objects have a single parent
          * 3) single parent supports free child positioning
-         * 
+         *
          * => all selected items are Node.
          */
-        
+
         final boolean result;
-        
-        final Selection selection = editorController.getSelection();
+
+        final Selection selection = editor.getSelection();
         if (selection.getGroup() instanceof ObjectSelectionGroup) {
             final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
             if (osg.hasSingleParent()) {
@@ -152,30 +163,30 @@ public class RelocateSelectionJob extends BatchDocumentJob {
         } else {
             result = false;
         }
-        
+
         return result;
     }
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
-        
+
         for (Map.Entry<FXOMObject, Point2D> entry : locationMap.entrySet()) {
             assert entry.getKey() instanceof FXOMInstance;
             final FXOMInstance fxomInstance = (FXOMInstance) entry.getKey();
             final Point2D layoutXY = entry.getValue();
-            final Job relocateJob = new RelocateNodeJob(fxomInstance,
-                layoutXY.getX(), layoutXY.getY(), getEditorController());
+            final Job relocateJob = new RelocateNodeJob(getContext(), fxomInstance,
+                layoutXY.getX(), layoutXY.getY(), getEditorController()).extend();
             result.add(relocateJob);
         }
-        
+
         return result;
     }
 
     @Override
     protected String makeDescription() {
         final String result;
-        
+
         final Set<FXOMObject> movedObjects = locationMap.keySet();
         if (locationMap.size() == 1) {
             final FXOMObject movedObject = movedObjects.iterator().next();
@@ -197,7 +208,7 @@ public class RelocateSelectionJob extends BatchDocumentJob {
                 }
             }
             final boolean homogeneous = (classes.size() == 1) && (unresolvedCount == 0);
-            
+
             if (homogeneous) {
                 final Class<?> singleClass = classes.iterator().next();
                 result = I18N.getString("drop.job.move.multiple.homogeneous",
@@ -208,8 +219,8 @@ public class RelocateSelectionJob extends BatchDocumentJob {
                         movedObjects.size());
             }
         }
-        
+
         return result;
     }
-    
+
 }

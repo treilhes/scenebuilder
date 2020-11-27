@@ -32,33 +32,35 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
  *
  */
 public class RemoveNodeJob extends Job {
-    
+
     private final Job subJob;
-    
-    public RemoveNodeJob(FXOMNode targetNode, EditorController editorController) {
-        super(editorController);
-        
+
+    public RemoveNodeJob(ApplicationContext context, FXOMNode targetNode, Editor editor) {
+        super(context, editor);
+
         assert (targetNode instanceof FXOMObject) || (targetNode instanceof FXOMProperty);
-        
+
         if (targetNode instanceof FXOMObject) {
-            subJob = new RemoveObjectJob((FXOMObject)targetNode, editorController);
+            subJob = new RemoveObjectJob(getContext(), (FXOMObject)targetNode, editor).extend();
         } else {
             assert targetNode instanceof FXOMProperty;
-            subJob = new RemovePropertyJob((FXOMProperty)targetNode, editorController);
+            subJob = new RemovePropertyJob(getContext(), (FXOMProperty)targetNode, editor).extend();
         }
     }
-    
-    
+
+
     /*
      * Job
      */
@@ -87,5 +89,5 @@ public class RemoveNodeJob extends Job {
     public String getDescription() {
         return getClass().getSimpleName(); // Should not reach end user
     }
-    
+
 }

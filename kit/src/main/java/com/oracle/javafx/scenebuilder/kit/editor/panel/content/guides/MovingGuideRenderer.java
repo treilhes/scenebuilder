@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

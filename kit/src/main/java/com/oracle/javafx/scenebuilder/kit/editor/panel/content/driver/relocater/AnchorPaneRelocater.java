@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

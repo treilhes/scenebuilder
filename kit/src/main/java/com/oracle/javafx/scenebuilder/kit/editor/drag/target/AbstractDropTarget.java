@@ -31,18 +31,21 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.drag.target;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
  */
-public abstract class AbstractDropTarget {
-    
+public abstract class AbstractDropTarget implements DropTarget{
+
     public abstract FXOMObject getTargetObject();
-    public abstract boolean acceptDragSource(AbstractDragSource dragSource);
-    public abstract Job makeDropJob(AbstractDragSource dragSource, EditorController editorController);
+    public abstract boolean acceptDragSource(DragSource dragSource);
+    public abstract Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController);
     public abstract boolean isSelectRequiredAfterDrop();
 }

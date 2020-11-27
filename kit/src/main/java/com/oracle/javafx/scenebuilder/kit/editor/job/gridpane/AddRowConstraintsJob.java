@@ -37,20 +37,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.JobUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.layout.RowConstraints;
 
@@ -63,17 +65,17 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
     // Value = list of target row indexes for this GridPane
     private final Map<FXOMObject, Set<Integer>> targetGridPanes;
     private final Position position;
-    // If the selected row is associated to an existing constraints, 
+    // If the selected row is associated to an existing constraints,
     // we duplicate the existing constraints.
     // Otherwise, we use the default values below.
     private static final double defaultMinHeight = 10.0;
     private static final double defaultPrefHeight = 30.0;
 
-    public AddRowConstraintsJob(
-            final EditorController editorController,
+    public AddRowConstraintsJob(ApplicationContext context, 
+            final Editor editor,
             final Position position,
             final Map<FXOMObject, Set<Integer>> targetGridPanes) {
-        super(editorController);
+        super(context, editor);
         this.position = position;
         this.targetGridPanes = targetGridPanes;
     }
@@ -90,10 +92,10 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
             final Set<Integer> targetIndexes = targetGridPanes.get(targetGridPane);
             result.addAll(addRowConstraints((FXOMInstance) targetGridPane, targetIndexes));
         }
-        
+
         return result;
     }
-    
+
     @Override
     protected String makeDescription() {
         return "Add Row Constraints"; //NOI18N
@@ -136,10 +138,10 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
                 final FXOMInstance addedConstraints = makeRowConstraintsInstance(
                         (FXOMInstance) targetConstraints);
 
-                final Job addValueJob = new AddPropertyValueJob(
+                final Job addValueJob = new AddPropertyValueJob(getContext(), 
                         addedConstraints,
                         (FXOMPropertyC) constraintsProperty,
-                        addedIndex, getEditorController());
+                        addedIndex, getEditorController()).extend();
                 result.add(addValueJob);
             } //
             // The target index is not associated to an existing constraints value :
@@ -149,20 +151,20 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
                 for (int index = constraintsSize; index < addedIndex; index++) {
                     // Create new empty constraints for the exisiting rows
                     final FXOMInstance addedConstraints = makeRowConstraintsInstance();
-                    final Job addValueJob = new AddPropertyValueJob(
+                    final Job addValueJob = new AddPropertyValueJob(getContext(), 
                             addedConstraints,
                             (FXOMPropertyC) constraintsProperty,
-                            index, getEditorController());
+                            index, getEditorController()).extend();
                     result.add(addValueJob);
                 }
                 // Create new constraints with default values for the new added row
                 final FXOMInstance addedConstraints = makeRowConstraintsInstance();
                 JobUtils.setMinHeight(addedConstraints, RowConstraints.class, defaultMinHeight);
                 JobUtils.setPrefHeight(addedConstraints, RowConstraints.class, defaultPrefHeight);
-                final Job addValueJob = new AddPropertyValueJob(
+                final Job addValueJob = new AddPropertyValueJob(getContext(), 
                         addedConstraints,
                         (FXOMPropertyC) constraintsProperty,
-                        addedIndex, getEditorController());
+                        addedIndex, getEditorController()).extend();
                 result.add(addValueJob);
                 constraintsSize = addedIndex + 1;
             }
@@ -173,13 +175,13 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
         // IMPORTANT :
         // Note that the AddPropertyJob must be called after the AddPropertyValueJob.
         if (constraintsProperty.getParentInstance() == null) {
-            final Job addPropertyJob = new AddPropertyJob(
+            final Job addPropertyJob = new AddPropertyJob(getContext(), 
                     constraintsProperty,
                     targetGridPane,
-                    -1, getEditorController());
+                    -1, getEditorController()).extend();
             result.add(addPropertyJob);
         }
-        
+
         return result;
     }
 

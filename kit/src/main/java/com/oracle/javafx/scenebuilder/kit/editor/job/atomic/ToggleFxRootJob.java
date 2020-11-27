@@ -31,11 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 /**
  * Job used to enable/disable fx:root on the fxom document associated
@@ -43,8 +45,8 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
  */
 public class ToggleFxRootJob extends Job {
 
-    public ToggleFxRootJob(EditorController editorController) {
-        super(editorController);
+    public ToggleFxRootJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     /*

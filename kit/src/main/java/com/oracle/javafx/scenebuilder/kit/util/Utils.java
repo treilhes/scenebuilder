@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 public class Utils {
     public static final String makeTitle(FXOMDocument fxomDocument) {

@@ -42,7 +42,7 @@ import java.util.List;
  *
  * 
  */
-public class BuiltinGlossary extends Glossary {
+public class BuiltinGlossary extends AbstractGlossary {
     
     public BuiltinGlossary() {
     }

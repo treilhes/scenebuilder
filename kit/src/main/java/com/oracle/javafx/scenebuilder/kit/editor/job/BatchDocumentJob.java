@@ -34,8 +34,11 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
  * This Job updates the FXOM document at execution time. The selection is not
@@ -47,8 +50,8 @@ public abstract class BatchDocumentJob extends CompositeJob {
 
     private List<Job> subJobs;
 
-    public BatchDocumentJob(EditorController editorController) {
-        super(editorController);
+    public BatchDocumentJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override

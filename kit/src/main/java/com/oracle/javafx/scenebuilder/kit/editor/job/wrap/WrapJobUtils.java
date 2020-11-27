@@ -33,15 +33,18 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -178,26 +181,28 @@ public class WrapJobUtils {
         return result;
     }
 
-    static ModifyObjectJob modifyObjectJob(
+    static Job modifyObjectJob(
+    		final ApplicationContext context,
             final FXOMInstance instance,
             final Class<?> clazz,
             final String name,
             final Object value,
-            final EditorController controller) {
+            final Editor editor) {
         final PropertyName pn = new PropertyName(name, clazz);
         final ValuePropertyMetadata vpm
                 = Metadata.getMetadata().queryValueProperty(instance, pn);
-        final ModifyObjectJob job = new ModifyObjectJob(
-                instance, vpm, value, controller);
+        final Job job = new ModifyObjectJob(context,
+                instance, vpm, value, editor).extend();
         return job;
     }
 
-    static ModifyObjectJob modifyObjectJob(
+    static Job modifyObjectJob(
+    		final ApplicationContext context,
             final FXOMInstance instance,
             final String name,
             final Object value,
-            final EditorController controller) {
-        return modifyObjectJob(instance, null, name, value, controller);
+            final Editor editor) {
+        return modifyObjectJob(context, instance, null, name, value, editor);
     }
 
     /**

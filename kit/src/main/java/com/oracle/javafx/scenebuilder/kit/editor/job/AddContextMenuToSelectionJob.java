@@ -40,27 +40,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Library;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.Library;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  *
  */
 public class AddContextMenuToSelectionJob extends BatchSelectionJob {
-    
+
     private Map<FXOMObject, FXOMObject> contextMenuMap; // Initialized lazily
 
-    public AddContextMenuToSelectionJob(EditorController editorController) {
-        super(editorController);
+    public AddContextMenuToSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
-    
+
     public Collection<FXOMObject> getContextMenus() {
         constructContextMenuMap();
         return contextMenuMap.values();
@@ -72,20 +75,20 @@ public class AddContextMenuToSelectionJob extends BatchSelectionJob {
 
     @Override
     protected List<Job> makeSubJobs() {
-        
+
         constructContextMenuMap();
-        
+
         final List<Job> result = new LinkedList<>();
         for (Map.Entry<FXOMObject, FXOMObject> e : contextMenuMap.entrySet()) {
             final FXOMObject fxomObject = e.getKey();
             final FXOMObject contextMenuObject = e.getValue();
-            final Job insertJob = new InsertAsAccessoryJob(
-                    contextMenuObject, fxomObject, 
-                    DesignHierarchyMask.Accessory.CONTEXT_MENU, 
-                    getEditorController());
+            final Job insertJob = new InsertAsAccessoryJob(getContext(),
+                    contextMenuObject, fxomObject,
+                    DesignHierarchyMask.Accessory.CONTEXT_MENU,
+                    getEditorController()).extend();
             result.add(insertJob);
         }
-        
+
         return result;
     }
 
@@ -94,31 +97,31 @@ public class AddContextMenuToSelectionJob extends BatchSelectionJob {
         final Collection<FXOMObject> contextMenus = contextMenuMap.values();
         assert contextMenus.isEmpty() == false;
         final FXOMObject hitMenu = contextMenus.iterator().next();
-        
+
         return new ObjectSelectionGroup(contextMenus, hitMenu, null);
     }
 
     /*
      * CompositeJob
      */
-    
+
     @Override
     protected String makeDescription() {
         return I18N.getString("label.action.edit.add.context.menu");
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void constructContextMenuMap() {
         if (contextMenuMap == null) {
             contextMenuMap = new LinkedHashMap<>();
-            
+
             // Build the ContextMenu item from the library builtin items
             final String contextMenuFxmlPath = "builtin/ContextMenu.fxml"; //NOI18N
-            final URL contextMenuFxmlURL 
+            final URL contextMenuFxmlURL
                     = BuiltinLibrary.class.getResource(contextMenuFxmlPath);
             assert contextMenuFxmlURL != null;
 

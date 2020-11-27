@@ -37,13 +37,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
@@ -74,8 +77,8 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         TOP, RIGHT, BOTTOM, LEFT
     }
 
-    public FitToParentObjectJob(FXOMInstance fxomInstance, EditorController editorController) {
-        super(editorController);
+    public FitToParentObjectJob(ApplicationContext context, FXOMInstance fxomInstance, Editor editor) {
+        super(context, editor);
 
         assert fxomInstance != null;
         this.fxomInstance = fxomInstance;
@@ -98,14 +101,14 @@ public class FitToParentObjectJob extends BatchDocumentJob {
             return result; // subJobs is empty => isExecutable will return false
         }
         // Preview version : Node must be resizable (as in SB 1.1)
-        // TODO : if the object is not resizable, 
+        // TODO : if the object is not resizable,
         // update its bounds but do not anchor it.
         final Node childNode = (Node) childObject;
         if (childNode.isResizable() == false) {
             return result; // subJobs is empty => isExecutable will return false
         }
         // Preview version : Parent node must be an AnchorPane (as in SB 1.1)
-        // TODO : if the object container is a Pane, 
+        // TODO : if the object container is a Pane,
         // update its bounds but do not anchor it.
         final Object parentObject = parentInstance.getSceneGraphObject();
         if ((parentObject instanceof AnchorPane) == false) {
@@ -170,7 +173,7 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         }
         return result;
     }
-    
+
     @Override
     protected String makeDescription() {
         final StringBuilder sb = new StringBuilder();
@@ -185,8 +188,8 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         final PropertyName pn = new PropertyName(name, clazz);
         final ValuePropertyMetadata vpm
                 = Metadata.getMetadata().queryValueProperty(fxomInstance, pn);
-        final ModifyObjectJob subJob = new ModifyObjectJob(
-                fxomInstance, vpm, value, getEditorController());
+        final Job subJob = new ModifyObjectJob(getContext(),
+                fxomInstance, vpm, value, getEditorController()).extend();
         return subJob;
     }
 

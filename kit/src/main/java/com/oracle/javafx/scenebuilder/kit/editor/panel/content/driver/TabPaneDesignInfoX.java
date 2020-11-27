@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

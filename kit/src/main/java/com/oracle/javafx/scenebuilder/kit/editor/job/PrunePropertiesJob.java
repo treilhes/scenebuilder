@@ -35,41 +35,44 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveFxControllerJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
 
 /**
  *
  */
 public class PrunePropertiesJob extends BatchDocumentJob {
-    
+
     private final FXOMObject fxomObject;
     private final FXOMObject targetParent;
 
-    public PrunePropertiesJob(FXOMObject fxomObject, FXOMObject targetParent, EditorController editorController) {
-        super(editorController);
-        
+    public PrunePropertiesJob(ApplicationContext context, FXOMObject fxomObject, FXOMObject targetParent, Editor editor) {
+        super(context, editor);
+
         assert fxomObject != null;
-        
+
         this.fxomObject = fxomObject;
         this.targetParent = targetParent;
     }
-    
+
 
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
         final Metadata metadata = Metadata.getMetadata();
-        
+
         if (fxomObject instanceof FXOMInstance) {
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            
+
             for (FXOMProperty p : fxomInstance.getProperties().values()) {
                 if (metadata.isPropertyTrimmingNeeded(p.getName())) {
                     final Class<?> residentClass = p.getName().getResidenceClass();
@@ -84,16 +87,16 @@ public class PrunePropertiesJob extends BatchDocumentJob {
                         prune = true;
                     }
                     if (prune) {
-                        result.add(new RemovePropertyJob(p, getEditorController()));
+                        result.add(new RemovePropertyJob(getContext(), p, getEditorController()).extend());
                     }
                 }
             }
         }
-        
+
         if ((fxomObject.getFxController() != null) && (targetParent != null)) {
-            result.add(new RemoveFxControllerJob(fxomObject, getEditorController()));
+            result.add(new RemoveFxControllerJob(getContext(), fxomObject, getEditorController()).extend());
         }
-        
+
         return result;
     }
 
@@ -101,5 +104,5 @@ public class PrunePropertiesJob extends BatchDocumentJob {
     protected String makeDescription() {
         return getClass().getSimpleName(); // Should not reach user
     }
-    
+
 }

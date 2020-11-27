@@ -45,6 +45,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Scope;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
+import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
@@ -54,11 +56,15 @@ import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowController;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
+import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 
@@ -66,33 +72,38 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 @ComponentScan(
-	basePackageClasses = { 
+	basePackageClasses = {
 		com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
-		com.oracle.javafx.scenebuilder.app.i18n.I18N.class, 
-		I18N.class, 
+		com.oracle.javafx.scenebuilder.app.i18n.I18N.class,
+		I18N.class,
 		PreferencesContext.class,
-		MavenArtifactsPreferences.class, 
-		MavenSetting.class, 
-		Tracking.class, 
+		MavenArtifactsPreferences.class,
+		MavenSetting.class,
+		Tracking.class,
 		RegistrationWindowController.class,
-		WelcomeDialogWindowController.class, 
-		PreferencesController.class, 
-		BuiltinLibrary.class, 
+		WelcomeDialogWindowController.class,
+		PreferencesController.class,
+		BuiltinLibrary.class,
 		Metadata.class,
-		MenuBarController.class, 
-		EditorController.class, 
+		MenuBarController.class,
+		EditorController.class,
 		SelectionBarController.class,
-		SceneBuilderBeanFactory.class 
-		}, 
-	basePackages = { 
+		SceneBuilderBeanFactory.class,
+		JobManagerImpl.class,
+		ExtendedJob.class,
+		ExtendedAction.class,
+		PreferenceEditorFactoryImpl.class
+		},
+	basePackages = {
 			"com.oracle.javafx.scenebuilder.app.settings",
-			"com.oracle.javafx.scenebuilder.api.preferences", 
+			"com.oracle.javafx.scenebuilder.api.preferences",
 			"com.oracle.javafx.scenebuilder.app.preferences",
-			"com.oracle.javafx.scenebuilder.kit.preferences", 
+			"com.oracle.javafx.scenebuilder.kit.preferences",
 			"com.oracle.javafx.scenebuilder.kit.library.user",
-			"com.oracle.javafx.scenebuilder.api.subjects", 
+			"com.oracle.javafx.scenebuilder.api.subjects",
 			"com.oracle.javafx.scenebuilder.app",
-			"com.oracle.javafx.scenebuilder.gluon.preferences",
+			"com.oracle.javafx.scenebuilder.ext",
+			"com.oracle.javafx.scenebuilder.gluon",
 			"com.oracle.javafx.scenebuilder.app.actions"
 			})
 public class SceneBuilderBootstrap extends JavafxApplication {
@@ -155,16 +166,16 @@ public class SceneBuilderBootstrap extends JavafxApplication {
 
 	/*
 	 * Background startup
-	 * 
+	 *
 	 * To speed SB startup, we create two threads which anticipate some
 	 * initialization tasks and offload the JFX thread: - 'Phase 0' thread executes
 	 * tasks that do not require JFX initialization - 'Phase 1' thread executes
 	 * tasks that requires JFX initialization
-	 * 
+	 *
 	 * Tasks executed here must be carefully chosen: 1) they must be thread-safe 2)
 	 * they should be order-safe : whether they are executed in background or by the
 	 * JFX thread should make no difference.
-	 * 
+	 *
 	 * Currently we simply anticipate creation of big singleton instances (like
 	 * Metadata, Preferences...)
 	 */

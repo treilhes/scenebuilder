@@ -33,11 +33,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
 import java.util.Objects;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
 
 /**
  * Job used to modify an fx:id.
@@ -49,8 +51,8 @@ public class ModifyFxIdJob extends Job {
     private final String newValue;
     private final String oldValue;
 
-    public ModifyFxIdJob(FXOMObject fxomObject, String newValue, EditorController editorController) {
-        super(editorController);
+    public ModifyFxIdJob(ApplicationContext context, FXOMObject fxomObject, String newValue, Editor editor) {
+        super(context, editor);
 
         assert fxomObject != null;
         assert fxomObject.getSceneGraphObject() != null;
@@ -93,14 +95,14 @@ public class ModifyFxIdJob extends Job {
     @Override
     public String getDescription() {
         final String result;
-        
+
         if (newValue == null) {
             assert oldValue != null;
             result = I18N.getString("job.remove.fxid", oldValue);
         } else {
             result = I18N.getString("job.set.fxid", newValue);
         }
-        
+
         return result;
     }
 }

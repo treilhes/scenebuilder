@@ -33,9 +33,12 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 
 /**
  * This Job updates the FXOM document AND the selection at execution time.
@@ -47,8 +50,8 @@ public abstract class InlineSelectionJob extends InlineDocumentJob {
     private AbstractSelectionGroup oldSelectionGroup;
     private AbstractSelectionGroup newSelectionGroup;
 
-    public InlineSelectionJob(EditorController editorController) {
-        super(editorController);
+    public InlineSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     protected final AbstractSelectionGroup getOldSelectionGroup() {

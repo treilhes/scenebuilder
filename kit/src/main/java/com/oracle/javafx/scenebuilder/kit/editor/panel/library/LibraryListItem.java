@@ -31,34 +31,34 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library;
 
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.LibraryItem;
 
 /**
  * This class hosts either a LibraryItem or a library section name. The cell
  * factory used by the Library panel controller uses this class to differentiate
  * the rendering of section names versus items (when the library displays things
  * as a list).
- * 
+ *
  * @treatAsPrivate
  */
 public class LibraryListItem {
     private String sectionName = null;
     private LibraryItem libItem = null;
-    
+
     public LibraryListItem(LibraryItem libItem) {
         this.libItem = libItem;
         this.sectionName = null;
     }
-    
+
     public LibraryListItem(String sectionName) {
         this.sectionName = sectionName;
         this.libItem = null;
     }
-    
+
     public String getSectionName() {
         return this.sectionName;
     }
-    
+
     public LibraryItem getLibItem() {
         return this.libItem;
     }

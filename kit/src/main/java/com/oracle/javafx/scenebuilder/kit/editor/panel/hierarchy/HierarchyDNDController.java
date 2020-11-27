@@ -32,17 +32,17 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy;
 
-import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
+import com.oracle.javafx.scenebuilder.api.Drag;
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.DragEvent;
@@ -175,9 +175,9 @@ public class HierarchyDNDController {
         }
 
         // First update drop target
-        final DragController dragController
+        final Drag dragController
                 = panelController.getEditorController().getDragController();
-        final AbstractDropTarget dropTarget = makeDropTarget(treeItem, location);
+        final DropTarget dropTarget = makeDropTarget(treeItem, location);
         dragController.setDropTarget(dropTarget);
 
         // Then update transfer mode
@@ -233,7 +233,7 @@ public class HierarchyDNDController {
         return null;
     }
 
-    private AbstractDropTarget makeDropTarget(
+    private DropTarget makeDropTarget(
             final TreeItem<HierarchyItem> treeItem,
             final DroppingMouseLocation location) {
 
@@ -241,7 +241,7 @@ public class HierarchyDNDController {
 
         final TreeItem<HierarchyItem> rootTreeItem = panelController.getRoot();
         final FXOMObject dropTargetObject;
-        final AbstractDropTarget result;
+        final DropTarget result;
         Accessory accessory = null; // Used if we insert as accessory (drop over a place holder)
         int targetIndex = -1; // Used if we insert as sub components
 
@@ -264,7 +264,7 @@ public class HierarchyDNDController {
             //      the accessory is set to the place holder value
             // whatever the location value is.
             // - otherwise
-            //      the drop target is the place holder item 
+            //      the drop target is the place holder item
             //      the accessory is set to null
             //      the target index is set depending on the location value
             //------------------------------------------------------------------
@@ -318,7 +318,7 @@ public class HierarchyDNDController {
                 }
             } //
             // TreeItem is not a place holder:
-            // we set the drop target, accessory and target index 
+            // we set the drop target, accessory and target index
             // depending on the mouse location value
             //------------------------------------------------------------------
             else {
@@ -339,9 +339,9 @@ public class HierarchyDNDController {
                         } else {
                             // If the parent accepts sub components,
                             // this is a reordering gesture and the target is the parent
-                            final DragController dragController
+                            final Drag dragController
                                     = panelController.getEditorController().getDragController();
-                            final AbstractDragSource dragSource = dragController.getDragSource();
+                            final DragSource dragSource = dragController.getDragSource();
                             final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
                             assert parentTreeItem != null; // Because of (2)
                             final FXOMObject parentObject = parentTreeItem.getValue().getFxomObject();
@@ -366,9 +366,9 @@ public class HierarchyDNDController {
                             if (treeItem.isLeaf() || !treeItem.isExpanded()) {
                                 // If the parent accepts sub components,
                                 // this is a reordering gesture and the target is the parent
-                                final DragController dragController
+                                final Drag dragController
                                         = panelController.getEditorController().getDragController();
-                                final AbstractDragSource dragSource = dragController.getDragSource();
+                                final DragSource dragSource = dragController.getDragSource();
                                 final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
                                 assert parentTreeItem != null; // Because of (3)
                                 final FXOMObject parentObject = parentTreeItem.getValue().getFxomObject();
@@ -398,17 +398,17 @@ public class HierarchyDNDController {
         return result;
     }
 
-    private AbstractDropTarget makeDropTarget(
+    private DropTarget makeDropTarget(
             final FXOMObject dropTargetObject,
             final Accessory accessory,
             int targetIndex) {
 
-        AbstractDropTarget result = null;
+        DropTarget result = null;
 
         if (dropTargetObject instanceof FXOMInstance) {
-            final DragController dragController
+            final Drag dragController
                     = panelController.getEditorController().getDragController();
-            final AbstractDragSource dragSource = dragController.getDragSource();
+            final DragSource dragSource = dragController.getDragSource();
             assert dragSource != null;
             final FXOMInstance dropTargetInstance = (FXOMInstance) dropTargetObject;
             if (accessory != null) {
@@ -454,7 +454,7 @@ public class HierarchyDNDController {
                     for (Accessory a : accessories) {
                         final AccessoryDropTarget dropTarget
                                 = new AccessoryDropTarget(dropTargetInstance, a);
-                        // If the accessory drop target accepts the dragged objects, 
+                        // If the accessory drop target accepts the dragged objects,
                         // we return this drop target.
                         // Otherwise, we look for the next accessory.
                         if (dropTarget.acceptDragSource(dragSource)) {

@@ -32,32 +32,34 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
  *
  */
 public class CombineReferenceJob  extends Job {
-    
+
     private final Job subJob;
-    
-    public CombineReferenceJob(FXOMNode reference, EditorController editorController) {
-        super(editorController);
+
+    public CombineReferenceJob(ApplicationContext context, FXOMNode reference, Editor editor) {
+        super(context, editor);
         if (reference instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) reference;
-            subJob = new CombineIntrinsicReferenceJob(fxomIntrinsic, getEditorController());
+            subJob = new CombineIntrinsicReferenceJob(getContext(), fxomIntrinsic, getEditorController()).extend();
         } else if (reference instanceof FXOMPropertyT) {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) reference;
-            subJob = new CombineExpressionReferenceJob(fxomProperty, getEditorController());
+            subJob = new CombineExpressionReferenceJob(getContext(), fxomProperty, getEditorController()).extend();
         } else {
             throw new RuntimeException("Bug"); //NOI18N
         }
     }
-    
+
     /*
      * Job
      */
@@ -87,5 +89,5 @@ public class CombineReferenceJob  extends Job {
     }
 
 
-    
+
 }

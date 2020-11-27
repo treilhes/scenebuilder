@@ -31,14 +31,17 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.GenericParentTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.scene.layout.FlowPane;
 
@@ -47,8 +50,10 @@ import javafx.scene.layout.FlowPane;
  */
 public class FlowPaneDriver extends AbstractNodeDriver {
 
-    public FlowPaneDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    public FlowPaneDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
     }
 
     /*
@@ -56,12 +61,12 @@ public class FlowPaneDriver extends AbstractNodeDriver {
      */
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
-        
+
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject() instanceof FlowPane;
-        
+
         final int targetIndex = GenericParentTring.lookupCrackIndex(fxomObject, sceneX, sceneY);
-        
+
         final FXOMObject beforeChild;
         if (targetIndex == -1) {
             beforeChild = null;
@@ -73,17 +78,17 @@ public class FlowPaneDriver extends AbstractNodeDriver {
                 beforeChild = null;
             }
         }
-        
+
         return new ContainerZDropTarget((FXOMInstance)fxomObject, beforeChild);
     }
-    
-    
+
+
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
-        assert dropTarget instanceof ContainerZDropTarget; 
+    public AbstractTring<?> makeTring(DropTarget dropTarget) {
+        assert dropTarget instanceof ContainerZDropTarget;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
         assert dropTarget.getTargetObject().getSceneGraphObject() instanceof FlowPane;
-        
+
         final ContainerZDropTarget zDropTarget = (ContainerZDropTarget) dropTarget;
         final int targetIndex;
         if (zDropTarget.getBeforeChild() == null) {
@@ -91,7 +96,7 @@ public class FlowPaneDriver extends AbstractNodeDriver {
         } else {
             targetIndex = zDropTarget.getBeforeChild().getIndexInParentProperty();
         }
-        return new GenericParentTring(contentPanelController, 
+        return new GenericParentTring(contentPanelController,
                 (FXOMInstance) dropTarget.getTargetObject(),
                 targetIndex);
     }

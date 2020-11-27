@@ -38,12 +38,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.ButtonTypePropertyMetadata;
+
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ButtonTypePropertyMetadata;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

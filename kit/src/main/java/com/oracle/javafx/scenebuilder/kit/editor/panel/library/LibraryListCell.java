@@ -33,13 +33,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.library;
 
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.LibraryDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -63,8 +63,8 @@ import javafx.stage.Window;
  * @param <T>
  */
 class LibraryListCell extends ListCell<LibraryListItem> {
-    private final EditorController editorController;
-    
+    private final Editor editorController;
+
     private final HBox graphic = new HBox();
     private final ImageView iconImageView = new ImageView();
     private final Label classNameLabel = new Label();
@@ -72,33 +72,33 @@ class LibraryListCell extends ListCell<LibraryListItem> {
     private final Label sectionLabel = new Label();
     private final URL missingIconURL = ImageUtils.getNodeIconURL("MissingIcon.png"); //NOI18N
     private static final String EMPTY_QUALIFIER_ID = " (empty)"; //NOI18N
-    
-    public LibraryListCell(final EditorController ec) {
+
+    public LibraryListCell(final Editor ec) {
         super();
         this.editorController = ec;
-        
+
         graphic.getStyleClass().add("list-cell-graphic"); //NOI18N
         classNameLabel.getStyleClass().add("library-classname-label"); //NOI18N
         qualifierLabel.getStyleClass().add("library-qualifier-label"); //NOI18N
         sectionLabel.getStyleClass().add("library-section-label"); //NOI18N
-        
+
         graphic.getChildren().add(iconImageView);
         graphic.getChildren().add(classNameLabel);
         graphic.getChildren().add(qualifierLabel);
         graphic.getChildren().add(sectionLabel);
-        
+
         HBox.setHgrow(sectionLabel, Priority.ALWAYS);
         sectionLabel.setMaxWidth(Double.MAX_VALUE);
-        
+
         final EventHandler<MouseEvent> mouseEventHandler = e -> handleMouseEvent(e);
         // Mouse events
         this.addEventHandler(MouseEvent.ANY, mouseEventHandler);
-        
+
         setOnDragDetected(t -> {
 //                System.out.println("LibraryListCell - setOnDragDetected.handle");
             final LibraryListItem listItem = LibraryListCell.this.getItem();
             final FXOMDocument fxomDocument = editorController.getFxomDocument();
-            
+
             if ((listItem != null) && (fxomDocument != null)) {
                 final LibraryItem item = LibraryListCell.this.getItem().getLibItem();
                 if (item != null) {
@@ -106,7 +106,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
                     final Dragboard db = list.startDragAndDrop(TransferMode.COPY);
 
                     final Window ownerWindow = getScene().getWindow();
-                    final LibraryDragSource dragSource 
+                    final LibraryDragSource dragSource
                             = new LibraryDragSource(item, fxomDocument, ownerWindow);
                     assert editorController.getDragController().getDragSource() == null;
                     assert dragSource.isAcceptable();
@@ -141,7 +141,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
                 }
                 graphic.setId(id); // for QE
             }
-            
+
             setGraphic(graphic);
         } else {
             setGraphic(null);
@@ -165,29 +165,29 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             return Cursor.CLOSED_HAND;
         }
     }
-    
+
     private void handleMouseEvent(MouseEvent me) {
         // Handle cursor
         final Scene scene = getScene();
-        
+
         if (scene == null) {
             return;
         }
-        
-        // When another window is focused (just like the preview window), 
+
+        // When another window is focused (just like the preview window),
         // we use default cursor
         if (scene.getWindow() != null && !scene.getWindow().isFocused()) {
             setCursor(Cursor.DEFAULT);
             return;
         }
-        
+
         final LibraryListItem listItem = getItem();
         LibraryItem item = null;
-        
+
         if (listItem != null) {
             item = listItem.getLibItem();
         }
-        
+
         boolean isSection = false;
         if (listItem != null && listItem.getSectionName() != null) {
             isSection = true;
@@ -227,7 +227,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
 
     private void updateLayout(LibraryListItem listItem) {
         assert listItem != null;
-        
+
         if (listItem.getLibItem() != null) {
             final LibraryItem item = listItem.getLibItem();
             // The classname shall be space character free (it is an API name).
@@ -248,7 +248,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             qualifierLabel.setText(getQualifier(item.getName()));
             // getIconURL can return null, this is deliberate.
             URL iconURL = item.getIconURL();
-            // Use missing icon 
+            // Use missing icon
             if (iconURL == null) {
                 iconURL = missingIconURL;
             }
@@ -265,7 +265,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             sectionLabel.setText(listItem.getSectionName());
         }
     }
-    
+
     private String getClassName(String input) {
         if (!input.contains(" ")) { //NOI18N
             return input;
@@ -273,7 +273,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             return input.substring(0, input.lastIndexOf(' ')); //NOI18N
         }
     }
-    
+
     private String getQualifier(String input) {
         if (!input.contains(" ")) { //NOI18N
             return ""; //NOI18N

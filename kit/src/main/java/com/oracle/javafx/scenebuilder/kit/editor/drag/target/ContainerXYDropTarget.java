@@ -36,17 +36,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RelocateNodeJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -77,7 +79,7 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
     public double getSceneY() {
         return sceneY;
     }
-    
+
 
     /*
      * AbstractDropTarget
@@ -88,9 +90,9 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public boolean acceptDragSource(AbstractDragSource dragSource) {
+    public boolean acceptDragSource(DragSource dragSource) {
         assert dragSource != null;
-        
+
         final boolean result;
         if (dragSource.getDraggedObjects().isEmpty()) {
             result = false;
@@ -108,32 +110,32 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
                 result = m.isAcceptingSubComponent(dragSource.getDraggedObjects());
             }
         }
-        
+
         return result;
     }
 
     @Override
-    public Job makeDropJob(AbstractDragSource dragSource, EditorController editorController) {
+    public Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController) {
         assert acceptDragSource(dragSource);
         assert editorController != null;
-        
-        
+
+
         final List<FXOMObject> draggedObjects = dragSource.getDraggedObjects();
         final FXOMObject hitObject = dragSource.getHitObject();
         final double hitX = dragSource.getHitX();
         final double hitY = dragSource.getHitY();
         final FXOMObject currentParent = hitObject.getParentObject();
-        
+
         final BatchJob result;
         if (currentParent == targetContainer) {
             // It's a relocating job
             assert hitObject.getSceneGraphObject() instanceof Node;
             assert hitObject instanceof FXOMInstance;
-            
+
             final boolean shouldRefreshSceneGraph = false;
-            result = new BatchJob(editorController, 
+            result = new BatchJob(context, editorController,
                     shouldRefreshSceneGraph, dragSource.makeDropJobDescription());
-            
+
             final Point2D dxy = computeRelocationDXY((FXOMInstance) hitObject, hitX, hitY);
             for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
                 assert draggedObject.getSceneGraphObject() instanceof Node;
@@ -141,8 +143,8 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
                 final Node draggedNode = (Node) draggedObject.getSceneGraphObject();
                 final double newLayoutX = Math.round(draggedNode.getLayoutX() + dxy.getX());
                 final double newLayoutY = Math.round(draggedNode.getLayoutY() + dxy.getY());
-                result.addSubJob(new RelocateNodeJob((FXOMInstance)draggedObject, 
-                        newLayoutX, newLayoutY, editorController));
+                result.addSubJob(new RelocateNodeJob(context, (FXOMInstance)draggedObject,
+                        newLayoutX, newLayoutY, editorController).extend());
             }
         } else {
             // It's a reparening job :
@@ -150,22 +152,22 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
             //  - add drag source objects to this drop target
             //  - relocate the drag source objects
             //  - adjust toggle group declaration (if any)
-            
+
             final boolean shouldRefreshSceneGraph = true;
-            result = new BatchJob(editorController, 
+            result = new BatchJob(context, editorController,
                     shouldRefreshSceneGraph, dragSource.makeDropJobDescription());
-            
+
             if (currentParent != null) {
                 for (FXOMObject draggedObject : draggedObjects) {
-                    result.addSubJob(new RemoveObjectJob(draggedObject,
-                            editorController));
+                    result.addSubJob(new RemoveObjectJob(context, draggedObject,
+                            editorController).extend());
                 }
             }
             for (FXOMObject draggedObject : draggedObjects) {
-                result.addSubJob(new InsertAsSubComponentJob(
-                        draggedObject, targetContainer, -1, editorController));
+                result.addSubJob(new InsertAsSubComponentJob(context,
+                        draggedObject, targetContainer, -1, editorController).extend());
             }
-            
+
             // Computes dragged object positions relatively to hitObject
             assert hitObject.getSceneGraphObject() instanceof Node;
             final Node hitNode = (Node) hitObject.getSceneGraphObject();
@@ -179,7 +181,7 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
                 final double layoutDY = draggedNode.getLayoutY() - layoutY0;
                 layoutDXY.put(draggedObject, new Point2D(layoutDX, layoutDY));
             }
-            
+
             final Parent targetParent = (Parent)targetContainer.getSceneGraphObject();
             final Point2D targetCenter = targetParent.sceneToLocal(sceneX, sceneY, true /* rootScene */);
             final Bounds layoutBounds = hitNode.getLayoutBounds();
@@ -191,28 +193,28 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
             final double currentDY = currentOrigin.getY() - currentCenter.getY();
             final double targetOriginX = targetCenter.getX() + currentDX;
             final double targetOriginY = targetCenter.getY() + currentDY;
-            
+
             for (FXOMObject draggedObject : draggedObjects) {
                 assert draggedObject instanceof FXOMInstance;
                 final Point2D dxy = layoutDXY.get(draggedObject);
                 assert dxy != null;
                 final double newLayoutX = Math.round(targetOriginX + dxy.getX());
                 final double newLayoutY = Math.round(targetOriginY + dxy.getY());
-                result.addSubJob(new RelocateNodeJob((FXOMInstance)draggedObject, 
-                        newLayoutX, newLayoutY, editorController));
+                result.addSubJob(new RelocateNodeJob(context, (FXOMInstance)draggedObject,
+                        newLayoutX, newLayoutY, editorController).extend());
             }
         }
-        
-        assert result.isExecutable();
-        
-        return result;
+
+        assert result.extend().isExecutable();
+
+        return result.extend();
     }
-    
+
     @Override
     public boolean isSelectRequiredAfterDrop() {
         return true;
     }
-    
+
     /*
      * Objects
      */
@@ -250,28 +252,28 @@ public class ContainerXYDropTarget extends AbstractDropTarget {
     public String toString() {
         return "ContainerXYDropTarget{" + "targetContainer=" + targetContainer + ", sceneX=" + sceneX + ", sceneY=" + sceneY + '}'; //NOI18N
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private Point2D computeRelocationDXY(FXOMInstance hitObject, double hitX, double hitY) {
         assert hitObject != null;
         assert hitObject.getSceneGraphObject() instanceof Node;
-        
+
         /*
          * Converts (hitX, hitY) in hitObject parent coordinate space.
          */
         final Node sceneGraphNode = (Node)hitObject.getSceneGraphObject();
         final Point2D currentHit = sceneGraphNode.localToParent(hitX, hitY);
-        
+
         /*
          * Computes drop target location in hitObject parent coordinate space
          */
         final Parent sceneGraphParent = sceneGraphNode.getParent();
         final Point2D newHit = sceneGraphParent.sceneToLocal(sceneX, sceneY, true /* rootScene */);
-        
+
         final double dx = newHit.getX() - currentHit.getX();
         final double dy = newHit.getY() - currentHit.getY();
         return new Point2D(dx, dy);

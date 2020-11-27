@@ -38,19 +38,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.Handles;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractGenericHandles;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -62,74 +62,74 @@ import javafx.scene.control.TreeItem;
 
 /**
  * This class groups the entry points reserved to QE testing.
- * 
+ *
  * Design consideration
- * 
- * This class tries to hide SB internal architecture as much as possible; 
- * for example, an FXML document is represented by a DocumentWindowController 
+ *
+ * This class tries to hide SB internal architecture as much as possible;
+ * for example, an FXML document is represented by a DocumentWindowController
  * instance in SB; however, in this class, the FXML document is
  * identified by the Scene instance holding the document window contents..
- * 
+ *
  * However some internals must be disclosed:
- * 
+ *
  * - FXOMObject : represents a design object ; it is paired with an object
  *   in the user scene graph ; FXOMObject.getSceneGraphObject() returns the
  *   matching scene graph object : sometimes it's a plain Node (eg Button),
  *   sometimes not (eg a Tab, a TableColumn...).
- * 
+ *
  * - ...
- * 
+ *
  */
 public class SceneBuilderTest {
 
     /**
-     * Performs [File/New] menu command and returns the Scene instance 
+     * Performs [File/New] menu command and returns the Scene instance
      * holding the new document window.
-     * 
+     *
      * @return the scene instance holding the new document window (never null).
      */
     public static Scene newFxmlFile() {
-        final DocumentWindowController newWindow 
+        final DocumentWindowController newWindow
                 = MainController.getSingleton().makeNewWindow();
         newWindow.openWindow();
         return newWindow.getScene();
     }
-    
+
     /**
      * Performs [File/Open] menu command with the file passed in argument.
      * If an error happens, the method throws the corresponding exception
      * (in place of displaying an alert dialog).
-     * 
+     *
      * @param fxmlFile fxml file to be opened (never null)
      * @return the scene instance holding the new document window (never null).
      * @throws IOException if the open operation has failed.
      */
     public static Scene openFxmlFile(File fxmlFile) throws IOException {
         assert fxmlFile != null;
-        
-        final DocumentWindowController newWindow 
+
+        final DocumentWindowController newWindow
                 = MainController.getSingleton().makeNewWindow();
         newWindow.loadFromFile(fxmlFile);
         newWindow.openWindow();
         return newWindow.getScene();
     }
-    
+
     /**
      * Returns the root of the [user scene graph] ie the scene graph
      * constructed from the content of the FXML file. If documentScene does
      * not match any document window, returns null.
-     * 
+     *
      * Note: the returned is an [Object] because an FXML file is not limited
      * to javafx.scene.Node.
-     * 
+     *
      * @param documentScene a scene holding a document window
-     * 
-     * @return the user scene graph root or null if documentScene does 
+     *
+     * @return the user scene graph root or null if documentScene does
      *         not hold a document window
      */
     public static Object getUserSceneGraphRoot(Scene documentScene) {
         assert documentScene != null;
-        
+
         final Object result;
         final FXOMDocument fxomDocument = lookupFxomDocument(documentScene);
         if (fxomDocument == null) {
@@ -137,22 +137,22 @@ public class SceneBuilderTest {
         } else {
             result = fxomDocument.getSceneGraphRoot();
         }
-        
+
         return result;
     }
-    
-    
+
+
     /**
      * Returns the set of selected objects. Each selected object is represented
      * by an FXOMObject instance.
-     * 
+     *
      * @param documentScene a scene holding a document window
-     * @return the set of selected objects or null if documentScene does 
+     * @return the set of selected objects or null if documentScene does
      *         not hold a document window
      */
     public static Set<FXOMObject> findSelectedObjects(Scene documentScene) {
         assert documentScene != null;
-        
+
         final Set<FXOMObject> result;
         final DocumentWindowController dwc = lookupWindowController(documentScene);
         if (dwc == null) {
@@ -167,21 +167,21 @@ public class SceneBuilderTest {
                 result = Collections.emptySet();
             }
         }
-        
+
         return result;
     }
-    
+
     /**
-     * Returns the fxom object matching a given node in the content panel. 
+     * Returns the fxom object matching a given node in the content panel.
      * Returns null if nothing is found.
-     * 
+     *
      * @param node a node part of the content panel (never null)
      * @return null or the matching fxom object
      */
     public static FXOMObject fxomObjectFromContentPanelNode(Node node) {
         assert node != null;
         assert node.getScene() != null;
-        
+
         final FXOMObject result;
         final DocumentWindowController dwc = lookupWindowController(node.getScene());
         if (dwc == null) {
@@ -191,19 +191,19 @@ public class SceneBuilderTest {
             final double midX = (b.getMinX() + b.getMaxX()) / 2.0;
             final double midY = (b.getMinY() + b.getMaxY()) / 2.0;
             final Point2D nodeCenter = node.localToScene(midX, midY, true /* rootScene */);
-            
+
             final ContentPanelController cpc = dwc.getContentPanelController();
             result = cpc.searchWithNode(node, nodeCenter.getX(), nodeCenter.getY());
         }
-        
+
         return result;
     }
-    
+
     /**
      * Returns the node in content panel matching a given fxom object.
      * This method invokes FXOMObject.getSceneGraphObject() and checks if
      * it is a Node. If it's not, it returns null.
-     * 
+     *
      * @param documentScene a scene holding a document window
      * @param fxomObject an fxom object (never null)
      * @return null or the matching node in content panel
@@ -212,7 +212,7 @@ public class SceneBuilderTest {
             Scene documentScene, FXOMObject fxomObject) {
         assert documentScene != null;
         assert fxomObject != null;
-        
+
         final Node result;
         if (fxomObject.getSceneGraphObject() instanceof Node) {
             result = (Node) fxomObject.getSceneGraphObject();
@@ -221,14 +221,14 @@ public class SceneBuilderTest {
         }
         return result;
     }
-    
+
     /**
-     * Returns the fxom object matching a given node in the hierarchy panel. 
+     * Returns the fxom object matching a given node in the hierarchy panel.
      * Returns null if nothing is found.
      * This method lookups for a Cell object ancestor of the specified node parameter
      * and returns the associated FXOMObject.
      * If there is no Cell object ancestor, it returns null.
-     * 
+     *
      * @param node a node part of the hierarchy panel (never null)
      * @return null or the matching fxom object
      */
@@ -267,13 +267,13 @@ public class SceneBuilderTest {
 
         return result;
     }
-    
+
     /**
      * Returns the node in hierarchy panel matching a given fxom object.
      * Returns null if the FXOMObject is currently not displayed by hierarchy
      * panel.
-     * The returned Node is a Cell object. 
-     * 
+     * The returned Node is a Cell object.
+     *
      * @param documentScene a scene holding a document window
      * @param fxomObject an fxom object (never null)
      * @return null or the matching node in hierarchy panel
@@ -282,7 +282,7 @@ public class SceneBuilderTest {
             Scene documentScene, FXOMObject fxomObject) {
         assert documentScene != null;
         assert fxomObject != null;
-        
+
         final Node result;
         final DocumentWindowController dwc = lookupWindowController(documentScene);
         if (dwc == null) {
@@ -305,16 +305,16 @@ public class SceneBuilderTest {
                 result = null;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Looks for the TreeItem corresponding to the specified FXOM object.
      * If a TreeItem has been found, scroll to this TreeItem within the hierarchy panel.
-     * 
+     *
      * @param documentScene
-     * @param fxomObject 
+     * @param fxomObject
      */
     public static void revealInHierarchyPanel(
             Scene documentScene, FXOMObject fxomObject) {
@@ -325,7 +325,7 @@ public class SceneBuilderTest {
             final EditorController ec = dwc.getEditorController();
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
 
-            final AbstractHierarchyPanelController hpc 
+            final AbstractHierarchyPanelController hpc
                     = dwc.getDocumentPanelController().getHierarchyPanelController();
             assert hpc != null;
             assert hpc.getPanelControl() != null;
@@ -333,7 +333,7 @@ public class SceneBuilderTest {
             expandAllTreeItems(hpc.getRoot());
             // Then look for the fxom object
             if (hpc.getPanelControl().isVisible()) {
-                final TreeItem<HierarchyItem> treeItem 
+                final TreeItem<HierarchyItem> treeItem
                         = hpc.lookupTreeItem(fxomObject);
                 if (treeItem != null) {
                     hpc.scrollTo(treeItem);
@@ -344,7 +344,7 @@ public class SceneBuilderTest {
 
     /**
      * Returns the node representing a resize handle.
-     * 
+     *
      * @param documentScene a scene holding a document window
      * @param fxomObject one of the selected fxom object
      * @param cp the cardinal point of the target handle
@@ -354,19 +354,19 @@ public class SceneBuilderTest {
             Scene documentScene, FXOMObject fxomObject, CardinalPoint cp) {
         assert documentScene != null;
         assert fxomObject != null;
-        
+
         final Node result;
         final DocumentWindowController dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
             final EditorController ec = dwc.getEditorController();
-            
+
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
             assert ec.getSelection().isSelected(fxomObject);
-            
+
             final ContentPanelController cpc = dwc.getContentPanelController();
-            final AbstractHandles<?> h = cpc.lookupHandles(fxomObject);
+            final Handles<?> h = cpc.lookupHandles(fxomObject);
             if (h instanceof AbstractGenericHandles<?>) {
                 final AbstractGenericHandles<?> gh = (AbstractGenericHandles<?>) h;
                 result = gh.getHandleNode(cp);
@@ -374,15 +374,15 @@ public class SceneBuilderTest {
                 result = null;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Returns the version string.
      * It has the format 'Version: [major].[minor]-b[ii], Changeset: [someValue]'.
      * <br>A typical value is 'Version: 2.0-b07, Changeset: 8a5ccd834b5f'.
-     * 
+     *
      * @return a version string. It is never null: in the case something weird
      * would occur when constructing the proper value then what is returned is
      * 'UNSET'.
@@ -391,13 +391,13 @@ public class SceneBuilderTest {
         AboutWindowController awc = new AboutWindowController(new VersionSetting());
         return awc.getBuildInfo();
     }
-    
-    
+
+
     /**
      * Closes the preview window associated to a document window.
      * Performs nothing if documentScene is not a scene associated to a
      * document window or if preview window is not opened.
-     * 
+     *
      * @param documentScene a scene holding a document window
      */
     public static void closePreviewWindow(Scene documentScene) {
@@ -406,37 +406,37 @@ public class SceneBuilderTest {
             dwc.getPreviewWindowController().closeWindow();
         }
     }
-    
+
     /**
      * Starts the application in test mode.
      * In this mode, no files are opened at application startup.
-     * 
+     *
      * @param args arguments to SceneBuilderApp.main()
      */
     public static void startApplication(String[] args) {
         SceneBuilderApp.main(args);
     }
-    
+
     /*
      * Private
      */
-    
+
     private static FXOMDocument lookupFxomDocument(Scene documentScene) {
         final FXOMDocument result;
-        
+
         final DocumentWindowController dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
             result = dwc.getEditorController().getFxomDocument();
         }
-        
+
         return result;
     }
-    
+
     private static DocumentWindowController lookupWindowController(Scene documentScene) {
         DocumentWindowController result = null;
-        
+
         final MainController app = MainController.getSingleton();
         for (DocumentWindowController c : app.getDocumentWindowControllers()) {
             if (c.getScene() == documentScene) {
@@ -444,10 +444,10 @@ public class SceneBuilderTest {
                 break;
             }
         }
-        
+
         return result;
     }
-    
+
     private static <T> void expandAllTreeItems(final TreeItem<T> parentTreeItem) {
         if (parentTreeItem != null) {
             parentTreeItem.setExpanded(true);

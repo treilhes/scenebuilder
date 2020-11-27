@@ -33,11 +33,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.SplitPaneDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.AdjustDividerGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -50,30 +52,34 @@ import javafx.scene.shape.Line;
 
 /**
  *
- * 
+ *
  */
 public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
-    
+
     private final Group grips = new Group();
-    
-    public SplitPaneHandles(ContentPanelController contentPanelController,
+	private final ApplicationContext context;
+
+    public SplitPaneHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, SplitPane.class);
-        
+        super(context, contentPanelController, fxomInstance, SplitPane.class);
+        this.context = context;
+
         getRootNode().getChildren().add(grips); // Above handles
     }
-    
-    
+
+
     /*
      * AbstractNodeHandles
      */
     @Override
     protected void layoutDecoration() {
         super.layoutDecoration();
-             
+
         // Adjusts the number of grip lines to the number of dividers
         adjustGripCount();
-        
+
         // Updates grip positions
         final double[] positions = getSceneGraphObject().getDividerPositions();
         for (int i = 0, count = positions.length; i < count; i++) {
@@ -83,35 +89,35 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
 
     @Override
     public AbstractGesture findGesture(Node node) {
-        
+
         int gripIndex = 0;
         final int gripCount = grips.getChildren().size();
         final List<Node> gripNodes = grips.getChildren();
         while ((gripIndex < gripCount) && (gripNodes.get(gripIndex) != node)) {
             gripIndex++;
         }
-        
+
         final AbstractGesture result;
         if (gripIndex < gripCount) {
             assert gripNodes.get(gripIndex) == node;
-            result = new AdjustDividerGesture(getContentPanelController(), 
+            result = new AdjustDividerGesture(context, getContentPanelController(),
                     getFxomInstance(), gripIndex);
         } else {
             result = super.findGesture(node);
         }
-        
+
         return result;
     }
 
-    
+
     /*
      * Private
      */
-    
+
     private void adjustGripCount() {
         final int dividerCount = getSceneGraphObject().getDividerPositions().length;
         final List<Node> gripChildren = grips.getChildren();
-        
+
         while (gripChildren.size() < dividerCount) {
             gripChildren.add(makeGripLine());
         }
@@ -119,7 +125,7 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
             gripChildren.remove(gripChildren.size()-1);
         }
     }
-    
+
     private Line makeGripLine() {
         final Line result = new Line();
         result.setStrokeWidth(SELECTION_HANDLES_SIZE);
@@ -136,11 +142,11 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
         attachHandles(result);
         return result;
     }
-    
+
     private void layoutDivider(int gripIndex) {
         assert grips.getChildren().get(gripIndex) instanceof Line;
-        
-        
+
+
         /*
          *      HORIZONTAL
          *
@@ -158,7 +164,7 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
          *
          *
          *      VERTICAL
-         * 
+         *
          *    startX                endX
          *      +--------------------+
          *      |                    |
@@ -172,12 +178,12 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
          *      |                    |
          *      +--------------------+
          */
-        
+
         final SplitPaneDesignInfoX di = new SplitPaneDesignInfoX();
         final double pos = getSceneGraphObject().getDividerPositions()[gripIndex];
         final double xy = di.dividerPositionToSplitPaneLocal(getSceneGraphObject(), pos);
         final Bounds lb = getSceneGraphObject().getLayoutBounds();
-        
+
         final double startX, startY, endX, endY;
         switch(getSceneGraphObject().getOrientation()) {
             default:
@@ -194,20 +200,20 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
                 endY = xy;
                 break;
         }
-        
+
         final boolean snapToPixel = true;
         final Point2D startPoint = sceneGraphObjectToDecoration(startX, startY, snapToPixel);
         final Point2D endPoint = sceneGraphObjectToDecoration(endX, endY, snapToPixel);
-        
+
         final Line gripLine = (Line) grips.getChildren().get(gripIndex);
         gripLine.setStartX(startPoint.getX());
         gripLine.setStartY(startPoint.getY());
         gripLine.setEndX(endPoint.getX());
         gripLine.setEndY(endPoint.getY());
     }
-    
-    
-    /* 
+
+
+    /*
      * Wrapper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void attachHandles(Node node) {

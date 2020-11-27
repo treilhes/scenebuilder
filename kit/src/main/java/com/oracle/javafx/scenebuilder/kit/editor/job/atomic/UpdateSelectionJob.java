@@ -36,12 +36,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
@@ -51,13 +53,13 @@ public class UpdateSelectionJob extends Job {
     private AbstractSelectionGroup oldSelectionGroup;
     private final AbstractSelectionGroup newSelectionGroup;
 
-    public UpdateSelectionJob(AbstractSelectionGroup group, EditorController editorController) {
-        super(editorController);
+    public UpdateSelectionJob(ApplicationContext context, AbstractSelectionGroup group, Editor editor) {
+        super(context, editor);
         newSelectionGroup = group;
     }
 
-    public UpdateSelectionJob(FXOMObject newSelectedObject, EditorController editorController) {
-        super(editorController);
+    public UpdateSelectionJob(ApplicationContext context, FXOMObject newSelectedObject, Editor editor) {
+        super(context, editor);
 
         assert newSelectedObject != null;
         final List<FXOMObject> newSelectedObjects = new ArrayList<>();
@@ -65,8 +67,8 @@ public class UpdateSelectionJob extends Job {
         newSelectionGroup = new ObjectSelectionGroup(newSelectedObjects, newSelectedObject, null);
     }
 
-    public UpdateSelectionJob(Collection<FXOMObject> newSelectedObjects, EditorController editorController) {
-        super(editorController);
+    public UpdateSelectionJob(ApplicationContext context, Collection<FXOMObject> newSelectedObjects, Editor editor) {
+        super(context, editor);
 
         assert newSelectedObjects != null; // But possibly empty
         if (newSelectedObjects.isEmpty()) {
@@ -88,7 +90,7 @@ public class UpdateSelectionJob extends Job {
     @Override
     public void execute() {
         final Selection selection = getEditorController().getSelection();
-        
+
         // Saves the current selection
         try {
             if (selection.getGroup() == null) {
@@ -99,7 +101,7 @@ public class UpdateSelectionJob extends Job {
         } catch(CloneNotSupportedException x) {
             throw new RuntimeException("Bug", x);
         }
-        
+
         // Now same as redo()
         redo();
     }
@@ -123,5 +125,5 @@ public class UpdateSelectionJob extends Job {
         // Not expected to reach the user
         return getClass().getSimpleName();
     }
-    
+
 }

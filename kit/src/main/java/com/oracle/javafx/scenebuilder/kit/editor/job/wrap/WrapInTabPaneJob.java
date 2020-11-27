@@ -34,18 +34,20 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -55,8 +57,8 @@ import javafx.scene.control.TabPane;
  */
 public class WrapInTabPaneJob extends AbstractWrapInJob {
 
-    public WrapInTabPaneJob(EditorController editorController) {
-        super(editorController);
+    public WrapInTabPaneJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = TabPane.class;
     }
 
@@ -74,7 +76,7 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
         }
         return result;
     }
-    
+
     @Override
     protected List<Job> wrapChildrenJobs(final List<FXOMObject> children) {
 
@@ -105,11 +107,11 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
                 tabContainer.getFxomDocument(), tabContainerPropertyName);
 
         // Add the Tab sub container to the new container
-        final Job addTabValueJob = new AddPropertyValueJob(
+        final Job addTabValueJob = new AddPropertyValueJob(getContext(), 
                 tabContainer,
                 newContainerProperty,
                 -1,
-                getEditorController());
+                getEditorController()).extend();
         jobs.add(addTabValueJob);
 
         assert children.size() == 1;
@@ -123,18 +125,18 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
 
         // Add the Tab sub container property to the tab container instance
         assert tabContainerProperty.getParentInstance() == null;
-        final Job addTabContainerPropertyJob = new AddPropertyJob(
+        final Job addTabContainerPropertyJob = new AddPropertyJob(getContext(), 
                 tabContainerProperty,
                 tabContainer,
-                -1, getEditorController());
+                -1, getEditorController()).extend();
         jobs.add(addTabContainerPropertyJob);
 
         // Add the new container property to the new container instance
         assert newContainerProperty.getParentInstance() == null;
-        final Job addNewContainerPropertyJob = new AddPropertyJob(
+        final Job addNewContainerPropertyJob = new AddPropertyJob(getContext(), 
                 newContainerProperty,
                 newContainer,
-                -1, getEditorController());
+                -1, getEditorController()).extend();
         jobs.add(addNewContainerPropertyJob);
 
         return jobs;

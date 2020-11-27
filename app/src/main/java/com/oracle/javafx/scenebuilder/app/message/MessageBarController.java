@@ -37,12 +37,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
@@ -159,8 +160,8 @@ public class MessageBarController extends AbstractFxmlPanelController {
         messageLabel.setText(""); //NOI18N
         statusLabel.setText(""); //NOI18N
         messageButton.setVisible(false);
-        
-        // Listens to the message log 
+
+        // Listens to the message log
         getEditorController().getMessageLog().revisionProperty().addListener(
                 (ChangeListener<Number>) (ov, t, t1) -> messageLogDidChange());
         getEditorController().getMessageLog().numOfWarningMessagesProperty().addListener(
@@ -171,9 +172,9 @@ public class MessageBarController extends AbstractFxmlPanelController {
                     }
                     messageButton.setText(numberOfMessages);
                 });
-        
+
         statusLabelTooltip = statusLabel.getTooltip();
-        
+
         // Update output components
         messageLogDidChange();
     }
@@ -192,11 +193,11 @@ public class MessageBarController extends AbstractFxmlPanelController {
             }
         }
     }
-    
+
     private void messageLogDidChange() {
         assert messageLabel != null;
-        
-        final MessageLogEntry entry
+
+        final MessageEntry entry
                 = getEditorController().getMessageLog().getYoungestEntry();
         int logSize = getEditorController().getMessageLog().getEntries().size();
 
@@ -208,10 +209,10 @@ public class MessageBarController extends AbstractFxmlPanelController {
             getSelectionBarHost().setVisible(false);
             getSelectionBarHost().setManaged(false);
             messageLabel.setManaged(true);
-            
+
             // Styling message area according severity
             setStyle(entry.getType());
-                        
+
             // If no message panel is defined nor in use we compute message bar
             // button. But as soon as a message panel is opened it means one or
             // more message is being displayed so we do not alter the message button.
@@ -224,12 +225,12 @@ public class MessageBarController extends AbstractFxmlPanelController {
                     messageButton.setManaged(true);
                 }
             }
-            
+
             // Displaying the message
             messageLabel.setText(entry.getText());
             messageLabel.setVisible(true);
-            
-            // We go back to the host after a given time            
+
+            // We go back to the host after a given time
             FadeTransition showHost = new FadeTransition(Duration.seconds(1), messagePart);
             showHost.setFromValue(1.0);
             showHost.setToValue(0.0);
@@ -252,7 +253,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
         } else if (getEditorController().getMessageLog().getEntryCount() == 0) {
             messageButton.setVisible(false);
             messageButton.setManaged(false);
-            
+
             if (messageWindowController != null && messageWindowController.isWindowOpened()) {
                 messageWindowController.closeWindow();
             }
@@ -260,7 +261,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
 
         previousTotalNumOfMessages = logSize;
     }
-    
+
     private void resetStyle() {
         // We clear all previous use, the sole way to control what's going on.
         messageLabel.getStyleClass().removeAll("message-info"); //NOI18N
@@ -270,10 +271,10 @@ public class MessageBarController extends AbstractFxmlPanelController {
         iconsHbox.getStyleClass().removeAll("message-info"); //NOI18N
         iconsHbox.getStyleClass().removeAll("message-warning"); //NOI18N
     }
-    
+
     private void setStyle(MessageLogEntry.Type type) {
         resetStyle();
-        
+
         switch (type) {
             case INFO:
                 messageLabel.getStyleClass().add("message-info"); //NOI18N

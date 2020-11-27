@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

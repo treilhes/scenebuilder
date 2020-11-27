@@ -31,9 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.rudder;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -42,22 +42,22 @@ import javafx.scene.shape.Line;
 
 /**
  *
- * 
+ *
  */
 public class ResizeRudder extends AbstractRudder<Node> {
-    
+
     private final Line diagonalLine = new Line();
 
-    public ResizeRudder(ContentPanelController contentPanelController, 
+    public ResizeRudder(Content contentPanelController,
             FXOMObject fxomObject) {
         super(contentPanelController, fxomObject, Node.class);
-        
+
         diagonalLine.setMouseTransparent(true);
         diagonalLine.getStyleClass().add("resize-rudder"); //NOI18N
         getRootNode().getChildren().add(diagonalLine);
     }
-    
-    
+
+
     /*
      * AbstractRudder
      */
@@ -86,16 +86,16 @@ public class ResizeRudder extends AbstractRudder<Node> {
     @Override
     protected void layoutDecoration() {
         final Bounds b = getSceneGraphObjectBounds();
-        
+
         final boolean snapToPixel = true;
         final Point2D p0 = sceneGraphObjectToDecoration(b.getMinX(), b.getMinY(), snapToPixel);
         final Point2D p1 = sceneGraphObjectToDecoration(b.getMaxX(), b.getMaxY(), snapToPixel);
-        
+
         final LineEquation eq = new LineEquation(p0.getX(), p0.getY(), p1.getX(), p1.getY());
         final double outset = 0.1;
         final Point2D d0 = eq.pointAtP(0.0 - outset);
         final Point2D d1 = eq.pointAtP(1.0 + outset);
-        
+
         diagonalLine.setStartX(d0.getX());
         diagonalLine.setStartY(d0.getY());
         diagonalLine.setEndX(d1.getX());

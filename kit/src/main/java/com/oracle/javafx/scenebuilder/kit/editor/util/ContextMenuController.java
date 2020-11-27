@@ -31,15 +31,20 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.util;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.ControlAction;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -57,7 +62,10 @@ import javafx.stage.WindowEvent;
 /**
  * Controller used to handle contextual menu in hierarchy and content view.
  */
-public class ContextMenuController {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
+public class ContextMenuController implements com.oracle.javafx.scenebuilder.api.ContextMenu {
 
     private final EditorController editorController;
     private ContextMenu contextMenu; // Initialized lazily
@@ -253,7 +261,7 @@ public class ContextMenuController {
         final MenuItemController c = (MenuItemController) i.getUserData();
         c.perform();
     }
-    
+
     private void jobManagerRevisionDidChange() {
         // FXOMDocument has been modified by a job.
         if (contextMenu != null && contextMenu.isShowing()) {

@@ -31,9 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TableViewDesignInfoX;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -42,27 +42,27 @@ import javafx.scene.control.TableView;
 
 /**
  *
- * 
+ *
  */
 public class TableColumnTring extends AbstractGenericTring<Object> {
 
     private final TableViewDesignInfoX tableViewDesignInfo
             = new TableViewDesignInfoX();
-    
-    public TableColumnTring(ContentPanelController contentPanelController, FXOMInstance fxomInstance) {
+
+    public TableColumnTring(Content contentPanelController, FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, Object.class);
         assert fxomInstance.getSceneGraphObject() instanceof TableColumn;
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
 
-    
+
     /*
      * AbstractGenericPring
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return tableViewDesignInfo.getColumnBounds(getTableColumn());
@@ -91,7 +91,7 @@ public class TableColumnTring extends AbstractGenericTring<Object> {
     /*
      * Private
      */
-    
+
     private TableColumn<?,?> getTableColumn() {
         assert getSceneGraphObject() instanceof TableColumn;
         return (TableColumn<?,?>) getSceneGraphObject();

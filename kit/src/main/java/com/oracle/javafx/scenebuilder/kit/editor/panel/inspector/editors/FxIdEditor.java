@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMFxIdIndex;
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMFxIdIndex;
+import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -50,14 +50,14 @@ public class FxIdEditor extends AutoSuggestEditor {
 
     private static final String PROPERTY_NAME = "fx:id";
     private static final String DEFAULT_VALUE = null;
-    private EditorController editorController;
+    private Editor editorController;
 
-    public FxIdEditor(List<String> suggestedFxIds, EditorController editorController) {
+    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
         super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOI18N
         initialize(editorController);
     }
-    
-    private void initialize(EditorController editorController) {
+
+    private void initialize(Editor editorController) {
         this.editorController = editorController;
 
         // text field events handling
@@ -90,7 +90,7 @@ public class FxIdEditor extends AutoSuggestEditor {
         setTextEditorBehavior(this, textField, onActionListener);
     }
 
-    public void reset(List<String> suggestedFxIds, EditorController editorController) {
+    public void reset(List<String> suggestedFxIds, Editor editorController) {
         reset(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds);
         this.editorController = editorController;
     }

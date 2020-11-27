@@ -31,13 +31,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.AbstractCurveEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.curve.QuadCurveEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.QuadCurveHandles;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.shape.QuadCurve;
 
@@ -46,19 +48,24 @@ import javafx.scene.shape.QuadCurve;
  */
 public class QuadCurveDriver extends AbstractNodeDriver {
 
-    public QuadCurveDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+	private final ApplicationContext context;
+
+    public QuadCurveDriver(
+    		ApplicationContext context,
+    		Content contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof QuadCurve;
         assert fxomObject instanceof FXOMInstance;
-        return new QuadCurveHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new QuadCurveHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
 
     @Override
@@ -69,5 +76,5 @@ public class QuadCurveDriver extends AbstractNodeDriver {
         final QuadCurve quadCurve = (QuadCurve) fxomObject.getSceneGraphObject();
         return new QuadCurveEditor(quadCurve);
     }
-    
+
 }

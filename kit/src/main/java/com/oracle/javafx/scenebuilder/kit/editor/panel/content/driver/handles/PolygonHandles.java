@@ -36,10 +36,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -49,26 +52,29 @@ import javafx.scene.shape.Polygon;
 
 /**
  *
- * 
+ *
  */
 public class PolygonHandles extends AbstractCurveHandles<Polygon> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();
     private final List<Line> linesHandle = new ArrayList<>();
-    
-    public PolygonHandles(ContentPanelController contentPanelController,
+	private ApplicationContext context;
+
+    public PolygonHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, Polygon.class);
-        
+        this.context = context;
         final List<Node> rootNodeChildren = getRootNode().getChildren();
-        
+
         setupHandles(rootNodeChildren);
     }
 
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
-    
+
     /*
      * AbstractCurveHandles
      */
@@ -76,7 +82,7 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
     protected void layoutDecoration() {
         final Polygon l = getSceneGraphObject();
         final boolean snapToPixel = true;
-        
+
         if (l.getPoints().size() != verticesHandle.size() * 2) {
             setupHandles(getRootNode().getChildren());
         }
@@ -107,7 +113,7 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
     @Override
     protected void startListeningToSceneGraphObject() {
         super.startListeningToSceneGraphObject();
-        
+
         final Polygon l = getSceneGraphObject();
         l.getPoints().addListener(pointsListener);
     }
@@ -115,7 +121,7 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
     @Override
     protected void stopListeningToSceneGraphObject() {
         super.stopListeningToSceneGraphObject();
-        
+
         final Polygon l = getSceneGraphObject();
         l.getPoints().removeListener(pointsListener);
     }
@@ -123,17 +129,17 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
     @Override
     public AbstractGesture findGesture(Node node) {
         final EditCurveGesture result;
-        
+
         if (node instanceof Circle && verticesHandle.contains(node)) {
-            result = new EditCurveGesture(getContentPanelController(), getFxomInstance(), EditCurveGesture.Tunable.VERTEX);
-            result.getTunableMap().put(EditCurveGesture.Tunable.VERTEX, verticesHandle.indexOf(node));
+            result = new EditCurveGesture(context, getContentPanelController(), getFxomInstance(), Tunable.VERTEX);
+            result.getTunableMap().put(Tunable.VERTEX, verticesHandle.indexOf(node));
         } else if (node instanceof Line && linesHandle.contains(node)) {
-            result = new EditCurveGesture(getContentPanelController(), getFxomInstance(), EditCurveGesture.Tunable.SIDE);
-            result.getTunableMap().put(EditCurveGesture.Tunable.SIDE, linesHandle.indexOf(node));
+            result = new EditCurveGesture(context, getContentPanelController(), getFxomInstance(), Tunable.SIDE);
+            result.getTunableMap().put(Tunable.SIDE, linesHandle.indexOf(node));
         } else {
             result = null;
         }
-        
+
         return result;
     }
 
@@ -141,11 +147,11 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
     public void enabledDidChange() {
         verticesHandle.forEach(this::setupHandleState);
     }
-    
+
     /*
      * Private
      */
-    
+
     private void setupHandles(final List<Node> rootNodeChildren) {
         verticesHandle.clear();
         linesHandle.clear();
@@ -169,18 +175,18 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
                     rootNodeChildren.add(c);
                 });
     }
-    
+
     private void setupHandleState(Circle handleCircle) {
-        
+
         final String styleClass = isEnabled() ? SELECTION_HANDLES : SELECTION_HANDLES_DIM;
         final Cursor cursor = isEnabled() ? Cursor.OPEN_HAND : Cursor.DEFAULT;
-        
+
         handleCircle.getStyleClass().add(styleClass);
         handleCircle.setCursor(cursor);
     }
-    
-    
-    /* 
+
+
+    /*
      * Wraper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void setupHandles(Node node) {

@@ -43,20 +43,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.ContextMenu;
+import com.oracle.javafx.scenebuilder.api.Drag;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -118,7 +118,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private boolean shouldEndOnExit;
     private Label promptLabel;
 
-    // When DND few pixels of the top or bottom of the Hierarchy 
+    // When DND few pixels of the top or bottom of the Hierarchy
     // the user can cause it to auto-scroll until the desired target node
     private static final double AUTO_SCROLLING_ZONE_HEIGHT = 40.0;
 
@@ -133,16 +133,16 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private Border firstCellRightLeftBorder;
     private Border firstCellTopRightBottomLeftBorder;
     private Border firstCellTopRightLeftBorder;
-    
+
     private final Border transparentBorder;
     private final Border firstCellTransparentBorder;
-    
+
     private final BorderWidths cellBorderWidths = new BorderWidths(2);
     private final Insets cellInsets = new Insets(-2, 0, -2, 0);
     private final Insets firstCellInsets = new Insets(0, 0, -2, 0);
 
-    private static final Color DEFAULT_PARENT_RING_COLOR = Color.rgb(238, 168, 47);    
-    
+    private static final Color DEFAULT_PARENT_RING_COLOR = Color.rgb(238, 168, 47);
+
     /**
      * @treatAsPrivate
      */
@@ -179,9 +179,9 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     /*
      * Public
      */
-    public AbstractHierarchyPanelController(URL fxmlURL, EditorController editorController) {
+    public AbstractHierarchyPanelController(URL fxmlURL, Editor editorController) {
         super(fxmlURL, I18N.getBundle(), editorController);
-        
+
         final BorderStroke bs = new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID,
                 CornerRadii.EMPTY, cellBorderWidths, cellInsets);
         transparentBorder = new Border(bs);
@@ -198,7 +198,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
         return promptLabel;
     }
-    
+
     /**
      * Returns the root TreeItem.
      *
@@ -275,7 +275,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         parentRingColor = value;
         updateParentRingColor();
     }
-    
+
     public void setBorder(Cell<?> cell, BorderSide side) {
         assert cell != null;
         boolean isFirstCell = cell.getStyleClass() != null
@@ -305,7 +305,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         assert border != null;
         cell.setBorder(border);
     }
-    
+
     private void setTransparentBorder(Cell<?> cell) {
         assert cell != null;
         boolean isFirstCell = cell.getStyleClass() != null
@@ -313,7 +313,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         final Border border = isFirstCell ? firstCellTransparentBorder : transparentBorder;
         cell.setBorder(border);
     }
-    
+
     /**
      * Returns the control used to represent the hierarchy. Either a TreeView or
      * a TreeTableView.
@@ -496,7 +496,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     protected void sceneGraphRevisionDidChange() {
         if (getPanelControl() != null) {
             // Update the map containing the TreeItems expanded property values
-            // This map will be used after rebuilding the tree, 
+            // This map will be used after rebuilding the tree,
             // in order to update the TreeItems expanded property to their previous value
             if (rootTreeItem != null) { // Root TreeItem may be null
                 updateTreeItemsExpandedMap(rootTreeItem);
@@ -590,7 +590,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
                     final TreeItem<HierarchyItem> lastTreeItem
                             = selectedTreeItems.get(selectedTreeItems.size() - 1);
                     // Call scrollTo only if the item is not visible.
-                    // This avoid unexpected scrolling to occur in the hierarchy 
+                    // This avoid unexpected scrolling to occur in the hierarchy
                     // TreeView / TreeTableView while changing some property in the inspector.
                     if (isVisible(lastTreeItem) == false) {
                         scrollTo(lastTreeItem);
@@ -772,7 +772,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             ((Pane) parent).getChildren().remove(label);
         }
     }
-        
+
     protected void updateParentRingColor() {
         // Update border items used to build the hierarchy parent ring
         BorderStroke bs;
@@ -819,7 +819,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
                 BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
                 CornerRadii.EMPTY, cellBorderWidths, firstCellInsets);
         firstCellTopRightLeftBorder = new Border(bs);
-        
+
         updateParentRing();
         updatePlaceHolder();
     }
@@ -952,7 +952,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         final List<TreeItem<HierarchyItem>> result = new ArrayList<>();
         for (FXOMObject fxomObject : fxomObjects) {
             final TreeItem<HierarchyItem> treeItem = lookupTreeItem(fxomObject);
-            // TreeItem may be null when selecting a GridPane column/row 
+            // TreeItem may be null when selecting a GridPane column/row
             // constraint in content panel
             if (treeItem != null) {
                 result.add(treeItem);
@@ -1095,7 +1095,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
 
         // Drag events
         //----------------------------------------------------------------------
-        // DRAG_DONE event received when drag gesture 
+        // DRAG_DONE event received when drag gesture
         // started from the hierarchy panel ends
         getPanelControl().setOnDragDone(event -> handleOnDragDone(event));
         getPanelControl().setOnDragDropped(event -> handleOnDragDropped(event));
@@ -1109,13 +1109,13 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
 
         // Mouse events
         //----------------------------------------------------------------------
-        // DRAG_DETECTED event received when drag gesture 
+        // DRAG_DETECTED event received when drag gesture
         // starts from the hierarchy panel
         getPanelControl().setOnDragDetected(event -> handleOnDragDetected(event));
         getPanelControl().setOnMousePressed(event -> handleOnMousePressed(event));
 
         // Setup the context menu
-        final ContextMenuController contextMenuController
+        final ContextMenu contextMenuController
                 = getEditorController().getContextMenuController();
         getPanelControl().setContextMenu(contextMenuController.getContextMenu());
 
@@ -1136,7 +1136,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             if (selection.getGroup() instanceof ObjectSelectionGroup) {
                 // A set of regular component (ie fxom objects) are selected
                 final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-                
+
                 // Abort dragging an empty place holder
                 for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {
                     final HierarchyItem item = selectedTreeItem.getValue();
@@ -1175,7 +1175,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
 
     private void handleOnDragDone(final DragEvent event) {
         // DragController update
-        final DragController dragController
+        final Drag dragController
                 = getEditorController().getDragController();
         assert shouldEndOnExit == false;
         dragController.end();
@@ -1190,13 +1190,13 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
 
         // DragController update
-        final DragController dragController
+        final Drag dragController
                 = getEditorController().getDragController();
         dragController.commit();
         // Do not invoke dragController.end here because we always receive a
         // DRAG_EXITED event which will perform the termination
         event.setDropCompleted(true);
-        
+
         // Give the focus to the hierarchy
         getPanelControl().requestFocus();
     }
@@ -1208,9 +1208,9 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         setParentRingEnabled(false);
 
         // DragController update
-        // The drag source is null if the drag gesture 
+        // The drag source is null if the drag gesture
         // has been started from outside (from the explorer / finder)
-        final DragController dragController
+        final Drag dragController
                 = getEditorController().getDragController();
         if (dragController.getDragSource() == null) { // Drag started externally
             final FXOMDocument fxomDocument
@@ -1242,7 +1242,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
 
         // DragController update
-        final DragController dragController
+        final Drag dragController
                 = getEditorController().getDragController();
         dragController.setDropTarget(null);
         if (shouldEndOnExit) {
@@ -1258,7 +1258,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private void handleOnDragOver(final DragEvent event) {
         final ScrollBar verticalScrollBar = getScrollBar(Orientation.VERTICAL);
 
-        // By dragging and hovering the cell within a few pixels 
+        // By dragging and hovering the cell within a few pixels
         // of the top or bottom of the Hierarchy,
         // the user can cause it to auto-scroll until the desired cell is in view.
         if (verticalScrollBar != null && verticalScrollBar.isVisible()) {
@@ -1315,7 +1315,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
                     }
                 }
                 break;
-                
+
             default:
                 break;
         }
@@ -1324,7 +1324,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private void handleOnMousePressed(final MouseEvent event) {
 
         if (event.getButton() == MouseButton.SECONDARY) {
-            final ContextMenuController contextMenuController
+            final ContextMenu contextMenuController
                     = getEditorController().getContextMenuController();
             // The context menu items depend on the selection so
             // we need to rebuild it each time it is invoked.

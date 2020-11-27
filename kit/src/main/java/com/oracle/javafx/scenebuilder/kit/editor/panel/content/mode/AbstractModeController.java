@@ -31,34 +31,35 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.mode;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Mode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
  *
- * 
+ *
  */
 
 
-public abstract class AbstractModeController {
-    
-    protected final ContentPanelController contentPanelController;
-    
-    
-    public AbstractModeController(ContentPanelController contentPanelController) {
+public abstract class AbstractModeController implements Mode{
+
+    protected final Content contentPanelController;
+
+
+    public AbstractModeController(Content contentPanelController) {
         this.contentPanelController = contentPanelController;
     }
 
-    public ContentPanelController getContentPanelController() {
+    public Content getContentPanelController() {
         return contentPanelController;
     }
-    
+
     public abstract void willResignActive(AbstractModeController nextModeController);
     public abstract void didBecomeActive(AbstractModeController previousModeController);
-    
+
     public abstract void editorSelectionDidChange();
     public abstract void fxomDocumentDidChange(FXOMDocument oldDocument);
     public abstract void fxomDocumentDidRefreshSceneGraph();
     public abstract void dropTargetDidChange();
-    
+
 }

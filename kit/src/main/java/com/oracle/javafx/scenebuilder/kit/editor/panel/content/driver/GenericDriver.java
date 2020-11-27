@@ -31,6 +31,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 
 /**
@@ -38,8 +40,10 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelContr
  */
 public class GenericDriver extends AbstractNodeDriver {
 
-    public GenericDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    public GenericDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
     }
-    
+
 }

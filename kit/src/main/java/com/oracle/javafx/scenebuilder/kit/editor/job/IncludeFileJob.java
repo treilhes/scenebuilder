@@ -37,17 +37,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.util.URLUtils;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 
 /**
  *
@@ -58,8 +61,8 @@ public class IncludeFileJob extends BatchSelectionJob {
     private FXOMObject targetObject;
     private FXOMIntrinsic newInclude;
 
-    public IncludeFileJob(File file, EditorController editorController) {
-        super(editorController);
+    public IncludeFileJob(ApplicationContext context, File file, Editor editor) {
+        super(context, editor);
 
         assert file != null;
         this.file = file;
@@ -103,11 +106,11 @@ public class IncludeFileJob extends BatchSelectionJob {
                         // Build InsertAsSubComponent jobs
                         final DesignHierarchyMask targetMask = new DesignHierarchyMask(targetObject);
                         if (targetMask.isAcceptingSubComponent(newInclude)) {
-                            result.add(new InsertAsSubComponentJob(
+                            result.add(new InsertAsSubComponentJob(getContext(),
                                     newInclude,
                                     targetObject,
                                     targetMask.getSubComponentCount(),
-                                    getEditorController()));
+                                    getEditorController()).extend());
                         }
                     }
                 }

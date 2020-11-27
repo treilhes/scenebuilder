@@ -31,7 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
 
 import javafx.scene.layout.StackPane;
 
@@ -40,8 +42,8 @@ import javafx.scene.layout.StackPane;
  */
 public class WrapInStackPaneJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInStackPaneJob(EditorController editorController) {
-        super(editorController);
+    public WrapInStackPaneJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = StackPane.class;
     }
 }

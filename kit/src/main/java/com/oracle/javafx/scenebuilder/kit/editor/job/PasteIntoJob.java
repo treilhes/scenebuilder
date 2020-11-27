@@ -34,18 +34,21 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.ClipboardDecoder;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardDecoder;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.scene.input.Clipboard;
 
@@ -56,8 +59,8 @@ public class PasteIntoJob extends BatchSelectionJob {
 
     private List<FXOMObject> newObjects;
 
-    public PasteIntoJob(EditorController editorController) {
-        super(editorController);
+    public PasteIntoJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -85,11 +88,11 @@ public class PasteIntoJob extends BatchSelectionJob {
                     final DesignHierarchyMask targetMask = new DesignHierarchyMask(targetObject);
                     if (targetMask.isAcceptingSubComponent(newObjects)) {
                         for (FXOMObject newObject : newObjects) {
-                            final InsertAsSubComponentJob subJob = new InsertAsSubComponentJob(
+                            final Job subJob = new InsertAsSubComponentJob(getContext(),
                                     newObject,
                                     targetObject,
                                     targetMask.getSubComponentCount(),
-                                    getEditorController());
+                                    getEditorController()).extend();
                             result.add(0, subJob);
                         }
                     } // Build InsertAsAccessory jobs for single source selection
@@ -101,9 +104,9 @@ public class PasteIntoJob extends BatchSelectionJob {
                         for (Accessory a : accessories) {
                             if (targetMask.isAcceptingAccessory(a, newObject)
                                     && targetMask.getAccessory(a) == null) {
-                                final InsertAsAccessoryJob subJob = new InsertAsAccessoryJob(
+                                final Job subJob = new InsertAsAccessoryJob(getContext(),
                                         newObject, targetObject, a,
-                                        getEditorController());
+                                        getEditorController()).extend();
                                 result.add(subJob);
                                 break;
                             }
@@ -137,7 +140,7 @@ public class PasteIntoJob extends BatchSelectionJob {
             return new ObjectSelectionGroup(newObjects, newObjects.iterator().next(), null);
         }
     }
-    
+
     private String makeSingleSelectionDescription() {
         final String result;
 

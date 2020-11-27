@@ -34,16 +34,18 @@ package com.oracle.javafx.scenebuilder.kit.editor.drag.target;
 import java.util.List;
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ReIndexObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  *
@@ -62,7 +64,7 @@ public class ContainerZDropTarget extends AbstractDropTarget {
     public FXOMObject getBeforeChild() {
         return beforeChild;
     }
-    
+
 
     /*
      * AbstractDropTarget
@@ -73,9 +75,9 @@ public class ContainerZDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public boolean acceptDragSource(AbstractDragSource dragSource) {
+    public boolean acceptDragSource(DragSource dragSource) {
         assert dragSource != null;
-        
+
         final boolean result;
         if (dragSource.getDraggedObjects().isEmpty()) {
             result = false;
@@ -83,49 +85,49 @@ public class ContainerZDropTarget extends AbstractDropTarget {
             final DesignHierarchyMask m = new DesignHierarchyMask(targetContainer);
             if (m.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                 final FXOMObject draggedObject0 = dragSource.getDraggedObjects().get(0);
-                final boolean sameContainer 
+                final boolean sameContainer
                         = targetContainer == draggedObject0.getParentObject();
-                final boolean sameIndex 
-                        = (beforeChild == draggedObject0) 
+                final boolean sameIndex
+                        = (beforeChild == draggedObject0)
                         || (beforeChild == draggedObject0.getNextSlibing());
-                        
+
                 result = (sameContainer == false) || (sameIndex == false);
             } else {
                 result = false;
             }
         }
-        
+
         return result;
     }
 
     @Override
-    public Job makeDropJob(AbstractDragSource dragSource, EditorController editorController) {
+    public Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController) {
         assert dragSource != null;
         assert dragSource.getDraggedObjects().isEmpty() == false;
         assert editorController != null;
-        
+
         final boolean shouldRefreshSceneGraph = true;
-        final BatchJob result = new BatchJob(editorController,
+        final BatchJob result = new BatchJob(context, editorController,
                 shouldRefreshSceneGraph, dragSource.makeDropJobDescription());
-        
+
         final List<FXOMObject> draggedObjects = dragSource.getDraggedObjects();
         final FXOMObject currentParent = draggedObjects.get(0).getParentObject();
-        
+
         if (currentParent == targetContainer) {
             // It's a re-indexing job
             for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
-                result.addSubJob(new ReIndexObjectJob(
-                        draggedObject, beforeChild, editorController));
+                result.addSubJob(new ReIndexObjectJob(context,
+                        draggedObject, beforeChild, editorController).extend());
             }
         } else {
             // It's a reparening job :
             //  - remove drag source objects from their current parent (if any)
             //  - add drag source objects to this drop target
-            
+
             if (currentParent != null) {
                 for (FXOMObject draggedObject : draggedObjects) {
-                    result.addSubJob(new RemoveObjectJob(draggedObject,
-                            editorController));
+                    result.addSubJob(new RemoveObjectJob(context, draggedObject,
+                            editorController).extend());
                 }
             }
             int targetIndex;
@@ -137,22 +139,22 @@ public class ContainerZDropTarget extends AbstractDropTarget {
                 assert targetIndex != -1;
             }
             for (FXOMObject draggedObject : draggedObjects) {
-                final Job j = new InsertAsSubComponentJob(draggedObject, 
-                        targetContainer, targetIndex++, editorController);
+                final Job j = new InsertAsSubComponentJob(context, draggedObject,
+                        targetContainer, targetIndex++, editorController).extend();
                 result.addSubJob(j);
             }
         }
-        
-        assert result.isExecutable();
-        
-        return result;
+
+        assert result.extend().isExecutable();
+
+        return result.extend();
     }
-    
+
     @Override
     public boolean isSelectRequiredAfterDrop() {
         return true;
     }
-    
+
     /*
      * Objects
      */
@@ -186,6 +188,6 @@ public class ContainerZDropTarget extends AbstractDropTarget {
     public String toString() {
         return "ContainerZDropTarget{" + "targetContainer=" + targetContainer + ", beforeChild=" + beforeChild + '}'; //NOI18N
     }
-    
-    
+
+
 }

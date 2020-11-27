@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.relocater
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

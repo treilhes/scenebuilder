@@ -31,10 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
@@ -42,20 +44,20 @@ import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 public class RemoveCollectionItemJob extends Job {
 
     private final FXOMObject targetValue;
-    
+
     private FXOMCollection parentCollection;
     private int indexInParentCollection;
 
-    public RemoveCollectionItemJob(FXOMObject value, EditorController editorController) {
-        super(editorController);
+    public RemoveCollectionItemJob(ApplicationContext context, FXOMObject value, Editor editor) {
+        super(context, editor);
         this.targetValue = value;
     }
-    
-    
+
+
     /*
      * Job
      */
-    
+
     @Override
     public boolean isExecutable() {
         return targetValue.getParentCollection() != null;
@@ -65,10 +67,10 @@ public class RemoveCollectionItemJob extends Job {
     public void execute() {
         assert parentCollection == null;
         assert isExecutable();
-        
+
         parentCollection = targetValue.getParentCollection();
         indexInParentCollection = targetValue.getIndexInParentCollection();
-        
+
         // Now same as redo()
         redo();
     }
@@ -76,7 +78,7 @@ public class RemoveCollectionItemJob extends Job {
     @Override
     public void undo() {
         assert targetValue.getParentCollection() == null;
-        
+
         getEditorController().getFxomDocument().beginUpdate();
         targetValue.addToParentCollection(indexInParentCollection, parentCollection);
         getEditorController().getFxomDocument().endUpdate();
@@ -89,7 +91,7 @@ public class RemoveCollectionItemJob extends Job {
     public void redo() {
         assert targetValue.getParentCollection() == parentCollection;
         assert targetValue.getIndexInParentCollection() == indexInParentCollection;
-        
+
         getEditorController().getFxomDocument().beginUpdate();
         targetValue.removeFromParentCollection();
         getEditorController().getFxomDocument().endUpdate();
@@ -100,10 +102,10 @@ public class RemoveCollectionItemJob extends Job {
     @Override
     public String getDescription() {
         // Should normally not reach the user
-        return getClass().getSimpleName() 
+        return getClass().getSimpleName()
                 + "[" //NOI18N
                 + targetValue.getGlueElement().getTagName()
                 + "]"; //NOI18N
     }
-    
+
 }

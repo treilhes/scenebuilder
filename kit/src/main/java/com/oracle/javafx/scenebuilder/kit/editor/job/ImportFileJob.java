@@ -36,15 +36,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 /**
  *
@@ -54,8 +57,8 @@ public class ImportFileJob extends BatchSelectionJob {
     private final File file;
     private FXOMObject newObject, targetObject;
 
-    public ImportFileJob(File file, EditorController editorController) {
-        super(editorController);
+    public ImportFileJob(ApplicationContext context, File file, Editor editor) {
+        super(context, editor);
 
         assert file != null;
         this.file = file;
@@ -76,14 +79,14 @@ public class ImportFileJob extends BatchSelectionJob {
 
             // newObject is null when file is empty
             if (newObject != null) {
-                // If the document is empty (root object is null), then we 
+                // If the document is empty (root object is null), then we
                 // insert the new object as root.
-                // Otherwise, we insert the new object under the common parent 
+                // Otherwise, we insert the new object under the common parent
                 // of the selected objects.
                 final FXOMObject rootObject = targetDocument.getFxomRoot();
 
                 if (rootObject == null) {
-                    result.add(new SetDocumentRootJob(newObject, getEditorController()));
+                    result.add(new SetDocumentRootJob(getContext(), newObject, getEditorController()).extend());
                 } else {
                     final Selection selection = getEditorController().getSelection();
                     if (selection.isEmpty() || selection.isSelected(rootObject)) {
@@ -97,11 +100,11 @@ public class ImportFileJob extends BatchSelectionJob {
                     // Build InsertAsSubComponent jobs
                     final DesignHierarchyMask targetMask = new DesignHierarchyMask(targetObject);
                     if (targetMask.isAcceptingSubComponent(newObject)) {
-                        result.add(new InsertAsSubComponentJob(
+                        result.add(new InsertAsSubComponentJob(getContext(),
                                 newObject,
                                 targetObject,
                                 targetMask.getSubComponentCount(),
-                                getEditorController()));
+                                getEditorController()).extend());
                     }
                 }
             }

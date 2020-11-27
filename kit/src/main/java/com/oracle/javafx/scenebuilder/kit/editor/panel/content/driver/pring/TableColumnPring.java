@@ -31,11 +31,11 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TableViewDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -44,27 +44,27 @@ import javafx.scene.control.TableView;
 
 /**
  *
- * 
+ *
  */
 public class TableColumnPring extends AbstractGenericPring<Object> {
 
     private final TableViewDesignInfoX tableViewDesignInfo
             = new TableViewDesignInfoX();
-    
-    public TableColumnPring(ContentPanelController contentPanelController, FXOMInstance fxomInstance) {
+
+    public TableColumnPring(Content contentPanelController, FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, Object.class);
         assert fxomInstance.getSceneGraphObject() instanceof TableColumn;
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
 
-    
+
     /*
      * AbstractGenericPring
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return tableViewDesignInfo.getColumnBounds(getTableColumn());
@@ -92,14 +92,14 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
     @Override
     public AbstractGesture findGesture(Node node) {
         final AbstractGesture result;
-        
+
         if (node == ringPath) {
-            result = new SelectWithPringGesture(getContentPanelController(), 
+            result = new SelectWithPringGesture(getContentPanelController(),
                     getFxomInstance());
         } else {
             result = null;
         }
-        
+
         return result;
     }
 
@@ -107,7 +107,7 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
     /*
      * Private
      */
-    
+
     private TableColumn<?,?> getTableColumn() {
         assert getSceneGraphObject() instanceof TableColumn;
         return (TableColumn<?,?>) getSceneGraphObject();

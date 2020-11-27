@@ -36,7 +36,9 @@ import static javafx.geometry.Orientation.HORIZONTAL;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
@@ -60,20 +62,26 @@ import javafx.scene.control.TreeView;
 public class HierarchyTreeViewController extends AbstractHierarchyPanelController {
 
 	private final ParentRingColorPreference parentRingColorPreference;
-	
+
     @FXML
     protected TreeView<HierarchyItem> treeView;
-	
 
-    public HierarchyTreeViewController(EditorController editorController, ParentRingColorPreference parentRingColorPreference) {
+	private ApplicationContext context;
+
+
+    public HierarchyTreeViewController(
+    		ApplicationContext context,
+    		Editor editorController,
+    		ParentRingColorPreference parentRingColorPreference) {
         super(HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController); //NOI18N
+        this.context = context;
         this.parentRingColorPreference = parentRingColorPreference;
     }
-    
+
     @FXML
     public void initialize() {
     	setParentRingColor(parentRingColorPreference.getValue());
-    	
+
     	parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setParentRingColor(n));
     }
 
@@ -94,8 +102,8 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
         // Initialize and configure tree view
         treeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Cell factory
-        treeView.setCellFactory(p -> new HierarchyTreeCell<>(HierarchyTreeViewController.this));
-        // We do not use the platform editing feature because 
+        treeView.setCellFactory(p -> new HierarchyTreeCell<>(context, HierarchyTreeViewController.this));
+        // We do not use the platform editing feature because
         // editing is started on selection + simple click instead of double click
         treeView.setEditable(false);
     }
@@ -103,7 +111,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     @Override
     protected void updatePanel() {
         if (treeView != null) {
-            // First update rootTreeItem + children TreeItems 
+            // First update rootTreeItem + children TreeItems
             updateTreeItems();
             // Then update the TreeTableView with the updated rootTreeItem
             stopListeningToTreeItemSelection();
@@ -196,7 +204,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
             final TreeItem<HierarchyItem> selectedTreeItem = selectedTreeItems.get(0);
             final HierarchyItem item = selectedTreeItem.getValue();
             final DisplayOption option = getDisplayOption();
-            if (item != null 
+            if (item != null
                     && item.isResourceKey(option) == false // Do not allow inline editing of the I18N value
                     && item.hasDisplayInfo(option)) {
                 final TreeCell<?> tc = HierarchyTreeViewUtils.getTreeCell(treeView, selectedTreeItem);
@@ -226,8 +234,8 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     @Override
     public void updateParentRing() {
         assert treeView != null;
-        
-        // Do not update parent ring while performing some operations 
+
+        // Do not update parent ring while performing some operations
         // like DND within the hierarchy panel
         if (isParentRingEnabled() == false) {
             return;

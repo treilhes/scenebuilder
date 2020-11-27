@@ -34,13 +34,15 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.DeleteObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  * Job invoked when removing column constraints.
@@ -50,11 +52,11 @@ public class RemoveColumnConstraintsJob extends BatchDocumentJob {
     private final FXOMObject targetGridPane;
     private final List<Integer> targetIndexes;
 
-    public RemoveColumnConstraintsJob(
-            final EditorController editorController,
+    public RemoveColumnConstraintsJob(ApplicationContext context, 
+            final Editor editor,
             final FXOMObject targetGridPane,
             final List<Integer> targetIndexes) {
-        super(editorController);
+        super(context, editor);
 
         assert targetGridPane != null;
         assert targetIndexes != null;
@@ -78,9 +80,9 @@ public class RemoveColumnConstraintsJob extends BatchDocumentJob {
             // The target index is associated to an existing constraints value :
             // => we remove the constraints value
             if (targetConstraints != null) {
-                final Job removeValueJob = new DeleteObjectJob(
+                final Job removeValueJob = new DeleteObjectJob(getContext(), 
                         targetConstraints,
-                        getEditorController());
+                        getEditorController()).extend();
                 result.add(removeValueJob);
             }
         }

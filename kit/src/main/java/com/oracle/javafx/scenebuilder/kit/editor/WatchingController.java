@@ -37,49 +37,57 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMAssetIndex;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.util.FileWatcher;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.util.FileWatcher;
 
 import javafx.application.Platform;
 
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 class WatchingController implements FileWatcher.Delegate {
-    
+
     private final EditorController editorController;
-    private final FileWatcher fileWatcher 
+    private final FileWatcher fileWatcher
             = new FileWatcher(2000 /*ms*/, this,  EditorController.class.getSimpleName());
 
     public WatchingController(EditorController editorController) {
         this.editorController = editorController;
     }
-    
+
     public void fxomDocumentDidChange() {
         updateFileWatcher();
     }
-    
+
     public void jobManagerRevisionDidChange() {
         updateFileWatcher();
     }
-    
+
     public void start() {
         fileWatcher.start();
     }
-    
+
     public void stop() {
         fileWatcher.stop();
     }
-    
+
     public boolean isStarted() {
         return fileWatcher.isStarted();
     }
-    
+
     /*
      * FileWatcher.Delegate
      */
-    
+
     @Override
     public void fileWatcherDidWatchTargetCreation(Path target) {
         assert Platform.isFxApplicationThread();
@@ -97,14 +105,14 @@ class WatchingController implements FileWatcher.Delegate {
         assert Platform.isFxApplicationThread();
         updateEditorController("file.watching.file.modified", target); //NOI18N
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void updateFileWatcher() {
-        
+
         final FXOMDocument fxomDocument = editorController.getFxomDocument();
         final Collection<Path> targets;
         if (fxomDocument == null) {
@@ -115,7 +123,7 @@ class WatchingController implements FileWatcher.Delegate {
         }
         fileWatcher.setTargets(targets);
     }
-    
+
     private void updateEditorController(String messageKey, Path target) {
         final String targetFileName = target.getFileName().toString();
         editorController.getMessageLog().logInfoMessage(messageKey, targetFileName);

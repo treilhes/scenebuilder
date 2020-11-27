@@ -45,11 +45,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.BoundedDoubleEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -77,17 +77,17 @@ public class FontPopupEditor extends PopupEditor {
     private FamilyEditor familyEditor;
     private StyleEditor styleEditor;
     private BoundedDoubleEditor sizeEditor;
-    private EditorController editorController;
+    private Editor editorController;
 
-    public FontPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public FontPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
         super(propMeta, selectedClasses);
-        initialize(editorController);
+        initialize(editor);
     }
 
-    private void initialize(EditorController editorController) {
+    private void initialize(Editor editorController) {
         this.editorController = editorController;
     }
-    
+
     private void setStyle() {
         styleEditor.reset("", "", new ArrayList<>(getStyles(EditorUtils.toString(familyEditor.getValue()), false, editorController)));//NOI18N
         styleEditor.setUpdateFromModel(true);
@@ -123,7 +123,7 @@ public class FontPopupEditor extends PopupEditor {
         return font;
     }
 
-    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editorController) {
         super.reset(propMeta, selectedClasses);
         this.editorController = editorController;
     }
@@ -210,12 +210,12 @@ public class FontPopupEditor extends PopupEditor {
         private List<String> families;
         private String family = null;
 
-        public FamilyEditor(String name, String defaultValue, List<String> families, EditorController editorController) {
+        public FamilyEditor(String name, String defaultValue, List<String> families, Editor editorController) {
             super(name, defaultValue, families);
             initialize(families, editorController);
         }
-        
-        private void initialize(List<String> families, EditorController editorController) {
+
+        private void initialize(List<String> families, Editor editorController) {
             this.families = families;
             EventHandler<ActionEvent> onActionListener = event -> {
                 if (Objects.equals(family, getTextField().getText())) {
@@ -248,15 +248,15 @@ public class FontPopupEditor extends PopupEditor {
     }
 
     private static class StyleEditor extends AutoSuggestEditor {
-        
+
         private String style = null;
 
-        public StyleEditor(String name, String defaultValue, List<String> suggestedList, EditorController editorController) {
+        public StyleEditor(String name, String defaultValue, List<String> suggestedList, Editor editorController) {
             super(name, defaultValue, suggestedList);
             initialize(editorController);
         }
-        
-        private void initialize(EditorController editorController) {
+
+        private void initialize(Editor editorController) {
             EventHandler<ActionEvent> onActionListener = event -> {
                 if (Objects.equals(style, getTextField().getText())) {
                     // no change
@@ -329,12 +329,12 @@ public class FontPopupEditor extends PopupEditor {
         return allFonts;
     }
 
-    public static List<String> getFamilies(EditorController editorController) {
+    public static List<String> getFamilies(Editor editorController) {
 //        System.out.println("Getting font families...");
         return new ArrayList<>(getFontMap(editorController).keySet());
     }
 
-    public static Set<String> getStyles(String family, boolean canBeUnknown, EditorController editorController) {
+    public static Set<String> getStyles(String family, boolean canBeUnknown, Editor editorController) {
         Map<String, Font> styles = getFontMap(editorController).get(family);
         if (styles == null) {
             assert !canBeUnknown;
@@ -343,7 +343,7 @@ public class FontPopupEditor extends PopupEditor {
         return styles.keySet();
     }
 
-    public static Font getFont(String family, String style, EditorController editorController) {
+    public static Font getFont(String family, String style, Editor editorController) {
         Map<String, Font> styles = getFontMap(editorController).get(family);
         if (styles == null) {
             styles = Collections.emptyMap();
@@ -357,7 +357,7 @@ public class FontPopupEditor extends PopupEditor {
         return styles.get(style);
     }
 
-    public static Font getFont(String family, String style, double size, EditorController editorController) {
+    public static Font getFont(String family, String style, double size, Editor editorController) {
         final Font font = getFont(family, style, editorController);
         if (font == null) {
             return null;
@@ -406,7 +406,7 @@ public class FontPopupEditor extends PopupEditor {
     }
 
     public static String getPersistentName(Font font) {
-        // The block below is an ugly workaround for 
+        // The block below is an ugly workaround for
         // RT-23021: Inconsitent naming for fonts in the 'Tahoma' family.
         final Map<String, String> problems = getPathologicalFonts();
         if (problems.containsKey(font.getName())) { // e.g. font.getName() is "Tahoma Bold" //NOI18N
@@ -427,7 +427,7 @@ public class FontPopupEditor extends PopupEditor {
         return font.getName();
     }
 
-    private static Map<String, Map<String, Font>> getFontMap(EditorController editorController) {
+    private static Map<String, Map<String, Font>> getFontMap(Editor editorController) {
         Map<String, Map<String, Font>> fonts = fontCache.get();
         if (fonts == null) {
             fonts = makeFontMap(editorController);
@@ -436,7 +436,7 @@ public class FontPopupEditor extends PopupEditor {
         return fonts;
     }
 
-    private static Map<String, Map<String, Font>> makeFontMap(EditorController editorController) {
+    private static Map<String, Map<String, Font>> makeFontMap(Editor editorController) {
         final Set<Font> fonts = getAllFonts();
         final Map<String, Map<String, Set<Font>>> fontTree = new TreeMap<>();
 

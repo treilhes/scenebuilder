@@ -32,10 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 
 /**
  *
@@ -44,9 +46,9 @@ public class BackupSelectionJob extends Job {
 
     private final AbstractSelectionGroup oldSelectionGroup;
 
-    public BackupSelectionJob(EditorController editorController) {
-        super(editorController);
-        
+    public BackupSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
+
         // Saves the current selection
         final Selection selection = getEditorController().getSelection();
         try {
@@ -92,5 +94,5 @@ public class BackupSelectionJob extends Job {
         // Not expected to reach the user
         return getClass().getSimpleName();
     }
-    
+
 }

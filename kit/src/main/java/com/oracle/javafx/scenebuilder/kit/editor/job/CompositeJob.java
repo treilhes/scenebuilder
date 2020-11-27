@@ -33,7 +33,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 
 /**
  * This Job handles a list of sub jobs and a description.
@@ -42,8 +45,8 @@ public abstract class CompositeJob extends Job {
 
     private String description;
 
-    public CompositeJob(EditorController editorController) {
-        super(editorController);
+    public CompositeJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override

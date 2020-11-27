@@ -31,32 +31,32 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 /**
  *
- * 
+ *
  */
 public abstract class AbstractNodeTring<T extends Node> extends AbstractGenericTring<T> {
 
-    public AbstractNodeTring(ContentPanelController contentPanelController, 
+    public AbstractNodeTring(Content contentPanelController,
             FXOMInstance fxomInstance, Class<T> sceneGraphClass) {
         super(contentPanelController, fxomInstance, sceneGraphClass);
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
 
-    
+
     /*
      * AbstractGenericPring
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return getSceneGraphObject().getLayoutBounds();

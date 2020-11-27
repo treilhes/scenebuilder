@@ -33,7 +33,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.drag.source;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -43,18 +44,18 @@ import javafx.stage.Window;
 /**
  *
  */
-public abstract class AbstractDragSource {
-    
+public abstract class AbstractDragSource implements DragSource{
+
     private final Window ownerWindow;
-    
+
     public AbstractDragSource(Window ownerWindow) {
         this.ownerWindow = ownerWindow;
     }
-    
+
     public Window getOwnerWindow() {
         return ownerWindow;
     }
-    
+
     public abstract boolean isAcceptable();
     public abstract List<FXOMObject> getDraggedObjects();
     public abstract FXOMObject getHitObject();
@@ -68,5 +69,5 @@ public abstract class AbstractDragSource {
     public abstract boolean isSingleImageViewOnly();
     public abstract boolean isSingleTooltipOnly();
     public abstract boolean isSingleContextMenuOnly();
-    
+
 }

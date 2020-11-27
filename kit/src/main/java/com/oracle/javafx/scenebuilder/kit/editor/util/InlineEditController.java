@@ -31,10 +31,16 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.util;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractPopupController;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
@@ -58,7 +64,10 @@ import javafx.util.Callback;
  * Controller used to in line edit nodes. The inline edit controller will
  * display TextInputControl within a popup window.
  */
-public class InlineEditController {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
+public class InlineEditController implements InlineEdit{
 
     // Style class used for styling the inline editor (TextInputControl)
     public static final String INLINE_EDITOR = "inline-editor"; //NOI18N
@@ -70,10 +79,7 @@ public class InlineEditController {
 
     private static final String NID_INLINE_EDITOR = "inlineEditor";
 
-    public enum Type {
 
-        TEXT_AREA, TEXT_FIELD
-    }
 
     public InlineEditController(final EditorController editorController) {
         this.editorController = editorController;

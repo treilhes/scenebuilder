@@ -32,12 +32,12 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane;
 
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget.RowArea;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.scene.layout.GridPane;
 
@@ -46,12 +46,12 @@ import javafx.scene.layout.GridPane;
  */
 public class GridPaneTring extends AbstractNodeTring<GridPane> {
 
-    private final GridPaneMosaic mosaic 
+    private final GridPaneMosaic mosaic
             = new GridPaneMosaic("tring", //NOI18N
                     false /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
-    
-    public GridPaneTring(ContentPanelController contentPanelController, 
+
+    public GridPaneTring(Content contentPanelController,
             FXOMInstance fxomObject) {
         super(contentPanelController, fxomObject, GridPane.class);
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
@@ -59,7 +59,7 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
 
     public void setupWithDropTarget(GridPaneDropTarget dropTarget) {
         assert dropTarget != null;
-        
+
         final int targetColumnIndex
                 = dropTarget.getTargetColumnIndex();
         final int targetRowIndex
@@ -101,22 +101,22 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
             mosaic.setTargetGap(targetGapColumnIndex, targetGapRowIndex);
         }
     }
-    
+
     /*
      * AbstractGenericTring
      */
-        
+
     @Override
     protected void layoutDecoration() {
-        
+
         super.layoutDecoration();
-        
+
         if (mosaic.getGridPane() != getSceneGraphObject()) {
             mosaic.setGridPane(getSceneGraphObject());
         } else {
             mosaic.update();
         }
-        
+
         // Update mosaic transform
         mosaic.getTopGroup().getTransforms().clear();
         mosaic.getTopGroup().getTransforms().add(getSceneGraphObjectToDecorationTransform());

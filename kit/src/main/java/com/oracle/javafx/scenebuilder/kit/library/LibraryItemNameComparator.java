@@ -34,12 +34,14 @@ package com.oracle.javafx.scenebuilder.kit.library;
 import java.util.Comparator;
 import java.util.Locale;
 
+import com.oracle.javafx.scenebuilder.api.LibraryItem;
+
 /**
  *
- * 
+ *
  */
 public class LibraryItemNameComparator implements Comparator<LibraryItem> {
-    
+
     /**
      * The comparison done here is performed on the name property of the
      * LibraryItem, and it is done ignoring the case.

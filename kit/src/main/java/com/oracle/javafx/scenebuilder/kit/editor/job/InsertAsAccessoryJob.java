@@ -36,20 +36,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 /**
  * Job used to insert new FXOM objects into an accessory location.
@@ -61,12 +64,12 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
     private final FXOMObject targetObject;
     private final Accessory accessory;
 
-    public InsertAsAccessoryJob(
+    public InsertAsAccessoryJob(ApplicationContext context, 
             FXOMObject newObject,
             FXOMObject targetObject,
             Accessory accessory,
-            EditorController editorController) {
-        super(editorController);
+            Editor editor) {
+        super(context, editor);
 
         assert newObject != null;
         assert targetObject != null;
@@ -97,22 +100,22 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                 FXOMProperty targetProperty = new FXOMPropertyC(fxomDocument, accessoryName);
 
                 final Job addValueJob
-                        = new AddPropertyValueJob(newObject,
+                        = new AddPropertyValueJob(getContext(), newObject,
                                 (FXOMPropertyC) targetProperty,
                                 -1,
-                                getEditorController());
+                                getEditorController()).extend();
                 result.add(addValueJob);
 
                 if (targetProperty.getParentInstance() == null) {
                     assert targetObject instanceof FXOMInstance;
                     final Job addPropertyJob
-                            = new AddPropertyJob(targetProperty, targetInstance,
-                                    -1, getEditorController());
+                            = new AddPropertyJob(getContext(), targetProperty, targetInstance,
+                                    -1, getEditorController()).extend();
                     result.add(addPropertyJob);
                 }
 
-                final Job pruneJob = new PrunePropertiesJob(newObject, targetObject,
-                        getEditorController());
+                final Job pruneJob = new PrunePropertiesJob(getContext(), newObject, targetObject,
+                        getEditorController()).extend();
                 if (pruneJob.isExecutable()) {
                     result.add(0, pruneJob);
                 }

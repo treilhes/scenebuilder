@@ -9,14 +9,15 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Parent;
 
 @Component
 public class DisplayOptionPreference extends EnumPreference<DisplayOption> implements ManagedGlobalPreference, UserPreference<DisplayOption> {
-	    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -25,8 +26,13 @@ public class DisplayOptionPreference extends EnumPreference<DisplayOption> imple
     public static final String PREFERENCE_KEY = "HIERARCHY_DISPLAY_OPTION"; //NOI18N
     public static final DisplayOption PREFERENCE_DEFAULT_VALUE = DisplayOption.INFO;
 
-	public DisplayOptionPreference(@Autowired PreferencesContext preferencesContext) {
+    private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public DisplayOptionPreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, DisplayOption.class, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	@Override
@@ -36,7 +42,7 @@ public class DisplayOptionPreference extends EnumPreference<DisplayOption> imple
 
 	@Override
 	public Parent getEditor() {
-		return PreferenceEditorFactory.newEnumFieldEditor(this);
+		return preferenceEditorFactory.newEnumFieldEditor(this);
 	}
 
 	@Override

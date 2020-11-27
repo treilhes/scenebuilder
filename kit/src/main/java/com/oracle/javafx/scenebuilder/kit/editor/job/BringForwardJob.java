@@ -34,19 +34,22 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ReIndexObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *
  */
 public class BringForwardJob extends InlineDocumentJob {
 
-    public BringForwardJob(EditorController editorController) {
-        super(editorController);
+    public BringForwardJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -81,8 +84,8 @@ public class BringForwardJob extends InlineDocumentJob {
             final FXOMObject nextSlibing = candidate.getNextSlibing();
             if (nextSlibing != null) {
                 final FXOMObject beforeChild = nextSlibing.getNextSlibing();
-                final ReIndexObjectJob subJob = new ReIndexObjectJob(
-                        candidate, beforeChild, getEditorController());
+                final Job subJob = new ReIndexObjectJob(getContext(),
+                        candidate, beforeChild, getEditorController()).extend();
                 if (subJob.isExecutable()) {
                     subJob.execute();
                     result.add(subJob);

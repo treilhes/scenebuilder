@@ -36,10 +36,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.Quad;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.ColorEncoder;
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

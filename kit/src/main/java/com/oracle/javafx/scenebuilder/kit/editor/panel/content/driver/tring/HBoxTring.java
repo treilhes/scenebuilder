@@ -33,8 +33,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -44,44 +44,44 @@ import javafx.scene.shape.Line;
 
 /**
  *
- * 
+ *
  */
 public class HBoxTring extends AbstractNodeTring<HBox> {
-        
+
     private final int targetIndex;
     private final Line crackLine = new Line();
 
-    public HBoxTring(ContentPanelController contentPanelController, 
+    public HBoxTring(Content contentPanelController,
             FXOMInstance fxomInstance, int targetIndex) {
         super(contentPanelController, fxomInstance, HBox.class);
         assert targetIndex >= -1;
         this.targetIndex = targetIndex;
-        
+
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);
         crackLine.setMouseTransparent(true);
         getRootNode().getChildren().add(0, crackLine);
     }
 
-    
+
     /*
      * AbstractGenericTring
      */
-        
+
     @Override
     protected void layoutDecoration() {
-        
+
         super.layoutDecoration();
-        
+
         final HBox hbox = getSceneGraphObject();
         final int childCount = hbox.getChildren().size();
-        
+
         if (childCount == 0) {
             // No crack line
             crackLine.setVisible(false);
-            
+
         } else {
             // Computes the crack x
-            
+
             final double crackX;
             final List<Node> children = hbox.getChildren();
             if (targetIndex == -1) {

@@ -40,14 +40,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
+import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
+import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
-import com.oracle.javafx.scenebuilder.kit.util.URLUtils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -76,28 +80,36 @@ public class StyleClassEditor extends InlineListEditor {
     private Set<FXOMInstance> selectedInstances;
     private Map<String, String> cssClassesMap;
     private List<String> themeClasses;
-    private EditorController editorController;
+    private Editor editorController;
+	private final StylesheetConfigManager stylesheetConfigManager;
 
-    public StyleClassEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses,
-            Set<FXOMInstance> selectedInstances, EditorController editorController) {
+    public StyleClassEditor(
+    		StylesheetConfigManager stylesheetConfigManager,
+    		ValuePropertyMetadata propMeta,
+    		Set<Class<?>> selectedClasses,
+            Set<FXOMInstance> selectedInstances,
+            Editor editorController) {
         super(propMeta, selectedClasses);
-        initialize(selectedInstances, editorController);
+        this.stylesheetConfigManager = stylesheetConfigManager;
+        initialize(selectedInstances, editorController, stylesheetConfigManager);
     }
-    
-    private void initialize(Set<FXOMInstance> selectedInstances, EditorController editorController) {
+
+    private void initialize(Set<FXOMInstance> selectedInstances, Editor editorController, StylesheetConfigManager stylesheetConfigManager) {
         this.selectedInstances = selectedInstances;
         this.editorController = editorController;
         setLayoutFormat(PropertyEditor.LayoutFormat.DOUBLE_LINE);
-        themeClasses = CssInternal.getThemeStyleClasses(editorController.getTheme());
+//        themeClasses = CssInternal.getThemeStyleClasses(editorController.getTheme());
         addItem(getNewStyleClassItem());
 
         // On Theme change, update the themeClasses
-        editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> themeClasses = CssInternal.getThemeStyleClasses(StyleClassEditor.this.editorController.getTheme()));
+//        editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> themeClasses = CssInternal.getThemeStyleClasses(StyleClassEditor.this.editorController.getTheme()));
+
+        stylesheetConfigManager.configUpdated().subscribe(s -> themeClasses = CssInternal.getThemeStyleClasses(s));
     }
 
     private StyleClassItem getNewStyleClassItem() {
         if (cssClassesMap == null) {
-            cssClassesMap = CssInternal.getStyleClassesMap(editorController, selectedInstances);
+            cssClassesMap = CssInternal.getStyleClassesMap(stylesheetConfigManager, editorController, selectedInstances);
             // We don't want the theme classes to be suggested: remove them from the list
             for (String themeClass : themeClasses) {
                 cssClassesMap.remove(themeClass);
@@ -147,7 +159,7 @@ public class StyleClassEditor extends InlineListEditor {
             if (item.isEmpty()) {
                 continue;
             }
-            
+
             // We don't want to show the default theme classes
             // (e.g. combo-box, combo-box-base for ComboBox)
             Object defaultValue = getPropertyMeta().getDefaultValueObject();
@@ -156,7 +168,7 @@ public class StyleClassEditor extends InlineListEditor {
             if (defaultClasses.contains(item)) {
                 continue;
             }
-            
+
             EditorItem editorItem;
             if (itemsIter.hasNext()) {
                 // re-use the current items first
@@ -175,10 +187,10 @@ public class StyleClassEditor extends InlineListEditor {
     }
 
     public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses,
-            Set<FXOMInstance> selectedInstances, EditorController editorController) {
+            Set<FXOMInstance> selectedInstances, Editor editor) {
         super.reset(propMeta, selectedClasses);
         this.selectedInstances = selectedInstances;
-        this.editorController = editorController;
+        this.editorController = editor;
         cssClassesMap = null;
         // add an empty item
         addItem(getNewStyleClassItem());
@@ -284,7 +296,7 @@ public class StyleClassEditor extends InlineListEditor {
             moveUpMi.setText(I18N.getString("inspector.list.moveup"));
             moveDownMi.setText(I18N.getString("inspector.list.movedown"));
 
-            // Add suggested classes in the already existing action menu button, 
+            // Add suggested classes in the already existing action menu button,
             // since we do not use the AutoSuggestEditor menu button for this editor.
             if (!cssClassesMap.isEmpty()) {
                 actionMb.getItems().add(new SeparatorMenuItem());

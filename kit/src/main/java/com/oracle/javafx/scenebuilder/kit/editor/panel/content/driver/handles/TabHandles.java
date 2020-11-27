@@ -31,12 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractResilientHandles;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TabPaneDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUtils;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
@@ -47,41 +49,43 @@ import javafx.scene.control.TabPane;
 
 /**
  *
- * 
+ *
  */
 
 public class TabHandles extends AbstractResilientHandles<Tab> {
-    
+
     /*
      * Handles for Tab need a special treatment.
-     * 
+     *
      * A Tab instance can be transiently disconnected from its parent TabPane:
      *  - Tab.getTabPane() returns null
      *  - TabPane.getTabs().contains() returns false
-     * 
+     *
      * When the Tab is disconnected, handles cannot be drawn.
      * This Handles class inherits from AbstractResilientHandles to take
      * care of this singularity.
-     * 
+     *
      */
-    
+
     private TabPane tabPane;
     private Node tabNode; // Skin node representing the tab
-    
-    public TabHandles(ContentPanelController contentPanelController,
+
+    public TabHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Tab.class);
-        
+        super(context, contentPanelController, fxomInstance, Tab.class);
+
         getSceneGraphObject().tabPaneProperty().addListener(
                 (ChangeListener<TabPane>) (ov, v1, v2) -> tabPaneDidChange());
-        
+
         tabPaneDidChange();
     }
 
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
-    
+
     /*
      * AbstractGenericHandles
      */
@@ -98,7 +102,7 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
         final Bounds b = tabNode.getLayoutBounds();
         final Point2D min = Deprecation.localToLocal(tabNode, b.getMinX(), b.getMinY(), tabPane);
         final Point2D max = Deprecation.localToLocal(tabNode, b.getMaxX(), b.getMaxY(), tabPane);
-        
+
         return BoundsUtils.makeBounds(min, max);
     }
 
@@ -106,7 +110,7 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
     public Node getSceneGraphObjectProxy() {
         assert isReady();
         assert tabPane != null;
-        
+
         return tabPane;
     }
 
@@ -114,7 +118,7 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
     protected void startListeningToSceneGraphObject() {
         assert isReady();
         assert tabPane != null;
-        
+
         if (tabNode == null) {
             tabNode = lookupTabNode();
         }
@@ -128,25 +132,25 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
     protected void stopListeningToSceneGraphObject() {
         assert isReady();
         assert tabPane != null;
-        
+
         stopListeningToLayoutBounds(tabPane);
         stopListeningToLocalToSceneTransform(tabPane);
         stopListeningToBoundsInParent(tabNode);
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void tabPaneDidChange() {
         tabPane = getSceneGraphObject().getTabPane();
         setReady(tabPane != null);
     }
-    
+
     private Node lookupTabNode() {
         assert tabPane != null;
-        
+
         final TabPaneDesignInfoX di = new TabPaneDesignInfoX();
         return di.getTabNode(tabPane, getSceneGraphObject());
     }

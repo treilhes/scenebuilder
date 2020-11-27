@@ -12,7 +12,8 @@ import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Parent;
 
@@ -41,7 +42,7 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
             }
         }
     }
-	    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -50,8 +51,13 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
     public static final String PREFERENCE_KEY = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; //NOI18N
     public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
-	public CssTableColumnsOrderingReversedPreference(@Autowired PreferencesContext preferencesContext) {
+    private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public CssTableColumnsOrderingReversedPreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	@Override
@@ -71,9 +77,9 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
 
 	@Override
 	public Parent getEditor() {
-		Function<Boolean, CSSAnalyzerColumnsOrder> adapter = 
+		Function<Boolean, CSSAnalyzerColumnsOrder> adapter =
 				b -> b ? CSSAnalyzerColumnsOrder.DEFAULTS_LAST : CSSAnalyzerColumnsOrder.DEFAULTS_FIRST;
-				
+
 		Function<CSSAnalyzerColumnsOrder, Boolean> reverseAdapter =
 				e -> {
 					switch (e) {
@@ -83,7 +89,7 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
 						return true;
 					}
 				};
-		return PreferenceEditorFactory.newChoiceFieldEditor(this, CSSAnalyzerColumnsOrder.values(), adapter, reverseAdapter);
+		return preferenceEditorFactory.newChoiceFieldEditor(this, CSSAnalyzerColumnsOrder.values(), adapter, reverseAdapter);
 	}
 
 }

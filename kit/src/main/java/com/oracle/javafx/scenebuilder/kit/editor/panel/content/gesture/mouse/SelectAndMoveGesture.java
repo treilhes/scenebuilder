@@ -31,14 +31,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -49,14 +49,14 @@ import javafx.stage.Window;
 
 /**
  *
- * 
+ *
  */
 public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
     public SelectAndMoveGesture(ContentPanelController contentPanelController) {
         super(contentPanelController);
     }
-    
+
     private FXOMObject hitObject;
     private double hitSceneX;
     private double hitSceneY;
@@ -64,7 +64,7 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
     public FXOMObject getHitObject() {
         return hitObject;
     }
-    
+
     public void setHitObject(FXOMObject hitObject) {
         this.hitObject = hitObject;
     }
@@ -76,14 +76,14 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
     public void setHitSceneY(double hitSceneY) {
         this.hitSceneY = hitSceneY;
     }
-    
+
     /*
      * AbstractMouseDragGesture
      */
 
     @Override
     protected void mousePressed(MouseEvent e) {
-        
+
         /*
          *             |      hitObject     |                hitObject                |
          *             |      selected      |                unselected               |
@@ -104,13 +104,13 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
          *             |         (C)        |         (D.1)      |       (D.2)        |
          * ------------+--------------------+--------------------+--------------------+
          */
-        
-        final Selection selection 
+
+        final Selection selection
                 = contentPanelController.getEditorController().getSelection();
         final boolean extendKeyDown
-                = EditorPlatform.isContinuousSelectKeyDown(e) 
+                = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);
-        
+
         if (selection.isSelected(hitObject)) {
             if (extendKeyDown) { // Case C
                 selection.toggleSelection(hitObject);
@@ -133,9 +133,9 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
     @Override
     protected void mouseDragDetected(MouseEvent e) {
-        final Selection selection 
+        final Selection selection
                 = contentPanelController.getEditorController().getSelection();
-        
+
         /*
          *             |      hitObject     |                hitObject                |
          *             |      selected      |                unselected               |
@@ -156,32 +156,32 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
          *             |         (C)        |         (D.1)      |       (D.2)        |
          * ------------+--------------------+--------------------+--------------------+
          */
-        
+
         final FXOMObject selectedHitObject;
         if (selection.isSelected(hitObject)) { // Case A, B.1 or D.1
             selectedHitObject = hitObject;
         } else {
             selectedHitObject = selection.lookupSelectedAncestor(hitObject); // Case B.2
         }
-        
+
         if (selectedHitObject != null) {
-                
+
             assert selection.getGroup() instanceof ObjectSelectionGroup;
-            
-            final ObjectSelectionGroup 
+
+            final ObjectSelectionGroup
                     osg = (ObjectSelectionGroup) selection.getGroup();
-            
+
             if (osg.hasSingleParent()) {
-                final EditorController editorController
+                final Editor editorController
                         = contentPanelController.getEditorController();
                 final Window ownerWindow
                         = contentPanelController.getPanelRoot().getScene().getWindow();
                 final Point2D hitPoint
                         = computeHitPoint(selectedHitObject);
                 final DocumentDragSource dragSource = new DocumentDragSource(
-                        osg.getSortedItems(), selectedHitObject, 
+                        osg.getSortedItems(), selectedHitObject,
                         hitPoint.getX(), hitPoint.getY(), ownerWindow);
-                
+
                 if (dragSource.isAcceptable()) {
                     final Node glassLayer = contentPanelController.getGlassLayer();
                     final Dragboard db = glassLayer.startDragAndDrop(TransferMode.COPY_OR_MOVE);
@@ -194,9 +194,9 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
             }
         }
     }
-    
+
     private Point2D computeHitPoint(FXOMObject fxomObject) {
-        
+
         final FXOMObject nodeObject = fxomObject.getClosestNode();
         final Node sceneGraphNode;
         if (nodeObject == null) {
@@ -213,19 +213,19 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
     @Override
     protected void mouseReleased(MouseEvent e) {
-        
-        // Click but no move : in that case, we make sure that 
+
+        // Click but no move : in that case, we make sure that
         // the hit object *only* is selected when shift is up.
-        
-        final Selection selection 
+
+        final Selection selection
                 = contentPanelController.getEditorController().getSelection();
         final boolean extendKeyDown
-                = EditorPlatform.isContinuousSelectKeyDown(e) 
+                = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);
         if (extendKeyDown == false) {
             selection.select(hitObject);
         }
-        
+
         /*
          *             |      hitObject     |                hitObject                |
          *             |      selected      |                unselected               |
@@ -246,17 +246,17 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
          *             |         (C)        |         (D.1)      |       (D.2)        |
          * ------------+--------------------+--------------------+--------------------+
          */
-        
+
     }
 
     @Override
     protected void mouseExited(MouseEvent e) {
         // Should be not called because mouse should exit glass layer
         // during this gesture
-        
+
         // Commenting the assertion : in some cases, this method is executed ;
         // is it related to DTL-6393 ?
 //        assert false;
     }
-    
+
 }

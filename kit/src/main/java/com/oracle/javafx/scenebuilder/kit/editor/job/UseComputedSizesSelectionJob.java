@@ -36,21 +36,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 /**
  *
  */
 public class UseComputedSizesSelectionJob extends BatchDocumentJob {
 
-    public UseComputedSizesSelectionJob(EditorController editorController) {
-        super(editorController);
+    public UseComputedSizesSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -93,8 +96,8 @@ public class UseComputedSizesSelectionJob extends BatchDocumentJob {
         }
 
         for (FXOMInstance candidate : candidates) {
-            final UseComputedSizesObjectJob subJob
-                    = new UseComputedSizesObjectJob(candidate, getEditorController());
+            final Job subJob
+                    = new UseComputedSizesObjectJob(getContext(), candidate, getEditorController()).extend();
             if (subJob.isExecutable()) {
                 result.add(subJob);
             }

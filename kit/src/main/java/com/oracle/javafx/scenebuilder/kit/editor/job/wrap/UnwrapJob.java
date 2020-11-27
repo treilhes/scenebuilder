@@ -34,26 +34,28 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxControllerJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -69,8 +71,8 @@ public class UnwrapJob extends BatchSelectionJob {
     private FXOMInstance oldContainer, newContainer;
     private List<FXOMObject> oldContainerChildren;
 
-    public UnwrapJob(EditorController editorController) {
-        super(editorController);
+    public UnwrapJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     protected boolean canUnwrap() {
@@ -176,9 +178,9 @@ public class UnwrapJob extends BatchSelectionJob {
             newContainer = (FXOMInstance) oldContainer.getParentObject();
 
             // Remove the old container property from the old container instance
-            final Job removePropertyJob = new RemovePropertyJob(
+            final Job removePropertyJob = new RemovePropertyJob(getContext(),
                     oldContainerProperty,
-                    getEditorController());
+                    getEditorController()).extend();
             result.add(removePropertyJob);
 
             // Remove the children from the old container property
@@ -214,9 +216,9 @@ public class UnwrapJob extends BatchSelectionJob {
                 result.addAll(addChildrenJobs);
 
                 // Remove the old container from the new container property
-                final Job removeValueJob = new RemovePropertyValueJob(
+                final Job removeValueJob = new RemovePropertyValueJob(getContext(),
                         oldContainer,
-                        getEditorController());
+                        getEditorController()).extend();
                 result.add(removeValueJob);
             } //
             //------------------------------------------------------------------
@@ -229,27 +231,27 @@ public class UnwrapJob extends BatchSelectionJob {
                 final String fxController = oldContainer.getFxController();
                 // First remove the fx:controller/fx:root from the old root object
                 if (isFxRoot) {
-                    final ToggleFxRootJob fxRootJob = new ToggleFxRootJob(getEditorController());
+                    final Job fxRootJob = new ToggleFxRootJob(getContext(), getEditorController()).extend();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final ModifyFxControllerJob fxControllerJob
-                            = new ModifyFxControllerJob(oldContainer, null, getEditorController());
+                    final Job fxControllerJob
+                            = new ModifyFxControllerJob(getContext(), oldContainer, null, getEditorController()).extend();
                     result.add(fxControllerJob);
                 }
-                // Then set the new container as root object            
+                // Then set the new container as root object
                 final FXOMObject child = oldContainerChildren.iterator().next();
-                final Job setDocumentRoot = new SetDocumentRootJob(
-                        child, getEditorController());
+                final Job setDocumentRoot = new SetDocumentRootJob(getContext(),
+                        child, getEditorController()).extend();
                 result.add(setDocumentRoot);
                 // Finally add the fx:controller/fx:root to the new root object
                 if (isFxRoot) {
-                    final ToggleFxRootJob fxRootJob = new ToggleFxRootJob(getEditorController());
+                    final Job fxRootJob = new ToggleFxRootJob(getContext(), getEditorController()).extend();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final ModifyFxControllerJob fxControllerJob
-                            = new ModifyFxControllerJob(child, fxController, getEditorController());
+                    final Job fxControllerJob
+                            = new ModifyFxControllerJob(getContext(), child, fxController, getEditorController()).extend();
                     result.add(fxControllerJob);
                 }
             }
@@ -276,11 +278,11 @@ public class UnwrapJob extends BatchSelectionJob {
         int index = start;
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final Job addValueJob = new AddPropertyValueJob(
+            final Job addValueJob = new AddPropertyValueJob(getContext(),
                     child,
                     containerProperty,
                     index++,
-                    getEditorController());
+                    getEditorController()).extend();
             jobs.add(addValueJob);
         }
         return jobs;
@@ -293,9 +295,9 @@ public class UnwrapJob extends BatchSelectionJob {
         final List<Job> jobs = new ArrayList<>();
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final Job removeValueJob = new RemovePropertyValueJob(
+            final Job removeValueJob = new RemovePropertyValueJob(getContext(),
                     child,
-                    getEditorController());
+                    getEditorController()).extend();
             jobs.add(removeValueJob);
         }
         return jobs;
@@ -327,17 +329,17 @@ public class UnwrapJob extends BatchSelectionJob {
                 final Point2D nextLayoutXY = oldContainerNode.localToParent(
                         currentLayoutX, currentLayoutY);
 
-                final ModifyObjectJob modifyLayoutX = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutX = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutX", nextLayoutXY.getX(), getEditorController());
                 jobs.add(modifyLayoutX);
-                final ModifyObjectJob modifyLayoutY = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutY = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutY", nextLayoutXY.getY(), getEditorController());
                 jobs.add(modifyLayoutY);
             } else {
-                final ModifyObjectJob modifyLayoutX = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutX = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutX", 0.0, getEditorController());
                 jobs.add(modifyLayoutX);
-                final ModifyObjectJob modifyLayoutY = WrapJobUtils.modifyObjectJob(
+                final Job modifyLayoutY = WrapJobUtils.modifyObjectJob(getContext(),
                         (FXOMInstance) child, "layoutY", 0.0, getEditorController());
                 jobs.add(modifyLayoutY);
             }
@@ -349,7 +351,7 @@ public class UnwrapJob extends BatchSelectionJob {
                     final Class<?> residentClass = p.getName().getResidenceClass();
                     if (residentClass != null
                             && residentClass != newContainer.getDeclaredClass()) {
-                        jobs.add(new RemovePropertyJob(p, getEditorController()));
+                        jobs.add(new RemovePropertyJob(getContext(), p, getEditorController()).extend());
                     }
                 }
             }

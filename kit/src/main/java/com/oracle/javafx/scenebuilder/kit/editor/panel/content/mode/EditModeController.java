@@ -37,45 +37,51 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.ContextMenu;
+import com.oracle.javafx.scenebuilder.api.Decoration.State;
+import com.oracle.javafx.scenebuilder.api.Drag;
+import com.oracle.javafx.scenebuilder.api.Driver;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Gesture;
+import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.Pring;
+import com.oracle.javafx.scenebuilder.api.Tring;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.RootDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.job.RelocateSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.AbstractDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane.GridPaneHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane.GridPaneTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectWithMarqueeGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -105,24 +111,26 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class EditModeController extends AbstractModeController
-implements AbstractGesture.Observer {
+implements Gesture.Observer {
 
-    private final List<AbstractHandles<?>> handles = new ArrayList<>();
+	private final ApplicationContext context;
+    private final List<Handles<?>> handles = new ArrayList<>();
     private final Set<FXOMObject> excludes = new HashSet<>();
     private final SelectWithMarqueeGesture selectWithMarqueeGesture;
     private final SelectAndMoveGesture selectAndMoveGesture;
     private final ZoomGesture zoomGesture;
 
-    private AbstractPring<?> pring;
-    private AbstractTring<?> tring;
-    private AbstractGesture activeGesture;
-    private AbstractGesture glassGesture;
+    private Pring<?> pring;
+    private Tring<?> tring;
+    private Gesture activeGesture;
+    private Gesture glassGesture;
     private FXOMInstance inlineEditedObject;
 
-
     public EditModeController(
+    		@Autowired ApplicationContext context,
     		@Autowired @Lazy ContentPanelController contentPanelController) {
         super(contentPanelController);
+        this.context = context;
         selectWithMarqueeGesture = new SelectWithMarqueeGesture(contentPanelController);
         selectAndMoveGesture = new SelectAndMoveGesture(contentPanelController);
         zoomGesture = new ZoomGesture(contentPanelController);
@@ -136,11 +144,11 @@ implements AbstractGesture.Observer {
      * @return null or the handles associated to the specified fxom object.
      */
 
-    public AbstractHandles<?> lookupHandles(FXOMObject fxomObject) {
+    public Handles<?> lookupHandles(FXOMObject fxomObject) {
         assert fxomObject != null;
 
-        AbstractHandles<?> result = null;
-        for (AbstractHandles<?> h : handles) {
+        Handles<?> result = null;
+        for (Handles<?> h : handles) {
             if (h.getFxomObject() == fxomObject) {
                 result = h;
                 break;
@@ -155,7 +163,7 @@ implements AbstractGesture.Observer {
      */
 
     @Override
-    public void gestureDidTerminate(AbstractGesture gesture) {
+    public void gestureDidTerminate(Gesture gesture) {
         assert activeGesture == gesture;
         activeGesture = null;
         startListeningToInputEvents();
@@ -243,7 +251,7 @@ implements AbstractGesture.Observer {
      * Private (pring)
      */
     private void updateParentRing() {
-        final AbstractPring<?> newPring;
+        final Pring<?> newPring;
 
         if (contentPanelController.isContentDisplayable()) {
             final Selection selection
@@ -262,7 +270,7 @@ implements AbstractGesture.Observer {
                         break;
                     case NEEDS_RECONCILE:
                         newPring = pring;
-                        pring.reconcile();;
+                        pring.reconcile();
                         break;
                     case NEEDS_REPLACE:
                         newPring = makePring(pring.getFxomObject());
@@ -288,9 +296,9 @@ implements AbstractGesture.Observer {
         }
     }
 
-    private AbstractPring<?> makePring(FXOMObject fxomObject) {
-        final AbstractDriver driver = contentPanelController.lookupDriver(fxomObject);
-        final AbstractPring<?> result;
+    private Pring<?> makePring(FXOMObject fxomObject) {
+        final Driver driver = contentPanelController.lookupDriver(fxomObject);
+        final Pring<?> result;
 
         if (driver != null) {
             result = driver.makePring(fxomObject);
@@ -317,13 +325,13 @@ implements AbstractGesture.Observer {
      * Private (tring)
      */
     private void updateTring() {
-        final DragController dragController
+        final Drag dragController
                 = contentPanelController.getEditorController().getDragController();
-        final AbstractTring<?> newTring;
+        final Tring<?> newTring;
 
         if (dragController.isDropAccepted()
                 && contentPanelController.isContentDisplayable()) {
-            final AbstractDropTarget dropTarget = dragController.getDropTarget();
+            final DropTarget dropTarget = dragController.getDropTarget();
             if ((tring instanceof GridPaneTring) && (dropTarget instanceof GridPaneDropTarget)) {
                 // Let's reuse the GridPaneTring (because it's costly)
                 newTring = tring;
@@ -345,7 +353,7 @@ implements AbstractGesture.Observer {
                 rudderLayer.getChildren().add(tring.getRootNode());
             }
         } else {
-            assert (tring == null) || tring.getState() == AbstractPring.State.CLEAN;
+            assert (tring == null) || tring.getState() == State.CLEAN;
         }
     }
 
@@ -356,14 +364,14 @@ implements AbstractGesture.Observer {
         tring.setupWithDropTarget(dropTarget);
     }
 
-    private AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
-        final AbstractTring<?> result;
+    private Tring<?> makeTring(DropTarget dropTarget) {
+        final Tring<?> result;
 
         if (dropTarget.getTargetObject() == null) {
             assert dropTarget instanceof RootDropTarget;
             result = null;
         } else {
-            final AbstractDriver driver
+            final Driver driver
                     = contentPanelController.lookupDriver(dropTarget.getTargetObject());
             if (driver != null) {
                 result = driver.makeTring(dropTarget);
@@ -404,13 +412,13 @@ implements AbstractGesture.Observer {
         }
 
         final boolean enabled = handles.size() == 1;
-        for (AbstractHandles<?> h : handles) {
+        for (Handles<?> h : handles) {
             h.setEnabled(enabled);
         }
     }
 
     private void updateHandles(ObjectSelectionGroup osg) {
-        final List<AbstractHandles<?>> obsoleteHandles = new ArrayList<>();
+        final List<Handles<?>> obsoleteHandles = new ArrayList<>();
         final List<FXOMObject> incomingObjects = new ArrayList<>();
 
         // Collects fxom objects from selection
@@ -419,7 +427,7 @@ implements AbstractGesture.Observer {
         }
 
         // Collects obsolete handles
-        for (AbstractHandles<?> h : handles) {
+        for (Handles<?> h : handles) {
             if (incomingObjects.contains(h.getFxomObject())) {
                 // FXOM object associated to these handles is still selected
                 switch(h.getState()) {
@@ -452,19 +460,19 @@ implements AbstractGesture.Observer {
         excludes.clear();
         final Group handleLayer = contentPanelController.getHandleLayer();
         for (FXOMObject incomingObject : incomingObjects) {
-            final AbstractDriver driver = contentPanelController.lookupDriver(incomingObject);
+            final Driver driver = contentPanelController.lookupDriver(incomingObject);
             if (driver == null) {
                 // incomingObject cannot be managed by content panel (eg MenuItem)
                 excludes.add(incomingObject);
             } else {
-                final AbstractHandles<?> newHandles = driver.makeHandles(incomingObject);
+                final Handles<?> newHandles = driver.makeHandles(incomingObject);
                 handleLayer.getChildren().add(newHandles.getRootNode());
                 handles.add(newHandles);
             }
         }
 
         // Let's disconnect the obsolete handles
-        for (AbstractHandles<?> h : obsoleteHandles) {
+        for (Handles<?> h : obsoleteHandles) {
             handleLayer.getChildren().remove(h.getRootNode());
             handles.remove(h);
         }
@@ -472,11 +480,11 @@ implements AbstractGesture.Observer {
 
 
     private void updateHandles(GridSelectionGroup gsg) {
-        final List<AbstractHandles<?>> obsoleteHandles = new ArrayList<>();
+        final List<Handles<?>> obsoleteHandles = new ArrayList<>();
 
         // Collects obsolete handles
         if (contentPanelController.isContentDisplayable()) {
-            for (AbstractHandles<?> h : handles) {
+            for (Handles<?> h : handles) {
                 if (h.getFxomObject() == gsg.getParentObject()) {
                     assert h instanceof GridPaneHandles;
 
@@ -507,9 +515,9 @@ implements AbstractGesture.Observer {
         if (handles.size() == obsoleteHandles.size()) {
             // No handles for grid pane row/column selection : creates one.
             assert gsg.getParentObject().getSceneGraphObject() instanceof GridPane;
-            final AbstractDriver driver = contentPanelController.lookupDriver(gsg.getParentObject());
+            final Driver driver = contentPanelController.lookupDriver(gsg.getParentObject());
             assert driver != null;
-            final AbstractHandles<?> newHandles = driver.makeHandles(gsg.getParentObject());
+            final Handles<?> newHandles = driver.makeHandles(gsg.getParentObject());
             handleLayer.getChildren().add(newHandles.getRootNode());
             handles.add(newHandles);
             assert newHandles instanceof GridPaneHandles;
@@ -518,7 +526,7 @@ implements AbstractGesture.Observer {
         }
 
         // Let's disconnect the obsolete handles
-        for (AbstractHandles<?> h : obsoleteHandles) {
+        for (Handles<?> h : obsoleteHandles) {
             handleLayer.getChildren().remove(h.getRootNode());
             handles.remove(h);
         }
@@ -526,7 +534,7 @@ implements AbstractGesture.Observer {
 
     private void removeAllHandles() {
         final Group handleLayer = contentPanelController.getHandleLayer();
-        for (AbstractHandles<?> h : new ArrayList<>(handles)) {
+        for (Handles<?> h : new ArrayList<>(handles)) {
             handleLayer.getChildren().remove(h.getRootNode());
             handles.remove(h);
         }
@@ -705,7 +713,7 @@ implements AbstractGesture.Observer {
                     if (hitObject != null && selection.isSelected(hitObject) == false) {
                         selection.select(hitObject);
                     }
-                    final ContextMenuController contextMenuController
+                    final ContextMenu contextMenuController
                             = contentPanelController.getEditorController().getContextMenuController();
                     // The context menu items depend on the selection so
                     // we need to rebuild it each time it is invoked.
@@ -739,7 +747,7 @@ implements AbstractGesture.Observer {
             if (m.isResourceKey() == false) {
                 handleInlineEditing((FXOMInstance) selectAndMoveGesture.getHitObject());
             } else {
-                final MessageLog ml = contentPanelController.getEditorController().getMessageLog();
+                final MessageLogger ml = contentPanelController.getEditorController().getMessageLog();
                 ml.logWarningMessage("log.warning.inline.edit.internationalized.strings");
             }
         }
@@ -750,7 +758,7 @@ implements AbstractGesture.Observer {
         assert hitObject != null;
         assert inlineEditedObject == null;
 
-        final AbstractDriver driver
+        final Driver driver
                 = contentPanelController.lookupDriver(hitObject);
         final Node inlineEditingBounds
                 = driver.getInlineEditorBounds(hitObject);
@@ -758,12 +766,12 @@ implements AbstractGesture.Observer {
         if (inlineEditingBounds != null) {
             inlineEditedObject = hitObject;
 
-            final InlineEditController inlineEditController =
+            final InlineEdit inlineEditController =
                     contentPanelController.getEditorController().getInlineEditController();
             final DesignHierarchyMask m
                     = new DesignHierarchyMask(inlineEditedObject);
             final String text = m.getDescription();
-            final InlineEditController.Type type;
+            final InlineEdit.Type type;
             if (inlineEditingBounds instanceof TextArea
                     || DesignHierarchyMask.containsLineFeed(text)) {
                 type = InlineEditController.Type.TEXT_AREA;
@@ -807,10 +815,10 @@ implements AbstractGesture.Observer {
         assert propertyName != null;
         final ValuePropertyMetadata vpm
                 = Metadata.getMetadata().queryValueProperty(inlineEditedObject, propertyName);
-        final EditorController editorController
+        final Editor editorController
                 = contentPanelController.getEditorController();
-        final ModifyObjectJob job
-                = new ModifyObjectJob(inlineEditedObject, vpm, newValue, editorController);
+        final Job job
+                = new ModifyObjectJob(context, inlineEditedObject, vpm, newValue, editorController).extend();
 
         if (job.isExecutable()) {
             editorController.getJobManager().push(job);
@@ -835,7 +843,7 @@ implements AbstractGesture.Observer {
             case LEFT:
             case RIGHT:
                 if (RelocateSelectionJob.isSelectionMovable(contentPanelController.getEditorController())) {
-                    activateGesture(new MoveWithKeyGesture(contentPanelController), e);
+                    activateGesture(new MoveWithKeyGesture(context, contentPanelController), e);
                 } else {
                     System.out.println("Selection is not movable");
                 }
@@ -874,7 +882,7 @@ implements AbstractGesture.Observer {
         assert e.getTarget() instanceof Node;
 
         if (e.getButton() == MouseButton.SECONDARY) {
-            final ContextMenuController contextMenuController
+            final ContextMenu contextMenuController
                     = contentPanelController.getEditorController().getContextMenuController();
             // The context menu items depend on the selection so
             // we need to rebuild it each time it is invoked.
@@ -882,7 +890,7 @@ implements AbstractGesture.Observer {
         } else {
             final Node target = (Node) e.getTarget();
             Node hitNode = target;
-            AbstractHandles<?> hitHandles = AbstractHandles.lookupHandles(hitNode);
+            Handles<?> hitHandles = AbstractHandles.lookupHandles(hitNode);
             while ((hitHandles == null) && (hitNode.getParent() != null)) {
                 hitNode = hitNode.getParent();
                 hitHandles = AbstractHandles.lookupHandles(hitNode);
@@ -903,7 +911,7 @@ implements AbstractGesture.Observer {
 
         final Node target = (Node) e.getTarget();
         Node hitNode = target;
-        AbstractPring<?> hitPring = AbstractPring.lookupPring(target);
+        Pring<?> hitPring = AbstractPring.lookupPring(target);
         while ((hitPring == null) && (hitNode.getParent() != null)) {
             hitNode = hitNode.getParent();
             hitPring = AbstractPring.lookupPring(hitNode);
@@ -918,7 +926,7 @@ implements AbstractGesture.Observer {
         e.consume();
     }
 
-    private void activateGesture(AbstractGesture gesture, InputEvent e) {
+    private void activateGesture(Gesture gesture, InputEvent e) {
         assert activeGesture == null : "activeGesture=" + activeGesture;
         if (gesture == null) {
             return;
@@ -929,7 +937,7 @@ implements AbstractGesture.Observer {
          *   - if a text session is on-going and can be completed cleanly.
          * If not, we do not activate the gesture.
          */
-        final EditorController editorController
+        final Editor editorController
                 = contentPanelController.getEditorController();
         if (contentPanelController.isContentDisplayable() && editorController.canGetFxmlText()) {
 

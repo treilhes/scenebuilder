@@ -31,9 +31,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.fxom;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

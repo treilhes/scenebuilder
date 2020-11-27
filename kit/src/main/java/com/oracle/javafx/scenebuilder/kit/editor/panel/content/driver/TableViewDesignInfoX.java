@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

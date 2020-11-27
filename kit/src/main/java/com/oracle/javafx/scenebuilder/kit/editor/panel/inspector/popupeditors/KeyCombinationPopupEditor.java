@@ -41,11 +41,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -86,7 +86,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
     private KeyCombination.ModifierValue shift;
     private KeyCombination.ModifierValue shortcut;
     private MainKey mainKey;
-    private EditorController editorController;
+    private Editor editorController;
     private final KeyCombination.Modifier[] keyCombinationModifiers = {
         KeyCombination.ALT_ANY, KeyCombination.ALT_DOWN,
         KeyCombination.CONTROL_ANY, KeyCombination.CONTROL_DOWN,
@@ -95,12 +95,12 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         KeyCombination.SHORTCUT_ANY, KeyCombination.SHORTCUT_DOWN};
 
     public KeyCombinationPopupEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses,
-            EditorController editorController) {
+            Editor editor) {
         super(propMeta, selectedClasses);
-        initialize(editorController);
+        initialize(editor);
     }
-    
-    private void initialize(EditorController editorController) {
+
+    private void initialize(Editor editorController) {
         this.editorController = editorController;
     }
 
@@ -170,9 +170,9 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         return gridPane;
     }
 
-    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public void reset(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
         super.reset(propMeta, selectedClasses);
-        this.editorController = editorController;
+        this.editorController = editor;
     }
 
     private void resetState() {
@@ -417,15 +417,15 @@ public class KeyCombinationPopupEditor extends PopupEditor {
 
     private class MainKey extends AutoSuggestEditor {
 
-        private EditorController editorController;
+        private Editor editorController;
         String mainKey = null;
 
-        public MainKey(List<String> suggestedKeys, EditorController editorController) {
+        public MainKey(List<String> suggestedKeys, Editor editorController) {
             super("", null, suggestedKeys); //NOI18N
             initialize(editorController);
         }
-        
-        private void initialize(EditorController editorController) {
+
+        private void initialize(Editor editorController) {
             this.editorController = editorController;
             EventHandler<ActionEvent> onActionListener = t -> {
                 if (Objects.equals(mainKey, getTextField().getText())) {
@@ -529,7 +529,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
             if (object == null) {
                 return I18N.getString("inspector.keycombination.none");
             }
-            return object.getKey() + "_" + object.getValue(); //NOI18N 
+            return object.getKey() + "_" + object.getValue(); //NOI18N
         }
 
         @Override

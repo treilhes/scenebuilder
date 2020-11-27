@@ -34,19 +34,22 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.ControlAction;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.ControlAction;
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 
 /**
  *
  */
 public class CutSelectionJob extends InlineSelectionJob {
 
-    private DeleteSelectionJob deleteSelectionSubJob;
+    private Job deleteSelectionSubJob;
 
-    public CutSelectionJob(EditorController editorController) {
-        super(editorController);
+    public CutSelectionJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -69,9 +72,9 @@ public class CutSelectionJob extends InlineSelectionJob {
             assert getEditorController().canPerformControlAction(ControlAction.COPY);
             getEditorController().performControlAction(ControlAction.COPY);
 
-            deleteSelectionSubJob = new DeleteSelectionJob(getEditorController());
+            deleteSelectionSubJob = new DeleteSelectionJob(getContext(), getEditorController()).extend();
             if (deleteSelectionSubJob.isExecutable()) {
-                deleteSelectionSubJob.execute(); 
+                deleteSelectionSubJob.execute();
                 result.add(deleteSelectionSubJob);
             }
         }

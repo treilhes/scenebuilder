@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
@@ -49,7 +49,7 @@ import javafx.util.Duration;
  *
  * 
  */
-public abstract class PropertiesEditor extends Editor {
+public abstract class PropertiesEditor extends AbstractEditor {
 
     private final HBox nameNode;
     private MenuButton menu;

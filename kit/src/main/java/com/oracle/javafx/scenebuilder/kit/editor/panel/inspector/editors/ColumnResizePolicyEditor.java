@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.TableViewResizePolicyPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
 
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeTableView;

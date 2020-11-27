@@ -34,49 +34,51 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 
 /**
  * Job invoked when re-indexing columns content.
- * 
+ *
  * IMPORTANT:
  * This job cannot extends BatchDocumentJob because its sub jobs list cannot be initialized lazily.
  */
 public class ReIndexColumnContentJob extends Job {
 
-    private BatchJob subJob;
+    private Job subJob;
     private final int offset;
     private final FXOMObject targetGridPane;
     private final List<Integer> targetIndexes;
 
-    public ReIndexColumnContentJob(
-            final EditorController editorController,
+    public ReIndexColumnContentJob(ApplicationContext context,
+            final Editor editor,
             final int offset,
             final FXOMObject targetGridPane,
             final List<Integer> targetIndexes) {
-        super(editorController);
+        super(context, editor);
         this.offset = offset;
         this.targetGridPane = targetGridPane;
         this.targetIndexes = targetIndexes;
         buildSubJobs();
     }
 
-    public ReIndexColumnContentJob(
-            final EditorController editorController,
+    public ReIndexColumnContentJob(ApplicationContext context,
+            final Editor editor,
             final int offset,
             final FXOMObject targetGridPane,
             final int targetIndex) {
-        super(editorController);
+        super(context, editor);
         this.offset = offset;
         this.targetGridPane = targetGridPane;
         this.targetIndexes = new ArrayList<>();
@@ -86,9 +88,9 @@ public class ReIndexColumnContentJob extends Job {
 
     @Override
     public boolean isExecutable() {
-        // When the columns are empty, there is no content to move and the 
-        // sub job list may be empty. 
-        // => we do not invoke subJob.isExecutable() here. 
+        // When the columns are empty, there is no content to move and the
+        // sub job list may be empty.
+        // => we do not invoke subJob.isExecutable() here.
         return subJob != null;
     }
 
@@ -125,7 +127,7 @@ public class ReIndexColumnContentJob extends Job {
     private void buildSubJobs() {
 
         // Create sub job
-        subJob = new BatchJob(getEditorController(),
+    	BatchJob batchJob = new BatchJob(getContext(), getEditorController(),
                 true /* shouldRefreshSceneGraph */, null);
 
         assert targetIndexes.isEmpty() == false;
@@ -143,10 +145,12 @@ public class ReIndexColumnContentJob extends Job {
                 final ValuePropertyMetadata vpm = Metadata.getMetadata().
                         queryValueProperty(childInstance, propertyName);
                 int newIndexValue = targetIndex + offset;
-                final Job modifyJob = new ModifyObjectJob(
-                        childInstance, vpm, newIndexValue, getEditorController());
-                subJob.addSubJob(modifyJob);
+                final Job modifyJob = new ModifyObjectJob(getContext(),
+                        childInstance, vpm, newIndexValue, getEditorController()).extend();
+                batchJob.addSubJob(modifyJob);
             }
         }
+
+        subJob = batchJob.extend();
     }
 }

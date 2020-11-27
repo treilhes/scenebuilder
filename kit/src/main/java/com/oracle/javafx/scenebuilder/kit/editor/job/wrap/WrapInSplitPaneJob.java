@@ -36,12 +36,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.JobUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.GridCourse;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
@@ -53,8 +55,8 @@ import javafx.scene.control.SplitPane;
  */
 public class WrapInSplitPaneJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInSplitPaneJob(EditorController editorController) {
-        super(editorController);
+    public WrapInSplitPaneJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
         newContainerClass = SplitPane.class;
     }
 
@@ -66,7 +68,7 @@ public class WrapInSplitPaneJob extends AbstractWrapInSubComponentJob {
         final Orientation orientation = getOrientation(children);
         JobUtils.setOrientation(newContainer, SplitPane.class, orientation.name());
     }
-    
+
     @Override
     protected Collection<FXOMObject> sortChildren(List<FXOMObject> children) {
         final List<FXOMObject> sorted = new ArrayList<>(children);

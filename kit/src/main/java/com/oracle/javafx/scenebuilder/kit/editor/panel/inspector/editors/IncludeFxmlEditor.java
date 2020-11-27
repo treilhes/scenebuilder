@@ -41,10 +41,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -61,15 +62,15 @@ import javafx.stage.FileChooser;
 public class IncludeFxmlEditor extends InlineListEditor {
 
     private final StackPane root = new StackPane();
-    private EditorController editorController;
+    private Editor editorController;
     @FXML
     private Button includeFxmlButton;
     @FXML
     private TextField includeFxmlField;
 
-    public IncludeFxmlEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, EditorController editorController) {
+    public IncludeFxmlEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
         super(propMeta, selectedClasses);
-        this.editorController = editorController;
+        this.editorController = editor;
         initialize();
     }
 

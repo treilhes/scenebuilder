@@ -33,9 +33,11 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  * Job used to modify the FX controller class.
@@ -47,8 +49,8 @@ public class ModifyFxControllerJob extends Job {
     private final String newValue;
     private final String oldValue;
 
-    public ModifyFxControllerJob(FXOMObject fxomObject, String newValue, EditorController editorController) {
-        super(editorController);
+    public ModifyFxControllerJob(ApplicationContext context, FXOMObject fxomObject, String newValue, Editor editor) {
+        super(context, editor);
 
         assert fxomObject != null;
 

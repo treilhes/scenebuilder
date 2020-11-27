@@ -31,6 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget.ColumnArea;
@@ -45,9 +51,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.Ab
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.RegionResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUtils;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -60,20 +63,24 @@ import javafx.scene.layout.Region;
 public class GridPaneDriver extends AbstractNodeDriver {
 
     private static final double MATCH_DIST = 4;
+	private final ApplicationContext context;
 
-    public GridPaneDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    public GridPaneDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractNodeDriver
      */
-    
+
     @Override
     public AbstractHandles<?> makeHandles(FXOMObject fxomObject) {
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject() instanceof GridPane;
-        return new GridPaneHandles(contentPanelController, (FXOMInstance)fxomObject);
+        return new GridPaneHandles(context, contentPanelController, (FXOMInstance)fxomObject);
     }
 
     @Override
@@ -84,37 +91,37 @@ public class GridPaneDriver extends AbstractNodeDriver {
     }
 
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
+    public AbstractTring<?> makeTring(DropTarget dropTarget) {
         assert dropTarget != null;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
         assert dropTarget.getTargetObject().getSceneGraphObject() instanceof GridPane;
         return new GridPaneTring(contentPanelController, (FXOMInstance) dropTarget.getTargetObject());
     }
 
-    
+
     @Override
     public AbstractResizer<?> makeResizer(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof GridPane;
         return new RegionResizer((Region) fxomObject.getSceneGraphObject());
     }
-    
-    
+
+
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject.getSceneGraphObject() instanceof GridPane;
         assert fxomObject instanceof FXOMInstance;
-        
+
         final AbstractDropTarget result;
-        
+
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
         final GridPane gridPane = (GridPane) fxomInstance.getSceneGraphObject();
         final int columnCount = Deprecation.getGridPaneColumnCount(gridPane);
         final int rowCount = Deprecation.getGridPaneRowCount(gridPane);
-        
-        
+
+
         /*
          *
-         *               
+         *
          *     |--------|-------------|-----------|-----------------------|--|
          *         0           1            2                 3            4
          *     +-------------------------------------------------------------+ -
@@ -151,23 +158,23 @@ public class GridPaneDriver extends AbstractNodeDriver {
          *     |                                                             | | 5
          *     +-------------------------------------------------------------+ -
          */
-        
+
         if ((rowCount == 0) || (columnCount == 0)) {
             result = new GridPaneDropTarget(fxomInstance, 0, 0, ColumnArea.CENTER, RowArea.CENTER);
         } else {
-        
+
             final Point2D hitPoint = gridPane.sceneToLocal(sceneX, sceneY, true /* rootScene */);
             final double hitX = hitPoint.getX();
             final double hitY = hitPoint.getY();
             final int targetColumnIndex, targetRowIndex;
             final double targetCellX, targetCellY;
-            
+
             // Searches the column where hitX resides
             int c = 0;
             Bounds cellBounds = Deprecation.getGridPaneCellBounds(gridPane, c++, 0);
             double columnMaxX = cellBounds.getMaxX();
             while ((columnMaxX < hitX) && (c < columnCount)) {
-                cellBounds = Deprecation.getGridPaneCellBounds(gridPane, c++, 0);                
+                cellBounds = Deprecation.getGridPaneCellBounds(gridPane, c++, 0);
                 columnMaxX = cellBounds.getMaxX();
             }
             if (hitX <= columnMaxX) { // hitX is in column 'c-1'
@@ -178,7 +185,7 @@ public class GridPaneDriver extends AbstractNodeDriver {
                 targetColumnIndex = columnCount;
                 targetCellX = 0.0;
             }
-            
+
             // Searches the row where hitY resides
             int r = 0;
             cellBounds = Deprecation.getGridPaneCellBounds(gridPane, 0, r++);
@@ -195,8 +202,8 @@ public class GridPaneDriver extends AbstractNodeDriver {
                 targetRowIndex = rowCount;
                 targetCellY = 0.0;
             }
-            
-            
+
+
             /*
              *            hgap          targetCellBounds.width
              *        +----------+----------------------------------+
@@ -214,16 +221,16 @@ public class GridPaneDriver extends AbstractNodeDriver {
              *        |          |    +........................+    |
              *        |          |                                  |
              *        +----------+----------------------------------+
-             * 
+             *
              *        (A) ColumnArea.LEFT
              *        (B) ColumnArea.LEFT
              *        (C) ColumnArea.CENTER
              *        (D) ColumnArea.RIGHT
              */
-            
+
             final ColumnArea targetColumnArea;
             if (targetColumnIndex < columnCount) {
-                final Bounds targetCellBounds 
+                final Bounds targetCellBounds
                         = Deprecation.getGridPaneCellBounds(gridPane, targetColumnIndex, 0);
                 final BoundsUtils.EdgeInfo edgeInfo
                         = BoundsUtils.distanceToEdges(targetCellBounds, targetCellX, targetCellY, gridPane);
@@ -245,7 +252,7 @@ public class GridPaneDriver extends AbstractNodeDriver {
             } else {
                 targetColumnArea = ColumnArea.LEFT;
             }
-            
+
             /*
              *        +----------+----------------------------------+
              *        |                                             |
@@ -263,16 +270,16 @@ public class GridPaneDriver extends AbstractNodeDriver {
              *        |          |    +........................+    |
              *        |          |                (D)               |
              *        +----------+----------------------------------+
-             * 
+             *
              *        (A) RowArea.TOP
              *        (B) RowArea.TOP
              *        (C) RowArea.CENTER
              *        (D) RowArea.BOTTOM
              */
-            
+
             final RowArea targetRowArea;
             if (targetRowIndex < rowCount) {
-                final Bounds targetCellBounds 
+                final Bounds targetCellBounds
                         = Deprecation.getGridPaneCellBounds(gridPane, 0, targetRowIndex);
                 final BoundsUtils.EdgeInfo edgeInfo
                         = BoundsUtils.distanceToEdges(targetCellBounds, targetCellX, targetCellY, gridPane);
@@ -294,14 +301,14 @@ public class GridPaneDriver extends AbstractNodeDriver {
             } else {
                 targetRowArea = RowArea.TOP;
             }
-            
-            result = new GridPaneDropTarget(fxomInstance, 
-                    targetColumnIndex, targetRowIndex, 
+
+            result = new GridPaneDropTarget(fxomInstance,
+                    targetColumnIndex, targetRowIndex,
                     targetColumnArea, targetRowArea);
         }
-        
-        
+
+
         return result;
     }
-    
+
 }

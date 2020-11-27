@@ -38,17 +38,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.RowConstraintsListPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane.GridPaneHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.GridPaneRowResizer;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.list.RowConstraintsListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.Deprecation;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
@@ -62,37 +65,37 @@ public class ResizeRowGesture extends AbstractMouseGesture {
 
     private static final PropertyName rowConstraintsName
             = new PropertyName("rowConstraints"); //NOI18N
-    private static final ValuePropertyMetadata rowConstraintsMeta 
+    private static final ValuePropertyMetadata rowConstraintsMeta
             = new RowConstraintsListPropertyMetadata(
                 rowConstraintsName,
                 true, /* readWrite */
                 Collections.emptyList(), /* defaultValue */
                 InspectorPath.UNUSED);
-    
+
     private final GridPaneHandles gridPaneHandles;
     private final FXOMInstance fxomInstance;
     private final int rowIndex;
     private final GridPane gridPane;
     private GridPaneRowResizer resizer;
+    private final ApplicationContext context;
 
-
-    public ResizeRowGesture(GridPaneHandles gridPaneHandles, int rowIndex) {
+    public ResizeRowGesture(ApplicationContext context,GridPaneHandles gridPaneHandles, int rowIndex) {
         super(gridPaneHandles.getContentPanelController());
-        
+        this.context = context;
         assert rowIndex >= 0;
-        
+
         this.gridPaneHandles = gridPaneHandles;
         this.fxomInstance = gridPaneHandles.getFxomInstance(); // Shortcut
         this.gridPane = (GridPane) fxomInstance.getSceneGraphObject(); // Shortcut
         this.rowIndex = rowIndex;
-        
+
         assert this.rowIndex < Deprecation.getGridPaneRowCount(this.gridPane);
     }
 
     /*
      * AbstractMouseGesture
      */
-    
+
     @Override
     protected void mousePressed() {
         // Everthing is done in mouseDragStarted
@@ -101,9 +104,9 @@ public class ResizeRowGesture extends AbstractMouseGesture {
     @Override
     protected void mouseDragStarted() {
         assert resizer == null;
-        
+
         resizer = new GridPaneRowResizer(gridPane, rowIndex);
-        
+
         // Now same as mouseDragged
         mouseDragged();
     }
@@ -111,7 +114,7 @@ public class ResizeRowGesture extends AbstractMouseGesture {
     @Override
     protected void mouseDragged() {
         assert resizer != null;
-        
+
         final double startSceneX = getMousePressedEvent().getSceneX();
         final double startSceneY = getMousePressedEvent().getSceneY();
         final double currentSceneX = getLastMouseEvent().getSceneX();
@@ -119,7 +122,7 @@ public class ResizeRowGesture extends AbstractMouseGesture {
         final Point2D start = gridPane.sceneToLocal(startSceneX, startSceneY, true /* rootScene */);
         final Point2D current = gridPane.sceneToLocal(currentSceneX, currentSceneY, true /* rootScene */);
         final double dy = current.getY() - start.getY();
-        
+
         resizer.updateHeight(dy);
         gridPane.layout();
         gridPaneHandles.layoutDecoration();
@@ -128,37 +131,37 @@ public class ResizeRowGesture extends AbstractMouseGesture {
     @Override
     protected void mouseDragEnded() {
         assert resizer != null;
-        
+
         /*
          * Three steps
-         * 
+         *
          * 1) Collects the modified row constraints list
          * 2) Reverts to initial sizing
          *    => this step is equivalent to userDidCancel()
          * 3) Push a BatchModifyObjectJob to officially resize the rows
          */
-        
+
         // Step #1
-        final List<RowConstraints> newConstraints 
+        final List<RowConstraints> newConstraints
                 = cloneRowConstraintsList(gridPane);
 
         // Step #2
         userDidCancel();
-        
+
         // Step #3
         final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
         metaValueMap.put(rowConstraintsMeta, newConstraints);
-        
-        final EditorController editorController 
+
+        final Editor editorController
                 = contentPanelController.getEditorController();
-        final ModifyObjectJob j = new ModifyObjectJob(
+        final Job j = new ModifyObjectJob(context,
                 fxomInstance,
                 rowConstraintsMeta,
                 newConstraints,
                 editorController,
-                I18N.getString("label.action.edit.resize.row"));
+                I18N.getString("label.action.edit.resize.row")).extend();
         editorController.getJobManager().push(j);
-        
+
         gridPaneHandles.layoutDecoration();
         resizer = null; // For sake of symetry...
     }
@@ -178,27 +181,27 @@ public class ResizeRowGesture extends AbstractMouseGesture {
         resizer.revertToOriginalSize();
         gridPane.layout();
     }
-    
-    
-    
+
+
+
     /*
      * Private
      */
-    
+
     private List<RowConstraints> cloneRowConstraintsList(GridPane gridPane) {
         final List<RowConstraints> result = new ArrayList<>();
-        
+
         for (RowConstraints rc : gridPane.getRowConstraints()) {
             result.add(cloneRowConstraints(rc));
         }
-        
+
         return result;
     }
-    
-    
+
+
     private RowConstraints cloneRowConstraints(RowConstraints cc) {
         final RowConstraints result = new RowConstraints();
-        
+
         result.setFillHeight(cc.isFillHeight());
         result.setValignment(cc.getValignment());
         result.setVgrow(cc.getVgrow());
@@ -206,7 +209,7 @@ public class ResizeRowGesture extends AbstractMouseGesture {
         result.setMinHeight(cc.getMinHeight());
         result.setPercentHeight(cc.getPercentHeight());
         result.setPrefHeight(cc.getPrefHeight());
-        
+
         return result;
     }
 }

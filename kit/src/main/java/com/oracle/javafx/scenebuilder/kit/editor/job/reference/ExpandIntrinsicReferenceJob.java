@@ -35,57 +35,59 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.InlineDocumentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ReplaceObjectJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCloner;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 /**
  *
  */
 public class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
-    
+
     private final FXOMIntrinsic reference;
     private final FXOMCloner cloner;
 
-    public ExpandIntrinsicReferenceJob(
-            FXOMIntrinsic reference, 
+    public ExpandIntrinsicReferenceJob(ApplicationContext context, 
+            FXOMIntrinsic reference,
             FXOMCloner cloner,
-            EditorController editorController) {
-        super(editorController);
-        
+            Editor editor) {
+        super(context, editor);
+
         assert reference != null;
         assert cloner != null;
-        assert reference.getFxomDocument() == editorController.getFxomDocument();
-        assert cloner.getTargetDocument() == editorController.getFxomDocument();
-        
+        assert reference.getFxomDocument() == editor.getFxomDocument();
+        assert cloner.getTargetDocument() == editor.getFxomDocument();
+
         this.reference = reference;
         this.cloner = cloner;
     }
-    
+
     /*
      * InlineDocumentJob
      */
     @Override
     protected List<Job> makeAndExecuteSubJobs() {
         final List<Job> result = new LinkedList<>();
-        
+
         // 1) clone the referee
         final FXOMDocument fxomDocument = getEditorController().getFxomDocument();
         final String fxId = FXOMNodes.extractReferenceSource(reference);
         final FXOMObject referee = fxomDocument.searchWithFxId(fxId);
         final FXOMObject refereeClone = cloner.clone(referee);
-        
+
         // 2) replace the reference by the referee clone
-        final Job replaceJob = new ReplaceObjectJob(reference, refereeClone, getEditorController());
+        final Job replaceJob = new ReplaceObjectJob(getContext(), reference, refereeClone, getEditorController()).extend();
         replaceJob.execute();
         result.add(replaceJob);
-        
+
         return result;
     }
 
@@ -101,6 +103,6 @@ public class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
                ((reference.getParentProperty() != null) ||
                 (reference.getParentCollection() != null));
     }
-    
-    
+
+
 }

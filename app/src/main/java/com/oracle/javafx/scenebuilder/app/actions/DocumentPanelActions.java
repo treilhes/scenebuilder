@@ -1,6 +1,7 @@
 package com.oracle.javafx.scenebuilder.app.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,12 +23,13 @@ public class DocumentPanelActions {
 			descriptionKey = "action.description.show.info")
 	public static class ShowInfoAction extends Show {
 		public ShowInfoAction(
+				@Autowired ApplicationContext context,
 				@Autowired @Lazy DocumentPanelController documentPanelController,
 				@Autowired @Lazy DisplayOptionPreference displayOptionPreference) {
-			super(DisplayOption.INFO, documentPanelController, displayOptionPreference);
+			super(context, DisplayOption.INFO, documentPanelController, displayOptionPreference);
 		}
 	}
-	
+
 	@Component
 	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 	@Lazy
@@ -36,12 +38,13 @@ public class DocumentPanelActions {
 			descriptionKey = "action.description.show.fx.id")
 	public static class ShowFxIdAction extends Show {
 		public ShowFxIdAction(
+				@Autowired ApplicationContext context,
 				@Autowired @Lazy DocumentPanelController documentPanelController,
 				@Autowired @Lazy DisplayOptionPreference displayOptionPreference) {
-			super(DisplayOption.FXID, documentPanelController, displayOptionPreference);
+			super(context, DisplayOption.FXID, documentPanelController, displayOptionPreference);
 		}
 	}
-	
+
 	@Component
 	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 	@Lazy
@@ -50,20 +53,21 @@ public class DocumentPanelActions {
 			descriptionKey = "action.description.show.node.id")
 	public static class ShowNodeIdAction extends Show {
 		public ShowNodeIdAction(
+				@Autowired ApplicationContext context,
 				@Autowired @Lazy DocumentPanelController documentPanelController,
 				@Autowired @Lazy DisplayOptionPreference displayOptionPreference) {
-			super(DisplayOption.NODEID, documentPanelController, displayOptionPreference);
+			super(context, DisplayOption.NODEID, documentPanelController, displayOptionPreference);
 		}
 	}
-	
+
 	public static class Show extends AbstractAction {
-		
+
 		private final DocumentPanelController documentPanelController;
 		private final DisplayOptionPreference displayOptionPreference;
 		private final DisplayOption option;
-		
-		public Show(DisplayOption option, DocumentPanelController documentPanelController, DisplayOptionPreference displayOptionPreference) {
-			super();
+
+		public Show(ApplicationContext context, DisplayOption option, DocumentPanelController documentPanelController, DisplayOptionPreference displayOptionPreference) {
+			super(context);
 			this.option = option;
 			this.documentPanelController = documentPanelController;
 			this.displayOptionPreference = displayOptionPreference;
@@ -84,6 +88,6 @@ public class DocumentPanelActions {
 	    		.setValue(documentPanelController.getHierarchyPanelController().getDisplayOption())
 	    		.writeToJavaPreferences();
 		}
-				
+
 	}
 }

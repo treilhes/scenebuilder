@@ -33,10 +33,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -47,7 +50,7 @@ import javafx.scene.shape.Line;
 
 /**
  *
- * 
+ *
  */
 public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
 
@@ -58,12 +61,16 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
     private final Line leftHandle = new Line();
     private final Line centerHandle = new Line();
     private final Line rightHandle = new Line();
+	private final ApplicationContext context;
 
-    
-    public CubicCurveHandles(ContentPanelController contentPanelController,
+
+    public CubicCurveHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, CubicCurve.class);
-        
+        this.context = context;
+
         setupHandleState(startHandle);
         setupHandleState(control1Handle);
         setupHandleState(control2Handle);
@@ -71,7 +78,7 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
         leftHandle.getStyleClass().add(SELECTION_WIRE);
         centerHandle.getStyleClass().add(SELECTION_WIRE);
         rightHandle.getStyleClass().add(SELECTION_WIRE);
-        
+
         setupHandles(startHandle);
         setupHandles(control1Handle);
         setupHandles(control2Handle);
@@ -79,7 +86,7 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
         setupHandles(leftHandle);
         setupHandles(centerHandle);
         setupHandles(rightHandle);
-        
+
         final List<Node> rootNodeChildren = getRootNode().getChildren();
         rootNodeChildren.add(leftHandle);
         rootNodeChildren.add(centerHandle);
@@ -89,18 +96,18 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
         rootNodeChildren.add(control2Handle);
         rootNodeChildren.add(endHandle);
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
-    
+
     /*
      * AbstractCurveHandles
      */
     @Override
     protected void layoutDecoration() {
         final CubicCurve l = getSceneGraphObject();
-        
+
         final boolean snapToPixel = true;
         final Point2D s = sceneGraphObjectToDecoration(l.getStartX(), l.getStartY(), snapToPixel);
         final Point2D c1 = sceneGraphObjectToDecoration(l.getControlX1(), l.getControlY1(), snapToPixel);
@@ -115,7 +122,7 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
         control2Handle.setCenterY(c2.getY());
         endHandle.setCenterX(e.getX());
         endHandle.setCenterY(e.getY());
-        
+
         leftHandle.setStartX(s.getX());
         leftHandle.setStartY(s.getY());
         leftHandle.setEndX(c1.getX());
@@ -133,7 +140,7 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
     @Override
     protected void startListeningToSceneGraphObject() {
         super.startListeningToSceneGraphObject();
-        
+
         final CubicCurve l = getSceneGraphObject();
         l.startXProperty().addListener(coordinateListener);
         l.startYProperty().addListener(coordinateListener);
@@ -148,7 +155,7 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
     @Override
     protected void stopListeningToSceneGraphObject() {
         super.stopListeningToSceneGraphObject();
-        
+
         final CubicCurve l = getSceneGraphObject();
         l.startXProperty().removeListener(coordinateListener);
         l.startYProperty().removeListener(coordinateListener);
@@ -163,23 +170,23 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
     @Override
     public AbstractGesture findGesture(Node node) {
         final AbstractGesture result;
-        
+
         if (node == startHandle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.START);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.START);
         } else if (node == control1Handle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.CONTROL1);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.CONTROL1);
         } else if (node == control2Handle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.CONTROL2);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.CONTROL2);
         } else if (node == endHandle) {
-            result = new EditCurveGesture(getContentPanelController(), 
-                    getFxomInstance(), EditCurveGesture.Tunable.END);
+            result = new EditCurveGesture(context, getContentPanelController(),
+                    getFxomInstance(), Tunable.END);
         } else {
             result = null;
         }
-        
+
         return result;
     }
 
@@ -190,22 +197,22 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
         setupHandleState(control2Handle);
         setupHandleState(endHandle);
     }
-    
+
     /*
      * Private
      */
-    
+
     private void setupHandleState(Circle handleCircle) {
-        
+
         final String styleClass = isEnabled() ? SELECTION_HANDLES : SELECTION_HANDLES_DIM;
         final Cursor cursor = isEnabled() ? Cursor.OPEN_HAND : Cursor.DEFAULT;
-        
+
         handleCircle.getStyleClass().add(styleClass);
         handleCircle.setCursor(cursor);
     }
-    
-    
-    /* 
+
+
+    /*
      * Wraper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void setupHandles(Node node) {

@@ -33,13 +33,15 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TableViewDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeTableColumnGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -53,34 +55,39 @@ import javafx.scene.shape.Line;
 
 /**
  *
- * 
+ *
  */
 public class TableViewHandles extends AbstractNodeHandles<Node> {
-    
+
     private final Group grips = new Group();
-    
-    public TableViewHandles(ContentPanelController contentPanelController,
+	private final ApplicationContext context;
+
+    public TableViewHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Node.class);
+        super(context, contentPanelController, fxomInstance, Node.class);
+        this.context = context;
+
         assert fxomInstance.getSceneGraphObject() instanceof TableView;
-        
+
         getRootNode().getChildren().add(grips); // Above handles
     }
-    
+
     public TableView<?> getTableView() {
         return (TableView<?>) getSceneGraphObject();
     }
-    
+
     /*
      * AbstractNodeHandles
      */
     @Override
     protected void layoutDecoration() {
         super.layoutDecoration();
-             
+
         // Adjusts the number of grip lines to the number of dividers
         adjustGripCount();
-        
+
         // Updates grip positions
         for (int i = 0, count = getTableView().getColumns().size(); i < count; i++) {
             layoutGrip(i);
@@ -89,32 +96,32 @@ public class TableViewHandles extends AbstractNodeHandles<Node> {
 
     @Override
     public AbstractGesture findGesture(Node node) {
-        
+
         final AbstractGesture result;
-        
+
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
             final DesignHierarchyMask m = new DesignHierarchyMask(getFxomInstance());
             final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
             assert columnObject instanceof FXOMInstance;
-            result = new ResizeTableColumnGesture(getContentPanelController(), 
+            result = new ResizeTableColumnGesture(context, getContentPanelController(),
                     (FXOMInstance)columnObject);
         } else {
             result = super.findGesture(node);
         }
-        
+
         return result;
     }
 
-    
+
     /*
      * Private
      */
-    
+
     private void adjustGripCount() {
         final int columnCount = getTableView().getColumns().size();
         final List<Node> gripChildren = grips.getChildren();
-        
+
         while (gripChildren.size() < columnCount) {
             gripChildren.add(makeGripLine());
         }
@@ -122,7 +129,7 @@ public class TableViewHandles extends AbstractNodeHandles<Node> {
             gripChildren.remove(gripChildren.size()-1);
         }
     }
-    
+
     private Line makeGripLine() {
         final Line result = new Line();
         result.setStrokeWidth(SELECTION_HANDLES_SIZE);
@@ -131,10 +138,10 @@ public class TableViewHandles extends AbstractNodeHandles<Node> {
         attachHandles(result);
         return result;
     }
-    
+
     private void layoutGrip(int gripIndex) {
         assert grips.getChildren().get(gripIndex) instanceof Line;
-        
+
         final TableColumn<?,?> tc = getTableView().getColumns().get(gripIndex);
         if (tc.isVisible()) {
             final TableViewDesignInfoX di = new TableViewDesignInfoX();
@@ -160,9 +167,9 @@ public class TableViewHandles extends AbstractNodeHandles<Node> {
             gripLine.setManaged(false);
         }
     }
-    
-    
-    /* 
+
+
+    /*
      * Wrapper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void attachHandles(Node node) {

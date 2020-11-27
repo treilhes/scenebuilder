@@ -37,13 +37,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal.CssPropAuthorInfo;
 
 import javafx.animation.FadeTransition;
@@ -82,7 +82,7 @@ import javafx.util.Duration;
  *
  *
  */
-public abstract class PropertyEditor extends Editor {
+public abstract class PropertyEditor extends AbstractEditor {
 
     // Layout format for editors. See DTL-5727 for details.
     public enum LayoutFormat {
@@ -370,7 +370,7 @@ public abstract class PropertyEditor extends Editor {
 
     /*
      * State properties
-     * 
+     *
      */
     public boolean isDisabled() {
         return disableProperty.getValue();
@@ -383,11 +383,11 @@ public abstract class PropertyEditor extends Editor {
     public ObservableBooleanValue disableProperty() {
         return disableProperty;
     }
-    
+
     public boolean isDisablePropertyBound(){
         return getValueEditor().disableProperty().isBound();
     }
-    
+
     public void unbindDisableProperty(){
         getValueEditor().disableProperty().unbind();
     }
@@ -676,16 +676,16 @@ public abstract class PropertyEditor extends Editor {
     protected static void handleIndeterminate(Node node) {
         if (node instanceof TextField) {
             ((TextField) node).setText(""); //NOI18N
-            ((TextField) node).setPromptText(Editor.INDETERMINATE_STR);
+            ((TextField) node).setPromptText(AbstractEditor.INDETERMINATE_STR);
         } else if (node instanceof ComboBox) {
             ((ComboBox<?>) node).getEditor().setText("");//NOI18N
-            ((ComboBox<?>) node).setPromptText(Editor.INDETERMINATE_STR);
+            ((ComboBox<?>) node).setPromptText(AbstractEditor.INDETERMINATE_STR);
         } else if (node instanceof ChoiceBox) {
             ((ChoiceBox<?>) node).getSelectionModel().clearSelection();
         } else if (node instanceof CheckBox) {
             ((CheckBox) node).setIndeterminate(true);
         } else if (node instanceof MenuButton) {
-            ((MenuButton) node).setText(Editor.INDETERMINATE_STR);
+            ((MenuButton) node).setText(AbstractEditor.INDETERMINATE_STR);
         }
     }
 

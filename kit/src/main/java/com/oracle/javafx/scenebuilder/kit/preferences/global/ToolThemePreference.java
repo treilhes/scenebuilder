@@ -9,8 +9,9 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Parent;
 
@@ -24,7 +25,7 @@ public class ToolThemePreference extends EnumPreference<ToolTheme> implements Ma
      **************************************************************************/
     public static final String PREFERENCE_KEY = "TOOL_THEME"; //NOI18N
     public static final ToolTheme PREFERENCE_DEFAULT_VALUE = ToolTheme.DEFAULT;
-    
+
     //TODO bad bad bad, but PropertyEditors need this instance and i don't want to change editors constructors
     //TODO editors musn't use dialogs internaly, change this later
     //TODO same problem for FXOMLoadr
@@ -32,9 +33,14 @@ public class ToolThemePreference extends EnumPreference<ToolTheme> implements Ma
     	return instance;
     }
 
-	public ToolThemePreference(@Autowired PreferencesContext preferencesContext) {
+    private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public ToolThemePreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, ToolTheme.class, PREFERENCE_DEFAULT_VALUE);
 		instance = this;
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	@Override
@@ -44,7 +50,7 @@ public class ToolThemePreference extends EnumPreference<ToolTheme> implements Ma
 
 	@Override
 	public Parent getEditor() {
-		return PreferenceEditorFactory.newEnumFieldEditor(this);
+		return preferenceEditorFactory.newEnumFieldEditor(this);
 	}
 
 	@Override

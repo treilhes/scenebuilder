@@ -35,14 +35,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 
 /**
  * Job invoked when removing rows.
@@ -52,8 +54,8 @@ public class DeleteRowJob extends BatchSelectionJob {
     private FXOMObject targetGridPane;
     private final List<Integer> targetIndexes = new ArrayList<>();
 
-    public DeleteRowJob(EditorController editorController) {
-        super(editorController);
+    public DeleteRowJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -74,12 +76,12 @@ public class DeleteRowJob extends BatchSelectionJob {
 
             // Add sub jobs
             // First remove the row constraints
-            final Job removeConstraints = new RemoveRowConstraintsJob(
-                    getEditorController(), targetGridPane, targetIndexes);
+            final Job removeConstraints = new RemoveRowConstraintsJob(getContext(),
+                    getEditorController(), targetGridPane, targetIndexes).extend();
             result.add(removeConstraints);
             // Then remove the row content
-            final Job removeContent = new RemoveRowContentJob(
-                    getEditorController(), targetGridPane, targetIndexes);
+            final Job removeContent = new RemoveRowContentJob(getContext(),
+                    getEditorController(), targetGridPane, targetIndexes).extend();
             result.add(removeContent);
             // Finally shift the row content
             result.addAll(moveRowContent());
@@ -124,7 +126,7 @@ public class DeleteRowJob extends BatchSelectionJob {
         targetIndex = iterator.next();
         while (targetIndex != -1) {
             // Move the rows content :
-            // - from the target index 
+            // - from the target index
             // - to the next target index if any or the last row index otherwise
             int fromIndex, toIndex;
 
@@ -139,17 +141,17 @@ public class DeleteRowJob extends BatchSelectionJob {
                 toIndex = rowsSize - 1;
             }
 
-            // When we delete 2 consecutive rows 
+            // When we delete 2 consecutive rows
             // => no content to move between the 2 rows
-            // When we delete the last row 
+            // When we delete the last row
             // => no row content to move below the last row
             if (nextTargetIndex != (targetIndex + 1)
                     && fromIndex < rowsSize) {
                 final int offset = -1 + shiftIndex;
                 final List<Integer> indexes
                         = GridPaneJobUtils.getIndexes(fromIndex, toIndex);
-                final ReIndexRowContentJob reIndexJob = new ReIndexRowContentJob(
-                        getEditorController(), offset, targetGridPane, indexes);
+                final Job reIndexJob = new ReIndexRowContentJob(getContext(),
+                        getEditorController(), offset, targetGridPane, indexes).extend();
                 result.add(reIndexJob);
             }
 

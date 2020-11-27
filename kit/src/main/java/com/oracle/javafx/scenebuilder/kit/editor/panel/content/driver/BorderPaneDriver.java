@@ -31,14 +31,17 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.BorderPaneTring;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -49,32 +52,34 @@ import javafx.scene.layout.BorderPane;
  */
 public class BorderPaneDriver extends AbstractNodeDriver {
 
-    public BorderPaneDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+    public BorderPaneDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
     }
 
     /*
      * AbstractDriver
      */
-     
+
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject.getSceneGraphObject() instanceof BorderPane;
         assert fxomObject instanceof FXOMInstance;
-        
+
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
         final BorderPane borderPane = (BorderPane) fxomInstance.getSceneGraphObject();
         final Point2D hitPoint = borderPane.sceneToLocal(sceneX, sceneY, true /* rootScene */);
         final double hitX = hitPoint.getX();
         final double hitY = hitPoint.getY();
-        
+
         final Bounds layoutBounds = borderPane.getLayoutBounds();
         final Bounds centerBounds = BorderPaneTring.computeCenterBounds(borderPane);
         final Bounds topBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.TOP);
         final Bounds bottomBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.BOTTOM);
         final Bounds leftBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.LEFT);
         final Bounds rightBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.RIGHT);
-        
+
         final Accessory targetAccessory;
         if (centerBounds.contains(hitX, hitY)) {
             targetAccessory = Accessory.CENTER;
@@ -89,20 +94,20 @@ public class BorderPaneDriver extends AbstractNodeDriver {
         } else {
             targetAccessory = Accessory.CENTER;
         }
-        
+
         return new AccessoryDropTarget(fxomInstance, targetAccessory);
     }
-    
-    
+
+
     @Override
-    public AbstractTring<?> makeTring(AbstractDropTarget dropTarget) {
+    public AbstractTring<?> makeTring(DropTarget dropTarget) {
         assert dropTarget instanceof AccessoryDropTarget;
-        
-        final AccessoryDropTarget accessoryDropTarget 
+
+        final AccessoryDropTarget accessoryDropTarget
                 = (AccessoryDropTarget) dropTarget;
-        return new BorderPaneTring(contentPanelController, 
+        return new BorderPaneTring(contentPanelController,
                 (FXOMInstance) dropTarget.getTargetObject(),
                 accessoryDropTarget.getAccessory());
     }
-    
+
 }

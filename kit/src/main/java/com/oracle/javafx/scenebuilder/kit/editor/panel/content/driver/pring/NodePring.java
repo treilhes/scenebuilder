@@ -31,33 +31,33 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.pring;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 /**
  *
- * 
+ *
  */
 public class NodePring extends AbstractGenericPring<Node> {
 
-    public NodePring(ContentPanelController contentPanelController, FXOMInstance fxomInstance) {
+    public NodePring(Content contentPanelController, FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, Node.class);
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
 
-    
+
     /*
      * AbstractGenericPring
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return getSceneGraphObject().getLayoutBounds();
@@ -83,14 +83,14 @@ public class NodePring extends AbstractGenericPring<Node> {
     @Override
     public AbstractGesture findGesture(Node node) {
         final AbstractGesture result;
-        
+
         if (node == ringPath) {
-            result = new SelectWithPringGesture(getContentPanelController(), 
+            result = new SelectWithPringGesture(getContentPanelController(),
                     getFxomInstance());
         } else {
             result = null;
         }
-        
+
         return result;
     }
 }

@@ -37,8 +37,8 @@ import static com.oracle.javafx.scenebuilder.kit.template.Type.PHONE;
 
 import java.net.URL;
 
+import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 public enum Template {
 
@@ -75,7 +75,8 @@ public enum Template {
     public static void prepareDocument(EditorController editorController, Template template) {
         if (template.getType() == Type.PHONE) {
             editorController.performEditAction(EditorController.EditAction.SET_SIZE_335x600);
-            editorController.setTheme(Theme.GLUON_MOBILE_LIGHT);
+            //TODO uncomment and fix for full theme support
+            //editorController.setTheme(Theme.GLUON_MOBILE_LIGHT);
         }
     }
 }

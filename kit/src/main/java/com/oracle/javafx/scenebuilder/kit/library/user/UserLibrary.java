@@ -55,11 +55,11 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.factory.InitializingBean;
 
+import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.kit.library.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
-import com.oracle.javafx.scenebuilder.kit.library.Library;
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 
@@ -78,20 +78,20 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * 
+ *
  */
-public class UserLibrary extends Library implements InitializingBean{
-    
+public class UserLibrary extends AbstractLibrary implements InitializingBean{
+
     public enum State { READY, WATCHING }
 
     public static final String TAG_USER_DEFINED = "Custom"; //NOI18N
-    
+
     private final BuiltinLibrary builtinLibrary;
-    
+
     private final String path;
     private final BuiltinSectionComparator sectionComparator
             = new BuiltinSectionComparator();
-    
+
     private final ObservableList<JarReport> jarReports = FXCollections.observableArrayList();
     private final ObservableList<JarReport> previousJarReports = FXCollections.observableArrayList();
     private final ObservableList<Path> fxmlFileReports = FXCollections.observableArrayList();
@@ -103,9 +103,9 @@ public class UserLibrary extends Library implements InitializingBean{
 
     private State state = State.READY;
     private Exception exception;
-    
+
     private LibraryFolderWatcher watcher;
-    
+
     private Thread watcherThread;
     // Where we store canonical class names of items we want to exclude from
     // the user defined one displayed in the Library panel.
@@ -127,21 +127,21 @@ public class UserLibrary extends Library implements InitializingBean{
         this(path, null, null, null);
     }
 
-    public UserLibrary(String path, MavenArtifactsPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) { 
+    public UserLibrary(String path, MavenArtifactsPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) {
         this.path = path;
         this.uiLogger = uiLogger;
         this.builtinLibrary = builtinLibrary;
         this.preferences = preferences;
-        
+
     }
-    
+
     @Override
 	public void afterPropertiesSet() throws Exception {
     	if (preferences != null) {
         	this.additionalJarPaths = () -> preferences.getArtifactsPathsWithDependencies();
             this.additionalFilter = () -> preferences.getArtifactsFilter();
         }
-        
+
         explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
 
         startWatching();
@@ -155,34 +155,34 @@ public class UserLibrary extends Library implements InitializingBean{
     public void setAdditionalFilter(Supplier<List<String>> additionalFilter) {
         this.additionalFilter = additionalFilter;
     }
-    
+
     public String getPath() {
         return path;
     }
-    
+
     public ObservableList<JarReport> getJarReports() {
         return jarReports;
     }
-    
+
     public ObservableList<JarReport> getPreviousJarReports() {
         return previousJarReports;
     }
-    
+
     public ObservableList<Path> getFxmlFileReports() {
         return fxmlFileReports;
     }
-    
+
     public ObservableList<Path> getPreviousFxmlFileReports() {
         return previousFxmlFileReports;
     }
-    
+
     public synchronized State getState() {
         return state;
     }
-    
+
     public synchronized void startWatching() {
         assert state == State.READY;
-        
+
         if (state == State.READY) {
             assert watcher == null;
             assert watcherThread == null;
@@ -195,17 +195,17 @@ public class UserLibrary extends Library implements InitializingBean{
             state = State.WATCHING;
         }
     }
-    
+
     public synchronized void stopWatching() {
         assert state == State.WATCHING;
-        
+
         if (state == State.WATCHING) {
             assert watcher != null;
             assert watcherThread != null;
             assert exception == null;
-            
+
             watcherThread.interrupt();
-            
+
             try {
                 watcherThread.join();
             } catch(InterruptedException x) {
@@ -214,7 +214,7 @@ public class UserLibrary extends Library implements InitializingBean{
                 watcher = null;
                 watcherThread = null;
                 state = State.READY;
-                
+
                 // In READY state, we release the class loader.
                 // This enables library import to manipulate jar files.
                 changeClassLoader(null);
@@ -222,15 +222,15 @@ public class UserLibrary extends Library implements InitializingBean{
             }
         }
     }
-    
+
     public int getExplorationCount() {
         return explorationCountProperty.get();
     }
-    
+
     public ReadOnlyIntegerProperty explorationCountProperty() {
         return explorationCountProperty;
     }
-    
+
     public Object getExplorationDate() {
         return explorationDateProperty.get();
     }
@@ -238,7 +238,7 @@ public class UserLibrary extends Library implements InitializingBean{
     public ReadOnlyObjectProperty<Date> explorationDateProperty() {
         return explorationDateProperty;
     }
-    
+
     public void setFilter(List<String> classnames) throws FileNotFoundException, IOException {
 //        if (classnames != null && classnames.size() > 0) { // empty classnames means "no filter", so we need to clear filters.txt file
             File filterFile = new File(getFilterFileName());
@@ -248,7 +248,7 @@ public class UserLibrary extends Library implements InitializingBean{
             for (String classname : classnames) {
                 allClassnames.add(classname);
             }
-            
+
             Path filterFilePath = Paths.get(getPath(), filterFileName);
             Path formerFilterFilePath = Paths.get(getPath(), filterFileName + ".tmp"); //NOI18N
             Files.deleteIfExists(formerFilterFilePath);
@@ -282,7 +282,7 @@ public class UserLibrary extends Library implements InitializingBean{
             }
 //        }
     }
-    
+
     public List<String> getFilter() throws FileNotFoundException, IOException {
         List<String> res = new ArrayList<>();
         File filterFile = new File(getFilterFileName());
@@ -311,7 +311,7 @@ public class UserLibrary extends Library implements InitializingBean{
 						onFinishedUpdatingJarReports.accept(c.getAddedSubList());
 					}
 				}
-        		
+
         	});
         }
     }
@@ -343,16 +343,16 @@ public class UserLibrary extends Library implements InitializingBean{
     /*
      * Package
      */
-    
+
     String getFilterFileName() {
         return getPath() + File.separator + filterFileName;
     }
-    
+
     void updateJarReports(Collection<JarReport> newJarReports) {
         previousJarReports.setAll(jarReports);
         jarReports.setAll(newJarReports);
     }
-    
+
     void updateFxmlFileReports(Collection<Path> newFxmlFileReports) {
         if (Platform.isFxApplicationThread()) {
             previousFxmlFileReports.setAll(fxmlFileReports);
@@ -364,7 +364,7 @@ public class UserLibrary extends Library implements InitializingBean{
             });
         }
     }
-    
+
     void setItems(Collection<LibraryItem> items) {
         if (Platform.isFxApplicationThread()) {
             itemsProperty.setAll(items);
@@ -374,7 +374,7 @@ public class UserLibrary extends Library implements InitializingBean{
             });
         }
     }
-    
+
     void addItems(Collection<LibraryItem> items) {
         if (Platform.isFxApplicationThread()) {
             itemsProperty.addAll(items);
@@ -382,7 +382,7 @@ public class UserLibrary extends Library implements InitializingBean{
             Platform.runLater(() -> itemsProperty.addAll(items));
         }
     }
-    
+
     void updateClassLoader(ClassLoader newClassLoader) {
         if (Platform.isFxApplicationThread()) {
             changeClassLoader(newClassLoader);
@@ -390,7 +390,7 @@ public class UserLibrary extends Library implements InitializingBean{
             Platform.runLater(() -> changeClassLoader(newClassLoader));
         }
     }
-    
+
     void updateExplorationCount(int count) {
         if (Platform.isFxApplicationThread()) {
             explorationCountProperty.set(count);
@@ -398,7 +398,7 @@ public class UserLibrary extends Library implements InitializingBean{
             Platform.runLater(() -> explorationCountProperty.set(count));
         }
     }
-    
+
     void updateExplorationDate(Date date) {
         if (Platform.isFxApplicationThread()) {
             explorationDateProperty.set(date);
@@ -406,7 +406,7 @@ public class UserLibrary extends Library implements InitializingBean{
             Platform.runLater(() -> explorationDateProperty.set(date));
         }
     }
-    
+
     void updateFirstExplorationCompleted() {
         if (Platform.isFxApplicationThread()) {
             firstExplorationCompleted.set(true);
@@ -434,14 +434,14 @@ public class UserLibrary extends Library implements InitializingBean{
     public Comparator<String> getSectionComparator() {
         return sectionComparator;
     }
-    
+
     /*
      * Private
      */
-    
+
     private void changeClassLoader(ClassLoader newClassLoader) {
         assert Platform.isFxApplicationThread();
-        
+
         /*
          * Before changing to the new class loader,
          * we invoke URLClassLoader.close() on the existing one
@@ -456,11 +456,11 @@ public class UserLibrary extends Library implements InitializingBean{
                 x.printStackTrace();
             }
         }
-        
+
         // Now moves to the new class loader
         classLoaderProperty.set(newClassLoader);
     }
-    
+
     private void userLibraryExplorationCountDidChange() {
         // We can have 0, 1 or N FXML file, same for JAR one.
         final int numOfFxmlFiles = getFxmlFileReports().size();
@@ -520,7 +520,7 @@ public class UserLibrary extends Library implements InitializingBean{
     /*
      * Debug
      */
-    
+
     public static void main(String[] args) throws Exception {
         final String path = "/Users/elp/Desktop/MyLib"; //NOI18N
         final UserLibrary lib = new UserLibrary(path);
@@ -533,5 +533,5 @@ public class UserLibrary extends Library implements InitializingBean{
         System.out.println("Exiting"); //NOI18N
     }
 
-	
+
 }

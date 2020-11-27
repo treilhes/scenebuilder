@@ -32,11 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.job.atomic;
 
-import com.oracle.javafx.scenebuilder.kit.alert.WarnThemeAlert;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  */
@@ -45,11 +46,11 @@ public class SetFxomRootJob extends Job {
     private final FXOMObject newRoot;
     private FXOMObject oldRoot;
 
-    public SetFxomRootJob(FXOMObject newRoot, EditorController editorController) {
-        super(editorController);
+    public SetFxomRootJob(ApplicationContext context, FXOMObject newRoot, Editor editor) {
+        super(context, editor);
 
-        assert editorController.getFxomDocument() != null;
-        assert (newRoot == null) || (newRoot.getFxomDocument() == editorController.getFxomDocument());
+        assert editor.getFxomDocument() != null;
+        assert (newRoot == null) || (newRoot.getFxomDocument() == editor.getFxomDocument());
 
         this.newRoot = newRoot;
     }
@@ -74,7 +75,8 @@ public class SetFxomRootJob extends Job {
         fxomDocument.setFxomRoot(newRoot);
         fxomDocument.endUpdate();
 
-        WarnThemeAlert.showAlertIfRequired(getEditorController(), newRoot, getEditorController().getOwnerWindow());
+        // TODO ensure the new framework show this alter
+        //WarnThemeAlert.showAlertIfRequired(getEditorController(), newRoot, getEditorController().getOwnerWindow());
     }
 
     @Override
@@ -106,4 +108,14 @@ public class SetFxomRootJob extends Job {
         // Not expected to reach the user
         return getClass().getSimpleName();
     }
+
+	public FXOMObject getNewRoot() {
+		return newRoot;
+	}
+
+	public FXOMObject getOldRoot() {
+		return oldRoot;
+	}
+
+
 }

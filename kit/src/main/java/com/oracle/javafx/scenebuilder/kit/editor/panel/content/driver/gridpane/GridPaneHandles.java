@@ -33,15 +33,17 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane;
 
 import java.util.Collections;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractNodeHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeColumnGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeRowGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -50,21 +52,24 @@ import javafx.scene.layout.GridPane;
  *
  */
 public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
-    
-    private final GridPaneMosaic mosaic 
+
+    private final GridPaneMosaic mosaic
             = new GridPaneMosaic("handles", //NOI18N
                     true /* shouldShowTray */,
                     true /* shouldCreateSensors */ );
-    
-    public GridPaneHandles(ContentPanelController contentPanelController,
+	private ApplicationContext context;
+
+    public GridPaneHandles(
+    		ApplicationContext context,
+    		Content contentPanelController,
             FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, GridPane.class);
-        
+        super(context, contentPanelController, fxomInstance, GridPane.class);
+        this.context = context;
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }
-    
+
     public void updateColumnRowSelection(GridSelectionGroup gsg) {
-        
+
         if (gsg == null) {
             mosaic.setSelectedColumnIndexes(Collections.emptySet());
             mosaic.setSelectedRowIndexes(Collections.emptySet());
@@ -84,22 +89,22 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
             }
         }
     }
-    
-    
+
+
     /*
      * AbstractNodeHandles
      */
     @Override
     public void layoutDecoration() {
         super.layoutDecoration();
-                
+
         if (mosaic.getGridPane() != getSceneGraphObject()) {
             mosaic.setGridPane(getSceneGraphObject());
         } else {
             mosaic.update();
         }
-        
-        // Mosaic update may have created new trays and new sensors. 
+
+        // Mosaic update may have created new trays and new sensors.
         // Attach this handles to them.
         for (Node node : this.mosaic.getNorthTrayNodes()) {
             attachHandles(node);
@@ -119,7 +124,7 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
         for (Node node : this.mosaic.getVgapSensorNodes()) {
             attachHandles(node);
         }
-        
+
         // Update mosaic transform
         mosaic.getTopGroup().getTransforms().clear();
         mosaic.getTopGroup().getTransforms().add(getSceneGraphObjectToDecorationTransform());
@@ -131,14 +136,14 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
         if (result == null) {
             result = findGestureInSensors(node);
         }
-        
+
         return result;
     }
-    
-    
+
+
     private AbstractGesture findGestureInTrays(Node node) {
         final GridSelectionGroup.Type feature;
-        
+
         int trayIndex = mosaic.getNorthTrayNodes().indexOf(node);
         if (trayIndex != -1) {
             feature = GridSelectionGroup.Type.COLUMN;
@@ -156,7 +161,7 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
                 }
             }
         }
-        
+
         final AbstractGesture result;
         if (trayIndex == -1) {
             result = super.findGesture(node);
@@ -164,35 +169,35 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
             result = new SelectAndMoveInGridGesture(getContentPanelController(),
                     getFxomInstance(), feature, trayIndex);
         }
-        
+
         return result;
     }
-    
-    
+
+
     private AbstractGesture findGestureInSensors(Node node) {
         final AbstractGesture result;
-        
+
         int sensorIndex = mosaic.getHgapSensorNodes().indexOf(node);
         if (sensorIndex != -1) {
-            result = new ResizeColumnGesture(this, sensorIndex);
+            result = new ResizeColumnGesture(context, this, sensorIndex);
         } else {
             sensorIndex = mosaic.getVgapSensorNodes().indexOf(node);
             if (sensorIndex != -1) {
-                result = new ResizeRowGesture(this, sensorIndex);
+                result = new ResizeRowGesture(context, this, sensorIndex);
             } else {
                 result = super.findGesture(node);
             }
         }
-        
+
         return result;
     }
 
-    
+
     /*
      * Private
      */
-    
-    /* 
+
+    /*
      * Wrapper to avoid the 'leaking this in constructor' warning emitted by NB.
      */
     private void attachHandles(Node node) {

@@ -47,9 +47,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.oracle.javafx.scenebuilder.kit.fxom.glue.GlueCharacters;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMSaver;
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueCharacters;
 
 import javafx.embed.swing.JFXPanel;
 

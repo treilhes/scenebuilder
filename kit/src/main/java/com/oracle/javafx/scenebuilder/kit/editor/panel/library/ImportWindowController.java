@@ -50,10 +50,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.alert.ImportingGluonControlsAlert;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.util.FolderExplorer;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarExplorer;
@@ -104,7 +103,7 @@ public class ImportWindowController extends AbstractModalDialog {
     private int numOfImportedJar;
     private boolean copyFilesToUserLibraryDir;
     private Stage owner;
-    
+
     // At first we put in this collection the items which are already excluded,
     // basically all which are listed in the filter file.
     // When constructing the list of items discovered in new jar file being imported
@@ -115,7 +114,7 @@ public class ImportWindowController extends AbstractModalDialog {
     private final List<String> artifactsFilter;
 
     private final MavenArtifactsPreferences mavenPreferences;
-    
+
     @FXML
     private VBox leftHandSidePart;
 
@@ -130,33 +129,33 @@ public class ImportWindowController extends AbstractModalDialog {
 
     @FXML
     ChoiceBox<String> defSizeChoice;
-    
+
     @FXML
     private Label sizeLabel;
 
     @FXML
     private SplitPane topSplitPane;
-    
+
     @FXML
     Group previewGroup;
-    
+
     @FXML
     Label numOfItemsLabel;
-    
+
     @FXML
     Label classNameLabel;
-    
+
     @FXML
     Label previewHintLabel;
-    
+
     @FXML
     ToggleButton checkAllUncheckAllToggle;
 
-    
+
     public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
         this(lpc, files, mavenPreferences, owner, true, new ArrayList<>());
     }
-    
+
     public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
             boolean copyFilesToUserLibraryDir, List<String> artifactsFilter) {
         super(ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
@@ -181,7 +180,7 @@ public class ImportWindowController extends AbstractModalDialog {
      I noticed two non daemon threads:
      AWT-EventQueue-0
      AWT-Shutdown
-    
+
      java.lang.NullPointerException
      at java.util.StringTokenizer.<init>(StringTokenizer.java:199)
      at java.util.StringTokenizer.<init>(StringTokenizer.java:221)
@@ -214,9 +213,9 @@ public class ImportWindowController extends AbstractModalDialog {
         } else {
             getStage().close();
         }
-        
+
         exploringTask = null;
-        
+
         try {
             closeClassLoader();
         } catch (IOException ex) {
@@ -228,10 +227,10 @@ public class ImportWindowController extends AbstractModalDialog {
     protected void okButtonPressed(ActionEvent e) {
         exploringTask = null;
         getStage().close();
-        
+
         try {
             closeClassLoader();
-            
+
             UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().getLibrary());
 
             if (copyFilesToUserLibraryDir) {
@@ -300,12 +299,12 @@ public class ImportWindowController extends AbstractModalDialog {
         assert classNameLabel != null;
         assert previewHintLabel != null;
         assert checkAllUncheckAllToggle != null;
-        
+
         // Setup dialog buttons
         setOKButtonVisible(true);
         setDefaultButtonID(ButtonID.OK);
         setShowDefaultButton(true);
-        
+
         // Setup size choice box
         defSizeChoice.getItems().clear();
         // Care to have values in sync with definition of PrefSize
@@ -332,13 +331,13 @@ public class ImportWindowController extends AbstractModalDialog {
                 checkAllUncheckAllToggle.setText(I18N.getString("import.toggle.uncheckall"));
             }
         });
-                
+
         setProcessing();
-        
+
         // We do not want the list becomes larger when the window is made larger.
         // The way to make the list larger is to use the splitter.
         SplitPane.setResizableWithParent(leftHandSidePart, false);
-        
+
         work();
     }
 
@@ -354,7 +353,7 @@ public class ImportWindowController extends AbstractModalDialog {
     /*
      * Private
      */
-    
+
     private void closeClassLoader() throws IOException {
         if (importClassLoader != null) {
             importClassLoader.close();
@@ -379,7 +378,7 @@ public class ImportWindowController extends AbstractModalDialog {
         }
         // add artifacts jars (main and dependencies)
         res.addAll(mavenPreferences.getArtifactsFilesWithDependencies());
-        
+
         return res;
     }
 
@@ -433,7 +432,7 @@ public class ImportWindowController extends AbstractModalDialog {
             getStage().toFront();
             updateNumOfItemsLabelAndSelectionToggleState();
         });
-        
+
         // We construct the import list only if exploration of jar files does well.
         // If Cancel is called during the construction of the list then the import
         // window is closed but the construction itself will continue up to the
@@ -449,12 +448,12 @@ public class ImportWindowController extends AbstractModalDialog {
             // controllerDidLoadContentFxml() wasn't an option. Below is the
             // earliest place it has been proven effective, at least on my machine.
             getStage().toFront();
-            
+
             try {
                 // We get the set of items which are already excluded prior to the current import.
                 UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().getLibrary());
                 alreadyExcludedItems = userLib.getFilter();
-                
+
                 List<JarReport> jarReportList = exploringTask.get(); // blocking call
                 final Callback<ImportRow, ObservableValue<Boolean>> importRequired
                         = row -> row.importRequired();
@@ -468,7 +467,7 @@ public class ImportWindowController extends AbstractModalDialog {
                             final String canonicalName = e.getKlass().getCanonicalName();
                             // If the class we import is already listed as an excluded one
                             // then it must appear unchecked in the list.
-                            if (alreadyExcludedItems.contains(canonicalName) || 
+                            if (alreadyExcludedItems.contains(canonicalName) ||
                                     artifactsFilter.contains(canonicalName)) {
                                 checked = false;
                                 if (alreadyExcludedItems.contains(canonicalName)) {
@@ -490,10 +489,11 @@ public class ImportWindowController extends AbstractModalDialog {
                     }
                 }
 
-                if (importingGluonControls) {
-                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(owner);
-                    alert.showAndWait();
-                }
+              //TODO uncomment and fix for full theme support
+//                if (importingGluonControls) {
+//                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(owner);
+//                    alert.showAndWait();
+//                }
 
                 // Sort based on the simple class name.
                 Collections.sort(importList.getItems(), new ImportRowComparator());
@@ -513,7 +513,7 @@ public class ImportWindowController extends AbstractModalDialog {
 
         th.start();
     }
-    
+
     private void showErrorDialog(Exception exception) {
         final ErrorDialog errorDialog = new ErrorDialog(null);
         errorDialog.setTitle(I18N.getString("import.error.title"));
@@ -541,7 +541,7 @@ public class ImportWindowController extends AbstractModalDialog {
             } catch (IOException ioe) {
                 showErrorDialog(ioe);
             }
-            
+
             // In order to get valid bounds I need to put the node into a
             // scene and ask for full layout.
             try {
@@ -564,7 +564,7 @@ public class ImportWindowController extends AbstractModalDialog {
                 builtinPrefWidth = 0;
                 builtinPrefHeight = 0;
             }
-            
+
             if (builtinPrefWidth == 0 || builtinPrefHeight == 0) {
                 if (zeNode instanceof Region) { // must check instanceof: custom components are not necessarily regions..
                     ((Region) zeNode).setPrefSize(200, 200);
@@ -617,19 +617,19 @@ public class ImportWindowController extends AbstractModalDialog {
 
     private int getNumOfComponentToImport(final ListView<ImportRow> list) {
         int res = 0;
-        
+
         for (final ImportRow row : list.getItems()) {
             if (row.isImportRequired()) {
                 res++;
             }
         }
-        
+
         return res;
     }
-    
+
     private List<String> getExcludedItems() {
         List<String> res = new ArrayList<>(alreadyExcludedItems);
-        
+
         for (ImportRow row : importList.getItems()) {
             if (! row.isImportRequired()) {
                 res.add(row.getCanonicalClassName());
@@ -645,7 +645,7 @@ public class ImportWindowController extends AbstractModalDialog {
                 .map(ImportRow::getCanonicalClassName)
                 .collect(Collectors.joining(File.pathSeparator));
     }
-    
+
     // The title of the button is important in the sense it says to the user
     // what action will be taken.
     // In the most common case one or more component are selected in the list,
@@ -676,7 +676,7 @@ public class ImportWindowController extends AbstractModalDialog {
             okButton.requestFocus();
         }
     }
-    
+
     void updateNumOfItemsLabelAndSelectionToggleState() {
         final int num = importList.getItems().size();
         if (num == 0 || num == 1) {
@@ -686,7 +686,7 @@ public class ImportWindowController extends AbstractModalDialog {
             numOfItemsLabel.setText(num + " " //NOI18N
                     + I18N.getString("import.num.items"));
         }
-        
+
         if (num >= 1) {
             checkAllUncheckAllToggle.setDisable(false);
         }
@@ -699,7 +699,7 @@ public class ImportWindowController extends AbstractModalDialog {
             checkAllUncheckAllToggle.setText(I18N.getString("import.toggle.uncheckall"));
         }
     }
-        
+
     // NOTE At the end of the day some tooling in metadata will supersedes the
     // use of this method that is only able to deal with a Region, ignoring all
     // other cases.
@@ -722,11 +722,11 @@ public class ImportWindowController extends AbstractModalDialog {
                 default:
                     break;
             }
-            
+
             defSizeChoice.getSelectionModel().select(choice);
         }
     }
-    
+
     private void setSizeLabel(PrefSize ps) {
         switch (ps) {
             case DEFAULT:

@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -45,11 +44,21 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.ContextMenu;
+import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Driver;
+import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.Handles;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.source.AbstractDragSource;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.AbstractDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.BorderPaneDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.CubicCurveDriver;
@@ -73,7 +82,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TreeTableC
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TreeTableViewDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.VBoxDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.WindowDriver;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.outline.NodeOutline;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.mode.EditModeController;
@@ -82,22 +90,11 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUnion;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.Picker;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.ScrollPaneBooster;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -154,7 +151,7 @@ import javafx.stage.Window;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class ContentPanelController extends AbstractFxmlPanelController
-                                    implements FXOMDocument.SceneGraphHolder {
+                                    implements Content, FXOMDocument.SceneGraphHolder {
 
     @FXML private ScrollPane scrollPane;
     @FXML private Pane workspacePane;
@@ -189,6 +186,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 	private final BackgroundImagePreference backgroundImagePreference;
 	private final ParentRingColorPreference parentRingColorPreference;
 	private final EditorController editorController;
+	private final ApplicationContext context;
 
     /*
      * Public
@@ -205,12 +203,20 @@ public class ContentPanelController extends AbstractFxmlPanelController
     		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
     		@Autowired BackgroundImagePreference backgroundImagePreference,
     		@Autowired ParentRingColorPreference parentRingColorPreference
+
+//    		@Autowired @Lazy EditModeController editModeController,
+//    		@Autowired @Lazy PickModeController pickModeController,
+//    		@Autowired WorkspaceController workspaceController
     		) {
         super(ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+        this.context = context;
         this.editorController = editorController;
-        this.editModeController = context.getBean(EditModeController.class, this);
+        this.editModeController = context.getBean(EditModeController.class, context, this);
         this.pickModeController = context.getBean(PickModeController.class, this);
         this.workspaceController = context.getBean(WorkspaceController.class, editorController);
+//        this.editModeController = editModeController;
+//        this.pickModeController = pickModeController;
+//        this.workspaceController = workspaceController;
 
         this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
         this.backgroundImagePreference = backgroundImagePreference;
@@ -222,21 +228,21 @@ public class ContentPanelController extends AbstractFxmlPanelController
     @FXML
     public void initialize() {
 
-    	editorController.getDragController().dragSourceProperty().addListener((ChangeListener<AbstractDragSource>) (ov, t, t1) -> dragSourceDidChange()
+    	editorController.getDragController().dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, t, t1) -> dragSourceDidChange()
         );
 
-        editorController.getDragController().dropTargetProperty().addListener((ChangeListener<AbstractDropTarget>) (ov, t, t1) -> dropTargetDidChange()
+        editorController.getDragController().dropTargetProperty().addListener((ChangeListener<DropTarget>) (ov, t, t1) -> dropTargetDidChange()
         );
 
-        editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> themeDidChange()
-        );
+//        editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> themeDidChange()
+//        );
+//
+//        editorController.gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> themeDidChange()));
+//
+//        editorController.gluonThemeProperty().addListener(((observable, oldValue, newValue) -> themeDidChange()));
 
-        editorController.gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> themeDidChange()));
-
-        editorController.gluonThemeProperty().addListener(((observable, oldValue, newValue) -> themeDidChange()));
-
-        editorController.sceneStyleSheetProperty().addListener((ListChangeListener<File>) change -> sceneStyleSheetsDidChange()
-        );
+//        editorController.sceneStyleSheetProperty().addListener((ListChangeListener<File>) change -> sceneStyleSheetsDidChange()
+//        );
         editorController.pickModeEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> pickModeDidChange()
         );
 
@@ -603,7 +609,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
          * is available in AbstractDriver.
          */
         if (match != null) {
-            final AbstractDriver driver = lookupDriver(match);
+            final Driver driver = lookupDriver(match);
             result = driver.refinePick(sceneGraphNode, sceneX, sceneY, match);
         } else {
             result = null;
@@ -751,8 +757,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param fxomObject an fxom object
      * @return null or the associated handles
      */
-    public AbstractHandles<?> lookupHandles(FXOMObject fxomObject) {
-        final AbstractHandles<?> result;
+    public Handles<?> lookupHandles(FXOMObject fxomObject) {
+        final Handles<?> result;
 
         if (currentModeController != editModeController) {
             result = null;
@@ -936,7 +942,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
                 contentGroup,
                 backgroundPane,
                 extensionRect);
-        themeDidChange(); // To setup initial value of WorkspaceController.themeStyleSheet
+//        themeDidChange(); // To setup initial value of WorkspaceController.themeStyleSheet
 
 
         // Setup the mode controller
@@ -946,7 +952,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         setupEventTracingFilter();
 
         // Setup the context menu
-        final ContextMenuController contextMenuController
+        final ContextMenu contextMenuController
                 = getEditorController().getContextMenuController();
         scrollPane.setContextMenu(contextMenuController.getContextMenu());
 
@@ -1005,54 +1011,54 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param fxomObject an fxom object (never null)
      * @return null or the driver adapted to fxomObject
      */
-    public AbstractDriver lookupDriver(FXOMObject fxomObject) {
+    public Driver lookupDriver(FXOMObject fxomObject) {
         final Object sceneGraphObject = fxomObject.getSceneGraphObject();
         final AbstractDriver result;
 
         if (sceneGraphObject instanceof HBox) {
-            result = new HBoxDriver(this);
+            result = new HBoxDriver(context, this);
         } else if (sceneGraphObject instanceof VBox) {
-            result = new VBoxDriver(this);
+            result = new VBoxDriver(context, this);
         } else if (sceneGraphObject instanceof GridPane) {
-            result = new GridPaneDriver(this);
+            result = new GridPaneDriver(context, this);
         } else if (sceneGraphObject instanceof BorderPane) {
-            result = new BorderPaneDriver(this);
+            result = new BorderPaneDriver(context, this);
         } else if (sceneGraphObject instanceof Line) {
-            result = new LineDriver(this);
+            result = new LineDriver(context, this);
         } else if (sceneGraphObject instanceof QuadCurve) {
-            result = new QuadCurveDriver(this);
+            result = new QuadCurveDriver(context, this);
         } else if (sceneGraphObject instanceof CubicCurve) {
-            result = new CubicCurveDriver(this);
+            result = new CubicCurveDriver(context, this);
         } else if (sceneGraphObject instanceof Polyline) {
-            result = new PolylineDriver(this);
+            result = new PolylineDriver(context, this);
         } else if (sceneGraphObject instanceof Polygon) {
-            result = new PolygonDriver(this);
+            result = new PolygonDriver(context, this);
         } else if (sceneGraphObject instanceof FlowPane) {
-            result = new FlowPaneDriver(this);
+            result = new FlowPaneDriver(context, this);
         } else if (sceneGraphObject instanceof TextFlow) {
-            result = new TextFlowDriver(this);
+            result = new TextFlowDriver(context, this);
         } else if (sceneGraphObject instanceof ToolBar) {
-            result = new ToolBarDriver(this);
+            result = new ToolBarDriver(context, this);
         } else if (sceneGraphObject instanceof SplitPane) {
-            result = new SplitPaneDriver(this);
+            result = new SplitPaneDriver(context, this);
         } else if (sceneGraphObject instanceof Tab) {
-            result = new TabDriver(this);
+            result = new TabDriver(context, this);
         } else if (sceneGraphObject instanceof TabPane) {
-            result = new TabPaneDriver(this);
+            result = new TabPaneDriver(context, this);
         } else if (sceneGraphObject instanceof TableView) {
-            result = new TableViewDriver(this);
+            result = new TableViewDriver(context, this);
         } else if (sceneGraphObject instanceof TableColumn) {
-            result = new TableColumnDriver(this);
+            result = new TableColumnDriver(context, this);
         } else if (sceneGraphObject instanceof TreeTableView) {
-            result = new TreeTableViewDriver(this);
+            result = new TreeTableViewDriver(context, this);
         } else if (sceneGraphObject instanceof TreeTableColumn) {
-            result = new TreeTableColumnDriver(this);
+            result = new TreeTableColumnDriver(context, this);
         } else if (sceneGraphObject instanceof Node) {
-            result = new GenericDriver(this);
+            result = new GenericDriver(context, this);
         } else if (sceneGraphObject instanceof Scene) {
-            result = new SceneDriver(this);
+            result = new SceneDriver(context, this);
         } else if (sceneGraphObject instanceof Window) {
-            result = new WindowDriver(this);
+            result = new WindowDriver(context, this);
         } else {
             result = null;
         }
@@ -1110,26 +1116,26 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
 
-    private void themeDidChange() {
-        if (contentGroup != null) {
-            final Theme theme = getEditorController().getTheme();
-            final GluonSwatch gluonSwatch = getEditorController().getGluonSwatch();
-            final GluonTheme gluonTheme = getEditorController().getGluonTheme();
-            final String themeStyleSheet = theme.getStylesheetURL();
-            workspaceController.setThemeStyleSheet(themeStyleSheet, theme, gluonSwatch, gluonTheme);
-        }
-    }
+//    private void themeDidChange() {
+//        if (contentGroup != null) {
+//            final Theme theme = getEditorController().getTheme();
+//            final GluonSwatch gluonSwatch = getEditorController().getGluonSwatch();
+//            final GluonTheme gluonTheme = getEditorController().getGluonTheme();
+//            final String themeStyleSheet = theme.getStylesheetURL();
+//            workspaceController.setThemeStyleSheet(themeStyleSheet, theme, gluonSwatch, gluonTheme);
+//        }
+//    }
 
 
     private void sceneStyleSheetsDidChange() {
-        if (contentGroup != null) {
-            final List<File> sceneStyleSheets = getEditorController().getSceneStyleSheets();
-            final List<String> sceneStyleSheetURLs = new ArrayList<>();
-            for (File f : sceneStyleSheets) {
-                sceneStyleSheetURLs.add(f.toURI().toString());
-            }
-            workspaceController.setPreviewStyleSheets(sceneStyleSheetURLs);
-        }
+//        if (contentGroup != null) {
+//            final List<File> sceneStyleSheets = getEditorController().getSceneStyleSheets();
+//            final List<String> sceneStyleSheetURLs = new ArrayList<>();
+//            for (File f : sceneStyleSheets) {
+//                sceneStyleSheetURLs.add(f.toURI().toString());
+//            }
+//            workspaceController.setPreviewStyleSheets(sceneStyleSheetURLs);
+//        }
     }
 
     private void pickModeDidChange() {

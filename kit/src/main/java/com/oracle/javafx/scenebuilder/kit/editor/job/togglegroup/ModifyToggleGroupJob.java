@@ -35,41 +35,43 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.togglegroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.ToggleGroupPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.kit.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.property.value.ToggleGroupPropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
 
 /**
  *
  */
 public class ModifyToggleGroupJob extends BatchDocumentJob {
-    
-    private static final PropertyName toggleGroupName 
+
+    private static final PropertyName toggleGroupName
             = new PropertyName("toggleGroup"); //NOI18N
-    
+
     private final FXOMObject targetObject;
     private final String toggleGroupId;
 
-    public ModifyToggleGroupJob(FXOMObject fxomObject, String toggleGroupId, 
-            EditorController editorController) {
-        super(editorController);
-        
+    public ModifyToggleGroupJob(ApplicationContext context, FXOMObject fxomObject, String toggleGroupId,
+            Editor editor) {
+        super(context, editor);
+
         assert fxomObject != null;
         assert (toggleGroupId == null) || JavaLanguage.isIdentifier(toggleGroupId);
-        
+
         this.targetObject = fxomObject;
         this.toggleGroupId = toggleGroupId;
     }
@@ -77,7 +79,7 @@ public class ModifyToggleGroupJob extends BatchDocumentJob {
     /*
      * CompositeJob
      */
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
@@ -90,49 +92,49 @@ public class ModifyToggleGroupJob extends BatchDocumentJob {
                 /*
                  * Case #0 : toggleGroupId is null
                  *      => removes toggleGroup FXOMProperty if needed
-                 * 
+                 *
                  * Case #1 : targetObject.toggleGroup is undefined
                  *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOI18N
-                 * 
+                 *
                  * Case #2 : targetObject defines the ToggleGroup instance
                  *      => removes toggleGroup FXOMPropertyC
                  *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOI18N
-                 * 
+                 *
                  * Case #3 : targetObject refers to a ToggleGroup instance
                  *      => removes toggleGroup FXOMPropertyT
                  *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOI18N
                  */
-                
+
                 final FXOMDocument fxomDocument
                         = targetInstance.getFxomDocument();
-                final FXOMProperty fxomProperty 
+                final FXOMProperty fxomProperty
                         = targetInstance.getProperties().get(toggleGroupName);
-                
+
                 if (fxomProperty != null) { // Case #0 #2 or #3
                     final Job removePropertyJob
-                            = new RemovePropertyJob(fxomProperty, getEditorController());
+                            = new RemovePropertyJob(getContext(), fxomProperty, getEditorController()).extend();
                     result.add(removePropertyJob);
                 }
-                
+
                 // Case #1, #2 and #3
                 if (toggleGroupId != null) {
                     final PrefixedValue pv
                             = new PrefixedValue(PrefixedValue.Type.EXPRESSION, toggleGroupId);
-                    final FXOMPropertyT newProperty 
+                    final FXOMPropertyT newProperty
                             = new FXOMPropertyT(fxomDocument, toggleGroupName, pv.toString());
                     final Job addPropertyJob
-                            = new AddPropertyJob(newProperty, targetInstance, -1, getEditorController());
+                            = new AddPropertyJob(getContext(), newProperty, targetInstance, -1, getEditorController()).extend();
                     result.add(addPropertyJob);
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     @Override
     protected String makeDescription() {
         return getClass().getSimpleName(); // Should not reach the user
     }
-    
+
 }

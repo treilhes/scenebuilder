@@ -35,15 +35,17 @@ package com.oracle.javafx.scenebuilder.kit.editor.job.togglegroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -54,30 +56,30 @@ public class ModifySelectionToggleGroupJob extends BatchDocumentJob {
 
     private final String toggleGroupId;
 
-    public ModifySelectionToggleGroupJob(String toggleGroupId, EditorController editorController) {
-        super(editorController);
-        
-        assert editorController.getFxomDocument() != null;
-        
+    public ModifySelectionToggleGroupJob(ApplicationContext context, String toggleGroupId, Editor editor) {
+        super(context, editor);
+
+        assert editor.getFxomDocument() != null;
+
         this.toggleGroupId = toggleGroupId;
     }
-    
-    
+
+
     /*
      * BatchSelectionJob
      */
-    
+
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
-        
+
         /*
          * Checks that toggleGroupId is:
          *  0) either null
          *  1) either an unused fx:id
          *  2) either the fx:id of an existing ToggleGroup instance
          */
-        
+
         final boolean executable;
         if (toggleGroupId == null) {
             executable = true;
@@ -95,7 +97,7 @@ public class ModifySelectionToggleGroupJob extends BatchDocumentJob {
                 executable = false;
             }
         }
-        
+
         /*
          * Creates some ModifyToggleGroupJob instances
          */
@@ -105,14 +107,14 @@ public class ModifySelectionToggleGroupJob extends BatchDocumentJob {
                 final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
                 for (FXOMObject fxomObject : osg.getItems()) {
                     final Job subJob
-                            = new ModifyToggleGroupJob(fxomObject, toggleGroupId, getEditorController());
+                            = new ModifyToggleGroupJob(getContext(), fxomObject, toggleGroupId, getEditorController()).extend();
                     if (subJob.isExecutable()) {
                         result.add(subJob);
                     }
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -120,5 +122,5 @@ public class ModifySelectionToggleGroupJob extends BatchDocumentJob {
     protected String makeDescription() {
         return I18N.getString("job.set.toggle.group");
     }
-    
+
 }

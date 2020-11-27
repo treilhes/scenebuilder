@@ -32,17 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
-
 /**
  * This class contains static methods that depends on theme.
  *
  * @treatAsPrivate
  */
 public class ThemeUtils {
-    
+
     /**
      * Gluon Glisten package
      */
@@ -67,76 +63,6 @@ public class ThemeUtils {
      * scene builder specific tweaks to Gluon theme
      */
     public static final String GLUON_DOCUMENT_STYLESHEET = "com/oracle/javafx/scenebuilder/app/css/GluonDocument.css";
-
-    /**
-     * Default theme
-     */
-    public static final Theme DEFAULT_THEME = Theme.MODENA;
-
-    /**
-     * Default Gluon Swatch
-     */
-    public static final GluonSwatch DEFAULT_SWATCH = GluonSwatch.BLUE;
-
-    /**
-     * Default Gluon Theme
-     */
-    public static final GluonTheme DEFAULT_GLUON_THEME = GluonTheme.LIGHT;
-
-    public static String getPlatformThemeStylesheetURL() {
-        // Return USER_AGENT css, which is Modena for fx 8.0
-        return Theme.MODENA.getStylesheetURL();
-    }
-
-    public static String getGluonDocumentStylesheetURL() {
-        return GLUON_DOCUMENT_STYLESHEET;
-    }
-
-    public static boolean isModena(Theme theme) {
-        return theme.toString().startsWith("MODENA");
-    }
-    
-    public static boolean isModenaBlackonwhite(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("BLACK_ON_WHITE");
-    }
-    
-    public static boolean isModenaWhiteonblack(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("WHITE_ON_BLACK");
-    }
-    
-    public static boolean isModenaYellowonblack(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("YELLOW_ON_BLACK");
-    }
-    
-    public static boolean isModenaHighContrast(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("HIGH_CONTRAST");
-    }
-    
-    public static boolean isModenaTouch(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("TOUCH");
-    }
-    
-    public static boolean isModenaTouchHighContrast(Theme theme) {
-        return isModena(theme)
-                && theme.toString().contains("HIGH_CONTRAST")
-                && theme.toString().contains("TOUCH");
-    }
-    
-    public static boolean isCaspian(Theme theme) {
-        return theme.toString().startsWith("CASPIAN");
-    }
-
-    public static boolean isGluonMobileLight(Theme theme) { return theme == Theme.GLUON_MOBILE_LIGHT; }
-
-    public static boolean isGluonMobileDark(Theme theme) {
-        return theme == Theme.GLUON_MOBILE_DARK;
-    }
-
 
 
 }

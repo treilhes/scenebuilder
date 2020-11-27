@@ -37,8 +37,8 @@ import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -38,59 +38,63 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.Job;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveNodeJob;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCloner;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.kit.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.util.JavaLanguage;
 
 /**
  *
  */
 public class ReferencesUpdater {
-    
-    private final EditorController editorController;
+
+    private final ApplicationContext context;
+    private final Editor editor;
     private final FXOMDocument fxomDocument;
     private final List<Job> executedJobs = new LinkedList<>();
     private final Set<String> declaredFxIds = new HashSet<>();
     private final FXOMCloner cloner;
-    
-    public ReferencesUpdater(EditorController editorController) {
-        assert editorController != null;
-        assert editorController.getFxomDocument() != null;
-        this.editorController = editorController;
-        this.fxomDocument = editorController.getFxomDocument();
+
+    public ReferencesUpdater(ApplicationContext context, Editor editor) {
+        assert editor != null;
+        assert editor.getFxomDocument() != null;
+        this.context = context;
+        this.editor = editor;
+        this.fxomDocument = editor.getFxomDocument();
         this.cloner = new FXOMCloner(this.fxomDocument);
     }
-    
+
     public void update() {
         if (fxomDocument.getFxomRoot() != null) {
             declaredFxIds.clear();
             update(fxomDocument.getFxomRoot());
         }
     }
-    
+
     public List<Job> getExecutedJobs() {
         return new LinkedList<>(executedJobs);
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void update(FXOMNode node) {
         if (node instanceof FXOMCollection) {
             updateCollection((FXOMCollection) node);
@@ -106,8 +110,8 @@ public class ReferencesUpdater {
             throw new RuntimeException("Bug"); //NOI18N
         }
     }
-    
-    
+
+
     private void updateCollection(FXOMCollection collection) {
         if (collection.getFxId() != null) {
             declaredFxIds.add(collection.getFxId());
@@ -117,8 +121,8 @@ public class ReferencesUpdater {
             update(items.get(i));
         }
     }
-    
-    
+
+
     private void updateInstance(FXOMInstance instance) {
         if (instance.getFxId() != null) {
             declaredFxIds.add(instance.getFxId());
@@ -129,8 +133,8 @@ public class ReferencesUpdater {
             update(properties.get(propertyName));
         }
     }
-    
-    
+
+
     private void updateIntrinsic(FXOMIntrinsic intrinsic) {
         switch(intrinsic.getType()) {
             case FX_REFERENCE:
@@ -141,16 +145,16 @@ public class ReferencesUpdater {
                 break;
         }
     }
-    
-    
+
+
     private void updatePropertyC(FXOMPropertyC property) {
         final List<FXOMObject> values = property.getValues();
         for (int i = 0, count = values.size(); i < count; i++) {
             update(values.get(i));
         }
     }
-    
-    
+
+
     private void updatePropertyT(FXOMPropertyT property) {
         final PrefixedValue pv = new PrefixedValue(property.getValue());
         if (pv.isExpression()) {
@@ -160,12 +164,12 @@ public class ReferencesUpdater {
             }
         }
     }
-    
-    
+
+
     private void updateReference(FXOMNode r, String fxId) {
         assert (r instanceof FXOMPropertyT) || (r instanceof FXOMIntrinsic);
         assert fxId != null;
-        
+
         if (declaredFxIds.contains(fxId) == false) {
             // r is a forward reference
             //
@@ -176,32 +180,32 @@ public class ReferencesUpdater {
             //    => we remove the reference
             // 2) else r is a strong reference
             //    => we expand the reference
-            
-            
+
+
             final FXOMObject declarer = fxomDocument.searchWithFxId(fxId);
 
             // 0)
             if (FXOMNodes.isToggleGroupReference(r)) {
-                final Job fixJob = new FixToggleGroupReferenceJob(r, editorController);
+                final Job fixJob = new FixToggleGroupReferenceJob(context, r, editor).extend();
                 fixJob.execute();
                 executedJobs.add(fixJob);
                 declaredFxIds.add(fxId);
             }
-            
+
             // 1
             else if (FXOMNodes.isWeakReference(r) || (declarer == null)) {
-                final Job removeJob = new RemoveNodeJob(r, editorController);
+                final Job removeJob = new RemoveNodeJob(context, r, editor).extend();
                 removeJob.execute();
                 executedJobs.add(removeJob);
-                
+
             // 2)
             } else {
-                
-                final Job expandJob = new ExpandReferenceJob(r, cloner, editorController);
+
+                final Job expandJob = new ExpandReferenceJob(context, r, cloner, editor).extend();
                 expandJob.execute();
                 executedJobs.add(expandJob);
             }
         }
     }
-    
+
 }

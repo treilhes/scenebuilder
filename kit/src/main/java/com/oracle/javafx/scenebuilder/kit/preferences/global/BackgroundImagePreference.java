@@ -12,7 +12,8 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference.BackgroundImage;
 
 import javafx.scene.Parent;
@@ -20,7 +21,7 @@ import javafx.scene.image.Image;
 
 @Component
 public class BackgroundImagePreference extends EnumPreference<BackgroundImage> implements ManagedGlobalPreference, UserPreference<BackgroundImage> {
-	
+
 	/***************************************************************************
      *                                                                         *
      * Support Classes                                                         *
@@ -51,7 +52,7 @@ public class BackgroundImagePreference extends EnumPreference<BackgroundImage> i
             }
         }
     }
-    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -60,8 +61,13 @@ public class BackgroundImagePreference extends EnumPreference<BackgroundImage> i
     public static final String PREFERENCE_KEY = "BACKGROUND_IMAGE"; //NOI18N
     public static final BackgroundImage PREFERENCE_DEFAULT_VALUE = BackgroundImage.BACKGROUND_03;
 
-	public BackgroundImagePreference(@Autowired PreferencesContext preferencesContext) {
+    private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public BackgroundImagePreference(
+			@Autowired PreferencesContext preferencesContext,
+			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, BackgroundImage.class, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
 	public static Image getImage(BackgroundImage bgi) {
@@ -84,7 +90,7 @@ public class BackgroundImagePreference extends EnumPreference<BackgroundImage> i
         assert url != null;
         return new Image(url.toExternalForm());
     }
-	
+
 	public Image getBackgroundImageImage() { return getImage(getValue()); }
 
 	@Override
@@ -94,7 +100,7 @@ public class BackgroundImagePreference extends EnumPreference<BackgroundImage> i
 
 	@Override
 	public Parent getEditor() {
-		return PreferenceEditorFactory.newEnumFieldEditor(this);
+		return preferenceEditorFactory.newEnumFieldEditor(this);
 	}
 
 

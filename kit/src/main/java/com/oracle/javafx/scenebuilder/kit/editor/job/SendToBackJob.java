@@ -34,20 +34,23 @@ package com.oracle.javafx.scenebuilder.kit.editor.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ReIndexObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.kit.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMPropertyC;
 
 /**
  *
  */
 public class SendToBackJob extends InlineDocumentJob {
 
-    public SendToBackJob(EditorController editorController) {
-        super(editorController);
+    public SendToBackJob(ApplicationContext context, Editor editor) {
+        super(context, editor);
     }
 
     @Override
@@ -83,8 +86,8 @@ public class SendToBackJob extends InlineDocumentJob {
             if (previousSlibing != null) {
                 final FXOMPropertyC parentProperty = candidate.getParentProperty();
                 final FXOMObject beforeChild = parentProperty.getValues().get(0);
-                final ReIndexObjectJob subJob = new ReIndexObjectJob(
-                        candidate, beforeChild, getEditorController());
+                final Job subJob = new ReIndexObjectJob(getContext(),
+                        candidate, beforeChild, getEditorController()).extend();
                 if (subJob.isExecutable()) {
                     subJob.execute();
                     result.add(subJob);

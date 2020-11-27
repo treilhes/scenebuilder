@@ -56,11 +56,12 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.kit.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.kit.library.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.kit.library.util.FolderExplorer;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarExplorer;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
@@ -68,15 +69,15 @@ import com.oracle.javafx.scenebuilder.kit.library.util.JarReportEntry;
 
 /**
  *
- * 
+ *
  */
 class LibraryFolderWatcher implements Runnable {
-    
+
 	private final BuiltinLibrary builtinLibrary;
     private final UserLibrary library;
 
     private enum FILE_TYPE {FXML, JAR, FOLDER_MARKER};
-    
+
     public LibraryFolderWatcher(UserLibrary library, BuiltinLibrary builtinLibrary) {
         this.library = library;
         this.builtinLibrary = builtinLibrary;
@@ -85,10 +86,10 @@ class LibraryFolderWatcher implements Runnable {
     /*
      * Runnable
      */
-    
+
     @Override
     public void run() {
-        
+
         try {
             library.updateExplorationCount(0);
             library.updateExplorationDate(new Date());
@@ -98,8 +99,8 @@ class LibraryFolderWatcher implements Runnable {
             // Let's stop
         }
     }
-    
-    
+
+
     /*
      * Private
      */
@@ -109,10 +110,10 @@ class LibraryFolderWatcher implements Runnable {
 
         // Attempts to add the maven jars, including dependencies
         List<Path> additionalJars = library.getAdditionalJarPaths().get();
-        
+
         final Set<Path> currentJarsOrFolders = new HashSet<>(additionalJars);
         final Set<Path> currentFxmls = new HashSet<>();
-                
+
         // Now attempts to discover the user library folder
         final Path folder = Paths.get(library.getPath());
         if (folder != null && folder.toFile().exists()) {
@@ -154,7 +155,7 @@ class LibraryFolderWatcher implements Runnable {
             }
         } catch(IOException x) { }
     }
-    
+
     private void runWatching() throws InterruptedException {
         while (true) {
             final Path folder = Paths.get(library.getPath());
@@ -173,16 +174,16 @@ class LibraryFolderWatcher implements Runnable {
             WatchKey watchKey = null;
             while ((watchKey == null) || (watchKey.isValid() == false)) {
                 try {
-                    watchKey = folder.register(watchService, 
-                    StandardWatchEventKinds.ENTRY_CREATE, 
-                    StandardWatchEventKinds.ENTRY_DELETE, 
+                    watchKey = folder.register(watchService,
+                    StandardWatchEventKinds.ENTRY_CREATE,
+                    StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY);
 
                     WatchKey wk;
                     do {
                         wk = watchService.take();
                         assert wk == watchKey;
-                        
+
                         boolean isDirty = false;
                         for (WatchEvent<?> e: wk.pollEvents()) {
                             final WatchEvent.Kind<?> kind = e.kind();
@@ -205,7 +206,7 @@ class LibraryFolderWatcher implements Runnable {
                                 assert kind == StandardWatchEventKinds.OVERFLOW;
                             }
                         }
-                                                
+
                         // We reconstruct a full set from scratch as soon as the
                         // dirty flag is set.
                         if (isDirty) {
@@ -281,8 +282,8 @@ class LibraryFolderWatcher implements Runnable {
 
         return res;
     }
-    
-    
+
+
     private boolean hasJarBeenAdded(Path context) {
         boolean hasJarBeenAdded = false;
         for (JarReport report : library.getJarReports()) {
@@ -297,7 +298,7 @@ class LibraryFolderWatcher implements Runnable {
 
     private void updateLibrary(Collection<Path> paths) throws IOException {
         final List<LibraryItem> newItems = new ArrayList<>();
-        
+
         for (Path path : paths) {
             newItems.add(makeLibraryItem(path));
         }
@@ -306,9 +307,9 @@ class LibraryFolderWatcher implements Runnable {
         library.updateFxmlFileReports(paths);
         library.updateExplorationDate(new Date());
     }
-    
-    
-    private LibraryItem makeLibraryItem(Path path) throws IOException {
+
+
+    private LibraryItemImpl makeLibraryItem(Path path) throws IOException {
         final URL iconURL = ImageUtils.getNodeIconURL(null);
         String fileName = path.getFileName().toString();
         String itemName = fileName.substring(0, fileName.indexOf(".fxml")); //NOI18N
@@ -320,15 +321,15 @@ class LibraryFolderWatcher implements Runnable {
             while ((line = reader.readLine()) != null) {
                 buf.append(line).append("\n"); //NOI18N
             }
-            
+
             fxmlText = buf.toString();
         }
 
-        final LibraryItem res = new LibraryItem(itemName, UserLibrary.TAG_USER_DEFINED, fxmlText, iconURL, library);
+        final LibraryItemImpl res = new LibraryItemImpl(itemName, UserLibrary.TAG_USER_DEFINED, fxmlText, iconURL, library);
         return res;
     }
-    
-    
+
+
     private void exploreAndUpdateLibrary(Collection<Path> jarsOrFolders) throws IOException {
 
         //  1) we create a classloader
@@ -363,7 +364,7 @@ class LibraryFolderWatcher implements Runnable {
             }
 
             Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.end", currentJarOrFolder));
-            
+
             //            if (jarReport.hasGluonControls()) {
 //                // We check if the jar has already been imported to avoid showing the import gluon jar
 //                // alert every time Scene Builder starts for jars that have already been imported
@@ -379,7 +380,7 @@ class LibraryFolderWatcher implements Runnable {
 //        }
 
         // 3)
-        final List<LibraryItem> newItems = new ArrayList<>();
+        final List<LibraryItemImpl> newItems = new ArrayList<>();
         for (JarReport jarOrFolderReport : jarOrFolderReports) {
             newItems.addAll(makeLibraryItems(jarOrFolderReport));
         }
@@ -393,36 +394,36 @@ class LibraryFolderWatcher implements Runnable {
                 .collect(Collectors.toList()));
         library.updateJarReports(new ArrayList<>(jarOrFolderReports));
         library.updateExplorationDate(new Date());
-        
+
         // 5
         // Fix for #45: mark end of first exploration
         library.updateFirstExplorationCompleted();
     }
-    
-    
-    private Collection<LibraryItem> makeLibraryItems(JarReport jarOrFolderReport) throws IOException {
-        final List<LibraryItem> result = new ArrayList<>();
+
+
+    private Collection<LibraryItemImpl> makeLibraryItems(JarReport jarOrFolderReport) throws IOException {
+        final List<LibraryItemImpl> result = new ArrayList<>();
         final URL iconURL = ImageUtils.getNodeIconURL(null);
         final List<String> excludedItems = library.getFilter();
         final List<String> artifactsFilter = library.getAdditionalFilter().get();
-                
+
         for (JarReportEntry e : jarOrFolderReport.getEntries()) {
             if ((e.getStatus() == JarReportEntry.Status.OK) && e.isNode()) {
                 // We filter out items listed in the excluded list, based on canonical name of the class.
                 final String canonicalName = e.getKlass().getCanonicalName();
-                if (!excludedItems.contains(canonicalName) && 
+                if (!excludedItems.contains(canonicalName) &&
                     !artifactsFilter.contains(canonicalName)) {
                     final String name = e.getKlass().getSimpleName();
                     final String fxmlText = JarExplorer.makeFxmlText(e.getKlass());
-                    result.add(new LibraryItem(name, UserLibrary.TAG_USER_DEFINED, fxmlText, iconURL, library));
+                    result.add(new LibraryItemImpl(name, UserLibrary.TAG_USER_DEFINED, fxmlText, iconURL, library));
                 }
             }
         }
-        
+
         return result;
     }
-    
-    
+
+
     private URL[] makeURLArrayFromPaths(Collection<Path> paths) {
         final URL[] result = new URL[paths.size()];
         int i = 0;
@@ -438,7 +439,7 @@ class LibraryFolderWatcher implements Runnable {
                 throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); //NOI18N
             }
         }
-        
+
         return result;
     }
 }

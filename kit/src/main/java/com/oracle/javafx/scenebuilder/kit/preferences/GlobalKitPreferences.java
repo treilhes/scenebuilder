@@ -1,17 +1,17 @@
 package com.oracle.javafx.scenebuilder.kit.preferences;
 
+import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
+//import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference;
+//import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference;
+//import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
+//import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference.BackgroundImage;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ThemePreference.Theme;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -30,8 +30,8 @@ public abstract class GlobalKitPreferences {
     protected final AlignmentGuidesColorPreference alignmentGuidesColor;
     protected final ParentRingColorPreference parentRingColor;
     protected final ThemePreference theme;
-    protected final GluonSwatchPreference gluonSwatch;
-    protected final GluonThemePreference gluonTheme;
+//    protected final GluonSwatchPreference gluonSwatch;
+//    protected final GluonThemePreference gluonTheme;
 
     /***************************************************************************
      *                                                                         *
@@ -42,7 +42,9 @@ public abstract class GlobalKitPreferences {
     public GlobalKitPreferences(RootContainerHeightPreference rootContainerHeight,
 			RootContainerWidthPreference rootContainerWidth, BackgroundImagePreference backgroundImage,
 			AlignmentGuidesColorPreference alignmentGuidesColor, ParentRingColorPreference parentRingColor,
-			ThemePreference theme, GluonSwatchPreference gluonSwatch, GluonThemePreference gluonTheme) {
+			ThemePreference theme
+			//, GluonSwatchPreference gluonSwatch, GluonThemePreference gluonTheme
+			) {
 		super();
 		this.rootContainerHeight = rootContainerHeight;
 		this.rootContainerWidth = rootContainerWidth;
@@ -50,8 +52,8 @@ public abstract class GlobalKitPreferences {
 		this.alignmentGuidesColor = alignmentGuidesColor;
 		this.parentRingColor = parentRingColor;
 		this.theme = theme;
-		this.gluonSwatch = gluonSwatch;
-		this.gluonTheme = gluonTheme;
+		//this.gluonSwatch = gluonSwatch;
+		//this.gluonTheme = gluonTheme;
 	}
 
     /***************************************************************************
@@ -103,16 +105,16 @@ public abstract class GlobalKitPreferences {
         parentRingColor.setValue(value);
     }
 
-    public Theme getTheme() { return theme.getValue(); }
+    public Class<? extends Theme> getTheme() { return theme.getValue(); }
 
-    public void setTheme(Theme theme) { this.theme.setValue(theme); }
+    public void setTheme(Class<? extends Theme> theme) { this.theme.setValue(theme); }
 
-    public GluonSwatch getSwatch() { return gluonSwatch.getValue(); }
-
-    public void setSwatch(GluonSwatch swatch) { this.gluonSwatch.setValue(swatch); }
-
-    public GluonTheme getGluonTheme() { return gluonTheme.getValue(); }
-
-    public void setGluonTheme(GluonTheme theme) { this.gluonTheme.setValue(theme); }
+//    public GluonSwatch getSwatch() { return gluonSwatch.getValue(); }
+//
+//    public void setSwatch(GluonSwatch swatch) { this.gluonSwatch.setValue(swatch); }
+//
+//    public GluonTheme getGluonTheme() { return gluonTheme.getValue(); }
+//
+//    public void setGluonTheme(GluonTheme theme) { this.gluonTheme.setValue(theme); }
 
 }

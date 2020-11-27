@@ -31,10 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 
+import org.springframework.context.ApplicationContext;
+
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.RegionResizer;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMObject;
 
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -46,28 +48,33 @@ import javafx.scene.layout.Region;
  */
 public class TabPaneDriver extends AbstractNodeDriver {
 
-    public TabPaneDriver(ContentPanelController contentPanelController) {
-        super(contentPanelController);
+	private final ApplicationContext context;
+
+    public TabPaneDriver(
+    		ApplicationContext context,
+    		ContentPanelController contentPanelController) {
+        super(context, contentPanelController);
+        this.context = context;
     }
 
     /*
      * AbstractDriver
      */
-    
+
     @Override
     public AbstractResizer<?> makeResizer(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof TabPane;
         return new RegionResizer((Region) fxomObject.getSceneGraphObject());
     }
-    
+
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof TabPane;
-        
+
         final TabPane tabPane = (TabPane) fxomObject.getSceneGraphObject();
         final TabPaneDesignInfoX di = new TabPaneDesignInfoX();
         final Tab tab = di.lookupTab(tabPane, sceneX, sceneY);
-        
+
         final FXOMObject result;
         if (tab == null) {
             result = fxomObject;
@@ -76,8 +83,8 @@ public class TabPaneDriver extends AbstractNodeDriver {
             assert result != null;
             assert result.getSceneGraphObject() == tab;
         }
-        
+
         return result;
     }
-    
+
 }

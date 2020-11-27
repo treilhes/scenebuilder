@@ -31,9 +31,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.TabOutline;
-import com.oracle.javafx.scenebuilder.kit.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -43,22 +43,22 @@ import javafx.scene.paint.Paint;
 
 /**
  *
- * 
+ *
  */
 public class TabTring extends AbstractTring<Tab> {
 
     private final TabOutline tabOutline;
 
-    public TabTring(ContentPanelController contentPanelController, FXOMInstance fxomInstance) {
+    public TabTring(Content contentPanelController, FXOMInstance fxomInstance) {
         super(contentPanelController, fxomInstance, Tab.class);
         assert fxomInstance.getSceneGraphObject() instanceof Tab;
-        
+
         tabOutline = new TabOutline(getSceneGraphObject());
         tabOutline.getRingPath().getStyleClass().add(TARGET_RING_CLASS);
         tabOutline.getRingPath().setMouseTransparent(true);
         getRootNode().getChildren().add(tabOutline.getRingPath());
     }
-    
+
     public FXOMInstance getFxomInstance() {
         return (FXOMInstance) getFxomObject();
     }
@@ -66,22 +66,22 @@ public class TabTring extends AbstractTring<Tab> {
     /*
      * AbstractPring
      */
-    
+
     @Override
     protected void layoutDecoration() {
         tabOutline.layout(this);
     }
-    
+
     @Override
     public void changeStroke(Paint stroke) {
         tabOutline.getRingPath().setStroke(stroke);
     }
-    
-    
+
+
     /*
      * AbstractDecoration
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return getSceneGraphObject().getTabPane().getLayoutBounds();
