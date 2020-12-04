@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
@@ -15,6 +16,8 @@ public interface PreferenceEditorFactory {
 	Parent newBooleanFieldEditor(Preference<Boolean> preference);
 
 	<T extends Enum<T>> Parent newEnumFieldEditor(EnumPreference<T> preference);
+
+	<T extends Enum<T>> Parent newEnumFieldEditor(EnumPreference<T> preference, Function<T, Node> createGraphic);
 
 	Parent newColorFieldEditor(Preference<Color> preference);
 

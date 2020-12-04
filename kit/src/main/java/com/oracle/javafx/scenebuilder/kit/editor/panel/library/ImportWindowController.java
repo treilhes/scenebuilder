@@ -249,7 +249,7 @@ public class ImportWindowController extends AbstractModalDialog {
                 if (!files.isEmpty())
                     libPanelController.copyFilesToUserLibraryDir(files);
 
-                Path foldersMarkerPath = Paths.get(userLib.getPath().toString(), LibraryUtil.FOLDERS_LIBRARY_FILENAME);
+                Path foldersMarkerPath = userLib.getPath().toPath().resolve(LibraryUtil.FOLDERS_LIBRARY_FILENAME);
 
                 if (!Files.exists(foldersMarkerPath))
                     Files.createFile(foldersMarkerPath);
@@ -364,9 +364,9 @@ public class ImportWindowController extends AbstractModalDialog {
     // one and jar files found in the user library dir.
     List<File> buildListOfAllFiles(List<File> importFiles) throws IOException {
         final List<File> res = new ArrayList<>(importFiles);
-        String userLibraryDir = ((UserLibrary) libPanelController.getEditorController().getLibrary()).getPath();
-        if (new File(userLibraryDir).exists()) {
-            Path userLibraryPath = new File(userLibraryDir).toPath();
+        File userLibraryDir = ((UserLibrary) libPanelController.getEditorController().getLibrary()).getPath();
+        if (userLibraryDir.exists()) {
+            Path userLibraryPath = userLibraryDir.toPath();
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(userLibraryPath)) {
                 for (Path entry : stream) {
                     if (entry.toString().endsWith(".jar")) { //NOI18N

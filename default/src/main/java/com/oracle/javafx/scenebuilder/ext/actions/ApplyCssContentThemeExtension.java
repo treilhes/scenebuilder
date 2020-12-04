@@ -13,12 +13,12 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class ThemeApplyCssContentActionExtension extends AbstractActionExtension<ApplyCssContentAction> {
+public class ApplyCssContentThemeExtension extends AbstractActionExtension<ApplyCssContentAction> {
 
 	private final ThemePreference themePreference;
 	private final ApplicationContext context;
 
-	public ThemeApplyCssContentActionExtension(
+	public ApplyCssContentThemeExtension(
 			@Autowired ApplicationContext context,
 			@Autowired @Lazy ThemePreference themePreference
 			) {

@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
@@ -77,12 +78,14 @@ public class ImageEditor extends PropertyEditor {
 
     private PrefixedValue.Type type = PrefixedValue.Type.PLAIN_STRING;
     private URL fxmlFileLocation;
+	private final FileSystem fileSystem;
 
-    public ImageEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, URL fxmlFileLocation) {
+    public ImageEditor(FileSystem fileSystem, ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, URL fxmlFileLocation) {
         super(propMeta, selectedClasses);
+        this.fileSystem = fileSystem;
         initialize(fxmlFileLocation);
     }
-    
+
     // Separate method to please FindBugs
     private void initialize(URL fxmlFileLocation) {
         this.fxmlFileLocation = fxmlFileLocation;
@@ -246,13 +249,13 @@ public class ImageEditor extends PropertyEditor {
                 new FileChooser.ExtensionFilter(
                         I18N.getString("inspector.select.image"),
                         Arrays.asList(extensions)));
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         File file = fileChooser.showOpenDialog(imagePathTf.getScene().getWindow());
         if ((file == null)) {
             return;
         }
         // Keep track of the user choice for next time
-        EditorController.updateNextInitialDirectory(file);
+        fileSystem.updateNextInitialDirectory(file);
         URL url;
         try {
             url = file.toURI().toURL();

@@ -43,6 +43,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -74,7 +75,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
-        
+
 /**
  * Utility class for property editors.
  *
@@ -371,7 +372,7 @@ public class EditorUtils {
         assert selectedObj instanceof Node;
         return (Node) selectedObj;
     }
-    
+
     public static void handleFading(FadeTransition fadeTransition, Node fadingSource) {
         handleFading(fadeTransition, fadingSource, null);
     }
@@ -412,7 +413,7 @@ public class EditorUtils {
         fadeTransition.play();
     }
 
-    protected static void openUrl(Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) throws IOException {
+    protected static void openUrl(FileSystem fileSystem, Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) throws IOException {
         Class<?> clazz = null;
         // In case of static property, we don't care of the selectedClasses
         if (selectedClasses != null) {
@@ -452,7 +453,7 @@ public class EditorUtils {
         }
         url += clazz.getName().replaceAll("\\.", "/") + ".html"; //NOI18N
         url += "#" + methodName; //NOI18N
-        EditorPlatform.open(url);
+        fileSystem.open(url);
     }
 
     // Specific swap() function for an ObservableList:
@@ -528,7 +529,7 @@ public class EditorUtils {
         }
         return getUrl(prefixedString, fxmlFileLocation);
     }
-    
+
     // Get the URL corresponding to a PrefixedValue string
 //    @SuppressWarnings("UseSpecificCatch")
     public static URL getUrl(String prefixedString, URL fxmlFileLocation) {
@@ -552,15 +553,15 @@ public class EditorUtils {
         // as "standard" characters (i.e. to backslash them)
         return new PrefixedValue(PrefixedValue.Type.PLAIN_STRING, str).toString();
     }
-    
+
     // From an url, returns the file name only (without the path)
     public static String getSimpleFileName(String url) {
         File file = new File(url);
         return file.getName();
     }
-    
+
     public static String toString(Object obj) {
         assert obj instanceof String;
-        return (String) obj; 
+        return (String) obj;
     }
 }

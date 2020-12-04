@@ -12,15 +12,14 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.charm.glisten.visual.GlistenStyleClasses;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
+import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -133,7 +132,7 @@ public class GluonSwatchPreference extends EnumPreference<GluonSwatch> implement
 
 	@Override
 	public Parent getEditor() {
-		return preferenceEditorFactory.newEnumFieldEditor(this);
+		return preferenceEditorFactory.newEnumFieldEditor(this, (g) -> g.createGraphic());
 	}
 
 	@Override

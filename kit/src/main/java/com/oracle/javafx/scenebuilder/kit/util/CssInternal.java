@@ -48,7 +48,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -187,9 +186,9 @@ public class CssInternal {
 //        return new ArrayList<>(themeClasses);
 //    }
 
-    public static List<String> getThemeStyleClasses(StylesheetProvider2 theme) {
+    public static List<String> getThemeStyleClasses(StylesheetProvider2 stylesheetConfig) {
     	//TODO maybe some other css are needed here
-        String themeStyleSheet = theme.getUserAgentStylesheet();
+        String themeStyleSheet = stylesheetConfig.getUserAgentStylesheet();
         Set<String> themeClasses = new HashSet<>();
         // For Theme css, we need to get the text css (.css) to be able to parse it.
         // (instead of the default binary format .bss)
@@ -207,7 +206,7 @@ public class CssInternal {
 //        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
 //    }
 
-    public static Map<String, String> getStyleClassesMap(StylesheetConfigManager stylesheetConfigManager, Editor editorController, Set<FXOMInstance> instances) {
+    public static Map<String, String> getStyleClassesMap(StylesheetProvider2 stylesheetConfig, Editor editorController, Set<FXOMInstance> instances) {
         Map<String, String> classesMap = new TreeMap<>();
         Object fxRoot = null;
         for (FXOMInstance instance : instances) {
@@ -218,12 +217,7 @@ public class CssInternal {
             classesMap.putAll(getFxObjectClassesMap(fxObject, fxRoot));
         }
 
-        // Handle the Scene stylesheets (if any)
-        //List<File> sceneStyleSheets = editorController.getSceneStyleSheets();
-
-    //  TODO check if it is a bad fix
-        //StylesheetProvider2 sp = stylesheetConfigManager.configUpdated().blockingMostRecent(new StylesheetConfig()).iterator().next();
-        StylesheetProvider2 sp = null;
+        StylesheetProvider2 sp = stylesheetConfig;
 
         if (sp != null) {
         	List<File> sceneStyleSheets = sp

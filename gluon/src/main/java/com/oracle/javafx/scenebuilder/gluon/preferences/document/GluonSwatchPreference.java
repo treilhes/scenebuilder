@@ -46,7 +46,7 @@ public class GluonSwatchPreference extends EnumPreference<GluonSwatch> implement
 
 	@Override
 	public Parent getEditor() {
-		return preferenceEditorFactory.newEnumFieldEditor(this);
+		return preferenceEditorFactory.newEnumFieldEditor(this, (g) -> g.createGraphic());
 	}
 
 	@Override

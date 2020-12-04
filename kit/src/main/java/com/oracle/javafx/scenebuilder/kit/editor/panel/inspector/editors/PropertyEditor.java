@@ -147,20 +147,23 @@ public abstract class PropertyEditor extends AbstractEditor {
         // Create a property link with a pretty name (e.g. layoutX ==> Layout X)
         propName = new Hyperlink();
         propName.setOnAction(event -> {
-            try {
-                if (propMeta != null && selectedClasses != null) {
-                    if (selectedClasses.size() <= 1) {
-                        EditorUtils.openUrl(selectedClasses, propMeta);
-                    }
-                } else {
-                    // Special case for non-properties (fx:id, ...)
-                    EditorPlatform.open(EditorPlatform.JAVADOC_HOME
-                            + "javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html"); //NOI18N
-                }
-                // Selection of multiple different classes ==> no link
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
+        	System.out.println("REACTIVATE ME");
+        	//TODO reactivate the code below when editors are spring components
+//            try {
+//
+//                if (propMeta != null && selectedClasses != null) {
+//                    if (selectedClasses.size() <= 1) {
+//                        EditorUtils.openUrl(selectedClasses, propMeta);
+//                    }
+//                } else {
+//                    // Special case for non-properties (fx:id, ...)
+//                    EditorPlatform.open(EditorPlatform.JAVADOC_HOME
+//                            + "javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html"); //NOI18N
+//                }
+//                // Selection of multiple different classes ==> no link
+//            } catch (IOException ex) {
+//                System.err.println(ex.getMessage());
+//            }
         });
         propName.getStyleClass().add("property-link"); //NOI18N
         propName.setFocusTraversable(false);
@@ -556,11 +559,13 @@ public abstract class PropertyEditor extends AbstractEditor {
                     } else {
                         // Open the css file
                         if (cssInfo.getMainUrl() != null) {
-                            try {
-                                EditorPlatform.open(cssInfo.getMainUrl().toString());
-                            } catch (IOException ex) {
-                                System.out.println(ex.getMessage() + ex);
-                            }
+                        	System.out.println("REACTIVATE ME");
+                        	//TODO reactivate the code below when editors are spring components
+//                            try {
+//                                EditorPlatform.open(cssInfo.getMainUrl().toString());
+//                            } catch (IOException ex) {
+//                                System.out.println(ex.getMessage() + ex);
+//                            }
                         }
                     }
                 });

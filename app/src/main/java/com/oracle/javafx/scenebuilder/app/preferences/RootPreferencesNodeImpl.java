@@ -10,8 +10,8 @@ import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 public class RootPreferencesNodeImpl implements RootPreferencesNode {
 
 	// PREFERENCES NODE NAME
-    static final String SB_RELEASE_NODE = "SB_2.0"; //NOI18N
-    
+    static final String SB_RELEASE_NODE = "SB_3.0"; //NOI18N
+
 	@Override
 	public Preferences getNode() {
 		return Preferences.userNodeForPackage(getClass()).node(SB_RELEASE_NODE);

@@ -42,7 +42,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
+import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
@@ -100,8 +101,8 @@ public final class PreviewWindowController extends AbstractWindowController {
     private boolean isDirty = false;
     private final long IMMEDIATE = 0; // milliseconds
     private final long DELAYED = 1000; // milliseconds
-	private final StylesheetConfigManager stylesheetConfigManager;
 	private StylesheetProvider2 stylesheetConfig;
+    private I18nResourceProvider resourceConfig;
 
     /**
      * The type of Camera used by the Preview panel.
@@ -113,11 +114,10 @@ public final class PreviewWindowController extends AbstractWindowController {
 
     public PreviewWindowController(
     		EditorController editorController,
-    		StylesheetConfigManager stylesheetConfigManager,
+    		DocumentManager documentManager,
     		Stage owner) {
         super(owner);
         this.editorController = editorController;
-        this.stylesheetConfigManager = stylesheetConfigManager;
         this.editorController.fxomDocumentProperty().addListener(
                 (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
                     assert editorController.getFxomDocument() == nd;
@@ -137,43 +137,16 @@ public final class PreviewWindowController extends AbstractWindowController {
             editorController.getFxomDocument().cssRevisionProperty().addListener(cssRevisionListener);
         }
 
-        stylesheetConfigManager.configUpdated().subscribe(s -> {
+        documentManager.stylesheetConfig().subscribe(s -> {
         	stylesheetConfig = s;
         	requestUpdate(DELAYED);
         });
-//        this.editorControllerTheme = editorController.getTheme();
-//        this.editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> {
-//            if (t1 != null) {
-//                editorControllerTheme = t1;
-//                requestUpdate(DELAYED);
-//            }
-//        });
-//
-//        this.editorControllerGluonSwatch = editorController.getGluonSwatch();
-//        this.editorController.gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                editorControllerGluonSwatch = newValue;
-//                requestUpdate(DELAYED);
-//            }
-//        }));
-//
-//        this.editorControllerGluonTheme = editorController.getGluonTheme();
-//        this.editorController.gluonThemeProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                editorControllerGluonTheme = newValue;
-//                requestUpdate(DELAYED);
-//            }
-//        }));
-//
-//        this.sceneStyleSheet = editorController.getSceneStyleSheets();
-//        this.editorController.sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
-//            if (t1 != null) {
-//                sceneStyleSheet = t1;
-//                requestUpdate(DELAYED);
-//            }
-//        });
 
-        this.editorController.resourcesProperty().addListener((ChangeListener<ResourceBundle>) (ov, t, t1) -> requestUpdate(DELAYED));
+        documentManager.i18nResourceConfig().subscribe(s -> {
+            resourceConfig = s;
+            requestUpdate(DELAYED);
+        });
+
         this.editorController.sampleDataEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
     }
 
@@ -357,36 +330,6 @@ public final class PreviewWindowController extends AbstractWindowController {
                 	getScene().getStylesheets().clear();
                     getScene().getStylesheets().addAll(newStylesheets);
                     getScene().getStylesheets().addAll(stylesheetConfig.getStylesheets());
-//
-//                    String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
-//                    String gluonSwatchStylesheet = editorControllerGluonSwatch.getStylesheetURL();
-//                    String gluonThemeStylesheet = editorControllerGluonTheme.getStylesheetURL();
-//                    if (editorControllerTheme == Theme.GLUON_MOBILE_LIGHT || editorControllerTheme == Theme.GLUON_MOBILE_DARK) {
-//
-//
-//                        if (!newStylesheets.contains(themeStyleSheetString)) {
-//                            newStylesheets.add(themeStyleSheetString);
-//                        }
-//                        if (!newStylesheets.contains(gluonDocumentStylesheet)) {
-//                            newStylesheets.add(gluonDocumentStylesheet);
-//                        }
-//                        if (!newStylesheets.contains(gluonSwatchStylesheet)) {
-//                            newStylesheets.add(gluonSwatchStylesheet);
-//                        }
-//                        if (!newStylesheets.contains(gluonThemeStylesheet)) {
-//                            newStylesheets.add(gluonThemeStylesheet);
-//                        }
-//                        getScene().setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
-//                        getScene().getStylesheets().clear();
-//                        getScene().getStylesheets().addAll(newStylesheets);
-//                    } else {
-//                        String gluonStylesheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL();
-//                        getScene().setUserAgentStylesheet(themeStyleSheetString);
-//                        getScene().getStylesheets().remove(gluonStylesheet);
-//                        getScene().getStylesheets().remove(gluonDocumentStylesheet);
-//                        getScene().getStylesheets().remove(gluonSwatchStylesheet);
-//                        getScene().getStylesheets().remove(gluonThemeStylesheet);
-//                    }
                 }
                 updateWindowSize();
                 updateWindowTitle();

@@ -90,7 +90,6 @@ public class JobManagerImpl implements JobManager {
 
     public void push(Job job) {
         assert job != null;
-        assert job.getEditorController() == editor;
         assert job.isExecutable();
 
         if (lock) {

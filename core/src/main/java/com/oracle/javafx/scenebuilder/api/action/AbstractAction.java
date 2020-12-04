@@ -58,15 +58,16 @@ public abstract class AbstractAction implements Action {
 		}
 	}
 
-	 public ExtendedAction<?> extend() {
-	    	if (this.getClass().isAssignableFrom(ExtendedAction.class)) {
-	    		return (ExtendedAction<?>)this;
-	    	}
-	    	if (extendedAction == null) {
-	    		extendedAction = getContext().getBean(ExtendedAction.class, this);
-	    	}
-	    	return extendedAction;
-	    }
+	@Override
+	public ExtendedAction<?> extend() {
+		if (this.getClass().isAssignableFrom(ExtendedAction.class)) {
+			return (ExtendedAction<?>) this;
+		}
+		if (extendedAction == null) {
+			extendedAction = getContext().getBean(ExtendedAction.class, this);
+		}
+		return extendedAction;
+	}
 
 	public ApplicationContext getContext() {
 		return context;

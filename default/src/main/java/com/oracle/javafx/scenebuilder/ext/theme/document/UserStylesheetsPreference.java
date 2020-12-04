@@ -1,36 +1,34 @@
-package com.oracle.javafx.scenebuilder.app.preferences.document;
+package com.oracle.javafx.scenebuilder.ext.theme.document;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.StringPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.type.ListOfStringPreference;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class I18NResourcePreference extends StringPreference implements ManagedDocumentPreference {
-	    
+@Lazy
+public class UserStylesheetsPreference extends ListOfStringPreference implements ManagedDocumentPreference {
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "I18NResource"; //NOI18N
-    public static final String PREFERENCE_DEFAULT_VALUE = null;
+    public static final String PREFERENCE_KEY = "userStylesheets"; //NOI18N
+    public static final List<String> PREFERENCE_DEFAULT_VALUE = new ArrayList<>();
 
-	public I18NResourcePreference(@Autowired PreferencesContext preferencesContext) {
+	public UserStylesheetsPreference(
+			@Autowired PreferencesContext preferencesContext
+			) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 	}
-
-	@Override
-	public boolean isValid() {
-		return super.isValid() && new File(getValue()).exists();
-	}
-	
-	
 }

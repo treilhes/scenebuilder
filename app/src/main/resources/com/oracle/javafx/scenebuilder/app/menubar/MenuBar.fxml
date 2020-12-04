@@ -214,28 +214,6 @@
             <MenuItem fx:id="showPreviewInWindowMenuItem" mnemonicParsing="true" text="%menu.title.show.preview.in.window" />
             <MenuItem fx:id="showPreviewInDialogMenuItem" mnemonicParsing="true" text="%menu.title.show.preview.in.dialog" />
             <SeparatorMenuItem fx:id="firstSeparator" mnemonicParsing="false" />
-            <Menu fx:id="styleSheetMenu" mnemonicParsing="true" text="%menu.title.scene.stylesheets">
-              <items>
-                <MenuItem fx:id="addSceneStyleSheetMenuItem" mnemonicParsing="false" text="%menu.title.add.stylesheet" />
-                <Menu fx:id="removeSceneStyleSheetMenu" mnemonicParsing="false" text="%menu.title.remove.stylesheet">
-                  <items>
-                    <MenuItem disable="true" mnemonicParsing="false" text="%scenestylesheet.none" />
-                  </items>
-                </Menu>
-                <Menu fx:id="openSceneStyleSheetMenu" mnemonicParsing="false" text="%menu.title.open.stylesheet">
-                  <items>
-                    <MenuItem disable="true" mnemonicParsing="false" text="%scenestylesheet.none" />
-                  </items>
-                </Menu>
-              </items>
-            </Menu>
-            <Menu fx:id="internationalizationMenu" mnemonicParsing="true" text="%menu.title.internationalization">
-              <items>
-                <MenuItem fx:id="setResourceMenuItem" mnemonicParsing="false" text="%menu.title.set.resource" />
-                <MenuItem fx:id="removeResourceMenuItem" mnemonicParsing="false" text="%menu.title.remove.resource" />
-                <MenuItem fx:id="revealResourceMenuItem" mnemonicParsing="false" text="%menu.title.reveal.resource" />
-              </items>
-            </Menu>
             <Menu fx:id="previewSizeMenu" mnemonicParsing="true" text="%menu.title.preview.size">
               <items>
                   <RadioMenuItem fx:id="preferredPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.preferred" />

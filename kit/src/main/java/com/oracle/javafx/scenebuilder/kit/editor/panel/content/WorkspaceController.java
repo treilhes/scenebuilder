@@ -32,8 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -42,6 +42,8 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Workspace;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -91,13 +93,17 @@ public class WorkspaceController implements Workspace{
     private double scaling = 1.0;
     private RuntimeException layoutException;
     private EditorController editorController;
-    private ArrayList<String> themeStylesheets = new ArrayList<String>();
+    private StylesheetProvider2 stylesheetConfig = null;
 
     private FXOMDocument fxomDocument;
 
+	private final DocumentManager documentManager;
+
     public WorkspaceController(
-    		@Autowired EditorController editorController) {
+    		@Autowired EditorController editorController,
+    		@Autowired DocumentManager documentManager) {
         this.editorController = editorController;
+        this.documentManager = documentManager;
     }
 
     public void panelControllerDidLoadFxml(ScrollPane scrollPane,
@@ -129,6 +135,11 @@ public class WorkspaceController implements Workspace{
 
         updateContentGroup();
         updateScalingGroup();
+
+        documentManager.stylesheetConfig().subscribe(s -> {
+        	stylesheetConfig = s;
+        	applyStylesheetConfig();
+        });
     }
 
     public void setFxomDocument(FXOMDocument fxomDocument) {
@@ -166,71 +177,15 @@ public class WorkspaceController implements Workspace{
         updateScalingGroup();
     }
 
-    public List<String> getThemeStyleSheets() {
-        return themeStylesheets;
-    	//return new ArrayList<>();
+    public void applyStylesheetConfig() {
+    	contentSubScene.setUserAgentStylesheet(stylesheetConfig.getUserAgentStylesheet());
+
+        // Update scenegraph layout, etc
+        FXOMDocument fxomDocument = editorController.getFxomDocument();
+        if (fxomDocument != null) {
+            fxomDocument.refreshSceneGraph();
+        }
     }
-
-//    public void setThemeStyleSheet(String themeStyleSheet, Theme theme, GluonSwatch gluonSwatch, GluonTheme gluonTheme) {
-//        assert themeStyleSheet != null;
-//        assert theme != null;
-//        assert gluonSwatch != null;
-//        assert gluonTheme != null;
-//        String gluonDocumentStylesheet = ThemeUtils.getGluonDocumentStylesheetURL();
-//        String gluonSwatchStylesheet = gluonSwatch.getStylesheetURL();
-//        String gluonThemeStylesheet = gluonTheme.getStylesheetURL();
-//        String previousGluonSwatchStylesheet = editorController.getGluonSwatch().getStylesheetURL();
-//        String previousGluonThemeStylesheet = editorController.getGluonTheme().getStylesheetURL();
-//        if (theme == Theme.GLUON_MOBILE_LIGHT || theme == Theme.GLUON_MOBILE_DARK) {
-//            contentSubScene.setUserAgentStylesheet(Theme.MODENA.getStylesheetURL());
-//            ObservableList<String> currentStyleSheets = FXCollections.observableArrayList(contentGroup.getStylesheets());
-//            currentStyleSheets.remove(previousGluonSwatchStylesheet);
-//            currentStyleSheets.remove(previousGluonThemeStylesheet);
-//            if (!currentStyleSheets.contains(themeStyleSheet)) {
-//                currentStyleSheets.add(themeStyleSheet);
-//            }
-//            if (!currentStyleSheets.contains(gluonDocumentStylesheet)) {
-//                currentStyleSheets.add(gluonDocumentStylesheet);
-//            }
-//            if (!currentStyleSheets.contains(gluonSwatchStylesheet)) {
-//                currentStyleSheets.add(gluonSwatchStylesheet);
-//            }
-//            if (!currentStyleSheets.contains(gluonThemeStylesheet)) {
-//                currentStyleSheets.add(gluonThemeStylesheet);
-//            }
-//            themeStylesheets.clear();
-//            themeStylesheets.addAll(currentStyleSheets);
-//            contentGroupApplyCss();
-////            setPreviewStyleSheets(Arrays.asList(themeStyleSheet));
-//        } else {
-//            contentSubScene.setUserAgentStylesheet(themeStyleSheet);
-//
-//            String gluonMobileStyleSheet = Theme.GLUON_MOBILE_LIGHT.getStylesheetURL(); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
-//            themeStylesheets.remove(gluonMobileStyleSheet);
-//            themeStylesheets.remove(gluonDocumentStylesheet);
-//            themeStylesheets.remove(previousGluonSwatchStylesheet);
-//            themeStylesheets.remove(previousGluonThemeStylesheet);
-//        }
-//
-//        // Update scenegraph layout, etc
-//        FXOMDocument fxomDocument = editorController.getFxomDocument();
-//        if (fxomDocument != null) {
-//            fxomDocument.refreshSceneGraph();
-//        }
-//    }
-
-//    public void setPreviewStyleSheets(List<String> previewStyleSheets) {
-//        Theme currentTheme = editorController.getTheme();
-//        themeStylesheets.clear();
-//        themeStylesheets.addAll(previewStyleSheets);
-//        if (currentTheme == Theme.GLUON_MOBILE_LIGHT || currentTheme == Theme.GLUON_MOBILE_DARK) {
-//            themeStylesheets.add(Theme.GLUON_MOBILE_LIGHT.getStylesheetURL()); // We can call this with GLUON_MOBILE_LIGHT or GLUON_MOBILE_DARK
-//            themeStylesheets.add(editorController.getGluonSwatch().getStylesheetURL());
-//            themeStylesheets.add(editorController.getGluonTheme().getStylesheetURL());
-//            themeStylesheets.add(ThemeUtils.getGluonDocumentStylesheetURL());
-//        }
-//        contentGroupApplyCss();
-//    }
 
     public void layoutContent(boolean applyCSS) {
         if (scrollPane != null) {
@@ -241,6 +196,7 @@ public class WorkspaceController implements Workspace{
                 scrollPane.layout();
                 layoutException = null;
             } catch(RuntimeException x) {
+            	Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, "Layout failure", x);
                 layoutException = x;
             }
         }
@@ -593,7 +549,7 @@ public class WorkspaceController implements Workspace{
     }
 
     private void contentGroupApplyCss() {
-        contentGroup.getStylesheets().setAll(themeStylesheets);
+        contentGroup.getStylesheets().setAll(stylesheetConfig.getStylesheets());
         if (fxomDocument != null) {
             contentGroup.getStylesheets().addAll(fxomDocument.getDisplayStylesheets());
         }

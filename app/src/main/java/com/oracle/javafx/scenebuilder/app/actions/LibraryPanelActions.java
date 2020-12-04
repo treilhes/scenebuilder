@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -18,14 +20,12 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.manager.LibraryDialogController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
 
@@ -77,14 +77,20 @@ public class LibraryPanelActions {
 
 		private final DocumentWindowController documentWindowController;
 		private final UserLibrary userLibrary;
+		private final FileSystem fileSystem;
+		private final Dialog dialog;
 
 		public RevealCustomFolderAction(
 				@Autowired ApplicationContext context,
+				@Autowired FileSystem fileSystem,
+				@Autowired Dialog dialog,
 				@Autowired @Lazy DocumentWindowController documentWindowController,
 				@Autowired @Lazy UserLibrary userLibrary) {
 			super(context);
 			this.documentWindowController = documentWindowController;
 			this.userLibrary = userLibrary;
+			this.fileSystem = fileSystem;
+			this.dialog = dialog;
 		}
 
 		@Override
@@ -94,17 +100,13 @@ public class LibraryPanelActions {
 
 		@Override
 		public void perform() {
-			String userLibraryPath = userLibrary.getPath();
 			try {
-				EditorPlatform.revealInFileBrowser(new File(userLibraryPath));
+				fileSystem.revealInFileBrowser(userLibrary.getPath());
 			} catch (IOException x) {
-				final ErrorDialog errorDialog = new ErrorDialog(null);
-				errorDialog.setMessage(
-						I18N.getString("alert.reveal.failure.message",
-								documentWindowController.getStage().getTitle()));
-				errorDialog.setDetails(I18N.getString("alert.reveal.failure.details"));
-				errorDialog.setDebugInfoWithThrowable(x);
-				errorDialog.showAndWait();
+				dialog.showErrorAndWait("",
+						I18N.getString("alert.reveal.failure.message", documentWindowController.getStage().getTitle()),
+						I18N.getString("alert.reveal.failure.details"),
+						x);
 			}
 		}
 	}

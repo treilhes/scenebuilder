@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.util;
+package com.oracle.javafx.scenebuilder.fs.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,7 +52,7 @@ import javafx.application.Platform;
  *
  */
 public class FileWatcher {
-    
+
     private final String name;
     private final Set<Path> targets = new HashSet<>();
     private final Map<Path, FileTime> modifiedTimes = new HashMap<>();
@@ -60,17 +60,17 @@ public class FileWatcher {
     private final Delegate delegate;
     private boolean started;
     private Timer watchingTimer;
-    
+
     public FileWatcher(long pollingTime, Delegate delegate, String name) {
         assert pollingTime > 0;
         assert delegate != null;
         assert name != null;
-        
+
         this.pollingTime = pollingTime;
         this.delegate = delegate;
         this.name = getClass().getSimpleName() + "[" + name + "]"; //NOI18N
     }
-    
+
     public synchronized void addTarget(Path target) {
         assert target != null;
         assert targets.contains(target) == false;
@@ -83,7 +83,7 @@ public class FileWatcher {
         }
         updateWatchingTimer();
     }
-    
+
     public synchronized void removeTarget(Path target) {
         assert target != null;
         assert targets.contains(target);
@@ -91,60 +91,61 @@ public class FileWatcher {
         modifiedTimes.remove(target);
         updateWatchingTimer();
     }
-    
+
     public synchronized void setTargets(Collection<Path> newTargets) {
-        
+
         final Set<Path> toBeAdded = new HashSet<>();
         toBeAdded.addAll(newTargets);
         toBeAdded.removeAll(targets);
-        
+
         final Set<Path> toBeRemoved = new HashSet<>();
         toBeRemoved.addAll(targets);
         toBeRemoved.removeAll(newTargets);
-        
+
         for (Path target : toBeAdded) {
             addTarget(target);
         }
-        
+
         for (Path target : toBeRemoved) {
             removeTarget(target);
         }
     }
-    
+
     public synchronized Set<Path> getTargets() {
         return Collections.unmodifiableSet(targets);
     }
-    
+
     public synchronized void start() {
         assert isStarted() == false;
         started = true;
         updateWatchingTimer();
     }
-    
+
     public synchronized void stop() {
         assert isStarted() == true;
         started = false;
         updateWatchingTimer();
     }
-    
+
     public synchronized boolean isStarted() {
         return started;
     }
-    
+
     public static interface Delegate {
         public void fileWatcherDidWatchTargetCreation(Path target);
         public void fileWatcherDidWatchTargetDeletion(Path target);
         public void fileWatcherDidWatchTargetModification(Path target);
+		void startWatcher();
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void updateWatchingTimer() {
         final boolean timerNeeded = started && (targets.isEmpty() == false);
-        
+
         if (timerNeeded) {
             if (watchingTimer == null) {
                 watchingTimer = new Timer(name, true /* isDaemon */);
@@ -162,13 +163,13 @@ public class FileWatcher {
             }
         }
     }
-    
+
     private synchronized void runWatching() {
-        
+
         // Note : this method may be called a few times after the timer
-        // is cancelled by stop() method. In that case, this.watchingTimer is 
+        // is cancelled by stop() method. In that case, this.watchingTimer is
         // null and we should simply do nothing.
-        
+
         if (watchingTimer != null) {
             for (Path target : targets) {
                 FileTime newModifiedTime;

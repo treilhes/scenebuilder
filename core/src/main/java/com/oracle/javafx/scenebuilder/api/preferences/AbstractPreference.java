@@ -11,27 +11,27 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 	private final T defaultValue;
 	private final Property<T> value;
 	private PreferencesContext preferencesContext;
-		
+
 	public AbstractPreference(PreferencesContext preferencesContext, String name, T defaultValue, Property<T> propertyHolder, boolean isNode) {
 		this.name = name == null ? "" : name;
 		this.value = propertyHolder;
 		this.defaultValue = defaultValue;
 		this.preferencesContext = preferencesContext;
 
-		// handle document scoped value 
+		// handle document scoped value
 		if (preferencesContext.isDocumentScope(getClass()) && !preferencesContext.isDocumentAlreadyInPathScope()) {
 			this.preferencesContext = this.preferencesContext.nodeContext(this, preferencesContext.computeDocumentNodeName());
 		}
 		if (isNode) {
 			this.preferencesContext = this.preferencesContext.nodeContext(this, this.name);
 		}
-		
-		setValue(defaultValue);
+
+		this.value.setValue(defaultValue);
 	}
 
 	protected abstract void write();
 	protected abstract void read();
-	
+
 	@Override
 	public Preferences getNode() {
 		if (preferencesContext.isDocumentScope(getClass())) {
@@ -40,12 +40,12 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 			return preferencesContext.getRootNode().getNode();
 		}
 	}
-	
+
 	@Override
 	public String getName() {
 		return name;
 	}
-	
+
 	protected void setName(String name) {
 		this.name = name;
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 		setValue(getDefault());
 		return this;
 	}
-	
+
 	@Override
 	public void writeToJavaPreferences() {
 		if (isValid()
@@ -96,5 +96,5 @@ public abstract class AbstractPreference<T> implements Preference<T> {
 		assert getName() != null;
 		read();
 	}
-	
+
 }

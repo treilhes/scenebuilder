@@ -54,24 +54,16 @@ public class ThemeMenuProvider implements MenuItemProvider {
 
 	@Override
 	public List<MenuAttachment> menuItems() {
-		return Arrays.asList(
-				new ThemeAttachment(context, themePreference, themeProviders)
-				);
+		return Arrays.asList(new ThemeAttachment());
 	}
 
 	public class ThemeAttachment implements MenuAttachment {
 
-		private final ApplicationContext context;
-		private final ThemePreference themePreference;
-
-	    private final List<Class<? extends Theme>> themeClasses;
+		private final List<Class<? extends Theme>> themeClasses;
 
 	    private Menu theme = null;
 
-
-		public ThemeAttachment(ApplicationContext context, ThemePreference themePreference, List<ThemeProvider> themeProviders) {
-			this.context = context;
-			this.themePreference = themePreference;
+		public ThemeAttachment() {
 			themeClasses = new ArrayList<>();
 			themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));
 		}
@@ -122,6 +114,9 @@ public class ThemeMenuProvider implements MenuItemProvider {
 			});
 
 			themePreference.getObservableValue().addListener((ob, o, n) -> {
+				theme.getItems().stream()
+					.filter(mi -> mi.getClass().isAssignableFrom(RadioMenuItem.class))
+					.forEach(mi -> ((RadioMenuItem)mi).setSelected(themePreference.getValue() == mi.getUserData()));
 				context.getBean(ApplyCssContentAction.class).extend().checkAndPerform();
 			});
 			return theme;

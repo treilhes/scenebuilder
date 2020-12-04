@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -52,20 +53,25 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ControlAction;
+import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
@@ -78,7 +84,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 //import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 //import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
 //import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonThemePreference;
@@ -115,18 +120,17 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.AbstractWrapInJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.UnwrapJob;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.glossary.AbstractGlossary;
 import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.preferences.document.SceneStyleSheetsPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -255,7 +259,7 @@ public class EditorController implements Editor {
     private final DragController dragController;
     private final InlineEditController inlineEditController;// = new InlineEditController(this);
     private final ContextMenuController contextMenuController;// = new ContextMenuController(this);
-    private final WatchingController watchingController;// = new WatchingController(this);
+    //private final WatchingController watchingController;// = new WatchingController(this);
 
     // At start-up the setter for the two variables below might be called by the
     // Preferences controller.
@@ -269,8 +273,8 @@ public class EditorController implements Editor {
             //= new SimpleObjectProperty<>();
     private final ObjectProperty<AbstractGlossary> glossaryProperty
             = new SimpleObjectProperty<>(new BuiltinGlossary());
-    private final ObjectProperty<ResourceBundle> resourcesProperty
-            = new SimpleObjectProperty<>(null);
+//    private final ObjectProperty<ResourceBundle> resourcesProperty
+//            = new SimpleObjectProperty<>(null);
 //    private final ObjectProperty<GluonTheme> gluonThemeProperty
 //            = new SimpleObjectProperty<>();
 //    private final ObjectProperty<GluonSwatch> gluonSwatchProperty
@@ -300,15 +304,18 @@ public class EditorController implements Editor {
     private Stage ownerWindow;
 
     private static String builtinToolStylesheet;
-    private static File nextInitialDirectory = new File(System.getProperty("user.home")); //NOI18N
 
-    private final SceneStyleSheetsPreference sceneStyleSheetsPreference;
-	private final ThemePreference themePreference;
+
+    //private final SceneStyleSheetsPreference sceneStyleSheetsPreference;
+	//private final ThemePreference themePreference;
 //	private final GluonThemePreference gluonThemePreference;
 //	private final GluonSwatchPreference gluonSwatchPreference;
 	private final RootContainerHeightPreference rootContainerHeightPreference;
 	private final RootContainerWidthPreference rootContainerWidthPreference;
 	private final ApplicationContext context;
+	private final FileSystem fileSystem;
+	private final Dialog dialog;
+    private I18nResourceProvider resourceConfig;
 
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
@@ -318,23 +325,25 @@ public class EditorController implements Editor {
     		@Autowired BuiltinLibrary builtinLibrary,
     		@Autowired RootContainerHeightPreference rootContainerHeightPreference,
     	    @Autowired RootContainerWidthPreference rootContainerWidthPreference,
+    	    @Autowired FileSystem fileSystem,
+    	    @Autowired Dialog dialog,
     	    @Lazy @Autowired DragController dragController,
+    	    @Lazy @Autowired DocumentManager documentManager,
     	    @Lazy @Autowired JobManager jobManager,
-    	    @Lazy @Autowired SceneStyleSheetsPreference sceneStyleSheets,
-    	    @Lazy @Autowired ThemePreference theme,
-//    	    @Lazy @Autowired GluonSwatchPreference gluonSwatch,
-//    	    @Lazy @Autowired GluonThemePreference gluonTheme,
-
+    	    //@Lazy @Autowired SceneStyleSheetsPreference sceneStyleSheets,
+    	    //@Lazy @Autowired ThemePreference theme,
     	    @Lazy @Autowired InlineEditController inlineEditController,
-    		@Lazy @Autowired ContextMenuController contextMenuController,
-    		@Lazy @Autowired WatchingController watchingController
+    		@Lazy @Autowired ContextMenuController contextMenuController
+    		//,@Lazy @Autowired WatchingController watchingController
 
     		) {
     	this.context = context;
     	this.jobManager = jobManager;
+    	this.fileSystem = fileSystem;
+    	this.dialog = dialog;
     	this.dragController = dragController;
-    	this.sceneStyleSheetsPreference = sceneStyleSheets;
-    	this.themePreference = theme;
+    	//this.sceneStyleSheetsPreference = sceneStyleSheets;
+    	//this.themePreference = theme;
     	this.rootContainerHeightPreference = rootContainerHeightPreference;
     	this.rootContainerWidthPreference = rootContainerWidthPreference;
 //    	this.gluonSwatchPreference = gluonSwatch;
@@ -342,7 +351,7 @@ public class EditorController implements Editor {
 
     	this.inlineEditController = inlineEditController;
     	this.contextMenuController = contextMenuController;
-    	this.watchingController = watchingController;
+    	//this.watchingController = watchingController;
 
 
     	libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
@@ -351,6 +360,10 @@ public class EditorController implements Editor {
     	jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
 
 
+    	documentManager.i18nResourceConfig().subscribe(s -> {
+            resourceConfig = s;
+            resourcesDidChange();
+        });
     }
 
 //	@Override
@@ -434,7 +447,7 @@ public class EditorController implements Editor {
      * @param fxmlText null or the fxml text to be edited
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
-    public void setFxmlText(String fxmlText, boolean checkGluonControls) throws IOException {
+    private void setFxmlText(String fxmlText, boolean checkGluonControls) throws IOException {
         setFxmlTextAndLocation(fxmlText, getFxmlLocation(), checkGluonControls);
     }
 
@@ -540,7 +553,7 @@ public class EditorController implements Editor {
         }
         if (fxmlLocation != null) {
             final File newInitialDirectory = new File(fxmlLocation.getPath());
-            EditorController.updateNextInitialDirectory(newInitialDirectory);
+            fileSystem.updateNextInitialDirectory(newInitialDirectory);
         }
     }
 
@@ -607,147 +620,34 @@ public class EditorController implements Editor {
         return glossaryProperty;
     }
 
-    /**
-     * Returns the resource bundle used by this editor.
-     *
-     * @return  the resource bundle used by this editor.
-     */
-    public ResourceBundle getResources() {
-        return resourcesProperty.getValue();
-    }
-
-    /**
-     * Sets the resource bundle used by this editor.
-     * Content and Preview panels sharing this editor will update
-     * their content to use this new theme.
-     *
-     * @param resources null of the resource bundle to be used by this editor.
-     */
-    public void setResources(ResourceBundle resources) {
-        resourcesProperty.setValue(resources);
-        resourcesDidChange();
-    }
-
-    /**
-     * The property holding the resource bundle used by this editor.
-     *
-     * @return the property holding the resource bundle used by this editor (never null).
-     */
-    public ObservableValue<ResourceBundle> resourcesProperty() {
-        return resourcesProperty;
-    }
-
 //    /**
-//     * Returns the theme used by this editor.
+//     * Returns the resource bundle used by this editor.
 //     *
-//     * @return the theme used by this editor.
+//     * @return  the resource bundle used by this editor.
 //     */
-//    public Theme getTheme() {
-//        return themeProperty.getValue();
+//    public ResourceBundle getResources() {
+//        return resourcesProperty.getValue();
 //    }
 //
 //    /**
-//     * Sets the theme used by this editor.
+//     * Sets the resource bundle used by this editor.
 //     * Content and Preview panels sharing this editor will update
 //     * their content to use this new theme.
 //     *
-//     * @param theme the theme to be used by this editor
+//     * @param resources null of the resource bundle to be used by this editor.
 //     */
-//    public void setTheme(Theme theme) {
-//        themeProperty.setValue(theme);
+//    public void setResources(ResourceBundle resources) {
+//        resourcesProperty.setValue(resources);
+//        resourcesDidChange();
 //    }
 //
 //    /**
-//     * The property holding the theme used by this editor.
+//     * The property holding the resource bundle used by this editor.
 //     *
-//     * @return the property holding the theme associated to the editor (never null).
+//     * @return the property holding the resource bundle used by this editor (never null).
 //     */
-//    public ObservableValue<Theme> themeProperty() {
-//        return themeProperty;
-//    }
-//
-//    /**
-//     * Returns the gluon theme used by this editor
-//     *
-//     * @return the gluon theme used by this editor
-//     */
-//    public GluonTheme getGluonTheme() {
-//        return gluonThemeProperty.get();
-//    }
-//
-//    /**
-//     * Sets the gluon theme used by this editor.
-//     * Content and Preview panels sharing this editor will update
-//     * their content to use this new theme.
-//     *
-//     * @param theme the theme to be used in this editor
-//     */
-//    public void setGluonTheme(GluonTheme theme) {
-//        gluonThemeProperty.set(theme);
-//    }
-//
-//    /**
-//     * The property holding the gluon theme used by this editor
-//     *
-//     * @return the property holding the gluon theme used by this editor.
-//     */
-//    public ObjectProperty<GluonTheme> gluonThemeProperty() {
-//        return gluonThemeProperty;
-//    }
-//
-//    /**
-//     * Sets the gluon swatch used by this editor.
-//     * Content and Preview panels sharing this editor will update
-//     * their content to use this new swatch.
-//     *
-//     * @param swatch the swatch to be used in this editor
-//     */
-//    public void setGluonSwatch(GluonSwatch swatch) {
-//        gluonSwatchProperty.set(swatch);
-//    }
-//
-//    /**
-//     * Returns the gluon swatch used by this editor
-//     *
-//     * @return the gluon swatch used by this editor
-//     */
-//    public GluonSwatch getGluonSwatch() {
-//        return gluonSwatchProperty.get();
-//    }
-//
-//    /**
-//     * The property holding the gluon swatch used by this editor
-//     *
-//     * @return the property holding the gluon swatch used by this editor.
-//     */
-//    public ObjectProperty<GluonSwatch> gluonSwatchProperty() {
-//        return gluonSwatchProperty;
-//    }
-//
-//    /**
-//     *
-//     * @return the list of scene style sheet used by this editor
-//     */
-//    public ObservableList<File> getSceneStyleSheets() {
-//        return sceneStyleSheetProperty.getValue();
-//    }
-//
-//    /**
-//     *
-//     * @param styleSheets the list of scene style sheet to be used by this editor
-//     */
-//    public void setSceneStyleSheets(ObservableList<File> styleSheets) {
-//        sceneStyleSheetProperty.setValue(styleSheets);
-//    }
-//
-//    /**
-//     * The property holding the list of scene style sheet used by this editor.
-//     *
-//     * @return the property holding the set of scene style sheet used by the editor,
-//     * or null if has not been set.
-//     */
-//    public ObservableListValue<File> sceneStyleSheetProperty() {
-//        return sceneStyleSheetProperty;
+//    public ObservableValue<ResourceBundle> resourcesProperty() {
+//        return resourcesProperty;
 //    }
 
     /**
@@ -829,7 +729,7 @@ public class EditorController implements Editor {
      * @param fxmlLocation null or the location of the fxml text being edited
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
-    public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation) throws IOException {
+    private void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation) throws IOException {
         setFxmlTextAndLocation(fxmlText, fxmlLocation, false);
     }
 
@@ -845,7 +745,7 @@ public class EditorController implements Editor {
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
     public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
-        updateFxomDocument(fxmlText, fxmlLocation, getResources(), checkTheme);
+        updateFxomDocument(fxmlText, fxmlLocation, new CombinedResourceBundle(resourceConfig.getBundles()), checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
 
@@ -860,7 +760,7 @@ public class EditorController implements Editor {
      *
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
-    public void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation,
+    private void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation,
                                                 ResourceBundle resources) throws IOException {
         setFxmlTextLocationAndResources(fxmlText, fxmlLocation, resources, false);
     }
@@ -877,7 +777,7 @@ public class EditorController implements Editor {
      *                           Gluon controls and if so, the correct theme is set
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
-    public void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation,
+    private void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation,
             ResourceBundle resources, boolean checkTheme) throws IOException {
         updateFxomDocument(fxmlText, fxmlLocation, resources, checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
@@ -943,31 +843,31 @@ public class EditorController implements Editor {
         return builtinToolStylesheet;
     }
 
-    /**
-     * Starts file watching on this editor.
-     * This editor will now monitor the files referenced by the FXML text
-     * (like images, medias, stylesheets, included fxmls...) and automatically
-     * request attached panels to update themselves.
-     */
-    public void startFileWatching() {
-        watchingController.start();
-    }
-
-    /**
-     * Stops file watching on this editor.
-     */
-    public void stopFileWatching() {
-        watchingController.stop();
-    }
-
-    /**
-     * Returns true if file watching is started on this editor.
-     *
-     * @return true if file watching is started on this editor.
-     */
-    public boolean isFileWatchingStarted() {
-        return watchingController.isStarted();
-    }
+//    /**
+//     * Starts file watching on this editor.
+//     * This editor will now monitor the files referenced by the FXML text
+//     * (like images, medias, stylesheets, included fxmls...) and automatically
+//     * request attached panels to update themselves.
+//     */
+//    public void startFileWatching() {
+//        watchingController.start();
+//    }
+//
+//    /**
+//     * Stops file watching on this editor.
+//     */
+//    public void stopFileWatching() {
+//        watchingController.stop();
+//    }
+//
+//    /**
+//     * Returns true if file watching is started on this editor.
+//     *
+//     * @return true if file watching is started on this editor.
+//     */
+//    public boolean isFileWatchingStarted() {
+//        return watchingController.isStarted();
+//    }
 
     /**
      * @treatAsPrivate Returns the selection associated to this editor.
@@ -2403,14 +2303,12 @@ public class EditorController implements Editor {
         final File includedFile = getIncludedFile();
         assert includedFile != null; // Because of (1)
         try {
-            EditorPlatform.open(includedFile.getAbsolutePath());
+            fileSystem.open(includedFile.getAbsolutePath());
         } catch (IOException ioe) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setTitle(I18N.getString("error.file.open.title"));
-            errorDialog.setMessage(I18N.getString("error.file.open.message",
-                    includedFile.getAbsolutePath()));
-            errorDialog.setDebugInfoWithThrowable(ioe);
-            errorDialog.showAndWait();
+        	dialog.showErrorAndWait(
+        			I18N.getString("error.file.open.title"),
+        			I18N.getString("error.file.open.message", includedFile.getAbsolutePath()),
+        			"", ioe);
         }
     }
 
@@ -2419,15 +2317,12 @@ public class EditorController implements Editor {
         final File includedFile = getIncludedFile();
         assert includedFile != null; // Because of (1)
         try {
-            EditorPlatform.revealInFileBrowser(includedFile);
+        	fileSystem.revealInFileBrowser(includedFile);
         } catch (IOException ioe) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setTitle(I18N.getString("error.file.reveal.title"));
-            errorDialog.setMessage(I18N.getString("error.file.reveal.message",
-                    includedFile.getAbsolutePath()));
-            errorDialog.setDetails(I18N.getString("error.write.details"));
-            errorDialog.setDebugInfoWithThrowable(ioe);
-            errorDialog.showAndWait();
+        	dialog.showErrorAndWait(
+        			I18N.getString("error.file.reveal.title"),
+        			I18N.getString("error.file.reveal.message", includedFile.getAbsolutePath()),
+        			I18N.getString("error.write.details"), ioe);
         }
     }
 
@@ -2523,31 +2418,6 @@ public class EditorController implements Editor {
         return stylesheet;
     }
 
-
-    /**
-     * Returns the last directory selected from the file chooser.
-     *
-     * @return the last selected directory (never null).
-     */
-    public static File getNextInitialDirectory() {
-        return nextInitialDirectory;
-    }
-
-    /**
-     * @treatAsPrivate
-     *
-     * Updates the initial directory used by the file chooser.
-     *
-     * @param chosenFile the selected file from which the initial directory is set.
-     */
-    public static void updateNextInitialDirectory(File chosenFile) {
-        assert chosenFile != null;
-
-        final Path chosenFolder = chosenFile.toPath().getParent();
-        if (chosenFolder != null) {
-            nextInitialDirectory = chosenFolder.toFile();
-        }
-    }
 
     /**
      * @treatAsPrivate
@@ -2649,12 +2519,54 @@ public class EditorController implements Editor {
         errorReport.setFxomDocument(newFxomDocument);
         fxomDocumentProperty.setValue(newFxomDocument);
 
-        watchingController.fxomDocumentDidChange();
+        updateFileWatcher(newFxomDocument);
+
 
        //TODO remove comment
 //        if (checkTheme) {
 //            WarnThemeAlert.showAlertIfRequired(this, newFxomDocument, ownerWindow);
 //        }
+    }
+
+    private void updateFileWatcher(FXOMDocument fxomDocument) {
+
+    	fileSystem.unwatch(this);
+
+        if (fxomDocument != null) {
+        	final FXOMAssetIndex assetIndex = new FXOMAssetIndex(fxomDocument);
+        	fileSystem.watch(this, assetIndex.getFileAssets().keySet(), new FileSystem.WatchingCallback() {
+
+				@Override
+				public void modified(Path path) {
+					assert Platform.isFxApplicationThread();
+			        updateEditorController("file.watching.file.modified", path); //NOI18N
+				}
+
+				@Override
+				public void deleted(Path path) {
+					assert Platform.isFxApplicationThread();
+			        updateEditorController("file.watching.file.deleted", path); //NOI18N
+				}
+
+				@Override
+				public void created(Path path) {
+					assert Platform.isFxApplicationThread();
+			        updateEditorController("file.watching.file.created", path); //NOI18N
+				}
+			});
+        }
+    }
+
+    private void updateEditorController(String messageKey, Path target) {
+        final String targetFileName = target.getFileName().toString();
+        getMessageLog().logInfoMessage(messageKey, targetFileName);
+        getErrorReport().forget();
+        if (targetFileName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOI18N
+            getErrorReport().cssFileDidChange(target);
+            getFxomDocument().reapplyCSS(target);
+        } else {
+            getFxomDocument().refreshSceneGraph();
+        }
     }
 
     private final ChangeListener<ClassLoader> libraryClassLoaderListener
@@ -2668,15 +2580,15 @@ public class EditorController implements Editor {
     }
 
     private void resourcesDidChange() {
-        if (getFxomDocument() != null) {
+        if (getFxomDocument() != null && resourceConfig != null) {
             errorReport.forget();
-            getFxomDocument().setResources(getResources());
+            getFxomDocument().setResources(new CombinedResourceBundle(resourceConfig.getBundles()));
         }
     }
 
     private void jobManagerRevisionDidChange() {
         errorReport.forget();
-        watchingController.jobManagerRevisionDidChange();
+        updateFileWatcher(getFxomDocument());
 //        setPickModeEnabled(false);
     }
 

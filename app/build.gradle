@@ -12,6 +12,7 @@ dependencies {
     implementation project(':kit')
     implementation project(':default')
     implementation project(':gluon')
+    implementation project(':filesystem')
 }
 
 run {

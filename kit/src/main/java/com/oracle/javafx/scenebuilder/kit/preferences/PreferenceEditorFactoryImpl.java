@@ -13,14 +13,19 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleF
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 @Component
@@ -63,6 +68,30 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
 		EnumSet<T> set = EnumSet.allOf(preference.getEnumClass());
 		field.getItems().setAll(set);
 		field.setValue(preference.getValue());
+		field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
+			preference.setValue(n).writeToJavaPreferences();
+        });
+		preference.getObservableValue().addListener((ob, o, n) -> {
+			field.setValue(n);
+        });
+		return field;
+	}
+
+	@Override
+	public <T extends Enum<T>> Parent newEnumFieldEditor(EnumPreference<T> preference, Function<T, Node> createGraphic) {
+		ComboBox<T> field = new ComboBox<>();
+		Callback<ListView<T>, ListCell<T>> cellFactory = null;
+
+		if (createGraphic != null) {
+			cellFactory = newCellFactory(createGraphic);
+			field.setCellFactory(cellFactory);
+			field.setButtonCell(cellFactory.call(null));
+		}
+
+		EnumSet<T> set = EnumSet.allOf(preference.getEnumClass());
+		field.getItems().setAll(set);
+		field.setValue(preference.getValue());
+
 		field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
 			preference.setValue(n).writeToJavaPreferences();
         });
@@ -173,5 +202,23 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
 			field.setValue(adapter.apply(n));
         });
 		return field;
+	}
+
+	private <T> Callback<ListView<T>, ListCell<T>> newCellFactory(Function<T, Node> createGraphic) {
+		return new Callback<ListView<T>, ListCell<T>>() {
+		    @Override
+		    public ListCell<T> call(ListView<T> p) {
+		        return new ListCell<T>() {
+		            @Override
+		            protected void updateItem(T item, boolean empty) {
+		                super.updateItem(item, empty);
+		                if (!empty) {
+		                	setText(item.toString());
+			                setGraphic(createGraphic.apply(item));
+		                }
+		            }
+		        };
+		    }
+		};
 	}
 }

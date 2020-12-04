@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Scope;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
@@ -57,10 +58,9 @@ import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowControl
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
-import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
@@ -92,7 +92,8 @@ import javafx.stage.Stage;
 		JobManagerImpl.class,
 		ExtendedJob.class,
 		ExtendedAction.class,
-		PreferenceEditorFactoryImpl.class
+		PreferenceEditorFactoryImpl.class,
+		DialogController.class
 		},
 	basePackages = {
 			"com.oracle.javafx.scenebuilder.app.settings",
@@ -104,6 +105,7 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.app",
 			"com.oracle.javafx.scenebuilder.ext",
 			"com.oracle.javafx.scenebuilder.gluon",
+			"com.oracle.javafx.scenebuilder.fs",
 			"com.oracle.javafx.scenebuilder.app.actions"
 			})
 public class SceneBuilderBootstrap extends JavafxApplication {
@@ -201,10 +203,13 @@ public class SceneBuilderBootstrap extends JavafxApplication {
 	@Bean
 	@Qualifier("userlibrary")
 	@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-	public UserLibrary getUserLibrary(@Autowired MavenArtifactsPreferences mavenPreferences, @Autowired UILogger logger,
+	public UserLibrary getUserLibrary(
+	        @Autowired MavenArtifactsPreferences mavenPreferences,
+	        @Autowired FileSystem fileSystem,
+	        @Autowired UILogger logger,
 			@Autowired BuiltinLibrary builtinLibrary) {
 		// Creates the user library
-		return new UserLibrary(AppPlatform.getUserLibraryFolder(), mavenPreferences, logger, builtinLibrary);
+		return new UserLibrary(fileSystem.getUserLibraryFolder(), mavenPreferences, logger, builtinLibrary);
 //                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
 //                () -> mavenPreferences.getArtifactsFilter());
 	}

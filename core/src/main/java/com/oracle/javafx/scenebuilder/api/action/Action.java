@@ -10,4 +10,6 @@ public interface Action {
 	boolean canPerform();
 	void perform();
 	void checkAndPerform();
+
+	ExtendedAction<?> extend();
 }

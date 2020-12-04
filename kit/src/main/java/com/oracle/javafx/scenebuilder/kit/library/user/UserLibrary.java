@@ -42,7 +42,6 @@ import java.io.PrintWriter;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,7 +87,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
     private final BuiltinLibrary builtinLibrary;
 
-    private final String path;
+    private final File path;
     private final BuiltinSectionComparator sectionComparator
             = new BuiltinSectionComparator();
 
@@ -123,11 +122,11 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
      * Public
      */
     // Constructor for test only
-    public UserLibrary(String path) {
+    public UserLibrary(File path) {
         this(path, null, null, null);
     }
 
-    public UserLibrary(String path, MavenArtifactsPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) {
+    public UserLibrary(File path, MavenArtifactsPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) {
         this.path = path;
         this.uiLogger = uiLogger;
         this.builtinLibrary = builtinLibrary;
@@ -156,7 +155,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         this.additionalFilter = additionalFilter;
     }
 
-    public String getPath() {
+    public File getPath() {
         return path;
     }
 
@@ -241,7 +240,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
     public void setFilter(List<String> classnames) throws FileNotFoundException, IOException {
 //        if (classnames != null && classnames.size() > 0) { // empty classnames means "no filter", so we need to clear filters.txt file
-            File filterFile = new File(getFilterFileName());
+            File filterFile = getFilterFile();
             // TreeSet to get natural order sorting and no duplicates
             TreeSet<String> allClassnames = new TreeSet<>();
 
@@ -249,8 +248,8 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
                 allClassnames.add(classname);
             }
 
-            Path filterFilePath = Paths.get(getPath(), filterFileName);
-            Path formerFilterFilePath = Paths.get(getPath(), filterFileName + ".tmp"); //NOI18N
+            Path filterFilePath = getPath().toPath().resolve(filterFileName);
+            Path formerFilterFilePath = getPath().toPath().resolve(filterFileName + ".tmp"); //NOI18N
             Files.deleteIfExists(formerFilterFilePath);
 
             try {
@@ -285,7 +284,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
     public List<String> getFilter() throws FileNotFoundException, IOException {
         List<String> res = new ArrayList<>();
-        File filterFile = new File(getFilterFileName());
+        File filterFile =  getFilterFile();
 
         if (filterFile.exists()) {
             try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(filterFile), "UTF-8"))) { //NOI18N
@@ -344,8 +343,8 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
      * Package
      */
 
-    String getFilterFileName() {
-        return getPath() + File.separator + filterFileName;
+    File getFilterFile() {
+        return new File(getPath(), filterFileName);
     }
 
     void updateJarReports(Collection<JarReport> newJarReports) {
@@ -522,7 +521,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
      */
 
     public static void main(String[] args) throws Exception {
-        final String path = "/Users/elp/Desktop/MyLib"; //NOI18N
+        final File path = new File("/Users/elp/Desktop/MyLib"); //NOI18N
         final UserLibrary lib = new UserLibrary(path);
         lib.startWatching();
         System.out.println("Starting to watch for 20 s"); //NOI18N

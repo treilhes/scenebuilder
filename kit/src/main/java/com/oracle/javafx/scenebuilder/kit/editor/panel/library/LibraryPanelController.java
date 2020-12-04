@@ -61,6 +61,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
@@ -177,6 +178,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     private final DisplayModePreference displayModePreference;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final AccordionAnimationPreference accordionAnimationPreference;
+	private final FileSystem fileSystem;
 
     /*
      * Public
@@ -190,6 +192,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public LibraryPanelController(
     		@Autowired EditorController editorController,
+    		@Autowired FileSystem fileSystem,
     		@Autowired MavenArtifactsPreferences mavenPreferences,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired DisplayModePreference displayModePreference,
@@ -205,6 +208,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.userLibrary = userLibrary;
+        this.fileSystem = fileSystem;
         this.mavenPreferences = mavenPreferences;
         this.displayModePreference = displayModePreference;
         this.accordionAnimationPreference = accordionAnimationPreference;
@@ -841,7 +845,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     private void processImportJarFxml(List<File> importedFiles) {
         if (importedFiles != null && !importedFiles.isEmpty()) {
             sectionNameToKeepOpened = getExpandedSectionName();
-            Path libPath = Paths.get(((UserLibrary)getEditorController().getLibrary()).getPath());
+            Path libPath = fileSystem.getUserLibraryFolder().toPath();
             // Create UserLibrary dir if missing
             if (createUserLibraryDir(libPath)) {
                 final List<File> fxmlFiles = getSubsetOfFiles(".fxml", importedFiles); //NOI18N
@@ -883,7 +887,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
 
     private void processImportFolder(File folder) {
         if (folder != null && folder.exists() && folder.isDirectory()) {
-            Path libPath = Paths.get(((UserLibrary)getEditorController().getLibrary()).getPath());
+            Path libPath = fileSystem.getUserLibraryFolder().toPath();
             if (createUserLibraryDir(libPath)) {
                 // From here we know we will initiate the import dialog.
                 // This is why we put application window on the front.
@@ -938,12 +942,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     }
 
     private boolean enoughFreeSpaceOnDisk(List<File> files) {
-        long totalSize = Long.MAX_VALUE; // bytes
         try {
-            for (File file : files) {
-                Path targetPath = Paths.get(file.getAbsolutePath());
-                totalSize += Files.size(targetPath);
-            }
+            return fileSystem.enoughFreeSpaceOnDisk(files);
         } catch (IOException ioe) {
             final ErrorDialog errorDialog = new ErrorDialog(null);
             errorDialog.setTitle(I18N.getString("error.disk.space.title"));
@@ -952,9 +952,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
             errorDialog.setDebugInfoWithThrowable(ioe);
             errorDialog.showAndWait();
         }
-
-        final File libFile = new File(((UserLibrary)getEditorController().getLibrary()).getPath());
-        return totalSize < libFile.getFreeSpace();
+        return false;
     }
 
     // Each copy is done via an intermediate temporary file that is renamed if
@@ -1019,11 +1017,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("lib.filechooser.filter.msg"),
                 "*.fxml", "*.jar")); //NOI18N
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(owner);
         if(selectedFiles != null && !selectedFiles.isEmpty()){
             // Keep track of the user choice for next time
-            EditorController.updateNextInitialDirectory(selectedFiles.get(0));
+        	fileSystem.updateNextInitialDirectory(selectedFiles.get(0));
         }
         return selectedFiles;
     }
@@ -1034,12 +1032,12 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
      */
     private File performSelectFolder(Window owner) {
         DirectoryChooser dirChooser = new DirectoryChooser();
-        dirChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        dirChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
         File folder = dirChooser.showDialog(owner);
         if (folder != null) {
             // Keep track of the user choice for next time
-            EditorController.updateNextInitialDirectory(folder);
+        	fileSystem.updateNextInitialDirectory(folder);
         }
 
         return folder;
@@ -1193,7 +1191,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     private void setUserLibraryPathString() {
         if (getEditorController().getLibrary() instanceof UserLibrary
                 && userLibraryPathString == null) {
-            userLibraryPathString = ((UserLibrary) getEditorController().getLibrary()).getPath();
+            userLibraryPathString = fileSystem.getUserLibraryFolder().getAbsolutePath();
             assert userLibraryPathString != null;
         }
     }
@@ -1292,7 +1290,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
                 // in the case there is a user library directory on disk.
                 Library lib = getEditorController().getLibrary();
                 if (lib instanceof UserLibrary) {
-                    File userLibDir = new File(((UserLibrary)lib).getPath());
+                    File userLibDir = fileSystem.getUserLibraryFolder();
                     if (userLibDir.canRead()) {
                     	customLibraryMenu.setDisable(false);
                     } else {

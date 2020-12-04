@@ -58,10 +58,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ControlAction;
+import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
+import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
+import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
@@ -71,7 +75,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftVisiblePreference;
@@ -90,6 +93,9 @@ import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.ext.controller.I18nResourceMenuController;
+import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
+import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
@@ -208,8 +214,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //private SearchController cssPanelSearchController;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
     private final CssPanelMenuController cssPanelMenuController;
-    private final ResourceController resourceController;
-    private final DocumentWatchingController watchingController;
+    private final I18nResourceMenuController resourceController;
+    //private final DocumentWatchingController watchingController;
 
     private final GlobalPreferences preferences;
     private final WildcardImportsPreference wildcardImportsPreference;
@@ -230,6 +236,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 	private final I18NResourcePreference i18NResourcePreference;
 	private final ThemePreference themePreference;
+
+
+	private final FileSystem fileSystem;
 
     //private final DocumentsManager documentManager;
 
@@ -294,7 +303,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final DocumentVisiblePreference documentVisiblePreference;
 	private final LibraryVisiblePreference libraryVisiblePreference;
 	private final PathPreference pathPreference;
-	private final StylesheetConfigManager stylesheetConfigManager;
+	private final DocumentManager documentManager;
+	private final List<InitWithDocument> initializations;
+	private final List<DisposeWithDocument> finalizations;
+	private final Dialog dialog;
 
 
     /*
@@ -308,14 +320,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Autowired RecentItemsPreference recentItemsPreference,
 			@Autowired ToolThemePreference toolThemePreference,
 			@Autowired WildcardImportsPreference wildcardImportsPreference,
+			@Autowired FileSystem fileSystem,
+			@Autowired Dialog dialog,
 			@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
 			@Lazy @Autowired PathPreference pathPreference,
 
 			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
 
-			@Lazy @Autowired StylesheetConfigManager stylesheetConfigManager,
-
 			@Lazy @Autowired EditorController editorController,
+			@Lazy @Autowired DocumentManager documentManager,
 			//@Autowired DocumentsManager documentManager,
 			@Lazy @Autowired MenuBarController menuBarController,
 
@@ -332,8 +345,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired MessageBarController messageBarController,
 			@Lazy @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
 			@Lazy @Autowired CssPanelMenuController cssPanelMenuController,
-			@Lazy @Autowired ResourceController resourceController,
-			@Lazy @Autowired DocumentWatchingController watchingController,
+			@Lazy @Autowired I18nResourceMenuController resourceController,
+			//@Lazy @Autowired DocumentWatchingController watchingController,
 
 			@Lazy @Autowired XPosPreference xPos,
 			@Lazy @Autowired YPosPreference yPos,
@@ -356,19 +369,23 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 			//@Lazy @Autowired PreviewWindowController previewWindowController,
 			//@Lazy @Autowired SkeletonWindowController skeletonWindowController,
-			@Lazy @Autowired JarAnalysisReportController jarAnalysisReportController
+			@Lazy @Autowired JarAnalysisReportController jarAnalysisReportController,
+			@Lazy @Autowired List<InitWithDocument> initializations,
+			@Lazy @Autowired List<DisposeWithDocument> finalizations
 			) {
         super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
-        DocumentScope.setCurrentScope(this);
+        //DocumentScope.setCurrentScope(this);
 
         this.editorController = editorController;
         this.recentItemsPreference = recentItemsPreference;
         this.toolThemePreference = toolThemePreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
         this.menuBarController = menuBarController;
-
+        this.fileSystem = fileSystem;
+        this.dialog = dialog;
         this.contentPanelController = contentPanelController;
+        this.documentManager = documentManager;
         this.documentPreferencesController = documentPreferencesController;
         //this.hierarchyPanelController = hierarchyPanelController;
         //this.infoPanelController = infoPanelController;
@@ -385,7 +402,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
         this.cssPanelMenuController = cssPanelMenuController;
         this.resourceController = resourceController;
-        this.watchingController = watchingController;
+        //this.watchingController = watchingController;
 
         this.preferences = preferences;
         this.i18NResourcePreference = i18NResourcePreference;
@@ -409,7 +426,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
         this.jarAnalysisReportController = jarAnalysisReportController;
 
-        this.stylesheetConfigManager = stylesheetConfigManager;
+        this.initializations = initializations;
+        this.finalizations = finalizations;
 
         documentPreferencesController.readFromJavaPreferences();
 //        pathPreference.readFromJavaPreferences();
@@ -492,6 +510,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 	@FXML
 	public void initialize() {
+		initializations.forEach(a -> a.init());
+
 		editorController.initialize();
 
 		bottomSplitController = new SplitController(mainSplitPane, SplitController.Target.LAST);
@@ -552,9 +572,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         if (bottomVisiblePreference.getValue()) { initializeCssPanel(); }
         bottomSplitController.setTargetVisible(bottomVisiblePreference.getValue());
 
-        if (i18NResourcePreference.isValid()) {
-        	setResourceFile(new File(i18NResourcePreference.getValue()));
-        }
 	}
 
 //	@Autowired
@@ -616,13 +633,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return sceneStyleSheetMenuController;
     }
 
-    public ResourceController getResourceController() {
+    public I18nResourceMenuController getResourceController() {
         return resourceController;
     }
 
-    public DocumentWatchingController getWatchingController() {
-        return watchingController;
-    }
+//    public DocumentWatchingController getWatchingController() {
+//        return watchingController;
+//    }
 
     public SplitController getBottomSplitController() {
         return bottomSplitController;
@@ -652,7 +669,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         updateLoadFileTime();
         updateStageTitle(); // No-op if fxml has not been loaded yet
         documentPreferencesController.readFromJavaPreferences();
-        watchingController.update();
+
+        //TODO remove after checking the new watching system is operational in EditorController or in filesystem
+        //watchingController.update();
 
         WarnThemeAlert.showAlertIfRequired(themePreference, editorController.getFxomDocument(), getStage());
     }
@@ -665,7 +684,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             updateLoadFileTime();
             updateStageTitle(); // No-op if fxml has not been loaded yet
             documentPreferencesController.readFromJavaPreferences();
-            watchingController.update();
+          //TODO remove after checking the new watching system is operational in EditorController or in filesystem
+            //watchingController.update();
         } catch(IOException x) {
             throw new IllegalStateException(x);
         }
@@ -676,7 +696,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             editorController.setFxmlTextAndLocation("", null, true); //NOI18N
             updateLoadFileTime();
             updateStageTitle(); // No-op if fxml has not been loaded yet
-            watchingController.update();
+          //TODO remove after checking the new watching system is operational in EditorController or in filesystem
+            //watchingController.update();
         } catch (IOException x) {
             throw new IllegalStateException(x);
         }
@@ -770,11 +791,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             case SET_RESOURCE:
                 result = true;
                 break;
-
-            case REMOVE_RESOURCE:
-            case REVEAL_RESOURCE:
-                result = resourceController.getResourceFile() != null;
-                break;
+//
+//            case REMOVE_RESOURCE:
+//            case REVEAL_RESOURCE:
+//                result = resourceController.getResourceFile() != null;
+//                break;
 
             case HELP:
                 result = true;
@@ -807,7 +828,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case SHOW_PREVIEW_WINDOW:
                 if (previewWindowController == null) {
-                    previewWindowController = new PreviewWindowController(editorController, stylesheetConfigManager, getStage());
+                    previewWindowController = new PreviewWindowController(editorController, documentManager, getStage());
                     previewWindowController.setToolStylesheet(getToolStylesheet());
                 }
                 previewWindowController.getStage().centerOnScreen();
@@ -816,7 +837,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case SHOW_PREVIEW_DIALOG:
                 if (previewWindowController == null) {
-                    previewWindowController = new PreviewWindowController(editorController, stylesheetConfigManager, getStage());
+                    previewWindowController = new PreviewWindowController(editorController, documentManager, getStage());
                     previewWindowController.setToolStylesheet(getToolStylesheet());
                 }
                 previewWindowController.openDialog();
@@ -958,21 +979,21 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 sceneStyleSheetMenuController.performAddSceneStyleSheet();
                 break;
 
-            case SET_RESOURCE:
-                resourceController.performSetResource();
-                // Update preferences
-                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
-                break;
-
-            case REMOVE_RESOURCE:
-                resourceController.performRemoveResource();
-                // Update preferences
-                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
-                break;
-
-            case REVEAL_RESOURCE:
-                resourceController.performRevealResource();
-                break;
+//            case SET_RESOURCE:
+//                resourceController.performSetResource();
+//                // Update preferences
+//                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
+//                break;
+//
+//            case REMOVE_RESOURCE:
+//                resourceController.performRemoveResource();
+//                // Update preferences
+//                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
+//                break;
+//
+//            case REVEAL_RESOURCE:
+//                resourceController.performRevealResource();
+//                break;
 
             case HELP:
                 performHelp();
@@ -1087,14 +1108,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     public boolean isLibraryPanelVisible() {
         return librarySplitController.isTargetVisible();
-    }
-
-    public File getResourceFile() {
-        return resourceController.getResourceFile();
-    }
-
-    public void setResourceFile(File file) {
-        resourceController.setResourceFile(file);
     }
 
     @Override
@@ -1212,17 +1225,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         assert bottomHost != null;
 
         assert contentPanelHost != null;
-        //assert inspectorPanelHost != null;
-        //assert inspectorSearchPanelHost != null;
         assert messageBarHost != null;
         assert mainSplitPane != null;
-        assert mainSplitPane.getItems().size() == 2;
+//        assert mainSplitPane.getItems().size() == 2;
         assert leftRightSplitPane != null;
-        assert leftRightSplitPane.getItems().size() == 2;
+//        assert leftRightSplitPane.getItems().size() == 2;
         assert libraryDocumentSplitPane != null;
-//        assert libraryDocumentSplitPane.getItems().size() == 2;
-//        assert documentAccordion != null;
-//        assert !documentAccordion.getPanes().isEmpty();
 
 
         // Add a border to the Windows app, because of the specific window decoration on Windows.
@@ -1265,7 +1273,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
 
         // Monitor the status of the document to set status icon accordingly in message bar
-        getEditorController().getJobManager().revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> messageBarController.setDocumentDirty(isDocumentDirty()));
+        getEditorController().getJobManager().revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
+        	messageBarController.setDocumentDirty(isDocumentDirty());
+        	documentManager.dirty().onNext(isDocumentDirty());
+        });
 
 
         libraryPanelController.getLibraryLabel().bind(Bindings.createStringBinding(() -> {
@@ -1289,13 +1300,17 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             //      - editorController watches files referenced from the FXML text
             //      - watchingController watches the document file, i18n resources,
             //        preview stylesheets...
-            assert !editorController.isFileWatchingStarted();
-            editorController.startFileWatching();
-            watchingController.start();
+
+
+        	//TODO remove after checking the new watching system is operational in EditorController or in filesystem
+            //assert !editorController.isFileWatchingStarted();
+            //editorController.startFileWatching();
+        	//watchingController.start();
         }
 
         super.openWindow();
         if (!EditorPlatform.IS_MAC) {
+        	//TODO uncomment or better add a Maximized preference to the document
             //getStage().setMaximized(true);
         }
         // Give focus to the library search TextField
@@ -1311,9 +1326,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
         super.closeWindow();
 
-        // Stops watching
-        editorController.stopFileWatching();
-        watchingController.stop();
+        //TODO remove after checking the new watching system is operational in EditorController or in filesystem
+        // finalizations list must handle the case below
+        //// Stops watching
+        //editorController.stopFileWatching();
+        //watchingController.stop();
+
+        finalizations.forEach(a -> a.dispose());
     }
 
     @Override
@@ -1582,7 +1601,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         var fileChooser = new FileChooser();
         var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"), "*.fxml"); //NOI18N
         fileChooser.getExtensionFilters().add(f);
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
         var fxmlFile = fileChooser.showOpenDialog(getStage());
         if (fxmlFile != null) {
@@ -1593,7 +1612,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             }
 
             // Keep track of the user choice for next time
-            EditorController.updateNextInitialDirectory(fxmlFile);
+            fileSystem.updateNextInitialDirectory(fxmlFile);
         }
         return Optional.ofNullable(fxmlFile);
     }
@@ -1619,13 +1638,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         fileChooser.getExtensionFilters().add(audioFilter);
         fileChooser.getExtensionFilters().add(videoFilter);
 
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
         File mediaFile = fileChooser.showOpenDialog(getStage());
         if (mediaFile != null) {
 
             // Keep track of the user choice for next time
-            EditorController.updateNextInitialDirectory(mediaFile);
+        	fileSystem.updateNextInitialDirectory(mediaFile);
 
             this.getEditorController().performImportMedia(mediaFile);
         }
@@ -1771,11 +1790,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
                 if (saveConfirmed) {
                     try {
-                        watchingController.removeDocumentTarget();
+                    	//TODO remove after checking the new watching system is operational in EditorController or in filesystem
+                        //watchingController.removeDocumentTarget();
                         final byte[] fxmlBytes = editorController.getFxmlText(wildcardImportsPreference.getValue()).getBytes(StandardCharsets.UTF_8); //NOI18N
                         Files.write(fxmlPath, fxmlBytes);
                         updateLoadFileTime();
-                        watchingController.update();
+                        //TODO remove after checking the new watching system is operational in EditorController or in filesystem
+                        //watchingController.update();
 
                         editorController.getMessageLog().logInfoMessage(
                                 "log.info.save.confirmation", I18N.getBundle(), fileName);
@@ -1812,7 +1833,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     = new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
                             "*.fxml"); //NOI18N
             fileChooser.getExtensionFilters().add(f);
-            fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+            fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
             File fxmlFile = fileChooser.showSaveDialog(getStage());
             if (fxmlFile == null) {
@@ -1901,7 +1922,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     // => reset document preferences
                     //resetDocumentPreferences();
 
-                    watchingController.update();
+                  //TODO remove after checking the new watching system is operational in EditorController or in filesystem
+                    //watchingController.update();
 
                     // Now performs a regular save action
                     result = performSaveAction();
@@ -1911,7 +1933,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     }
 
                     // Keep track of the user choice for next time
-                    EditorController.updateNextInitialDirectory(fxmlFile);
+                    fileSystem.updateNextInitialDirectory(fxmlFile);
 
                     // Update recent items with just saved file
                     recentItemsPreference.addRecentItem(fxmlFile);
@@ -2015,14 +2037,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final URL location = editorController.getFxomDocument().getLocation();
 
         try {
-            final File fxmlFile = new File(location.toURI());
-            EditorPlatform.revealInFileBrowser(fxmlFile);
+            fileSystem.revealInFileBrowser(new File(location.toURI()));
         } catch(IOException | URISyntaxException x) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setMessage(I18N.getString("alert.reveal.failure.message", getStage().getTitle()));
-            errorDialog.setDetails(I18N.getString("alert.reveal.failure.details"));
-            errorDialog.setDebugInfoWithThrowable(x);
-            errorDialog.showAndWait();
+        	dialog.showErrorAndWait("",
+        			I18N.getString("alert.reveal.failure.message", getStage().getTitle()),
+        			I18N.getString("alert.reveal.failure.details"),
+        			x);
         }
     }
 
@@ -2094,13 +2114,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     private void performHelp() {
         try {
-            EditorPlatform.open(EditorPlatform.DOCUMENTATION_URL);
+            fileSystem.open(EditorPlatform.DOCUMENTATION_URL);
         } catch (IOException ioe) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setMessage(I18N.getString("alert.help.failure.message", EditorPlatform.DOCUMENTATION_URL));
-            errorDialog.setDetails(I18N.getString("alert.messagebox.failure.details"));
-            errorDialog.setDebugInfoWithThrowable(ioe);
-            errorDialog.showAndWait();
+        	dialog.showErrorAndWait("",
+        			I18N.getString("alert.help.failure.message", EditorPlatform.DOCUMENTATION_URL),
+        			I18N.getString("alert.messagebox.failure.details"),
+        			ioe);
         }
     }
 

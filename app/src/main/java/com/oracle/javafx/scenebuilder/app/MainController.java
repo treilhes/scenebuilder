@@ -53,10 +53,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
@@ -73,7 +73,6 @@ import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowContr
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
 import com.oracle.javafx.scenebuilder.kit.ToolTheme;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
@@ -129,9 +128,6 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     SceneBuilderBeanFactory sceneBuilderFactory;
 
     @Autowired
-    DocumentManager documentsManager;
-
-    @Autowired
     private UserLibrary userLibrary;
 
     @Autowired
@@ -157,6 +153,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
 	private final ToolThemePreference toolThemePreference;
 
+
+	private final FileSystem fileSystem;
+
     /*
      * Public
      * //TODO delete in favor of injection
@@ -166,9 +165,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     public MainController(
-    		@Autowired ToolThemePreference toolThemePreference
+    		@Autowired ToolThemePreference toolThemePreference,
+    		@Autowired FileSystem fileSystem
     		) {
+
     	this.toolThemePreference = toolThemePreference;
+    	this.fileSystem = fileSystem;
+
+    	fileSystem.startWatcher();
+
         if (singleton != null) {
         	return;
         }
@@ -365,7 +370,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
      */
     public void start(Stage stage) {
         try {
-            if (AppPlatform.requestStart(this, parameters) == false) {
+            if (AppPlatform.requestStart(this, parameters, fileSystem) == false) {
                 // Start has been denied because another instance is running.
                 Platform.exit();
             }
@@ -511,7 +516,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             fileObjs.add(new File(file));
         }
 
-        EditorController.updateNextInitialDirectory(fileObjs.get(0));
+        fileSystem.updateNextInitialDirectory(fileObjs.get(0));
 
         // Fix for #45
         if (userLibrary.isFirstExplorationCompleted()) {
@@ -595,11 +600,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
                 "*.fxml")); //NOI18N
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
         if (fxmlFiles != null) {
             assert fxmlFiles.isEmpty() == false;
-            EditorController.updateNextInitialDirectory(fxmlFiles.get(0));
+            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
             performOpenFiles(fxmlFiles, fromWindow);
         }
     }
@@ -786,6 +791,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 dwc.updatePreferences();
                 documentWindowRequestClose(dwc);
             }
+            fileSystem.stopWatcher();
             logTimestamp(ACTION.STOP);
             // TODO (elp): something else here ?
             Platform.exit();

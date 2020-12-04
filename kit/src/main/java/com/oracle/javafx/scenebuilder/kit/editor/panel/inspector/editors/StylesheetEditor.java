@@ -43,13 +43,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue.Type;
 import com.oracle.javafx.scenebuilder.core.util.URLUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -89,12 +89,14 @@ public class StylesheetEditor extends InlineListEditor {
 
     private Type type;
     private URL fxmlFileLocation;
+	private final FileSystem fileSystem;
 
-    public StylesheetEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, URL fxmlFileLocation) {
+    public StylesheetEditor(FileSystem fileSystem, ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, URL fxmlFileLocation) {
         super(propMeta, selectedClasses);
+        this.fileSystem = fileSystem;
         initialize(fxmlFileLocation);
     }
-    
+
     private void initialize(URL fxmlFileLocation) {
         this.fxmlFileLocation = fxmlFileLocation;
         setLayoutFormat(PropertyEditor.LayoutFormat.DOUBLE_LINE);
@@ -214,11 +216,14 @@ public class StylesheetEditor extends InlineListEditor {
         if (urlStr == null) {
             return;
         }
-        try {
-            EditorPlatform.open(urlStr);
-        } catch (IOException ex) {
-            System.err.println(I18N.getString("inspector.stylesheet.cannotopen", urlStr + " : " + ex)); // should go to message panel
-        }
+        System.out.println("REACTIVATE ME");
+    	//TODO reactivate the code below when editors are spring components
+
+//        try {
+//            EditorPlatform.open(urlStr);
+//        } catch (IOException ex) {
+//            System.err.println(I18N.getString("inspector.stylesheet.cannotopen", urlStr + " : " + ex)); // should go to message panel
+//        }
     }
 
     private void reveal(EditorItem source) {
@@ -226,15 +231,18 @@ public class StylesheetEditor extends InlineListEditor {
         if (urlStr == null) {
             return;
         }
-        try {
-            File file = URLUtils.getFile(urlStr);
-            if (file == null) { // urlStr is not a file URL
-                return;
-            }
-            EditorPlatform.revealInFileBrowser(file);
-        } catch (URISyntaxException | IOException ex) {
-            System.err.println(I18N.getString("inspector.stylesheet.cannotreveal", urlStr + " : " + ex)); // should go to message panel
-        }
+
+        System.out.println("REACTIVATE ME");
+    	//TODO reactivate the code below when editors are spring components
+//        try {
+//            File file = URLUtils.getFile(urlStr);
+//            if (file == null) { // urlStr is not a file URL
+//                return;
+//            }
+//            EditorPlatform.revealInFileBrowser(file);
+//        } catch (URISyntaxException | IOException ex) {
+//            System.err.println(I18N.getString("inspector.stylesheet.cannotreveal", urlStr + " : " + ex)); // should go to message panel
+//        }
     }
 
     private String getUrl(EditorItem source) {
@@ -256,13 +264,13 @@ public class StylesheetEditor extends InlineListEditor {
                 new FileChooser.ExtensionFilter(
                         I18N.getString("inspector.select.css.filter"),
                         Arrays.asList(extensions)));
-        fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
         if ((file == null)) {
             return;
         }
         // Keep track of the user choice for next time
-        EditorController.updateNextInitialDirectory(file);
+        fileSystem.updateNextInitialDirectory(file);
         URL url;
         try {
             url = file.toURI().toURL();
@@ -376,7 +384,7 @@ public class StylesheetEditor extends InlineListEditor {
             absoluteMenuItem.setDisable(true);
         }
     }
-    
+
     /**
      ***************************************************************************
      *

@@ -35,18 +35,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.app.AppPlatform;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -58,22 +63,31 @@ import javafx.scene.control.SeparatorMenuItem;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 class DebugMenuController {
 
     private final Menu menu = new Menu("Debug"); //NOI18N
     private final DocumentWindowController documentWindowController;
+	private final FileSystem fileSystem;
+	private final Dialog dialog;
 
-    public DebugMenuController(DocumentWindowController documentWindowController) {
+    public DebugMenuController(
+    		@Autowired DocumentWindowController documentWindowController,
+    		@Autowired FileSystem fileSystem,
+    		@Autowired Dialog dialog) {
 
         this.documentWindowController = documentWindowController;
+        this.fileSystem = fileSystem;
+        this.dialog = dialog;
         /*
          * User Library Folder
          */
-        final String applicationDataFolder
-                = AppPlatform.getApplicationDataFolder();
+        final File applicationDataFolder = fileSystem.getApplicationDataFolder();
         final MenuItem libraryFolderMenuItem
                 = new MenuItem();
-        libraryFolderMenuItem.setText(applicationDataFolder);
+        libraryFolderMenuItem.setText(applicationDataFolder.getAbsolutePath());
         libraryFolderMenuItem.setOnAction(t -> handleRevealPath(applicationDataFolder));
 
         final Menu libraryFolderMenu = new Menu("Application Data Folder"); //NOI18N
@@ -135,15 +149,11 @@ class DebugMenuController {
      * Private
      */
 
-    private void handleRevealPath(String path) {
+    private void handleRevealPath(File file) {
         try {
-            EditorPlatform.revealInFileBrowser(new File(path));
+        	fileSystem.revealInFileBrowser(file);
         } catch(IOException x) {
-            final ErrorDialog d = new ErrorDialog(null);
-            d.setMessage("Failed to reveal folder"); //NOI18N
-            d.setDetails(path);
-            d.setDebugInfoWithThrowable(x);
-            d.showAndWait();
+        	dialog.showErrorAndWait("", "Failed to reveal folder", file.getAbsolutePath(), x);
         }
     }
 

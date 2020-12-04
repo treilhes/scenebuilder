@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.api.Driver;
 import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.Handles;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -202,7 +203,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
     		@Autowired EditorController editorController,
     		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
     		@Autowired BackgroundImagePreference backgroundImagePreference,
-    		@Autowired ParentRingColorPreference parentRingColorPreference
+    		@Autowired ParentRingColorPreference parentRingColorPreference,
+    		@Autowired DocumentManager documentManager
 
 //    		@Autowired @Lazy EditModeController editModeController,
 //    		@Autowired @Lazy PickModeController pickModeController,
@@ -213,7 +215,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         this.editorController = editorController;
         this.editModeController = context.getBean(EditModeController.class, context, this);
         this.pickModeController = context.getBean(PickModeController.class, this);
-        this.workspaceController = context.getBean(WorkspaceController.class, editorController);
+        this.workspaceController = context.getBean(WorkspaceController.class, editorController, documentManager);
 //        this.editModeController = editModeController;
 //        this.pickModeController = pickModeController;
 //        this.workspaceController = workspaceController;

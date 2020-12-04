@@ -46,18 +46,24 @@ import java.util.TreeSet;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.util.TestCssNode;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
+import com.sun.javafx.css.StyleManager;
+import com.sun.javafx.css.StyleMap;
+import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
+import javafx.css.PseudoClass;
 import javafx.css.Rule;
 import javafx.css.Style;
 import javafx.css.StyleOrigin;
 import javafx.css.Styleable;
 import javafx.css.StyleableProperty;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Skinnable;
 
 /**
@@ -87,16 +93,23 @@ public class NodeCssState {
     private List<MatchingRule> sortedMatchingRules = new ArrayList<>();
     private Collection<CssProperty> props;
 
+    private TestCssNode tsn;
+
     @SuppressWarnings("rawtypes")
     protected NodeCssState(Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
-        this.map = map;
+        //this.map = map;
         this.node = node;
         this.fxomObject = fxomObject;
+
+        this.tsn = new TestCssNode(node);
+        this.map = tsn.getStyleMap(node);
+
         getAuthorStyles();
         getInlineStyles();
         getUserAgentStyles();
         getMatchingRules();
         getAllStyleables();
+
     }
 
     /**
@@ -313,9 +326,9 @@ public class NodeCssState {
         public List<CssContentMaker.CssPropertyState.CssStyle> getFxThemeHiddenByModel() {
             List<CssContentMaker.CssPropertyState.CssStyle> ret = new ArrayList<>();
             CssContentMaker.CssPropertyState ps = getWinner();
-            List<CssContentMaker.CssPropertyState.CssStyle> notAppliedStyles = 
-                    ps == null ? 
-                    Collections.<CssContentMaker.CssPropertyState.CssStyle>emptyList() : 
+            List<CssContentMaker.CssPropertyState.CssStyle> notAppliedStyles =
+                    ps == null ?
+                    Collections.<CssContentMaker.CssPropertyState.CssStyle>emptyList() :
                     ps.getNotAppliedStyles();
             boolean hasModel = modelState().get() != null;
             if (hasModel) {
@@ -527,7 +540,7 @@ public class NodeCssState {
         private final boolean applied;
         private final boolean lookup;
 
-        MatchingDeclaration(CssContentMaker.CssPropertyState.CssStyle style, 
+        MatchingDeclaration(CssContentMaker.CssPropertyState.CssStyle style,
                 CssContentMaker.CssPropertyState prop, boolean applied, boolean lookup) {
             this.style = style;
             this.prop = prop;
@@ -563,7 +576,7 @@ public class NodeCssState {
 
     // This method add sub properties instead of compund property.
     private static void addSubProperties(
-            Collection<CssContentMaker.CssPropertyState> source, 
+            Collection<CssContentMaker.CssPropertyState> source,
             Collection<CssContentMaker.CssPropertyState> target) {
         for (CssContentMaker.CssPropertyState p : source) {
             if (p.getSubProperties().isEmpty()) {
@@ -680,10 +693,10 @@ public class NodeCssState {
 
                 CssContentMaker.CssPropertyState pState = new CssContentMaker.CssPropertyState(value, cssMetaList, cssValue);
 
-                /* 
-                 * Each sub property can be ruled by a specific Origin, 
+                /*
+                 * Each sub property can be ruled by a specific Origin,
                  * we need to check if the sub property is in a rule of the passed origin.
-                 * For example, we can have background-radius set by fxTheme 
+                 * For example, we can have background-radius set by fxTheme
                  * and background-color set by inline or author.
                  */
                 if (cssMetaList.getSubProperties() != null) {
@@ -718,7 +731,7 @@ public class NodeCssState {
                 applied.add(st);
                 pState.getNotAppliedStyles().addAll(CssContentMaker.getNotAppliedStyles(applied, node, cssMetaList));
                 /*
-                 * In case the origin is not the same and no sub properties have been found for 
+                 * In case the origin is not the same and no sub properties have been found for
                  * the passed origin, then the property is not taken into consideration
                  */
                 if (o == origin || !pState.getSubProperties().isEmpty()) {

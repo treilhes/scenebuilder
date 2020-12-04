@@ -53,10 +53,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -234,7 +234,8 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 	private Action showStyledOnlyAction;
 	private Action splitDefaultsAction;
 
-	private final StylesheetConfigManager stylesheetConfigManager;
+	private final DocumentManager documentManager;
+	private final FileSystem fileSystem;
 
     /**
      * Should be implemented by the application.
@@ -255,8 +256,9 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 			@Autowired EditorController c,
 			@Autowired Delegate delegate,
 			@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+			@Autowired FileSystem fileSystem,
 
-			@Lazy @Autowired StylesheetConfigManager stylesheetConfigManager,
+			@Lazy @Autowired DocumentManager documentManager,
 
 			@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
 			@Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
@@ -267,9 +269,10 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 			@Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction) {
 		super(CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), c);
 		this.editorController = c;
-		this.stylesheetConfigManager = stylesheetConfigManager;
+		this.documentManager = documentManager;
 		this.applicationDelegate = delegate;
 		this.sceneBuilderFactory = sceneBuilderFactory;
+		this.fileSystem = fileSystem;
 		this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
 
 		this.viewTableAction = viewTableAction;
@@ -389,7 +392,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
         defaultColumn.setCellFactory(new DefaultCellFactory());
 
         //editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> refresh());
-        stylesheetConfigManager.configUpdated().subscribe(s -> refresh());
+        documentManager.stylesheetConfig().subscribe(s -> refresh());
 
         cssStateProperty.addListener((ChangeListener<NodeCssState>) (arg0, oldValue, newValue) -> fillPropertiesTable());
 
@@ -470,7 +473,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
         }
     }
 
-    private static class PropertiesCellFactory implements Callback<TableColumn<CssProperty, CssProperty>, TableCell<CssProperty, CssProperty>> {
+    private class PropertiesCellFactory implements Callback<TableColumn<CssProperty, CssProperty>, TableCell<CssProperty, CssProperty>> {
 
         @Override
         public TableCell<CssProperty, CssProperty> call(TableColumn<CssProperty, CssProperty> param) {
@@ -1052,7 +1055,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
      *
      */
     // "Properties" column
-    private static class CssPropertyTableCell extends TableCell<CssProperty, CssProperty> {
+    private class CssPropertyTableCell extends TableCell<CssProperty, CssProperty> {
 
         CssPropertyTableCell() {
             getStyleClass().add("property-background");//NOI18N
@@ -1079,7 +1082,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
         }
     }
 
-    private static class LinkActionListener implements EventHandler<ActionEvent> {
+    private class LinkActionListener implements EventHandler<ActionEvent> {
 
         final CssProperty item;
 
@@ -1092,7 +1095,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
             try {
                 // XXX jfdenise, for now can't do better than opening the file, no Anchor per property...
                 // Retrieve defining class
-                EditorPlatform.open(EditorPlatform.JAVADOC_HOME
+            	fileSystem.open(EditorPlatform.JAVADOC_HOME
                         + "javafx.graphics/javafx/scene/doc-files/cssref.html#" + //NOI18N
                         item.getTarget().getClass().getSimpleName().toLowerCase(Locale.ROOT));
             } catch (IOException ex) {
@@ -1566,10 +1569,10 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
                 if (path.toLowerCase(Locale.ROOT).startsWith("file:/")) { //NOI18N
                     try {
                         if (open) {
-                            EditorPlatform.open(path);
+                        	fileSystem.open(path);
                         } else {
                             File f = new File(url.toURI());
-                            EditorPlatform.revealInFileBrowser(f);
+                            fileSystem.revealInFileBrowser(f);
                         }
                     } catch (URISyntaxException | IOException ex) {
                         System.out.println(ex.getMessage() + ": " + ex);

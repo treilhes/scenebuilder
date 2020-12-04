@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector;
 
-import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -61,12 +60,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
@@ -164,7 +164,6 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
@@ -351,17 +350,19 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
     private final AccordionAnimationPreference accordionAnimationPreference;
 	private final ApplicationContext context;
-	private final StylesheetConfigManager stylesheetConfigManager;
+	private final DocumentManager documentManager;
+	private final FileSystem fileSystem;
 
     /*
      * Public
      */
     public InspectorPanelController(
     		@Autowired ApplicationContext context,
+    		@Autowired FileSystem fileSystem,
     		@Autowired EditorController editorController,
     		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-    		@Lazy @Autowired StylesheetConfigManager stylesheetConfigManager,
+    		@Lazy @Autowired DocumentManager documentManager,
     		@Autowired AccordionAnimationPreference accordionAnimationPreference,
     		@Autowired @Qualifier("inspectorPanelActions.ShowAllAction") Action showAllAction,
     		@Autowired @Qualifier("inspectorPanelActions.ShowEditedAction") Action showEditedAction,
@@ -371,8 +372,9 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
     		) {
         super(InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
         this.context = context;
+        this.fileSystem = fileSystem;
         this.editorController = editorController;
-        this.stylesheetConfigManager = stylesheetConfigManager;
+        this.documentManager = documentManager;
         this.availableCharsets = CharsetEditor.getStandardCharsets();
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
@@ -682,8 +684,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
         });
 
         // Listen the Scene stylesheets changes
-        //getEditorController().sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> updateInspector());
-        stylesheetConfigManager.configUpdated().subscribe(s -> updateInspector());
+        documentManager.stylesheetConfig().subscribe(s -> updateInspector());
 
         selectionState = new SelectionState(editorController);
         viewModeChanged(null, getViewMode());
@@ -2026,13 +2027,13 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
             if (createdPropertyEditor != null) {
                 ((StyleClassEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getSelectedInstances(), getEditorController());
             } else {
-                createdPropertyEditor = new StyleClassEditor(stylesheetConfigManager, propMeta, selectedClasses, getSelectedInstances(), getEditorController());
+                createdPropertyEditor = new StyleClassEditor(documentManager, propMeta, selectedClasses, getSelectedInstances(), getEditorController());
             }
         } else if (editorClass == StylesheetEditor.class) {
             if (createdPropertyEditor != null) {
                 ((StylesheetEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController().getFxmlLocation());
             } else {
-                createdPropertyEditor = new StylesheetEditor(propMeta, selectedClasses, getEditorController().getFxmlLocation());
+                createdPropertyEditor = new StylesheetEditor(fileSystem, propMeta, selectedClasses, getEditorController().getFxmlLocation());
             }
         } else if (editorClass == StringListEditor.class) {
             if (createdPropertyEditor != null) {
@@ -2091,7 +2092,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
             if (createdPropertyEditor != null) {
                 ((ImageEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController().getFxmlLocation());
             } else {
-                createdPropertyEditor = new ImageEditor(propMeta, selectedClasses, getEditorController().getFxmlLocation());
+                createdPropertyEditor = new ImageEditor(fileSystem, propMeta, selectedClasses, getEditorController().getFxmlLocation());
             }
         } else if (editorClass == BoundsPopupEditor.class) {
             if (createdPropertyEditor != null) {
@@ -2186,7 +2187,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
             propertyEditor.reset(propMeta, selectedClasses);
         }
         else {
-            newPropertyEditor = new IncludeFxmlEditor(propMeta, selectedClasses, getEditorController());
+            newPropertyEditor = new IncludeFxmlEditor(fileSystem, propMeta, selectedClasses, getEditorController());
         }
         return newPropertyEditor;
     }

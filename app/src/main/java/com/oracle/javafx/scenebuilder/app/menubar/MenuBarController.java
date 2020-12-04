@@ -33,21 +33,22 @@
 package com.oracle.javafx.scenebuilder.app.menubar;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -55,6 +56,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -67,6 +69,7 @@ import com.oracle.javafx.scenebuilder.app.MainController.ApplicationControlActio
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
+import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
@@ -80,12 +83,10 @@ import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -107,7 +108,6 @@ import lombok.RequiredArgsConstructor;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
-//TODO Add generation of theme menus
 @RequiredArgsConstructor
 public class MenuBarController implements InitializingBean {
 
@@ -123,6 +123,8 @@ public class MenuBarController implements InitializingBean {
     // This member is null when this MenuBarController is used for
     // managing the menu bar passed to MenuBarSkin.setDefaultSystemMenu().
 
+    @Autowired
+    @Lazy
     private DebugMenuController debugMenuController; // Initialized lazily
 
     @FXML
@@ -335,18 +337,7 @@ public class MenuBarController implements InitializingBean {
     private MenuItem showPreviewInWindowMenuItem;
     @FXML
     private MenuItem showPreviewInDialogMenuItem;
-    @FXML
-    private MenuItem addSceneStyleSheetMenuItem;
-    @FXML
-    private Menu removeSceneStyleSheetMenu;
-    @FXML
-    private Menu openSceneStyleSheetMenu;
-    @FXML
-    private MenuItem setResourceMenuItem;
-    @FXML
-    private MenuItem removeResourceMenuItem;
-    @FXML
-    private MenuItem revealResourceMenuItem;
+
     @FXML
     private RadioMenuItem phonePreviewSizeMenuItem;
     @FXML
@@ -378,27 +369,30 @@ public class MenuBarController implements InitializingBean {
     @Autowired(required = false)
     List<MenuItemProvider> menuItemProviders;
 
+    @Autowired
+    ApplicationContext context;
+
     Map<String, MenuItem> menuMap = null;
 
     public void buildMenuMap(MenuBar menuBar) {
-    	if (menuMap != null) {
-    		return;
-    	}
-    	menuMap = new HashMap<>();
+        if (menuMap != null) {
+            return;
+        }
+        menuMap = new HashMap<>();
         menuBar.getMenus().forEach(m -> {
-        	addToMenuMap(m);
+            addToMenuMap(m);
             m.getItems().forEach(mi -> {
-            	addToMenuMap(mi);
+                addToMenuMap(mi);
             });
         });
     }
 
     public void addToMenuMap(MenuItem m) {
-    	if (m.getId() != null && !m.getId().isEmpty()) {
+        if (m.getId() != null && !m.getId().isEmpty()) {
             if (menuMap.containsKey(m.getId())) {
-            	Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, "Duplicate id in menu map : {0}", m.getId());
+                Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, "Duplicate id in menu map : {0}", m.getId());
             } else {
-            	menuMap.put(m.getId(), m);
+                menuMap.put(m.getId(), m);
             }
         }
     }
@@ -411,89 +405,111 @@ public class MenuBarController implements InitializingBean {
         buildMenuMap(menuBar);
 
         if (menuItemProviders != null && !menuItemProviders.isEmpty()) {
-            menuItemProviders.stream()
-                .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
-                .flatMap(mip -> mip.menuItems().stream())
-                .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
-                .forEach(ma -> {
-                MenuItem target = menuMap.get(ma.getTargetId());
 
-                if (target != null) {
+             List<MenuItemProvider> validProviders = menuItemProviders.stream()
+                    .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
+                    .collect(Collectors.toList());
 
-                	ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                	int index = items.indexOf(target);
+            List<MenuAttachment> validAttachments = validProviders.stream()
+                    .flatMap(mip -> mip.menuItems().stream())
+                    .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
+                    .collect(Collectors.toList());
 
-                	if (ma.getMenuItem().getId() != null && !ma.getMenuItem().getId().isEmpty()) {
-                		menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
-                	}
+            boolean hasInvalidProviders = menuItemProviders.size() > validProviders.size();
+            List<MenuItemProvider> invalidProviders = hasInvalidProviders
+                    ? menuItemProviders.stream().filter(m -> !validProviders.contains(m)).collect(Collectors.toList())
+                    : null;
 
-                    switch (ma.getPositionRequest()) {
-                        case AsFirstSibling: {
-                        	items.add(0, ma.getMenuItem());
-                            break;
-                        }
-                        case AsLastSibling: {
-                        	items.add(ma.getMenuItem());
-                            break;
-                        }
-                        case AsPreviousSibling: {
-                        	items.add(index, ma.getMenuItem());
-                            break;
-                        }
-                        case AsNextSibling: {
-                        	items.add(index + 1, ma.getMenuItem());
-                            break;
-                        }
-                        case AfterPreviousSeparator: {
-                        	int insertAt = 0;
-                        	for (int i=index; i >= 0;i--) {
-                        		if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
-                        			insertAt = i + 1;
-                        			break;
-                        		}
-                        	}
-                        	items.add(insertAt, ma.getMenuItem());
-                            break;
-                        }
-                        case BeforeNextSeparator: {
-                        	int insertAt = items.size();
-                        	for (int i=index; i < items.size();i++) {
-                        		if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
-                        			insertAt = i;
-                        			break;
-                        		}
-                        	}
-                        	items.add(insertAt, ma.getMenuItem());
-                            break;
+            boolean atLeastOneInserted = true;
+            while (!validAttachments.isEmpty() && atLeastOneInserted) {
+                atLeastOneInserted = false;
+
+                ListIterator<MenuAttachment> it = validAttachments.listIterator();
+                while (it.hasNext()) {
+                    MenuAttachment ma = it.next();
+                    MenuItem target = menuMap.get(ma.getTargetId());
+
+                    if (target != null) {
+
+                        ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                        int index = items.indexOf(target);
+
+                        if (ma.getMenuItem().getId() == null) {
+                            ma.getMenuItem().setId(ma.getClass().getSimpleName());
                         }
 
+                        menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
+                        it.remove();
+                        atLeastOneInserted = true;
+
+                        switch (ma.getPositionRequest()) {
+                            case AsFirstSibling: {
+                                items.add(0, ma.getMenuItem());
+                                break;
+                            }
+                            case AsLastSibling: {
+                                items.add(ma.getMenuItem());
+                                break;
+                            }
+                            case AsPreviousSibling: {
+                                items.add(index, ma.getMenuItem());
+                                break;
+                            }
+                            case AsNextSibling: {
+                                items.add(index + 1, ma.getMenuItem());
+                                break;
+                            }
+                            case AfterPreviousSeparator: {
+                                int insertAt = 0;
+                                for (int i = index; i >= 0; i--) {
+                                    if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                                        insertAt = i + 1;
+                                        break;
+                                    }
+                                }
+                                items.add(insertAt, ma.getMenuItem());
+                                break;
+                            }
+                            case BeforeNextSeparator: {
+                                int insertAt = items.size();
+                                for (int i = index; i < items.size(); i++) {
+                                    if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                                        insertAt = i;
+                                        break;
+                                    }
+                                }
+                                items.add(insertAt, ma.getMenuItem());
+                                break;
+                            }
+
+                        }
                     }
-                } else {
-                	Logger.getLogger(MenuBarController.class.getName())
-                		.log(Level.SEVERE, "Unable to find this id in the menuBar: {0}", ma.getTargetId());
                 }
+            }
 
-            });
+            if (invalidProviders != null) {
+                invalidProviders.forEach(mip -> {
+                    Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                            "Invalid MenuItemProviders submitted {0}", mip.getClass().getName());
+                });
+            }
+            if (validAttachments.size() > 0) {
+                Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                        "Unable to add all the provided menu in the menuBar");
+                validAttachments.forEach(ma -> {
+                    Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                            "Unable to attach {0} to id {1} using {2}", new String[] { ma.getClass().getName(),
+                                    ma.getTargetId(), ma.getPositionRequest().toString() });
+                });
+            }
         }
     }
 
     public MenuBar getMenuBar() {
 
         if (menuBar == null) {
-            final URL fxmlURL = MenuBarController.class.getResource("MenuBar.fxml"); //NOI18N
-            final FXMLLoader loader = new FXMLLoader();
-
-            loader.setController(this);
-            loader.setLocation(fxmlURL);
-            loader.setResources(I18N.getBundle());
-            try {
-                loader.load();
-                controllerDidLoadFxml();
-            } catch (RuntimeException | IOException x) {
-                System.out.println("loader.getController()=" + loader.getController()); //NOI18N
-                System.out.println("loader.getLocation()=" + loader.getLocation()); //NOI18N
-                throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
-            }
+            FXMLUtils.load(this, "MenuBar.fxml");
+            controllerDidLoadFxml();
         }
 
         return menuBar;
@@ -502,9 +518,6 @@ public class MenuBarController implements InitializingBean {
     public void setDebugMenuVisible(boolean visible) {
         if (isDebugMenuVisible() != visible) {
             if (visible) {
-                if (debugMenuController == null) {
-                    debugMenuController = new DebugMenuController(documentWindowController);
-                }
                 menuBar.getMenus().add(debugMenuController.getMenu());
             } else {
                 menuBar.getMenus().remove(debugMenuController.getMenu());
@@ -513,17 +526,12 @@ public class MenuBarController implements InitializingBean {
     }
 
     public boolean isDebugMenuVisible() {
-        final boolean result;
-        if (debugMenuController == null) {
-            result = false;
-        } else {
-            result = menuBar.getMenus().contains(debugMenuController.getMenu());
-        }
-        return result;
+        return menuBar.getMenus().contains(debugMenuController.getMenu());
     }
 
     public static synchronized MenuBarController getSystemMenuBarController() {
         assert systemMenuBarController != null;
+        //TODO uncomment below and springify
 //        if (systemMenuBarController == null) {
 //            systemMenuBarController = new MenuBarController(null);
 //        }
@@ -641,12 +649,7 @@ public class MenuBarController implements InitializingBean {
 
         assert showPreviewInWindowMenuItem != null;
         assert showPreviewInDialogMenuItem != null;
-        assert addSceneStyleSheetMenuItem != null;
-        assert removeSceneStyleSheetMenu != null;
-        assert openSceneStyleSheetMenu != null;
-        assert setResourceMenuItem != null;
-        assert removeResourceMenuItem != null;
-        assert revealResourceMenuItem != null;
+
         assert phonePreviewSizeMenuItem != null;
         assert tabletPreviewSizeMenuItem != null;
         assert qvgaPreviewSizeMenuItem != null;
@@ -1049,47 +1052,49 @@ public class MenuBarController implements InitializingBean {
         showPreviewInWindowMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, modifier));
         showPreviewInDialogMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SHOW_PREVIEW_DIALOG));
 
-        addSceneStyleSheetMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.ADD_SCENE_STYLE_SHEET));
-        updateOpenAndRemoveSceneStyleSheetMenus();
-        if (documentWindowController != null) {
-            //TODO uncomment and fix for full theme support
-//            this.documentWindowController.getEditorController().sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
-//                if (t1 != null) {
-//                    updateOpenAndRemoveSceneStyleSheetMenus();
-//                    setupMenuItemHandlers(removeSceneStyleSheetMenu);
-//                    setupMenuItemHandlers(openSceneStyleSheetMenu);
+      //TODO uncomment/delete and fix for full theme support
+
+//        addSceneStyleSheetMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.ADD_SCENE_STYLE_SHEET));
+//        updateOpenAndRemoveSceneStyleSheetMenus();
+//        if (documentWindowController != null) {
+//
+////            this.documentWindowController.getEditorController().sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
+////                if (t1 != null) {
+////                    updateOpenAndRemoveSceneStyleSheetMenus();
+////                    setupMenuItemHandlers(removeSceneStyleSheetMenu);
+////                    setupMenuItemHandlers(openSceneStyleSheetMenu);
+////                }
+////            });
+//        }
+
+//        setResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SET_RESOURCE));
+//        removeResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REMOVE_RESOURCE) {
+//            @Override
+//            public String getTitle() {
+//                String title = I18N.getString("menu.title.remove.resource");
+//                if (documentWindowController != null
+//                        && documentWindowController.getResourceFile() != null) {
+//                    title = I18N.getString("menu.title.remove.resource.with.file",
+//                            documentWindowController.getResourceFile().getName());
 //                }
-//            });
-        }
-
-        setResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SET_RESOURCE));
-        removeResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REMOVE_RESOURCE) {
-            @Override
-            public String getTitle() {
-                String title = I18N.getString("menu.title.remove.resource");
-                if (documentWindowController != null
-                        && documentWindowController.getResourceFile() != null) {
-                    title = I18N.getString("menu.title.remove.resource.with.file",
-                            documentWindowController.getResourceFile().getName());
-                }
-
-                return title;
-            }
-        });
-        revealResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVEAL_RESOURCE) {
-
-            @Override
-            public String getTitle() {
-                String title = I18N.getString("menu.title.reveal.resource");
-                if (documentWindowController != null
-                        && documentWindowController.getResourceFile() != null) {
-                    title = I18N.getString("menu.title.reveal.resource.with.file",
-                            documentWindowController.getResourceFile().getName());
-                }
-
-                return title;
-            }
-        });
+//
+//                return title;
+//            }
+//        });
+//        revealResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVEAL_RESOURCE) {
+//
+//            @Override
+//            public String getTitle() {
+//                String title = I18N.getString("menu.title.reveal.resource");
+//                if (documentWindowController != null
+//                        && documentWindowController.getResourceFile() != null) {
+//                    title = I18N.getString("menu.title.reveal.resource.with.file",
+//                            documentWindowController.getResourceFile().getName());
+//                }
+//
+//                return title;
+//            }
+//        });
         phonePreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_335x600));
         tabletPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_900x600));
         qvgaPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_320x240));
@@ -1322,39 +1327,6 @@ public class MenuBarController implements InitializingBean {
         }
 
         openRecentMenu.getItems().setAll(menuItems);
-    }
-
-  //TODO uncomment and fix for full theme support
-    private void updateOpenAndRemoveSceneStyleSheetMenus() {
-//        assert removeSceneStyleSheetMenu != null;
-//
-//        if (documentWindowController != null) {
-//
-//            ObservableList<File> sceneStyleSheets = documentWindowController.getEditorController().getSceneStyleSheets();
-//
-//            if (sceneStyleSheets != null) {
-//                removeSceneStyleSheetMenu.getItems().clear();
-//                openSceneStyleSheetMenu.getItems().clear();
-//
-//                if (sceneStyleSheets.size() == 0) {
-//                    MenuItem mi = new MenuItem(I18N.getString("scenestylesheet.none"));
-//                    mi.setDisable(true);
-//                    removeSceneStyleSheetMenu.getItems().add(mi);
-//                    MenuItem mi2 = new MenuItem(I18N.getString("scenestylesheet.none"));
-//                    mi2.setDisable(true);
-//                    openSceneStyleSheetMenu.getItems().add(mi2);
-//                } else {
-//                    for (File f : sceneStyleSheets) {
-//                        MenuItem mi = new MenuItem(f.getName());
-//                        mi.setUserData(new RemoveSceneStyleSheetActionController(f));
-//                        removeSceneStyleSheetMenu.getItems().add(mi);
-//                        MenuItem mi2 = new MenuItem(f.getName());
-//                        mi2.setUserData(new OpenSceneStyleSheetActionController(f));
-//                        openSceneStyleSheetMenu.getItems().add(mi2);
-//                    }
-//                }
-//            }
-//        }
     }
 
     /*
@@ -1956,56 +1928,6 @@ public class MenuBarController implements InitializingBean {
             } else {
                 return null;
             }
-        }
-    }
-
-    class RemoveSceneStyleSheetActionController extends MenuItemController {
-
-        private final File styleSheet;
-
-        public RemoveSceneStyleSheetActionController(File file) {
-            this.styleSheet = file;
-        }
-
-        @Override
-        public boolean canPerform() {
-            return (documentWindowController != null && styleSheet.exists());
-        }
-
-        @Override
-        public void perform() {
-            assert documentWindowController != null;
-            documentWindowController.getSceneStyleSheetMenuController().performRemoveSceneStyleSheet(styleSheet);
-        }
-
-        @Override
-        public String getTitle() {
-            return styleSheet.getName();
-        }
-    }
-
-    class OpenSceneStyleSheetActionController extends MenuItemController {
-
-        private final File styleSheet;
-
-        public OpenSceneStyleSheetActionController(File file) {
-            this.styleSheet = file;
-        }
-
-        @Override
-        public boolean canPerform() {
-            return (documentWindowController != null && styleSheet.exists());
-        }
-
-        @Override
-        public void perform() {
-            assert documentWindowController != null;
-            documentWindowController.getSceneStyleSheetMenuController().performOpenSceneStyleSheet(styleSheet);
-        }
-
-        @Override
-        public String getTitle() {
-            return styleSheet.getName();
         }
     }
 

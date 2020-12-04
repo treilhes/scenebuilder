@@ -32,9 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.app.preferences;
 
-import java.io.File;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -44,7 +41,6 @@ import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftVisiblePreference;
@@ -56,14 +52,12 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPrefer
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
-import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonThemePreference;
-import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
-import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.document.SceneStyleSheetsPreference;
+
 
 /**
  * Defines preferences specific to a document.
@@ -88,11 +82,6 @@ public class DocumentPreferences {
     private final BottomDividerVPosPreference bottomDividerVPos;
     private final LeftDividerVPosPreference leftDividerVPos;
 
-    private final SceneStyleSheetsPreference sceneStyleSheets;
-    private final I18NResourcePreference I18NResource;
-    private final ThemePreference theme;
-    private final GluonSwatchPreference gluonSwatch;
-    private final GluonThemePreference gluonTheme;
     private final PathPreference path;
 
     private final DocumentWindowController documentWindowController;
@@ -115,11 +104,10 @@ public class DocumentPreferences {
     	    @Autowired RightDividerHPosPreference rightDividerHPos,
     	    @Autowired BottomDividerVPosPreference bottomDividerVPos,
     	    @Autowired LeftDividerVPosPreference leftDividerVPos,
-    	    @Autowired SceneStyleSheetsPreference sceneStyleSheets,
+
     	    @Autowired I18NResourcePreference I18NResource,
     	    @Autowired ThemePreference theme,
-    	    @Autowired GluonSwatchPreference gluonSwatch,
-    	    @Autowired GluonThemePreference gluonTheme
+    	    @Autowired GluonSwatchPreference gluonSwatch
     		) {
         this.documentWindowController = dwc;
         this.path = path;
@@ -137,11 +125,6 @@ public class DocumentPreferences {
         this.rightDividerHPos = rightDividerHPos;
         this.bottomDividerVPos = bottomDividerVPos;
         this.leftDividerVPos = leftDividerVPos;
-        this.sceneStyleSheets = sceneStyleSheets;
-        this.I18NResource = I18NResource;
-        this.theme = theme;
-        this.gluonSwatch = gluonSwatch;
-        this.gluonTheme = gluonTheme;
 
     }
 
@@ -260,45 +243,4 @@ public class DocumentPreferences {
     public void setLeftDividerVPos(double value) {
         leftDividerVPos.setValue(value);
     }
-
-    public List<String> getSceneStyleSheets() {
-        return sceneStyleSheets.getValue();
-    }
-
-    public String getI18NResource() {
-        return I18NResource.getValue();
-    }
-
-    public void setI18NResource(String value) {
-        I18NResource.setValue(value);
-    }
-
-    public void setI18NResourceFile(File file) {
-        if (file != null) {
-            I18NResource.setValue(file.getPath());
-        }
-    }
-
-//    public void setGluonSwatch(GluonSwatch gluonSwatch) {
-//        this.gluonSwatch.setValue(gluonSwatch);
-//    }
-//
-//    public GluonSwatch getGluonSwatch() {
-//        if (gluonSwatch.getValue() == null) {
-//            return documentWindowController.getEditorController().getGluonSwatch();
-//        }
-//        return gluonSwatch.getValue();
-//    }
-//
-//    public void setGluonTheme(GluonTheme gluonTheme) {
-//        this.gluonTheme.setValue(gluonTheme);
-//    }
-//
-//    public GluonTheme getGluonTheme() {
-//        if (gluonTheme.getValue() == null) {
-//            return documentWindowController.getEditorController().getGluonTheme();
-//        }
-//        return gluonTheme.getValue();
-//    }
-
 }

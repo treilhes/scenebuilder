@@ -42,7 +42,6 @@ import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -115,7 +114,7 @@ class LibraryFolderWatcher implements Runnable {
         final Set<Path> currentFxmls = new HashSet<>();
 
         // Now attempts to discover the user library folder
-        final Path folder = Paths.get(library.getPath());
+        final Path folder = library.getPath().toPath();
         if (folder != null && folder.toFile().exists()) {
             boolean retry;
             do {
@@ -158,7 +157,7 @@ class LibraryFolderWatcher implements Runnable {
 
     private void runWatching() throws InterruptedException {
         while (true) {
-            final Path folder = Paths.get(library.getPath());
+            final Path folder = library.getPath().toPath();
 
             WatchService watchService = null;
             while (watchService == null) {
@@ -254,7 +253,7 @@ class LibraryFolderWatcher implements Runnable {
 
     private Set<Path> getAllFiles(FILE_TYPE fileType) throws IOException {
         Set<Path> res = new HashSet<>();
-        final Path folder = Paths.get(library.getPath());
+        final Path folder = library.getPath().toPath();
 
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder)) {
             for (Path p : ds) {

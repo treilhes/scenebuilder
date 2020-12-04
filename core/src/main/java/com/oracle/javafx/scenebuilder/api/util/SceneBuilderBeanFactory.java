@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.aop.TargetSource;
@@ -45,7 +46,7 @@ public class SceneBuilderBeanFactory {
 	 * Scope identifier for the standard singleton scope: {@value}.
 	 * <p>
 	 * Custom scopes can be added via {@code registerScope}.
-	 * 
+	 *
 	 * @see #registerScope
 	 */
 	public static final String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
@@ -54,7 +55,7 @@ public class SceneBuilderBeanFactory {
 	 * Scope identifier for the standard prototype scope: {@value}.
 	 * <p>
 	 * Custom scopes can be added via {@code registerScope}.
-	 * 
+	 *
 	 * @see #registerScope
 	 */
 	public static final String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
@@ -63,16 +64,16 @@ public class SceneBuilderBeanFactory {
 	 * Scope identifier for the custom document scope: {@value}.
 	 * <p>
 	 * Custom scopes can be added via {@code registerScope}.
-	 * 
+	 *
 	 * @see #registerScope
 	 */
 	public static final String SCOPE_DOCUMENT = "document";
-	
+
 	/**
 	 * Scope identifier for the custom thread scope: {@value}.
 	 * <p>
 	 * Custom scopes can be added via {@code registerScope}.
-	 * 
+	 *
 	 * @see #registerScope
 	 */
 	public static final String SCOPE_THREAD = "thread";
@@ -86,20 +87,20 @@ public class SceneBuilderBeanFactory {
 	public <C> C get(Class<C> cls) {
 		return context.getBean(cls);
 	}
-	
+
 	@Component
 	public static class SceneBuilderBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
 		public SceneBuilderBeanFactoryPostProcessor() {
 			super();
 		}
-		
+
 	    @Override
 	    public void postProcessBeanFactory(ConfigurableListableBeanFactory factory) throws BeansException {
 	        factory.registerScope(SCOPE_DOCUMENT, new DocumentScope());
 	        factory.registerScope(SCOPE_THREAD, new ThreadScope());
 	        factory.addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
-	        
+
 	        DefaultListableBeanFactory bf = (DefaultListableBeanFactory)factory;
 	        bf.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver() {
 
@@ -107,7 +108,7 @@ public class SceneBuilderBeanFactory {
 				protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor, String beanName) {
 					TargetSource ts = new TargetSource() {
 						private Object savedTarget = null;
-						
+
 						@Override
 						public Class<?> getTargetClass() {
 							return descriptor.getDependencyType();
@@ -163,7 +164,7 @@ public class SceneBuilderBeanFactory {
 	        });
 	    }
 	}
-	
+
 	public static class FxmlControllerBeanPostProcessor implements BeanPostProcessor {
 
 		public FxmlControllerBeanPostProcessor() {
@@ -175,7 +176,7 @@ public class SceneBuilderBeanFactory {
 			bean = BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
 
 			if (FxmlController.class.isAssignableFrom(bean.getClass())) {
-				FxmlController controller = (FxmlController)bean; 
+				FxmlController controller = (FxmlController)bean;
 				FXMLLoader loader = new FXMLLoader();
 				loader.setController(controller);
 				loader.setLocation(controller.getFxmlURL());
@@ -190,19 +191,20 @@ public class SceneBuilderBeanFactory {
 		            throw new RuntimeException("Failed to load " + controller.getFxmlURL().getFile(), x); //NOI18N
 		        }
 			}
-			
+
 			return bean;
 		}
 	}
 
 	public static class DocumentScope implements Scope {
-		
+
 		private static final String SCOPE_OBJECT_NAME = "documentWindowController";
-		
-		private static Document currentScope;
-		
-		private static Map<Document, Map<String, Object>> scopes = new ConcurrentHashMap<>();
-	
+
+
+		private static UUID currentScope;
+		private static Map<Document, UUID> scopesId = new ConcurrentHashMap<>();
+		private static Map<UUID, Map<String, Object>> scopes = new ConcurrentHashMap<>();
+
 		public static synchronized void setCurrentScope(Document scopedDocument) {
 			if (scopedDocument == null) {
 				if (currentScope != null) {
@@ -211,62 +213,73 @@ public class SceneBuilderBeanFactory {
 				}
 				return;
 			}
-			if (!scopes.containsKey(scopedDocument)) {
-				scopes.put(scopedDocument, new ConcurrentHashMap<>());
+			if (!scopesId.containsKey(scopedDocument)) {
+				scopesId.put(scopedDocument, UUID.randomUUID());
 			}
-			if (DocumentScope.currentScope != scopedDocument) {
-				DocumentScope.currentScope = scopedDocument;
+			UUID scopeId = scopesId.get(scopedDocument);
+			if (!scopes.containsKey(scopeId)) {
+				scopes.put(scopeId, new ConcurrentHashMap<>());
+			}
+			if (DocumentScope.currentScope != scopeId) {
+				DocumentScope.currentScope = scopeId;
 				String msg = "SCOPE CHANGE TO : %s (unused: %s, dirty: %s, content: %s, name %s)";
-				if (DocumentScope.currentScope.isInited()) {
-					System.out.println(String.format(msg, 
-							DocumentScope.currentScope,
-							DocumentScope.currentScope.isUnused(),
-							DocumentScope.currentScope.isDocumentDirty(),
-							DocumentScope.currentScope.hasName(),
-							DocumentScope.currentScope.getName()
+				if (scopedDocument.isInited()) {
+					System.out.println(String.format(msg,
+							scopedDocument,
+							scopedDocument.isUnused(),
+							scopedDocument.isDocumentDirty(),
+							scopedDocument.hasName(),
+							scopedDocument.getName()
 							));
 				} else {
-					System.out.println(String.format(msg, 
-							DocumentScope.currentScope,
+					System.out.println(String.format(msg,
+							scopedDocument,
 							"",
 							"",
 							"",
 							""
 							));
 				}
-				
 			}
-			
 		}
 
 		public static void removeScope(Document document) {
 			System.out.println("REMOVING SCOPE " + document);
-			if (currentScope == document) {
+			UUID scopeId = scopesId.get(document);
+			if (currentScope == scopeId) {
 				currentScope = null;
 			}
-			scopes.remove(document);
+			scopes.remove(scopeId);
+			scopesId.remove(document);
 		}
 
 		public DocumentScope() {
 			super();
 		}
-		
+
 		@Override
 		public synchronized Object get(String name, ObjectFactory<?> objectFactory) {
 
 			if (SCOPE_OBJECT_NAME.equals(name) && (
-					(currentScope == null) || 
+					(currentScope == null) ||
 					(currentScope != null && !scopes.get(currentScope).containsKey(name)))
 				) { // new prototype bean as scope
-				
-				
+
+				UUID scopeId = UUID.randomUUID();
+				scopes.put(scopeId, new ConcurrentHashMap<>());
+				currentScope = scopeId;
+
 				Document scopeDocument = (Document)objectFactory.getObject();
+
+				scopesId.put(scopeDocument, scopeId);
 				setCurrentScope(scopeDocument);
+
 				Map<String, Object> scopedObjects = scopes.get(currentScope);
 				scopedObjects.put(name, scopeDocument);
 				return scopeDocument;
-				
+
 			} else {
+				assert currentScope != null;
 				Map<String, Object> scopedObjects = scopes.get(currentScope);
 				if(!scopedObjects.containsKey(name)) {
 			        scopedObjects.put(name, objectFactory.getObject());
@@ -274,7 +287,7 @@ public class SceneBuilderBeanFactory {
 				return scopedObjects.get(name);
 			}
 		}
-		
+
 		@Override
 		public String getConversationId() {
 			return Thread.currentThread().getName();
@@ -282,7 +295,7 @@ public class SceneBuilderBeanFactory {
 
 		@Override
 		public void registerDestructionCallback(String name, Runnable callback) {
-			
+
 		}
 
 		@Override
@@ -295,23 +308,23 @@ public class SceneBuilderBeanFactory {
 			return null;
 		}
 
-		
+
 	}
-	
+
 	public static class ThreadScope implements Scope {
 		ScopedObjectsThreadLocal scopedObjectsThreadLocal = new ScopedObjectsThreadLocal();
 
 		public ThreadScope() {
 			super();
 		}
-		
+
 		@Override
 		public Object get(String name, ObjectFactory<?> objectFactory) {
 			Map<String, Object> scopedObjects = scopedObjectsThreadLocal.get();
 			if(!scopedObjects.containsKey(name)) {
 		        scopedObjects.put(name, objectFactory.getObject());
 		    }
-		    return scopedObjects.get(name);	
+		    return scopedObjects.get(name);
 		}
 
 		@Override
@@ -321,7 +334,7 @@ public class SceneBuilderBeanFactory {
 
 		@Override
 		public void registerDestructionCallback(String name, Runnable callback) {
-			
+
 		}
 
 		@Override

@@ -40,13 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.StylesheetConfigManager;
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -77,26 +74,40 @@ import javafx.scene.layout.StackPane;
  */
 public class StyleClassEditor extends InlineListEditor {
 
-    private Set<FXOMInstance> selectedInstances;
+
     private Map<String, String> cssClassesMap;
+
+    private StylesheetProvider2 stylesheetConfig;
     private List<String> themeClasses;
-    private Editor editorController;
-	private final StylesheetConfigManager stylesheetConfigManager;
+
+	private final DocumentManager documentManager;
+
+	private Editor editorController;
+    private Set<FXOMInstance> selectedInstances;
+
+
 
     public StyleClassEditor(
-    		StylesheetConfigManager stylesheetConfigManager,
+    		DocumentManager documentManager,
     		ValuePropertyMetadata propMeta,
     		Set<Class<?>> selectedClasses,
             Set<FXOMInstance> selectedInstances,
             Editor editorController) {
         super(propMeta, selectedClasses);
-        this.stylesheetConfigManager = stylesheetConfigManager;
-        initialize(selectedInstances, editorController, stylesheetConfigManager);
+        this.documentManager = documentManager;
+
+        documentManager.stylesheetConfig().subscribe(s -> {
+        	stylesheetConfig = s;
+        	themeClasses = CssInternal.getThemeStyleClasses(s);
+        });
+
+        initialize(selectedInstances, editorController);
     }
 
-    private void initialize(Set<FXOMInstance> selectedInstances, Editor editorController, StylesheetConfigManager stylesheetConfigManager) {
-        this.selectedInstances = selectedInstances;
+    private void initialize(Set<FXOMInstance> selectedInstances, Editor editorController) {
+    	this.selectedInstances = selectedInstances;
         this.editorController = editorController;
+
         setLayoutFormat(PropertyEditor.LayoutFormat.DOUBLE_LINE);
 //        themeClasses = CssInternal.getThemeStyleClasses(editorController.getTheme());
         addItem(getNewStyleClassItem());
@@ -104,12 +115,13 @@ public class StyleClassEditor extends InlineListEditor {
         // On Theme change, update the themeClasses
 //        editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> themeClasses = CssInternal.getThemeStyleClasses(StyleClassEditor.this.editorController.getTheme()));
 
-        stylesheetConfigManager.configUpdated().subscribe(s -> themeClasses = CssInternal.getThemeStyleClasses(s));
+
+
     }
 
     private StyleClassItem getNewStyleClassItem() {
         if (cssClassesMap == null) {
-            cssClassesMap = CssInternal.getStyleClassesMap(stylesheetConfigManager, editorController, selectedInstances);
+            cssClassesMap = CssInternal.getStyleClassesMap(stylesheetConfig, editorController, selectedInstances);
             // We don't want the theme classes to be suggested: remove them from the list
             for (String themeClass : themeClasses) {
                 cssClassesMap.remove(themeClass);
@@ -409,12 +421,15 @@ public class StyleClassEditor extends InlineListEditor {
             if (urlStr == null) {
                 return;
             }
-            try {
-                EditorPlatform.open(urlStr);
-            } catch (IOException ex) {
-                editorController.getMessageLog().logWarningMessage(
-                        "inspector.stylesheet.cannotopen", urlStr); //NOI18N
-            }
+
+            System.out.println("REACTIVATE ME");
+        	//TODO reactivate the code below when editors are spring components
+//            try {
+//                EditorPlatform.open(urlStr);
+//            } catch (IOException ex) {
+//                editorController.getMessageLog().logWarningMessage(
+//                        "inspector.stylesheet.cannotopen", urlStr); //NOI18N
+//            }
         }
 
         @FXML
@@ -423,16 +438,19 @@ public class StyleClassEditor extends InlineListEditor {
             if (urlStr == null) {
                 return;
             }
-            try {
-                File file = URLUtils.getFile(urlStr);
-                if (file == null) { // urlStr is not a file URL
-                    return;
-                }
-                EditorPlatform.revealInFileBrowser(file);
-            } catch (URISyntaxException | IOException ex) {
-                editorController.getMessageLog().logWarningMessage(
-                        "inspector.stylesheet.cannotreveal", urlStr); //NOI18N
-            }
+            System.out.println("REACTIVATE ME");
+        	//TODO reactivate the code below when editors are spring components
+//            try {
+//                File file = URLUtils.getFile(urlStr);
+//                if (file == null) { // urlStr is not a file URL
+//                    return;
+//                }
+//
+//                EditorPlatform.revealInFileBrowser(file);
+//            } catch (URISyntaxException | IOException ex) {
+//                editorController.getMessageLog().logWarningMessage(
+//                        "inspector.stylesheet.cannotreveal", urlStr); //NOI18N
+//            }
         }
 
         private void updateButtons() {

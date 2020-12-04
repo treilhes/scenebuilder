@@ -28,7 +28,7 @@ public class SubjectManager {
 
 	public static Recorder RECORDER = new Recorder();
 	public static Player PLAYER = new Player();
-	
+
 	@SuppressWarnings("rawtypes")
 	private static Map<String, Map<String, Subject>> subjects = new ConcurrentHashMap<>();
 
@@ -45,19 +45,36 @@ public class SubjectManager {
 		}
 		subjects.get(clsName).put(subjectName, rsubject);
 
-//		rsubject.subscribe(o -> {
+        rsubject.subscribe(o -> {
 //			if (RECORDER.isRecording()) {
 //				RECORDER.record(new DataEvent(null, clsName, subjectName, o.getClass().getName(), o));
 //			}
+
+            if (logger.isInfoEnabled()) {
+                try {
+                    logger.info(String.format("Event emitted %s", mapper.writeValueAsString(
+                            new DataEvent(new Date().getTime(), clsName, subjectName, o.getClass().getName(), o))));
+                } catch (Exception e) {
+                    logger.info(String.format("Event emitted %s",
+                            mapper.writeValueAsString(new DataEvent(new Date().getTime(), clsName, subjectName,
+                                    o.getClass().getName(), o.getClass().getName()))));
+                }
+
+            }
+
+        });
+
+//		rsubject.doOnSubscribe(d -> {
+//			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx");
 //			if (logger.isInfoEnabled()) {
-//				logger.info(String.format("Event emitted %s", mapper.writeValueAsString(
-//						new DataEvent(new Date().getTime(), clsName, subjectName, o.getClass().getName(), o))));
+//				logger.info(String.format("Subscription registered %s", mapper.writeValueAsString(
+//						new DataEvent(new Date().getTime(), clsName, subjectName, d.getClass().getName(), d))));
 //			}
 //		});
 
 		return rsubject;
 	}
-	
+
 
 	@NoArgsConstructor
 	@AllArgsConstructor
@@ -169,7 +186,7 @@ public class SubjectManager {
 
 			playingThread.start();
 		}
-		
+
 		public void waitPlay() {
 			if (this.playingThread != null) {
 				try {
@@ -179,7 +196,7 @@ public class SubjectManager {
 				}
 			}
 		}
-		
+
 		public void stopPlay() {
 			if (this.recordStream != null) {
 				try {

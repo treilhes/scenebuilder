@@ -56,19 +56,19 @@ import javafx.stage.Stage;
  */
 @ExtendWith(MockitoExtension.class)
 public class StaticLoadTest {
-	
+
 	private static I18N i18nTest = new I18N(new ArrayList<>()) {
 		@Override
 		public String get(String key) {
 			return "fake";
 		}
 	};
-    
+
     private boolean thrown;
-    
+
     @Mock
     private BuiltinLibrary library;
-    
+
     public static class DummyApp extends Application {
         @Override
         public void start(Stage primaryStage) throws Exception {
@@ -87,11 +87,11 @@ public class StaticLoadTest {
         t.setDaemon(true);
         t.start();
     }
-    
+
     @Test
     public void testStaticLoadWithoutEventHandler() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(library, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoadWithoutEventHandler.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -101,12 +101,12 @@ public class StaticLoadTest {
         }
 
         assertFalse(thrown);
-    } 
-    
+    }
+
     @Test
     public void testStaticLoad() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(library, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoad.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -116,5 +116,5 @@ public class StaticLoadTest {
         }
 
         assertFalse(thrown);
-    } 
+    }
 }

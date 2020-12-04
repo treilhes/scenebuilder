@@ -32,17 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
-import static com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform.IS_LINUX;
-import static com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform.IS_MAC;
-import static com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform.IS_WINDOWS;
-
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.app.util.MessageBox;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 
@@ -53,91 +49,54 @@ import javafx.application.Platform;
  *
  */
 public class AppPlatform {
-    
-    private static String applicationDataFolder;
-    private static String userLibraryFolder;
-    private static String messageBoxFolder;
+
     private static MessageBox<MessageBoxMessage> messageBox;
-    
-    public static synchronized String getApplicationDataFolder() {
-        
-        if (applicationDataFolder == null) {
-            final String appName = "Scene Builder"; //NOI18N
-            
-            if (IS_WINDOWS) {
-                applicationDataFolder 
-                        = System.getenv("APPDATA") + "\\" + appName; //NOI18N
-            } else if (IS_MAC) {
-                applicationDataFolder 
-                        = System.getProperty("user.home") //NOI18N
-                        + "/Library/Application Support/" //NOI18N
-                        + appName;
-            } else if (IS_LINUX) {
-                applicationDataFolder
-                        = System.getProperty("user.home") + "/.scenebuilder"; //NOI18N
-            }
-        }
-        
-        assert applicationDataFolder != null;
-        
-        return applicationDataFolder;
-    }
-    
-    
-    public static synchronized String getUserLibraryFolder() {
-        
-        if (userLibraryFolder == null) {
-            userLibraryFolder = getApplicationDataFolder() + "/Library"; //NOI18N
-        }
-        
-        return userLibraryFolder;
-    }
 
     public static boolean requestStart(
-            AppNotificationHandler notificationHandler, Application.Parameters parameters)  
+            AppNotificationHandler notificationHandler, Application.Parameters parameters, FileSystem fileSystem)
     throws IOException {
         if (EditorPlatform.isAssertionEnabled()) {
             // Development mode : we do not delegate to the existing instance
             notificationHandler.handleLaunch(parameters.getUnnamed());
             return true;
         } else {
-            return requestStartGeneric(notificationHandler, parameters);
+            return requestStartGeneric(notificationHandler, parameters, fileSystem);
         }
     }
-    
+
     public interface AppNotificationHandler {
         public void handleLaunch(List<String> files);
         public void handleOpenFilesAction(List<String> files);
         public void handleMessageBoxFailure(Exception x);
         public void handleQuitAction();
     }
-    
-    
+
+
     /*
      * Private (requestStartGeneric)
      */
-    
+
     private static synchronized boolean requestStartGeneric(
-            AppNotificationHandler notificationHandler, Application.Parameters parameters) 
+            AppNotificationHandler notificationHandler, Application.Parameters parameters, FileSystem fileSystem)
     throws IOException {
         assert notificationHandler != null;
         assert parameters != null;
         assert messageBox == null;
-        
+
         try {
-            Files.createDirectories(Paths.get(getMessageBoxFolder()));
+            Files.createDirectories(fileSystem.getMessageBoxFolder().toPath());
         } catch(FileAlreadyExistsException x) {
             // Fine
         }
-        
+
         final boolean result;
-        messageBox = new MessageBox<>(getMessageBoxFolder(), MessageBoxMessage.class, 1000 /* ms */);
+        messageBox = new MessageBox<>(fileSystem.getMessageBoxFolder(), MessageBoxMessage.class, 1000 /* ms */);
         if (messageBox.grab(new MessageBoxDelegate(notificationHandler))) {
             notificationHandler.handleLaunch(parameters.getUnnamed());
             result = true;
         } else {
             result = false;
-            final MessageBoxMessage unamedParameters 
+            final MessageBoxMessage unamedParameters
                     = new MessageBoxMessage(parameters.getUnnamed());
             try {
                 messageBox.sendMessage(unamedParameters);
@@ -145,38 +104,30 @@ public class AppPlatform {
                 throw new IOException(x);
             }
         }
-        
+
         return result;
     }
-    
-    private static String getMessageBoxFolder() {
-        if (messageBoxFolder == null) {
-            messageBoxFolder = getApplicationDataFolder() + "/MB"; //NOI18N
-        }
-        
-        return messageBoxFolder;
-    }
-    
+
     private static class MessageBoxMessage extends ArrayList<String> {
         static final long serialVersionUID = 10;
         public MessageBoxMessage(List<String> strings) {
             super(strings);
         };
     };
-    
+
     private static class MessageBoxDelegate implements MessageBox.Delegate<MessageBoxMessage> {
 
         private final AppNotificationHandler eventHandler;
-        
+
         public MessageBoxDelegate(AppNotificationHandler eventHandler) {
             assert eventHandler != null;
             this.eventHandler = eventHandler;
         }
-        
+
         /*
          * MessageBox.Delegate
          */
-        
+
         @Override
         public void messageBoxDidGetMessage(MessageBoxMessage message) {
             assert Platform.isFxApplicationThread() == false;
@@ -188,6 +139,6 @@ public class AppPlatform {
             assert Platform.isFxApplicationThread() == false;
             Platform.runLater(() -> eventHandler.handleMessageBoxFailure(x));
         }
-        
-    } 
+
+    }
 }

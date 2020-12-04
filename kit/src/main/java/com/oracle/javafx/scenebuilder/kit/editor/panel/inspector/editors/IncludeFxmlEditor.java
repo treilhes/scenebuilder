@@ -42,10 +42,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -67,10 +67,12 @@ public class IncludeFxmlEditor extends InlineListEditor {
     private Button includeFxmlButton;
     @FXML
     private TextField includeFxmlField;
+	private final FileSystem fileSystem;
 
-    public IncludeFxmlEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
+    public IncludeFxmlEditor(FileSystem fileSystem, ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Editor editor) {
         super(propMeta, selectedClasses);
         this.editorController = editor;
+        this.fileSystem = fileSystem;
         initialize();
     }
 
@@ -113,7 +115,7 @@ public class IncludeFxmlEditor extends InlineListEditor {
     public void addIncludeFile() {
         File fxmlFile = chooseFxml();
         if (fxmlFile != null) {
-            EditorController.updateNextInitialDirectory(fxmlFile);
+        	fileSystem.updateNextInitialDirectory(fxmlFile);
             editorController.performIncludeFxml(fxmlFile);
             includeFxmlField.setText(getRelativePath(fxmlFile));
         }
@@ -134,7 +136,7 @@ public class IncludeFxmlEditor extends InlineListEditor {
             final Path chosenFolder = file.toPath().getParent();
             fileChooser.setInitialDirectory(chosenFolder.toFile());
         } else {
-            fileChooser.setInitialDirectory(EditorController.getNextInitialDirectory());
+            fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         }
     }
 

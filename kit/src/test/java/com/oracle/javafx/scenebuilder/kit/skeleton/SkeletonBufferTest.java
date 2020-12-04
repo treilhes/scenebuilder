@@ -59,13 +59,13 @@ public class SkeletonBufferTest {
 			return "fake";
 		}
 	};
-	
+
 	@Mock
     private BuiltinLibrary library;
-	
+
     @Test
     public void testControllerWithoutPackageName() throws IOException {
-        EditorController editorController = new EditorController(library, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithoutPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
@@ -79,7 +79,7 @@ public class SkeletonBufferTest {
 
     @Test
     public void testControllerWithSimplePackageName() throws IOException {
-        EditorController editorController = new EditorController(library, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithSimplePackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
@@ -93,7 +93,7 @@ public class SkeletonBufferTest {
 
     @Test
     public void testControllerWithAdvancedPackageName() throws IOException {
-        EditorController editorController = new EditorController(library, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithAdvancedPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);

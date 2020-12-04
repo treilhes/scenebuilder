@@ -15,11 +15,10 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ListOfStringPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
 
 @Component
 public class RecentItemsPreference extends ListOfStringPreference implements ManagedGlobalPreference {
-	    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -27,7 +26,7 @@ public class RecentItemsPreference extends ListOfStringPreference implements Man
      **************************************************************************/
     public static final String PREFERENCE_KEY = "RECENT_ITEMS"; //NOI18N
     public static final List<String> PREFERENCE_DEFAULT_VALUE = new ArrayList<>();
-    
+
 	private final RecentItemsSizePreference recentItemsSize;
 
 	public RecentItemsPreference(
@@ -37,7 +36,7 @@ public class RecentItemsPreference extends ListOfStringPreference implements Man
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 		this.recentItemsSize = recentItemsSize;
 	}
-	
+
     public boolean containsRecentItem(File file) {
         final String path = file.getPath();
         return getValue().contains(path);
