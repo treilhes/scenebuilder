@@ -46,24 +46,18 @@ import java.util.TreeSet;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
-import com.oracle.javafx.scenebuilder.core.util.TestCssNode;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
-import com.sun.javafx.css.StyleManager;
-import com.sun.javafx.css.StyleMap;
-import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
-import javafx.css.PseudoClass;
 import javafx.css.Rule;
 import javafx.css.Style;
 import javafx.css.StyleOrigin;
 import javafx.css.Styleable;
 import javafx.css.StyleableProperty;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Skinnable;
 
 /**
@@ -93,16 +87,16 @@ public class NodeCssState {
     private List<MatchingRule> sortedMatchingRules = new ArrayList<>();
     private Collection<CssProperty> props;
 
-    private TestCssNode tsn;
+    //private TestCssNode tsn;
 
     @SuppressWarnings("rawtypes")
     protected NodeCssState(Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
-        //this.map = map;
+        this.map = map;
         this.node = node;
         this.fxomObject = fxomObject;
 
-        this.tsn = new TestCssNode(node);
-        this.map = tsn.getStyleMap(node);
+        //this.tsn = new TestCssNode(node);
+        //this.map = tsn.getStyleMap(node);
 
         getAuthorStyles();
         getInlineStyles();
