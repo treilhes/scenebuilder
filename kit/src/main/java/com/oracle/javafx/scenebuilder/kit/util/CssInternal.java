@@ -129,19 +129,19 @@ public class CssInternal {
     }
 
     public static String getThemeDisplayName(Style style) {
-        String themeName = ""; //NOI18N
+        String themeName = ""; // NOI18N
         String url = style.getDeclaration().getRule().getStylesheet().getUrl();
-        if (url.contains("modena")) {//NOI18N
-            themeName += "modena/"; //NOI18N
-        } else if (url.contains("caspian")) {//NOI18N
-            themeName += "caspian/"; //NOI18N
+        if (url.contains("modena")) {// NOI18N
+            themeName += "modena/"; // NOI18N
+        } else if (url.contains("caspian")) {// NOI18N
+            themeName += "caspian/"; // NOI18N
         }
         File file = new File(url);
-        themeName += file.getName().replace(".bss", ".css");//NOI18N
-        if (themeName.endsWith("modena.css")) {//NOI18N
-            themeName = "modena.css";//NOI18N
-        } else if (themeName.endsWith("caspian.css")) {//NOI18N
-            themeName = "caspian.css";//NOI18N
+        themeName += file.getName().replace(".bss", ".css");// NOI18N
+        if (themeName.endsWith("modena.css")) {// NOI18N
+            themeName = "modena.css";// NOI18N
+        } else if (themeName.endsWith("caspian.css")) {// NOI18N
+            themeName = "caspian.css";// NOI18N
         }
         return themeName;
     }
@@ -151,19 +151,19 @@ public class CssInternal {
         String stylePath = rule.getStylesheet().getUrl();
         assert stylePath != null;
 
-        //FIXME temp fix to remove, worst: gluon is not event present
+        // FIXME temp fix to remove, worst: gluon is not event present
 
         List<String> themeUrls = new ArrayList<>();
         new DefaultThemesList().themes().forEach(t -> {
-        	try {
-				themeUrls.add(t.newInstance().getUserAgentStylesheet());
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            try {
+                themeUrls.add(t.newInstance().getUserAgentStylesheet());
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         });
 
         for (String themeUrl : themeUrls) {
@@ -188,7 +188,7 @@ public class CssInternal {
 //    }
 
     public static List<String> getThemeStyleClasses(StylesheetProvider2 stylesheetConfig) {
-    	//TODO maybe some other css are needed here
+        // TODO maybe some other css are needed here
         String themeStyleSheet = stylesheetConfig.getUserAgentStylesheet();
         Set<String> themeClasses = new HashSet<>();
         // For Theme css, we need to get the text css (.css) to be able to parse it.
@@ -207,7 +207,8 @@ public class CssInternal {
 //        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
 //    }
 
-    public static Map<String, String> getStyleClassesMap(StylesheetProvider2 stylesheetConfig, Editor editorController, Set<FXOMInstance> instances) {
+    public static Map<String, String> getStyleClassesMap(StylesheetProvider2 stylesheetConfig, Editor editorController,
+            Set<FXOMInstance> instances) {
         Map<String, String> classesMap = new TreeMap<>();
         Object fxRoot = null;
         for (FXOMInstance instance : instances) {
@@ -221,9 +222,8 @@ public class CssInternal {
         StylesheetProvider2 sp = stylesheetConfig;
 
         if (sp != null) {
-        	List<File> sceneStyleSheets = sp
-            		.getStylesheets().stream().map(s -> new File(s)).filter(f -> f.exists())
-            		.collect(Collectors.toList());
+            List<File> sceneStyleSheets = sp.getStylesheets().stream().map(s -> new File(s)).filter(f -> f.exists())
+                    .collect(Collectors.toList());
 
             if (sceneStyleSheets != null) {
                 for (File stylesheet : sceneStyleSheets) {
@@ -289,7 +289,7 @@ public class CssInternal {
         try {
             s = new CssParser().parse(url);
         } catch (IOException ex) {
-            System.out.println("Warning: Invalid Stylesheet " + url); //NOI18N
+            System.out.println("Warning: Invalid Stylesheet " + url); // NOI18N
             return styleClasses;
         }
         if (s == null) {
@@ -324,8 +324,9 @@ public class CssInternal {
             if (Node.class.isAssignableFrom(clazz)) {
                 Object metadatas = null;
                 try {
-                    metadatas = clazz.getMethod("getClassCssMetaData").invoke(null, (Object[]) null); //NOI18N
-                } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    metadatas = clazz.getMethod("getClassCssMetaData").invoke(null, (Object[]) null); // NOI18N
+                } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException ex) {
                     assert false;
                 }
                 for (CssMetaData<? extends Styleable, ?> metadata : ((List<CssMetaData<? extends Styleable, ?>>) metadatas)) {
@@ -341,7 +342,8 @@ public class CssInternal {
         return new ArrayList<>(cssProperties);
     }
 
-    // If this property is ruled by CSS, return a CssPropAuthorInfo. Otherwise returns null.
+    // If this property is ruled by CSS, return a CssPropAuthorInfo. Otherwise
+    // returns null.
     public static CssPropAuthorInfo getCssInfo(Object fxObject, ValuePropertyMetadata prop) {
         CssPropAuthorInfo info = null;
         Node node = null;
@@ -363,7 +365,8 @@ public class CssInternal {
     private static CssPropAuthorInfo getCssInfoForNode(Node node, ValuePropertyMetadata prop) {
         @SuppressWarnings("rawtypes")
         Map<StyleableProperty, List<Style>> map = collectCssState(node);
-        for (@SuppressWarnings("rawtypes") Map.Entry<StyleableProperty, List<Style>> entry : map.entrySet()) {//NOI18N
+        for (@SuppressWarnings("rawtypes")
+        Map.Entry<StyleableProperty, List<Style>> entry : map.entrySet()) {// NOI18N
             StyleableProperty<?> beanProp = entry.getKey();
             List<Style> styles = new ArrayList<>(entry.getValue());
             String name = getBeanPropertyName(beanProp);
@@ -375,8 +378,7 @@ public class CssInternal {
                 // then we have a property ruled by CSS, otherwise return null
                 // This is in sync because the map is not empty
                 StyleOrigin origin = beanProp.getStyleOrigin();
-                if (origin == null || origin.equals(StyleOrigin.USER)
-                        || origin.equals(StyleOrigin.USER_AGENT)) {
+                if (origin == null || origin.equals(StyleOrigin.USER) || origin.equals(StyleOrigin.USER_AGENT)) {
                     return null;
                 }
                 CssMetaData<?, ?> styleable = beanProp.getCssMetaData();
@@ -409,8 +411,8 @@ public class CssInternal {
     }
 
     /**
-     * CSS information attached to a Bean Property when styled with Author or
-     * Inline origin.
+     * CSS information attached to a Bean Property when styled with Author or Inline
+     * origin.
      *
      */
     public static class CssPropAuthorInfo {
@@ -425,7 +427,8 @@ public class CssInternal {
             this(prop, value, styleable, null);
         }
 
-        private CssPropAuthorInfo(ValuePropertyMetadata prop, StyleableProperty<?> value, CssMetaData<?, ?> styleable, Object val) {
+        private CssPropAuthorInfo(ValuePropertyMetadata prop, StyleableProperty<?> value, CssMetaData<?, ?> styleable,
+                Object val) {
             this.prop = prop;
             this.styleable = styleable;
             this.value = value;
@@ -547,18 +550,18 @@ public class CssInternal {
 
     // From an css url, returns the theme display name
     public static String getThemeDisplayName(String url) {
-        String themeName = ""; //NOI18N
-        if (url.contains("modena")) {//NOI18N
-            themeName += "modena/"; //NOI18N
-        } else if (url.contains("caspian")) {//NOI18N
-            themeName += "caspian/"; //NOI18N
+        String themeName = ""; // NOI18N
+        if (url.contains("modena")) {// NOI18N
+            themeName += "modena/"; // NOI18N
+        } else if (url.contains("caspian")) {// NOI18N
+            themeName += "caspian/"; // NOI18N
         }
         File file = new File(url);
-        themeName += file.getName().replace(".bss", ".css");//NOI18N
-        if (themeName.endsWith("modena.css")) {//NOI18N
-            themeName = "modena.css";//NOI18N
-        } else if (themeName.endsWith("caspian.css")) {//NOI18N
-            themeName = "caspian.css";//NOI18N
+        themeName += file.getName().replace(".bss", ".css");// NOI18N
+        if (themeName.endsWith("modena.css")) {// NOI18N
+            themeName = "modena.css";// NOI18N
+        } else if (themeName.endsWith("caspian.css")) {// NOI18N
+            themeName = "caspian.css";// NOI18N
         }
         return themeName;
     }

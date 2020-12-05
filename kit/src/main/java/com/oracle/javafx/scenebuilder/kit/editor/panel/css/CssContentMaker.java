@@ -82,7 +82,7 @@ public class CssContentMaker {
             String cssValue;
             Object value = sub.getInitialValue(n);
             if (value == null) {
-                cssValue = "none";//NOI18N
+                cssValue = "none";// NOI18N
                 fxValue = cssValue;
             } else {
                 fxValue = sub.getInitialValue(n);
@@ -97,8 +97,7 @@ public class CssContentMaker {
     }
 
     @SuppressWarnings("unchecked")
-    public static <N extends Node> PropertyState initialValue(N n, CssProperty complex,
-            CssMetaData<N, ?> sub) {
+    public static <N extends Node> PropertyState initialValue(N n, CssProperty complex, CssMetaData<N, ?> sub) {
         PropertyState val = null;
 
         try {
@@ -106,7 +105,7 @@ public class CssContentMaker {
             String cssValue;
             Object complexInitial = complex.getStyleable().getInitialValue(complex.getTarget());
             if (complexInitial == null) {
-                cssValue = "none";//NOI18N
+                cssValue = "none";// NOI18N
                 fxValue = cssValue;
             } else {
                 fxValue = sub.getInitialValue(n);
@@ -128,7 +127,8 @@ public class CssContentMaker {
             // In this case, we are handling a sub-component, no model value then.
             return null;
         }
-        // First retrieve the java bean property and check if it is overriden by the inspector.
+        // First retrieve the java bean property and check if it is overriden by the
+        // inspector.
         String beanPropName = CssUtils.getBeanPropertyName(node, cssMeta);
         if (beanPropName == null) {
             // No corresponding java bean property
@@ -137,8 +137,7 @@ public class CssContentMaker {
         PropertyName beanPropertyName = new PropertyName(beanPropName);
         assert fxomObject instanceof FXOMInstance;
         FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        ValuePropertyMetadata propMeta
-                = Metadata.getMetadata().queryValueProperty(fxomInstance, beanPropertyName);
+        ValuePropertyMetadata propMeta = Metadata.getMetadata().queryValueProperty(fxomInstance, beanPropertyName);
         if (propMeta == null) {
             // No corresponding metadata
             return null;
@@ -166,8 +165,8 @@ public class CssContentMaker {
             if (cssMeta.getSubProperties() != null && !cssMeta.getSubProperties().isEmpty()) {
                 for (CssMetaData sub : cssMeta.getSubProperties()) {
                     // Create a virtual sub property
-                    PropertyState subProp = new BeanPropertyState(propMeta, sub.getProperty(),
-                            propertyValue, CssValueConverter.toCssString(sub.getProperty(), propertyValue));
+                    PropertyState subProp = new BeanPropertyState(propMeta, sub.getProperty(), propertyValue,
+                            CssValueConverter.toCssString(sub.getProperty(), propertyValue));
                     val.getSubProperties().add(subProp);
                 }
             }
@@ -217,9 +216,8 @@ public class CssContentMaker {
     }
 
     public static boolean containsPseudoState(String selector) {
-        return selector.contains(":");//NOI18N
+        return selector.contains(":");// NOI18N
     }
-
 
     /*
      *
@@ -252,7 +250,8 @@ public class CssContentMaker {
                 node.setOpacity(0);
                 CssUtils.addToParent(p, node);
             }
-            NodeCssState state = new NodeCssState(CssInternal.collectCssState(node), node, getFXOMObject(selectedObject));
+            NodeCssState state = new NodeCssState(CssInternal.collectCssState(node), node,
+                    getFXOMObject(selectedObject));
             return state;
         } finally {
             if (p != null) {
@@ -271,24 +270,22 @@ public class CssContentMaker {
     }
 
     @SuppressWarnings("rawtypes")
-    private static <N extends Node> InitialPropertyState newInitialPropertyState(
-            Object fxValue, String cssValue, N n, CssMetaData<?, ?> cssMeta) {
-        InitialPropertyState val
-                = new InitialPropertyState(cssMeta.getProperty(), fxValue, cssValue);
+    private static <N extends Node> InitialPropertyState newInitialPropertyState(Object fxValue, String cssValue, N n,
+            CssMetaData<?, ?> cssMeta) {
+        InitialPropertyState val = new InitialPropertyState(cssMeta.getProperty(), fxValue, cssValue);
         if (cssMeta.getSubProperties() != null && !cssMeta.getSubProperties().isEmpty()) {
             for (CssMetaData sub : cssMeta.getSubProperties()) {
-                Object subValue
-                        = CssValueConverter.getSubPropertyValue(sub.getProperty(), fxValue);
+                Object subValue = CssValueConverter.getSubPropertyValue(sub.getProperty(), fxValue);
                 String subCssValue = CssValueConverter.toCssString(subValue);
-                PropertyState subProp
-                        = new InitialPropertyState(sub.getProperty(), subValue, subCssValue);
+                PropertyState subProp = new InitialPropertyState(sub.getProperty(), subValue, subCssValue);
                 val.getSubProperties().add(subProp);
             }
         }
         return val;
     }
 
-    // Retrieve the styles associated to the value. This is the case of lookup (or variable)
+    // Retrieve the styles associated to the value. This is the case of lookup (or
+    // variable)
     @SuppressWarnings("rawtypes")
     protected static CssStyle retrieveStyle(List<Style> styles, Style style) {
         CssStyle st = new CssStyle(style);
@@ -300,8 +297,8 @@ public class CssContentMaker {
     }
 
     @SuppressWarnings("rawtypes")
-    private static void retrieveStylesFromParsedValue(
-            List<Style> lst, CssStyle current, ParsedValue<?, ?> parsedValue) {
+    private static void retrieveStylesFromParsedValue(List<Style> lst, CssStyle current,
+            ParsedValue<?, ?> parsedValue) {
         final Object val = parsedValue.getValue();
         if (val instanceof ParsedValue[][]) {
             // If ParsedValue is a layered sequence of values, resolve the lookups for each.
@@ -338,12 +335,12 @@ public class CssContentMaker {
         }
     }
 
-    protected static List<CssStyle> getNotAppliedStyles(
-            List<Style> appliedStyles, Node node, CssMetaData<?, ?> cssMeta) {
+    protected static List<CssStyle> getNotAppliedStyles(List<Style> appliedStyles, Node node,
+            CssMetaData<?, ?> cssMeta) {
         List<CssStyle> ret = new ArrayList<>();
 
         List<Style> allStyles = NodeHelper.getMatchingStyles(cssMeta, node);
-        //List<Style> allStyles = tsn.getMatchingStyles(cssMeta, node);
+
 //        System.out.println("===========================");
 //        System.out.println("getNotAppliedStyles() called!");
 //        System.out.println("===========================");
@@ -358,7 +355,8 @@ public class CssContentMaker {
         }
         for (Style style : notApplied) {
             if (style.getDeclaration().getProperty().equals(cssMeta.getProperty())) {
-                // We need to retrieve from allStyles, in case a lookup is shared by appliedStyles and notApplied
+                // We need to retrieve from allStyles, in case a lookup is shared by
+                // appliedStyles and notApplied
                 CssStyle cssStyle = retrieveStyle(matchingStyles, style);
                 ret.add(cssStyle);
             }
@@ -368,7 +366,8 @@ public class CssContentMaker {
 
     protected static List<Style> removeUserAgentStyles(List<Style> allStyles) {
         // With SB 2, we apply explicitly Modena/Caspian theme css on user scene graph.
-        // The rules that appear with an AUTHOR origin has already been considered as USER_AGENT.
+        // The rules that appear with an AUTHOR origin has already been considered as
+        // USER_AGENT.
         // So when an internal css method (such as getMatchingStyles()) is called,
         // we need here to remove all USER_AGENT styles, to avoid doublons.
         List<Style> matchingStyles = new ArrayList<>();
@@ -402,6 +401,7 @@ public class CssContentMaker {
         protected PropertyState(String cssValue) {
             this.cssValue = cssValue;
         }
+
         private final List<CssStyle> notAppliedStyles = new ArrayList<>();
         private final List<PropertyState> lst = new ArrayList<>();
         private final String cssValue;
@@ -450,10 +450,10 @@ public class CssContentMaker {
         }
     }
 
-/**
- *
- * @treatAsPrivate
- */
+    /**
+     *
+     * @treatAsPrivate
+     */
     public static class BeanPropertyState extends PropertyState {
 
         PropertyMetadata propMeta;
@@ -482,10 +482,10 @@ public class CssContentMaker {
         }
     }
 
-/**
- *
- * @treatAsPrivate
- */
+    /**
+     *
+     * @treatAsPrivate
+     */
     public static class CssPropertyState extends PropertyState {
 
         protected final StyleableProperty<?> value;
@@ -557,7 +557,7 @@ public class CssContentMaker {
 
             public String getSelector() {
                 String sel = style.getSelector().toString();
-                if (sel.startsWith("*")) {//NOI18N
+                if (sel.startsWith("*")) {// NOI18N
                     sel = sel.substring(1);
                 }
                 return sel;

@@ -70,9 +70,9 @@ public class NodeCssState {
 
     static {
         ORDERED_ORIGIN.add(StyleOrigin.USER_AGENT);// fxTheme : modena/caspian
-        ORDERED_ORIGIN.add(StyleOrigin.USER);//Bean API Call
-        ORDERED_ORIGIN.add(StyleOrigin.AUTHOR);//CSS files
-        ORDERED_ORIGIN.add(StyleOrigin.INLINE);//Style property
+        ORDERED_ORIGIN.add(StyleOrigin.USER);// Bean API Call
+        ORDERED_ORIGIN.add(StyleOrigin.AUTHOR);// CSS files
+        ORDERED_ORIGIN.add(StyleOrigin.INLINE);// Style property
 
     }
 
@@ -87,7 +87,7 @@ public class NodeCssState {
     private List<MatchingRule> sortedMatchingRules = new ArrayList<>();
     private Collection<CssProperty> props;
 
-    //private TestCssNode tsn;
+    // private TestCssNode tsn;
 
     @SuppressWarnings("rawtypes")
     protected NodeCssState(Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
@@ -95,8 +95,8 @@ public class NodeCssState {
         this.node = node;
         this.fxomObject = fxomObject;
 
-        //this.tsn = new TestCssNode(node);
-        //this.map = tsn.getStyleMap(node);
+        // this.tsn = new TestCssNode(node);
+        // this.map = tsn.getStyleMap(node);
 
         getAuthorStyles();
         getInlineStyles();
@@ -129,26 +129,30 @@ public class NodeCssState {
             this(nodeCssState, null, cssMeta, target, fxomObject);
         }
 
-        CssProperty(NodeCssState nodeCssState, CssProperty mainProperty,
-                CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
+        CssProperty(NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
+                FXOMObject fxomObject) {
             this.mainProperty = mainProperty;
             this.cssMeta = cssMeta;
             this.target = target;
             name.setValue(cssMeta.getProperty());
-            CssContentMaker.CssPropertyState inlineState = nodeCssState.retrieveCssStyle(cssMeta, nodeCssState.getInlineStyles());
+            CssContentMaker.CssPropertyState inlineState = nodeCssState.retrieveCssStyle(cssMeta,
+                    nodeCssState.getInlineStyles());
             if (inlineState != null) {
                 inlineCss.setValue(inlineState);
             }
-            CssContentMaker.CssPropertyState authorState = nodeCssState.retrieveCssStyle(cssMeta, nodeCssState.getAuthorStyles());
+            CssContentMaker.CssPropertyState authorState = nodeCssState.retrieveCssStyle(cssMeta,
+                    nodeCssState.getAuthorStyles());
             if (authorState != null) {
                 authorCss.setValue(authorState);
             }
-            CssContentMaker.CssPropertyState fxThemeState = nodeCssState.retrieveCssStyle(cssMeta, nodeCssState.getUserAgentStyles());
+            CssContentMaker.CssPropertyState fxThemeState = nodeCssState.retrieveCssStyle(cssMeta,
+                    nodeCssState.getUserAgentStyles());
             if (fxThemeState != null) {
                 fxTheme.setValue(fxThemeState);
             }
             @SuppressWarnings("unchecked")
-            CssContentMaker.PropertyState builtinState = CssContentMaker.initialValue(target, mainProperty == null ? this : mainProperty, cssMeta);
+            CssContentMaker.PropertyState builtinState = CssContentMaker.initialValue(target,
+                    mainProperty == null ? this : mainProperty, cssMeta);
             assert builtinState != null;
             builtin.setValue(builtinState);
 
@@ -225,28 +229,21 @@ public class NodeCssState {
         }
 
         public boolean isBuiltinSource() {
-            return inlineState().get() == null
-                    && authorState().get() == null
-                    && modelState().get() == null
+            return inlineState().get() == null && authorState().get() == null && modelState().get() == null
                     && fxThemeState().get() == null;
         }
 
         public boolean isFxThemeSource() {
-            return fxThemeState().get() != null
-                    && inlineState().get() == null
-                    && authorState().get() == null
+            return fxThemeState().get() != null && inlineState().get() == null && authorState().get() == null
                     && modelState().get() == null;
         }
 
         public boolean isModelSource() {
-            return modelState().get() != null
-                    && inlineState().get() == null
-                    && authorState().get() == null;
+            return modelState().get() != null && inlineState().get() == null && authorState().get() == null;
         }
 
         public boolean isAuthorSource() {
-            return authorState().get() != null
-                    && inlineState().get() == null;
+            return authorState().get() != null && inlineState().get() == null;
         }
 
         public boolean isInlineSource() {
@@ -320,16 +317,16 @@ public class NodeCssState {
         public List<CssContentMaker.CssPropertyState.CssStyle> getFxThemeHiddenByModel() {
             List<CssContentMaker.CssPropertyState.CssStyle> ret = new ArrayList<>();
             CssContentMaker.CssPropertyState ps = getWinner();
-            List<CssContentMaker.CssPropertyState.CssStyle> notAppliedStyles =
-                    ps == null ?
-                    Collections.<CssContentMaker.CssPropertyState.CssStyle>emptyList() :
-                    ps.getNotAppliedStyles();
+            List<CssContentMaker.CssPropertyState.CssStyle> notAppliedStyles = ps == null
+                    ? Collections.<CssContentMaker.CssPropertyState.CssStyle>emptyList()
+                    : ps.getNotAppliedStyles();
             boolean hasModel = modelState().get() != null;
             if (hasModel) {
                 List<Style> allStyles = NodeHelper.getMatchingStyles(getStyleable(), target);
                 List<Style> matchingStyles = CssContentMaker.removeUserAgentStyles(allStyles);
                 for (Style style : matchingStyles) {
-                    CssContentMaker.CssPropertyState.CssStyle cssStyle = new CssContentMaker.CssPropertyState.CssStyle(style);
+                    CssContentMaker.CssPropertyState.CssStyle cssStyle = new CssContentMaker.CssPropertyState.CssStyle(
+                            style);
                     if (cssStyle.getOrigin() == StyleOrigin.USER_AGENT && !notAppliedStyles.contains(cssStyle)) {
                         if (getStyleable().getProperty().equals(cssStyle.getCssProperty())) {
                             cssStyle = CssContentMaker.retrieveStyle(matchingStyles, style);
@@ -343,8 +340,8 @@ public class NodeCssState {
 
     }
 
-    private CssContentMaker.CssPropertyState retrieveCssStyle(
-            CssMetaData<?, ?> cssMeta, Collection<CssContentMaker.CssPropertyState> styles) {
+    private CssContentMaker.CssPropertyState retrieveCssStyle(CssMetaData<?, ?> cssMeta,
+            Collection<CssContentMaker.CssPropertyState> styles) {
         for (CssContentMaker.CssPropertyState prop : styles) {
             if (prop.getCssProperty().equals(cssMeta.getProperty())) {
                 return prop;
@@ -438,8 +435,7 @@ public class NodeCssState {
 
         @Override
         public int compare(MatchingRule t, MatchingRule t1) {
-            int originComparaison = compareOrigin(
-                    t.getRule().getOrigin(), t1.rule.getOrigin());
+            int originComparaison = compareOrigin(t.getRule().getOrigin(), t1.rule.getOrigin());
             int tnotApplied = countNotApplied(t.declarations);
             int t1notApplied = countNotApplied(t1.declarations);
             int notAppliedComparaisons = tnotApplied - t1notApplied;
@@ -534,8 +530,8 @@ public class NodeCssState {
         private final boolean applied;
         private final boolean lookup;
 
-        MatchingDeclaration(CssContentMaker.CssPropertyState.CssStyle style,
-                CssContentMaker.CssPropertyState prop, boolean applied, boolean lookup) {
+        MatchingDeclaration(CssContentMaker.CssPropertyState.CssStyle style, CssContentMaker.CssPropertyState prop,
+                boolean applied, boolean lookup) {
             this.style = style;
             this.prop = prop;
             this.applied = applied;
@@ -569,8 +565,7 @@ public class NodeCssState {
     }
 
     // This method add sub properties instead of compund property.
-    private static void addSubProperties(
-            Collection<CssContentMaker.CssPropertyState> source,
+    private static void addSubProperties(Collection<CssContentMaker.CssPropertyState> source,
             Collection<CssContentMaker.CssPropertyState> target) {
         for (CssContentMaker.CssPropertyState p : source) {
             if (p.getSubProperties().isEmpty()) {
@@ -589,7 +584,7 @@ public class NodeCssState {
             Collection<CssContentMaker.CssPropertyState> styledProperties = new TreeSet<>();
             addSubProperties(getUserAgentStyles(), styledProperties);
             addSubProperties(getAuthorStyles(), styledProperties);
-                // We need them to have the exhaustive set of styled properties.
+            // We need them to have the exhaustive set of styled properties.
             // We compute the rules based on the set of properties.
             addSubProperties(getInlineStyles(), styledProperties);
             matchingRules = new HashMap<>();
@@ -624,8 +619,8 @@ public class NodeCssState {
         }
     }
 
-    private void addMatchingDeclaration(
-            CssPropertyState cssP, CssPropertyState.CssStyle style, boolean applied, boolean isLookup) {
+    private void addMatchingDeclaration(CssPropertyState cssP, CssPropertyState.CssStyle style, boolean applied,
+            boolean isLookup) {
         MatchingRule mr = new MatchingRule(style.getCssRule(), style.getSelector());
         List<MatchingDeclaration> lst = matchingRules.get(mr);
         if (lst == null) {
@@ -666,7 +661,7 @@ public class NodeCssState {
 //                }
 //                System.out.println("\n\n\n");
 //            }
-        for (Map.Entry<StyleableProperty, List<Style>> entry : map.entrySet()) {//NOI18N
+        for (Map.Entry<StyleableProperty, List<Style>> entry : map.entrySet()) {// NOI18N
             StyleableProperty value = entry.getKey();
 //                System.out.println("\nStyleable property: " + value);
             assert entry.getValue() != null;
@@ -674,41 +669,44 @@ public class NodeCssState {
             Style st = entry.getValue().get(0);
             StyleOrigin o = CssInternal.getOrigin(st);
 //                printStyle(st);
-                /* If this origin is equals to the passed one, this is the nominal case.
-             * If this property contains sub properties (eg:background-fills), then we need to check
+            /*
+             * If this origin is equals to the passed one, this is the nominal case. If this
+             * property contains sub properties (eg:background-fills), then we need to check
              * each sub property.
              */
             CssMetaData<? extends Styleable, ?> cssMetaList = value.getCssMetaData();
             if (o == origin || cssMetaList.getSubProperties() != null) {
-                    // Need the first style to compute the value
+                // Need the first style to compute the value
                 // We have at least a style. The first one is the winner.
                 String cssValue = CssValueConverter.toCssString(cssMetaList.getProperty(),
                         st.getDeclaration().getRule(), value.getValue());
 
-                CssContentMaker.CssPropertyState pState = new CssContentMaker.CssPropertyState(value, cssMetaList, cssValue);
+                CssContentMaker.CssPropertyState pState = new CssContentMaker.CssPropertyState(value, cssMetaList,
+                        cssValue);
 
                 /*
-                 * Each sub property can be ruled by a specific Origin,
-                 * we need to check if the sub property is in a rule of the passed origin.
-                 * For example, we can have background-radius set by fxTheme
-                 * and background-color set by inline or author.
+                 * Each sub property can be ruled by a specific Origin, we need to check if the
+                 * sub property is in a rule of the passed origin. For example, we can have
+                 * background-radius set by fxTheme and background-color set by inline or
+                 * author.
                  */
                 if (cssMetaList.getSubProperties() != null) {
                     for (CssMetaData sub : cssMetaList.getSubProperties()) {
 
+                        // List<Style> allStyles = tsn.getMatchingStyles(sub, node);
 
-
-                        //List<Style> allStyles = tsn.getMatchingStyles(sub, node);
-
-
-                        List<CssContentMaker.CssPropertyState.CssStyle> notApplied = CssContentMaker.getNotAppliedStyles(entry.getValue(), node, sub);
+                        List<CssContentMaker.CssPropertyState.CssStyle> notApplied = CssContentMaker
+                                .getNotAppliedStyles(entry.getValue(), node, sub);
                         for (Style style : entry.getValue()) {
                             StyleOrigin styleOrigin = CssInternal.getOrigin(style);
                             if (style.getDeclaration().getProperty().equals(sub.getProperty())
                                     && (styleOrigin == origin)) {
-                                CssContentMaker.CssPropertyState.CssStyle cssStyle = CssContentMaker.retrieveStyle(entry.getValue(), style);
-                                String subCssValue = CssValueConverter.toCssString(sub.getProperty(), style.getDeclaration().getRule(), value.getValue());
-                                CssContentMaker.CssSubPropertyState subCss = new CssContentMaker.CssSubPropertyState(value, sub, subCssValue);
+                                CssContentMaker.CssPropertyState.CssStyle cssStyle = CssContentMaker
+                                        .retrieveStyle(entry.getValue(), style);
+                                String subCssValue = CssValueConverter.toCssString(sub.getProperty(),
+                                        style.getDeclaration().getRule(), value.getValue());
+                                CssContentMaker.CssSubPropertyState subCss = new CssContentMaker.CssSubPropertyState(
+                                        value, sub, subCssValue);
                                 subCss.setStyle(cssStyle);
                                 subCss.getNotAppliedStyles().addAll(notApplied);
                                 pState.getSubProperties().add(subCss);
@@ -716,15 +714,17 @@ public class NodeCssState {
                         }
                     }
                     // eg: -fx-font set
-                    CssContentMaker.CssPropertyState.CssStyle style = CssContentMaker.retrieveStyle(entry.getValue(), st);
+                    CssContentMaker.CssPropertyState.CssStyle style = CssContentMaker.retrieveStyle(entry.getValue(),
+                            st);
                     pState.setStyle(style);
                     if (!st.getDeclaration().getProperty().equals(cssMetaList.getProperty())) {
                         style.setUnused();
                     }
                 } else {
-                        // Single style for this single property.
+                    // Single style for this single property.
                     // Transform the flat list into a chain of lookup.
-                    CssContentMaker.CssPropertyState.CssStyle style = CssContentMaker.retrieveStyle(entry.getValue(), st);
+                    CssContentMaker.CssPropertyState.CssStyle style = CssContentMaker.retrieveStyle(entry.getValue(),
+                            st);
                     pState.setStyle(style);
                 }
                 List<Style> applied = new ArrayList<>();
