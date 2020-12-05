@@ -45,9 +45,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
+import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -326,7 +326,7 @@ public class NodeCssState {
                     ps.getNotAppliedStyles();
             boolean hasModel = modelState().get() != null;
             if (hasModel) {
-                List<Style> allStyles = Deprecation.getMatchingStyles(getStyleable(), target);
+                List<Style> allStyles = NodeHelper.getMatchingStyles(getStyleable(), target);
                 List<Style> matchingStyles = CssContentMaker.removeUserAgentStyles(allStyles);
                 for (Style style : matchingStyles) {
                     CssContentMaker.CssPropertyState.CssStyle cssStyle = new CssContentMaker.CssPropertyState.CssStyle(style);
@@ -667,7 +667,7 @@ public class NodeCssState {
 //                System.out.println("\n\n\n");
 //            }
         for (Map.Entry<StyleableProperty, List<Style>> entry : map.entrySet()) {//NOI18N
-            StyleableProperty<?> value = entry.getKey();
+            StyleableProperty value = entry.getKey();
 //                System.out.println("\nStyleable property: " + value);
             assert entry.getValue() != null;
             assert !entry.getValue().isEmpty();
@@ -695,6 +695,12 @@ public class NodeCssState {
                  */
                 if (cssMetaList.getSubProperties() != null) {
                     for (CssMetaData sub : cssMetaList.getSubProperties()) {
+
+
+
+                        //List<Style> allStyles = tsn.getMatchingStyles(sub, node);
+
+
                         List<CssContentMaker.CssPropertyState.CssStyle> notApplied = CssContentMaker.getNotAppliedStyles(entry.getValue(), node, sub);
                         for (Style style : entry.getValue()) {
                             StyleOrigin styleOrigin = CssInternal.getOrigin(style);

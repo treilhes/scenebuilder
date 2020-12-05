@@ -37,14 +37,10 @@ import java.net.URI;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableMap;
-import javafx.css.CssMetaData;
-import javafx.css.Style;
-import javafx.css.Styleable;
 import javafx.css.StyleableProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -83,13 +79,6 @@ public class Deprecation {
 //        System.err.println("Error: impl_setStyleMap is no longer publicly accessible");
     }
 
-//    // RT-21096 : Promote impl_getStyleMap / impl_setStyleMap to public API
-    public static Map<StyleableProperty<?>, List<Style>> getStyleMap(Node node) {
-//        return node.impl_findStyles(null);
-//        System.err.println("Error: findStyles is no longer publicly accessible");
-        return null;
-    }
-
     public static void reapplyCSS(Parent parent, URI stylesheetPath) {
         try {
             reapplyCSS(parent, stylesheetPath.toURL());
@@ -118,13 +107,6 @@ public class Deprecation {
                 reapplyCSS(childSubScene.getRoot(), stylesheetPath);
             }
         }
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static List<Style> getMatchingStyles(CssMetaData cssMetaData, Styleable styleable) {
-//        return Node.impl_getMatchingStyles(cssMetaData, styleable);
-//        System.err.println("Error: impl_getMatchingStyles is no longer publicly accessible");
-        return null;
     }
 
     // Deprecated stuff in Parent

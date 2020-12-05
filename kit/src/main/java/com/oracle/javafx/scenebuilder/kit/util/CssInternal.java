@@ -54,6 +54,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
+import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.FXCollections;
@@ -512,7 +513,7 @@ public class CssInternal {
         Map<StyleableProperty, List<Style>> ret = new HashMap<>();
 //        ret.putAll(Deprecation.getStyleMap(node));
 
-        Map<StyleableProperty<?>, List<Style>> map = Deprecation.getStyleMap(node);
+        Map<StyleableProperty<?>, List<Style>> map = NodeHelper.findStyles(node, null);
         if (map != null && !map.isEmpty()) {
             for (Map.Entry<StyleableProperty<?>, List<Style>> entry : map.entrySet()) {
                 StyleableProperty<?> key = entry.getKey();

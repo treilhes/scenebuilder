@@ -44,10 +44,10 @@ import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState.CssStyle;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
+import com.sun.javafx.scene.NodeHelper;
 
 import javafx.css.CssMetaData;
 import javafx.css.ParsedValue;
@@ -241,7 +241,7 @@ public class CssContentMaker {
             if (node.getScene() == null) {
                 // The node is not visible (ContextMenu, Tooltip, ...)
                 // A node MUST be in the scene to allow for CSS content collect,
-                // so we add it (temporarily) to the scene. 
+                // so we add it (temporarily) to the scene.
                 Node inScene = CssUtils.getFirstAncestorWithNonNullScene(node);
                 if (inScene == null) {
                     // May happen if the Content Panel is not present
@@ -342,7 +342,8 @@ public class CssContentMaker {
             List<Style> appliedStyles, Node node, CssMetaData<?, ?> cssMeta) {
         List<CssStyle> ret = new ArrayList<>();
 
-        List<Style> allStyles = Deprecation.getMatchingStyles(cssMeta, node);
+        List<Style> allStyles = NodeHelper.getMatchingStyles(cssMeta, node);
+        //List<Style> allStyles = tsn.getMatchingStyles(cssMeta, node);
 //        System.out.println("===========================");
 //        System.out.println("getNotAppliedStyles() called!");
 //        System.out.println("===========================");
@@ -378,7 +379,7 @@ public class CssContentMaker {
         }
         return matchingStyles;
     }
-    
+
 //    protected static void printStyles(List<Style> styles) {
 //        for (Style style : styles) {
 //            printStyle(style);
