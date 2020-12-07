@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationContext;
 
+import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.EditCurveGuide;
@@ -59,7 +60,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractHandles;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;

@@ -36,8 +36,8 @@ import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

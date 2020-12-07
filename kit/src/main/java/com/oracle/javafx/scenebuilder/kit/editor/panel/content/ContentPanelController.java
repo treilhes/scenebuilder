@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.AbstractDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.BorderPaneDriver;
@@ -91,7 +92,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.mode.PickModeCont
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUnion;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.Picker;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.ScrollPaneBooster;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;

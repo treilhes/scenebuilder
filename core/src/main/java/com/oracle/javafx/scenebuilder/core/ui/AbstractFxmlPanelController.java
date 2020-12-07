@@ -29,68 +29,67 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
+package com.oracle.javafx.scenebuilder.core.ui;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.FxmlController;
+
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.Region;
+import javafx.scene.Parent;
 
 /**
+ * AbstractFxmlPanelController is the abstract base class for all the
+ * panel controller which build their UI components from an FXML file.
  *
- * 
+ * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
+ * method in charge of finishing the initialization of the UI components
+ * loaded from the FXML file.
+ *
+ *
  */
-public abstract class AbstractFxmlPopupController extends AbstractPopupController {
-    
+public abstract class AbstractFxmlPanelController extends AbstractPanelController implements FxmlController {
+
     private final URL fxmlURL;
     private final ResourceBundle resources;
-    
-    public AbstractFxmlPopupController(URL fxmlURL) {
-        this(fxmlURL, null);
-    };
-    
-    public AbstractFxmlPopupController(URL fxmlURL, ResourceBundle resources) {
-        assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
+
+    /**
+     * Base constructor for invocation by the subclasses.
+     *
+     * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
+     * @param editorController  the editor controller (cannot be null)
+     */
+    protected AbstractFxmlPanelController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, ResourceBundle resources, Editor editorController) {
+        super(sceneBuilderManager, editorController);
         this.fxmlURL = fxmlURL;
         this.resources = resources;
+        assert fxmlURL != null : "Check the name of the FXML file used by "
+                + getClass().getSimpleName();
     }
-    
-    public URL getFXMLURL() {
-        return fxmlURL;
-    }
-    
-    public ResourceBundle getResources() {
-        return resources;
-    }
-    
+
     /*
-     * To be implemented by subclasses
+     * AbstractPanelController
      */
-    
-    public void controllerDidLoadFxml() {
-        assert getRoot() != null;
-        assert getRoot().getScene() == null;
-    }
-    
-    /*
-     * AbstractWindowController
-     */
-    
+
     /**
-     * This implementation loads the FXML file using the URL passed to 
-     * {@link AbstractFxmlWindowController}.
+     * This implementation loads the FXML file using the URL passed to
+     * {@link AbstractFxmlPanelController}.
+     * Subclass implementation should make sure that this method can be invoked
+     * outside of the JavaFX thread
      */
     @Override
-    protected void makeRoot() {
+    protected void makePanel() {
         final FXMLLoader loader = new FXMLLoader();
 
         loader.setController(this);
         loader.setLocation(fxmlURL);
         loader.setResources(resources);
         try {
-            setRoot((Region)loader.load());
+            setPanelRoot((Parent)loader.load());
             controllerDidLoadFxml();
         } catch (RuntimeException | IOException x) {
             System.out.println("loader.getController()=" + loader.getController());
@@ -98,5 +97,32 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
             throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
         }
     }
-    
+
+    @Override
+    public URL getFxmlURL() {
+		return fxmlURL;
+	}
+
+    @Override
+	public ResourceBundle getResources() {
+		return resources;
+	}
+
+    /*
+     * Protected
+     */
+
+    /**
+     * Called by {@link AbstractFxmlPanelController#makePanel() } after
+     * the FXML file has been successfully loaded.
+     * Warning : this routine may be invoked outside of the event thread.
+     */
+    @Override
+	public abstract void controllerDidLoadFxml();
+
+        // Note : remember that here:
+        // 1) getHost() might be null
+        // 2) getPanelRoot().getScene() might be null
+        // 3) getPanelRoot().getScene().getWindow() might be null
+
 }

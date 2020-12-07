@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

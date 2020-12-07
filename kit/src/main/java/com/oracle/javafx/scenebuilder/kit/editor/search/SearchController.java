@@ -41,7 +41,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlController;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

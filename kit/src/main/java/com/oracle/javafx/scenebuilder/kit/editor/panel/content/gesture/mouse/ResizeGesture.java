@@ -37,6 +37,7 @@ import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 
+import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
@@ -55,7 +56,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.relocater.
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.relocater.PaneRelocater;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.rudder.ResizeRudder;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.RegionRectangle;
 
 import javafx.event.EventType;

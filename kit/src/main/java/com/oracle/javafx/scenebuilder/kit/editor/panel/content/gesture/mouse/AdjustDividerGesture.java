@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
+import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.SplitPaneDesignInfoX;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
 
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyEvent;

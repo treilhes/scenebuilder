@@ -33,10 +33,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content;
 
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPopupController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPopupController;
 
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;

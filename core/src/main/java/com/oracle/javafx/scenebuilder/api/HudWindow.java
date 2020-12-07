@@ -1,7 +1,5 @@
 package com.oracle.javafx.scenebuilder.api;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.CardinalPoint;
-
 import javafx.scene.Node;
 
 public interface HudWindow {

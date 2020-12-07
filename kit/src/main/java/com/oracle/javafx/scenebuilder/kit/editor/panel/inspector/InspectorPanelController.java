@@ -110,6 +110,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
@@ -156,7 +157,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.Fo
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.KeyCombinationPopupEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.PaintPopupEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.Rectangle2DPopupEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;

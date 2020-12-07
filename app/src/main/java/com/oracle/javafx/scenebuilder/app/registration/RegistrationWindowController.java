@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationEmailPr
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationOptInPreference;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;

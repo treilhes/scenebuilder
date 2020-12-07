@@ -37,7 +37,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
