@@ -66,12 +66,12 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
@@ -93,9 +93,6 @@ import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.ext.controller.I18nResourceMenuController;
-import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
-import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
@@ -113,7 +110,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModal
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
@@ -212,15 +208,15 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //private SearchController librarySearchController;
     //private SearchController inspectorSearchController;
     //private SearchController cssPanelSearchController;
-    private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
-    private final CssPanelMenuController cssPanelMenuController;
-    private final I18nResourceMenuController resourceController;
+    //private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
+    //private final CssPanelMenuController cssPanelMenuController;
+    //private final I18nResourceMenuController resourceController;
     //private final DocumentWatchingController watchingController;
 
-    private final GlobalPreferences preferences;
+    //private final GlobalPreferences preferences;
     private final WildcardImportsPreference wildcardImportsPreference;
     private final RecentItemsPreference recentItemsPreference;
-    private final ToolThemePreference toolThemePreference;
+    //private final ToolThemePreference toolThemePreference;
 
     private final DocumentPreferencesController documentPreferencesController;
 
@@ -234,7 +230,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final BottomDividerVPosPreference bottomDividerVPos;
 	private final LeftDividerVPosPreference leftDividerVPos;
 
-	private final I18NResourcePreference i18NResourcePreference;
+	//private final I18NResourcePreference i18NResourcePreference;
 	private final ThemePreference themePreference;
 
 
@@ -307,6 +303,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final List<InitWithDocument> initializations;
 	private final List<DisposeWithDocument> finalizations;
 	private final Dialog dialog;
+    private final SceneBuilderManager sceneBuilderManager;
 
 
     /*
@@ -316,13 +313,14 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	public DocumentWindowController(
 			@Autowired ApplicationContext context,
 			@Autowired MainController mainController,
-			@Autowired GlobalPreferences preferences,
+			//@Autowired GlobalPreferences preferences,
 			@Autowired RecentItemsPreference recentItemsPreference,
-			@Autowired ToolThemePreference toolThemePreference,
+			//@Autowired ToolThemePreference toolThemePreference,
 			@Autowired WildcardImportsPreference wildcardImportsPreference,
 			@Autowired FileSystem fileSystem,
 			@Autowired Dialog dialog,
-			@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
+			@Autowired SceneBuilderManager sceneBuilderManager,
+			//@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
 			@Lazy @Autowired PathPreference pathPreference,
 
 			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
@@ -343,9 +341,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired LibraryPanelController libraryPanelController,
 			@Lazy @Autowired SelectionBarController selectionBarController,
 			@Lazy @Autowired MessageBarController messageBarController,
-			@Lazy @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
-			@Lazy @Autowired CssPanelMenuController cssPanelMenuController,
-			@Lazy @Autowired I18nResourceMenuController resourceController,
+			//@Lazy @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
+			//@Lazy @Autowired CssPanelMenuController cssPanelMenuController,
+			//@Lazy @Autowired I18nResourceMenuController resourceController,
 			//@Lazy @Autowired DocumentWatchingController watchingController,
 
 			@Lazy @Autowired XPosPreference xPos,
@@ -373,13 +371,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired List<InitWithDocument> initializations,
 			@Lazy @Autowired List<DisposeWithDocument> finalizations
 			) {
-        super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
+        super(sceneBuilderManager, DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         //DocumentScope.setCurrentScope(this);
-
+        this.sceneBuilderManager = sceneBuilderManager;
         this.editorController = editorController;
         this.recentItemsPreference = recentItemsPreference;
-        this.toolThemePreference = toolThemePreference;
+        //this.toolThemePreference = toolThemePreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
         this.menuBarController = menuBarController;
         this.fileSystem = fileSystem;
@@ -399,13 +397,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //this.librarySearchController = librarySearchController;
         //this.inspectorSearchController = inspectorSearchController;
         //this.cssPanelSearchController = cssPanelSearchController;
-        this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
-        this.cssPanelMenuController = cssPanelMenuController;
-        this.resourceController = resourceController;
+        //this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
+        //this.cssPanelMenuController = cssPanelMenuController;
+        //this.resourceController = resourceController;
         //this.watchingController = watchingController;
 
-        this.preferences = preferences;
-        this.i18NResourcePreference = i18NResourcePreference;
+        //this.preferences = preferences;
+        //this.i18NResourcePreference = i18NResourcePreference;
         this.pathPreference = pathPreference;
         // preferences
         this.xPos = xPos;
@@ -520,8 +518,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         librarySplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.FIRST);
         documentSplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.LAST);
 
-		setToolStylesheet(toolThemePreference.getValue().getStylesheetURL());
-		toolThemePreference.getObservableValue().addListener((ob, o, n) -> setToolStylesheet(n.getStylesheetURL()));
+		//setToolStylesheet(toolThemePreference.getValue().getStylesheetURL());
+        //toolThemePreference.getObservableValue().addListener((ob, o, n) -> setToolStylesheet(n.getStylesheetURL()));
 
 		// initialize preference binding
 		final Stage stage = getStage();
@@ -629,13 +627,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return previewWindowController;
     }
 
-    public SceneStyleSheetMenuController getSceneStyleSheetMenuController() {
-        return sceneStyleSheetMenuController;
-    }
+//    public SceneStyleSheetMenuController getSceneStyleSheetMenuController() {
+//        return sceneStyleSheetMenuController;
+//    }
 
-    public I18nResourceMenuController getResourceController() {
-        return resourceController;
-    }
+//    public I18nResourceMenuController getResourceController() {
+//        return resourceController;
+//    }
 
 //    public DocumentWatchingController getWatchingController() {
 //        return watchingController;
@@ -828,8 +826,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case SHOW_PREVIEW_WINDOW:
                 if (previewWindowController == null) {
-                    previewWindowController = new PreviewWindowController(editorController, documentManager, getStage());
-                    previewWindowController.setToolStylesheet(getToolStylesheet());
+                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, getStage());
+                    //previewWindowController.setToolStylesheet(getToolStylesheet());
                 }
                 previewWindowController.getStage().centerOnScreen();
                 previewWindowController.openWindow();
@@ -837,8 +835,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case SHOW_PREVIEW_DIALOG:
                 if (previewWindowController == null) {
-                    previewWindowController = new PreviewWindowController(editorController, documentManager, getStage());
-                    previewWindowController.setToolStylesheet(getToolStylesheet());
+                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, getStage());
+                    //previewWindowController.setToolStylesheet(getToolStylesheet());
                 }
                 previewWindowController.openDialog();
                 break;
@@ -975,9 +973,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                         ! contentPanelController.isGuidesVisible());
                 break;
 
-            case ADD_SCENE_STYLE_SHEET:
-                sceneStyleSheetMenuController.performAddSceneStyleSheet();
-                break;
+//            case ADD_SCENE_STYLE_SHEET:
+//                sceneStyleSheetMenuController.performAddSceneStyleSheet();
+//                break;
 
 //            case SET_RESOURCE:
 //                resourceController.performSetResource();
@@ -1001,9 +999,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case SHOW_SAMPLE_CONTROLLER:
                 if (skeletonWindowController == null) {
-                    skeletonWindowController = new SkeletonWindowController(editorController,
+                    skeletonWindowController = new SkeletonWindowController(
+                            sceneBuilderManager, editorController,
                             Utils.makeTitle(editorController.getFxomDocument()), getStage());
-                    skeletonWindowController.setToolStylesheet(getToolStylesheet());
+                    //skeletonWindowController.setToolStylesheet(getToolStylesheet());
                 }
                 skeletonWindowController.openWindow();
                 break;
@@ -1369,18 +1368,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
 
-    @Override
-    protected void toolStylesheetDidChange(String oldStylesheet) {
-        super.toolStylesheetDidChange(oldStylesheet);
-        editorController.setToolStylesheet(getToolStylesheet());
-        // previewWindowController should not be affected by tool style sheet
-        if (skeletonWindowController != null) {
-            skeletonWindowController.setToolStylesheet(getToolStylesheet());
-        }
-        if (jarAnalysisReportController != null) {
-            jarAnalysisReportController.setToolStylesheet(getToolStylesheet());
-        }
-    }
+//    @Override
+//    protected void toolStylesheetDidChange(String oldStylesheet) {
+//        super.toolStylesheetDidChange(oldStylesheet);
+//        editorController.setToolStylesheet(getToolStylesheet());
+//        // previewWindowController should not be affected by tool style sheet
+//        if (skeletonWindowController != null) {
+//            skeletonWindowController.setToolStylesheet(getToolStylesheet());
+//        }
+//        if (jarAnalysisReportController != null) {
+//            jarAnalysisReportController.setToolStylesheet(getToolStylesheet());
+//        }
+//    }
 
     /*
      * Private
@@ -1575,7 +1574,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     }
                 }
 
-                final AlertDialog d = new AlertDialog(getStage());
+                final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
                 d.setMessage(message);
                 d.setDetails(I18N.getString("alert.delete.fxid.details"));
                 d.setOKButtonTitle(I18N.getString("label.delete"));
@@ -1778,7 +1777,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (checkLoadFileTime()) {
                     saveConfirmed = true;
                 } else {
-                    final AlertDialog d = new AlertDialog(getStage());
+                    final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
                     d.setMessage(I18N.getString("alert.overwrite.message", fileName));
                     d.setDetails(I18N.getString("alert.overwrite.details"));
                     d.setOKButtonVisible(true);
@@ -1809,7 +1808,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     result = ActionStatus.CANCELLED;
                 }
             } catch(IOException x) {
-                final ErrorDialog d = new ErrorDialog(getStage());
+                final ErrorDialog d = new ErrorDialog(sceneBuilderManager, getStage());
                 d.setMessage(I18N.getString("alert.save.failure.message", fileName));
                 d.setDetails(I18N.getString("alert.save.failure.details"));
                 d.setDebugInfoWithThrowable(x);
@@ -1850,7 +1849,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     try {
                         URL alternateURL = new URL(fxmlFile.toURI().toURL().toExternalForm() + ".fxml"); //NOI18N
                         File alternateFxmlFile = new File(alternateURL.toURI());
-                        final AlertDialog d = new AlertDialog(getStage());
+                        final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
                         d.setMessage(I18N.getString("alert.save.noextension.message", fxmlFile.getName()));
                         String details = I18N.getString("alert.save.noextension.details");
 
@@ -1899,7 +1898,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());
                     final String fileName = fxmlPath.getFileName().toString();
-                    final ErrorDialog d = new ErrorDialog(getStage());
+                    final ErrorDialog d = new ErrorDialog(sceneBuilderManager, getStage());
                     d.setMessage(I18N.getString("alert.save.conflict.message", fileName));
                     d.setDetails(I18N.getString("alert.save.conflict.details"));
                     d.showAndWait();
@@ -1951,7 +1950,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         assert editorController.getFxomDocument() != null;
         assert editorController.getFxomDocument().getLocation() != null;
 
-        final AlertDialog d = new AlertDialog(getStage());
+        final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
         d.setMessage(I18N.getString("alert.revert.question.message", getStage().getTitle()));
         d.setDetails(I18N.getString("alert.revert.question.details"));
         d.setOKButtonTitle(I18N.getString("label.revert"));
@@ -1960,7 +1959,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             try {
                 reload();
             } catch(IOException x) {
-                final ErrorDialog errorDialog = new ErrorDialog(null);
+                final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
                 errorDialog.setMessage(I18N.getString("alert.open.failure1.message", getStage().getTitle()));
                 errorDialog.setDetails(I18N.getString("alert.open.failure1.details"));
                 errorDialog.setDebugInfoWithThrowable(x);
@@ -1990,7 +1989,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final boolean closeConfirmed;
         if (isDocumentDirty()) {
 
-            final AlertDialog d = new AlertDialog(getStage());
+            final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
             d.setMessage(I18N.getString("alert.save.question.message", getStage().getTitle()));
             d.setDetails(I18N.getString("alert.save.question.details"));
             d.setOKButtonTitle(I18N.getString("label.save"));

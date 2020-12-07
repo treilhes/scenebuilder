@@ -32,7 +32,7 @@
 package com.oracle.javafx.scenebuilder.app.message;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractPopupController;
 
 import javafx.geometry.Bounds;
@@ -46,8 +46,8 @@ public class MessagePopupController extends AbstractPopupController {
 
     private final MessagePanelController messagePanelController;
 
-    public MessagePopupController(Editor editorController) {
-        this.messagePanelController = new MessagePanelController(editorController);
+    public MessagePopupController(SceneBuilderManager sceneBuilderManager, Editor editorController) {
+        this.messagePanelController = new MessagePanelController(sceneBuilderManager, editorController);
     }
 
 

@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -98,8 +99,9 @@ public class InfoPanelController extends AbstractFxmlPanelController {
 
     public InfoPanelController(
     		@Autowired ApplicationContext context,
+    		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired EditorController editorController) {
-        super(InfoPanelController.class.getResource("InfoPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+        super(sceneBuilderManager, InfoPanelController.class.getResource("InfoPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.context = context;
     }
 

@@ -36,6 +36,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 
 import javafx.fxml.FXMLLoader;
@@ -62,8 +63,8 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
      * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
      * @param editorController  the editor controller (cannot be null)
      */
-    protected AbstractFxmlPanelController(URL fxmlURL, ResourceBundle resources, Editor editorController) {
-        super(editorController);
+    protected AbstractFxmlPanelController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, ResourceBundle resources, Editor editorController) {
+        super(sceneBuilderManager, editorController);
         this.fxmlURL = fxmlURL;
         this.resources = resources;
         assert fxmlURL != null : "Check the name of the FXML file used by "

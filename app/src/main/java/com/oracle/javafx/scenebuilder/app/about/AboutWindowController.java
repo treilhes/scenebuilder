@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
@@ -62,7 +63,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     private GridPane vbox;
     @FXML
     private TextArea textArea;
-    
+
     private String sbBuildInfo;
     private String sbBuildVersion;
     private String sbBuildDate;
@@ -72,11 +73,14 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
     private final String LOG_FILE_NAME;
 
-    public AboutWindowController(@Autowired VersionSetting versionSetting) {
-        super(AboutWindowController.class.getResource("About.fxml"), //NOI18N
+    public AboutWindowController(
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired VersionSetting versionSetting
+            ) {
+        super(sceneBuilderManager, AboutWindowController.class.getResource("About.fxml"), //NOI18N
                 I18N.getBundle());
         this.LOG_FILE_NAME = "scenebuilder-" + versionSetting.getSceneBuilderVersion() + ".log"; //NOI18N
-        
+
         try (InputStream in = getClass().getResourceAsStream("about.properties")) { //NOI18N
 
             if (in != null) {
@@ -92,7 +96,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
             // We go with default values
         }
     }
-    
+
     @FXML
     public void onMousePressed(MouseEvent event) {
         if ((event.getClickCount() == 2) && event.isAltDown()) {
@@ -105,9 +109,9 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
         closeWindow();
     }
 
-    @Override 
+    @Override
     public void onFocus() {}
-    
+
     /*
      * AbstractWindowController
      */
@@ -137,10 +141,10 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
                 .append(getJavaParagraph())
                 .append(getOsParagraph())
                 .append(I18N.getString(sbAboutCopyrightKeyName));
-        
+
         return text.toString();
     }
-    
+
     /**
      *
      * @treatAsPrivate
@@ -148,7 +152,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     public String getBuildJavaVersion() {
         return sbBuildJavaVersion;
     }
-    
+
     /**
      *
      * @treatAsPrivate
@@ -156,7 +160,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     public String getBuildInfo() {
         return sbBuildInfo;
     }
-    
+
     private StringBuilder getVersionParagraph() {
         StringBuilder sb = new StringBuilder(I18N.getString("about.product.version"));
         sb.append("\nJavaFX Scene Builder ").append(sbBuildVersion) //NOI18N
@@ -170,7 +174,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
         }
         sb.append(LOG_FILE_NAME);
         return sb.toString();
-        
+
     }
 
     private StringBuilder getBuildInfoParagraph() {
@@ -191,14 +195,14 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
                 .append("\n\n"); //NOI18N
         return sb;
     }
-    
+
     private StringBuilder getJavaParagraph() {
         StringBuilder sb = new StringBuilder("Java\n"); //NOI18N
         sb.append(System.getProperty("java.runtime.version")).append(", ") //NOI18N
                 .append(System.getProperty("java.vendor")).append("\n\n"); //NOI18N
         return sb;
     }
-    
+
     private StringBuilder getOsParagraph() {
         StringBuilder sb = new StringBuilder(I18N.getString("about.operating.system"));
         sb.append("\n").append(System.getProperty("os.name")).append(", ") //NOI18N

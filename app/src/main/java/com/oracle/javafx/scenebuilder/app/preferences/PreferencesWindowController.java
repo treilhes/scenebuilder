@@ -47,13 +47,13 @@ import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.Pr
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -71,85 +71,80 @@ import javafx.stage.WindowEvent;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class PreferencesWindowController extends AbstractFxmlWindowController {
-	
-	private static final int PREFERENCE_MAX_HEIGHT = 700;
 
-	@FXML
-	private TabPane prefTabPane;
-	@FXML
-	private GridPane globalGrid;
-	@FXML
+    private static final int PREFERENCE_MAX_HEIGHT = 700;
+
+    @FXML
+    private TabPane prefTabPane;
+    @FXML
+    private GridPane globalGrid;
+    @FXML
     private Button globalResetButton;
-	
-	@FXML
-	private GridPane documentGrid;
-	@FXML
+
+    @FXML
+    private GridPane documentGrid;
+    @FXML
     private Button documentResetButton;
-	
+
     private final Stage ownerWindow;
 
     private List<UserPreference<?>> globalPreferences;
-	private List<UserPreference<?>> documentPreferences;
-	
+    private List<UserPreference<?>> documentPreferences;
 
-    public PreferencesWindowController(
-    		@Autowired DocumentWindowController documentWindowController,
-    		@Autowired List<ManagedGlobalPreference> globalPreferences,
-    		@Autowired List<ManagedDocumentPreference> documentPreferences
-    		) {
-        super(PreferencesWindowController.class.getResource("Preferences.fxml"), //NOI18N
+    public PreferencesWindowController(@Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired DocumentWindowController documentWindowController,
+            @Autowired List<ManagedGlobalPreference> globalPreferences,
+            @Autowired List<ManagedDocumentPreference> documentPreferences) {
+        super(sceneBuilderManager, PreferencesWindowController.class.getResource("Preferences.fxml"), // NOI18N
                 I18N.getBundle(), documentWindowController.getStage());
         this.ownerWindow = documentWindowController.getStage();
 
-		this.globalPreferences = globalPreferences.stream()
-				.filter(p -> UserPreference.class.isAssignableFrom(p.getClass()))
-				.map(p -> (UserPreference<?>)p)
-				.filter(p -> p.getGroup() != null && p.getLabelI18NKey() != null)
-				.collect(Collectors.toList());
-		this.documentPreferences = documentPreferences.stream()
-				.filter(p -> UserPreference.class.isAssignableFrom(p.getClass()))
-				.map(p -> (UserPreference<?>)p)
-				.filter(p -> p.getGroup() != null && p.getLabelI18NKey() != null)
-				.collect(Collectors.toList());
+        this.globalPreferences = globalPreferences.stream()
+                .filter(p -> UserPreference.class.isAssignableFrom(p.getClass())).map(p -> (UserPreference<?>) p)
+                .filter(p -> p.getGroup() != null && p.getLabelI18NKey() != null).collect(Collectors.toList());
+        this.documentPreferences = documentPreferences.stream()
+                .filter(p -> UserPreference.class.isAssignableFrom(p.getClass())).map(p -> (UserPreference<?>) p)
+                .filter(p -> p.getGroup() != null && p.getLabelI18NKey() != null).collect(Collectors.toList());
     }
 
     @FXML
     public void initialize() {
-    	prefTabPane.setMaxHeight(PREFERENCE_MAX_HEIGHT);
-    	populatePreferenceGrid(globalGrid, globalPreferences, globalResetButton);
-    	populatePreferenceGrid(documentGrid, documentPreferences, documentResetButton);
+        prefTabPane.setMaxHeight(PREFERENCE_MAX_HEIGHT);
+        populatePreferenceGrid(globalGrid, globalPreferences, globalResetButton);
+        populatePreferenceGrid(documentGrid, documentPreferences, documentResetButton);
     }
-    
-    private static void populatePreferenceGrid(GridPane target, List<UserPreference<?>> preferences, Button resetButton) {
-		Map<PreferenceGroup, List<UserPreference<?>>> preferencesMap = preferences.stream()
-				.collect(Collectors.groupingBy(UserPreference::getGroup));
-    	
-		List<PreferenceGroup> sortedKeys = new ArrayList<>(preferencesMap.keySet());
-		
-		Collections.sort(sortedKeys, (g1, g2) -> g1.getOrderKey().compareTo(g2.getOrderKey()));
-		
-		sortedKeys.stream().forEach(g -> {
-			List<UserPreference<?>> preferenceList = preferencesMap.get(g);
-			Collections.sort(preferenceList, (p1, p2) -> p1.getOrderKey().compareTo(p2.getOrderKey()));
-			
-			preferenceList.stream().forEach(p -> {
-				if (p.getLabelI18NKey() != null) {
-	    			int rowIndex = target.getRowCount();
-	    			Label label = new Label(I18N.getString(p.getLabelI18NKey()));
-	    			Parent editor = p.getEditor();
-	    			target.addRow(rowIndex, label);
-	    			target.addRow(rowIndex, editor);
-	    			GridPane.setHgrow(label, Priority.ALWAYS);
-	    			GridPane.setHgrow(editor, Priority.ALWAYS);
-	    		}
-			});
-    		
-			Separator separator = new Separator();
-			target.addRow(target.getRowCount(), separator);
-			GridPane.setColumnSpan(separator, 2);
-			GridPane.setHgrow(separator, Priority.ALWAYS);
-    	});
-		
+
+    private static void populatePreferenceGrid(GridPane target, List<UserPreference<?>> preferences,
+            Button resetButton) {
+        Map<PreferenceGroup, List<UserPreference<?>>> preferencesMap = preferences.stream()
+                .collect(Collectors.groupingBy(UserPreference::getGroup));
+
+        List<PreferenceGroup> sortedKeys = new ArrayList<>(preferencesMap.keySet());
+
+        Collections.sort(sortedKeys, (g1, g2) -> g1.getOrderKey().compareTo(g2.getOrderKey()));
+
+        sortedKeys.stream().forEach(g -> {
+            List<UserPreference<?>> preferenceList = preferencesMap.get(g);
+            Collections.sort(preferenceList, (p1, p2) -> p1.getOrderKey().compareTo(p2.getOrderKey()));
+
+            preferenceList.stream().forEach(p -> {
+                if (p.getLabelI18NKey() != null) {
+                    int rowIndex = target.getRowCount();
+                    Label label = new Label(I18N.getString(p.getLabelI18NKey()));
+                    Parent editor = p.getEditor();
+                    target.addRow(rowIndex, label);
+                    target.addRow(rowIndex, editor);
+                    GridPane.setHgrow(label, Priority.ALWAYS);
+                    GridPane.setHgrow(editor, Priority.ALWAYS);
+                }
+            });
+
+            Separator separator = new Separator();
+            target.addRow(target.getRowCount(), separator);
+            GridPane.setColumnSpan(separator, 2);
+            GridPane.setHgrow(separator, Priority.ALWAYS);
+        });
+
     }
 
     /*
@@ -172,17 +167,18 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         super.closeWindow();
     }
 
-    @Override 
-    public void onFocus() {}
-    
+    @Override
+    public void onFocus() {
+    }
+
     @FXML
     void resetToDocumentDefaultAction(ActionEvent event) {
-    	documentPreferences.forEach(u -> u.reset());
+        documentPreferences.forEach(u -> u.reset());
     }
-    	
+
     @FXML
     void resetToDefaultAction(ActionEvent event) {
-    	globalPreferences.forEach(u -> u.reset());
+        globalPreferences.forEach(u -> u.reset());
     }
 
 }

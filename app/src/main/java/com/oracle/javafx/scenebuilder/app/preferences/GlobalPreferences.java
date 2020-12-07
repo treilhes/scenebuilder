@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPref
 import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference;
-import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.preferences.GlobalKitPreferences;
@@ -64,7 +63,6 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPrefer
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 
 /**
  * Defines preferences global to the SB application.
@@ -89,7 +87,7 @@ public class GlobalPreferences extends GlobalKitPreferences {
      **************************************************************************/
 
     // Global preferences
-    private final ToolThemePreference toolTheme;
+    //private final ToolThemePreference toolTheme;
     private final DisplayModePreference libraryDisplayOption;
     private final DisplayOptionPreference hierarchyDisplayOption;
 
@@ -124,7 +122,8 @@ public class GlobalPreferences extends GlobalKitPreferences {
 			RootContainerWidthPreference rootContainerWidth, BackgroundImagePreference backgroundImage,
 			AlignmentGuidesColorPreference alignmentGuidesColor, ParentRingColorPreference parentRingColor,
 			ThemePreference theme, GluonSwatchPreference gluonSwatch, GluonThemePreference gluonTheme,
-			ToolThemePreference toolTheme, DisplayModePreference libraryDisplayOption,
+			//ToolThemePreference toolTheme,
+			DisplayModePreference libraryDisplayOption,
 			DisplayOptionPreference hierarchyDisplayOption,
 
 			CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversed,
@@ -140,7 +139,7 @@ public class GlobalPreferences extends GlobalKitPreferences {
 				rootContainerHeight, rootContainerWidth, backgroundImage, alignmentGuidesColor, parentRingColor, theme
 				//,gluonSwatch, gluonTheme
 				);
-		this.toolTheme = toolTheme;
+		//this.toolTheme = toolTheme;
 		this.libraryDisplayOption = libraryDisplayOption;
 		this.hierarchyDisplayOption = hierarchyDisplayOption;
 
@@ -166,13 +165,13 @@ public class GlobalPreferences extends GlobalKitPreferences {
      *                                                                         *
      **************************************************************************/
 
-    public ToolTheme getToolTheme() {
-        return toolTheme.getValue();
-    }
-
-	public void setToolTheme(ToolTheme value) {
-        toolTheme.setValue(value);
-    }
+//    public ToolTheme getToolTheme() {
+//        return toolTheme.getValue();
+//    }
+//
+//	public void setToolTheme(ToolTheme value) {
+//        toolTheme.setValue(value);
+//    }
 
     public DISPLAY_MODE getLibraryDisplayOption() {
         return libraryDisplayOption.getValue();

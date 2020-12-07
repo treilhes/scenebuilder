@@ -388,7 +388,8 @@ public class SceneBuilderTest {
      * 'UNSET'.
      */
     public static String getVersionString() {
-        AboutWindowController awc = new AboutWindowController(new VersionSetting());
+        // FIXME give a implementation of SceneBuilderManager to this constructor
+        AboutWindowController awc = new AboutWindowController(null, new VersionSetting());
         return awc.getBuildInfo();
     }
 

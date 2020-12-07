@@ -65,7 +65,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
@@ -84,12 +83,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-//import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
-//import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
-//import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonThemePreference;
-//import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
-//import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference.GluonTheme;
-import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddContextMenuToSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.AddTooltipToSelectionJob;
@@ -132,12 +125,9 @@ import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -279,25 +269,25 @@ public class EditorController implements Editor {
 //            = new SimpleObjectProperty<>();
 //    private final ObjectProperty<GluonSwatch> gluonSwatchProperty
 //            = new SimpleObjectProperty<>();
-    private final ListProperty<File> sceneStyleSheetProperty
-            = new SimpleListProperty<>();
+//    private final ListProperty<File> sceneStyleSheetProperty
+//            = new SimpleListProperty<>();
     private final BooleanProperty pickModeEnabledProperty
             = new SimpleBooleanProperty(false);
     private final BooleanProperty sampleDataEnabledProperty
             = new SimpleBooleanProperty(false);
-    private final SimpleStringProperty toolStylesheetProperty
-            = new SimpleStringProperty(getBuiltinToolStylesheet());
+//    private final SimpleStringProperty toolStylesheetProperty
+//            = new SimpleStringProperty(getBuiltinToolStylesheet());
  // -- Theme property
-    private final ObjectProperty<Theme> themeProperty
-            = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            FXOMDocument fxomDocument = getFxomDocument();
-            if (fxomDocument != null) {
-                fxomDocument.refreshSceneGraph();
-            }
-        }
-    };
+//    private final ObjectProperty<Theme> themeProperty
+//            = new SimpleObjectProperty<>() {
+//        @Override
+//        protected void invalidated() {
+//            FXOMDocument fxomDocument = getFxomDocument();
+//            if (fxomDocument != null) {
+//                fxomDocument.refreshSceneGraph();
+//            }
+//        }
+//    };
 
     private Callback<Void, Boolean> requestTextEditingSessionEnd;
 
@@ -800,48 +790,48 @@ public class EditorController implements Editor {
         return fxomDocumentProperty.getValue();
     }
 
-    /**
-     * Returns the tool stylesheet associated to this editor controller.
-     * Its default value equals to getBuiltinToolStylesheet().
-     *
-     * @return the tool stylesheet associated to this editor controller (never null)
-     */
-    public String getToolStylesheet() {
-        return toolStylesheetProperty.getValue();
-    }
+//    /**
+//     * Returns the tool stylesheet associated to this editor controller.
+//     * Its default value equals to getBuiltinToolStylesheet().
+//     *
+//     * @return the tool stylesheet associated to this editor controller (never null)
+//     */
+//    public String getToolStylesheet() {
+//        return toolStylesheetProperty.getValue();
+//    }
 
-    /**
-     * Sets the tool stylesheet associated to this editor controller.
-     * Each panel connected to this editor controller will install this style
-     * sheet in its root object.
-     *
-     * @param stylesheet the tool stylesheet associated to this editor controller (never null)
-     */
-    public void setToolStylesheet(String stylesheet) {
-        assert stylesheet != null;
-        toolStylesheetProperty.setValue(stylesheet);
-    }
+//    /**
+//     * Sets the tool stylesheet associated to this editor controller.
+//     * Each panel connected to this editor controller will install this style
+//     * sheet in its root object.
+//     *
+//     * @param stylesheet the tool stylesheet associated to this editor controller (never null)
+//     */
+//    public void setToolStylesheet(String stylesheet) {
+//        assert stylesheet != null;
+//        toolStylesheetProperty.setValue(stylesheet);
+//    }
 
-    /**
-     * The property holding tool stylesheet associated to this editor controller.
-     * @return the property holding tool stylesheet associated to this editor controller.
-     */
-    public ObservableValue<String> toolStylesheetProperty() {
-        return toolStylesheetProperty;
-    }
+//    /**
+//     * The property holding tool stylesheet associated to this editor controller.
+//     * @return the property holding tool stylesheet associated to this editor controller.
+//     */
+//    public ObservableValue<String> toolStylesheetProperty() {
+//        return toolStylesheetProperty;
+//    }
 
-    /**
-     * Returns the builtin tool stylesheet.
-     * This is the default value for EditorController#toolStylesheet property.
-     *
-     * @return the builtin tool stylesheet.
-     */
-    public static synchronized String getBuiltinToolStylesheet() {
-        if (builtinToolStylesheet == null) {
-            builtinToolStylesheet = ToolTheme.DEFAULT.getStylesheetURL();
-        }
-        return builtinToolStylesheet;
-    }
+//    /**
+//     * Returns the builtin tool stylesheet.
+//     * This is the default value for EditorController#toolStylesheet property.
+//     *
+//     * @return the builtin tool stylesheet.
+//     */
+//    public static synchronized String getBuiltinToolStylesheet() {
+//        if (builtinToolStylesheet == null) {
+//            builtinToolStylesheet = ToolTheme.DEFAULT.getStylesheetURL();
+//        }
+//        return builtinToolStylesheet;
+//    }
 
 //    /**
 //     * Starts file watching on this editor.

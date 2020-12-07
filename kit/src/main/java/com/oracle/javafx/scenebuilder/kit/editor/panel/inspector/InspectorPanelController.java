@@ -60,6 +60,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.Inspector;
@@ -67,6 +68,7 @@ import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
@@ -109,7 +111,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxIdJob;
@@ -345,7 +346,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
 	private Action viewByPropertyNameAction;
 	private Action viewByPropertyTypeAction;
 
-	private final EditorController editorController;
+	private final Editor editorController;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
     private final AccordionAnimationPreference accordionAnimationPreference;
@@ -358,8 +359,9 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
      */
     public InspectorPanelController(
     		@Autowired ApplicationContext context,
+    		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired FileSystem fileSystem,
-    		@Autowired EditorController editorController,
+    		@Autowired Editor editorController,
     		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Lazy @Autowired DocumentManager documentManager,
@@ -370,7 +372,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
     		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
     		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction
     		) {
-        super(InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
+        super(sceneBuilderManager, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
         this.context = context;
         this.fileSystem = fileSystem;
         this.editorController = editorController;
@@ -2412,7 +2414,7 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
         private FXOMObject commonParentObject;
         private final Set<FXOMInstance> unresolvedInstances = new HashSet<>();
 
-        public SelectionState(EditorController editorController) {
+        public SelectionState(Editor editorController) {
             this.selection = editorController.getSelection();
             initialize();
         }

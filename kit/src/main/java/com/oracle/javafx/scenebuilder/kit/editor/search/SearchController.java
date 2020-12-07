@@ -37,8 +37,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlController;
 
 import javafx.beans.property.StringProperty;
@@ -51,28 +53,30 @@ import javafx.scene.layout.StackPane;
 
 /**
  *
- * 
+ *
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-public class SearchController extends AbstractFxmlController {
+public class SearchController extends AbstractFxmlController implements ViewSearch{
 
     @FXML
     private TextField searchField;
-    
+
     // This StackPane contains the searchImage.
     @FXML
     private StackPane searchIcon;
 
-    public SearchController(@Autowired EditorController c) {
-        super(SearchController.class.getResource("Search.fxml"), c); //NOI18N
+    public SearchController(
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired Editor editor) {
+        super(sceneBuilderManager, SearchController.class.getResource("Search.fxml"), editor); //NOI18N
     }
 
 	public StringProperty textProperty() {
         return searchField.textProperty();
     }
-    
+
 	public void requestFocus() {
         searchField.requestFocus();
     }
@@ -82,7 +86,7 @@ public class SearchController extends AbstractFxmlController {
         if (searchField.getLength() == 0) {
             searchIcon.getStyleClass().add("search-magnifying-glass"); //NOI18N
         }
-        
+
         // For SQE tests
         searchField.setId("Search Text"); //NOI18N
 
@@ -95,7 +99,7 @@ public class SearchController extends AbstractFxmlController {
                 searchIcon.getStyleClass().add("search-clear"); //NOI18N
             }
         });
-        
+
         searchField.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 searchField.clear();
@@ -109,7 +113,7 @@ public class SearchController extends AbstractFxmlController {
                 searchField.selectAll();
             }
         }));
-        
+
         searchIcon.setOnMouseClicked(t -> searchField.clear());
     }
 

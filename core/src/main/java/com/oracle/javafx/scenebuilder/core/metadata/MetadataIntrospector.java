@@ -51,7 +51,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.editor.panel.inspector.editors.util.SBDuration;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.CustomComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
@@ -70,6 +69,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPr
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.PaintPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.SBDuration;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.paint.Color;

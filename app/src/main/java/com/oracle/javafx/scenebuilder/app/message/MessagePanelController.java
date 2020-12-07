@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.app.message;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
 
@@ -68,8 +68,8 @@ public class MessagePanelController extends AbstractFxmlPanelController {
         getEditorController().getMessageLog().clear();
     }
 
-    public MessagePanelController(Editor editorController) {
-        super(MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+    public MessagePanelController(SceneBuilderManager sceneBuilderManager, Editor editorController) {
+        super(sceneBuilderManager, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle(), editorController); //NOI18N
     }
 
 

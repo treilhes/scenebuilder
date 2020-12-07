@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -70,25 +71,27 @@ import javafx.stage.WindowEvent;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class JarAnalysisReportController extends AbstractFxmlWindowController {
-    
+
     @FXML
     TextFlow textFlow;
     @FXML
     Label timestampLabel;
 
     private final EditorController editorController;
-    private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; //NOI18N
+    private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; // NOI18N
     private final SimpleDateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(TIMESTAMP_PATTERN);
     private int prefixCounter = 0;
     private boolean dirty = false;
 
     public JarAnalysisReportController(
-    		@Autowired EditorController editorController, 
-    		@Autowired DocumentWindowController document) {
-        super(JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"), I18N.getBundle(), document.getStage()); //NOI18N
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired EditorController editorController,
+            @Autowired DocumentWindowController document) {
+        super(sceneBuilderManager, JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
+                I18N.getBundle(), document.getStage()); // NOI18N
         this.editorController = editorController;
     }
-    
+
     @FXML
     void onCopyAction(ActionEvent event) {
         final Map<DataFormat, Object> content = new HashMap<>();
@@ -96,10 +99,10 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
 
         for (Node item : textFlow.getChildrenUnmodifiable()) {
             if (item instanceof Text) {
-                sb.append(((Text)item).getText());
+                sb.append(((Text) item).getText());
             }
         }
-        
+
         content.put(DataFormat.PLAIN_TEXT, sb.toString());
         Clipboard.getSystemClipboard().setContent(content);
     }
@@ -108,19 +111,20 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     public void onCloseRequest(WindowEvent event) {
         getStage().close();
     }
-    
-    @Override 
-    public void onFocus() {}
-    
+
+    @Override
+    public void onFocus() {
+    }
+
     @Override
     public void openWindow() {
         super.openWindow();
-        
+
         if (dirty) {
             update();
         }
     }
-    
+
     @Override
     protected void controllerDidCreateStage() {
         // Setup window title
@@ -131,22 +135,22 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     public void controllerDidLoadFxml() {
         assert textFlow != null;
         assert timestampLabel != null;
-                
-        UserLibrary lib = (UserLibrary)editorController.getLibrary();
+
+        UserLibrary lib = (UserLibrary) editorController.getLibrary();
         lib.getJarReports().addListener((ListChangeListener<JarReport>) change -> update());
-        
+
         update();
     }
-    
+
     private void update() {
         // No need to eat CPU if the skeleton window isn't opened
         if (getStage().isShowing()) {
             textFlow.getChildren().clear();
-            
+
             updateTimeStampLabel();
-            
-            UserLibrary lib = (UserLibrary)editorController.getLibrary();
-            
+
+            UserLibrary lib = (UserLibrary) editorController.getLibrary();
+
             for (JarReport report : lib.getJarReports()) {
                 for (JarReportEntry entry : report.getEntries()) {
                     if (entry.getStatus() != JarReportEntry.Status.OK) {
@@ -155,26 +159,26 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
                             // for full stack in order to style them separately
                             StringBuilder sb = new StringBuilder();
                             sb.append(getSectionPrefix()).append(I18N.getString("jar.analysis.exception"));
-                            sb.append(" ").append(entry.getName()); //NOI18N
+                            sb.append(" ").append(entry.getName()); // NOI18N
                             Text text = new Text();
                             text.setText(sb.toString());
-                            text.getStyleClass().add("header"); //NOI18N
+                            text.getStyleClass().add("header"); // NOI18N
                             textFlow.getChildren().add(text);
-                            
+
                             StringBuilder sb2 = new StringBuilder();
                             sb2.append(getFullStack(entry.getException()));
                             Text text2 = new Text();
                             text2.setText(sb2.toString());
-                            text2.getStyleClass().add("body"); //NOI18N
+                            text2.getStyleClass().add("body"); // NOI18N
                             textFlow.getChildren().add(text2);
                         }
-                    } else if (! entry.isNode()) {
+                    } else if (!entry.isNode()) {
                         StringBuilder sb = new StringBuilder();
                         sb.append(getSectionPrefix()).append(I18N.getString("jar.analysis.not.node"));
-                        sb.append(" ").append(entry.getName()); //NOI18N
+                        sb.append(" ").append(entry.getName()); // NOI18N
                         Text text = new Text();
                         text.setText(sb.toString());
-                        text.getStyleClass().add("header"); //NOI18N
+                        text.getStyleClass().add("header"); // NOI18N
                         textFlow.getChildren().add(text);
                     }
                 }
@@ -185,29 +189,29 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
             dirty = true;
         }
     }
-    
+
     // The very first section must start on top, it is only for the next one we
     // need a separator.
     private String getSectionPrefix() {
         if (prefixCounter == 0) {
             prefixCounter++;
-            return ""; //NOI18N
+            return ""; // NOI18N
         } else {
-            return "\n\n"; //NOI18N
+            return "\n\n"; // NOI18N
         }
     }
-    
+
     private StringBuilder getFullStack(Throwable t) {
-        StringBuilder res = new StringBuilder("\n"); //NOI18N
+        StringBuilder res = new StringBuilder("\n"); // NOI18N
         StringWriter writer = new StringWriter();
-            t.printStackTrace(new PrintWriter(writer, true));
-            res.append(writer.getBuffer().toString());
+        t.printStackTrace(new PrintWriter(writer, true));
+        res.append(writer.getBuffer().toString());
         return res;
     }
-    
+
     private void updateTimeStampLabel() {
-        UserLibrary lib = (UserLibrary)editorController.getLibrary();
-        Date date = (Date)lib.getExplorationDate();
+        UserLibrary lib = (UserLibrary) editorController.getLibrary();
+        Date date = (Date) lib.getExplorationDate();
         String timestampValue = TIMESTAMP_DATE_FORMAT.format(date);
         timestampLabel.setText(I18N.getString("jar.analysis.report.timestamp", timestampValue));
     }

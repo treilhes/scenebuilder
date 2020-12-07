@@ -46,6 +46,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationHashPreference;
@@ -68,7 +69,8 @@ import javafx.stage.WindowEvent;
 @Lazy
 public class RegistrationWindowController extends AbstractFxmlWindowController {
 
-    private static final Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+"); //NOI18N
+    private static final Pattern emailPattern = Pattern.compile(
+            "[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+"); // NOI18N
 
     @FXML
     private Label lbAlert;
@@ -80,19 +82,20 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     final private Window owner;
     private final Tracking tracking;
 
-	private final RegistrationHashPreference registrationHashPreference;
+    private final RegistrationHashPreference registrationHashPreference;
 
-	private final RegistrationEmailPreference registrationEmailPreference;
+    private final RegistrationEmailPreference registrationEmailPreference;
 
-	private final RegistrationOptInPreference registrationOptInPreference;
-    
+    private final RegistrationOptInPreference registrationOptInPreference;
+
     public RegistrationWindowController(
-    		@Autowired DocumentWindowController window,
-    		@Autowired Tracking tracking,
-    		@Autowired RegistrationHashPreference registrationHashPreference,
-    		@Autowired RegistrationEmailPreference registrationEmailPreference,
-    		@Autowired RegistrationOptInPreference registrationOptInPreference) {
-        super(RegistrationWindowController.class.getResource("Registration.fxml"), //NOI18N
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired DocumentWindowController window,
+            @Autowired Tracking tracking,
+            @Autowired RegistrationHashPreference registrationHashPreference,
+            @Autowired RegistrationEmailPreference registrationEmailPreference,
+            @Autowired RegistrationOptInPreference registrationOptInPreference) {
+        super(sceneBuilderManager, RegistrationWindowController.class.getResource("Registration.fxml"), // NOI18N
                 I18N.getBundle(), window.getStage());
         this.owner = window.getStage();
         this.tracking = tracking;
@@ -107,10 +110,10 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
 
         event.consume();
     }
-    
-    @Override 
-    public void onFocus() {}
-    
+
+    @Override
+    public void onFocus() {
+    }
 
     /*
      * AbstractWindowController
@@ -156,7 +159,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
 
         closeWindow();
     }
-    
+
     @FXML
     public void trackUserRegistration() {
         if (!isEmailAddressValid()) {
@@ -168,7 +171,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
         String hash = update ? registrationHashPreference.getValue() : getUniqueId();
         String email = tfEmail.getText();
         boolean optIn = cbOptIn.isSelected();
-                
+
         // Update preferences
         registrationHashPreference.setValue(hash).writeToJavaPreferences();
         registrationEmailPreference.setValue(email).writeToJavaPreferences();
@@ -179,7 +182,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
         closeWindow();
     }
 
-    private String getUniqueId(){
+    private String getUniqueId() {
         String uniqueId = "";
         try {
             InetAddress address = InetAddress.getLocalHost();
@@ -211,7 +214,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
             // Convert the byte to hex format
             String hexStr = "";
             for (int i = 0; i < digest.length; i++) {
-                hexStr +=  Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1);
+                hexStr += Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1);
             }
 
             return hexStr;

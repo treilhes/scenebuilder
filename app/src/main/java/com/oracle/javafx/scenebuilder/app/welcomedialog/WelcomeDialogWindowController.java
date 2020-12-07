@@ -41,6 +41,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
@@ -74,20 +75,21 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 	private final RecentItemsPreference recentItemsPreference;
 
 	private final RecentItemsSizePreference recentItemsSizePreference;
-    
+
     private WelcomeDialogWindowController(
+            @Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired MainController sceneBuilderApp,
     		@Autowired WindowIconSetting windowIconSetting,
     		@Autowired RecentItemsPreference recentItemsPreference,
     		@Autowired RecentItemsSizePreference recentItemsSizePreference) {
-        super(WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
+        super(sceneBuilderManager, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
                 null); // We want it to be a top level window so we're setting the owner to null.
 
         this.sceneBuilderApp = sceneBuilderApp;
         this.recentItemsPreference = recentItemsPreference;
         this.recentItemsSizePreference = recentItemsSizePreference;
-        
+
         windowIconSetting.setWindowIcon(this.getStage());
     }
 
@@ -96,8 +98,8 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     public void onCloseRequest(WindowEvent event) {
         getStage().hide();
     }
-    
-    @Override 
+
+    @Override
     public void onFocus() {}
 
     /*
@@ -120,7 +122,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 
         List<String> recentItems = recentItemsPreference.getValue();
         int recentItemsSize = recentItemsSizePreference.getValue();
-        
+
         if (recentItems.size() == 0) {
             Label noRecentItems = new Label(I18N.getString("welcome.recent.items.no.recent.items"));
             noRecentItems.getStyleClass().add("no-recent-items-label");

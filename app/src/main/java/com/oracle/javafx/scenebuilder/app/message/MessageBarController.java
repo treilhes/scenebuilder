@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -87,10 +88,11 @@ public class MessageBarController extends AbstractFxmlPanelController {
 
     private final ImageView fileDirtyImage;
     private Tooltip statusLabelTooltip = null;
+    private final SceneBuilderManager sceneBuilderManager;
 
-    public MessageBarController(EditorController editorController) {
-        super(MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle(), editorController); //NOI18N
-
+    public MessageBarController(SceneBuilderManager sceneBuilderManager, EditorController editorController) {
+        super(sceneBuilderManager, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle(), editorController); //NOI18N
+        this.sceneBuilderManager = sceneBuilderManager;
         // Initialize file dirty image
         final URL fileDirtyURL = MessageBarController.class.getResource("file-dirty.png"); //NOI18N
         assert fileDirtyURL != null;
@@ -107,7 +109,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
     @FXML
     void onOpenCloseAction(ActionEvent e) {
         if (messageWindowController == null) {
-            messageWindowController = new MessagePopupController(getEditorController());
+            messageWindowController = new MessagePopupController(sceneBuilderManager, getEditorController());
         }
         if (messageWindowController.isWindowOpened()) {
             messageWindowController.closeWindow();

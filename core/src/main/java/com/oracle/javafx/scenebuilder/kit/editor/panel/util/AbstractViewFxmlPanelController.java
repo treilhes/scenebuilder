@@ -37,47 +37,47 @@ import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.View;
+import com.oracle.javafx.scenebuilder.api.ViewContent;
+import com.oracle.javafx.scenebuilder.api.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.search.SearchController;
-import com.oracle.javafx.scenebuilder.kit.editor.view.ViewController;
+
 
 import lombok.Getter;
 
 /**
- * AbstractViewFxmlPanelController is the abstract base class for all the 
+ * AbstractViewFxmlPanelController is the abstract base class for all the
  * view controller which build their UI components from an FXML file.
- * 
+ *
  * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
  * method in charge of finishing the initialization of the UI components
  * loaded from the FXML file.
- * 
+ *
  * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
 public abstract class AbstractViewFxmlPanelController extends AbstractFxmlPanelController implements View {
 
 	@Autowired
 	private @Getter ViewManager viewManager;
-	
+
 	@Autowired
-	private @Getter SearchController searchController;
-	
+	private @Getter ViewSearch searchController;
+
 	@Autowired
-	private @Getter ViewController viewController;
-	
+	private @Getter ViewContent viewController;
+
 	/*
      * Public
      */
 	/**
      * Base constructor for invocation by the subclasses.
-     * 
+     *
      * @param editorController  the editor controller (cannot be null)
      */
-    public AbstractViewFxmlPanelController(URL fxmlURL, ResourceBundle resources, EditorController c) {
-        super(fxmlURL, resources, c); //NOI18NgetSearchController
-//        searchController = new SearchController(c);
-//        viewController = new ViewController(c);
+    public AbstractViewFxmlPanelController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, ResourceBundle resources, Editor editor) {
+        super(sceneBuilderManager, fxmlURL, resources, editor); //NOI18N
     }
 
 	@Override
@@ -90,5 +90,5 @@ public abstract class AbstractViewFxmlPanelController extends AbstractFxmlPanelC
 		getViewController().setContent(super.getPanelRoot());
 	}
 
-    
+
 }

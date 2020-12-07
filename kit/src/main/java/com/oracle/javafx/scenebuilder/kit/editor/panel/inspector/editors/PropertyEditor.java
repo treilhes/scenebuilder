@@ -31,14 +31,12 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
@@ -619,7 +617,10 @@ public abstract class PropertyEditor extends AbstractEditor {
         if (source == null) {
             source = propName;
         }
-        final AlertDialog alertDialog = new AlertDialog(source.getScene().getWindow());
+
+        // TODO the SceneBuilderManager parameter is null, so this AlertDialog can't respond to ToolTheme change
+        // it will be solved by using spring bean or propagating a SceneBuilderManager instance which is a pains
+        final AlertDialog alertDialog = new AlertDialog(null, source.getScene().getWindow());
         // Messages
         alertDialog.setTitle(I18N.getString("inspector.error.title"));
         alertDialog.setMessage(I18N.getString("inspector.error.message"));

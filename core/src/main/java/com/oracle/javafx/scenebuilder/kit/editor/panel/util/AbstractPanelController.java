@@ -32,14 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 
@@ -69,6 +70,10 @@ public abstract class AbstractPanelController  {
     private final Editor editorController;
     private Parent panelRoot;
 
+    private StylesheetProvider2 toolStylesheetConfig;
+
+    private final SceneBuilderManager sceneBuilderManager;
+
     /**
      * Base constructor for invocation by the subclasses.
      * Subclass implementations should make sure that this constructor can be
@@ -76,9 +81,11 @@ public abstract class AbstractPanelController  {
      *
      * @param c the editor controller (should not be null).
      */
-    protected AbstractPanelController(Editor c) {
-        assert c != null;
-        this.editorController = c;
+    protected AbstractPanelController(SceneBuilderManager sceneBuilderManager, Editor editor) {
+        assert editor != null;
+        this.editorController = editor;
+        this.sceneBuilderManager = sceneBuilderManager;
+
         startListeningToEditorSelection();
         startListeningToJobManagerRevision();
         editorController.fxomDocumentProperty().addListener((ChangeListener<FXOMDocument>) (ov, od, nd) -> {
@@ -101,7 +108,7 @@ public abstract class AbstractPanelController  {
             editorController.getFxomDocument().sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
             editorController.getFxomDocument().cssRevisionProperty().addListener(cssRevisionListener);
         }
-        editorController.toolStylesheetProperty().addListener((ChangeListener<String>) (ov, od, nd) -> toolStylesheetDidChange(od));
+
     }
 
     /**
@@ -125,12 +132,11 @@ public abstract class AbstractPanelController  {
             makePanel();
             assert panelRoot != null;
 
-            // Installs the stylesheet from the editor controller
-            final List<String> stylesheets = panelRoot.getStylesheets();
-            if (stylesheets.contains(EditorController.getBuiltinToolStylesheet())) {
-                toolStylesheetDidChange(EditorController.getBuiltinToolStylesheet());
-            } else {
-                toolStylesheetDidChange(null);
+            if (sceneBuilderManager != null) {
+                sceneBuilderManager.stylesheetConfig()
+                    .subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+                    toolStylesheetDidChange(s);
+                });
             }
         }
 
@@ -286,25 +292,40 @@ public abstract class AbstractPanelController  {
 
 
     /**
-     * Replaces oldStylesheet by the tool style sheet assigned to the editor
+     * Replaces old Stylesheet config by the tool style sheet assigned to this
      * controller. This methods {@link EditorController#getToolStylesheet}.
      *
-     * @param oldStylesheet null or the style sheet to be replaced
+     * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */
-    protected void toolStylesheetDidChange(String oldStylesheet) {
-        /*
-         * Tool style sheet has changed in editor controller.
-         * If the panel has been loaded, then we replace the old sheet
-         * by the new one in the stylesheets property of its root object.
-         */
-        if (panelRoot != null) {
-            final List<String> stylesheets = panelRoot.getStylesheets();
-            if (oldStylesheet != null) {
-                stylesheets.remove(oldStylesheet);
+    protected void toolStylesheetDidChange(StylesheetProvider2 newToolStylesheetConfig) {
+
+        if (panelRoot == null) { // nothing to style so return
+            return;
+        }
+
+        if (toolStylesheetConfig != null) { // if old conf then removeit
+            panelRoot.getStylesheets().remove(toolStylesheetConfig.getUserAgentStylesheet());
+            panelRoot.getStylesheets().removeAll(toolStylesheetConfig.getStylesheets());
+        }
+
+        if (newToolStylesheetConfig != null) { // replace the active conf only if the new one is valid
+            toolStylesheetConfig = newToolStylesheetConfig;
+        }
+
+        //apply the conf if the current one is valid
+        if (toolStylesheetConfig != null) {
+            if (toolStylesheetConfig.getUserAgentStylesheet() != null) {
+                panelRoot.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
             }
-            stylesheets.add(editorController.getToolStylesheet());
+            if (toolStylesheetConfig.getStylesheets() != null) {
+                Logger.getLogger(AbstractWindowController.class.getName()).log(Level.INFO,
+                        "Applying new tool theme using {0} on {1}",
+                        new Object[] { toolStylesheetConfig.getStylesheets(), this.getClass().getName() });
+                panelRoot.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
+            }
         }
     }
+
 
 
 }

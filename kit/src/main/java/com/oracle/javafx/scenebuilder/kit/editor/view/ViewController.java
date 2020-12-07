@@ -37,9 +37,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.ViewContent;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
 
@@ -51,19 +53,19 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.layout.StackPane;
 
 /**
- * AbstractViewFxmlPanelController is the abstract base class for all the 
+ * AbstractViewFxmlPanelController is the abstract base class for all the
  * view controller which build their UI components from an FXML file.
- * 
+ *
  * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
  * method in charge of finishing the initialization of the UI components
  * loaded from the FXML file.
- * 
+ *
  * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-public class ViewController extends AbstractFxmlController {
+public class ViewController extends AbstractFxmlController implements ViewContent {
 
 	@Autowired
 	private DockManager views;
@@ -72,31 +74,33 @@ public class ViewController extends AbstractFxmlController {
     @FXML private StackPane viewSearchPanelHost;
     @FXML private Label viewLabel;
     @FXML private MenuButton viewMenuButton;
-    
+
     /*
      * Public
      */
 	/**
      * Base constructor for invocation by the subclasses.
-     * 
+     *
      * @param editorController  the editor controller (cannot be null)
      */
-    public ViewController(@Autowired EditorController c) {
-        super(ViewController.class.getResource("View.fxml"), c);
+    public ViewController(
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired Editor editor) {
+        super(sceneBuilderManager, ViewController.class.getResource("View.fxml"), editor);
     }
-    
+
     public StringProperty textProperty() {
         return viewLabel.textProperty();
     }
-    
+
     public void setContent(Parent content) {
         viewPanelHost.getChildren().add(content);
     }
-    
+
     public void setSearchControl(Parent searchControl) {
         viewSearchPanelHost.getChildren().add(searchControl);
     }
-    
+
     @Override
     public void controllerDidLoadFxml() {
     	assert viewPanelHost != null;
@@ -108,5 +112,5 @@ public class ViewController extends AbstractFxmlController {
 		return viewMenuButton;
 	}
 
-    
+
 }

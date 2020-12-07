@@ -61,7 +61,7 @@ public class LibraryPanelActions {
 
 		@Override
 		public void perform() {
-			jarAnalysisReportController.setToolStylesheet(documentWindowController.getToolStylesheet());
+			//jarAnalysisReportController.setToolStylesheet(documentWindowController.getToolStylesheet());
 	        jarAnalysisReportController.openWindow();
 		}
 

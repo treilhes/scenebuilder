@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.editor.panel.inspector.editors.util;
+package com.oracle.javafx.scenebuilder.core.metadata.util;
 
 import javafx.beans.NamedArg;
 import javafx.util.Duration;

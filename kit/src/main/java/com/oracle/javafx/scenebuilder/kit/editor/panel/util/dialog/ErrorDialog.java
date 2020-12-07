@@ -35,19 +35,23 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 import javafx.stage.Window;
 
 /**
  *
- * 
+ *
  */
 public class ErrorDialog extends AlertDialog {
-    
+
+    private final SceneBuilderManager sceneBuilderManager;
+
     private String debugInfo;
-    
-    public ErrorDialog(Window owner) {
-        super(owner);
+
+    public ErrorDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
+        super(sceneBuilderManager, owner);
+        this.sceneBuilderManager = sceneBuilderManager;
         setOKButtonVisible(false);
         setShowDefaultButton(true);
         setDefaultButtonID(AlertDialog.ButtonID.CANCEL);
@@ -57,19 +61,19 @@ public class ErrorDialog extends AlertDialog {
         setActionRunnable(() -> showDetailsDialog());
         updateActionButtonVisibility(); // not visible by default
     }
-    
+
     public String getDebugInfo() {
         return debugInfo;
     }
-    
+
     public void setDebugInfo(String debugInfo) {
         this.debugInfo = debugInfo;
         updateActionButtonVisibility();
     }
-    
+
     public void setDebugInfoWithThrowable(Throwable t) {
         final String info;
-        
+
         if (t == null) {
             info = null;
         } else {
@@ -78,21 +82,20 @@ public class ErrorDialog extends AlertDialog {
             t./**/printStackTrace(pw);
             info = sw.toString();
         }
-        
+
         setDebugInfo(info);
     }
-    
-    
+
     /*
      * Private
      */
-    
+
     private void updateActionButtonVisibility() {
         setActionButtonVisible(debugInfo != null);
     }
-    
+
     private void showDetailsDialog() {
-        final TextViewDialog detailDialog = new TextViewDialog(null);
+        final TextViewDialog detailDialog = new TextViewDialog(sceneBuilderManager, null);
         detailDialog.setText(debugInfo);
         detailDialog.showAndWait();
     }

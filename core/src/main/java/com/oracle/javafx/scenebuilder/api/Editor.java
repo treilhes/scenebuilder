@@ -2,17 +2,16 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
-import javafx.beans.value.ObservableListValue;
 import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public interface Editor {
+
 
 	/**
      * Returns null or the location of the fxml being edited.
@@ -59,9 +58,9 @@ public interface Editor {
 
 	public ObservableValue<FXOMDocument> fxomDocumentProperty();
 
-	public ObservableValue<String> toolStylesheetProperty();
+//	public ObservableValue<String> toolStylesheetProperty();
 
-	public String getToolStylesheet();
+//	public String getToolStylesheet();
 
 	public Glossary getGlossary();
 
@@ -86,5 +85,15 @@ public interface Editor {
 	public void performInsert(LibraryItem item);
 
 	public ObservableValue<Library> libraryProperty();
+
+    public ObservableValue<Boolean> sampleDataEnabledProperty();
+
+    public boolean is3D();
+
+    public ObservableValue<Boolean> pickModeEnabledProperty();
+
+    public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd);
+
+    public void textEditingSessionDidEnd();
 
 }

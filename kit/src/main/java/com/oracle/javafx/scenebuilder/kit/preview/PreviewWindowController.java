@@ -37,17 +37,17 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.kit.util.Utils;
@@ -78,7 +78,7 @@ import javafx.stage.WindowEvent;
  */
 public final class PreviewWindowController extends AbstractWindowController {
 
-    private final EditorController editorController;
+    private final Editor editorController;
     private Timer timer = null;
     private final int WIDTH_WHEN_EMPTY = 320;
     private final int HEIGHT_WHEN_EMPTY = 200;
@@ -113,10 +113,11 @@ public final class PreviewWindowController extends AbstractWindowController {
     }
 
     public PreviewWindowController(
-    		EditorController editorController,
+            SceneBuilderManager sceneBuilderManager,
+    		Editor editorController,
     		DocumentManager documentManager,
     		Stage owner) {
-        super(owner);
+        super(sceneBuilderManager, owner);
         this.editorController = editorController;
         this.editorController.fxomDocumentProperty().addListener(
                 (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
@@ -224,11 +225,11 @@ public final class PreviewWindowController extends AbstractWindowController {
         isDirty = true;
     }
 
-    @Override
-    protected void toolStylesheetDidChange(String oldStylesheet) {
-        // Preview window ignores the tool style sheet.
-        // Unlike other windows, its styling is driven by the user design.
-    }
+//    @Override
+//    protected void toolStylesheetDidChange(String oldStylesheet) {
+//        // Preview window ignores the tool style sheet.
+//        // Unlike other windows, its styling is driven by the user design.
+//    }
 
     /*
      * Private

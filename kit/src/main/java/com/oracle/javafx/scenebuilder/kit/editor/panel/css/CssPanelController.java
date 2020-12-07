@@ -53,10 +53,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -211,7 +213,7 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 
     private Object selectedObject; // Can be either an FXOMObject (selection mode), or a Node (pick mode)
     private Selection selection;
-    private final EditorController editorController;
+    private final Editor editorController;
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
@@ -253,7 +255,8 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
     *
     */
 	public CssPanelController(
-			@Autowired EditorController c,
+	        @Autowired SceneBuilderManager sceneBuilderManager,
+			@Autowired Editor editor,
 			@Autowired Delegate delegate,
 			@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
 			@Autowired FileSystem fileSystem,
@@ -267,8 +270,8 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 			@Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction,
 			@Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction,
 			@Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction) {
-		super(CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), c);
-		this.editorController = c;
+		super(sceneBuilderManager, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), editor);
+		this.editorController = editor;
 		this.documentManager = documentManager;
 		this.applicationDelegate = delegate;
 		this.sceneBuilderFactory = sceneBuilderFactory;

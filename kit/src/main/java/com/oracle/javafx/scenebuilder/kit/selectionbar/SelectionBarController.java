@@ -37,14 +37,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlPanelController;
 
 import javafx.event.ActionEvent;
@@ -73,8 +74,10 @@ public class SelectionBarController extends AbstractFxmlPanelController {
 
     private final Image selectionChevronImage;
 
-    public SelectionBarController(EditorController editorController) {
-        super(SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle(), editorController); //NOI18N
+    public SelectionBarController(
+            SceneBuilderManager sceneBuilderManager,
+            Editor editorController) {
+        super(sceneBuilderManager, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle(), editorController); //NOI18N
 
         // Initialize selection chevron image
         final URL selectionChevronURL = SelectionBarController.class.getResource("selection-chevron.png"); //NOI18N
@@ -121,7 +124,7 @@ public class SelectionBarController extends AbstractFxmlPanelController {
      */
     @Override
     public void controllerDidLoadFxml() {
-        
+
         // Sanity checks
         assert pathBox != null;
 
@@ -167,7 +170,7 @@ public class SelectionBarController extends AbstractFxmlPanelController {
 //                        // Update tooltip with the first entry
 //                        final Tooltip iconsTooltip = new Tooltip(entries.get(0).toString());
 //
-//                        // We use a label to set a tooltip over the node icon 
+//                        // We use a label to set a tooltip over the node icon
 //                        // (StackPane does not allow to set tooltips)
 //                        graphic = new Label();
 //                        ((Label) graphic).setGraphic(iconsStack);
@@ -192,7 +195,7 @@ public class SelectionBarController extends AbstractFxmlPanelController {
                     fxomObject = mask.getParentFXOMObject();
                     // Add selection chevron if needed
                     if (fxomObject != null) {
-                        // We cannot share the image view to avoid 
+                        // We cannot share the image view to avoid
                         // Children: duplicate children added
                         ImageView img = new ImageView(selectionChevronImage);
                         StackPane sp = new StackPane();

@@ -13,6 +13,8 @@ dependencies {
     implementation project(':default')
     implementation project(':gluon')
     implementation project(':filesystem')
+    implementation project(':sb')
+	implementation project(':preview')
 }
 
 run {

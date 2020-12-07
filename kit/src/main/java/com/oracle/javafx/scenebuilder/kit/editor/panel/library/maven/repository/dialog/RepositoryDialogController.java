@@ -31,9 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.dialog;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.Repository;
@@ -58,7 +59,7 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 public class RepositoryDialogController extends AbstractFxmlWindowController {
-    
+
     @FXML
     private AnchorPane MavenDialog;
 
@@ -85,60 +86,61 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
 
     @FXML
     private CheckBox privateCheckBox;
-    
+
     @FXML
     private Label userLabel;
-    
+
     @FXML
     private TextField userTextfield;
 
     @FXML
     private Label passwordLabel;
-    
+
     @FXML
     private PasswordField passwordTextfield;
-    
+
     @FXML
     private Button testButton;
-    
+
     @FXML
     private Label resultLabel;
-//    
+//
     private final Window owner;
-    private final EditorController editorController;
+    private final Editor editorController;
     private MavenRepositorySystem maven;
     private Repository oldRepository;
     private final Service<String> testService;
 
     private final MavenSetting mavenSetting;
     private final MavenRepositoriesPreferences repositoryPreferences;
-    
-    
+
+
     public RepositoryDialogController(
-    		EditorController editorController, 
+            SceneBuilderManager sceneBuilderManager,
+    		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(sceneBuilderManager, LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.owner = owner;
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;
         this.repositoryPreferences = repositoryPreferences;
-        
+
         testService = new Service<String>() {
             @Override
             protected Task<String> createTask() {
                 return new Task<String>() {
                     @Override
                     protected String call() throws Exception {
-                        return maven.validateRepository(new Repository(nameIDTextfield.getText(), 
+                        return maven.validateRepository(new Repository(nameIDTextfield.getText(),
                             typeTextfield.getText(), urlTextfield.getText(),
                             userTextfield.getText(), passwordTextfield.getText()));
                     }
                 };
             }
         };
-        
+
         testService.stateProperty().addListener((obs, ov, nv) -> {
             if (nv.equals(Worker.State.SUCCEEDED)) {
                 String result = testService.getValue();
@@ -168,12 +170,12 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
             getStage().initOwner(this.owner);
             getStage().initModality(Modality.WINDOW_MODAL);
         }
-    }       
-    
+    }
+
     @FXML
     void cancel() {
         closeWindow();
-        
+
         nameIDTextfield.clear();
         typeTextfield.clear();
         urlTextfield.clear();
@@ -187,11 +189,11 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     void addRepository() {
         Repository repository;
         if (privateCheckBox.isSelected()) {
-            repository = new Repository(nameIDTextfield.getText(), 
-                typeTextfield.getText(), urlTextfield.getText(), 
+            repository = new Repository(nameIDTextfield.getText(),
+                typeTextfield.getText(), urlTextfield.getText(),
                 userTextfield.getText(), passwordTextfield.getText());
         } else {
-            repository = new Repository(nameIDTextfield.getText(), 
+            repository = new Repository(nameIDTextfield.getText(),
                 typeTextfield.getText(), urlTextfield.getText());
         }
         if (oldRepository != null) {
@@ -202,7 +204,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
                 "log.user.repository.updated", repository.getId());
         cancel();
     }
-    
+
     @FXML
     void test() {
         testService.restart();
@@ -213,13 +215,13 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
         cancel();
     }
 
-    @Override 
+    @Override
     public void onFocus() {}
-    
+
     @Override
     public void openWindow() {
         super.openWindow();
-        
+
         userLabel.disableProperty().bind(privateCheckBox.selectedProperty().not());
         userTextfield.disableProperty().bind(privateCheckBox.selectedProperty().not());
         passwordLabel.disableProperty().bind(privateCheckBox.selectedProperty().not());
@@ -228,19 +230,19 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
         resultLabel.setText("");
         maven = new MavenRepositorySystem(false, mavenSetting, repositoryPreferences);
     }
-    
+
     private void logInfoMessage(String key, Object... args) {
         editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
     }
-    
+
     private void updatePreferences(Repository repository) {
         if (repository == null) {
             return;
         }
-        
+
         // Update record repository
         repositoryPreferences.getRecordRepository(repository).writeToJavaPreferences();
-        
+
     }
 
     public void setRepository(Repository repository) {
@@ -249,29 +251,29 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
             super.getStage().setTitle(I18N.getString("repository.dialog.title.add"));
             addButton.setText(I18N.getString("repository.dialog.add"));
             addButton.setTooltip(new Tooltip(I18N.getString("repository.dialog.add.tooltip")));
-        
+
             addButton.disableProperty().bind(nameIDTextfield.textProperty().isEmpty().or(
                       typeTextfield.textProperty().isEmpty().or(
                       urlTextfield.textProperty().isEmpty())));
-        
+
             return;
         }
-        
+
         nameIDTextfield.setText(repository.getId());
         typeTextfield.setText(repository.getType());
         urlTextfield.setText(repository.getURL());
-        
+
         userTextfield.clear();
         if (repository.getUser() != null) {
             userTextfield.setText(repository.getUser());
             privateCheckBox.setSelected(true);
-        } 
+        }
         passwordTextfield.clear();
         if (repository.getPassword()!= null) {
             passwordTextfield.setText(repository.getPassword());
             privateCheckBox.setSelected(true);
-        } 
-        
+        }
+
         addButton.disableProperty().bind(nameIDTextfield.textProperty().isEqualTo(repository.getId()).and(
                   typeTextfield.textProperty().isEqualTo(repository.getType()).and(
                   urlTextfield.textProperty().isEqualTo(repository.getURL()).and(

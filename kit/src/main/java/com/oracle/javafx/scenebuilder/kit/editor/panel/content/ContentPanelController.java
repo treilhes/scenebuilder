@@ -52,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.Handles;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -199,6 +200,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param editorController the editor controller (never null).
      */
     public ContentPanelController(
+            @Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired ApplicationContext context,
     		@Autowired EditorController editorController,
     		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
@@ -210,7 +212,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 //    		@Autowired @Lazy PickModeController pickModeController,
 //    		@Autowired WorkspaceController workspaceController
     		) {
-        super(ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+        super(sceneBuilderManager, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.context = context;
         this.editorController = editorController;
         this.editModeController = context.getBean(EditModeController.class, context, this);

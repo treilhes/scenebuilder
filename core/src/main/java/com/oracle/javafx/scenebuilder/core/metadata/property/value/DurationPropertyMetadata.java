@@ -32,9 +32,9 @@
 
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
-import com.oracle.javafx.scenebuilder.core.editor.panel.inspector.editors.util.SBDuration;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.SBDuration;
 
 public class DurationPropertyMetadata extends TextEncodablePropertyMetadata<SBDuration> {
 

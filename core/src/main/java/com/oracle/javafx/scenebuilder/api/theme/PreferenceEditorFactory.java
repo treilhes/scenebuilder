@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
+// TODO move this interface in com.oracle.javafx.scenebuilder.api.preferences
 public interface PreferenceEditorFactory {
 
 	Parent newDoubleFieldEditor(Preference<Double> preference);

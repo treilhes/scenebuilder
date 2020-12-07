@@ -47,6 +47,7 @@ import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -179,8 +180,8 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     /*
      * Public
      */
-    public AbstractHierarchyPanelController(URL fxmlURL, Editor editorController) {
-        super(fxmlURL, I18N.getBundle(), editorController);
+    public AbstractHierarchyPanelController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, Editor editorController) {
+        super(sceneBuilderManager, fxmlURL, I18N.getBundle(), editorController);
 
         final BorderStroke bs = new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID,
                 CornerRadii.EMPTY, cellBorderWidths, cellInsets);

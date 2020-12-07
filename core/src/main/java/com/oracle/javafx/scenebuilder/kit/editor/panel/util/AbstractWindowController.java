@@ -32,9 +32,13 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -48,89 +52,88 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * 
+ *
  */
 public abstract class AbstractWindowController {
-    
+
     final private Stage owner;
     private Parent root;
     private Scene scene;
     private Stage stage;
     private final double CLAMP_FACTOR = 0.9;
     private final boolean sizeToScene; // true by default
-    private String toolStylesheet = EditorController.getBuiltinToolStylesheet();
+    private StylesheetProvider2 toolStylesheetConfig;
+    private final SceneBuilderManager sceneBuilderManager;
+
+    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, Stage owner) {
+        this(sceneBuilderManager, owner, true);
+    }
+
+    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, Stage owner, boolean sizeToScene) {
+        this.owner = owner;
+        this.sizeToScene = sizeToScene;
+        this.sceneBuilderManager = sceneBuilderManager;
+    }
 
     private final EventHandler<WindowEvent> closeRequestHandler = event -> {
         onCloseRequest(event);
         event.consume();
     };
-    private final ChangeListener<Boolean> focusHandler = (ob,o,n) -> {
-    	if (n) {
-    		onFocus();
-    	}
+    private final ChangeListener<Boolean> focusHandler = (ob, o, n) -> {
+        if (n) {
+            onFocus();
+        }
     };
-    
-    public AbstractWindowController() {
-        this(null, true);
-    }
-    
-    public AbstractWindowController(Stage owner) {
-        this(owner, true);
-    }
-    
-    public AbstractWindowController(Stage owner, boolean sizeToScene) {
-        this.owner = owner;
-        this.sizeToScene = sizeToScene;
-    }
-    
+
     /**
-     * Returns the root FX object of this window.
-     * When called the first time, this method invokes {@link #makeRoot()}
-     * to build the FX components of the panel.
-     * 
+     * Returns the root FX object of this window. When called the first time, this
+     * method invokes {@link #makeRoot()} to build the FX components of the panel.
+     *
      * @return the root object of this window (never null)
      */
     public Parent getRoot() {
         if (root == null) {
             makeRoot();
             assert root != null;
-            toolStylesheetDidChange(null);
+
+            if (sceneBuilderManager != null) {
+                sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+                    toolStylesheetDidChange(s);
+                });
+            }
         }
-        
+
         return root;
     }
-    
+
     /**
-     * Returns the scene of this window.
-     * This method invokes {@link #getRoot()}.
-     * When called the first time, it also invokes {@link #controllerDidCreateScene()}
-     * just after creating the scene object.
-     * 
+     * Returns the scene of this window. This method invokes {@link #getRoot()}.
+     * When called the first time, it also invokes
+     * {@link #controllerDidCreateScene()} just after creating the scene object.
+     *
      * @return the scene object of this window (never null)
      */
     public Scene getScene() {
         assert Platform.isFxApplicationThread();
-        
+
         if (scene == null) {
             scene = new Scene(getRoot());
             controllerDidCreateScene();
         }
-        
+
         return scene;
     }
-    
-    
+
     /**
-     * Returns the stage of this window.
-     * This method invokes {@link #getScene()}.
-     * When called the first time, it also invokes {@link #controllerDidCreateStage()}
-     * just after creating the stage object.
-     * 
+     * Returns the stage of this window. This method invokes {@link #getScene()}.
+     * When called the first time, it also invokes
+     * {@link #controllerDidCreateStage()} just after creating the stage object.
+     *
      * @return the stage object of this window (never null).
      */
     public Stage getStage() {
         assert Platform.isFxApplicationThread();
-        
+
         if (stage == null) {
             stage = new Stage();
             stage.initOwner(owner);
@@ -148,20 +151,19 @@ public abstract class AbstractWindowController {
 
             controllerDidCreateStage();
         }
-        
+
         return stage;
     }
-    
+
     /**
      * Opens this window and place it in front.
      */
     public void openWindow() {
         assert Platform.isFxApplicationThread();
-        
         getStage().show();
         getStage().toFront();
     }
-    
+
     /**
      * Closes this window.
      */
@@ -170,94 +172,97 @@ public abstract class AbstractWindowController {
         getStage().close();
     }
 
-    /**
-     * Returns the tool stylesheet used by this window controller.
-     * 
-     * @return the tool stylesheet used by this window controller.
-     */
-    public String getToolStylesheet() {
-        return toolStylesheet;
-    }
-
-    /**
-     * Sets the tool stylesheet used by this window controller.
-     * 
-     * @param toolStylesheet the tool stylesheet to be used by this window controller.
-     */
-    public void setToolStylesheet(String toolStylesheet) {
-        final String oldStylesheet = this.toolStylesheet;
-        this.toolStylesheet = toolStylesheet;
-        if (this.root != null) {
-            toolStylesheetDidChange(oldStylesheet);
-        }
-    }
-    
-    
     /*
      * To be implemented by subclasses
      */
-    
+
     /**
-     * Creates the FX object composing the window content.
-     * This routine is called by {@link AbstractWindowController#getRoot}.
-     * It *must* invoke {@link AbstractWindowController#setRoot}.
+     * Creates the FX object composing the window content. This routine is called by
+     * {@link AbstractWindowController#getRoot}. It *must* invoke
+     * {@link AbstractWindowController#setRoot}.
      */
     protected abstract void makeRoot();
-    
+
     public abstract void onCloseRequest(WindowEvent event);
+
     public abstract void onFocus();
-    
+
     protected void controllerDidCreateScene() {
         assert getRoot() != null;
         assert getRoot().getScene() != null;
         assert getRoot().getScene().getWindow() == null;
     }
-    
+
     protected void controllerDidCreateStage() {
         assert getRoot() != null;
         assert getRoot().getScene() != null;
         assert getRoot().getScene().getWindow() != null;
     }
-    
+
     /*
      * For subclasses
      */
-    
+
     /**
-     * Set the root of this panel controller.
-     * This routine must be invoked by subclass's makePanel() routine.
-     * 
+     * Set the root of this panel controller. This routine must be invoked by
+     * subclass's makePanel() routine.
+     *
      * @param root the root panel (non null).
      */
-    protected  final void setRoot(Parent root) {
+    protected final void setRoot(Parent root) {
         assert root != null;
         this.root = root;
     }
 
-    
-    protected void toolStylesheetDidChange(String oldStylesheet) {
-        final List<String> stylesheets = root.getStylesheets();
-        if (oldStylesheet != null) {
-            stylesheets.remove(oldStylesheet);
+    /**
+     * Replaces old Stylesheet config by the tool style sheet assigned to this
+     * controller. This methods {@link EditorController#getToolStylesheet}.
+     *
+     * @param newToolStylesheetConfig null or the new style sheet configuration to apply
+     */
+    protected void toolStylesheetDidChange(StylesheetProvider2 newToolStylesheetConfig) {
+
+        if (root == null) { // nothing to style so return
+            return;
         }
-        stylesheets.add(toolStylesheet);
+
+        if (toolStylesheetConfig != null) { // if old conf then removeit
+            root.getStylesheets().remove(toolStylesheetConfig.getUserAgentStylesheet());
+            root.getStylesheets().removeAll(toolStylesheetConfig.getStylesheets());
+        }
+
+        if (newToolStylesheetConfig != null) { // replace the active conf only if the new one is valid
+            toolStylesheetConfig = newToolStylesheetConfig;
+        }
+
+        // apply the conf if the current one is valid
+        if (toolStylesheetConfig != null) {
+            if (toolStylesheetConfig.getUserAgentStylesheet() != null) {
+                root.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
+            }
+            if (toolStylesheetConfig.getStylesheets() != null) {
+                Logger.getLogger(AbstractWindowController.class.getName()).log(Level.INFO,
+                        "Applying new tool theme using {0} on {1}",
+                        new Object[] { toolStylesheetConfig.getStylesheets(), this.getClass().getName() });
+                root.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
+            }
+        }
     }
-    
-    
+
     /*
      * Private
      */
-    
+
     // See DTL-5928
     // The three approaches below do not provide any resizing, for some reason:
     // (1)
-    //            stage.setHeight(newHeight);
-    //            stage.setWidth(newWidth);
+    // stage.setHeight(newHeight);
+    // stage.setWidth(newWidth);
     // (2)
-    //            scene.getWindow().setHeight(newHeight);
-    //            scene.getWindow().setWidth(newWidth);
+    // scene.getWindow().setHeight(newHeight);
+    // scene.getWindow().setWidth(newWidth);
     // (3)
-    //            getRoot().resize(newWidth, newHeight);
+    // getRoot().resize(newWidth, newHeight);
     //
     // The current implementation raises the point root of layout must be
     // a Region, which is for now acceptable but could perhaps be an issue later.
@@ -271,49 +276,49 @@ public abstract class AbstractWindowController {
 
             if (currentHeight > primaryScreenHeight) {
                 double newHeight = primaryScreenHeight * CLAMP_FACTOR;
-    //            System.out.println("Clamp: new height is " + newHeight);
+                // System.out.println("Clamp: new height is " + newHeight);
                 assert getRoot() instanceof Region;
-                ((Region)getRoot()).setPrefHeight(newHeight);
+                ((Region) getRoot()).setPrefHeight(newHeight);
             }
 
             if (currentWidth > primaryScreenWidth) {
                 double newWidth = primaryScreenWidth * CLAMP_FACTOR;
-    //            System.out.println("Clamp: new width is " + newWidth);
+                // System.out.println("Clamp: new width is " + newWidth);
                 assert getRoot() instanceof Region;
-                ((Region)getRoot()).setPrefWidth(newWidth);
+                ((Region) getRoot()).setPrefWidth(newWidth);
             }
         }
     }
 
     protected Rectangle2D getBiggestViewableRectangle() {
         assert stage != null;
-        
+
         Rectangle2D res;
-        
+
         if (Screen.getScreens().size() == 1) {
             res = Screen.getPrimary().getVisualBounds();
         } else {
             Rectangle2D stageRect = new Rectangle2D(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
             List<Screen> screens = Screen.getScreensForRectangle(stageRect);
-            
+
             // The stage is entirely rendered on one screen, which is either the
             // primary one or not, we don't care here.
 //            if (screens.size() == 1) {
-                res = screens.get(0).getVisualBounds();
+            res = screens.get(0).getVisualBounds();
 //            } else {
-                // The stage is spread over several screens.
-                // We compute the surface of the stage on each on the involved
-                // screen to select the biggest one == still to be implemented.
+            // The stage is spread over several screens.
+            // We compute the surface of the stage on each on the involved
+            // screen to select the biggest one == still to be implemented.
 //                TreeMap<String, Screen> sortedScreens = new TreeMap<>();
-//                
+//
 //                for (Screen screen : screens) {
 //                    computeSurface(screen, stageRect, sortedScreens);
 //                }
-//                
+//
 //                res = sortedScreens.get(sortedScreens.lastKey()).getVisualBounds();
 //            }
         }
-        
+
         return res;
     }
 
@@ -330,7 +335,7 @@ public abstract class AbstractWindowController {
 //                surfaceX = screenBounds.getMinX();
 //            }
 //        } else {
-//            
+//
 //        }
 //    }
 

@@ -33,6 +33,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 
 import java.net.URL;
 
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -41,38 +43,38 @@ import javafx.stage.Window;
 
 /**
  *
- * 
+ *
  */
 public class AlertDialog extends AbstractModalDialog {
-    
+
     @FXML protected Label messageLabel;
     @FXML protected Label detailsLabel;
-    
+
     private Runnable actionRunnable;
-    
-    public AlertDialog(Window owner) {
-        super(AlertDialog.class.getResource("AlertDialog.fxml"), null, owner); //NOI18N
+
+    public AlertDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
+        super(sceneBuilderManager, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner); //NOI18N
         getStage().setResizable(false);
         setImageViewVisible(true);
         setImageViewImage(getDialogImage());
     }
-    
+
     public String getMessage() {
         return getMessageLabel().getText();
     }
-    
+
     public void setMessage(String message) {
         getMessageLabel().setText(message);
     }
-    
+
     public String getDetails() {
         return getDetailsLabel().getText();
     }
-    
+
     public void setDetails(String details) {
         getDetailsLabel().setText(details);
     }
-    
+
     public void setActionRunnable(Runnable runnable) {
         this.actionRunnable = runnable;
     }
@@ -80,29 +82,29 @@ public class AlertDialog extends AbstractModalDialog {
     /*
      * AbstractModalDialog
      */
-    
+
     @Override
     public void controllerDidLoadContentFxml() {
-        
+
         // Sanity checks
         assert messageLabel != null;
         assert detailsLabel != null;
-        
+
         // Remove label text (inserted for design purpose)
         messageLabel.setText(null);
         detailsLabel.setText(null);
     }
-    
+
     @Override
     public void okButtonPressed(ActionEvent e) {
         getStage().close();
     }
-    
+
     @Override
     public void cancelButtonPressed(ActionEvent e) {
         getStage().close();
     }
-    
+
     @Override
     public void actionButtonPressed(ActionEvent e) {
         if (actionRunnable != null) {
@@ -111,25 +113,25 @@ public class AlertDialog extends AbstractModalDialog {
             getStage().close();
         }
     }
-    
-    
-    
+
+
+
     /*
      * Private
      */
-    
+
     private Label getMessageLabel() {
         getContentRoot(); // Force content fxml loading
         return messageLabel;
     }
-    
+
 
     private Label getDetailsLabel() {
         getContentRoot(); // Force content fxml loading
         return detailsLabel;
     }
-    
-    
+
+
     private static Image dialogImage;
     private static synchronized Image getDialogImage() {
         if (dialogImage == null) {

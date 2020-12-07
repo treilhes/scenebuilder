@@ -1,6 +1,7 @@
 package com.oracle.javafx.scenebuilder.api;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javafx.beans.property.IntegerProperty;
 
@@ -35,6 +36,8 @@ public interface MessageLogger {
 	int getWarningEntryCount();
 
 	int getEntryCount();
+
+    void logInfoMessage(String key, ResourceBundle bundle, Object[] args);
 
 
 

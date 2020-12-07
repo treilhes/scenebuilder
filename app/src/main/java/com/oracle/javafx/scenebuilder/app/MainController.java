@@ -57,6 +57,7 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
@@ -72,12 +73,10 @@ import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
-import com.oracle.javafx.scenebuilder.kit.ToolTheme;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.kit.template.Type;
@@ -88,7 +87,6 @@ import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
@@ -149,12 +147,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     //private UserLibrary userLibrary;
 
-    private ToolTheme toolTheme = ToolTheme.DEFAULT;
-
-	private final ToolThemePreference toolThemePreference;
+//    private ToolTheme toolTheme = ToolTheme.DEFAULT;
+//
+//	private final ToolThemePreference toolThemePreference;
 
 
 	private final FileSystem fileSystem;
+
+    private final SceneBuilderManager sceneBuilderManager;
 
     /*
      * Public
@@ -165,11 +165,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     public MainController(
-    		@Autowired ToolThemePreference toolThemePreference,
+    		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired FileSystem fileSystem
     		) {
 
-    	this.toolThemePreference = toolThemePreference;
+    	this.sceneBuilderManager = sceneBuilderManager;
     	this.fileSystem = fileSystem;
 
     	fileSystem.startWatcher();
@@ -180,16 +180,16 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         singleton = this;
 
         // SB-270
-        windowList.addListener((ListChangeListener.Change<? extends DocumentWindowController> c) -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    final String toolStylesheet = getToolStylesheet();
-                    for (DocumentWindowController dwc : c.getAddedSubList()) {
-                        dwc.setToolStylesheet(toolStylesheet);
-                    }
-                }
-            }
-        });
+//        windowList.addListener((ListChangeListener.Change<? extends DocumentWindowController> c) -> {
+//            while (c.next()) {
+//                if (c.wasAdded()) {
+//                    final String toolStylesheet = getToolStylesheet();
+//                    for (DocumentWindowController dwc : c.getAddedSubList()) {
+//                        dwc.setToolStylesheet(toolStylesheet);
+//                    }
+//                }
+//            }
+//        });
 
     }
 
@@ -197,7 +197,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         switch (a) {
             case ABOUT:
                 AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
-                aboutWindowController.setToolStylesheet(getToolStylesheet());
+                //aboutWindowController.setToolStylesheet(getToolStylesheet());
                 aboutWindowController.openWindow();
                 windowIconSetting.setWindowIcon(aboutWindowController.getStage());
                 break;
@@ -218,7 +218,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 break;
 
             case NEW_TEMPLATE:
-                final TemplatesWindowController templatesWindowController = new TemplatesWindowController(source.getStage());
+                final TemplatesWindowController templatesWindowController = new TemplatesWindowController(
+                        sceneBuilderManager, source.getStage());
                 templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
                 templatesWindowController.openWindow();
                 break;
@@ -241,7 +242,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
             case SHOW_PREFERENCES:
                 PreferencesWindowController preferencesWindowController = context.getBean(PreferencesWindowController.class);
-                preferencesWindowController.setToolStylesheet(getToolStylesheet());
+                //preferencesWindowController.setToolStylesheet(getToolStylesheet());
                 preferencesWindowController.openWindow();
                 break;
 
@@ -270,13 +271,13 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 result = windowList.isEmpty() == false;
                 break;
 
-            case USE_DEFAULT_THEME:
-                result = toolTheme != ToolTheme.DEFAULT;
-                break;
-
-            case USE_DARK_THEME:
-                result = toolTheme != ToolTheme.DARK;
-                break;
+//            case USE_DEFAULT_THEME:
+//                result = toolTheme != ToolTheme.DEFAULT;
+//                break;
+//
+//            case USE_DARK_THEME:
+//                result = toolTheme != ToolTheme.DARK;
+//                break;
 
             default:
                 result = false;
@@ -381,7 +382,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             // }
 
         } catch (IOException x) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
+            final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
             errorDialog.setTitle(I18N.getString("alert.title.start"));
             errorDialog.setMessage(I18N.getString("alert.start.failure.message"));
             errorDialog.setDetails(I18N.getString("alert.start.failure.details"));
@@ -537,7 +538,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     @Override
     public void handleMessageBoxFailure(Exception x) {
-        final ErrorDialog errorDialog = new ErrorDialog(null);
+        final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
         errorDialog.setTitle(I18N.getString("alert.title.messagebox"));
         errorDialog.setMessage(I18N.getString("alert.messagebox.failure.message"));
         errorDialog.setDetails(I18N.getString("alert.messagebox.failure.details"));
@@ -688,7 +689,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             case 1: {
                 final File fxmlFile = exceptions.keySet().iterator().next();
                 final Exception x = exceptions.get(fxmlFile);
-                final ErrorDialog errorDialog = new ErrorDialog(null);
+                final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
                 errorDialog.setMessage(I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())));
                 errorDialog.setDetails(I18N.getString("alert.open.failure1.details"));
                 errorDialog.setDebugInfoWithThrowable(x);
@@ -697,7 +698,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 break;
             }
             default: {
-                final ErrorDialog errorDialog = new ErrorDialog(null);
+                final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
                 if (exceptions.size() == fxmlFiles.size()) {
                     // Open operation has failed for all the files
                     errorDialog.setMessage(I18N.getString("alert.open.failureN.message"));
@@ -753,7 +754,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             default: {
                 assert pendingDocs.size() >= 2;
 
-                final AlertDialog d = new AlertDialog(null);
+                final AlertDialog d = new AlertDialog(sceneBuilderManager, null);
                 d.setMessage(I18N.getString("alert.review.question.message", pendingDocs.size()));
                 d.setDetails(I18N.getString("alert.review.question.details"));
                 d.setOKButtonTitle(I18N.getString("label.review.changes"));
@@ -815,9 +816,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
     }
 
-    private String getToolStylesheet() {
-        return toolThemePreference.getValue().getStylesheetURL();
-    }
+//    private String getToolStylesheet() {
+//        return toolThemePreference.getValue().getStylesheetURL();
+//    }
 
 
 

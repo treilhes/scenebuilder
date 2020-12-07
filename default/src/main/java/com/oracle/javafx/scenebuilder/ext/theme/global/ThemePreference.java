@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
@@ -16,6 +15,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.type.ObjectPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
+import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
 
 import javafx.scene.Parent;
 
@@ -28,6 +28,7 @@ public class ThemePreference extends ObjectPreference<Class<? extends Theme>> im
      *                                                                         *
      **************************************************************************/
     public static final String PREFERENCE_KEY = "theme"; //NOI18N
+    public static final Class<? extends Theme> PREFERENCE_DEFAULT_VALUE = DefaultThemesList.Modena.class;
 
     private final List<Class<? extends Theme>> themeClasses;
 
@@ -36,9 +37,8 @@ public class ThemePreference extends ObjectPreference<Class<? extends Theme>> im
 	public ThemePreference(
 			@Autowired PreferencesContext preferencesContext,
 			@Autowired PreferenceEditorFactory preferenceEditorFactory,
-			@Autowired @Qualifier("default") ThemeProvider themeProvider,
 			@Autowired List<ThemeProvider> themeProviders) {
-		super(preferencesContext, PREFERENCE_KEY, themeProvider.themes().get(0));
+		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
 		this.preferenceEditorFactory = preferenceEditorFactory;
 		themeClasses = new ArrayList<>();
 		themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));

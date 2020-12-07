@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.template;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -42,8 +43,10 @@ import javafx.stage.WindowEvent;
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     private final Window owner;
 
-    public TemplatesWindowController(Stage owner) {
-        super(TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), //NOI18N
+    public TemplatesWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            Stage owner) {
+        super(sceneBuilderManager, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
                 I18N.getBundle(), owner);
         this.owner = owner;
     }
@@ -55,15 +58,15 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
         setupTemplateButtonHandlers();
     }
 
-
     @Override
     public void onCloseRequest(WindowEvent event) {
         getStage().hide();
     }
 
-    @Override 
-    public void onFocus() {}
-    
+    @Override
+    public void onFocus() {
+    }
+
     @Override
     protected void controllerDidCreateStage() {
         super.controllerDidCreateStage();
@@ -79,4 +82,3 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
         }
     }
 }
-

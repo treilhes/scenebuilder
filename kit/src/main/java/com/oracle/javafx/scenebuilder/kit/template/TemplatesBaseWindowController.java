@@ -36,6 +36,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
@@ -62,10 +63,13 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
 
     private Consumer<Template> onTemplateChosen;
 
-    public TemplatesBaseWindowController(URL fxmlURL, ResourceBundle resources, Stage owner) {
-        super(fxmlURL, resources, owner);
+    public TemplatesBaseWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            URL fxmlURL,
+            ResourceBundle resources,
+            Stage owner) {
+        super(sceneBuilderManager, fxmlURL, resources, owner);
     }
-
 
     @Override
     public void onCloseRequest(WindowEvent event) {
@@ -99,14 +103,14 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
 
     private void setupTemplateButtonHandlers(Parent templateContainer) {
         for (Node child : templateContainer.getChildrenUnmodifiable()) {
-            if (!(child instanceof Button) && child instanceof Parent){
-                setupTemplateButtonHandlers((Parent)child);
+            if (!(child instanceof Button) && child instanceof Parent) {
+                setupTemplateButtonHandlers((Parent) child);
             }
             if (child instanceof Button) {
                 Button button = (Button) child;
                 button.setOnAction(event -> {
                     getStage().hide();
-                    onTemplateChosen.accept((Template)button.getUserData());
+                    onTemplateChosen.accept((Template) button.getUserData());
                 });
             }
         }
@@ -116,4 +120,3 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
         this.onTemplateChosen = onTemplateChosen;
     }
 }
-

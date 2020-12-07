@@ -60,12 +60,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
@@ -78,12 +81,10 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractViewFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
@@ -179,6 +180,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final AccordionAnimationPreference accordionAnimationPreference;
 	private final FileSystem fileSystem;
+    private final SceneBuilderManager sceneBuilderManager;
+    private final Dialog dialog;
 
     /*
      * Public
@@ -191,8 +194,10 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public LibraryPanelController(
-    		@Autowired EditorController editorController,
+    		@Autowired Editor editorController,
+    		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired FileSystem fileSystem,
+    		@Autowired Dialog dialog,
     		@Autowired MavenArtifactsPreferences mavenPreferences,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired DisplayModePreference displayModePreference,
@@ -205,8 +210,10 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     		@Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
     		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
     		) { //, UserLibrary library) {
-        super(LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+        super(sceneBuilderManager, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+        this.sceneBuilderManager = sceneBuilderManager;
         this.sceneBuilderFactory = sceneBuilderFactory;
+        this.dialog = dialog;
         this.userLibrary = userLibrary;
         this.fileSystem = fileSystem;
         this.mavenPreferences = mavenPreferences;
@@ -822,12 +829,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
                 writer.write(text);
             }
         } catch (IOException ioe) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setTitle(I18N.getString("error.file.create.title"));
-            errorDialog.setMessage(I18N.getString("error.file.create.message", targetFilePath.normalize().toString()));
-            errorDialog.setDetails(I18N.getString("error.write.details"));
-            errorDialog.setDebugInfoWithThrowable(ioe);
-            errorDialog.showAndWait();
+            dialog.showErrorAndWait(
+                    I18N.getString("error.file.create.title"),
+                    I18N.getString("error.file.create.message", targetFilePath.normalize().toString()),
+                    I18N.getString("error.write.details"),
+                    ioe);
         }
     }
 
@@ -872,8 +878,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
                     }
 
                     final ImportWindowController iwc
-                            = new ImportWindowController(this, jarFiles, mavenPreferences, (Stage) window);
-                    iwc.setToolStylesheet(getEditorController().getToolStylesheet());
+                            = new ImportWindowController(sceneBuilderManager, this, jarFiles, mavenPreferences, (Stage) window);
+                    //iwc.setToolStylesheet(getEditorController().getToolStylesheet());
                     // See comment in OnDragDropped handle set in method startListeningToDrop.
                     ButtonID userChoice = iwc.showAndWait();
 
@@ -899,8 +905,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
                     stage.toFront();
                 }
 
-                final ImportWindowController iwc = new ImportWindowController(this, Arrays.asList(folder), mavenPreferences, (Stage) window);
-                iwc.setToolStylesheet(getEditorController().getToolStylesheet());
+                final ImportWindowController iwc = new ImportWindowController(sceneBuilderManager, this, Arrays.asList(folder), mavenPreferences, (Stage) window);
+                //iwc.setToolStylesheet(getEditorController().getToolStylesheet());
                 // See comment in OnDragDropped handle set in method startListeningToDrop.
                 ButtonID userChoice = iwc.showAndWait();
 
@@ -930,12 +936,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
             Files.createDirectories(libPath, new FileAttribute<?>[]{});
             dirCreated = true;
         } catch (IOException ioe) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setTitle(I18N.getString("error.dir.create.title"));
-            errorDialog.setMessage(I18N.getString("error.dir.create.message", libPath.normalize().toString()));
-            errorDialog.setDetails(I18N.getString("error.write.details"));
-            errorDialog.setDebugInfoWithThrowable(ioe);
-            errorDialog.showAndWait();
+            dialog.showErrorAndWait(
+                    I18N.getString("error.dir.create.title"),
+                    I18N.getString("error.dir.create.message", libPath.normalize().toString()),
+                    I18N.getString("error.write.details"),
+                    ioe);
         }
 
         return dirCreated;
@@ -945,12 +950,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         try {
             return fileSystem.enoughFreeSpaceOnDisk(files);
         } catch (IOException ioe) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setTitle(I18N.getString("error.disk.space.title"));
-            errorDialog.setMessage(I18N.getString("error.disk.space.message"));
-            errorDialog.setDetails(I18N.getString("error.write.details"));
-            errorDialog.setDebugInfoWithThrowable(ioe);
-            errorDialog.showAndWait();
+            dialog.showErrorAndWait(
+                    I18N.getString("error.disk.space.title"),
+                    I18N.getString("error.disk.space.message"),
+                    I18N.getString("error.write.details"),
+                    ioe);
         }
         return false;
     }
@@ -996,16 +1000,13 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         ((UserLibrary) getEditorController().getLibrary()).startWatching();
 
         if (errorCount > 0) {
-            final ErrorDialog errorDialog = new ErrorDialog(null);
-            errorDialog.setTitle(I18N.getString("error.copy.title"));
-            if (errorCount == 1) {
-                errorDialog.setMessage(I18N.getString("error.copy.message.single", savedFileName, userLibraryPathString));
-                errorDialog.setDebugInfoWithThrowable(savedIOE);
-            } else {
-                errorDialog.setMessage(I18N.getString("error.copy.message.multiple", errorCount, userLibraryPathString));
-            }
-            errorDialog.setDetails(I18N.getString("error.write.details"));
-            errorDialog.showAndWait();
+            dialog.showErrorAndWait(
+                    I18N.getString("error.copy.title"),
+                    errorCount == 1 ?
+                            I18N.getString("error.copy.message.single", savedFileName, userLibraryPathString):
+                            I18N.getString("error.copy.message.multiple", errorCount, userLibraryPathString),
+                    I18N.getString("error.write.details"),
+                    errorCount == 1 ? savedIOE : null);
         }
     }
 
@@ -1044,7 +1045,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     }
 
     private void userLibraryUpdateRejected() {
-        final AlertDialog dialog = new AlertDialog(null);
+        final AlertDialog dialog = new AlertDialog(sceneBuilderManager, null);
         dialog.setTitle(I18N.getString("alert.import.reject.dependencies.title"));
         dialog.setMessage(I18N.getString("alert.import.reject.dependencies.message"));
         dialog.setDetails(I18N.getString("alert.import.reject.dependencies.details"));
@@ -1071,12 +1072,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
             } catch (IOException ioe) {
                 scanWentWell = false;
                 hasDependencies = true; // not sure but better take no risk
-                final ErrorDialog errorDialog = new ErrorDialog(null);
-                errorDialog.setTitle(I18N.getString("error.import.reject.dependencies.scan.title"));
-                errorDialog.setMessage(I18N.getString("error.import.reject.dependencies.scan.message"));
-                errorDialog.setDetails(I18N.getString("error.import.reject.dependencies.scan.details"));
-                errorDialog.setDebugInfoWithThrowable(ioe);
-                errorDialog.showAndWait();
+                dialog.showErrorAndWait(
+                        I18N.getString("error.import.reject.dependencies.scan.title"),
+                        I18N.getString("error.import.reject.dependencies.scan.message"),
+                        I18N.getString("error.import.reject.dependencies.scan.details"),
+                        ioe);
             }
         }
 

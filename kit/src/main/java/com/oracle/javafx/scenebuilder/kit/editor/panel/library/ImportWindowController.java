@@ -50,6 +50,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
@@ -150,15 +151,17 @@ public class ImportWindowController extends AbstractModalDialog {
 
     @FXML
     ToggleButton checkAllUncheckAllToggle;
+    private final SceneBuilderManager sceneBuilderManager;
 
 
-    public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
-        this(lpc, files, mavenPreferences, owner, true, new ArrayList<>());
+    public ImportWindowController(SceneBuilderManager sceneBuilderManager, LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
+        this(sceneBuilderManager, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
     }
 
-    public ImportWindowController(LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
+    public ImportWindowController(SceneBuilderManager sceneBuilderManager, LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
             boolean copyFilesToUserLibraryDir, List<String> artifactsFilter) {
-        super(ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(sceneBuilderManager, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        this.sceneBuilderManager = sceneBuilderManager;
         libPanelController = lpc;
         importFiles = new ArrayList<>(files);
         this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
@@ -515,7 +518,7 @@ public class ImportWindowController extends AbstractModalDialog {
     }
 
     private void showErrorDialog(Exception exception) {
-        final ErrorDialog errorDialog = new ErrorDialog(null);
+        final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
         errorDialog.setTitle(I18N.getString("import.error.title"));
         errorDialog.setMessage(I18N.getString("import.error.message"));
         errorDialog.setDetails(I18N.getString("import.error.details"));

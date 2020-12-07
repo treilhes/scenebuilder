@@ -34,9 +34,10 @@ package com.oracle.javafx.scenebuilder.kit.skeleton;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.AbstractFxmlWindowController;
 
 import javafx.beans.value.ChangeListener;
@@ -61,6 +62,37 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
     @FXML
     TextArea textArea;
 
+    private final Editor editorController;
+    private boolean dirty = false;
+
+    private String documentName;
+
+    public SkeletonWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            Editor editorController,
+            String documentName,
+            Stage owner) {
+        super(sceneBuilderManager, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle(),
+                owner); // NOI18N
+        this.editorController = editorController;
+        this.documentName = documentName;
+
+        this.editorController.fxomDocumentProperty().addListener((ChangeListener<FXOMDocument>) (ov, od, nd) -> {
+            assert editorController.getFxomDocument() == nd;
+            if (od != null) {
+                od.sceneGraphRevisionProperty().removeListener(fxomDocumentRevisionListener);
+            }
+            if (nd != null) {
+                nd.sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
+                update();
+            }
+        });
+
+        if (editorController.getFxomDocument() != null) {
+            editorController.getFxomDocument().sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
+        }
+    }
+
     @FXML
     private void onCopyAction(ActionEvent event) {
         final Map<DataFormat, Object> content = new HashMap<>();
@@ -74,41 +106,15 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
         Clipboard.getSystemClipboard().setContent(content);
     }
 
-    private final EditorController editorController;
-    private boolean dirty = false;
-
-    private String documentName;
-
-    public SkeletonWindowController(EditorController editorController, String documentName, Stage owner) {
-        super(SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.editorController = editorController;
-        this.documentName = documentName;
-
-        this.editorController.fxomDocumentProperty().addListener(
-                (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
-                    assert editorController.getFxomDocument() == nd;
-                    if (od != null) {
-                        od.sceneGraphRevisionProperty().removeListener(fxomDocumentRevisionListener);
-                    }
-                    if (nd != null) {
-                        nd.sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
-                        update();
-                    }
-                });
-
-        if (editorController.getFxomDocument() != null) {
-            editorController.getFxomDocument().sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
-        }
-    }
-
     @Override
     public void onCloseRequest(WindowEvent event) {
         getStage().close();
     }
 
-    @Override 
-    public void onFocus() {}
-    
+    @Override
+    public void onFocus() {
+    }
+
     @Override
     public void openWindow() {
         super.openWindow();
@@ -138,8 +144,7 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
     /*
      * Private
      */
-    private final ChangeListener<Number> fxomDocumentRevisionListener
-            = (observable, oldValue, newValue) -> update();
+    private final ChangeListener<Number> fxomDocumentRevisionListener = (observable, oldValue, newValue) -> update();
 
     private void updateTitle() {
         final String title = I18N.getString("skeleton.window.title", documentName);

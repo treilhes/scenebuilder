@@ -33,9 +33,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository
 
 import java.util.stream.Collectors;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.preset.MavenPresets;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.maven.repository.dialog.RepositoryDialogController;
@@ -60,20 +61,24 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     @FXML
     private ListView<RepositoryListItem> repositoryListView;
 
-    private final EditorController editorController;
+    private final Editor editorController;
     private final Stage owner;
 
     private ObservableList<RepositoryListItem> listItems;
 
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final MavenSetting mavenSetting;
-    
+
+    private final SceneBuilderManager sceneBuilderManager;
+
     public RepositoryManagerController(
-    		EditorController editorController, 
-    		MavenSetting mavenSetting, 
+            SceneBuilderManager sceneBuilderManager,
+    		Editor editorController,
+    		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(sceneBuilderManager, LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
+        this.sceneBuilderManager = sceneBuilderManager;
         this.owner = owner;
         this.editorController = editorController;
         this.repositoryPreferences = repositoryPreferences;
@@ -92,15 +97,15 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
             getStage().initModality(Modality.WINDOW_MODAL);
         }
     }
-    
+
     @Override
     public void onCloseRequest(WindowEvent event) {
         close();
     }
 
-    @Override 
+    @Override
     public void onFocus() {}
-    
+
     @Override
     public void openWindow() {
         super.openWindow();
@@ -115,13 +120,13 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
         listItems.clear();
         repositoryListView.setItems(listItems);
         repositoryListView.setCellFactory(param -> new RepositoryManagerListCell());
-        
+
         // custom repositories
         listItems.addAll(repositoryPreferences.getRepositories()
                 .stream()
                 .map(r -> new CustomRepositoryListItem(this, r))
                 .collect(Collectors.toList()));
-        
+
         // preset on top
         listItems.addAll(0, MavenPresets.getPresetRepositories()
             .stream()
@@ -141,8 +146,8 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     }
 
     private void repositoryDialog(Repository repository) {
-        RepositoryDialogController repositoryDialogController = new RepositoryDialogController(editorController,
-                mavenSetting, repositoryPreferences, getStage());
+        RepositoryDialogController repositoryDialogController = new RepositoryDialogController(sceneBuilderManager,
+                editorController, mavenSetting, repositoryPreferences, getStage());
         repositoryDialogController.openWindow();
         repositoryDialogController.setRepository(repository);
         repositoryDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -155,20 +160,20 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
             }
         });
     }
-    
+
     public void edit(RepositoryListItem item) {
         repositoryDialog(item.getRepository());
     }
-    
+
     public void delete(RepositoryListItem item) {
         // Remove repository
         logInfoMessage("log.user.repository.removed", item.getRepository().getId());
         repositoryPreferences.removeRecordRepository(item.getRepository().getId());
         loadRepositoryList();
     }
-    
+
     private void logInfoMessage(String key, Object... args) {
         editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
     }
-    
+
 }
