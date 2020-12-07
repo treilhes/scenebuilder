@@ -1378,9 +1378,3 @@
     -fx-shape: null;
     -fx-padding: 0;
 }
-
-
-.button {
-    -font-size: 25px;
-    -fx-padding: 50px;
-}
