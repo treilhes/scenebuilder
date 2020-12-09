@@ -37,12 +37,12 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.SetFxomRootJob;
 
 /**
@@ -97,7 +97,7 @@ public class SetDocumentRootJob extends BatchSelectionJob {
                 final DesignHierarchyMask mask = new DesignHierarchyMask(newRoot);
                 if (mask.needResizeWhenTopElement()) {
                     result.add(new UsePredefinedSizeJob(getContext(), getEditorController(),
-                            EditorController.Size.SIZE_DEFAULT, newRoot).extend());
+                            Size.SIZE_DEFAULT, newRoot).extend());
                 }
             }
         }

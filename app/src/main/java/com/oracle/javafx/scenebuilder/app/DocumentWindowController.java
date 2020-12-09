@@ -94,6 +94,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
@@ -110,10 +111,9 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModal
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
-import com.oracle.javafx.scenebuilder.kit.preview.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
-import com.oracle.javafx.scenebuilder.kit.util.Utils;
+import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -123,7 +123,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextInputControl;
@@ -243,7 +242,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     // - PreviewWindowController
     // - SkeletonWindowController
     // - JarAnalysisReportController
-    private PreviewWindowController previewWindowController = null;
+    private final PreviewWindowController previewWindowController;
     private SkeletonWindowController skeletonWindowController = null;
     private JarAnalysisReportController jarAnalysisReportController = null;
 
@@ -323,6 +322,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			//@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
 			@Lazy @Autowired PathPreference pathPreference,
 
+			@Lazy @Autowired PreviewWindowController previewWindowController,
 			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
 
 			@Lazy @Autowired EditorController editorController,
@@ -388,6 +388,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //this.hierarchyPanelController = hierarchyPanelController;
         //this.infoPanelController = infoPanelController;
         this.documentPanelController = documentPanelController;
+        this.previewWindowController = previewWindowController;
 
         this.inspectorPanelController = inspectorPanelController;
         this.cssPanelController = cssPanelController;
@@ -742,18 +743,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             case TOGGLE_RIGHT_PANEL:
             case TOGGLE_OUTLINES_VISIBILITY:
             case TOGGLE_GUIDES_VISIBILITY:
-            case SHOW_PREVIEW_WINDOW:
-                result = true;
-                break;
-
-            case SHOW_PREVIEW_DIALOG:
-                final FXOMDocument fxomDocument = editorController.getFxomDocument();
-                if (fxomDocument != null) {
-                    Object sceneGraphRoot = fxomDocument.getSceneGraphRoot();
-                    return sceneGraphRoot instanceof DialogPane;
-                }
-                result = false;
-                break;
+//            case SHOW_PREVIEW_WINDOW:
+//                result = true;
+//                break;
+//
+//            case SHOW_PREVIEW_DIALOG:
+//                final FXOMDocument fxomDocument = editorController.getFxomDocument();
+//                if (fxomDocument != null) {
+//                    Object sceneGraphRoot = fxomDocument.getSceneGraphRoot();
+//                    return sceneGraphRoot instanceof DialogPane;
+//                }
+//                result = false;
+//                break;
 
             case SAVE_FILE:
                 result = isDocumentDirty()
@@ -824,22 +825,22 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 performSelectNone();
                 break;
 
-            case SHOW_PREVIEW_WINDOW:
-                if (previewWindowController == null) {
-                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, getStage());
-                    //previewWindowController.setToolStylesheet(getToolStylesheet());
-                }
-                previewWindowController.getStage().centerOnScreen();
-                previewWindowController.openWindow();
-                break;
-
-            case SHOW_PREVIEW_DIALOG:
-                if (previewWindowController == null) {
-                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, getStage());
-                    //previewWindowController.setToolStylesheet(getToolStylesheet());
-                }
-                previewWindowController.openDialog();
-                break;
+//            case SHOW_PREVIEW_WINDOW:
+//                if (previewWindowController == null) {
+//                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, getStage());
+//                    //previewWindowController.setToolStylesheet(getToolStylesheet());
+//                }
+//                previewWindowController.getStage().centerOnScreen();
+//                previewWindowController.openWindow();
+//                break;
+//
+//            case SHOW_PREVIEW_DIALOG:
+//                if (previewWindowController == null) {
+//                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, getStage());
+//                    //previewWindowController.setToolStylesheet(getToolStylesheet());
+//                }
+//                previewWindowController.openDialog();
+//                break;
 
             case SAVE_FILE:
                 performSaveOrSaveAsAction();

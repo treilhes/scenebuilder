@@ -107,6 +107,7 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.gluon",
 			"com.oracle.javafx.scenebuilder.fs",
 			"com.oracle.javafx.scenebuilder.sb",
+			"com.oracle.javafx.scenebuilder.preview",
 			"com.oracle.javafx.scenebuilder.app.actions"
 			})
 public class SceneBuilderBootstrap extends JavafxApplication {

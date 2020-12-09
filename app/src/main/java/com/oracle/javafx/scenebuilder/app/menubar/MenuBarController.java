@@ -55,6 +55,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
@@ -73,7 +74,6 @@ import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
@@ -333,26 +333,6 @@ public class MenuBarController implements InitializingBean {
     private MenuItem unwrapMenuItem;
 
     // Preview
-    @FXML
-    private MenuItem showPreviewInWindowMenuItem;
-    @FXML
-    private MenuItem showPreviewInDialogMenuItem;
-
-    @FXML
-    private RadioMenuItem phonePreviewSizeMenuItem;
-    @FXML
-    private RadioMenuItem tabletPreviewSizeMenuItem;
-    @FXML
-    private RadioMenuItem qvgaPreviewSizeMenuItem;
-    @FXML
-    private RadioMenuItem vgaPreviewSizeMenuItem;
-    @FXML
-    private RadioMenuItem touchPreviewSizeMenuItem;
-    @FXML
-    private RadioMenuItem hdPreviewSizeMenuItem;
-    @FXML
-    private RadioMenuItem preferredPreviewSizeMenuItem;
-
 
     // Window
     // Help
@@ -371,6 +351,10 @@ public class MenuBarController implements InitializingBean {
 
     @Autowired
     ApplicationContext context;
+
+    //TODO delete when all the menuBar will be handled by extensions
+    // for now it prevents extension's menu to be disabled by legacy code
+    List<MenuItem> dynamicMenu = new ArrayList<>();
 
     Map<String, MenuItem> menuMap = null;
 
@@ -426,40 +410,46 @@ public class MenuBarController implements InitializingBean {
 
                 ListIterator<MenuAttachment> it = validAttachments.listIterator();
                 while (it.hasNext()) {
+                    boolean inserted = false;
                     MenuAttachment ma = it.next();
                     MenuItem target = menuMap.get(ma.getTargetId());
 
                     if (target != null) {
 
-                        ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                        int index = items.indexOf(target);
-
                         if (ma.getMenuItem().getId() == null) {
                             ma.getMenuItem().setId(ma.getClass().getSimpleName());
                         }
 
-                        menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
-                        it.remove();
-                        atLeastOneInserted = true;
-
                         switch (ma.getPositionRequest()) {
                             case AsFirstSibling: {
+                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
                                 items.add(0, ma.getMenuItem());
+                                inserted = true;
                                 break;
                             }
                             case AsLastSibling: {
+                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
                                 items.add(ma.getMenuItem());
+                                inserted = true;
                                 break;
                             }
                             case AsPreviousSibling: {
+                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                int index = items.indexOf(target);
                                 items.add(index, ma.getMenuItem());
+                                inserted = true;
                                 break;
                             }
                             case AsNextSibling: {
+                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                int index = items.indexOf(target);
                                 items.add(index + 1, ma.getMenuItem());
+                                inserted = true;
                                 break;
                             }
                             case AfterPreviousSeparator: {
+                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                int index = items.indexOf(target);
                                 int insertAt = 0;
                                 for (int i = index; i >= 0; i--) {
                                     if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
@@ -468,9 +458,12 @@ public class MenuBarController implements InitializingBean {
                                     }
                                 }
                                 items.add(insertAt, ma.getMenuItem());
+                                inserted = true;
                                 break;
                             }
                             case BeforeNextSeparator: {
+                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                int index = items.indexOf(target);
                                 int insertAt = items.size();
                                 for (int i = index; i < items.size(); i++) {
                                     if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
@@ -479,9 +472,35 @@ public class MenuBarController implements InitializingBean {
                                     }
                                 }
                                 items.add(insertAt, ma.getMenuItem());
+                                inserted = true;
                                 break;
                             }
+                        case AsFirstChild: {
+                            if (target instanceof Menu) {
+                                Menu m = (Menu)target;
+                                m.getItems().add(0, ma.getMenuItem());
+                                inserted = true;
+                            }
+                            break;
+                        }
+                        case AsLastChild: {
+                            if (target instanceof Menu) {
+                                Menu m = (Menu)target;
+                                m.getItems().add(ma.getMenuItem());
+                                inserted = true;
+                            }
+                            break;
+                        }
+                        default:
+                            break;
 
+                        }
+
+                        if (inserted) {
+                            dynamicMenu.add(ma.getMenuItem());
+                            menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
+                            it.remove();
+                            atLeastOneInserted = true;
                         }
                     }
                 }
@@ -646,17 +665,6 @@ public class MenuBarController implements InitializingBean {
         assert wrapInSceneMenuItem != null;
         assert wrapInStageMenuItem != null;
         assert unwrapMenuItem != null;
-
-        assert showPreviewInWindowMenuItem != null;
-        assert showPreviewInDialogMenuItem != null;
-
-        assert phonePreviewSizeMenuItem != null;
-        assert tabletPreviewSizeMenuItem != null;
-        assert qvgaPreviewSizeMenuItem != null;
-        assert vgaPreviewSizeMenuItem != null;
-        assert touchPreviewSizeMenuItem != null;
-        assert hdPreviewSizeMenuItem != null;
-        assert preferredPreviewSizeMenuItem != null;
 
         assert helpMenuItem != null;
         assert aboutMenuItem != null;
@@ -1046,64 +1054,6 @@ public class MenuBarController implements InitializingBean {
                 new KeyCodeCombination(KeyCode.U, modifier));
 
         /*
-         * Preview menu
-         */
-        showPreviewInWindowMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SHOW_PREVIEW_WINDOW));
-        showPreviewInWindowMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, modifier));
-        showPreviewInDialogMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SHOW_PREVIEW_DIALOG));
-
-      //TODO uncomment/delete and fix for full theme support
-
-//        addSceneStyleSheetMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.ADD_SCENE_STYLE_SHEET));
-//        updateOpenAndRemoveSceneStyleSheetMenus();
-//        if (documentWindowController != null) {
-//
-////            this.documentWindowController.getEditorController().sceneStyleSheetProperty().addListener((ChangeListener<ObservableList<File>>) (ov, t, t1) -> {
-////                if (t1 != null) {
-////                    updateOpenAndRemoveSceneStyleSheetMenus();
-////                    setupMenuItemHandlers(removeSceneStyleSheetMenu);
-////                    setupMenuItemHandlers(openSceneStyleSheetMenu);
-////                }
-////            });
-//        }
-
-//        setResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SET_RESOURCE));
-//        removeResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REMOVE_RESOURCE) {
-//            @Override
-//            public String getTitle() {
-//                String title = I18N.getString("menu.title.remove.resource");
-//                if (documentWindowController != null
-//                        && documentWindowController.getResourceFile() != null) {
-//                    title = I18N.getString("menu.title.remove.resource.with.file",
-//                            documentWindowController.getResourceFile().getName());
-//                }
-//
-//                return title;
-//            }
-//        });
-//        revealResourceMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVEAL_RESOURCE) {
-//
-//            @Override
-//            public String getTitle() {
-//                String title = I18N.getString("menu.title.reveal.resource");
-//                if (documentWindowController != null
-//                        && documentWindowController.getResourceFile() != null) {
-//                    title = I18N.getString("menu.title.reveal.resource.with.file",
-//                            documentWindowController.getResourceFile().getName());
-//                }
-//
-//                return title;
-//            }
-//        });
-        phonePreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_335x600));
-        tabletPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_900x600));
-        qvgaPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_320x240));
-        vgaPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_640x480));
-        touchPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_1280x800));
-        hdPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_1920x1080));
-        preferredPreviewSizeMenuItem.setUserData(new SetSizeActionController(Size.SIZE_PREFERRED));
-
-        /*
          * Window menu : it is setup after the other menus
          */
 
@@ -1162,6 +1112,11 @@ public class MenuBarController implements InitializingBean {
 
     private void handleOnMenuValidation(Menu menu) {
         for (MenuItem i : menu.getItems()) {
+
+            if (dynamicMenu.contains(i)) {
+                continue;
+            }
+
             final boolean disable, selected;
             final String title;
             if (i.getUserData() instanceof MenuItemController) {
@@ -1864,9 +1819,9 @@ public class MenuBarController implements InitializingBean {
 
     class SetSizeActionController extends MenuItemController {
 
-        private final EditorController.Size size;
+        private final Size size;
 
-        public SetSizeActionController(EditorController.Size size) {
+        public SetSizeActionController(Size size) {
             this.size = size;
         }
 
@@ -1912,7 +1867,7 @@ public class MenuBarController implements InitializingBean {
                 return null;
             }
 
-            if (size == EditorController.Size.SIZE_PREFERRED) {
+            if (size == Size.SIZE_PREFERRED) {
                 String title = I18N.getString("menu.title.size.preferred");
 
                 if (documentWindowController.getPreviewWindowController() != null

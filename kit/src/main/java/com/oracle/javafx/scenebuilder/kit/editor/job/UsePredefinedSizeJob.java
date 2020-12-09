@@ -37,6 +37,7 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 
 import javafx.scene.Scene;
@@ -231,9 +231,7 @@ public class UsePredefinedSizeJob extends Job {
         if (size == Size.SIZE_DEFAULT) {
             return editor.getDefaultRootContainerWidth();
         }
-
-        String sizeString = size.toString();
-        return Double.parseDouble(sizeString.substring(5, sizeString.indexOf('x'))); //NOI18N
+        return size.getWidth();
     }
 
     private double getHeightFromSize(Size size) {
@@ -243,7 +241,6 @@ public class UsePredefinedSizeJob extends Job {
             return editor.getDefaultRootContainerHeight();
         }
 
-        String sizeString = size.toString();
-        return Double.parseDouble(sizeString.substring(sizeString.indexOf('x') + 1, sizeString.length())); //NOI18N
+        return size.getHeight();
     }
 }

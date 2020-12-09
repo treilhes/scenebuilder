@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -223,24 +224,6 @@ public class EditorController implements Editor {
     }
 
 
-
-    /**
-     * Predefined sizes (width x height).
-     * Preferred one refers to the one explicitly set by the user: it is for
-     * use for previewing only.
-     * Default one is the one stored as a global preference: its value is
-     * under user control.
-     */
-    public enum Size {
-        SIZE_335x600,
-        SIZE_900x600,
-        SIZE_320x240,
-        SIZE_640x480,
-        SIZE_1280x800,
-        SIZE_1920x1080,
-        SIZE_PREFERRED,
-        SIZE_DEFAULT
-    }
 
     private final Selection selection = new Selection();
     private final JobManager jobManager;

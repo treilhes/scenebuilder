@@ -6,5 +6,7 @@ public enum PositionRequest {
 	AsLastSibling,
 	AsFirstSibling,
 	BeforeNextSeparator,
-	AfterPreviousSeparator
+	AfterPreviousSeparator,
+	AsFirstChild,
+	AsLastChild
 }

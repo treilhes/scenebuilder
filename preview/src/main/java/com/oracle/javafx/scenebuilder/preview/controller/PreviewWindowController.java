@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.preview;
+package com.oracle.javafx.scenebuilder.preview.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,17 +40,23 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.Size;
-import com.oracle.javafx.scenebuilder.kit.util.Utils;
+import com.oracle.javafx.scenebuilder.core.util.Utils;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -70,13 +76,15 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
  * Controller for Window when calling "Show Preview in Window"
  */
-public final class PreviewWindowController extends AbstractWindowController {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
+public class PreviewWindowController extends AbstractWindowController {
 
     private final Editor editorController;
     private Timer timer = null;
@@ -98,7 +106,7 @@ public final class PreviewWindowController extends AbstractWindowController {
     // dependent on the operating system.
     private double decorationX = 0;
     private double decorationY = 0;
-    private boolean isDirty = false;
+    private boolean isDirty = true;
     private final long IMMEDIATE = 0; // milliseconds
     private final long DELAYED = 1000; // milliseconds
 	private StylesheetProvider2 stylesheetConfig;
@@ -116,8 +124,8 @@ public final class PreviewWindowController extends AbstractWindowController {
             SceneBuilderManager sceneBuilderManager,
     		Editor editorController,
     		DocumentManager documentManager,
-    		Stage owner) {
-        super(sceneBuilderManager, owner);
+    		Document document) {
+        super(sceneBuilderManager, document.getStage());
         this.editorController = editorController;
         this.editorController.fxomDocumentProperty().addListener(
                 (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
@@ -250,6 +258,10 @@ public final class PreviewWindowController extends AbstractWindowController {
      * In some cases it is wise to used delay = 0, e.g. when opening the window.
      */
     private void requestUpdate(long delay) {
+
+        if (!getStage().isShowing()) {
+            return;
+        }
         TimerTask timerTask = new TimerTask() {
 
             @Override
@@ -486,67 +498,25 @@ public final class PreviewWindowController extends AbstractWindowController {
     }
 
     private double getWidthFromSize(Size size) {
-        double res = WIDTH_WHEN_EMPTY;
-
         switch (size) {
-            case SIZE_335x600:
-                res = 335.0;
-                break;
-            case SIZE_900x600:
-                res = 900.0;
-                break;
-            case SIZE_1280x800:
-                res = 1280.0;
-                break;
-            case SIZE_1920x1080:
-                res = 1920.0;
-                break;
-            case SIZE_320x240:
-                res = 320.0;
-                break;
-            case SIZE_640x480:
-                res = 640.0;
-                break;
+            case SIZE_DEFAULT:
+                return WIDTH_WHEN_EMPTY;
             case SIZE_PREFERRED:
-                res = getRoot().prefWidth(-1);
-                break;
+                return getRoot().prefWidth(-1);
             default:
-                break;
+                return size.getWidth();
         }
-
-        return res;
     }
 
     private double getHeightFromSize(Size size) {
-        double res = HEIGHT_WHEN_EMPTY;
-
         switch (size) {
-            case SIZE_335x600:
-                res = 600.0;
-                break;
-            case SIZE_900x600:
-                res = 600.0;
-                break;
-            case SIZE_1280x800:
-                res = 800.0;
-                break;
-            case SIZE_1920x1080:
-                res = 1080.0;
-                break;
-            case SIZE_320x240:
-                res = 240.0;
-                break;
-            case SIZE_640x480:
-                res = 480.0;
-                break;
+            case SIZE_DEFAULT:
+                return HEIGHT_WHEN_EMPTY;
             case SIZE_PREFERRED:
-                res = getRoot().prefHeight(-1);
-                break;
+                return getRoot().prefHeight(-1);
             default:
-                break;
+                return size.getHeight();
         }
-
-        return res;
     }
 
     /**

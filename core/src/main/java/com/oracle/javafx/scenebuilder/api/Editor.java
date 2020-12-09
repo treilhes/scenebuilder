@@ -96,4 +96,6 @@ public interface Editor {
 
     public void textEditingSessionDidEnd();
 
+    public boolean isNode();
+
 }

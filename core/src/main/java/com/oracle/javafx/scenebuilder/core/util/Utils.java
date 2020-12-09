@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.kit.util;
+package com.oracle.javafx.scenebuilder.core.util;
 
 import java.io.File;
 import java.net.URISyntaxException;

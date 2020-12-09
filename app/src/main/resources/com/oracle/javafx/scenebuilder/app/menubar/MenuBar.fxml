@@ -209,25 +209,7 @@
             <MenuItem fx:id="unwrapMenuItem" mnemonicParsing="true" text="%menu.title.unwrap" />
           </items>
         </Menu>
-        <Menu fx:id="previewMenu" mnemonicParsing="true" text="%menu.title.preview">
-          <items>
-            <MenuItem fx:id="showPreviewInWindowMenuItem" mnemonicParsing="true" text="%menu.title.show.preview.in.window" />
-            <MenuItem fx:id="showPreviewInDialogMenuItem" mnemonicParsing="true" text="%menu.title.show.preview.in.dialog" />
-            <SeparatorMenuItem fx:id="firstSeparator" mnemonicParsing="false" />
-            <Menu fx:id="previewSizeMenu" mnemonicParsing="true" text="%menu.title.preview.size">
-              <items>
-                  <RadioMenuItem fx:id="preferredPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.preferred" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <RadioMenuItem fx:id="phonePreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.phone" />
-                  <RadioMenuItem fx:id="tabletPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.tablet" />
-                  <RadioMenuItem fx:id="qvgaPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.qvga" />
-                  <RadioMenuItem fx:id="vgaPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.vga" />
-                  <RadioMenuItem fx:id="touchPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.touch" />
-                  <RadioMenuItem fx:id="hdPreviewSizeMenuItem" mnemonicParsing="false" text="%menu.title.size.hd" />
-              </items>
-            </Menu>
-          </items>
-        </Menu>
+        <Menu fx:id="previewMenu" mnemonicParsing="true" text="%menu.title.preview" />
         <Menu fx:id="windowMenu" mnemonicParsing="true" text="%menu.title.window">
           <items>
             <SeparatorMenuItem mnemonicParsing="false" />

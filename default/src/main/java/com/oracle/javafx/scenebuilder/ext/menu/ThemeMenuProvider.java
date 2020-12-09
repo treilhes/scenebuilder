@@ -33,7 +33,8 @@ import javafx.scene.control.ToggleGroup;
 @Lazy
 public class ThemeMenuProvider implements MenuItemProvider {
 
-	private final static String FIRST_SEPARATOR_ID = "firstSeparator";
+	//private final static String FIRST_SEPARATOR_ID = "firstSeparator";
+    private final static String FIRST_SEPARATOR_ID = "previewMenu";
 
 	private final List<ThemeProvider> themeProviders;
 
@@ -75,7 +76,7 @@ public class ThemeMenuProvider implements MenuItemProvider {
 
 		@Override
 		public PositionRequest getPositionRequest() {
-			return PositionRequest.AsNextSibling;
+			return PositionRequest.AsLastChild;
 		}
 
 		@SuppressWarnings("unchecked")
