@@ -67,6 +67,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         return relativePosition;
     }
 
+    @Override
     public void setRelativePosition(CardinalPoint relativePosition) {
         this.relativePosition = relativePosition;
     }
@@ -75,6 +76,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         return rowCount;
     }
 
+    @Override
     public void setRowCount(int rowCount) {
         // We force fxml to load so that we can call reconfigureGridPane().
         getRoot();
@@ -84,6 +86,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         reconfigureGridPane();
     }
 
+    @Override
     public void setNameAtRowIndex(String name, int rowIndex) {
         assert (0 <= rowIndex);
         assert (rowIndex < gridPane.getRowConstraints().size());
@@ -93,6 +96,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         nameLabel.setText(name);
     }
 
+    @Override
     public void setValueAtRowIndex(String value, int rowIndex) {
         assert (0 <= rowIndex);
         assert (rowIndex < gridPane.getRowConstraints().size());

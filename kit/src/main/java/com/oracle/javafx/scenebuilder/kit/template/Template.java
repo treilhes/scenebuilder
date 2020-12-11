@@ -37,7 +37,6 @@ import static com.oracle.javafx.scenebuilder.kit.template.Type.PHONE;
 
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 public enum Template {

@@ -57,13 +57,22 @@ public abstract class AbstractDriver implements Driver {
         this.contentPanelController = contentPanelController;
     }
 
+    @Override
     public abstract Handles<?> makeHandles(FXOMObject fxomObject);
+    @Override
     public abstract Pring<?> makePring(FXOMObject fxomObject);
+    @Override
     public abstract Tring<?> makeTring(DropTarget dropTarget);
+    @Override
     public abstract Resizer<?> makeResizer(FXOMObject fxomObject);
+    @Override
     public abstract CurveEditor<?> makeCurveEditor(FXOMObject fxomObject);
+    @Override
     public abstract FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject);
+    @Override
     public abstract DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY);
+    @Override
     public abstract Node getInlineEditorBounds(FXOMObject fxomObject);
+    @Override
     public abstract boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds);
 }

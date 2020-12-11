@@ -60,6 +60,7 @@ public class EditCurveGuideController implements EditCurveGuide{
         pointIndex.addPoint(pointInScene);
     }
 
+    @Override
     public void addSampleBounds(Node node) {
         assert node != null;
         assert node.getScene() != null;
@@ -97,6 +98,7 @@ public class EditCurveGuideController implements EditCurveGuide{
         verticalLineIndex.addLine(new VerticalSegment(maxX, minY, maxY));
     }
 
+    @Override
     public Point2D correct(Point2D point) {
         assert point != null;
 
@@ -130,6 +132,7 @@ public class EditCurveGuideController implements EditCurveGuide{
         return new Point2D(x, y);
     }
 
+    @Override
     public Point2D makeStraightAngles(Point2D point) {
         assert point != null;
 

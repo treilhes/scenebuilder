@@ -53,17 +53,26 @@ public abstract class AbstractResizer<T extends Node> implements Resizer<T>{
         this.sceneGraphObject = sceneGraphObject;
     }
 
+    @Override
     public T getSceneGraphObject() {
         return sceneGraphObject;
     }
 
+    @Override
     public abstract Bounds computeBounds(double width, double height);
+    @Override
     public abstract Feature getFeature();
+    @Override
     public abstract void changeWidth(double width);
+    @Override
     public abstract void changeHeight(double height);
+    @Override
     public abstract void revertToOriginalSize();
 
+    @Override
     public abstract List<PropertyName> getPropertyNames();
+    @Override
     public abstract Object getValue(PropertyName propertyName);
+    @Override
     public abstract Map<PropertyName, Object> getChangeMap();
 }

@@ -99,7 +99,7 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
         loader.setLocation(fxmlURL);
         loader.setResources(I18N.getBundle());
         try {
-            setPanelRoot((Parent)loader.load());
+            setRoot((Parent)loader.load());
             controllerDidLoadFxml();
         } catch (RuntimeException | IOException x) {
             System.out.println("loader.getController()=" + loader.getController());

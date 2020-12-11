@@ -11,8 +11,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.Pr
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
-
 import javafx.scene.Parent;
 
 @Component

@@ -61,6 +61,7 @@ public class MessageLog implements MessageLogger{
      * Public
      */
 
+    @Override
     public void logInfoMessage(String infoKey, ResourceBundle bundle, Object... arguments) {
         logMessage(MessageLogEntry.Type.INFO, bundle, infoKey, arguments);
     }
@@ -78,26 +79,32 @@ public class MessageLog implements MessageLogger{
         logWarningMessage(warningKey, I18N.getBundle(), arguments);
     }
 
+    @Override
     public IntegerProperty revisionProperty() {
         return revision;
     }
 
+    @Override
     public IntegerProperty numOfWarningMessagesProperty() {
         return numOfWarningMessages;
     }
 
+    @Override
     public List<MessageEntry> getEntries() {
         return Collections.unmodifiableList(entries);
     }
 
+    @Override
     public MessageLogEntry getYoungestEntry() {
         return entries.isEmpty() ? null : entries.get(0);
     }
 
+    @Override
     public int getEntryCount() {
         return entries.size();
     }
 
+    @Override
     public int getWarningEntryCount() {
         int count = 0;
         for (MessageLogEntry entry : entries) {
@@ -108,6 +115,7 @@ public class MessageLog implements MessageLogger{
         return count;
     }
 
+    @Override
     public void clear() {
         if (entries.isEmpty() == false) {
             entries.clear();
@@ -116,6 +124,7 @@ public class MessageLog implements MessageLogger{
         }
     }
 
+    @Override
     public void clearEntry(MessageEntry entry) {
         assert entry != null;
         assert entries.contains(entry);

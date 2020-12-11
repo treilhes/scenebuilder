@@ -42,8 +42,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

@@ -73,11 +73,23 @@ public class SearchController extends AbstractFxmlController implements ViewSear
         super(sceneBuilderManager, SearchController.class.getResource("Search.fxml"), editor); //NOI18N
     }
 
-	public StringProperty textProperty() {
+    @FXML
+    protected void initialize() {
+        System.out.println("SearchController initialize " + this.getClass().getSimpleName() +  this);
+    }
+
+    @Autowired
+    private void initialize2(@Autowired Editor test) {
+        System.out.println("SearchController initialize2 " + this.getClass().getSimpleName() +  this);
+    }
+
+	@Override
+    public StringProperty textProperty() {
         return searchField.textProperty();
     }
 
-	public void requestFocus() {
+	@Override
+    public void requestFocus() {
         searchField.requestFocus();
     }
 

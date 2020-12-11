@@ -150,6 +150,7 @@ public class ContextMenuController implements com.oracle.javafx.scenebuilder.api
         this.editorController.getJobManager().revisionProperty().addListener(jobManagerRevisionListener);
     }
 
+    @Override
     public ContextMenu getContextMenu() {
         if (contextMenu == null) {
             // Initialization of context menu
@@ -163,6 +164,7 @@ public class ContextMenuController implements com.oracle.javafx.scenebuilder.api
     /**
      * Updates the context menu items depending on the selection.
      */
+    @Override
     public void updateContextMenuItems() {
 
         // Lazely initialization of context menu items

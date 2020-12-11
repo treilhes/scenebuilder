@@ -56,18 +56,29 @@ public abstract class AbstractDragSource implements DragSource{
         return ownerWindow;
     }
 
+    @Override
     public abstract boolean isAcceptable();
+    @Override
     public abstract List<FXOMObject> getDraggedObjects();
+    @Override
     public abstract FXOMObject getHitObject();
+    @Override
     public abstract double getHitX();
+    @Override
     public abstract double getHitY();
     public abstract ClipboardContent makeClipboardContent();
     public abstract Image makeDragView();
+    @Override
     public abstract Node makeShadow();
+    @Override
     public abstract String makeDropJobDescription();
+    @Override
     public abstract boolean isNodeOnly();
+    @Override
     public abstract boolean isSingleImageViewOnly();
+    @Override
     public abstract boolean isSingleTooltipOnly();
+    @Override
     public abstract boolean isSingleContextMenuOnly();
 
 }

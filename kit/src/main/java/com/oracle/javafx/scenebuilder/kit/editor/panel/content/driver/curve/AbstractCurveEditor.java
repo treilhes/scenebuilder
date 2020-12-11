@@ -52,22 +52,32 @@ public abstract class AbstractCurveEditor<T extends Node> implements CurveEditor
         this.sceneGraphObject = sceneGraphObject;
     }
 
+    @Override
     public T getSceneGraphObject() {
         return sceneGraphObject;
     }
 
+    @Override
     public abstract EditCurveGuideController createController(EnumMap<Tunable, Integer> tunableMap);
 
+    @Override
     public abstract void moveTunable(EnumMap<Tunable, Integer> tunableMap, double newX, double newY);
+    @Override
     public abstract void revertToOriginalState();
 
+    @Override
     public abstract List<PropertyName> getPropertyNames();
 
+    @Override
     public abstract Object getValue(PropertyName propertyName);
 
+    @Override
     public abstract Map<PropertyName, Object> getChangeMap();
 
+    @Override
     public abstract List<Double> getPoints();
+    @Override
     public abstract void addPoint(EnumMap<Tunable, Integer> tunableMap, double newX, double newY);
+    @Override
     public abstract void removePoint(EnumMap<Tunable, Integer> tunableMap);
 }

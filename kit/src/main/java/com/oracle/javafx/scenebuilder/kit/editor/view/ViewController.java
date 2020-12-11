@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021 Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -52,6 +52,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.layout.StackPane;
 
+// TODO: Auto-generated Javadoc
 /**
  * AbstractViewFxmlPanelController is the abstract base class for all the
  * view controller which build their UI components from an FXML file.
@@ -67,12 +68,20 @@ import javafx.scene.layout.StackPane;
 @Lazy
 public class ViewController extends AbstractFxmlController implements ViewContent {
 
+	/** The views. */
 	@Autowired
 	private DockManager views;
 
+	/** The view panel host. */
 	@FXML private StackPane viewPanelHost;
+
+    /** The view search panel host. */
     @FXML private StackPane viewSearchPanelHost;
+
+    /** The view label. */
     @FXML private Label viewLabel;
+
+    /** The view menu button. */
     @FXML private MenuButton viewMenuButton;
 
     /*
@@ -81,7 +90,8 @@ public class ViewController extends AbstractFxmlController implements ViewConten
 	/**
      * Base constructor for invocation by the subclasses.
      *
-     * @param editorController  the editor controller (cannot be null)
+     * @param sceneBuilderManager the scene builder manager
+     * @param editor the editor
      */
     public ViewController(
             @Autowired SceneBuilderManager sceneBuilderManager,
@@ -89,18 +99,40 @@ public class ViewController extends AbstractFxmlController implements ViewConten
         super(sceneBuilderManager, ViewController.class.getResource("View.fxml"), editor);
     }
 
+    /**
+     * Text property.
+     *
+     * @return the string property
+     */
+    @Override
     public StringProperty textProperty() {
         return viewLabel.textProperty();
     }
 
+    /**
+     * Sets the content.
+     *
+     * @param content the new content
+     */
+    @Override
     public void setContent(Parent content) {
         viewPanelHost.getChildren().add(content);
     }
 
+    /**
+     * Sets the search control.
+     *
+     * @param searchControl the new search control
+     */
+    @Override
     public void setSearchControl(Parent searchControl) {
         viewSearchPanelHost.getChildren().add(searchControl);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void controllerDidLoadFxml() {
     	assert viewPanelHost != null;
@@ -108,7 +140,13 @@ public class ViewController extends AbstractFxmlController implements ViewConten
         //views.showDockTarget().resubscribe(d -> )
     }
 
-	public MenuButton getViewMenuButton() {
+	/**
+	 * Gets the view menu button.
+	 *
+	 * @return the view menu button
+	 */
+	@Override
+    public MenuButton getViewMenuButton() {
 		return viewMenuButton;
 	}
 

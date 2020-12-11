@@ -80,14 +80,17 @@ public class JobManagerImpl implements JobManager {
     }
 
 
+    @Override
     public List<Job> getUndoStack() {
         return Collections.unmodifiableList(undoStack);
     }
 
+    @Override
     public List<Job> getRedoStack() {
         return Collections.unmodifiableList(redoStack);
     }
 
+    @Override
     public void push(Job job) {
         assert job != null;
         assert job.isExecutable();
@@ -108,6 +111,7 @@ public class JobManagerImpl implements JobManager {
 
     }
 
+    @Override
     public void clear() {
         if (lock) {
             // Method is called from a revision property listener
@@ -119,10 +123,12 @@ public class JobManagerImpl implements JobManager {
         // We don't change the revision.
     }
 
+    @Override
     public boolean canUndo() {
         return undoStack.isEmpty() == false;
     }
 
+    @Override
     public String getUndoDescription() {
         final String result;
         if (canUndo()) {
@@ -133,6 +139,7 @@ public class JobManagerImpl implements JobManager {
         return result;
     }
 
+    @Override
     public void undo() {
         assert canUndo();
 
@@ -148,10 +155,12 @@ public class JobManagerImpl implements JobManager {
         incrementRevision();
     }
 
+    @Override
     public boolean canRedo() {
         return redoStack.isEmpty() == false;
     }
 
+    @Override
     public String getRedoDescription() {
         final String result;
         if (canRedo()) {
@@ -162,6 +171,7 @@ public class JobManagerImpl implements JobManager {
         return result;
     }
 
+    @Override
     public void redo() {
         assert canRedo();
 
@@ -183,6 +193,7 @@ public class JobManagerImpl implements JobManager {
      *
      * @return the property holding the revision number of this job manager.
      */
+    @Override
     public ReadOnlyIntegerProperty revisionProperty() {
         return revision;
     }
@@ -193,6 +204,7 @@ public class JobManagerImpl implements JobManager {
      * @return the current job, which is the one at index 0 in the undo stack.
      * It can be null.
      */
+    @Override
     public Job getCurrentJob() {
         if (undoStack.size() > 0) {
             return undoStack.get(0);

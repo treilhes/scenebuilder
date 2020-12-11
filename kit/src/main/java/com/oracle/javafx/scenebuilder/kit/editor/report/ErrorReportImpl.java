@@ -74,6 +74,7 @@ public class ErrorReportImpl implements ErrorReport {
         this.dirty = true;
     }
 
+    @Override
     public List<ErrorReportEntry> query(FXOMObject fxomObject, boolean recursive) {
         final List<ErrorReportEntry> result;
 

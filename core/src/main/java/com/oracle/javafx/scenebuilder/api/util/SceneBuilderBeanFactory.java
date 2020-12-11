@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.ObjectFactory;
@@ -183,7 +182,9 @@ public class SceneBuilderBeanFactory {
 		        loader.setResources(controller.getResources());
 				loader.setClassLoader(bean.getClass().getClassLoader());
 		        try {
-		        	controller.setPanelRoot((Parent)loader.load());
+		            System.out.println("SBBF setPanelRoot " + controller.getClass().getSimpleName() +  controller);
+		        	controller.setRoot((Parent)loader.load());
+		        	System.out.println("SBBF controllerDidLoadFxml " + controller.getClass().getSimpleName() +  controller);
 		        	controller.controllerDidLoadFxml();
 		        } catch (RuntimeException | IOException x) {
 		            System.out.println("loader.getController()=" + loader.getController());

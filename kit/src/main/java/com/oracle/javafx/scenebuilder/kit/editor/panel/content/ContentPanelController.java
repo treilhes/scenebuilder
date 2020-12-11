@@ -287,6 +287,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      *
      * @return true if this content panel displays alignment guides.
      */
+    @Override
     public boolean isGuidesVisible() {
         return guidesVisible;
     }
@@ -305,6 +306,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      *
      * @return the color used by this content panel to draw parent rings.
      */
+    @Override
     public Paint getPringColor() {
         return pringColor;
     }
@@ -323,6 +325,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      *
      * @return the color used by this content panel to draw alignment guides.
      */
+    @Override
     public Paint getGuidesColor() {
         return guidesColor;
     }
@@ -341,6 +344,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      *
      * @return the scaling factor used by this content panel.
      */
+    @Override
     public double getScaling() {
         return workspaceController.getScaling();
     }
@@ -350,6 +354,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      *
      * @param scaling the scaling factor to be used by this content panel.
      */
+    @Override
     public void setScaling(double scaling) {
         this.workspaceController.setScaling(scaling);
     }
@@ -423,6 +428,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     /**
      * Scrolls this content panel so that the selected objects are visible.
      */
+    @Override
     public void scrollToSelection() {
         // Walk through the selected objects and computes the enclosing bounds.
         final BoundsUnion union = new BoundsUnion();
@@ -455,6 +461,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
 
+    @Override
     public void reveal(FXOMObject targetFxomObject) {
         FXOMObject fxomObject = targetFxomObject;
 
@@ -486,6 +493,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param sceneY y coordinate of a scene point
      * @return null or the topmost FXOMObject located at (sceneX, sceneY)
      */
+    @Override
     public FXOMObject pick(double sceneX, double sceneY) {
         return pick(sceneX, sceneY, Collections.emptySet());
     }
@@ -500,6 +508,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param excludes null or a set of FXOMObject to be excluded from the pick.
      * @return null or the topmost FXOMObject located at (sceneX, sceneY)
      */
+    @Override
     public FXOMObject pick(double sceneX, double sceneY, Set<FXOMObject> excludes) {
         final FXOMObject result;
 
@@ -637,10 +646,12 @@ public class ContentPanelController extends AbstractFxmlPanelController
         workspaceController.layoutContent(applyCSS);
     }
 
+    @Override
     public void beginInteraction() {
         workspaceController.beginInteraction();
     }
 
+    @Override
     public void endInteraction() {
         workspaceController.endInteraction();
     }
@@ -654,6 +665,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the background object of this content panel.
      * @return the background object of this content panel.
      */
+    @Override
     public Pane getWorkspacePane() {
         return workspacePane;
     }
@@ -663,6 +675,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the glass layer container.
      * @return the glass layer container.
      */
+    @Override
     public Pane getGlassLayer() {
         return glassLayer;
     }
@@ -681,6 +694,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the parent ring layer container.
      * @return the parent ring layer container.
      */
+    @Override
     public Group getPringLayer() {
         return pringLayer;
     }
@@ -690,6 +704,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the handle layer container.
      * @return the handle layer container.
      */
+    @Override
     public Group getHandleLayer() {
         return handleLayer;
     }
@@ -698,6 +713,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the rudder layer container.
      * @return the rudder layer container.
      */
+    @Override
     public Group getRudderLayer() {
         return rudderLayer;
     }
@@ -707,6 +723,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the sub scene holding the user scene graph.
      * @return the sub scene holding the user scene graph.
      */
+    @Override
     public SubScene getContentSubScene() {
         return contentSubScene;
     }
@@ -718,6 +735,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param sceneGraphObject a scene graph object
      * @return transform from sceneGraphObject local coordinates to rudder local coordinates
      */
+    @Override
     public Transform computeSceneGraphToRudderLayerTransform(Node sceneGraphObject) {
         assert sceneGraphObject != null;
         assert sceneGraphObject.getScene() == rudderLayer.getScene();
@@ -742,6 +760,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @treatAsPrivate Returns the hud window controller.
      * @return the hud window controller.
      */
+    @Override
     public HudWindowController getHudWindowController() {
         return hudWindowController;
     }
@@ -782,6 +801,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      *
      * @return true if this content panel is able to display the content
      */
+    @Override
     public boolean isContentDisplayable() {
         final boolean result;
 
@@ -1015,6 +1035,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param fxomObject an fxom object (never null)
      * @return null or the driver adapted to fxomObject
      */
+    @Override
     public Driver lookupDriver(FXOMObject fxomObject) {
         final Object sceneGraphObject = fxomObject.getSceneGraphObject();
         final AbstractDriver result;

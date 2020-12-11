@@ -52,6 +52,7 @@ public abstract class AbstractTring<T> extends AbstractDecoration<T> implements 
         super(contentPanelController, fxomObject, sceneGraphClass);
     }
 
+    @Override
     public abstract void changeStroke(Paint stroke);
 
 }

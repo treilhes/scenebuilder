@@ -89,6 +89,7 @@ public class DragController implements Drag{
         this.editorController = editorController;
     }
 
+    @Override
     public void begin(DragSource dragSource) {
         assert dragSource != null;
         assert dragSource.isAcceptable();
@@ -109,6 +110,7 @@ public class DragController implements Drag{
         editorController.getSelection().clear();
     }
 
+    @Override
     public void end() {
         assert getDragSource() != null;
 
@@ -153,14 +155,17 @@ public class DragController implements Drag{
 
     }
 
+    @Override
     public DragSource getDragSource() {
         return dragSourceProperty.get();
     }
 
+    @Override
     public Property<DragSource> dragSourceProperty() {
         return dragSourceProperty;
     }
 
+    @Override
     public void setDropTarget(DropTarget newDropTarget) {
         assert getDragSource() != null;
         assert (newDropTarget == null) || (this.committedDropTarget == null);
@@ -196,18 +201,22 @@ public class DragController implements Drag{
         }
     }
 
+    @Override
     public DropTarget getDropTarget() {
         return dropTargetProperty.get();
     }
 
+    @Override
     public Property<DropTarget> dropTargetProperty() {
         return dropTargetProperty;
     }
 
+    @Override
     public boolean isDropAccepted() {
         return dropAccepted;
     }
 
+    @Override
     public TransferMode[] getAcceptedTransferModes() {
         final TransferMode[] result;
 
@@ -228,6 +237,7 @@ public class DragController implements Drag{
         return result;
     }
 
+    @Override
     public void commit() {
         assert isDropAccepted();
         assert committedDropTarget == null;

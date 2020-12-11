@@ -10,8 +10,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
-
 import javafx.scene.Parent;
 
 @Component

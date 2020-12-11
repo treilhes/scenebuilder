@@ -11,8 +11,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.IntegerPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
-
 import javafx.scene.Parent;
 
 @Component

@@ -104,6 +104,7 @@ public class InlineEditController implements InlineEdit{
      * @param initialValue
      * @return
      */
+    @Override
     public TextInputControl createTextInputControl(final Type type, final Node target, final String initialValue) {
 
         TextInputControl editor = null;
@@ -159,6 +160,7 @@ public class InlineEditController implements InlineEdit{
      * @param requestCommit
      * @param requestRevert
      */
+    @Override
     public void startEditingSession(final TextInputControl editor, final Node anchor,
             final Callback<String, Boolean> requestCommit,
             final Callback<Void, Boolean> requestRevert) {

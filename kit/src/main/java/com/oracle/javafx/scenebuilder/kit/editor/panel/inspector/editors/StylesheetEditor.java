@@ -33,9 +33,7 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +47,6 @@ import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue.Type;
-import com.oracle.javafx.scenebuilder.core.util.URLUtils;
-
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;

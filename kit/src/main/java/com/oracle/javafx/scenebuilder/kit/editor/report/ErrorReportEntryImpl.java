@@ -61,14 +61,17 @@ public class ErrorReportEntryImpl implements ErrorReportEntry {
         this(fxomNode, type, null);
     }
 
+    @Override
     public FXOMNode getFxomNode() {
         return fxomNode;
     }
 
+    @Override
     public Type getType() {
         return type;
     }
 
+    @Override
     public CSSParsingReportImpl getCssParsingReport() {
         return cssParsingReport;
     }

@@ -78,10 +78,12 @@ public class CSSParsingReportImpl implements CSSParsingReport{
         return (ioException == null) && parseErrors.isEmpty();
     }
 
+    @Override
     public IOException getIOException() {
         return ioException;
     }
 
+    @Override
     public List<CssParser.ParseError> getParseErrors() {
         return Collections.unmodifiableList(parseErrors);
     }

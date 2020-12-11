@@ -48,14 +48,17 @@ public class MessageLogEntry implements MessageEntry{
         this.timestamp = timestamp;
     }
 
+    @Override
     public Type getType() {
         return type;
     }
 
+    @Override
     public String getText() {
         return text;
     }
 
+    @Override
     public String getTimestamp() {
         return timestamp;
     }

@@ -53,7 +53,9 @@ public abstract class AbstractPring<T> extends AbstractDecoration<T> implements 
         super(contentPanelController, fxomObject, sceneGraphClass);
     }
 
+    @Override
     public abstract void changeStroke(Paint stroke);
+    @Override
     public abstract AbstractGesture findGesture(Node node);
 
     private static final String PRING = "PRING"; //NOI18N

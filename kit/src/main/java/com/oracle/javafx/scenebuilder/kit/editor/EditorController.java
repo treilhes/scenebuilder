@@ -382,6 +382,7 @@ public class EditorController implements Editor {
      *
      * @return default width for the root container.
      */
+    @Override
     public double getDefaultRootContainerWidth() {
         return defaultRootContainerWidth;
     }
@@ -400,6 +401,7 @@ public class EditorController implements Editor {
      *
      * @return default height for the root container.
      */
+    @Override
     public double getDefaultRootContainerHeight() {
         return defaultRootContainerHeight;
     }
@@ -456,6 +458,7 @@ public class EditorController implements Editor {
      *
      * @return true if fxml content being edited can be returned safely.
      */
+    @Override
     public boolean canGetFxmlText() {
         final boolean result;
 
@@ -482,6 +485,7 @@ public class EditorController implements Editor {
      *
      * @param requestSessionEnd Callback that should end the text editing session or return false
      */
+    @Override
     public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd) {
         assert requestTextEditingSessionEnd == null;
         requestTextEditingSessionEnd = requestSessionEnd;
@@ -491,6 +495,7 @@ public class EditorController implements Editor {
     /**
      * Tells this editor that the text editing session has ended.
      */
+    @Override
     public void textEditingSessionDidEnd() {
         assert requestTextEditingSessionEnd != null;
         requestTextEditingSessionEnd = null;
@@ -499,6 +504,7 @@ public class EditorController implements Editor {
     /*
      * Returns true if a text editing session is currently on going.
      */
+    @Override
     public boolean isTextEditingSessionOnGoing() {
         return requestTextEditingSessionEnd != null;
     }
@@ -507,6 +513,7 @@ public class EditorController implements Editor {
      * The property holding the fxml location associated to this editor.
      * @return the property holding the fxml location associated to this editor.
      */
+    @Override
     public ObservableValue<URL> fxmlLocationProperty() {
         return fxmlLocationProperty;
     }
@@ -535,6 +542,7 @@ public class EditorController implements Editor {
      *
      * @return the library used by this editor (never null).
      */
+    @Override
     public Library getLibrary() {
         return libraryProperty.getValue();
     }
@@ -559,6 +567,7 @@ public class EditorController implements Editor {
      *
      * @return the property holding the library used by this editor (never null).
      */
+    @Override
     public ObservableValue<Library> libraryProperty() {
         return libraryProperty;
     }
@@ -568,6 +577,7 @@ public class EditorController implements Editor {
      *
      * @return the glossary used by this editor (never null).
      */
+    @Override
     public AbstractGlossary getGlossary() {
         return glossaryProperty.getValue();
     }
@@ -627,6 +637,7 @@ public class EditorController implements Editor {
      * Returns true if 'pick mode' is enabled for this editor.
      * @return true if 'pick mode' is enabled for this editor.
      */
+    @Override
     public boolean isPickModeEnabled() {
         return pickModeEnabledProperty.getValue();
     }
@@ -636,6 +647,7 @@ public class EditorController implements Editor {
      *
      * @param pickModeEnabled true if 'pick mode' should be enabled.
      */
+    @Override
     public void setPickModeEnabled(boolean pickModeEnabled) {
         pickModeEnabledProperty.setValue(pickModeEnabled);
     }
@@ -645,6 +657,7 @@ public class EditorController implements Editor {
      *
      * @return the property indicating if 'pick mode' is enabled or not.
      */
+    @Override
     public ObservableValue<Boolean> pickModeEnabledProperty() {
         return pickModeEnabledProperty;
     }
@@ -678,6 +691,7 @@ public class EditorController implements Editor {
      *
      * @return the property indicating if sample data should be displayed or not.
      */
+    @Override
     public ObservableValue<Boolean> sampleDataEnabledProperty() {
         return sampleDataEnabledProperty;
     }
@@ -760,6 +774,7 @@ public class EditorController implements Editor {
      * The property holding the document associated to this editor.
      * @return the property holding the document associated to this editor.
      */
+    @Override
     public ObservableValue<FXOMDocument> fxomDocumentProperty() {
         return fxomDocumentProperty;
     }
@@ -769,6 +784,7 @@ public class EditorController implements Editor {
      *
      * @return the document associated to this editor.
      */
+    @Override
     public FXOMDocument getFxomDocument() {
         return fxomDocumentProperty.getValue();
     }
@@ -847,6 +863,7 @@ public class EditorController implements Editor {
      *
      * @return  the selection associated to this editor.
      */
+    @Override
     public Selection getSelection() {
         return selection;
     }
@@ -878,6 +895,7 @@ public class EditorController implements Editor {
      *
      * @return  the job manager associated to this editor.
      */
+    @Override
     public JobManager getJobManager() {
         return jobManager;
     }
@@ -887,6 +905,7 @@ public class EditorController implements Editor {
      *
      * @return  the message log associated to this editor.
      */
+    @Override
     public MessageLog getMessageLog() {
         return messageLog;
     }
@@ -896,6 +915,7 @@ public class EditorController implements Editor {
      *
      * @return  the error report associated to this editor.
      */
+    @Override
     public ErrorReportImpl getErrorReport() {
         return errorReport;
     }
@@ -905,6 +925,7 @@ public class EditorController implements Editor {
      *
      * @return the drag controller associated to this editor.
      */
+    @Override
     public Drag getDragController() {
         return dragController;
     }
@@ -914,6 +935,7 @@ public class EditorController implements Editor {
      *
      * @return the inline edit controller associated to this editor.
      */
+    @Override
     public InlineEditController getInlineEditController() {
         return inlineEditController;
     }
@@ -923,6 +945,7 @@ public class EditorController implements Editor {
      *
      * @return the context menu controller associated to this editor.
      */
+    @Override
     public ContextMenuController getContextMenuController() {
         return contextMenuController;
     }
@@ -1509,6 +1532,7 @@ public class EditorController implements Editor {
      *
      * @param controlAction the control action to be performed.
      */
+    @Override
     public void performControlAction(ControlAction controlAction) {
         switch(controlAction) {
             case COPY: {
@@ -1558,6 +1582,7 @@ public class EditorController implements Editor {
      * @param controlAction the control action to be tested.
      * @return true if the specified control action is permitted.
      */
+    @Override
     public boolean canPerformControlAction(ControlAction controlAction) {
         final boolean result;
 
@@ -1668,6 +1693,7 @@ public class EditorController implements Editor {
      *
      * @param fxmlFile the FXML file to be included
      */
+    @Override
     public void performIncludeFxml(File fxmlFile) {
         final IncludeFileJob job = new IncludeFileJob(context, fxmlFile, this);
         if (job.extend().isExecutable()) {
@@ -1704,6 +1730,7 @@ public class EditorController implements Editor {
      *
      * @param libraryItem the library item describing the object to be inserted.
      */
+    @Override
     public void performInsert(LibraryItem libraryItem) {
         final Job job;
         final FXOMObject target;
@@ -1746,6 +1773,7 @@ public class EditorController implements Editor {
      * @param libraryItem the library item describing the object to be inserted.
      * @return true if the 'insert' action is permitted.
      */
+    @Override
     public boolean canPerformInsert(LibraryItem libraryItem) {
         final FXOMObject targetCandidate;
         final boolean result;
@@ -2207,6 +2235,7 @@ public class EditorController implements Editor {
      *
      * @return the included file associated to the selected object or null.
      */
+    @Override
     public File getIncludedFile() {
         final AbstractSelectionGroup asg = getSelection().getGroup();
         if (asg instanceof ObjectSelectionGroup == false) {
@@ -2398,6 +2427,7 @@ public class EditorController implements Editor {
      * @return true if the current FXOM document represents a 3D layout, false
      *         otherwise.
      */
+    @Override
     public boolean is3D() {
         boolean res = false;
         FXOMDocument doc = getFxomDocument();
@@ -2421,6 +2451,7 @@ public class EditorController implements Editor {
      * @return true if the current FXOM document is an instance of a Node, false
      * otherwise.
      */
+    @Override
     public boolean isNode() {
         boolean res = false;
         FXOMDocument doc = getFxomDocument();
@@ -2442,6 +2473,7 @@ public class EditorController implements Editor {
      * @return true if the current selection objects are all instances of a Node,
      * false otherwise.
      */
+    @Override
     public boolean isSelectionNode() {
         final AbstractSelectionGroup asg = selection.getGroup();
         if (asg instanceof ObjectSelectionGroup) {
@@ -2569,6 +2601,7 @@ public class EditorController implements Editor {
         this.ownerWindow = ownerWindow;
     }
 
+    @Override
     public Stage getOwnerWindow() {
         return ownerWindow;
     }

@@ -13,7 +13,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference.BackgroundImage;
 
 import javafx.scene.Parent;

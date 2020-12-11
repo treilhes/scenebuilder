@@ -36,10 +36,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javafx.collections.ObservableList;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-
 public class ResourceUtils {
 
     //public static final String BASE = ResourceUtils.class.getResource("css/Base.css").toExternalForm();

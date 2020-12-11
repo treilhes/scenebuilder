@@ -72,11 +72,13 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
         return enabled;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         enabledDidChange();
     }
 
+    @Override
     public AbstractGesture findEnabledGesture(Node node) {
         final AbstractGesture result;
 

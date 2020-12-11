@@ -57,17 +57,21 @@ public abstract class AbstractLibrary implements Library{
      * Public
      */
 
+    @Override
     public ObservableList<LibraryItem> getItems() {
         return itemsProperty;
     }
 
+    @Override
     public ReadOnlyProperty<ClassLoader> classLoaderProperty() {
         return classLoaderProperty;
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return classLoaderProperty.getValue();
     }
 
+    @Override
     public abstract Comparator<String> getSectionComparator();
 }

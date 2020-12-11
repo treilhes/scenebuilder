@@ -44,8 +44,12 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
  */
 public abstract class AbstractDropTarget implements DropTarget{
 
+    @Override
     public abstract FXOMObject getTargetObject();
+    @Override
     public abstract boolean acceptDragSource(DragSource dragSource);
+    @Override
     public abstract Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController);
+    @Override
     public abstract boolean isSelectRequiredAfterDrop();
 }

@@ -63,26 +63,32 @@ public class LibraryItemImpl implements LibraryItem {
         this.iconURL = iconURL;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getSection() {
         return section;
     }
 
+    @Override
     public String getFxmlText() {
         return fxmlText;
     }
 
+    @Override
     public URL getIconURL() {
         return iconURL;
     }
 
+    @Override
     public AbstractLibrary getLibrary() {
         return library;
     }
 
+    @Override
     public FXOMDocument instantiate() {
         FXOMDocument result;
 

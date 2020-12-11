@@ -92,6 +92,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         return rootNode;
     }
 
+    @Override
     public State getState() {
         final State result;
 
@@ -109,6 +110,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         return result;
     }
 
+    @Override
     public void reconcile() {
         assert getState() == State.NEEDS_RECONCILE;
 

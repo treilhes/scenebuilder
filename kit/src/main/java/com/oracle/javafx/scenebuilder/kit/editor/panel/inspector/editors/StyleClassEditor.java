@@ -31,9 +31,6 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +44,6 @@ import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 
 import javafx.beans.value.ChangeListener;

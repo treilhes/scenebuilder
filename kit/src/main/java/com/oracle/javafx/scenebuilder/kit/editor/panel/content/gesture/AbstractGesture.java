@@ -48,6 +48,7 @@ public abstract class AbstractGesture implements Gesture {
         this.contentPanelController = contentPanelController;
     }
 
+    @Override
     public abstract void start(InputEvent e, Observer observer);
 
 
