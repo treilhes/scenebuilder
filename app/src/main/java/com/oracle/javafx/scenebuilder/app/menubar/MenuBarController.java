@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -99,7 +99,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
-import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -108,24 +107,11 @@ import lombok.RequiredArgsConstructor;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
-@RequiredArgsConstructor
 public class MenuBarController implements InitializingBean {
 
     private static MenuBarController systemMenuBarController; // For Mac only
 
-    @Autowired
-    private BuiltinLibrary builtinLibrary;
-
     private Menu insertCustomMenu;
-    private final DocumentWindowController documentWindowController;
-    private final RecentItemsPreference recentItemsPreference;
-
-    // This member is null when this MenuBarController is used for
-    // managing the menu bar passed to MenuBarSkin.setDefaultSystemMenu().
-
-    @Autowired
-    @Lazy
-    private DebugMenuController debugMenuController; // Initialized lazily
 
     @FXML
     private MenuBar menuBar;
@@ -346,17 +332,35 @@ public class MenuBarController implements InitializingBean {
     private static final KeyCombination.Modifier modifier = KeyboardModifier.control();
     private final Map<KeyCombination, MenuItem> keyToMenu = new HashMap<>();
 
-    @Autowired(required = false)
-    List<MenuItemProvider> menuItemProviders;
-
-    @Autowired
-    ApplicationContext context;
-
     //TODO delete when all the menuBar will be handled by extensions
     // for now it prevents extension's menu to be disabled by legacy code
     List<MenuItem> dynamicMenu = new ArrayList<>();
 
     Map<String, MenuItem> menuMap = null;
+
+    private final ApplicationContext context;
+    private final DocumentWindowController documentWindowController;
+    private final RecentItemsPreference recentItemsPreference;
+    private final BuiltinLibrary builtinLibrary;
+    private final DebugMenuController debugMenuController; // Initialized lazily
+    private final List<MenuItemProvider> menuItemProviders;
+
+
+    public MenuBarController(
+            @Autowired ApplicationContext context,
+            @Autowired BuiltinLibrary builtinLibrary,
+            @Autowired RecentItemsPreference recentItemsPreference,
+            @Autowired(required = false) List<MenuItemProvider> menuItemProviders,
+            @Autowired @Lazy DocumentWindowController documentWindowController,
+            @Autowired @Lazy DebugMenuController debugMenuController
+            ) {
+        this.context = context;
+        this.builtinLibrary = builtinLibrary;
+        this.recentItemsPreference = recentItemsPreference;
+        this.menuItemProviders = menuItemProviders;
+        this.documentWindowController = documentWindowController;
+        this.debugMenuController = debugMenuController;
+    }
 
     public void buildMenuMap(MenuBar menuBar) {
         if (menuMap != null) {

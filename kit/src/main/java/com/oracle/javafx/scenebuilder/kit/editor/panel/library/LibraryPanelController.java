@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -81,7 +81,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractViewFxmlPanelController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
@@ -129,7 +129,7 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class LibraryPanelController extends AbstractViewFxmlPanelController {
+public class LibraryPanelController extends AbstractFxmlViewController {
 
     private String searchPattern;
     ArrayList<LibraryItem> searchData = new ArrayList<>();
@@ -190,11 +190,11 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     /**
      * Creates a library panel controller for the specified editor controller.
      *
-     * @param c the editor controller (never null).
+     * @param editor the editor controller (never null).
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public LibraryPanelController(
-    		@Autowired Editor editorController,
+    		@Autowired Editor editor,
     		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,
@@ -210,7 +210,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
     		@Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
     		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
     		) { //, UserLibrary library) {
-        super(sceneBuilderManager, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
+        super(sceneBuilderManager, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editor); //NOI18N
         this.sceneBuilderManager = sceneBuilderManager;
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.dialog = dialog;
@@ -352,8 +352,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
         assert noSearchResults != null;
         assert libSearchList != null;
 
-        getViewController().setSearchControl(getSearchController().getPanelRoot());
-		getViewController().setContent(super.getPanelRoot());
+        getViewController().setSearchControl(getSearchController().getRoot());
+		getViewController().setContent(super.getRoot());
 
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
 
@@ -871,7 +871,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
                     // This is why we put application window on the front.
                     // From there the import dialog window, which is application modal,
                     // should come on top of it.
-                    final Window window = getPanelRoot().getScene().getWindow();
+                    final Window window = getRoot().getScene().getWindow();
                     if (window instanceof Stage) {
                         final Stage stage = (Stage) window;
                         stage.toFront();
@@ -899,7 +899,7 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
                 // This is why we put application window on the front.
                 // From there the import dialog window, which is application modal,
                 // should come on top of it.
-                final Window window = getPanelRoot().getScene().getWindow();
+                final Window window = getRoot().getScene().getWindow();
                 if (window instanceof Stage) {
                     final Stage stage = (Stage) window;
                     stage.toFront();
@@ -1212,8 +1212,8 @@ public class LibraryPanelController extends AbstractViewFxmlPanelController {
 
 
 	@Override
-	public Parent getPanelRoot() {
-		return getViewController().getPanelRoot();
+	public Parent getRoot() {
+		return getViewController().getRoot();
 	}
 
 	public void createLibraryMenu() {

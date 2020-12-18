@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -190,33 +190,17 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     private EditorController editorController;
+    private final FileSystem fileSystem;
     private final MenuBarController menuBarController;
     private final ContentPanelController contentPanelController;
-
-    //private final AbstractHierarchyPanelController hierarchyPanelController;
-    //private final InfoPanelController infoPanelController;
     private final DocumentPanelController documentPanelController;
-
     private final InspectorPanelController inspectorPanelController;
     private final CssPanelController cssPanelController;
-
     private final LibraryPanelController libraryPanelController;
-
     private final SelectionBarController selectionBarController;
     private final MessageBarController messageBarController;
-    //private SearchController librarySearchController;
-    //private SearchController inspectorSearchController;
-    //private SearchController cssPanelSearchController;
-    //private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
-    //private final CssPanelMenuController cssPanelMenuController;
-    //private final I18nResourceMenuController resourceController;
-    //private final DocumentWatchingController watchingController;
-
-    //private final GlobalPreferences preferences;
     private final WildcardImportsPreference wildcardImportsPreference;
     private final RecentItemsPreference recentItemsPreference;
-    //private final ToolThemePreference toolThemePreference;
-
     private final DocumentPreferencesController documentPreferencesController;
 
     //PREFERENCES
@@ -228,12 +212,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final RightDividerHPosPreference rightDividerHPos;
 	private final BottomDividerVPosPreference bottomDividerVPos;
 	private final LeftDividerVPosPreference leftDividerVPos;
-
-	//private final I18NResourcePreference i18NResourcePreference;
 	private final ThemePreference themePreference;
 
-
-	private final FileSystem fileSystem;
 
     //private final DocumentsManager documentManager;
 
@@ -246,17 +226,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private SkeletonWindowController skeletonWindowController = null;
     private JarAnalysisReportController jarAnalysisReportController = null;
 
-    //@FXML private StackPane libraryPanelHost;
-    //@FXML private StackPane librarySearchPanelHost;
-    //@FXML private StackPane hierarchyPanelHost;
-    //@FXML private StackPane infoPanelHost;
     @FXML private StackPane contentPanelHost;
-    //@FXML private StackPane inspectorPanelHost;
-    //@FXML private StackPane inspectorSearchPanelHost;
-    //@FXML private StackPane cssPanelHost;
-    //@FXML private StackPane cssPanelSearchPanelHost;
     @FXML private StackPane messageBarHost;
-    //@FXML private Accordion documentAccordion;
     @FXML private SplitPane mainSplitPane;
     @FXML private SplitPane leftRightSplitPane;
     @FXML private SplitPane libraryDocumentSplitPane;
@@ -265,22 +236,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @FXML private VBox leftBottomHost;
     @FXML private VBox rightHost;
     @FXML private VBox bottomHost;
-
-    //@FXML private Label libraryLabel;
-
-    //@FXML private MenuButton libraryMenuButton;
-    //@FXML private MenuItem libraryImportSelection;
-    //@FXML private RadioMenuItem libraryViewAsList;
-    //@FXML private RadioMenuItem libraryViewAsSections;
-    //@FXML private MenuItem libraryReveal;
-    //@FXML private Menu customLibraryMenu;
-
-    //@FXML private MenuItem cssPanelShowStyledOnlyMi;
-    //@FXML private MenuItem cssPanelSplitDefaultsMi;
-
-//    @FXML private RadioMenuItem showInfoMenuItem;
-//    @FXML private RadioMenuItem showFxIdMenuItem;
-//    @FXML private RadioMenuItem showNodeIdMenuItem;
 
     private SplitController bottomSplitController;
     private SplitController leftSplitController;
@@ -522,27 +477,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 		//setToolStylesheet(toolThemePreference.getValue().getStylesheetURL());
         //toolThemePreference.getObservableValue().addListener((ob, o, n) -> setToolStylesheet(n.getStylesheetURL()));
 
-		// initialize preference binding
-		final Stage stage = getStage();
-        assert stage != null;
-
-        // Add stage x and y listeners
-        if (xPos.isValid()) {stage.setX(xPos.getValue());}
-        stage.xProperty().addListener((ob, o, n) -> xPos.setValue(n.doubleValue()));
-        xPos.getObservableValue().addListener((ob, o, n) -> stage.setX(n));
-
-        if (yPos.isValid()) {stage.setY(yPos.getValue());}
-        stage.yProperty().addListener((ov, t, t1) -> yPos.setValue(t1.doubleValue()));
-        yPos.getObservableValue().addListener((ob, o, n) -> stage.setY(n));
-
-        // Add stage height and width listeners
-        if (stageHeight.isValid()) {stage.setHeight(stageHeight.getValue());}
-        stage.heightProperty().addListener((ov, t, t1) -> stageHeight.setValue(t1.doubleValue()));
-        stageHeight.getObservableValue().addListener((ob, o, n) -> stage.setHeight(n));
-
-        if (stageWidth.isValid()) {stage.setWidth(stageWidth.getValue());}
-        stage.widthProperty().addListener((ov, t, t1) -> stageWidth.setValue(t1.doubleValue()));
-        stageWidth.getObservableValue().addListener((ob, o, n) -> stage.setWidth(n));
 
         //split containers
         // Add dividers position listeners
@@ -1182,9 +1116,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     public void initializeCssPanel() {
         assert bottomHost != null;
-        if (!bottomHost.getChildren().contains(cssPanelController.getPanelRoot())) {
-        	bottomHost.getChildren().add(cssPanelController.getPanelRoot());
-        	VBox.setVgrow(cssPanelController.getPanelRoot(), Priority.ALWAYS);
+        if (!bottomHost.getChildren().contains(cssPanelController.getRoot())) {
+        	bottomHost.getChildren().add(cssPanelController.getRoot());
+        	VBox.setVgrow(cssPanelController.getRoot(), Priority.ALWAYS);
         }
     }
 
@@ -1245,23 +1179,23 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBarController.getMenuBar());
 
-        leftTopHost.getChildren().add(libraryPanelController.getPanelRoot());
-        leftBottomHost.getChildren().add(documentPanelController.getPanelRoot());
-        rightHost.getChildren().add(inspectorPanelController.getPanelRoot());
+        leftTopHost.getChildren().add(libraryPanelController.getRoot());
+        leftBottomHost.getChildren().add(documentPanelController.getRoot());
+        rightHost.getChildren().add(inspectorPanelController.getRoot());
 
-        VBox.setVgrow(libraryPanelController.getPanelRoot(), Priority.ALWAYS);
-        VBox.setVgrow(documentPanelController.getPanelRoot(), Priority.ALWAYS);
-        VBox.setVgrow(inspectorPanelController.getPanelRoot(), Priority.ALWAYS);
+        VBox.setVgrow(libraryPanelController.getRoot(), Priority.ALWAYS);
+        VBox.setVgrow(documentPanelController.getRoot(), Priority.ALWAYS);
+        VBox.setVgrow(inspectorPanelController.getRoot(), Priority.ALWAYS);
 
         //bottomHost.getChildren().add(cssPanelController.getPanelRoot());
 
-        contentPanelHost.getChildren().add(contentPanelController.getPanelRoot());
+        contentPanelHost.getChildren().add(contentPanelController.getRoot());
         //inspectorPanelHost.getChildren().add(inspectorPanelController.getPanelRoot());
         //inspectorSearchPanelHost.getChildren().add(inspectorSearchController.getPanelRoot());
-        messageBarHost.getChildren().add(messageBarController.getPanelRoot());
+        messageBarHost.getChildren().add(messageBarController.getRoot());
 
         messageBarController.getSelectionBarHost().getChildren().add(
-                selectionBarController.getPanelRoot());
+                selectionBarController.getRoot());
 
         //inspectorSearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> inspectorPanelController.setSearchPattern(newStr));
 
@@ -1290,6 +1224,29 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     protected void controllerDidCreateStage() {
         updateStageTitle();
         editorController.setOwnerWindow(getStage());
+
+     // initialize preference binding
+        final Stage stage = getStage();
+        assert stage != null;
+
+        // Add stage x and y listeners
+        if (xPos.isValid()) {stage.setX(xPos.getValue());}
+        stage.xProperty().addListener((ob, o, n) -> xPos.setValue(n.doubleValue()));
+        xPos.getObservableValue().addListener((ob, o, n) -> stage.setX(n));
+
+        if (yPos.isValid()) {stage.setY(yPos.getValue());}
+        stage.yProperty().addListener((ov, t, t1) -> yPos.setValue(t1.doubleValue()));
+        yPos.getObservableValue().addListener((ob, o, n) -> stage.setY(n));
+
+        // Add stage height and width listeners
+        if (stageHeight.isValid()) {stage.setHeight(stageHeight.getValue());}
+        stage.heightProperty().addListener((ov, t, t1) -> stageHeight.setValue(t1.doubleValue()));
+        stageHeight.getObservableValue().addListener((ob, o, n) -> stage.setHeight(n));
+
+        if (stageWidth.isValid()) {stage.setWidth(stageWidth.getValue());}
+        stage.widthProperty().addListener((ov, t, t1) -> stageWidth.setValue(t1.doubleValue()));
+        stageWidth.getObservableValue().addListener((ob, o, n) -> stage.setWidth(n));
+
     }
 
     @Override

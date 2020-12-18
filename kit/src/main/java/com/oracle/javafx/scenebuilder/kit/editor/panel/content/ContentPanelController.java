@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -173,8 +173,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     private Paint guidesColor = Color.RED;
 
     private WorkspaceController workspaceController;
-    private final HudWindowController hudWindowController
-            = new HudWindowController();
+    private final HudWindowController hudWindowController;
 
     private final EditModeController editModeController;
     private final PickModeController pickModeController;
@@ -206,7 +205,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
     		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
     		@Autowired BackgroundImagePreference backgroundImagePreference,
     		@Autowired ParentRingColorPreference parentRingColorPreference,
-    		@Autowired DocumentManager documentManager
+    		@Autowired DocumentManager documentManager,
+    		@Autowired @Lazy HudWindowController hudWindowController
 
 //    		@Autowired @Lazy EditModeController editModeController,
 //    		@Autowired @Lazy PickModeController pickModeController,
@@ -218,6 +218,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         this.editModeController = context.getBean(EditModeController.class, context, this);
         this.pickModeController = context.getBean(PickModeController.class, this);
         this.workspaceController = context.getBean(WorkspaceController.class, editorController, documentManager);
+        this.hudWindowController = hudWindowController;
 //        this.editModeController = editModeController;
 //        this.pickModeController = pickModeController;
 //        this.workspaceController = workspaceController;
@@ -1274,7 +1275,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
             candidates.remove(0);
             if (candidate.isNode()) {
                 final Node sgo = (Node) candidate.getSceneGraphObject();
-                if (sgo.getScene() == getPanelRoot().getScene()) {
+                if (sgo.getScene() == getRoot().getScene()) {
                     result.add(candidate);
                 }
             }

@@ -30,41 +30,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.preview.controller;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-
 /**
+ * Ths package is the "Preview" scenebuilder extension<br>
+ * <img src="doc-files/previewMenu.png" alt="previewMenu">
+ * <img src="doc-files/previewMenuWindow.png" alt="previewMenu"><br>
+ *
+ * @author ptreilhes
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
-public class PreviewMenuController {
-
-    private final PreviewWindowController previewWindowController;
-
-    public PreviewMenuController(
-    		@Autowired @Lazy PreviewWindowController previewWindowController) {
-    	this.previewWindowController = previewWindowController;
-    }
-
-    public void performOpenPreviewWindow() {
-        previewWindowController.getStage().centerOnScreen();
-        previewWindowController.openWindow();
-    }
-
-    public void performOpenPreviewDialog() {
-        previewWindowController.openDialog();
-    }
-
-    public void performChangePreviewSize(Size newSize) {
-        previewWindowController.setSize(newSize);
-    }
-}
+package com.oracle.javafx.scenebuilder.preview.menu;

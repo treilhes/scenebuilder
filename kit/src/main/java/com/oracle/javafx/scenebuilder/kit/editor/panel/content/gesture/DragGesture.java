@@ -169,7 +169,7 @@ public class DragGesture extends AbstractGesture {
             final FXOMDocument fxomDocument
                     = contentPanelController.getEditorController().getFxomDocument();
             final Window ownerWindow
-                    = contentPanelController.getPanelRoot().getScene().getWindow();
+                    = contentPanelController.getRoot().getScene().getWindow();
             final ExternalDragSource dragSource = new ExternalDragSource(
                     lastDragEvent.getDragboard(), fxomDocument, ownerWindow);
             assert dragSource.isAcceptable();

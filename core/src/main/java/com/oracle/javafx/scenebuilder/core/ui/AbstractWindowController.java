@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 
@@ -50,35 +52,66 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+
 /**
- *
- *
+ * The Class AbstractWindowController.
  */
 public abstract class AbstractWindowController {
 
+    /** The owner window stage. */
     final private Stage owner;
+
+    /** The root. */
     private Parent root;
+
+    /** The scene. */
     private Scene scene;
+
+    /** The stage. */
     private Stage stage;
+
+    /** The clamp factor. */
     private final double CLAMP_FACTOR = 0.9;
+
+    /** The size to scene. */
     private final boolean sizeToScene; // true by default
+
+    /** The tool stylesheet config. */
     private StylesheetProvider2 toolStylesheetConfig;
+
+    /** The scene builder manager. */
     private final SceneBuilderManager sceneBuilderManager;
 
+    /**
+     * Instantiates a new abstract window controller.
+     *
+     * @param sceneBuilderManager the scene builder manager
+     * @param owner the owner
+     */
     public AbstractWindowController(SceneBuilderManager sceneBuilderManager, Stage owner) {
         this(sceneBuilderManager, owner, true);
     }
 
+    /**
+     * Instantiates a new abstract window controller.
+     *
+     * @param sceneBuilderManager the scene builder manager
+     * @param owner the owner
+     * @param sizeToScene the size to scene
+     */
     public AbstractWindowController(SceneBuilderManager sceneBuilderManager, Stage owner, boolean sizeToScene) {
         this.owner = owner;
         this.sizeToScene = sizeToScene;
         this.sceneBuilderManager = sceneBuilderManager;
     }
 
+    /** The close request handler. */
     private final EventHandler<WindowEvent> closeRequestHandler = event -> {
         onCloseRequest(event);
         event.consume();
     };
+
+    /** The focus handler. */
     private final ChangeListener<Boolean> focusHandler = (ob, o, n) -> {
         if (n) {
             onFocus();
@@ -86,23 +119,12 @@ public abstract class AbstractWindowController {
     };
 
     /**
-     * Returns the root FX object of this window. When called the first time, this
-     * method invokes {@link #makeRoot()} to build the FX components of the panel.
+     * Returns the root FX object of this window.
      *
      * @return the root object of this window (never null)
      */
     public Parent getRoot() {
-        if (root == null) {
-            makeRoot();
-            assert root != null;
-
-            if (sceneBuilderManager != null) {
-                sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
-                    toolStylesheetDidChange(s);
-                });
-            }
-        }
-
+        assert root != null;
         return root;
     }
 
@@ -172,27 +194,41 @@ public abstract class AbstractWindowController {
         getStage().close();
     }
 
-    /*
-     * To be implemented by subclasses
-     */
+//    /*
+//     * To be implemented by subclasses
+//     */
+//
+//    /**
+//     * Creates the FX object composing the window content. This routine is called by
+//     * {@link AbstractWindowController#getRoot}. It *must* invoke
+//     * {@link AbstractWindowController#setRoot}.
+//     */
+//    protected abstract void makeRoot();
 
     /**
-     * Creates the FX object composing the window content. This routine is called by
-     * {@link AbstractWindowController#getRoot}. It *must* invoke
-     * {@link AbstractWindowController#setRoot}.
+ * On close request.
+ *
+ * @param event the event
+ */
+public abstract void onCloseRequest(WindowEvent event);
+
+    /**
+     * On focus.
      */
-    protected abstract void makeRoot();
-
-    public abstract void onCloseRequest(WindowEvent event);
-
     public abstract void onFocus();
 
+    /**
+     * Controller did create scene.
+     */
     protected void controllerDidCreateScene() {
         assert getRoot() != null;
         assert getRoot().getScene() != null;
         assert getRoot().getScene().getWindow() == null;
     }
 
+    /**
+     * Controller did create stage.
+     */
     protected void controllerDidCreateStage() {
         assert getRoot() != null;
         assert getRoot().getScene() != null;
@@ -209,14 +245,20 @@ public abstract class AbstractWindowController {
      *
      * @param root the root panel (non null).
      */
-    protected final void setRoot(Parent root) {
+    public void setRoot(Parent root) {
         assert root != null;
         this.root = root;
+
+        if (sceneBuilderManager != null) {
+            sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+                toolStylesheetDidChange(s);
+            });
+        }
     }
 
     /**
      * Replaces old Stylesheet config by the tool style sheet assigned to this
-     * controller. This methods {@link EditorController#getToolStylesheet}.
+     * controller. This methods is event binded to {@link DocumentManager#stylesheetConfig()} using an RxJava2 subscription.
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */
@@ -265,6 +307,9 @@ public abstract class AbstractWindowController {
     // getRoot().resize(newWidth, newHeight);
     //
     // The current implementation raises the point root of layout must be
+    /**
+     * Clamp window.
+     */
     // a Region, which is for now acceptable but could perhaps be an issue later.
     private void clampWindow() {
         if (getRoot() instanceof Region) {
@@ -290,6 +335,11 @@ public abstract class AbstractWindowController {
         }
     }
 
+    /**
+     * Gets the biggest viewable rectangle.
+     *
+     * @return the biggest viewable rectangle
+     */
     protected Rectangle2D getBiggestViewableRectangle() {
         assert stage != null;
 

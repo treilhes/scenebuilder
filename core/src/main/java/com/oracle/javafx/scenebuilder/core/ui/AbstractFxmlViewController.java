@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,6 @@ import com.oracle.javafx.scenebuilder.api.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 
-
 import lombok.Getter;
 
 /**
@@ -57,7 +56,7 @@ import lombok.Getter;
  *
  * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
-public abstract class AbstractViewFxmlPanelController extends AbstractFxmlPanelController implements View {
+public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View {
 
 	@Autowired
 	private @Getter ViewManager viewManager;
@@ -74,21 +73,21 @@ public abstract class AbstractViewFxmlPanelController extends AbstractFxmlPanelC
 	/**
      * Base constructor for invocation by the subclasses.
      *
-     * @param editorController  the editor controller (cannot be null)
+     * @param editor  the editor controller (cannot be null)
      */
-    public AbstractViewFxmlPanelController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, ResourceBundle resources, Editor editor) {
+    public AbstractFxmlViewController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, ResourceBundle resources, Editor editor) {
         super(sceneBuilderManager, fxmlURL, resources, editor); //NOI18N
     }
 
-	@Override
-	protected void makePanel() {
-		assert getSearchController() != null;
-		assert getViewController() != null;
-		super.makePanel();
-		getViewController().makePanel();
-		getViewController().setSearchControl(getSearchController().getPanelRoot());
-		getViewController().setContent(super.getPanelRoot());
-	}
+//	@Override
+//	protected void makePanel() {
+//		assert getSearchController() != null;
+//		assert getViewController() != null;
+//		super.makePanel();
+//		getViewController().makePanel();
+//		getViewController().setSearchControl(getSearchController().getRoot());
+//		getViewController().setContent(super.getRoot());
+//	}
 
 
 }

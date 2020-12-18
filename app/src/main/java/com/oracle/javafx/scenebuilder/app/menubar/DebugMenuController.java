@@ -103,7 +103,7 @@ class DebugMenuController {
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM BEGINS"); //NOI18N
             final ContentPanelController cpc
                     = DebugMenuController.this.documentWindowController.getContentPanelController();
-            checkLocalToSceneTransform(cpc.getPanelRoot());
+            checkLocalToSceneTransform(cpc.getRoot());
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM ENDS"); //NOI18N
         });
 

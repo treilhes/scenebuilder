@@ -330,7 +330,7 @@ public class SceneBuilderTest {
             assert hpc != null;
             assert hpc.getPanelControl() != null;
             // First expand the hierarchy tree
-            expandAllTreeItems(hpc.getRoot());
+            expandAllTreeItems(hpc.getRootItem());
             // Then look for the fxom object
             if (hpc.getPanelControl().isVisible()) {
                 final TreeItem<HierarchyItem> treeItem

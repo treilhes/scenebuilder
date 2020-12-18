@@ -1,7 +1,6 @@
-package com;
-
 /*
- * Copyright (c) 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -15,7 +14,7 @@ package com;
  *  - Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the distribution.
- *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *  - Neither the name of Oracle Corporation nor the names of its
  *    contributors may be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
@@ -31,8 +30,12 @@ package com;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
-public class ControllerWithSimplePackage {
-    // no-op
-}
+/**
+ * Ths package is the "Preview" scenebuilder extension<br>
+ * <img src="doc-files/previewMenu.png" alt="previewMenu">
+ * <img src="doc-files/previewMenuWindow.png" alt="previewMenu"><br>
+ *
+ * @author ptreilhes
+ *
+ */
+package com.oracle.javafx.scenebuilder.preview.controller;

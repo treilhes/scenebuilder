@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,10 +32,16 @@
  */
 package com.oracle.javafx.scenebuilder.app.message;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
@@ -55,6 +62,9 @@ import javafx.scene.layout.VBox;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Lazy
 public class MessagePanelController extends AbstractFxmlPanelController {
 
     private double panelWidth;
@@ -68,7 +78,9 @@ public class MessagePanelController extends AbstractFxmlPanelController {
         getEditorController().getMessageLog().clear();
     }
 
-    public MessagePanelController(SceneBuilderManager sceneBuilderManager, Editor editorController) {
+    public MessagePanelController(
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired Editor editorController) {
         super(sceneBuilderManager, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle(), editorController); //NOI18N
     }
 

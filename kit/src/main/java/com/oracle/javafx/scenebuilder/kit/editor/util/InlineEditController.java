@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -334,16 +335,18 @@ public class InlineEditController implements InlineEdit{
                     requestCommitAndClose(requestCommit, editor.getText());
                 }
             });
+
+            setRoot(editor);
         }
 
         TextInputControl getEditor() {
             return editor;
         }
-
-        @Override
-        protected void makeRoot() {
-            setRoot(editor);
-        }
+//
+//        //@Override
+//        protected void makeRoot() {
+//
+//        }
 
         @Override
         protected void onHidden(WindowEvent event) {

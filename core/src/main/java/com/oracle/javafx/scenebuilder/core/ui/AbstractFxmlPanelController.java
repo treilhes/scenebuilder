@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,16 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
 
 /**
  * AbstractFxmlPanelController is the abstract base class for all the
@@ -75,28 +73,28 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
      * AbstractPanelController
      */
 
-    /**
-     * This implementation loads the FXML file using the URL passed to
-     * {@link AbstractFxmlPanelController}.
-     * Subclass implementation should make sure that this method can be invoked
-     * outside of the JavaFX thread
-     */
-    @Override
-    protected void makePanel() {
-        final FXMLLoader loader = new FXMLLoader();
-
-        loader.setController(this);
-        loader.setLocation(fxmlURL);
-        loader.setResources(resources);
-        try {
-            setRoot((Parent)loader.load());
-            controllerDidLoadFxml();
-        } catch (RuntimeException | IOException x) {
-            System.out.println("loader.getController()=" + loader.getController());
-            System.out.println("loader.getLocation()=" + loader.getLocation());
-            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
-        }
-    }
+//    /**
+//     * This implementation loads the FXML file using the URL passed to
+//     * {@link AbstractFxmlPanelController}.
+//     * Subclass implementation should make sure that this method can be invoked
+//     * outside of the JavaFX thread
+//     */
+//    @Override
+//    protected void makePanel() {
+//        final FXMLLoader loader = new FXMLLoader();
+//
+//        loader.setController(this);
+//        loader.setLocation(fxmlURL);
+//        loader.setResources(resources);
+//        try {
+//            setRoot((Parent)loader.load());
+//            controllerDidLoadFxml();
+//        } catch (RuntimeException | IOException x) {
+//            System.out.println("loader.getController()=" + loader.getController());
+//            System.out.println("loader.getLocation()=" + loader.getLocation());
+//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
+//        }
+//    }
 
     @Override
     public URL getFxmlURL() {
@@ -113,7 +111,7 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
      */
 
     /**
-     * Called by {@link AbstractFxmlPanelController#makePanel() } after
+     * Called by {@link SceneBuilderBeanFactoryPostProcessor#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory) } after
      * the FXML file has been successfully loaded.
      * Warning : this routine may be invoked outside of the event thread.
      */

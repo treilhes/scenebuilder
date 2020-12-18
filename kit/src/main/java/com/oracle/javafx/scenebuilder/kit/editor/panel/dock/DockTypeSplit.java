@@ -25,7 +25,7 @@ public class DockTypeSplit implements DockType {
 
 	@Override
 	public Parent computeRoot(List<View> views) {
-		Node[] nodes = views.stream().map(v -> v.getPanelRoot()).toArray(Node[]::new);
+		Node[] nodes = views.stream().map(v -> v.getRoot()).toArray(Node[]::new);
 		return new SplitPane(nodes);
 	}
 

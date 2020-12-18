@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -121,10 +122,10 @@ public class PreviewWindowController extends AbstractWindowController {
     }
 
     public PreviewWindowController(
-            SceneBuilderManager sceneBuilderManager,
-    		Editor editorController,
-    		DocumentManager documentManager,
-    		Document document) {
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired Editor editorController,
+            @Autowired DocumentManager documentManager,
+            @Autowired Document document) {
         super(sceneBuilderManager, document.getStage());
         this.editorController = editorController;
         this.editorController.fxomDocumentProperty().addListener(
@@ -159,19 +160,19 @@ public class PreviewWindowController extends AbstractWindowController {
         this.editorController.sampleDataEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
     }
 
-    /*
-     * AbstractWindowController
-     */
-    @Override
-    protected void makeRoot() {
-        // Until the timer used in requestUpdate() expires, so that the root of
-        // the scene is updated to the real content, we set a placeholder.
-        StackPane sp = new StackPane();
-        sp.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
-        setRoot(sp);
-
-        requestUpdate(IMMEDIATE);
-    }
+//    /*
+//     * AbstractWindowController
+//     */
+//    @Override
+//    protected void makeRoot() {
+//        // Until the timer used in requestUpdate() expires, so that the root of
+//        // the scene is updated to the real content, we set a placeholder.
+//        StackPane sp = new StackPane();
+//        sp.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
+//        setRoot(sp);
+//
+//        requestUpdate(IMMEDIATE);
+//    }
 
     @Override
     public void onCloseRequest(WindowEvent event) {
@@ -189,6 +190,14 @@ public class PreviewWindowController extends AbstractWindowController {
     protected void controllerDidCreateStage() {
         updateWindowSize();
         updateWindowTitle();
+
+     // Until the timer used in requestUpdate() expires, so that the root of
+        // the scene is updated to the real content, we set a placeholder.
+        StackPane sp = new StackPane();
+        sp.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
+        setRoot(sp);
+
+        requestUpdate(IMMEDIATE);
     }
 
     @Override

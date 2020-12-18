@@ -175,7 +175,7 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
                 final Editor editorController
                         = contentPanelController.getEditorController();
                 final Window ownerWindow
-                        = contentPanelController.getPanelRoot().getScene().getWindow();
+                        = contentPanelController.getRoot().getScene().getWindow();
                 final Point2D hitPoint
                         = computeHitPoint(selectedHitObject);
                 final DocumentDragSource dragSource = new DocumentDragSource(

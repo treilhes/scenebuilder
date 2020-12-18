@@ -6,6 +6,6 @@ import javafx.scene.Parent;
 
 public interface View {
 	String getName();
-	Parent getPanelRoot();
+	Parent getRoot();
 	ViewManager getViewManager();
 }

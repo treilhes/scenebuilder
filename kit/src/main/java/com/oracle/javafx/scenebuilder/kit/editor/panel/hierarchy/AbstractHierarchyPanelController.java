@@ -205,7 +205,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      *
      * @return the root TreeItem.
      */
-    public TreeItem<HierarchyItem> getRoot() {
+    public TreeItem<HierarchyItem> getRootItem() {
         return rootTreeItem;
     }
 
@@ -582,7 +582,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             stopListeningToTreeItemSelection();
             clearSelection();
             // Root TreeItem may be null
-            if (getRoot() != null && selectedFxomObjects.isEmpty() == false) {
+            if (getRootItem() != null && selectedFxomObjects.isEmpty() == false) {
                 final List<TreeItem<HierarchyItem>> selectedTreeItems
                         = lookupTreeItem(selectedFxomObjects);
                 if (selectedTreeItems.isEmpty() == false) {
@@ -968,7 +968,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      * @treatAsPrivate
      */
     public TreeItem<HierarchyItem> lookupTreeItem(FXOMObject fxomObject) {
-        return lookupTreeItem(fxomObject, getRoot());
+        return lookupTreeItem(fxomObject, getRootItem());
     }
 
     private TreeItem<HierarchyItem> lookupTreeItem(FXOMObject fxomObject, TreeItem<HierarchyItem> fromTreeItem) {
@@ -1046,7 +1046,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      */
     public <T> TreeItem<T> getNextVisibleTreeItem(final TreeItem<T> treeItem) {
         assert treeItem != null;
-        if (treeItem == getRoot()) {
+        if (treeItem == getRootItem()) {
             // Root TreeItem has no next TreeItem
             return null;
         } else if (treeItem.isExpanded() && !treeItem.getChildren().isEmpty()) {
@@ -1055,7 +1055,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         } else {
             TreeItem<T> parentTreeItem = treeItem.getParent();
             TreeItem<T> result = treeItem.nextSibling();
-            while (result == null && parentTreeItem != getRoot()) {
+            while (result == null && parentTreeItem != getRootItem()) {
                 result = parentTreeItem.nextSibling();
                 parentTreeItem = parentTreeItem.getParent();
             }
@@ -1073,13 +1073,13 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      */
     public <T> TreeItem<T> getPreviousVisibleTreeItem(final TreeItem<T> treeItem) {
         assert treeItem != null;
-        if (treeItem == getRoot()) {
+        if (treeItem == getRootItem()) {
             // Root TreeItem has no previous TreeItem
             return null;
         } else {
             TreeItem<T> parentTreeItem = treeItem.getParent();
             TreeItem<T> result = treeItem.previousSibling();
-            while (result == null && parentTreeItem != getRoot()) {
+            while (result == null && parentTreeItem != getRootItem()) {
                 result = parentTreeItem.previousSibling();
                 parentTreeItem = parentTreeItem.getParent();
             }
@@ -1153,7 +1153,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
                 final FXOMObject hitObject = hierarchyItem.getFxomObject();
                 assert (hitObject != null); // Because we cannot drag placeholders
                 // Build drag source
-                final Window ownerWindow = getPanelRoot().getScene().getWindow();
+                final Window ownerWindow = getRoot().getScene().getWindow();
                 final DocumentDragSource dragSource = new DocumentDragSource(
                         osg.getSortedItems(), hitObject, ownerWindow);
                 if (dragSource.isAcceptable()) {
@@ -1217,7 +1217,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             final FXOMDocument fxomDocument
                     = getEditorController().getFxomDocument();
             // Build drag source
-            final Window ownerWindow = getPanelRoot().getScene().getWindow();
+            final Window ownerWindow = getRoot().getScene().getWindow();
             final ExternalDragSource dragSource = new ExternalDragSource(
                     event.getDragboard(), fxomDocument, ownerWindow);
             assert dragSource.isAcceptable();

@@ -250,7 +250,7 @@ public class PickModeController extends AbstractModeController {
             } else {
                 assert closestNodeObject.getSceneGraphObject() instanceof Node;
                 final Node closestNode = (Node)closestNodeObject.getSceneGraphObject();
-                if (closestNode.getScene() == contentPanelController.getPanelRoot().getScene()) {
+                if (closestNode.getScene() == contentPanelController.getRoot().getScene()) {
                     result = new HitNodeChrome(contentPanelController, hitItem, hitNode);
                 } else {
                     // Case #2 above

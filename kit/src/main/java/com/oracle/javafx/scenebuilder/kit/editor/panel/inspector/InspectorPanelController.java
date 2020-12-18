@@ -110,7 +110,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractViewFxmlPanelController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
@@ -199,7 +199,7 @@ import javafx.scene.layout.VBox;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class InspectorPanelController extends AbstractViewFxmlPanelController implements Inspector {
+public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
     @FXML
     private TitledPane propertiesTitledPane;
@@ -661,8 +661,8 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
         assert accordion != null;
         assert inspectorRoot != null;
 
-        getViewController().setSearchControl(getSearchController().getPanelRoot());
-		getViewController().setContent(super.getPanelRoot());
+        getViewController().setSearchControl(getSearchController().getRoot());
+		getViewController().setContent(super.getRoot());
 
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
 
@@ -2644,8 +2644,8 @@ public class InspectorPanelController extends AbstractViewFxmlPanelController im
 	}
 
 	@Override
-	public Parent getPanelRoot() {
-		return getViewController().getPanelRoot();
+	public Parent getRoot() {
+		return getViewController().getRoot();
 	}
 
 

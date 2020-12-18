@@ -31,10 +31,10 @@
  */
 package com.oracle.javafx.scenebuilder.kit.util.eventnames;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
 
 /**
  * Unit test for {@link FindEventNamesUtil#findEventName(String)}
@@ -43,6 +43,7 @@ public class FindEventNamesUtilTest {
 
     @BeforeClass
     public static void initialize() {
+        System.out.println();
         FindEventNamesUtil.initializeEventsMap();
     }
 

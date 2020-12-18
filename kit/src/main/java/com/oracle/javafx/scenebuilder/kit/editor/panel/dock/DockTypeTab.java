@@ -25,7 +25,7 @@ public class DockTypeTab implements DockType {
 
 	@Override
 	public Parent computeRoot(List<View> views) {
-		Tab[] tabs = views.stream().map(v -> new Tab(v.getName(), v.getPanelRoot())).toArray(Tab[]::new);
+		Tab[] tabs = views.stream().map(v -> new Tab(v.getName(), v.getRoot())).toArray(Tab[]::new);
 		return new TabPane(tabs);
 	}
 

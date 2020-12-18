@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,8 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.app.message;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import org.springframework.context.ApplicationContext;
+
 import com.oracle.javafx.scenebuilder.core.ui.AbstractPopupController;
 
 import javafx.geometry.Bounds;
@@ -46,18 +47,10 @@ public class MessagePopupController extends AbstractPopupController {
 
     private final MessagePanelController messagePanelController;
 
-    public MessagePopupController(SceneBuilderManager sceneBuilderManager, Editor editorController) {
-        this.messagePanelController = new MessagePanelController(sceneBuilderManager, editorController);
-    }
+    public MessagePopupController(ApplicationContext context) {
+        this.messagePanelController = context.getBean(MessagePanelController.class);
 
-
-    /*
-     * AbstractPopupController
-     */
-
-    @Override
-    protected void makeRoot() {
-        setRoot(messagePanelController.getPanelRoot());
+        setRoot(messagePanelController.getRoot());
     }
 
     @Override

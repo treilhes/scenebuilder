@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Oracle and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -54,7 +55,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import javafx.scene.layout.GridPane;
 
 /**
- * Job used to support Modify > GridPane > Increase/Decrease Row/Column span.
+ * Job used to support Modify &gt; GridPane &gt; Increase/Decrease Row/Column span.
  * This job is multi-selection proof: it will do something on all items of the
  * selection if and only if required conditions are met by all of them.
  */

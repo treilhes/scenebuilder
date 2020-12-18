@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractViewFxmlPanelController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyPanelController;
@@ -69,7 +69,7 @@ import javafx.scene.layout.StackPane;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class DocumentPanelController extends AbstractViewFxmlPanelController {
+public class DocumentPanelController extends AbstractFxmlViewController {
 
 
 	private final AbstractHierarchyPanelController hierarchyPanelController;
@@ -99,7 +99,7 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
     /**
      * Creates a library panel controller for the specified editor controller.
      *
-     * @param c the editor controller (never null).
+     * @param editor the editor controller (never null).
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public DocumentPanelController(
@@ -151,18 +151,18 @@ public class DocumentPanelController extends AbstractViewFxmlPanelController {
         assert !documentAccordion.getPanes().isEmpty();
 
         //getViewController().setSearchControl(getSearchController().getPanelRoot());
-		getViewController().setContent(super.getPanelRoot());
+		getViewController().setContent(super.getRoot());
 
-		hierarchyPanelHost.getChildren().add(hierarchyPanelController.getPanelRoot());
-        infoPanelHost.getChildren().add(infoPanelController.getPanelRoot());
+		hierarchyPanelHost.getChildren().add(hierarchyPanelController.getRoot());
+        infoPanelHost.getChildren().add(infoPanelController.getRoot());
 
         documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
 
     }
 
     @Override
-	public Parent getPanelRoot() {
-		return getViewController().getPanelRoot();
+	public Parent getRoot() {
+		return getViewController().getRoot();
 	}
 
     private void createLibraryMenu() {

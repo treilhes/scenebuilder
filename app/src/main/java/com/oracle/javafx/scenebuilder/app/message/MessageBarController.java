@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +34,8 @@ package com.oracle.javafx.scenebuilder.app.message;
 
 import java.net.URL;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -88,11 +91,14 @@ public class MessageBarController extends AbstractFxmlPanelController {
 
     private final ImageView fileDirtyImage;
     private Tooltip statusLabelTooltip = null;
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationContext context;
 
-    public MessageBarController(SceneBuilderManager sceneBuilderManager, EditorController editorController) {
+    public MessageBarController(
+            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired EditorController editorController) {
         super(sceneBuilderManager, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle(), editorController); //NOI18N
-        this.sceneBuilderManager = sceneBuilderManager;
+        this.context = context;
         // Initialize file dirty image
         final URL fileDirtyURL = MessageBarController.class.getResource("file-dirty.png"); //NOI18N
         assert fileDirtyURL != null;
@@ -109,7 +115,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
     @FXML
     void onOpenCloseAction(ActionEvent e) {
         if (messageWindowController == null) {
-            messageWindowController = new MessagePopupController(sceneBuilderManager, getEditorController());
+            messageWindowController = new MessagePopupController(context);
         }
         if (messageWindowController.isWindowOpened()) {
             messageWindowController.closeWindow();

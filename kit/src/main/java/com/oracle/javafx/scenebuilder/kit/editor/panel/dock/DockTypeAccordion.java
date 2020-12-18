@@ -25,7 +25,7 @@ public class DockTypeAccordion implements DockType {
 
 	@Override
 	public Parent computeRoot(List<View> views) {
-		TitledPane[] panes = views.stream().map(v -> new TitledPane(v.getName(), v.getPanelRoot())).toArray(TitledPane[]::new);
+		TitledPane[] panes = views.stream().map(v -> new TitledPane(v.getName(), v.getRoot())).toArray(TitledPane[]::new);
 		return new Accordion(panes);
 	}
 

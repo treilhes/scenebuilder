@@ -37,7 +37,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	Paint getGuidesColor();
 
-	Parent getPanelRoot();
+	Parent getRoot();
 
 	Pane getWorkspacePane();
 

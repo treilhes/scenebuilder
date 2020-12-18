@@ -625,7 +625,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         editor = inlineEditController.createTextInputControl(type, displayInfoLabel, initialValue);
         // CSS
         final ObservableList<String> styleSheets
-                = panelController.getPanelRoot().getStylesheets();
+                = panelController.getRoot().getStylesheets();
         editor.getStylesheets().addAll(styleSheets);
         editor.getStyleClass().add("theme-presets"); //NOI18N
         editor.getStyleClass().add(InlineEditController.INLINE_EDITOR);

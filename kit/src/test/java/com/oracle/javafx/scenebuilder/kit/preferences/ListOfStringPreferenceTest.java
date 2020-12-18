@@ -16,110 +16,111 @@ import com.oracle.javafx.scenebuilder.api.preferences.type.ListOfStringPreferenc
 
 public class ListOfStringPreferenceTest extends AbstractPreferencesTest {
 
-	private static final String LIST_NAME_1 = "string1";
-	private static final List<String> LIST_VALUE_1 = new ArrayList<>(Arrays.asList("value1","value2","value3"));
-	private static final List<String> DEFAULT_VALUE = new ArrayList<>();
-	private static final String NO_VALUE = "NO_VALUE";
+    private static final String LIST_NAME_1 = "string1";
+    private static final List<String> LIST_VALUE_1 = new ArrayList<>(Arrays.asList("value1", "value2", "value3"));
+    private static final List<String> DEFAULT_VALUE = new ArrayList<>();
+    private static final String NO_VALUE = "NO_VALUE";
 
-	static {
-		defineRoot(new RootPreferencesNode() {
-			@Override
-			public Preferences getNode() {
-				return Preferences.userNodeForPackage(StringPreferenceTest.class)
-						.node(StringPreferenceTest.class.getSimpleName());
-			}
-		});
-	}
+    static {
+        defineRoot(new RootPreferencesNode() {
 
-	@Test
-	void shouldCreateValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.writeToJavaPreferences();
-		assertEquals("", globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
-	}
+            @Override
+            public Preferences getNode() {
+                return Preferences.userNodeForPackage(StringPreferenceTest.class)
+                        .node(StringPreferenceTest.class.getSimpleName());
+            }
+        });
+    }
 
-	@Test
-	void shouldCreateDocumentValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.writeToJavaPreferences();
-		assertEquals("", documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
-				.get(LIST_NAME_1, NO_VALUE));
-	}
+    @Test
+    void shouldCreateValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.writeToJavaPreferences();
+        assertEquals("", globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
+    }
 
-	@Test
-	void shouldNotCreateRecordValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, null);
-		sp.writeToJavaPreferences();
-		assertEquals(NO_VALUE, globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
-	}
+    @Test
+    void shouldCreateDocumentValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.writeToJavaPreferences();
+        assertEquals("", documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
+                .get(LIST_NAME_1, NO_VALUE));
+    }
 
-	@Test
-	void shouldNotCreateDocumentRecordValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, null);
-		sp.writeToJavaPreferences();
-		assertEquals(NO_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
-				.get(LIST_NAME_1, NO_VALUE));
-	}
+    @Test
+    void shouldNotCreateRecordValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, null);
+        sp.writeToJavaPreferences();
+        assertEquals(NO_VALUE, globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
+    }
 
-	@Test
-	void shouldSaveRecordValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.setValue(LIST_VALUE_1);
-		sp.writeToJavaPreferences();
-		assertFalse(globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE).isEmpty());
-	}
+    @Test
+    void shouldNotCreateDocumentRecordValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, null);
+        sp.writeToJavaPreferences();
+        assertEquals(NO_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
+                .get(LIST_NAME_1, NO_VALUE));
+    }
 
-	@Test
-	void shouldSaveDocumentRecordValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.setValue(LIST_VALUE_1);
-		sp.writeToJavaPreferences();
-		assertFalse(documentPreferenceContext.getDocumentsNode().getNode()
-				.node(DOCUMENT_ITEM_NODE_NAME).get(LIST_NAME_1, NO_VALUE).isEmpty());
-	}
+    @Test
+    void shouldSaveRecordValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.setValue(LIST_VALUE_1);
+        sp.writeToJavaPreferences();
+        assertFalse(globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE).isEmpty());
+    }
 
-	@Test
-	public void shouldDeleteValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.setValue(LIST_VALUE_1);
-		sp.writeToJavaPreferences();
+    @Test
+    void shouldSaveDocumentRecordValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.setValue(LIST_VALUE_1);
+        sp.writeToJavaPreferences();
+        assertFalse(documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
+                .get(LIST_NAME_1, NO_VALUE).isEmpty());
+    }
 
-		sp.setValue(null);
-		sp.writeToJavaPreferences();
-		assertEquals(NO_VALUE, globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
-	}
+    @Test
+    public void shouldDeleteValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.setValue(LIST_VALUE_1);
+        sp.writeToJavaPreferences();
 
-	@Test
-	public void shouldDeleteDocumentValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.setValue(LIST_VALUE_1);
-		sp.writeToJavaPreferences();
+        sp.setValue(null);
+        sp.writeToJavaPreferences();
+        assertEquals(NO_VALUE, globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
+    }
 
-		sp.setValue(null);
-		sp.writeToJavaPreferences();
-		assertEquals(NO_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
-				.get(LIST_NAME_1, NO_VALUE));
-	}
+    @Test
+    public void shouldDeleteDocumentValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.setValue(LIST_VALUE_1);
+        sp.writeToJavaPreferences();
 
-	@Test
-	public void shouldInitValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.setValue(LIST_VALUE_1);
-		sp.writeToJavaPreferences();
+        sp.setValue(null);
+        sp.writeToJavaPreferences();
+        assertEquals(NO_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
+                .get(LIST_NAME_1, NO_VALUE));
+    }
 
-		ListOfStringPreference sp2 = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp2.readFromJavaPreferences();
-		assertEquals(LIST_VALUE_1, sp2.getValue());
-	}
+    @Test
+    public void shouldInitValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.setValue(LIST_VALUE_1);
+        sp.writeToJavaPreferences();
 
-	@Test
-	public void shouldInitDocumentValue(TestInfo testInfo) throws Exception {
-		ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp.setValue(LIST_VALUE_1);
-		sp.writeToJavaPreferences();
+        ListOfStringPreference sp2 = new ListOfStringPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp2.readFromJavaPreferences();
+        assertEquals(LIST_VALUE_1, sp2.getValue());
+    }
 
-		ListOfStringPreference sp2 = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
-		sp2.readFromJavaPreferences();
-		assertEquals(LIST_VALUE_1, sp2.getValue());
-	}
+    @Test
+    public void shouldInitDocumentValue(TestInfo testInfo) throws Exception {
+        ListOfStringPreference sp = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp.setValue(LIST_VALUE_1);
+        sp.writeToJavaPreferences();
+
+        ListOfStringPreference sp2 = new ListOfStringPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
+        sp2.readFromJavaPreferences();
+        assertEquals(LIST_VALUE_1, sp2.getValue());
+    }
 }

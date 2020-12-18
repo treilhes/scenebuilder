@@ -69,7 +69,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractViewFxmlPanelController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.BeanPropertyState;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssContentMaker.CssPropertyState.CssStyle;
@@ -144,7 +144,7 @@ import javafx.util.Duration;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class CssPanelController extends AbstractViewFxmlPanelController {
+public class CssPanelController extends AbstractFxmlViewController {
 
     @FXML
     private StackPane cssPanelHost;
@@ -349,8 +349,8 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
     @Override
     public void controllerDidLoadFxml() {
 
-    	getViewController().setSearchControl(getSearchController().getPanelRoot());
-		getViewController().setContent(super.getPanelRoot());
+    	getViewController().setSearchControl(getSearchController().getRoot());
+		getViewController().setContent(super.getRoot());
 
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
         createLibraryMenu();
@@ -2302,8 +2302,8 @@ public class CssPanelController extends AbstractViewFxmlPanelController {
 	}
 
 	@Override
-	public Parent getPanelRoot() {
-		return getViewController().getPanelRoot();
+	public Parent getRoot() {
+		return getViewController().getRoot();
 	}
 
 	public MenuItem getHideDefaultValues() {

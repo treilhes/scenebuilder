@@ -201,7 +201,7 @@ public class HierarchyDNDController {
             } else {
                 // TreeItem is null when dropping below the datas
                 // => the graphic owner is the root
-                graphicOwnerTreeItem = panelController.getRoot();
+                graphicOwnerTreeItem = panelController.getRootItem();
             }
             assert graphicOwnerTreeItem != null;
             assert graphicOwnerTreeItem.getValue().isEmpty() == false;
@@ -239,7 +239,7 @@ public class HierarchyDNDController {
 
         assert location != null;
 
-        final TreeItem<HierarchyItem> rootTreeItem = panelController.getRoot();
+        final TreeItem<HierarchyItem> rootTreeItem = panelController.getRootItem();
         final FXOMObject dropTargetObject;
         final DropTarget result;
         Accessory accessory = null; // Used if we insert as accessory (drop over a place holder)

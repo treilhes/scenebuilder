@@ -783,7 +783,7 @@ implements Gesture.Observer {
                             type, inlineEditingBounds, text);
             // CSS
             final ObservableList<String> styleSheets
-                    = getContentPanelController().getPanelRoot().getStylesheets();
+                    = getContentPanelController().getRoot().getStylesheets();
             inlineEditor.getStylesheets().addAll(styleSheets);
             inlineEditor.getStyleClass().add("theme-presets"); //NOI18N
             inlineEditor.getStyleClass().add(InlineEditController.INLINE_EDITOR);

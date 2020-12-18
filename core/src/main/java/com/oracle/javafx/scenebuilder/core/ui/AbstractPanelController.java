@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,14 +36,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.util.FxmlController;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 
+// TODO: Auto-generated Javadoc
 /**
  * AbstractPanelController is the abstract base class for all the panel
  * controllers of Scene Builder Kit.
@@ -53,8 +57,7 @@ import javafx.scene.Parent;
  * <p>
  * Subclasses must provide three methods:
  * <ul>
- * <li><code>makePanel</code> must create the FX components
- * which compose the panel
+ * <li>Spring will create the FX components which compose the panel and provide it using {@link FxmlController#setRoot(Parent)} called by {@link SceneBuilderBeanFactoryPostProcessor#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)}
  * <li><code>fxomDocumentDidChange</code> must keep the panel up to date
  * after the editor controller has changed the base document
  * <li><code>editorSelectionDidChange</code> must keep the panel up to date
@@ -65,13 +68,19 @@ import javafx.scene.Parent;
  */
 public abstract class AbstractPanelController  {
 
+    /** The Constant LOG. */
     private static final Logger LOG = Logger.getLogger(AbstractPanelController.class.getName());
 
+    /** The editor controller. */
     private final Editor editorController;
+
+    /** The panel root. */
     private Parent panelRoot;
 
+    /** The tool stylesheet config. */
     private StylesheetProvider2 toolStylesheetConfig;
 
+    /** The scene builder manager. */
     private final SceneBuilderManager sceneBuilderManager;
 
     /**
@@ -79,7 +88,8 @@ public abstract class AbstractPanelController  {
      * Subclass implementations should make sure that this constructor can be
      * invoked outside of the JavaFX thread.
      *
-     * @param c the editor controller (should not be null).
+     * @param sceneBuilderManager the scene builder manager
+     * @param editor the editor controller (should not be null).
      */
     protected AbstractPanelController(SceneBuilderManager sceneBuilderManager, Editor editor) {
         assert editor != null;
@@ -122,24 +132,11 @@ public abstract class AbstractPanelController  {
 
     /**
      * Returns the root FX object of this panel.
-     * When called the first time, this method invokes {@link #makePanel()}
-     * to build the FX components of the panel.
      *
      * @return the root object of the panel (never null)
      */
-    public Parent getPanelRoot() {
-        if (panelRoot == null) {
-            makePanel();
-            assert panelRoot != null;
-
-            if (sceneBuilderManager != null) {
-                sceneBuilderManager.stylesheetConfig()
-                    .subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
-                    toolStylesheetDidChange(s);
-                });
-            }
-        }
-
+    public Parent getRoot() {
+        assert panelRoot != null;
         return panelRoot;
     }
 
@@ -147,16 +144,17 @@ public abstract class AbstractPanelController  {
      * To be implemented by subclasses
      */
 
-    /**
-     * Creates the FX object composing the panel.
-     * This routine is called by {@link AbstractPanelController#getPanelRoot}.
-     * It *must* invoke {@link AbstractPanelController#setPanelRoot}.
-     */
-    protected abstract void makePanel();
+//    /**
+//     * Creates the FX object composing the panel.
+//     * This routine is called by {@link AbstractPanelController#getPanelRoot}.
+//     * It *must* invoke {@link AbstractPanelController#setPanelRoot}.
+//     */
+//    @Deprecated
+//    protected abstract void makePanel();
 
     /**
      * Updates the panel after the editor controller has change
-     * the base document. Subclass can use {@link EditorController#getFxomDocument() }
+     * the base document. Subclass can use {@link Editor#getFxomDocument() }
      * to retrieve the newly set document (possibly null).
      *
      * @param oldDocument the previous document (possibly null).
@@ -185,7 +183,7 @@ public abstract class AbstractPanelController  {
 
     /**
      * Updates the panel after the editor controller has changed the selected
-     * objects. Subclass can use {@link EditorController#getSelection()} to
+     * objects. Subclass can use {@link Editor#getSelection()} to
      * retrieve the currently selected objects.
      */
     protected abstract void editorSelectionDidChange();
@@ -196,8 +194,9 @@ public abstract class AbstractPanelController  {
      */
 
     /**
-     * Set the root of this panel controller.
-     * This routine must be invoked by subclass's makePanel() routine.
+     * Set the root of this panel controller.<br>
+     * This routine is invoked by {@link SceneBuilderBeanFactoryPostProcessor#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)}
+     * using {@link FxmlController#setRoot(Parent)}
      *
      * @param panelRoot the root panel (non null).
      */
@@ -205,8 +204,16 @@ public abstract class AbstractPanelController  {
         System.out.println("APC setPanelRoot " + this.getClass().getSimpleName() +  this);
         assert panelRoot != null;
         this.panelRoot = panelRoot;
+
+        if (sceneBuilderManager != null) {
+            sceneBuilderManager.stylesheetConfig()
+                .subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+                toolStylesheetDidChange(s);
+            });
+        }
     }
 
+    /** The fxom document revision listener. */
     private final ChangeListener<Number> fxomDocumentRevisionListener
             = (observable, oldValue, newValue) -> {
         try {
@@ -216,6 +223,7 @@ public abstract class AbstractPanelController  {
         }
     };
 
+    /** The css revision listener. */
     private final ChangeListener<Number> cssRevisionListener
             = (observable, oldValue, newValue) -> {
         try {
@@ -225,6 +233,7 @@ public abstract class AbstractPanelController  {
         }
     };
 
+    /** The job manager revision listener. */
     private final ChangeListener<Number> jobManagerRevisionListener
             = (observable, oldValue, newValue) -> {
         try {
@@ -234,6 +243,7 @@ public abstract class AbstractPanelController  {
         }
     };
 
+    /** The editor selection listener. */
     private final ChangeListener<Number> editorSelectionListener =
         (observable, oldValue, newValue) -> {
         try {
@@ -294,7 +304,7 @@ public abstract class AbstractPanelController  {
 
     /**
      * Replaces old Stylesheet config by the tool style sheet assigned to this
-     * controller. This methods {@link EditorController#getToolStylesheet}.
+     * controller. This methods is event binded to {@link DocumentManager#stylesheetConfig()} using an RxJava2 subscription.
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */

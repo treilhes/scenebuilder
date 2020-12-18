@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 
 public interface ViewSearch {
 
-    Parent getPanelRoot();
+    Parent getRoot();
 
     StringProperty textProperty();
 
