@@ -1,5 +1,6 @@
 plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8' apply false
+    //id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
 
 apply plugin: 'base'
@@ -22,6 +23,11 @@ subprojects {
 
     ext.buildDateFormat = version.endsWith('-SNAPSHOT') ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd'
 
+	java {
+	    //withJavadocJar()
+  		//withSourcesJar()
+	}
+	
     repositories {
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
