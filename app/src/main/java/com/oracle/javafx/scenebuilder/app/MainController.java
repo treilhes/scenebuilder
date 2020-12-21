@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,6 +53,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
@@ -73,8 +74,7 @@ import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
@@ -88,7 +88,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
+//import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -156,6 +156,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     private final SceneBuilderManager sceneBuilderManager;
 
+    private final Dialog dialog;
+
     /*
      * Public
      * //TODO delete in favor of injection
@@ -166,11 +168,13 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     public MainController(
     		@Autowired SceneBuilderManager sceneBuilderManager,
-    		@Autowired FileSystem fileSystem
+    		@Autowired FileSystem fileSystem,
+    		@Autowired Dialog dialog
     		) {
 
     	this.sceneBuilderManager = sceneBuilderManager;
     	this.fileSystem = fileSystem;
+    	this.dialog = dialog;
 
     	fileSystem.startWatcher();
 
@@ -382,12 +386,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             // }
 
         } catch (IOException x) {
-            final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
-            errorDialog.setTitle(I18N.getString("alert.title.start"));
-            errorDialog.setMessage(I18N.getString("alert.start.failure.message"));
-            errorDialog.setDetails(I18N.getString("alert.start.failure.details"));
-            errorDialog.setDebugInfoWithThrowable(x);
-            errorDialog.showAndWait();
+            dialog.showErrorAndWait(
+                    I18N.getString("alert.title.start"), 
+                    I18N.getString("alert.start.failure.message"), 
+                    I18N.getString("alert.start.failure.details"), 
+                    x);
             Platform.exit();
         }
     }
@@ -538,12 +541,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     @Override
     public void handleMessageBoxFailure(Exception x) {
-        final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
-        errorDialog.setTitle(I18N.getString("alert.title.messagebox"));
-        errorDialog.setMessage(I18N.getString("alert.messagebox.failure.message"));
-        errorDialog.setDetails(I18N.getString("alert.messagebox.failure.details"));
-        errorDialog.setDebugInfoWithThrowable(x);
-        errorDialog.showAndWait();
+        dialog.showErrorAndWait(
+                I18N.getString("alert.title.messagebox"), 
+                I18N.getString("alert.messagebox.failure.message"), 
+                I18N.getString("alert.messagebox.failure.details"), 
+                x);
     }
 
     @Override
@@ -689,28 +691,29 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             case 1: {
                 final File fxmlFile = exceptions.keySet().iterator().next();
                 final Exception x = exceptions.get(fxmlFile);
-                final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
-                errorDialog.setMessage(I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())));
-                errorDialog.setDetails(I18N.getString("alert.open.failure1.details"));
-                errorDialog.setDebugInfoWithThrowable(x);
-                errorDialog.setTitle(I18N.getString("alert.title.open"));
-                errorDialog.showAndWait();
+                dialog.showErrorAndWait(
+                        I18N.getString("alert.title.open"), 
+                        I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())), 
+                        I18N.getString("alert.open.failure1.details"), 
+                        x);
                 break;
             }
             default: {
-                final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
                 if (exceptions.size() == fxmlFiles.size()) {
                     // Open operation has failed for all the files
-                    errorDialog.setMessage(I18N.getString("alert.open.failureN.message"));
-                    errorDialog.setDetails(I18N.getString("alert.open.failureN.details"));
+                    dialog.showErrorAndWait(
+                            I18N.getString("alert.title.open"), 
+                            I18N.getString("alert.open.failureN.message"), 
+                            I18N.getString("alert.open.failureN.details")
+                            );
                 } else {
                     // Open operation has failed for some files
-                    errorDialog.setMessage(I18N.getString("alert.open.failureMofN.message",
-                            exceptions.size(), fxmlFiles.size()));
-                    errorDialog.setDetails(I18N.getString("alert.open.failureMofN.details"));
+                    dialog.showErrorAndWait(
+                            I18N.getString("alert.title.open"), 
+                            I18N.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()), 
+                            I18N.getString("alert.open.failureMofN.details")
+                            );
                 }
-                errorDialog.setTitle(I18N.getString("alert.title.open"));
-                errorDialog.showAndWait();
                 break;
             }
         }
@@ -754,7 +757,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             default: {
                 assert pendingDocs.size() >= 2;
 
-                final AlertDialog d = new AlertDialog(sceneBuilderManager, null);
+                final Alert d = dialog.customAlert();
                 d.setMessage(I18N.getString("alert.review.question.message", pendingDocs.size()));
                 d.setDetails(I18N.getString("alert.review.question.details"));
                 d.setOKButtonTitle(I18N.getString("label.review.changes"));
@@ -864,7 +867,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     	versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 Platform.runLater(() -> {
-                    SBAlert alert = new SBAlert(Alert.AlertType.ERROR, getFrontDocumentWindow().getStage());
+                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, getFrontDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.error.title"));
                     alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
                     alert.setContentText(I18N.getString("check_for_updates.alert.error.message"));
@@ -878,7 +881,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                         dialog.showAndWait();
                     });
                 } else {
-                    SBAlert alert = new SBAlert(Alert.AlertType.INFORMATION, getFrontDocumentWindow().getStage());
+                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION, getFrontDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.up_to_date.title"));
                     alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
                     alert.setContentText(I18N.getString("check_for_updates.alert.up_to_date.message"));
@@ -891,7 +894,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     private void showVersionNumberFormatError(DocumentWindowController dwc) {
-        SBAlert alert = new SBAlert(Alert.AlertType.ERROR, dwc.getStage());
+        SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, dwc.getStage());
         // The version number format is not supported and this is most probably only happening
         // in development so we don't localize the strings
         alert.setTitle("Error");

@@ -158,8 +158,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.Ke
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.PaintPopupEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.popupeditors.Rectangle2DPopupEditor;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +34,11 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 
 import java.net.URL;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,7 +50,9 @@ import javafx.stage.Window;
  *
  *
  */
-public class AlertDialog extends AbstractModalDialog {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public class AlertDialog extends AbstractModalDialog  implements Alert {
 
     @FXML protected Label messageLabel;
     @FXML protected Label detailsLabel;
@@ -54,6 +61,11 @@ public class AlertDialog extends AbstractModalDialog {
 
     public AlertDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
         super(sceneBuilderManager, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner); //NOI18N
+    }
+
+    @Override
+    public void controllerDidLoadFxml() {
+        super.controllerDidLoadFxml();
         getStage().setResizable(false);
         setImageViewVisible(true);
         setImageViewImage(getDialogImage());
@@ -63,6 +75,7 @@ public class AlertDialog extends AbstractModalDialog {
         return getMessageLabel().getText();
     }
 
+    @Override
     public void setMessage(String message) {
         getMessageLabel().setText(message);
     }
@@ -71,6 +84,7 @@ public class AlertDialog extends AbstractModalDialog {
         return getDetailsLabel().getText();
     }
 
+    @Override
     public void setDetails(String details) {
         getDetailsLabel().setText(details);
     }

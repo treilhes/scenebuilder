@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,24 +36,44 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 /**
- *
+ * This class describes a property used as a placeholder for other component 
  * 
  */
 public class ComponentPropertyMetadata extends PropertyMetadata {
     
-    private final ComponentClassMetadata classMetadata;
+    /** The class metadata of the owner component. */
+    private final ComponentClassMetadata<?> classMetadata;
+    
+    /** Does this placeholder accept a collection of components. */
     private final boolean collection;
 
-    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata classMetadata, boolean collection) {
+    /**
+     * Instantiates a new component property metadata.
+     *
+     * @param name the property name
+     * @param classMetadata the owner component metadata
+     * @param collection true if it accepts a collection of components or only one
+     */
+    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection) {
         super(name);
         this.classMetadata = classMetadata;
         this.collection = collection;
     }
 
-    public ComponentClassMetadata getClassMetadata() {
+    /**
+     * Gets the the owner component metadata.
+     *
+     * @return the owner component metadata
+     */
+    public ComponentClassMetadata<?> getClassMetadata() {
         return classMetadata;
     }
 
+    /**
+     * Checks if if it accepts a collection of components or only one.
+     *
+     * @return true, if is accepts a collection
+     */
     public boolean isCollection() {
         return collection;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,8 +35,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.stage.Window;
 
@@ -43,15 +49,24 @@ import javafx.stage.Window;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ErrorDialog extends AlertDialog {
 
+    private final ApplicationContext context;
     private final SceneBuilderManager sceneBuilderManager;
 
     private String debugInfo;
 
-    public ErrorDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
+    protected ErrorDialog(ApplicationContext context, SceneBuilderManager sceneBuilderManager, Window owner) {
         super(sceneBuilderManager, owner);
         this.sceneBuilderManager = sceneBuilderManager;
+        this.context = context;
+    }
+
+    @Override
+    public void controllerDidLoadFxml() {
+        super.controllerDidLoadFxml();
         setOKButtonVisible(false);
         setShowDefaultButton(true);
         setDefaultButtonID(AlertDialog.ButtonID.CANCEL);
@@ -95,7 +110,7 @@ public class ErrorDialog extends AlertDialog {
     }
 
     private void showDetailsDialog() {
-        final TextViewDialog detailDialog = new TextViewDialog(sceneBuilderManager, null);
+        final TextViewDialog detailDialog = context.getBean(TextViewDialog.class, sceneBuilderManager, null);
         detailDialog.setText(debugInfo);
         detailDialog.showAndWait();
     }

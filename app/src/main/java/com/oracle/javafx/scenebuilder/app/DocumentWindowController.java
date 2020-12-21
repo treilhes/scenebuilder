@@ -108,8 +108,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelC
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
@@ -1532,7 +1532,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     }
                 }
 
-                final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
+                final Alert d = dialog.customAlert(getStage());
                 d.setMessage(message);
                 d.setDetails(I18N.getString("alert.delete.fxid.details"));
                 d.setOKButtonTitle(I18N.getString("label.delete"));
@@ -1735,7 +1735,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (checkLoadFileTime()) {
                     saveConfirmed = true;
                 } else {
-                    final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
+                    final Alert d = dialog.customAlert(getStage());
                     d.setMessage(I18N.getString("alert.overwrite.message", fileName));
                     d.setDetails(I18N.getString("alert.overwrite.details"));
                     d.setOKButtonVisible(true);
@@ -1766,11 +1766,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     result = ActionStatus.CANCELLED;
                 }
             } catch(IOException x) {
-                final ErrorDialog d = new ErrorDialog(sceneBuilderManager, getStage());
-                d.setMessage(I18N.getString("alert.save.failure.message", fileName));
-                d.setDetails(I18N.getString("alert.save.failure.details"));
-                d.setDebugInfoWithThrowable(x);
-                d.showAndWait();
+                dialog.showErrorAndWait(
+                        getStage(),
+                        null, 
+                        I18N.getString("alert.save.failure.message", fileName), 
+                        I18N.getString("alert.save.failure.details"), 
+                        x);
                 result = ActionStatus.CANCELLED;
             }
         } else {
@@ -1807,7 +1808,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     try {
                         URL alternateURL = new URL(fxmlFile.toURI().toURL().toExternalForm() + ".fxml"); //NOI18N
                         File alternateFxmlFile = new File(alternateURL.toURI());
-                        final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
+                        final Alert d = dialog.customAlert(getStage());
                         d.setMessage(I18N.getString("alert.save.noextension.message", fxmlFile.getName()));
                         String details = I18N.getString("alert.save.noextension.details");
 
@@ -1856,10 +1857,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());
                     final String fileName = fxmlPath.getFileName().toString();
-                    final ErrorDialog d = new ErrorDialog(sceneBuilderManager, getStage());
-                    d.setMessage(I18N.getString("alert.save.conflict.message", fileName));
-                    d.setDetails(I18N.getString("alert.save.conflict.details"));
-                    d.showAndWait();
+                    dialog.showErrorAndWait(
+                            getStage(),
+                            null, 
+                            I18N.getString("alert.save.conflict.message", fileName), 
+                            I18N.getString("alert.save.conflict.details")
+                            );
                     result = ActionStatus.CANCELLED;
                 } else if (forgetSave) {
                     result = ActionStatus.CANCELLED;
@@ -1908,7 +1911,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         assert editorController.getFxomDocument() != null;
         assert editorController.getFxomDocument().getLocation() != null;
 
-        final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
+        final Alert d = dialog.customAlert(getStage());
         d.setMessage(I18N.getString("alert.revert.question.message", getStage().getTitle()));
         d.setDetails(I18N.getString("alert.revert.question.details"));
         d.setOKButtonTitle(I18N.getString("label.revert"));
@@ -1917,12 +1920,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             try {
                 reload();
             } catch(IOException x) {
-                final ErrorDialog errorDialog = new ErrorDialog(sceneBuilderManager, null);
-                errorDialog.setMessage(I18N.getString("alert.open.failure1.message", getStage().getTitle()));
-                errorDialog.setDetails(I18N.getString("alert.open.failure1.details"));
-                errorDialog.setDebugInfoWithThrowable(x);
-                errorDialog.setTitle(I18N.getString("alert.title.open"));
-                errorDialog.showAndWait();
+                dialog.showErrorAndWait(
+                        I18N.getString("alert.title.open"), 
+                        I18N.getString("alert.open.failure1.message", getStage().getTitle()), 
+                        I18N.getString("alert.open.failure1.details"), 
+                        x);
                 MainController.getSingleton().documentWindowRequestClose(this);
             }
         }
@@ -1946,8 +1948,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         // Checks if there are some pending changes
         final boolean closeConfirmed;
         if (isDocumentDirty()) {
-
-            final AlertDialog d = new AlertDialog(sceneBuilderManager, getStage());
+            
+            final Alert d = dialog.customAlert(getStage());
             d.setMessage(I18N.getString("alert.save.question.message", getStage().getTitle()));
             d.setDetails(I18N.getString("alert.save.question.details"));
             d.setOKButtonTitle(I18N.getString("label.save"));

@@ -49,8 +49,8 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarc
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.info.InfoPanelController;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;

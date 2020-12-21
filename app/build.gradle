@@ -15,6 +15,8 @@ dependencies {
     implementation project(':filesystem')
     implementation project(':sb')
 	implementation project(':preview')
+	implementation project(':library')
+	implementation project(':controls')
 }
 
 run {

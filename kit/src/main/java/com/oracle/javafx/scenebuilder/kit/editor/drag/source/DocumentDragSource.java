@@ -43,7 +43,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -236,7 +235,7 @@ public class DocumentDragSource extends AbstractDragSource {
         final Label visualNode = new Label();
         visualNode.setGraphic(new ImageView(image));
 //        visualNode.setText(mask.getClassNameInfo());
-        visualNode.getStylesheets().add(EditorController.getStylesheet().toString());
+        visualNode.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
         visualNode.getStyleClass().add("drag-preview"); //NOI18N
 
         return ImageUtils.getImageFromNode(visualNode);
@@ -246,7 +245,7 @@ public class DocumentDragSource extends AbstractDragSource {
     public Node makeShadow() {
         final Group result = new Group();
         
-        result.getStylesheets().add(EditorController.getStylesheet().toString());
+        result.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
 
         for (FXOMObject draggedObject : draggedObjects) {
             if (draggedObject.getSceneGraphObject() instanceof Node) {

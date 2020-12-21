@@ -40,35 +40,82 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 /**
- *
- *
+ * This class describes a single valued property 
+ * 
  */
 public abstract class ValuePropertyMetadata extends PropertyMetadata {
 
+    /** Is property writable. */
     private final boolean readWrite;
+    
+    //TODO this property must be extracted elsewhere in the future "Inspector extension" or better if possible
+    /** The inspector path. */
     private final InspectorPath inspectorPath;
 
 
+    /** The default value alternatives. */
     private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
 
+    /**
+     * Instantiates a new value property metadata.
+     *
+     * @param name the property name
+     * @param readWrite Is the property writable?
+     * @param inspectorPath the inspector path
+     */
     public ValuePropertyMetadata(PropertyName name, boolean readWrite, InspectorPath inspectorPath) {
         super(name);
         this.readWrite = readWrite;
         this.inspectorPath = inspectorPath;
     }
 
+    /**
+     * Checks if the property is writable.
+     *
+     * @return true, if the property is writable
+     */
     public boolean isReadWrite() {
         return readWrite;
     }
 
 
+    /**
+     * Gets the inspector path.
+     *
+     * @return the inspector path
+     */
     public InspectorPath getInspectorPath() {
         return inspectorPath;
     }
 
+    /**
+     * Gets the value class.
+     *
+     * @return the value class
+     */
     public abstract Class<?> getValueClass();
+    
+    /**
+     * Gets the default value object.
+     *
+     * @return the default value object
+     */
     public abstract Object getDefaultValueObject();
+    
+    /**
+     * Gets the current value object from the given fxom instance.
+     *
+     * @param fxomInstance the fxom instance
+     * @return the value object
+     */
     public abstract Object getValueObject(FXOMInstance fxomInstance);
+    
+    /**
+     * Sets the current value object from the given fxom instance
+     *
+     * @param fxomInstance the fxom instance
+     * @param valueObject the value object
+     */
     public abstract void setValueObject(FXOMInstance fxomInstance, Object valueObject);
 
     public Map<Class<?>, Object> getDefaultValueAlternatives() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,34 +32,110 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.klass;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener.Change;
+
 /**
- *
+ * This class describes an fxml component class 
  * 
  */
-public class ComponentClassMetadata extends ClassMetadata {
+public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     
-    private final Set<PropertyMetadata> properties = new HashSet<>();
+    /** The component properties. */
+    private final ObservableSet<PropertyMetadata> properties = FXCollections.observableSet(new HashSet<>());
+    
+    /** The component properties values subset. */
+    private final Set<ValuePropertyMetadata> values = new HashSet<>();
+    
+    /** The component properties component subset. */
+    private final Set<ComponentPropertyMetadata> subComponents = new HashSet<>();
+    
+    /** The free child positioning flag. default false */
     private final boolean freeChildPositioning;
-    private final ComponentClassMetadata parentMetadata;
+    
+    /** The inherited parent metadata. */
+    private final ComponentClassMetadata<?> parentMetadata;
 
-    public ComponentClassMetadata(Class<?> klass, ComponentClassMetadata parentMetadata) {
+    /**
+     * Instantiates a new component class metadata.
+     *
+     * @param klass the component's class
+     * @param parentMetadata the inherited parent component's metadata
+     */
+    public ComponentClassMetadata(Class<T> klass, ComponentClassMetadata<?> parentMetadata) {
         super(klass);
         this.parentMetadata = parentMetadata;
         this.freeChildPositioning = false; // TODO(elp)
-    }
+        setupSetSync();
+    } 
 
+    private void setupSetSync() {
+        properties.addListener((Change<? extends PropertyMetadata> e) -> {
+            if (e.wasAdded() && e.getElementAdded() != null) {
+                if (e.getElementAdded().getClass().isAssignableFrom(ValuePropertyMetadata.class)) {
+                    values.add((ValuePropertyMetadata)e.getElementAdded());
+                } else if (e.getElementAdded().getClass().isAssignableFrom(ComponentPropertyMetadata.class)) {
+                    subComponents.add((ComponentPropertyMetadata)e.getElementAdded());
+                } 
+            } else if (e.wasRemoved() && e.getElementRemoved() != null) {
+                if (e.getElementRemoved().getClass().isAssignableFrom(ValuePropertyMetadata.class)) {
+                    values.remove(e.getElementAdded());
+                } else if (e.getElementRemoved().getClass().isAssignableFrom(ComponentPropertyMetadata.class)) {
+                    subComponents.remove(e.getElementAdded());
+                } 
+            }
+            
+        });
+    }
+    /**
+     * Gets the component's properties.
+     *
+     * @return the properties
+     */
     public Set<PropertyMetadata> getProperties() {
         return properties;
     }
+    
+    /**
+     * Gets the component's properties values subset.
+     *
+     * @return the values subset properties
+     */
+    public Set<ValuePropertyMetadata> getValueProperties() {
+        return Collections.unmodifiableSet(values);
+    }
+    
+    /**
+     * Gets the component's properties sub components subset.
+     *
+     * @return the components subset properties
+     */
+    public Set<ComponentPropertyMetadata> getSubComponentProperties() {
+        return Collections.unmodifiableSet(subComponents);
+    }
 
+    /**
+     * Gets the sub component property.
+     * Components with more than one sub component properties are ignored 
+     * and those properties are treated as accessories
+     *
+     * @return the sub component property or null if none or more than one
+     */
+    //TODO find a way to handle multiple sub component properties without using special cases "if"
+    //TODO enable handling future "multiple sub component properties" in a generic way
     public PropertyName getSubComponentProperty() {
+        //return getSubComponentPropertyV2();
         PropertyName result = null;
         Class<?> componentClass = getKlass();
         
@@ -80,15 +156,55 @@ public class ComponentClassMetadata extends ClassMetadata {
 
         return result;
     }
+    
+    public PropertyName getSubComponentPropertyV2() {
+        PropertyName result = null;
+        ComponentClassMetadata<?> componentClass = this;
+        
+        if (getKlass() == javafx.scene.layout.BorderPane.class) {
+            // We consider that BorderPane has no subcomponents.
+            // left, right, bottom and top components are treated as "accessories".
+            result = null;
+        } else if (getKlass() == javafx.scene.control.DialogPane.class) {
+            // We consider that DialogPane has no subcomponents.
+            // content, expanded content, header and graphic components are treated as "accessories".
+            result = null;
+        } else {
+            while ((result == null) && (componentClass != null)) {
+                result = componentClass.getSubComponentProperties().size() == 1 ?
+                            componentClass.getSubComponentProperties().stream().findFirst().get().getName():
+                            null;
+                componentClass = componentClass.getParentMetadata();
+            }
+        }
 
+        return result;
+    }
+
+    /**
+     * Checks if is child positioning is free or constrained.
+     *
+     * @return true, if is free child positioning
+     */
     public boolean isFreeChildPositioning() {
         return freeChildPositioning;
     }
 
+    /**
+     * Gets the inherited parent component metadata.
+     *
+     * @return the parent metadata
+     */
     public ComponentClassMetadata getParentMetadata() {
         return parentMetadata;
     }
     
+    /**
+     * Lookup property by name.
+     *
+     * @param propertyName the property name
+     * @return the property metadata
+     */
     public PropertyMetadata lookupProperty(PropertyName propertyName) {
         PropertyMetadata result = null;
         
@@ -124,6 +240,14 @@ public class ComponentClassMetadata extends ClassMetadata {
      * Private
      */
     
+    /**
+     * Gets the sub component property for the specified component class.
+     *
+     * @param componentClass the component class
+     * @return the sub component property or null if none or more than one
+     */
+    //TODO this method is not dynamic and not extensible, need to do something about it
+    @Deprecated
     private static PropertyName getSubComponentProperty(Class<?> componentClass) {
         final PropertyName result;
         

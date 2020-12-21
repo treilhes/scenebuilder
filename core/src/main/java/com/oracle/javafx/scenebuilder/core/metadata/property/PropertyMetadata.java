@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,17 +37,28 @@ import java.util.Objects;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 /**
- *
+ * A base class that represents a property metadata of an fxml component
  * 
  */
 public class PropertyMetadata implements Comparable<PropertyMetadata> {
     
+    /** The property name. */
     private final PropertyName name;
 
+    /**
+     * Instantiates a new property metadata.
+     *
+     * @param name the name of the property
+     */
     public PropertyMetadata(PropertyName name) {
         this.name = name;
     }
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     public PropertyName getName() {
         return name;
     }

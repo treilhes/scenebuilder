@@ -37,11 +37,11 @@ import java.util.Objects;
  *
  * 
  */
-public class ClassMetadata implements Comparable<ClassMetadata> {
+public class ClassMetadata<T> implements Comparable<ClassMetadata<T>> {
     
-    private final Class<?> klass;
+    private final Class<T> klass;
 
-    public ClassMetadata(Class<?> klass) {
+    public ClassMetadata(Class<T> klass) {
         this.klass = klass;
     }
 

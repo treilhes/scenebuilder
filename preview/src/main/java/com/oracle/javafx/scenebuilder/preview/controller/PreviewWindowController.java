@@ -128,6 +128,9 @@ public class PreviewWindowController extends AbstractWindowController {
             @Autowired Document document) {
         super(sceneBuilderManager, document.getStage());
         this.editorController = editorController;
+        
+        makeRoot();
+        
         this.editorController.fxomDocumentProperty().addListener(
                 (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
                     assert editorController.getFxomDocument() == nd;
@@ -164,15 +167,14 @@ public class PreviewWindowController extends AbstractWindowController {
 //     * AbstractWindowController
 //     */
 //    @Override
-//    protected void makeRoot() {
-//        // Until the timer used in requestUpdate() expires, so that the root of
-//        // the scene is updated to the real content, we set a placeholder.
-//        StackPane sp = new StackPane();
-//        sp.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
-//        setRoot(sp);
-//
-//        requestUpdate(IMMEDIATE);
-//    }
+    protected void makeRoot() {
+        // Until the timer used in requestUpdate() expires, so that the root of
+        // the scene is updated to the real content, we set a placeholder.
+        StackPane sp = new StackPane();
+        sp.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
+        setRoot(sp);
+
+    }
 
     @Override
     public void onCloseRequest(WindowEvent event) {

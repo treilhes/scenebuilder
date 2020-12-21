@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -619,6 +620,8 @@ public abstract class PropertyEditor extends AbstractEditor {
         }
 
         // TODO the SceneBuilderManager parameter is null, so this AlertDialog can't respond to ToolTheme change
+        // FIXME AlertDialog is now a Spring bean with fxml loaded by Spring, so this will throw an exception
+        // FIXME context must be available here
         // it will be solved by using spring bean or propagating a SceneBuilderManager instance which is a pains
         final AlertDialog alertDialog = new AlertDialog(null, source.getScene().getWindow());
         // Messages

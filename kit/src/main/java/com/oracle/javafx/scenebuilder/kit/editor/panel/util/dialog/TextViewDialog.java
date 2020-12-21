@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,8 +35,12 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,17 +55,18 @@ import javafx.stage.Window;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TextViewDialog extends AbstractModalDialog {
 
     @FXML
     private TextArea textArea;
 
     /*
-     * Public
+     * Protected
      */
 
-
-    public TextViewDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
+    protected TextViewDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
         super(sceneBuilderManager, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, owner); //NOI18N
         setOKButtonVisible(false);
         setActionButtonVisible(true);

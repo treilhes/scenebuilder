@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropert
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -237,7 +236,7 @@ public class ExternalDragSource extends AbstractDragSource {
     public Node makeShadow() {
         final Group result = new Group();
 
-        result.getStylesheets().add(EditorController.getStylesheet().toString());
+        result.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
 
         for (FXOMObject draggedObject : getDraggedObjects()) {
             if (draggedObject.getSceneGraphObject() instanceof Node) {

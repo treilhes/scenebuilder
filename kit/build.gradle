@@ -1,6 +1,8 @@
 dependencies {
 	implementation project(':core')
 	implementation project(':defaultx')
+	implementation project(':sb')
+	implementation project(':library')
 }
 
 jar {

@@ -53,11 +53,11 @@ import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePrefere
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.preferences.GlobalKitPreferences;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference.CSSAnalyzerColumnsOrder;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;

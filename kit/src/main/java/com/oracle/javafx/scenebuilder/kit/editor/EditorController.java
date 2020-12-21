@@ -119,7 +119,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.glossary.AbstractGlossary;
 import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
@@ -295,7 +294,7 @@ public class EditorController implements Editor {
      */
     public EditorController(
     		@Autowired ApplicationContext context,
-    		@Autowired BuiltinLibrary builtinLibrary,
+    		@Autowired Library builtinLibrary,
     		@Autowired RootContainerHeightPreference rootContainerHeightPreference,
     	    @Autowired RootContainerWidthPreference rootContainerWidthPreference,
     	    @Autowired FileSystem fileSystem,
@@ -2403,23 +2402,6 @@ public class EditorController implements Editor {
         final Job addTooltipJob = new AddTooltipToSelectionJob(context,this).extend();
         getJobManager().push(addTooltipJob);
    }
-
-    /**
-     * Returns the URL of the CSS style associated to EditorController class.
-     * This stylesheet contains rules shareable by all other components of
-     * SB kit.
-     *
-     * @return URL of EditorController class style sheet (never null).
-     */
-    private static URL stylesheet = null;
-    public synchronized static URL getStylesheet() {
-        if (stylesheet == null) {
-            stylesheet = EditorController.class.getResource("EditorController.css"); //NOI18N
-            assert stylesheet != null;
-        }
-        return stylesheet;
-    }
-
 
     /**
      * @treatAsPrivate

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -742,7 +743,7 @@ public class FXOMNodes {
         final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOI18N
         final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOI18N
 
-        final ComponentClassMetadata imageViewMeta
+        final ComponentClassMetadata<?> imageViewMeta
                 = Metadata.getMetadata().queryComponentMetadata(ImageView.class);
         final PropertyMetadata imagePropMeta
                 = imageViewMeta.lookupProperty(imageName);

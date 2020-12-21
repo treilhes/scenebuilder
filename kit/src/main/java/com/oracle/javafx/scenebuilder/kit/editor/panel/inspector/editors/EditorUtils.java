@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -269,7 +269,7 @@ public class EditorUtils {
     // Get the component class metadata where a property is defined.
     private static ComponentClassMetadata getDefiningClass(Class<?> clazz, PropertyName propName) {
         Metadata metadata = Metadata.getMetadata();
-        ComponentClassMetadata classMeta = metadata.queryComponentMetadata(clazz);
+        ComponentClassMetadata<?> classMeta = metadata.queryComponentMetadata(clazz);
         while (clazz != null) {
             for (PropertyMetadata propMeta : classMeta.getProperties()) {
                 if (propMeta.getName().compareTo(propName) == 0) {

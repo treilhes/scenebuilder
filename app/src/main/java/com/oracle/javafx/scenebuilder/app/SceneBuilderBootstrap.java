@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,6 +57,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowController;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
+import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
@@ -84,6 +85,7 @@ import javafx.stage.Stage;
 		WelcomeDialogWindowController.class,
 		PreferencesController.class,
 		BuiltinLibrary.class,
+		ComponentClassMetadatas.class,
 		Metadata.class,
 		MenuBarController.class,
 		EditorController.class,
@@ -107,6 +109,7 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.gluon",
 			"com.oracle.javafx.scenebuilder.fs",
 			"com.oracle.javafx.scenebuilder.sb",
+			"com.oracle.javafx.scenebuilder.controls",
 			"com.oracle.javafx.scenebuilder.preview",
 			"com.oracle.javafx.scenebuilder.app.actions"
 			})
