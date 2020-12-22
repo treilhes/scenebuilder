@@ -68,38 +68,56 @@ public class GluonComponentPropertyMetadataCatalog {
         actionItems_Node_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.actionItemsName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         buttons_EXPANDEDPANEL_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.buttonsName,
                     buttonBaseMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         collapsedContentPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.collapsedContentName,
                     nodeMetadata,
-                    false /* collection */);
+                    false, /* unique */
+                    getClass().getResource("subcompicons/Gluon_ExpansionPanel-collapsed_content.png"),
+                    getClass().getResource("subcompicons/Gluon_ExpansionPanel-collapsed_content@2x.png"));
         content_EXPANDEDPANEL_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         expandedContentPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.expandedContentName,
                     nodeMetadata,
-                    false /* collection */);
+                    false, /* unique */
+                    getClass().getResource("subcompicons/Gluon_ExpansionPanel-expanded_content.png"),
+                    getClass().getResource("subcompicons/Gluon_ExpansionPanel-expanded_content@2x.png"));
         items_ExpansionPanel_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.itemsName,
                     expansionPanelMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         options_Option_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.optionsName,
                     optionMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         titleNodes_Node_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.titleNodesName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         toggles_ToggleButton_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.togglesName,
                     toggleButtonMetadata,
-                    true /* collection */);
+                    true, /* collection */
+                    null,
+                    null);
     }
 }

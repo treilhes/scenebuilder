@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,30 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.library;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 /**
- *
+ * Section are now ordered by alphabetical order
  * @treatAsPrivate
  */
 public class BuiltinSectionComparator implements Comparator<String> {
-    
-    private static final List<String> orderedSections = new ArrayList<>();
-    
-    static {
-        orderedSections.add(BuiltinLibrary.TAG_CONTAINERS);
-        orderedSections.add(BuiltinLibrary.TAG_CONTROLS);
-        orderedSections.add(BuiltinLibrary.TAG_GLUON);
-        orderedSections.add(BuiltinLibrary.TAG_MENU);
-        orderedSections.add(BuiltinLibrary.TAG_MISCELLANEOUS);
-        orderedSections.add(BuiltinLibrary.TAG_SHAPES);
-        orderedSections.add(BuiltinLibrary.TAG_CHARTS);
-        orderedSections.add(BuiltinLibrary.TAG_3D);
-    }
-    
-    
+        
     /*
      * Comparator
      */
@@ -64,26 +48,7 @@ public class BuiltinSectionComparator implements Comparator<String> {
     public int compare(String section1, String section2) {
         assert section1 != null;
         assert section2 != null;
-        
-        final int index1 = orderedSections.indexOf(section1);
-        final int index2 = orderedSections.indexOf(section2);
-        final int result;
-        
-        if ((index1 != -1) && (index2 != -1)) {
-            // section1 and section2 are both predefined names
-            result = Integer.compare(index1, index2);
-        } else if (index1 != -1) {
-            // only section1 is predefined -> goes before section2
-            result = +1;
-        } else if (index2 != -1) {
-            // only section2 is predefined -> goes before section1
-            result = -1;
-        } else {
-            // section1 and section2 are both custom
-            result = section1.compareTo(section2);
-        }
-        
-        return result;
+        return section1.compareTo(section2);
     }
     
 }

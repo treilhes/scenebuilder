@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,7 +49,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.ShowUpdateDialogDat
 import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference;
-import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.kit.preferences.GlobalKitPreferences;
@@ -57,12 +56,12 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColo
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference.CSSAnalyzerColumnsOrder;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 /**
  * Defines preferences global to the SB application.
@@ -121,7 +120,7 @@ public class GlobalPreferences extends GlobalKitPreferences {
     public GlobalPreferences(RootContainerHeightPreference rootContainerHeight,
 			RootContainerWidthPreference rootContainerWidth, BackgroundImagePreference backgroundImage,
 			AlignmentGuidesColorPreference alignmentGuidesColor, ParentRingColorPreference parentRingColor,
-			ThemePreference theme, GluonSwatchPreference gluonSwatch, GluonThemePreference gluonTheme,
+			ThemePreference theme, GluonSwatchPreference gluonSwatch, 
 			//ToolThemePreference toolTheme,
 			DisplayModePreference libraryDisplayOption,
 			DisplayOptionPreference hierarchyDisplayOption,

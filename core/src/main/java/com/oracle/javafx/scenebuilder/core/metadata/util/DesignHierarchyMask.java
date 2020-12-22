@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,6 @@ import com.gluonhq.charm.glisten.control.BottomNavigation;
 import com.gluonhq.charm.glisten.control.DropdownButton;
 import com.gluonhq.charm.glisten.control.ExpansionPanel;
 import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -54,11 +53,11 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
-import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -68,10 +67,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextInputControl;
@@ -91,6 +86,7 @@ import javafx.stage.Stage;
  */
 public class DesignHierarchyMask {
 
+    @Deprecated
     public enum Accessory {
         // True accessories
 
@@ -135,26 +131,46 @@ public class DesignHierarchyMask {
             public String toString() { return "CONTENT"; }
         }
     }
+    @Deprecated
     private static final PropertyName graphicName = new PropertyName("graphic");
+    @Deprecated
     private static final PropertyName contentName = new PropertyName("content");
+    @Deprecated
     private static final PropertyName rootName = new PropertyName("root");
+    @Deprecated
     private static final PropertyName sceneName = new PropertyName("scene");
+    @Deprecated
     private static final PropertyName expandableContentName = new PropertyName("expandableContent");
+    @Deprecated
     private static final PropertyName headerName = new PropertyName("header");
+    @Deprecated
     private static final PropertyName topName = new PropertyName("top");
+    @Deprecated
     private static final PropertyName bottomName = new PropertyName("bottom");
+    @Deprecated
     private static final PropertyName leftName = new PropertyName("left");
+    @Deprecated
     private static final PropertyName rightName = new PropertyName("right");
+    @Deprecated
     private static final PropertyName centerName = new PropertyName("center");
+    @Deprecated
     private static final PropertyName xAxisName = new PropertyName("xAxis");
+    @Deprecated
     private static final PropertyName yAxisName = new PropertyName("yAxis");
+    @Deprecated
     private static final PropertyName placeholderName = new PropertyName("placeholder");
+    @Deprecated
     private static final PropertyName tooltipName = new PropertyName("tooltip");
+    @Deprecated
     private static final PropertyName contextMenuName = new PropertyName("contextMenu");
+    @Deprecated
     private static final PropertyName clipName = new PropertyName("clip");
+    @Deprecated
     private static final PropertyName treeColumnName = new PropertyName("treeColumn");
     // ExpansionPanel
+    @Deprecated
     private static final PropertyName expandedContentName = new PropertyName("expandedContent");
+    @Deprecated
     private static final PropertyName collapsedContentName = new PropertyName("collapsedContent");
 
     private final FXOMObject fxomObject;
@@ -165,18 +181,37 @@ public class DesignHierarchyMask {
         this.fxomObject = fxomObject;
     }
 
+    /**
+     * Gets the fxml object model of the object.
+     *
+     * @return the fxom object
+     */
     public FXOMObject getFxomObject() {
         return fxomObject;
-    }
+    } 
 
+    /**
+     * Gets the fxml object model of the parent object.
+     * @return the parent fxom object
+     */
     public FXOMObject getParentFXOMObject() {
         return fxomObject.getParentObject();
     }
 
+    /**
+     * Checks if is the object is an instance of {@See Node}.
+     *
+     * @return true, if is a {@See Node}
+     */
     public boolean isFxNode() {
         return fxomObject.getSceneGraphObject() instanceof Node;
     }
 
+    /**
+     * Gets the closest instance of {@See Node} in the object inheritance chain.
+     *
+     * @return the closest instance of {@See Node} in the object inheritance chain.
+     */
     public FXOMObject getClosestFxNode() {
         FXOMObject result = fxomObject;
         DesignHierarchyMask mask = this;
@@ -189,7 +224,7 @@ public class DesignHierarchyMask {
         return result;
     }
 
-    public URL getClassNameIconURL() {
+    private Qualifier findFxomObjectQualifier() {
         final Object sceneGraphObject;
 
         // For FXOMIntrinsic, we use the source sceneGraphObject
@@ -203,49 +238,15 @@ public class DesignHierarchyMask {
             // For now, handle icons for scenegraph objects only
             return null;
         }
-        final URL url;
-        if (sceneGraphObject instanceof Separator) {
-            // Separator orientation
-            final Separator obj = (Separator) sceneGraphObject;
-            if (Orientation.HORIZONTAL.equals(obj.getOrientation())) {
-                url = ImageUtils.getNodeIconURL("Separator-h.png"); //NOI18N
-            } else {
-                url = ImageUtils.getNodeIconURL("Separator-v.png"); //NOI18N
-            }
-        } else if (sceneGraphObject instanceof ScrollBar) {
-            // ScrollBar orientation
-            final ScrollBar obj = (ScrollBar) sceneGraphObject;
-            if (Orientation.HORIZONTAL.equals(obj.getOrientation())) {
-                url = ImageUtils.getNodeIconURL("ScrollBar-h.png"); //NOI18N
-            } else {
-                url = ImageUtils.getNodeIconURL("ScrollBar-v.png"); //NOI18N
-            }
-        } else if (sceneGraphObject instanceof Slider) {
-            // Slider orientation
-            final Slider obj = (Slider) sceneGraphObject;
-            if (Orientation.HORIZONTAL.equals(obj.getOrientation())) {
-                url = ImageUtils.getNodeIconURL("Slider-h.png"); //NOI18N
-            } else {
-                url = ImageUtils.getNodeIconURL("Slider-v.png"); //NOI18N
-            }
-        } else if (sceneGraphObject instanceof SplitPane) {
-            // SplitPane orientation
-            final SplitPane obj = (SplitPane) sceneGraphObject;
-            if (Orientation.HORIZONTAL.equals(obj.getOrientation())) {
-                url = ImageUtils.getNodeIconURL("SplitPane-h.png"); //NOI18N
-            } else {
-                url = ImageUtils.getNodeIconURL("SplitPane-v.png"); //NOI18N
-            }
-        } else {
-            // Default
-            Class componentClass = sceneGraphObject.getClass();
-            String fileName = componentClass.getSimpleName();
-            if (componentClass.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
-                fileName = EditorPlatform.GLUON_FILE_PREFIX + fileName;
-            }
-            url = ImageUtils.getNodeIconURL(fileName + ".png"); //NOI18N
-        }
-        return url;
+        
+        ComponentClassMetadata<?> cm = Metadata.getMetadata().queryComponentMetadata(sceneGraphObject.getClass());
+        
+        return cm.applicableQualifiers(sceneGraphObject).stream().findFirst().orElse(Qualifier.UNKNOWN);
+        
+    }
+    public URL getClassNameIconURL() {
+        Qualifier qualifier = findFxomObjectQualifier();
+        return qualifier == null ? null : qualifier.getIconUrl();
     }
 
     public Image getClassNameIcon() {
@@ -375,6 +376,7 @@ public class DesignHierarchyMask {
         return result;
     }
 
+    @Deprecated
     public boolean hasDescription() {
         final Object sceneGraphObject = fxomObject.getSceneGraphObject();
         if (sceneGraphObject == null) {
@@ -617,6 +619,7 @@ public class DesignHierarchyMask {
         return false;
     }
 
+    @Deprecated
     public PropertyName getSubComponentPropertyName() {
         final Object sceneGraphObject = fxomObject.getSceneGraphObject();
         final PropertyName result;
@@ -637,6 +640,7 @@ public class DesignHierarchyMask {
         return result;
     }
 
+    
     public int getSubComponentCount() {
         final PropertyName name = getSubComponentPropertyName();
         return (name == null) ? 0 : getSubComponents().size();

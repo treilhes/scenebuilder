@@ -67,6 +67,7 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -83,7 +84,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
@@ -598,7 +598,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
         String sectionName = paneName;
 
         if (sectionName == null) {
-            sectionName = BuiltinLibrary.TAG_CONTAINERS;
+            sectionName = DefaultSectionNames.TAG_CONTAINERS;
         }
 
         for (TitledPane tp : libAccordion.getPanes()) {
@@ -807,7 +807,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                 }
             } finally {
                 if (currentDisplayMode.equals(DISPLAY_MODE.SECTIONS)) {
-                    sectionNameToKeepOpened = UserLibrary.TAG_USER_DEFINED;
+                    sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
                 }
 
                 ((UserLibrary) getEditorController().getLibrary()).startWatching();
@@ -859,7 +859,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                     copyFilesToUserLibraryDir(fxmlFiles);
 
                     if (currentDisplayMode.equals(DISPLAY_MODE.SECTIONS)) {
-                        sectionNameToKeepOpened = UserLibrary.TAG_USER_DEFINED;
+                        sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
                     }
                 }
 
@@ -883,7 +883,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                     ButtonID userChoice = iwc.showAndWait();
 
                     if (userChoice.equals(ButtonID.OK) && currentDisplayMode.equals(DISPLAY_MODE.SECTIONS)) {
-                        sectionNameToKeepOpened = UserLibrary.TAG_USER_DEFINED;
+                        sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
                     }
                 }
             }
@@ -910,7 +910,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                 ButtonID userChoice = iwc.showAndWait();
 
                 if (userChoice.equals(ButtonID.OK) && currentDisplayMode.equals(DISPLAY_MODE.SECTIONS)) {
-                    sectionNameToKeepOpened = UserLibrary.TAG_USER_DEFINED;
+                    sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
                 }
             }
         }

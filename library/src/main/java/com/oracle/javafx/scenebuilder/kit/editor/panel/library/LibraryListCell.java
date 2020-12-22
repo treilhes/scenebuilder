@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,11 +36,12 @@ import java.net.URL;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.source.LibraryDragSource;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -70,8 +72,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
     private final Label classNameLabel = new Label();
     private final Label qualifierLabel = new Label();
     private final Label sectionLabel = new Label();
-    private final URL missingIconURL = ImageUtils.getNodeIconURL("MissingIcon.png"); //NOI18N
-    private static final String EMPTY_QUALIFIER_ID = " (empty)"; //NOI18N
+
 
     public LibraryListCell(final Editor ec) {
         super();
@@ -131,13 +132,11 @@ class LibraryListCell extends ListCell<LibraryListItem> {
                 // this applies to orientation as well as empty qualifiers.
                 // FX8 qualifier is not kept as there's no ambiguity there.
                 String id = item.getLibItem().getName();
-                if (id.contains(BuiltinLibrary.getFX8Qualifier())) {
-                    id = id.substring(0, id.indexOf(BuiltinLibrary.getFX8Qualifier()));
-                }
+
                 // If QE were about to test a localized version the ID should
                 // remain unchanged.
-                if (id.contains(BuiltinLibrary.getEmptyQualifier())) {
-                    id = id.replace(BuiltinLibrary.getEmptyQualifier(), EMPTY_QUALIFIER_ID);
+                if (item.getLibItem().getQualifier().getLabel() != null) {
+                    id += String.format(" (%s)", item.getLibItem().getQualifier().getLabel());
                 }
                 graphic.setId(id); // for QE
             }
@@ -224,10 +223,32 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             }
         }
     }
+    
+    private String makeQualifierLabel(Qualifier qualifier) {
+        String label = qualifier.getLabel();
+        String description = qualifier.getDescription();
+        
+        if (label == null && description == null) {
+            return "";
+        }
+        
+        String output = "";
+        
+        if (label != null) {
+            output += "(" + I18N.getStringOrDefault(String.format("label.qualifier.%s",label), label) + ")";
+        }
+        
+        if (description != null) {
+            output += output.length() == 0 ? "" : " ";
+            output += "(" + I18N.getStringOrDefault(String.format("description.qualifier.%s",description), description) + ")";
+        }
+        return output;
+    }
+    
 
     private void updateLayout(LibraryListItem listItem) {
         assert listItem != null;
-
+        
         if (listItem.getLibItem() != null) {
             final LibraryItem item = listItem.getLibItem();
             // The classname shall be space character free (it is an API name).
@@ -235,7 +256,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             // right after. In the case there is several qualifiers in a row
             // only the latest one is taken as is, others are kept with class
             // name.
-            String classname = getClassName(item.getName());
+            String classname = item.getName();
             iconImageView.setManaged(true);
             classNameLabel.setManaged(true);
             qualifierLabel.setManaged(true);
@@ -245,13 +266,9 @@ class LibraryListCell extends ListCell<LibraryListItem> {
             qualifierLabel.setVisible(true);
             sectionLabel.setVisible(false);
             classNameLabel.setText(classname);
-            qualifierLabel.setText(getQualifier(item.getName()));
+            qualifierLabel.setText(makeQualifierLabel(item.getQualifier()));
             // getIconURL can return null, this is deliberate.
             URL iconURL = item.getIconURL();
-            // Use missing icon
-            if (iconURL == null) {
-                iconURL = missingIconURL;
-            }
             iconImageView.setImage(new Image(iconURL.toExternalForm()));
         } else if (listItem.getSectionName() != null) {
             iconImageView.setManaged(false);
@@ -266,19 +283,4 @@ class LibraryListCell extends ListCell<LibraryListItem> {
         }
     }
 
-    private String getClassName(String input) {
-        if (!input.contains(" ")) { //NOI18N
-            return input;
-        } else {
-            return input.substring(0, input.lastIndexOf(' ')); //NOI18N
-        }
-    }
-
-    private String getQualifier(String input) {
-        if (!input.contains(" ")) { //NOI18N
-            return ""; //NOI18N
-        } else {
-            return input.substring(input.lastIndexOf(' '), input.length()); //NOI18N
-        }
-    }
 }

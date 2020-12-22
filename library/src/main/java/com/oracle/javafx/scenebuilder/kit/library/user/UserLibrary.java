@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -83,7 +83,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
     public enum State { READY, WATCHING }
 
-    public static final String TAG_USER_DEFINED = "Custom"; //NOI18N
+    //public static final String TAG_USER_DEFINED = "Custom"; //NOI18N
 
     private final BuiltinLibrary builtinLibrary;
 
@@ -179,6 +179,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         return state;
     }
 
+    // TODO another watching code. may be replaced by filsesystem watcher
     public synchronized void startWatching() {
         assert state == State.READY;
 
@@ -195,6 +196,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         }
     }
 
+    // TODO another watching code. may be replaced by filsesystem watcher
     public synchronized void stopWatching() {
         assert state == State.WATCHING;
 

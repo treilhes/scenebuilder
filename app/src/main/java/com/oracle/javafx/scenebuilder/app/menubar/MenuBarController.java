@@ -56,6 +56,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.Size;
+import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
@@ -79,7 +80,6 @@ import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 
 import javafx.collections.ObservableList;
@@ -1309,7 +1309,7 @@ public class MenuBarController implements InitializingBean {
 
             // Collect custom items
             for (LibraryItem li : editorController.getLibrary().getItems()) {
-                if (li.getSection().equals(UserLibrary.TAG_USER_DEFINED)) {
+                if (li.getSection().equals(DefaultSectionNames.TAG_USER_DEFINED)) {
                     sectionItems.add(li);
                 }
             }
@@ -1332,7 +1332,7 @@ public class MenuBarController implements InitializingBean {
     // At constructing time we dunno if we've custom items then we keep it hidden.
     private void constructCustomPartOfInsertMenu() {
         assert insertMenu != null;
-        insertCustomMenu = makeMenuForLibrarySection(UserLibrary.TAG_USER_DEFINED);
+        insertCustomMenu = makeMenuForLibrarySection(DefaultSectionNames.TAG_USER_DEFINED);
         insertMenu.getItems().add(0, insertCustomMenu);
         insertCustomMenu.setVisible(false);
     }

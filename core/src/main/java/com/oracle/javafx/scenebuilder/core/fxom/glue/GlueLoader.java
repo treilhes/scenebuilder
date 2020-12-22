@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +41,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -49,7 +54,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  *
@@ -85,12 +89,14 @@ class GlueLoader implements ContentHandler, ErrorHandler, LexicalHandler {
         assert prefixMappings.isEmpty();
         
         try {
-            XMLReader xr = XMLReaderFactory.createXMLReader();
+            SAXParser sx = SAXParserFactory.newDefaultInstance().newSAXParser();
+            XMLReader xr = sx.getXMLReader();
+            
             xr.setContentHandler(this);
             xr.setErrorHandler(this);
             xr.setProperty("http://xml.org/sax/properties/lexical-handler", this); //NOI18N
             xr.parse(new InputSource(is));
-        } catch(SAXException x) {
+        } catch(SAXException | ParserConfigurationException x) {
             throw new IOException(x);
         }
         

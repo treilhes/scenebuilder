@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 
 /**
  *
@@ -45,22 +46,22 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
  */
 public class LibraryItemImpl implements LibraryItem {
 
-    private final String name;
-    private final String section;
-    private final String fxmlText;
-    private final URL iconURL;
-    private final AbstractLibrary library;
 
-    public LibraryItemImpl(String name, String section, String fxmlText, URL iconURL, AbstractLibrary library) {
+    private final String fxmlText;
+    private final AbstractLibrary library;
+    private final String name;
+    private final Qualifier qualifier;
+
+    public LibraryItemImpl(String name, Qualifier qualifier, String fxmlText, AbstractLibrary library) {
         assert name != null;
+        assert qualifier != null;
         assert fxmlText != null;
         assert library != null;
 
         this.name = name;
-        this.section = section;
+        this.qualifier = qualifier;
         this.fxmlText = fxmlText;
         this.library = library;
-        this.iconURL = iconURL;
     }
 
     @Override
@@ -70,7 +71,7 @@ public class LibraryItemImpl implements LibraryItem {
 
     @Override
     public String getSection() {
-        return section;
+        return qualifier.getCategory();
     }
 
     @Override
@@ -80,7 +81,12 @@ public class LibraryItemImpl implements LibraryItem {
 
     @Override
     public URL getIconURL() {
-        return iconURL;
+        return qualifier.getIconUrl();
+    }
+    
+    @Override
+    public Qualifier getQualifier() {
+        return qualifier;
     }
 
     @Override
@@ -107,9 +113,8 @@ public class LibraryItemImpl implements LibraryItem {
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.name);
-        hash = 67 * hash + Objects.hashCode(this.section);
+        hash = 67 * hash + Objects.hashCode(this.qualifier);
         hash = 67 * hash + Objects.hashCode(this.fxmlText);
-        hash = 67 * hash + Objects.hashCode(this.iconURL);
         hash = 67 * hash + Objects.hashCode(this.library);
         return hash;
     }
@@ -129,13 +134,10 @@ public class LibraryItemImpl implements LibraryItem {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.section, other.section)) {
+        if (!Objects.equals(this.qualifier, other.qualifier)) {
             return false;
         }
         if (!Objects.equals(this.fxmlText, other.fxmlText)) {
-            return false;
-        }
-        if (!Objects.equals(this.iconURL, other.iconURL)) {
             return false;
         }
         return Objects.equals(this.library, other.library);
@@ -151,7 +153,7 @@ public class LibraryItemImpl implements LibraryItem {
 
         result.append(getClass().getSimpleName());
         result.append('[');
-        result.append(name);
+        result.append(getName());
         result.append(']');
 
         return result.toString();

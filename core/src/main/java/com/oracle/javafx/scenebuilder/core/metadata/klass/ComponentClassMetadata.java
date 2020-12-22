@@ -32,11 +32,16 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.klass;
 
+import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -45,6 +50,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener.Change;
+import lombok.Getter;
 
 /**
  * This class describes an fxml component class 
@@ -60,6 +66,9 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     
     /** The component properties component subset. */
     private final Set<ComponentPropertyMetadata> subComponents = new HashSet<>();
+    
+    /** The component properties component subset. */
+    private final Map<String, Qualifier> qualifiers = new HashMap<>();
     
     /** The free child positioning flag. default false */
     private final boolean freeChildPositioning;
@@ -98,6 +107,16 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
             
         });
     }
+    
+    /**
+     * Gets the component's qualifiers (aka default setups).
+     *
+     * @return the properties
+     */
+    public Map<String, Qualifier> getQualifiers() {
+        return qualifiers;
+    }
+    
     /**
      * Gets the component's properties.
      *
@@ -126,6 +145,22 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     }
 
     /**
+     * Gets the component's properties sub components subset for all the inheritance chain.
+     *
+     * @return all the components subset properties
+     */
+    public Set<ComponentPropertyMetadata> getAllSubComponentProperties() {
+        HashSet<ComponentPropertyMetadata> result = new HashSet<>();
+        ComponentClassMetadata<?> current = this;
+        
+        while (current != null) {
+            result.addAll(current.getSubComponentProperties());
+            current = current.getParentMetadata();
+        }
+        
+        return Collections.unmodifiableSet(result);
+    }
+    /**
      * Gets the sub component property.
      * Components with more than one sub component properties are ignored 
      * and those properties are treated as accessories
@@ -134,6 +169,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      */
     //TODO find a way to handle multiple sub component properties without using special cases "if"
     //TODO enable handling future "multiple sub component properties" in a generic way
+    @Deprecated
     public PropertyName getSubComponentProperty() {
         //return getSubComponentPropertyV2();
         PropertyName result = null;
@@ -195,7 +231,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      *
      * @return the parent metadata
      */
-    public ComponentClassMetadata getParentMetadata() {
+    public ComponentClassMetadata<?> getParentMetadata() {
         return parentMetadata;
     }
     
@@ -360,5 +396,62 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     private static final PropertyName togglesName = new PropertyName("toggles");
     private static final PropertyName titleNodesName = new PropertyName("titleNodes");
     private static final PropertyName optionsName = new PropertyName("options");
-
+ 
+    
+    /**
+     * Find the applicable qualifiers in the available qualifiers.
+     * A {@link ComponentClassMetadata.Qualifier} is applicable if the {@link ApplicabilityCheck} provided trough
+     * {@link Qualifier#Qualifier(URL, String, String, URL, URL, String, ApplicabilityCheck)} return true
+     * If none were provided during the {@link Qualifier} instantiation then the {@link Qualifier} is always applicable
+     * 
+     * @param sceneGraphObject the scene graph object
+     * @return the applicable qualifiers sets
+     */
+    public Set<Qualifier> applicableQualifiers(Object sceneGraphObject) {
+        if (!sceneGraphObject.getClass().isAssignableFrom(getKlass()) || getQualifiers().size() == 0) {
+            return Collections.unmodifiableSet(new HashSet<>());
+        }
+        return Collections.unmodifiableSet(getQualifiers().values().stream().filter(q -> q.isApplicable(sceneGraphObject)).collect(Collectors.toSet()));
+    }
+    
+    public static class Qualifier {
+        
+        public static final Qualifier UNKNOWN = new Qualifier(null, null, null, null, null, null);
+        
+        public static final String HIDDEN = null;
+        public static final String DEFAULT = "";
+        public static final String EMPTY = "empty";
+        
+        @Getter private final URL fxmlUrl;
+        @Getter private final String label;
+        @Getter private final String description;
+        @Getter private final URL iconUrl;
+        @Getter private final URL iconX2Url;
+        @Getter private final String category;
+        @Getter private final ApplicabilityCheck applicabilityCheck;
+        
+        public Qualifier(URL fxmlUrl, String label, String description, URL iconUrl, URL iconX2Url, String category) {
+            this(fxmlUrl, label, description, iconUrl, iconX2Url, category, (o) -> true);
+        }
+        
+        public Qualifier(URL fxmlUrl, String label, String description, URL iconUrl, URL iconX2Url, String category, ApplicabilityCheck<?> applicabilityCheck) {
+            super();
+            this.fxmlUrl = fxmlUrl;
+            this.label = label;
+            this.description = description;
+            this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
+            this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
+            this.category = category != null ? category : DefaultSectionNames.TAG_USER_DEFINED;
+            this.applicabilityCheck = applicabilityCheck;
+        }
+        
+        public boolean isApplicable(Object object) {
+            return applicabilityCheck.isApplicable(object);
+        }
+    }
+    
+    @FunctionalInterface
+    public interface ApplicabilityCheck<T> {
+        boolean isApplicable(T object);
+    }
 }

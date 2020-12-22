@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
+import java.net.URL;
+
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -47,6 +49,12 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
     /** Does this placeholder accept a collection of components. */
     private final boolean collection;
 
+    /** Icon illustrating this placeholder. */
+    private final URL iconUrl;
+    
+    /** Icon illustrating this placeholder. double sized */
+    private final URL iconX2Url;
+    
     /**
      * Instantiates a new component property metadata.
      *
@@ -54,10 +62,12 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
      * @param classMetadata the owner component metadata
      * @param collection true if it accepts a collection of components or only one
      */
-    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection) {
+    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url) {
         super(name);
         this.classMetadata = classMetadata;
         this.collection = collection;
+        this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
+        this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
     }
 
     /**
@@ -78,10 +88,24 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
         return collection;
     }
 
-    /*
-     * Object
+    /**
+     * Gets the icon.
+     *
+     * @return the icon
      */
+    public URL getIconUrl() {
+        return iconUrl;
+    }
     
+    /**
+     * Gets the icon double sized.
+     *
+     * @return the icon
+     */
+    public URL getIconX2Url() {
+        return iconX2Url;
+    }
+
     @Override
     public int hashCode() { // To please FindBugs
         return super.hashCode();

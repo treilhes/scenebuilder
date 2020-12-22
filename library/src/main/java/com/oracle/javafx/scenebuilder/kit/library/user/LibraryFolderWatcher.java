@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.kit.library.LibraryItemImpl;
@@ -324,7 +325,7 @@ class LibraryFolderWatcher implements Runnable {
             fxmlText = buf.toString();
         }
 
-        final LibraryItemImpl res = new LibraryItemImpl(itemName, UserLibrary.TAG_USER_DEFINED, fxmlText, iconURL, library);
+        final LibraryItemImpl res = new LibraryItemImpl(itemName, Qualifier.UNKNOWN, fxmlText, library);
         return res;
     }
 
@@ -414,7 +415,7 @@ class LibraryFolderWatcher implements Runnable {
                     !artifactsFilter.contains(canonicalName)) {
                     final String name = e.getKlass().getSimpleName();
                     final String fxmlText = JarExplorer.makeFxmlText(e.getKlass());
-                    result.add(new LibraryItemImpl(name, UserLibrary.TAG_USER_DEFINED, fxmlText, iconURL, library));
+                    result.add(new LibraryItemImpl(name, Qualifier.UNKNOWN, fxmlText, library));
                 }
             }
         }

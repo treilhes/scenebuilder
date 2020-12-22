@@ -124,154 +124,230 @@ public class ComponentPropertyMetadataCatalog {
         bottomPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.bottomName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/BorderPane-bottom.png"),
+                    getClass().getResource("subcompicons/BorderPane-bottom@2x.png")); 
         buttonsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.buttonsName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         centerPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.centerName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/BorderPane-center.png"),
+                    getClass().getResource("subcompicons/BorderPane-center@2x.png"));
         children_c1_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.childrenName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         children_empty_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.childrenName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         clipPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.clipName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         columnConstraintsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.columnConstraintsName,
                     columnConstraintsMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         columns_TableColumn_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.columnsName,
                     tableColumnMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         columns_TreeTableColumn_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.columnsName,
                     treeTableColumnMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         content_Node_NULL_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/DialogPane-content.png"),
+                    null);
         content_Node_SEPARATOR_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         contextMenuPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contextMenuName,
                     contextMenuMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         elementsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.elementsName,
                     pathElementMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         expandableContentPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.expandableContentName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/DialogPane-expandable_content.png"),
+                    null);
         graphicPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.graphicName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/DialogPane-graphic.png"),
+                    null);
         headerPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.headerName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/DialogPane-header.png"),
+                    null);
         items_MenuItem_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.itemsName,
                     menuItemMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         items_Node_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.itemsName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         labelForPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.labelForName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         leftPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.leftName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/BorderPane-left.png"),
+                    getClass().getResource("subcompicons/BorderPane-left@2x.png"));
         menusPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.menusName,
                     menuMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         panesPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.panesName,
                     titledPaneMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         placeholderPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.placeholderName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         rightPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.rightName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/BorderPane-right.png"),
+                    getClass().getResource("subcompicons/BorderPane-right@2x.png"));
         root_scene_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.rootName,
                     nodeMetadata,
-                    false);
+                    false, /* unique */
+                    null,
+                    null);
         rowConstraintsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.rowConstraintsName,
                     rowConstraintsMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         scene_stage_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.sceneName,
                     sceneMetadata,
-                    false);
+                    false, /* unique */
+                    null,
+                    null);
         scopePropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.scopeName,
                     nodeMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         shapePropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.shapeName,
                     shapeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         sortNodePropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.sortNodeName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         sortOrderPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.sortOrderName,
                     tableColumnMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         tabsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.tabsName,
                     tabMetadata,
-                    true); /* collection */
+                    true, /* collection */
+                    null,
+                    null);
         textFormatterPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.textFormatterName,
                     textFormatterMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         tooltipPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.tooltipName,
                     tooltipMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         topPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.topName,
                     nodeMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    getClass().getResource("subcompicons/BorderPane-top.png"),
+                    getClass().getResource("subcompicons/BorderPane-top@2x.png"));
         treeColumnPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.treeColumnName,
                     treeTableColumnMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         xAxisPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.    xAxisName,
                     axisMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
         yAxisPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.    yAxisName,
                     axisMetadata,
-                    false); /* collection */
+                    false, /* unique */
+                    null,
+                    null);
     }
 }
