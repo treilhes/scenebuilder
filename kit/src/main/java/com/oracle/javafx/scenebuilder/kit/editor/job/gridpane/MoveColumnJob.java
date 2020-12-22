@@ -39,6 +39,7 @@ import java.util.Set;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
@@ -50,7 +51,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.Position;

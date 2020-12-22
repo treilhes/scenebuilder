@@ -43,13 +43,13 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 

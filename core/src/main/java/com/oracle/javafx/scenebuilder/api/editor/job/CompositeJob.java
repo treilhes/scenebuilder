@@ -29,77 +29,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.job;
+package com.oracle.javafx.scenebuilder.api.editor.job;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
- * This Job updates the FXOM document at execution time. The selection is not
- * updated.
- *
- * The sub jobs are FIRST all created, THEN executed.
+ * This Job handles a list of sub jobs and a description.
  */
-public abstract class BatchDocumentJob extends CompositeJob {
+public abstract class CompositeJob extends Job {
 
-    private List<Job> subJobs;
+    private String description;
 
-    public BatchDocumentJob(ApplicationContext context, Editor editor) {
+    public CompositeJob(ApplicationContext context, Editor editor) {
         super(context, editor);
     }
 
     @Override
-    public final List<Job> getSubJobs() {
-        if (subJobs == null) {
-            subJobs = Collections.unmodifiableList(makeSubJobs());
-            assert subJobs != null;
+    public final String getDescription() {
+        if (description == null) {
+            description = makeDescription();
+            assert description != null;
         }
-        return subJobs;
+        return description;
     }
 
-    @Override
-    public final boolean isExecutable() {
-        return getSubJobs().isEmpty() == false;
-    }
-
-    @Override
-    public void execute() {
-        final FXOMDocument fxomDocument
-                = getEditorController().getFxomDocument();
-        fxomDocument.beginUpdate();
-        for (Job subJob : getSubJobs()) {
-            subJob.execute();
-        }
-        fxomDocument.endUpdate();
-    }
-
-    @Override
-    public void undo() {
-        final FXOMDocument fxomDocument
-                = getEditorController().getFxomDocument();
-        fxomDocument.beginUpdate();
-        for (int i = getSubJobs().size() - 1; i >= 0; i--) {
-            getSubJobs().get(i).undo();
-        }
-        fxomDocument.endUpdate();
-    }
-
-    @Override
-    public void redo() {
-        final FXOMDocument fxomDocument
-                = getEditorController().getFxomDocument();
-        fxomDocument.beginUpdate();
-        for (Job subJob : getSubJobs()) {
-            subJob.redo();
-        }
-        fxomDocument.endUpdate();
-    }
-
-    protected abstract List<Job> makeSubJobs();
+    public abstract List<Job> getSubJobs();
+    protected abstract String makeDescription();
 }

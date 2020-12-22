@@ -37,6 +37,7 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -49,7 +50,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxControllerJob;

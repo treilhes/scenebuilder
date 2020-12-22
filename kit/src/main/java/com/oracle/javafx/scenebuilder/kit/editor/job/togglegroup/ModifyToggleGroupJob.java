@@ -38,6 +38,7 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -50,7 +51,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.ToggleGroupPr
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemovePropertyJob;
 

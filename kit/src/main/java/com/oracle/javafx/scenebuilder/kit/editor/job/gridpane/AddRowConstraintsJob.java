@@ -40,6 +40,7 @@ import java.util.Set;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -48,7 +49,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.JobUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.AddPropertyValueJob;
