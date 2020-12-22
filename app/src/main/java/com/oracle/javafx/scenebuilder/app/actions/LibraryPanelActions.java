@@ -55,10 +55,10 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGro
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.manager.LibraryDialogController;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayModePreference;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.manager.LibraryDialogController;
+import com.oracle.javafx.scenebuilder.library.preferences.global.DisplayModePreference;
+import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.stage.Window;
 

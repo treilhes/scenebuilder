@@ -90,6 +90,9 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreferen
 import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -105,14 +108,11 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.library.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.beans.InvalidationListener;

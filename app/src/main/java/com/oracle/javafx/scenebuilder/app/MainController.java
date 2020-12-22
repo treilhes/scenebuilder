@@ -73,13 +73,13 @@ import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
 import com.oracle.javafx.scenebuilder.kit.template.Template;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.kit.template.Type;
+import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
+import com.oracle.javafx.scenebuilder.library.util.JarReport;
 
 import javafx.application.Application.Parameters;
 import javafx.application.HostServices;

@@ -62,12 +62,12 @@ import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.preferences.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
+import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
+import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;

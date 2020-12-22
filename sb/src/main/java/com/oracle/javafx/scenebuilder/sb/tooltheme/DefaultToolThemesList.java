@@ -63,7 +63,7 @@ public class DefaultToolThemesList implements ToolThemeProvider {
 	@ToolThemeMeta(name = "prefs.tool.theme.default")
 	public static class Default extends AbstractToolTheme {
 		public Default() {
-			super(null, Arrays.asList("com/oracle/javafx/scenebuilder/kit/css/ThemeDefault.css"));
+			super(null, Arrays.asList("com/oracle/javafx/scenebuilder/sb/css/ThemeDefault.css"));
 		}
 	}
 
@@ -72,7 +72,7 @@ public class DefaultToolThemesList implements ToolThemeProvider {
     @ToolThemeMeta(name = "prefs.tool.theme.dark")
     public static class Dark extends AbstractToolTheme {
         public Dark() {
-            super(null, Arrays.asList("com/oracle/javafx/scenebuilder/kit/css/ThemeDark.css"));
+            super(null, Arrays.asList("com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css"));
         }
     }
 

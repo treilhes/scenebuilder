@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.Alert;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 
 import javafx.stage.Window;
 

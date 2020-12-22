@@ -50,9 +50,9 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.util.JarReport;
-import com.oracle.javafx.scenebuilder.kit.library.util.JarReportEntry;
+import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
+import com.oracle.javafx.scenebuilder.library.util.JarReport;
+import com.oracle.javafx.scenebuilder.library.util.JarReportEntry;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;

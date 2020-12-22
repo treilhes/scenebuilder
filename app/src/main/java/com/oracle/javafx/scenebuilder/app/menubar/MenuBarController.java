@@ -76,11 +76,11 @@ import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinSectionComparator;
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItemImpl;
-import com.oracle.javafx.scenebuilder.kit.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
+import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
+import com.oracle.javafx.scenebuilder.library.BuiltinSectionComparator;
+import com.oracle.javafx.scenebuilder.library.LibraryItemImpl;
+import com.oracle.javafx.scenebuilder.library.LibraryItemNameComparator;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

@@ -53,7 +53,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
+import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 
 /**
  *

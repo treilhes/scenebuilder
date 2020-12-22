@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

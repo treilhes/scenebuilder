@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.editor.drag.source.AbstractDragSource;
+import com.oracle.javafx.scenebuilder.core.editor.drag.source.DragSourceShadow;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;

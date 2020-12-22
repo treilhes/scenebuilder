@@ -47,7 +47,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.library.BuiltinLibrary;
+import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
