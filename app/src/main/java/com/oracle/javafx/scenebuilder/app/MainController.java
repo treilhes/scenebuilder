@@ -222,8 +222,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 break;
 
             case NEW_TEMPLATE:
-                final TemplatesWindowController templatesWindowController = new TemplatesWindowController(
-                        sceneBuilderManager, source.getStage());
+                final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class, sceneBuilderManager, source.getStage());
                 templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
                 templatesWindowController.openWindow();
                 break;

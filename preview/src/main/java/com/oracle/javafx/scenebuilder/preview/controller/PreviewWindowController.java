@@ -66,6 +66,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.ParallelCamera;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.control.ButtonType;
@@ -300,21 +301,23 @@ public class PreviewWindowController extends AbstractWindowController {
                     themeStyleSheetString = stylesheetConfig.getUserAgentStylesheet();
 
                     if (sceneGraphRoot instanceof Parent) {
-                        ((Parent) sceneGraphRoot).setId(NID_PREVIEW_ROOT);
-                        assert ((Parent) sceneGraphRoot).getScene() == null;
+                        Parent root = (Parent) sceneGraphRoot;
+                        root.setId(NID_PREVIEW_ROOT);
+                        assert root.getScene() == null;
 
-                        setRoot((Parent) updateAutoResizeTransform((Parent) sceneGraphRoot));
+                        setRoot((Parent) updateAutoResizeTransform(root));
 
                         // Compute the proper styling
                         List<String> newStyleSheets1 = new ArrayList<>();
                         computeStyleSheets(newStyleSheets1, sceneGraphRoot, clone.getDisplayStylesheets());
 
                         // Clean all styling
-                        ((Parent) sceneGraphRoot).getStylesheets().removeAll();
+                        root.getStylesheets().removeAll();
 
                         // Apply the new styling
-                        ((Parent) sceneGraphRoot).getStylesheets().addAll(newStyleSheets1);
+                        root.getStylesheets().addAll(newStyleSheets1);
                     } else if (sceneGraphRoot instanceof Node) {
+                        Node root = (Node) sceneGraphRoot;
                         StackPane sp1 = new StackPane();
                         sp1.setId(NID_PREVIEW_ROOT);
 
@@ -327,7 +330,7 @@ public class PreviewWindowController extends AbstractWindowController {
 
                         // With some 3D assets such as TuxRotation the
                         // rendering is wrong unless applyCSS is called.
-                        ((Node) sceneGraphRoot).applyCss();
+                        root.applyCss();
                         sp1.getChildren().add(updateAutoResizeTransform((Node) sceneGraphRoot));
                         setRoot(sp1);
                     } else {
@@ -355,6 +358,12 @@ public class PreviewWindowController extends AbstractWindowController {
                     getScene().getStylesheets().addAll(newStylesheets);
                     getScene().getStylesheets().addAll(stylesheetConfig.getStylesheets());
                 }
+                
+//                PerspectiveCamera pc = new PerspectiveCamera(false);
+//                pc.setLayoutX(50);
+//                pc.setCLayoutY(50);
+//                ParallelCamera pl = new ParallelCamera();
+//                getScene().setCamera(pc);
                 updateWindowSize();
                 updateWindowTitle();
             });

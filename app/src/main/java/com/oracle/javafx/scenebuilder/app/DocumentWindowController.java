@@ -91,8 +91,8 @@ import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPref
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
+import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -1294,8 +1294,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     @Override
     public void onCloseRequest(WindowEvent event) {
-        performCloseAction();
-        DocumentScope.removeScope(this);
+        if (performCloseAction() == ActionStatus.DONE) {
+            DocumentScope.removeScope(this);
+        }
     }
 
     @Override
@@ -1981,8 +1982,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         // Closes if confirmed
         if (closeConfirmed) {
             MainController.getSingleton().documentWindowRequestClose(this);
-
-
         }
 
         return closeConfirmed ? ActionStatus.DONE : ActionStatus.CANCELLED;

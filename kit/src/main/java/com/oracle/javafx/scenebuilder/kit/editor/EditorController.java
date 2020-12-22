@@ -2422,7 +2422,6 @@ public class EditorController implements Editor {
                 res = (rootBounds.getDepth() > 0);
             }
         }
-
         return res;
     }
 

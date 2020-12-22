@@ -206,11 +206,11 @@ public abstract class AbstractWindowController {
 //    protected abstract void makeRoot();
 
     /**
- * On close request.
- *
- * @param event the event
- */
-public abstract void onCloseRequest(WindowEvent event);
+     * On close request.
+     *
+     * @param event the event
+     */
+    public abstract void onCloseRequest(WindowEvent event);
 
     /**
      * On focus.
