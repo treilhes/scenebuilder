@@ -41,9 +41,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.DoubleField;
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker;
-import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPicker.Mode;
+import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
+import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
+import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker.Mode;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;

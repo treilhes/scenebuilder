@@ -40,8 +40,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -49,6 +54,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class MessageLog implements MessageLogger{
 
     private final List<MessageLogEntry> entries = new ArrayList<>();
@@ -57,10 +65,15 @@ public class MessageLog implements MessageLogger{
     private final static String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; //NOI18N
     private static SimpleDateFormat TIMESTAMP_DATE_FORMAT;
 
+    
 
     /*
      * Public
      */
+
+    public MessageLog() {
+        super();
+    }
 
     @Override
     public void logInfoMessage(String infoKey, ResourceBundle bundle, Object... arguments) {
@@ -176,4 +189,5 @@ public class MessageLog implements MessageLogger{
     private void resetNumOfWarningMessages() {
         numOfWarningMessages.set(0);
     }
+
 }

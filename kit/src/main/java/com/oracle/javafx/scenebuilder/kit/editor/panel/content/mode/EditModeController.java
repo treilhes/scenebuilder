@@ -67,8 +67,8 @@ import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget;
+import com.oracle.javafx.scenebuilder.editors.drag.target.RootDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.job.RelocateSelectionJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.AbstractDecoration;
@@ -787,7 +787,7 @@ implements Gesture.Observer {
                     = getContentPanelController().getRoot().getStylesheets();
             inlineEditor.getStylesheets().addAll(styleSheets);
             inlineEditor.getStyleClass().add("theme-presets"); //NOI18N
-            inlineEditor.getStyleClass().add(InlineEditController.INLINE_EDITOR);
+            inlineEditor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
             final Callback<String, Boolean> requestCommit
                     = value -> inlineEditingDidRequestCommit(value);
             final Callback<Void, Boolean> requestRevert

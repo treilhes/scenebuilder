@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.PaintPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -49,18 +49,18 @@ import javafx.scene.paint.Color;
  */
 public class ColorInputPropertyMetadata extends ComplexPropertyMetadata<ColorInput> {
     
-    private final DoublePropertyMetadata heightMetadata
-            = new DoublePropertyMetadata(new PropertyName("height"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata widthMetadata
-            = new DoublePropertyMetadata(new PropertyName("width"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata xMetadata
-            = new DoublePropertyMetadata(new PropertyName("x"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata yMetadata
-            = new DoublePropertyMetadata(new PropertyName("y"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata heightMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata widthMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata xMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata yMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final PaintPropertyMetadata paintMetadata
             = new PaintPropertyMetadata(new PropertyName("paint"), //NOI18N
             true /* readWrite */, Color.RED, InspectorPath.UNUSED);

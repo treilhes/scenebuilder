@@ -17,6 +17,9 @@ dependencies {
 	implementation project(':preview')
 	implementation project(':library')
 	implementation project(':controls')
+	implementation project(':document')
+	implementation project(':editors')
+	implementation project(':jobs')
 }
 
 run {

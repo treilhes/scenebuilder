@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ListValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -48,9 +49,8 @@ public class DoubleArrayPropertyMetadata extends ListValuePropertyMetadata<Doubl
     
     private final static PropertyName unusedName
             = new PropertyName("unused"); //NOI18N
-    private final static DoublePropertyMetadata doubleMetadata
-            = new DoublePropertyMetadata(unusedName, 
-                    DoublePropertyMetadata.DoubleKind.COORDINATE,
+    private final static CoordinateDoublePropertyMetadata doubleMetadata
+            = new CoordinateDoublePropertyMetadata(unusedName, 
                     true, 0.0, InspectorPath.UNUSED);
 
     public DoubleArrayPropertyMetadata(PropertyName name, boolean readWrite, List<Double> defaultValue, InspectorPath inspectorPath) {
@@ -78,5 +78,14 @@ public class DoubleArrayPropertyMetadata extends ListValuePropertyMetadata<Doubl
         }
         
         setValue(fxomInstance, value);
+    }
+    
+    public static class DividerPositionsDoubleArrayPropertyMetadata extends DoubleArrayPropertyMetadata {
+
+        public DividerPositionsDoubleArrayPropertyMetadata(PropertyName name, boolean readWrite,
+                List<Double> defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
     }
 }

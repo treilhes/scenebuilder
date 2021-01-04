@@ -39,10 +39,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * 
  */
+@Component
 public class BuiltinGlossary extends AbstractGlossary {
     
     public BuiltinGlossary() {

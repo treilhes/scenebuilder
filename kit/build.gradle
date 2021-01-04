@@ -3,6 +3,8 @@ dependencies {
 	implementation project(':defaultx')
 	implementation project(':sb')
 	implementation project(':library')
+	implementation project(':jobs')
+	implementation project(':editors')
 }
 
 jar {

@@ -71,7 +71,7 @@ import javafx.util.Callback;
 public class InlineEditController implements InlineEdit{
 
     // Style class used for styling the inline editor (TextInputControl)
-    public static final String INLINE_EDITOR = "inline-editor"; //NOI18N
+    
     private static final double TEXT_INPUT_CONTROL_MIN_WIDTH = 15;
     private static final double TEXT_AREA_MIN_HEIGHT = 80;
     private static final double TEXT_FIELD_MIN_HEIGHT = 15;

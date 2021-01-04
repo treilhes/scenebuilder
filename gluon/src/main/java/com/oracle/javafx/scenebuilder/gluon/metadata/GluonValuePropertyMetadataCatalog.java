@@ -40,7 +40,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EventHandlerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.SelectionMode;
@@ -77,7 +77,7 @@ public class GluonValuePropertyMetadataCatalog {
                 true, /* defaultValue */
                 new InspectorPath("Properties", "Specific", 0));
     public final ValuePropertyMetadata titleFilterPropertyMetadata =
-            new StringPropertyMetadata(
+            new I18nStringPropertyMetadata(
                 PropertyNames.titleFilterName,
                 true, /* readWrite */
                 "",

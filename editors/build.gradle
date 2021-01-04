@@ -1,0 +1,5 @@
+dependencies {
+	implementation project(':core')
+	//temp
+	implementation project(':jobs')
+}

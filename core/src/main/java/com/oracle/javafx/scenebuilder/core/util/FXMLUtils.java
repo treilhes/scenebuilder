@@ -44,18 +44,27 @@ public class FXMLUtils {
 	private FXMLUtils() {}
 
 	public static <T> T load(Object controllerInstance, String fxml) {
-		final URL fxmlURL = controllerInstance.getClass().getResource(fxml); //NOI18N
+		return load(controllerInstance, controllerInstance.getClass(), fxml);
+	}
+	
+	public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, String fxml) {
+        final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOI18N
         final FXMLLoader loader = new FXMLLoader();
 
         loader.setController(controllerInstance);
         loader.setLocation(fxmlURL);
         loader.setResources(I18N.getBundle());
+        
+        // setting ClassLoader for OSGi environments
+        loader.setClassLoader(resourceLoadingClass.getClassLoader());
+        
         try {
             return loader.load();
         } catch (RuntimeException | IOException x) {
+            System.out.println("loader.getClassLoader()=" + resourceLoadingClass.getName()); //NOI18N
             System.out.println("loader.getController()=" + loader.getController()); //NOI18N
             System.out.println("loader.getLocation()=" + loader.getLocation()); //NOI18N
             throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
         }
-	}
+    }
 }

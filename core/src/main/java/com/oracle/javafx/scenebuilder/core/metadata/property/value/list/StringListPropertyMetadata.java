@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -46,8 +46,8 @@ import javafx.fxml.FXMLLoader;
  */
 public class StringListPropertyMetadata extends ListValuePropertyMetadata<String> {
 
-    private final static StringPropertyMetadata itemMetadata
-            = new StringPropertyMetadata(new PropertyName("unused"), //NOI18N
+    private final static I18nStringPropertyMetadata itemMetadata
+            = new I18nStringPropertyMetadata(new PropertyName("unused"), //NOI18N
                     true, null, InspectorPath.UNUSED, true /* detectFileURL */);
 
     public StringListPropertyMetadata(PropertyName name, boolean readWrite, 
@@ -99,5 +99,26 @@ public class StringListPropertyMetadata extends ListValuePropertyMetadata<String
     @Override
     protected List<String> makeValueFromString(String string) {
         return splitValue(string);
+    }
+    
+    public static class StyleClassStringListPropertyMetadata extends StringListPropertyMetadata {
+        public StyleClassStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+    }
+    
+    public static class StylesheetsStringListPropertyMetadata extends StringListPropertyMetadata {
+        public StylesheetsStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+    }
+    
+    public static class SourceStringListPropertyMetadata extends StringListPropertyMetadata {
+        public SourceStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
     }
 }

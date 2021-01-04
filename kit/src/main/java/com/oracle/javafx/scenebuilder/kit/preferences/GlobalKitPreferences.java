@@ -40,10 +40,10 @@ import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
 //import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonThemePreference.GluonTheme;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference.BackgroundImage;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

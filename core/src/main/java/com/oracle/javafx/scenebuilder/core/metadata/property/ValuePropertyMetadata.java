@@ -52,7 +52,6 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
     /** The inspector path. */
     private final InspectorPath inspectorPath;
 
-
     /** The default value alternatives. */
     private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
 
@@ -64,7 +63,7 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
      * @param inspectorPath the inspector path
      */
     public ValuePropertyMetadata(PropertyName name, boolean readWrite, InspectorPath inspectorPath) {
-        super(name);
+        super(name, false);
         this.readWrite = readWrite;
         this.inspectorPath = inspectorPath;
     }
@@ -183,4 +182,10 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
         return super.equals(obj);
     }
 
+    @Override
+    public ValuePropertyMetadata addConstant(String key, Object value) {
+        return (ValuePropertyMetadata)super.addConstant(key, value);
+    }
+
+    
 }

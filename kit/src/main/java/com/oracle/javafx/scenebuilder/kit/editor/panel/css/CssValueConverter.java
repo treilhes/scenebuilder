@@ -40,8 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
+import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.EditorUtils;
 
 import javafx.css.Declaration;
 import javafx.css.ParsedValue;

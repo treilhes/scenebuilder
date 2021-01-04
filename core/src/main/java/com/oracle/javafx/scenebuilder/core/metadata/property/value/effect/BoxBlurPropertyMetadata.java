@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.EffectSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -51,12 +51,12 @@ public class BoxBlurPropertyMetadata extends ComplexPropertyMetadata<BoxBlur> {
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata heightMetadata
-            = new DoublePropertyMetadata(new PropertyName("height"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.EFFECT_SIZE, true /* readWrite */, 5.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata widthMetadata
-            = new DoublePropertyMetadata(new PropertyName("width"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.EFFECT_SIZE, true /* readWrite */, 5.0, InspectorPath.UNUSED);
+    private final EffectSizeDoublePropertyMetadata heightMetadata
+            = new EffectSizeDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            true /* readWrite */, 5.0, InspectorPath.UNUSED);
+    private final EffectSizeDoublePropertyMetadata widthMetadata
+            = new EffectSizeDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            true /* readWrite */, 5.0, InspectorPath.UNUSED);
     private final IntegerPropertyMetadata iterationsMetadata
             = new IntegerPropertyMetadata(new PropertyName("iterations"), //NOI18N
              true /* readWrite */, 1, InspectorPath.UNUSED);

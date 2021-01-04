@@ -58,10 +58,10 @@ import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrde
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController.DISPLAY_MODE;
 import com.oracle.javafx.scenebuilder.library.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 /**
  * Defines preferences global to the SB application.

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -51,18 +51,18 @@ public class SpotLightPropertyMetadata extends ComplexPropertyMetadata<Light.Spo
     private final ColorPropertyMetadata colorMetadata
             = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
             true, Color.WHITE, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata pointsAtXMetadata
-            = new DoublePropertyMetadata(new PropertyName("pointsAtX"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata pointsAtYMetadata
-            = new DoublePropertyMetadata(new PropertyName("pointsAtY"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata pointsAtZMetadata
-            = new DoublePropertyMetadata(new PropertyName("pointsAtZ"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata specularExponentMetadata
-            = new DoublePropertyMetadata(new PropertyName("specularExponent"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 1.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata pointsAtXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtX"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata pointsAtYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtY"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata pointsAtZMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtZ"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata specularExponentMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOI18N
+            true, 1.0, InspectorPath.UNUSED);
     
     public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, 
             Light.Spot defaultValue, InspectorPath inspectorPath) {

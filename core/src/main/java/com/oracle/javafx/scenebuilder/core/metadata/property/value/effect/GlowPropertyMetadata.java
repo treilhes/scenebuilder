@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -50,9 +50,9 @@ public class GlowPropertyMetadata extends ComplexPropertyMetadata<Glow> {
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata levelMetadata
-            = new DoublePropertyMetadata(new PropertyName("level"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 0.3, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata levelMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("level"), //NOI18N
+            true /* readWrite */, 0.3, InspectorPath.UNUSED);
 
     public GlowPropertyMetadata(PropertyName name, boolean readWrite, 
             Glow defaultValue, InspectorPath inspectorPath) {

@@ -34,6 +34,8 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -46,15 +48,15 @@ import javafx.scene.image.Image;
  */
 public class ImagePropertyMetadata extends ComplexPropertyMetadata<DesignImage> {
 
-    private final StringPropertyMetadata urlMetadata
-            = new StringPropertyMetadata(new PropertyName("url"), 
+    private final I18nStringPropertyMetadata urlMetadata
+            = new I18nStringPropertyMetadata(new PropertyName("url"), 
             true, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata requestedWidthMetadata
-            = new DoublePropertyMetadata(new PropertyName("requestedWidth"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata requestedHeightMetadata
-            = new DoublePropertyMetadata(new PropertyName("requestedHeight"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata requestedWidthMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("requestedWidth"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata requestedHeightMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("requestedHeight"), 
+            true, 0.0, InspectorPath.UNUSED);
     private final BooleanPropertyMetadata preserveRatioMetadata
             = new BooleanPropertyMetadata(new PropertyName("preserveRatio"),
             true /* readWrite */, false /* defaultValue */, InspectorPath.UNUSED);

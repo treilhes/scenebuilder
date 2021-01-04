@@ -71,6 +71,8 @@ public interface MessageLogger {
 
     void logInfoMessage(String key, ResourceBundle bundle, Object[] args);
 
+    void logInfoMessage(String messageKey, Object... params);
+
 
 
 

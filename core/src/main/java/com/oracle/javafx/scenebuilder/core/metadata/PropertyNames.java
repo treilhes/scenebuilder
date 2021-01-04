@@ -168,10 +168,12 @@ public interface PropertyNames {
     public final PropertyName hideOnEscapeName =  new PropertyName("hideOnEscape");
     public final PropertyName hmaxName =  new PropertyName("hmax");
     public final PropertyName hminName =  new PropertyName("hmin");
+    public final PropertyName hvalueName =  new PropertyName("hvalue");
+    public final PropertyName hGroupName =  new PropertyName("hGroup");
     public final PropertyName horizontalGridLinesVisibleName =  new PropertyName("horizontalGridLinesVisible");
     public final PropertyName horizontalZeroLineVisibleName =  new PropertyName("horizontalZeroLineVisible");
     public final PropertyName htmlTextName =  new PropertyName("htmlText");
-    public final PropertyName hvalueName =  new PropertyName("hvalue");
+    
     public final PropertyName iconifiedName = new PropertyName("iconified");
     public final PropertyName idName =  new PropertyName("id");
     public final PropertyName imageName =  new PropertyName("image");
@@ -415,6 +417,7 @@ public interface PropertyNames {
     public final PropertyName vmaxName =  new PropertyName("vmax");
     public final PropertyName vminName =  new PropertyName("vmin");
     public final PropertyName vvalueName =  new PropertyName("vvalue");
+    public final PropertyName vGroupName =  new PropertyName("vGroup");
     public final PropertyName widthName =  new PropertyName("width");
     public final PropertyName wrappingWidthName =  new PropertyName("wrappingWidth");
     public final PropertyName wrapTextName =  new PropertyName("wrapText");
@@ -430,6 +433,7 @@ public interface PropertyNames {
     public final PropertyName AnchorPane_leftAnchorName =  new PropertyName("leftAnchor", javafx.scene.layout.AnchorPane.class);
     public final PropertyName AnchorPane_rightAnchorName =  new PropertyName("rightAnchor", javafx.scene.layout.AnchorPane.class);
     public final PropertyName AnchorPane_topAnchorName =  new PropertyName("topAnchor", javafx.scene.layout.AnchorPane.class);
+    public final PropertyName AnchorPane_anchorsGroupName =  new PropertyName("anchorsGroup", javafx.scene.layout.AnchorPane.class);
     public final PropertyName BorderPane_alignmentName =  new PropertyName("alignment", javafx.scene.layout.BorderPane.class);
     public final PropertyName BorderPane_marginName =  new PropertyName("margin", javafx.scene.layout.BorderPane.class);
     public final PropertyName FlowPane_marginName =  new PropertyName("margin", javafx.scene.layout.FlowPane.class);

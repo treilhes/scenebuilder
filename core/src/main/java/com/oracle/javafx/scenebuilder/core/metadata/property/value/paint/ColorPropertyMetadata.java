@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -55,18 +55,18 @@ import javafx.scene.paint.Color;
  */
 public class ColorPropertyMetadata extends ComplexPropertyMetadata<Color> {
 
-    private final DoublePropertyMetadata redMetadata
-            = new DoublePropertyMetadata(new PropertyName("red"),
-            DoublePropertyMetadata.DoubleKind.OPACITY, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata greenMetadata
-            = new DoublePropertyMetadata(new PropertyName("green"),
-            DoublePropertyMetadata.DoubleKind.OPACITY, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata blueMetadata
-            = new DoublePropertyMetadata(new PropertyName("blue"),
-            DoublePropertyMetadata.DoubleKind.OPACITY, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata opacityMetadata
-            = new DoublePropertyMetadata(new PropertyName("opacity"),
-            DoublePropertyMetadata.DoubleKind.OPACITY, true, 1.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata redMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("red"),
+            true, 0.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata greenMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("green"),
+            true, 0.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata blueMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("blue"),
+            true, 0.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata opacityMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("opacity"),
+            true, 1.0, InspectorPath.UNUSED);
 
     public ColorPropertyMetadata(PropertyName name, boolean readWrite, 
             Color defaultValue, InspectorPath inspectorPath) {

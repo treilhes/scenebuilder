@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 /**
  *
  */
-public class StringPropertyMetadata extends TextEncodablePropertyMetadata<String> {
+public abstract class StringPropertyMetadata extends TextEncodablePropertyMetadata<String> {
     
     private static final PropertyName valueName = new PropertyName("value"); //NOI18N
 
@@ -64,6 +64,9 @@ public class StringPropertyMetadata extends TextEncodablePropertyMetadata<String
         this(name, readWrite, defaultValue, inspectorPath, false);
     }
 
+    public boolean isMultiline() {
+        return false;
+    }
     /*
      * Values of a string property can be represented in multiple ways.
      * 
@@ -146,4 +149,71 @@ public class StringPropertyMetadata extends TextEncodablePropertyMetadata<String
         return result;
     }
     
+    public static class StyleStringPropertyMetadata extends StringPropertyMetadata {
+        public StyleStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+        }
+
+        public StyleStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath, false);
+        }
+    }
+    
+    public static class IdStringPropertyMetadata extends StringPropertyMetadata {
+        public IdStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+        }
+
+        public IdStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath, false);
+        }
+    }
+    
+    public static class CharsetStringPropertyMetadata extends StringPropertyMetadata {
+        public CharsetStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+        }
+
+        public CharsetStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath, false);
+        }
+    }
+    
+    public static class I18nStringPropertyMetadata extends StringPropertyMetadata {
+        public I18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+        }
+
+        public I18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath, false);
+        }
+    }
+    
+    public static class MultilineI18nStringPropertyMetadata extends I18nStringPropertyMetadata {
+        public MultilineI18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+        }
+
+        public MultilineI18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
+                String defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath, false);
+        }
+
+        @Override
+        public boolean isMultiline() {
+            return true;
+        }
+        
+        
+    }
+
 }

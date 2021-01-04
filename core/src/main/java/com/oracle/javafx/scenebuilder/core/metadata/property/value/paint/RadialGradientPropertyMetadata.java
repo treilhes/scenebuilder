@@ -38,7 +38,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.AngleDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StopListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -57,21 +59,21 @@ public class RadialGradientPropertyMetadata extends ComplexPropertyMetadata<Radi
             = new RadialGradient(0.0, 1.0, 0.0, 0.0, 1.0,
             true /* proportional */, CycleMethod.NO_CYCLE).getStops();
     
-    private final DoublePropertyMetadata focusAngleMetadata
-            = new DoublePropertyMetadata(new PropertyName("focusAngle"), 
-            DoublePropertyMetadata.DoubleKind.ANGLE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata focusDistanceMetadata
-            = new DoublePropertyMetadata(new PropertyName("focusDistance"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata centerXMetadata
-            = new DoublePropertyMetadata(new PropertyName("centerX"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata centerYMetadata
-            = new DoublePropertyMetadata(new PropertyName("centerY"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata radiusMetadata
-            = new DoublePropertyMetadata(new PropertyName("radius"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
+    private final AngleDoublePropertyMetadata focusAngleMetadata
+            = new AngleDoublePropertyMetadata(new PropertyName("focusAngle"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata focusDistanceMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("focusDistance"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata centerXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("centerX"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata centerYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("centerY"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata radiusMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("radius"), 
+            true, 0.0, InspectorPath.UNUSED);
     private final BooleanPropertyMetadata proportionalMetadata
             = new BooleanPropertyMetadata(new PropertyName("proportional"), 
             true, true, InspectorPath.UNUSED);

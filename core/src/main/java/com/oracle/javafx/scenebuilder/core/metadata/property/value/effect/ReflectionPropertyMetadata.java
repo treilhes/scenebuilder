@@ -36,7 +36,8 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -47,21 +48,21 @@ import javafx.scene.effect.Reflection;
  */
 public class ReflectionPropertyMetadata extends ComplexPropertyMetadata<Reflection> {
     
-    private final DoublePropertyMetadata bottomOpacityMetadata
-            = new DoublePropertyMetadata(new PropertyName("bottomOpacity"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata fractionMetadata
-            = new DoublePropertyMetadata(new PropertyName("fraction"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 0.75, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata bottomOpacityMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("bottomOpacity"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata fractionMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("fraction"), //NOI18N
+            true /* readWrite */, 0.75, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata topOffsetMetadata
-            = new DoublePropertyMetadata(new PropertyName("topOffset"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata topOpacityMetadata
-            = new DoublePropertyMetadata(new PropertyName("topOpacity"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 0.5, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata topOffsetMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("topOffset"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata topOpacityMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("topOpacity"), //NOI18N
+            true /* readWrite */, 0.5, InspectorPath.UNUSED);
 
     public ReflectionPropertyMetadata(PropertyName name, boolean readWrite, 
             Reflection defaultValue, InspectorPath inspectorPath) {

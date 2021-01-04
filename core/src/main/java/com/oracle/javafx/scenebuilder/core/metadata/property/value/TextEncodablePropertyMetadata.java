@@ -76,4 +76,5 @@ public abstract class TextEncodablePropertyMetadata<T> extends SingleValueProper
         throw new RuntimeException("Bug"); //NOI18N
         // Should never be invoked because canMakeStringFromValue() always return true
     }
+
  }

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.AngleDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -51,12 +51,12 @@ public class DistantLightPropertyMetadata extends ComplexPropertyMetadata<Light.
     private final ColorPropertyMetadata colorMetadata
             = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
             true, Color.WHITE, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata azimuthMetadata
-            = new DoublePropertyMetadata(new PropertyName("azimuth"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.ANGLE, true, 45.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata elevationMetadata
-            = new DoublePropertyMetadata(new PropertyName("elevation"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.ANGLE, true, 45.0, InspectorPath.UNUSED);
+    private final AngleDoublePropertyMetadata azimuthMetadata
+            = new AngleDoublePropertyMetadata(new PropertyName("azimuth"), //NOI18N
+            true, 45.0, InspectorPath.UNUSED);
+    private final AngleDoublePropertyMetadata elevationMetadata
+            = new AngleDoublePropertyMetadata(new PropertyName("elevation"), //NOI18N
+            true, 45.0, InspectorPath.UNUSED);
     
     public DistantLightPropertyMetadata(PropertyName name, boolean readWrite, 
             Light.Distant defaultValue, InspectorPath inspectorPath) {

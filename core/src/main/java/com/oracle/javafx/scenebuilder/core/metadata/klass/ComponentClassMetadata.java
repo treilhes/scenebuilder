@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyGroupMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -63,6 +64,9 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     
     /** The component properties values subset. */
     private final Set<ValuePropertyMetadata> values = new HashSet<>();
+    
+    /** The group properties values subset. */
+    private final Set<PropertyGroupMetadata> groups = new HashSet<>();
     
     /** The component properties component subset. */
     private final Set<ComponentPropertyMetadata> subComponents = new HashSet<>();
@@ -93,15 +97,23 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         properties.addListener((Change<? extends PropertyMetadata> e) -> {
             if (e.wasAdded() && e.getElementAdded() != null) {
                 if (e.getElementAdded().getClass().isAssignableFrom(ValuePropertyMetadata.class)) {
-                    values.add((ValuePropertyMetadata)e.getElementAdded());
+                    if (e.getElementAdded().isGroup()) {
+                        groups.add((PropertyGroupMetadata)e.getElementAdded());
+                    } else {
+                        values.add((ValuePropertyMetadata)e.getElementAdded());
+                    }
                 } else if (e.getElementAdded().getClass().isAssignableFrom(ComponentPropertyMetadata.class)) {
                     subComponents.add((ComponentPropertyMetadata)e.getElementAdded());
                 } 
             } else if (e.wasRemoved() && e.getElementRemoved() != null) {
                 if (e.getElementRemoved().getClass().isAssignableFrom(ValuePropertyMetadata.class)) {
-                    values.remove(e.getElementAdded());
+                    if (e.getElementRemoved().isGroup()) {
+                        groups.remove(e.getElementRemoved());
+                    } else {
+                        values.remove(e.getElementRemoved());
+                    }
                 } else if (e.getElementRemoved().getClass().isAssignableFrom(ComponentPropertyMetadata.class)) {
-                    subComponents.remove(e.getElementAdded());
+                    subComponents.remove(e.getElementRemoved());
                 } 
             }
             
@@ -242,19 +254,26 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      * @return the property metadata
      */
     public PropertyMetadata lookupProperty(PropertyName propertyName) {
-        PropertyMetadata result = null;
         
         assert propertyName != null;
         
         final Iterator<PropertyMetadata> it = properties.iterator();
-        while ((result == null) && it.hasNext()) {
+        while (it.hasNext()) {
             final PropertyMetadata pm = it.next();
             if (pm.getName().equals(propertyName)) {
-                result = pm;
+                return pm;
             }
         }
         
-        return result;
+        for (PropertyGroupMetadata g:groups) {
+            for (int i=0; i<g.getProperties().length; i++) {
+                PropertyMetadata pm = g.getProperties()[i];
+                if (pm.getName().equals(propertyName)) {
+                    return pm;
+                }
+            }
+        }
+        return null;
     }
 
     /*

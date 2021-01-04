@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget.ColumnArea;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.target.GridPaneDropTarget.RowArea;
+import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget;
+import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget.ColumnArea;
+import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget.RowArea;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractNodeTring;
 
 import javafx.scene.layout.GridPane;

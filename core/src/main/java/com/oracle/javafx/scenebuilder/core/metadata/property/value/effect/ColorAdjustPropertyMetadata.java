@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -50,18 +50,18 @@ public class ColorAdjustPropertyMetadata extends ComplexPropertyMetadata<ColorAd
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata brightnessMetadata
-            = new DoublePropertyMetadata(new PropertyName("brightness"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata contrastMetadata
-            = new DoublePropertyMetadata(new PropertyName("contrast"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata hueMetadata
-            = new DoublePropertyMetadata(new PropertyName("hue"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata saturationMetadata
-            = new DoublePropertyMetadata(new PropertyName("saturation"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata brightnessMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("brightness"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata contrastMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("contrast"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata hueMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("hue"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata saturationMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("saturation"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
 
     public ColorAdjustPropertyMetadata(PropertyName name, boolean readWrite, 
             ColorAdjust defaultValue, InspectorPath inspectorPath) {

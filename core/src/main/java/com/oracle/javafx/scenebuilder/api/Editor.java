@@ -94,7 +94,7 @@ public interface Editor {
 
 //	public String getToolStylesheet();
 
-	public Glossary getGlossary();
+	//public Glossary getGlossary();
 
 	public ErrorReport getErrorReport();
 

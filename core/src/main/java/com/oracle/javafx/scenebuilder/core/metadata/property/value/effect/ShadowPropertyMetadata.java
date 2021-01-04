@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -57,18 +57,18 @@ public class ShadowPropertyMetadata extends ComplexPropertyMetadata<Shadow> {
     private final ColorPropertyMetadata colorMetadata
             = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
             true /* readWrite */, Color.BLACK, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata heightMetadata
-            = new DoublePropertyMetadata(new PropertyName("height"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.SIZE, true /* readWrite */, 21.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata heightMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            true /* readWrite */, 21.0, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata widthMetadata
-            = new DoublePropertyMetadata(new PropertyName("width"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.SIZE, true /* readWrite */, 21.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata radiusMetadata
-            = new DoublePropertyMetadata(new PropertyName("radius"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.SIZE, true /* readWrite */, 10.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata widthMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            true /* readWrite */, 21.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata radiusMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOI18N
+            true /* readWrite */, 10.0, InspectorPath.UNUSED);
 
     public ShadowPropertyMetadata(PropertyName name, boolean readWrite, 
             Shadow defaultValue, InspectorPath inspectorPath) {

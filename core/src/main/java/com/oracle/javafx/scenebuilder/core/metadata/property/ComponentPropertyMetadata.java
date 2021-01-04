@@ -63,7 +63,7 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
      * @param collection true if it accepts a collection of components or only one
      */
     public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url) {
-        super(name);
+        super(name, false);
         this.classMetadata = classMetadata;
         this.collection = collection;
         this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
@@ -122,5 +122,5 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
         
         return super.equals(obj);
     }
-    
+   
 }

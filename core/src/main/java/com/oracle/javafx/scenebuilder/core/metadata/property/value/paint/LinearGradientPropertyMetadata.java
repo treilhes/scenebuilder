@@ -38,7 +38,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StopListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -57,18 +57,18 @@ public class LinearGradientPropertyMetadata extends ComplexPropertyMetadata<Line
             = new LinearGradient(0.0, 0.0, 1.0, 1.0,
             true /* proportional */, CycleMethod.NO_CYCLE).getStops();
     
-    private final DoublePropertyMetadata startXMetadata
-            = new DoublePropertyMetadata(new PropertyName("startX"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata startYMetadata
-            = new DoublePropertyMetadata(new PropertyName("startY"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata endXMetadata
-            = new DoublePropertyMetadata(new PropertyName("endX"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata endYMetadata
-            = new DoublePropertyMetadata(new PropertyName("endY"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata startXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("startX"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata startYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("startY"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata endXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("endX"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata endYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("endY"), 
+            true, 0.0, InspectorPath.UNUSED);
     private final BooleanPropertyMetadata proportionalMetadata
             = new BooleanPropertyMetadata(new PropertyName("proportional"), 
             true, true, InspectorPath.UNUSED);

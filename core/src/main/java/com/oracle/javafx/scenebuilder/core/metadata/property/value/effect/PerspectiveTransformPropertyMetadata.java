@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -50,30 +50,30 @@ public class PerspectiveTransformPropertyMetadata extends ComplexPropertyMetadat
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata llxMetadata
-            = new DoublePropertyMetadata(new PropertyName("llx"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata llyMetadata
-            = new DoublePropertyMetadata(new PropertyName("lly"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata lrxMetadata
-            = new DoublePropertyMetadata(new PropertyName("lrx"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata lryMetadata
-            = new DoublePropertyMetadata(new PropertyName("lry"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata ulxMetadata
-            = new DoublePropertyMetadata(new PropertyName("ulx"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata ulyMetadata
-            = new DoublePropertyMetadata(new PropertyName("uly"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata urxMetadata
-            = new DoublePropertyMetadata(new PropertyName("urx"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata uryMetadata
-            = new DoublePropertyMetadata(new PropertyName("ury"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata llxMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("llx"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata llyMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("lly"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata lrxMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("lrx"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata lryMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("lry"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata ulxMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("ulx"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata ulyMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("uly"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata urxMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("urx"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata uryMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("ury"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
 
     public PerspectiveTransformPropertyMetadata(PropertyName name, boolean readWrite, 
             PerspectiveTransform defaultValue, InspectorPath inspectorPath) {

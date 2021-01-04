@@ -141,10 +141,14 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.translateZPropertyMetadata);
             getProperties().add(valueCatalog.visiblePropertyMetadata);
             getProperties().add(valueCatalog.SplitPane_resizableWithParentPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_bottomAnchorPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_leftAnchorPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_rightAnchorPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_topAnchorPropertyMetadata);
+            
+//            getProperties().add(valueCatalog.AnchorPane_bottomAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_leftAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_rightAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_topAnchorPropertyMetadata);
+            
+            getProperties().add(valueCatalog.AnchorPane_AnchorPropertyGroupMetadata);
+            
             getProperties().add(valueCatalog.BorderPane_alignmentPropertyMetadata);
             getProperties().add(valueCatalog.BorderPane_marginPropertyMetadata);
             getProperties().add(valueCatalog.FlowPane_marginPropertyMetadata);
@@ -1427,9 +1431,12 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.fitToHeightPropertyMetadata);
             getProperties().add(valueCatalog.fitToWidthPropertyMetadata);
             getProperties().add(valueCatalog.hbarPolicyPropertyMetadata);
-            getProperties().add(valueCatalog.hmaxPropertyMetadata);
-            getProperties().add(valueCatalog.hminPropertyMetadata);
-            getProperties().add(valueCatalog.hvaluePropertyMetadata);
+            
+            //getProperties().add(valueCatalog.hmaxPropertyMetadata);
+            //getProperties().add(valueCatalog.hminPropertyMetadata);
+            //getProperties().add(valueCatalog.hvaluePropertyMetadata);
+            getProperties().add(valueCatalog.hGroupPropertyMetadata);
+            
             getProperties().add(valueCatalog.minViewportHeightPropertyMetadata);
             getProperties().add(valueCatalog.minViewportWidthPropertyMetadata);
             getProperties().add(valueCatalog.pannablePropertyMetadata);
@@ -1438,9 +1445,11 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.styleClass_c38_PropertyMetadata);
             getProperties().add(valueCatalog.vbarPolicyPropertyMetadata);
             getProperties().add(valueCatalog.viewportBoundsPropertyMetadata);
-            getProperties().add(valueCatalog.vmaxPropertyMetadata);
-            getProperties().add(valueCatalog.vminPropertyMetadata);
-            getProperties().add(valueCatalog.vvaluePropertyMetadata);
+            
+            //getProperties().add(valueCatalog.vmaxPropertyMetadata);
+            //getProperties().add(valueCatalog.vminPropertyMetadata);
+            //getProperties().add(valueCatalog.vvaluePropertyMetadata);
+            getProperties().add(valueCatalog.vGroupPropertyMetadata);
 
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/ScrollPane.fxml"), null, null,
@@ -2604,10 +2613,13 @@ public class ComponentClassMetadatas {
     public static class IncludeElementMetadata extends ComponentClassMetadata<FXOMIntrinsic> {
         protected IncludeElementMetadata(@Autowired ValuePropertyMetadataCatalog valueCatalog) {
             super(FXOMIntrinsic.class, null);
-            getProperties().add(valueCatalog.AnchorPane_bottomAnchorPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_leftAnchorPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_rightAnchorPropertyMetadata);
-            getProperties().add(valueCatalog.AnchorPane_topAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_bottomAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_leftAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_rightAnchorPropertyMetadata);
+//            getProperties().add(valueCatalog.AnchorPane_topAnchorPropertyMetadata);
+            
+            getProperties().add(valueCatalog.AnchorPane_AnchorPropertyGroupMetadata);
+            
             getProperties().add(valueCatalog.BorderPane_alignmentPropertyMetadata);
             getProperties().add(valueCatalog.FlowPane_marginPropertyMetadata);
             getProperties().add(valueCatalog.GridPane_columnIndexPropertyMetadata);

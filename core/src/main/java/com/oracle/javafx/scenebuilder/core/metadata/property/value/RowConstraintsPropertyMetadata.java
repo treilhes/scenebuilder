@@ -36,6 +36,9 @@ import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.ComputedAndPrefSizeDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.ComputedSizeDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.PercentageDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
@@ -48,44 +51,34 @@ import javafx.scene.layout.RowConstraints;
  *
  */
 public class RowConstraintsPropertyMetadata extends ComplexPropertyMetadata<RowConstraints> {
-    
+
     private static final RowConstraints DEFAULT = new RowConstraints();
 
-    private final BooleanPropertyMetadata fillHeightMetadata
-            = new BooleanPropertyMetadata(new PropertyName("fillHeight"), 
-                    true, DEFAULT.isFillHeight(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata maxHeightMetadata
-            = new DoublePropertyMetadata(new PropertyName("maxHeight"), 
-                    DoublePropertyMetadata.DoubleKind.USE_COMPUTED_SIZE, true,
-                    DEFAULT.getMaxHeight(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata minHeightMetadata
-            = new DoublePropertyMetadata(new PropertyName("minHeight"), 
-            DoublePropertyMetadata.DoubleKind.USE_COMPUTED_SIZE, true, 
-                    DEFAULT.getMinHeight(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata percentHeightMetadata
-            = new DoublePropertyMetadata(new PropertyName("percentHeight"), 
-            DoublePropertyMetadata.DoubleKind.PERCENTAGE, true, 
-                    DEFAULT.getPercentHeight(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata prefHeightMetadata
-            = new DoublePropertyMetadata(new PropertyName("prefHeight"), 
-            DoublePropertyMetadata.DoubleKind.USE_PREF_SIZE, true, 
-                    DEFAULT.getPrefHeight(), InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata valignmentMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("valignment"),
-            VPos.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true, InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata vgrowMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("vgrow"),
+    private final BooleanPropertyMetadata fillHeightMetadata = new BooleanPropertyMetadata(
+            new PropertyName("fillHeight"), true, DEFAULT.isFillHeight(), InspectorPath.UNUSED);
+    private final ComputedSizeDoublePropertyMetadata maxHeightMetadata = new ComputedSizeDoublePropertyMetadata(
+            new PropertyName("maxHeight"), true, DEFAULT.getMaxHeight(), InspectorPath.UNUSED);
+    private final ComputedSizeDoublePropertyMetadata minHeightMetadata = new ComputedSizeDoublePropertyMetadata(
+            new PropertyName("minHeight"), true, DEFAULT.getMinHeight(), InspectorPath.UNUSED);
+    private final PercentageDoublePropertyMetadata percentHeightMetadata = new PercentageDoublePropertyMetadata(
+            new PropertyName("percentHeight"), true, DEFAULT.getPercentHeight(), InspectorPath.UNUSED);
+    private final ComputedAndPrefSizeDoublePropertyMetadata prefHeightMetadata = new ComputedAndPrefSizeDoublePropertyMetadata(
+            new PropertyName("prefHeight"), true, DEFAULT.getPrefHeight(), InspectorPath.UNUSED);
+    private final EnumerationPropertyMetadata valignmentMetadata = new EnumerationPropertyMetadata(
+            new PropertyName("valignment"), VPos.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true,
+            InspectorPath.UNUSED);
+    private final EnumerationPropertyMetadata vgrowMetadata = new EnumerationPropertyMetadata(new PropertyName("vgrow"),
             Priority.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true, InspectorPath.UNUSED);
-    
-    public RowConstraintsPropertyMetadata(PropertyName name, boolean readWrite, 
-            RowConstraints defaultValue, InspectorPath inspectorPath) {
+
+    public RowConstraintsPropertyMetadata(PropertyName name, boolean readWrite, RowConstraints defaultValue,
+            InspectorPath inspectorPath) {
         super(name, RowConstraints.class, readWrite, defaultValue, inspectorPath);
     }
 
     /*
      * Utility
      */
-    
+
     public static boolean equals(RowConstraints r1, RowConstraints r2) {
         assert r1 != null;
         assert r2 != null;
@@ -94,31 +87,31 @@ public class RowConstraintsPropertyMetadata extends ComplexPropertyMetadata<RowC
         if (r1 == r2) {
             result = true;
         } else {
-            result = Objects.equals(r1.getValignment(),r2.getValignment())
+            result = Objects.equals(r1.getValignment(), r2.getValignment())
                     && Objects.equals(r1.getVgrow(), r2.getVgrow())
                     && MathUtils.equals(r1.getMaxHeight(), r2.getMaxHeight())
                     && MathUtils.equals(r1.getMinHeight(), r2.getMinHeight())
                     && MathUtils.equals(r1.getPercentHeight(), r2.getPercentHeight())
                     && MathUtils.equals(r1.getPrefHeight(), r2.getPrefHeight());
         }
-        
+
         return result;
     }
-    
+
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(RowConstraints value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, getValueClass());
-        
+
         fillHeightMetadata.setValue(result, value.isFillHeight());
         maxHeightMetadata.setValue(result, value.getMaxHeight());
         minHeightMetadata.setValue(result, value.getMinHeight());
         percentHeightMetadata.setValue(result, value.getPercentHeight());
         prefHeightMetadata.setValue(result, value.getPrefHeight());
-        
+
         final VPos valignment = value.getValignment();
         if (valignment == null) {
             valignmentMetadata.setValue(result, valignmentMetadata.getDefaultValue());
@@ -134,5 +127,5 @@ public class RowConstraintsPropertyMetadata extends ComplexPropertyMetadata<RowC
 
         return result;
     }
-    
+
 }

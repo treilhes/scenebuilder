@@ -58,13 +58,16 @@ import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowControl
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas;
+import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
+import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
+import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
-import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
@@ -81,6 +84,9 @@ import javafx.stage.Stage;
 		MavenArtifactsPreferences.class,
 		MavenSetting.class,
 		Tracking.class,
+		PropertyEditorFactory.class,
+		CoreEditors.class,
+		BuiltinGlossary.class,
 		RegistrationWindowController.class,
 		WelcomeDialogWindowController.class,
 		PreferencesController.class,
@@ -103,6 +109,7 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.app.preferences",
 			"com.oracle.javafx.scenebuilder.kit.preferences",
 			"com.oracle.javafx.scenebuilder.kit.library.user",
+			"com.oracle.javafx.scenebuilder.kit.editor.messagelog",
 			"com.oracle.javafx.scenebuilder.api.subjects",
 			"com.oracle.javafx.scenebuilder.app",
 			"com.oracle.javafx.scenebuilder.ext",
@@ -111,6 +118,9 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.sb",
 			"com.oracle.javafx.scenebuilder.controls",
 			"com.oracle.javafx.scenebuilder.preview",
+			"com.oracle.javafx.scenebuilder.document",
+			"com.oracle.javafx.scenebuilder.editors",
+			"com.oracle.javafx.scenebuilder.jobs",
 			"com.oracle.javafx.scenebuilder.app.actions"
 			})
 public class SceneBuilderBootstrap extends JavafxApplication {

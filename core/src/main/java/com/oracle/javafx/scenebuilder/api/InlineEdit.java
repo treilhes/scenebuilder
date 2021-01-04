@@ -37,6 +37,9 @@ import javafx.scene.control.TextInputControl;
 import javafx.util.Callback;
 
 public interface InlineEdit {
+    
+    public static final String INLINE_EDITOR_CLASS = "inline-editor"; //NOI18N
+    
 	public enum Type {
 
         TEXT_AREA, TEXT_FIELD

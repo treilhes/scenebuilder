@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -52,12 +52,12 @@ public class ImageInputPropertyMetadata extends ComplexPropertyMetadata<ImageInp
     private final ImagePropertyMetadata sourceMetadata
             = new ImagePropertyMetadata(new PropertyName("source"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata xMetadata
-            = new DoublePropertyMetadata(new PropertyName("x"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata yMetadata
-            = new DoublePropertyMetadata(new PropertyName("y"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata xMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata yMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
 
     public ImageInputPropertyMetadata(PropertyName name, boolean readWrite, 
             ImageInput defaultValue, InspectorPath inspectorPath) {

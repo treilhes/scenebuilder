@@ -36,7 +36,8 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.AngleDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -47,15 +48,15 @@ import javafx.scene.effect.MotionBlur;
  */
 public class MotionBlurPropertyMetadata extends ComplexPropertyMetadata<MotionBlur> {
     
-    private final DoublePropertyMetadata angleMetadata
-            = new DoublePropertyMetadata(new PropertyName("angle"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.ANGLE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final AngleDoublePropertyMetadata angleMetadata
+            = new AngleDoublePropertyMetadata(new PropertyName("angle"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata radiusMetadata
-            = new DoublePropertyMetadata(new PropertyName("radius"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.SIZE, true /* readWrite */, 10.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata radiusMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOI18N
+            true /* readWrite */, 10.0, InspectorPath.UNUSED);
 
     public MotionBlurPropertyMetadata(PropertyName name, boolean readWrite, 
             MotionBlur defaultValue, InspectorPath inspectorPath) {

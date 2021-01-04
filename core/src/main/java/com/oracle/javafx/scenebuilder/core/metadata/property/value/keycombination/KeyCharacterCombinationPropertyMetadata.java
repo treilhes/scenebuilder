@@ -36,7 +36,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -75,8 +75,8 @@ public class KeyCharacterCombinationPropertyMetadata extends ComplexPropertyMeta
             = new EnumerationPropertyMetadata(new PropertyName("shortcut"), //NOI18N
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
-    private final StringPropertyMetadata characterMetadata
-            = new StringPropertyMetadata(new PropertyName("character"), //NOI18N
+    private final I18nStringPropertyMetadata characterMetadata
+            = new I18nStringPropertyMetadata(new PropertyName("character"), //NOI18N
             true, null, InspectorPath.UNUSED);
 
     public KeyCharacterCombinationPropertyMetadata(PropertyName name, boolean readWrite, 

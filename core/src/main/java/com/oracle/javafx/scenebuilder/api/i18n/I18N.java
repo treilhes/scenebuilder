@@ -46,10 +46,21 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class I18N {
 	
+    public static void initForTest() {
+        new I18N();
+    }
 	private static I18N instance;
 	
 	private CombinedResourceBundle combinedBundle;
 	
+	private boolean testing = false;
+	
+	private I18N() {
+	    testing = true;
+	    instance = this;
+	}
+	
+	@Autowired
 	public I18N(@Autowired List<BundleProvider> bundleProviders) {
 		List<ResourceBundle> bundles = bundleProviders.stream().map(BundleProvider::getBundle).collect(Collectors.toList());
 		combinedBundle = new CombinedResourceBundle(bundles);
@@ -62,6 +73,9 @@ public class I18N {
 	}
 	
 	public String get(String key) {
+	    if (testing) {
+	        return key;
+	    }
 		return combinedBundle.getString(key);
 	}
     

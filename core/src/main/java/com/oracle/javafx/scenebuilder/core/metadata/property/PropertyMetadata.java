@@ -32,7 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -40,18 +42,25 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
  * A base class that represents a property metadata of an fxml component
  * 
  */
-public class PropertyMetadata implements Comparable<PropertyMetadata> {
+public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
     
     /** The property name. */
     private final PropertyName name;
 
+    /** The property is a group of properties. */
+    private final boolean group;
+    
+    /** The constants values of this property. */
+    protected Map<String, Object> constants = new TreeMap<>();
+    
     /**
      * Instantiates a new property metadata.
      *
      * @param name the name of the property
      */
-    public PropertyMetadata(PropertyName name) {
+    public PropertyMetadata(PropertyName name, boolean isGroup) {
         this.name = name;
+        this.group = isGroup;
     }
 
     /**
@@ -63,6 +72,31 @@ public class PropertyMetadata implements Comparable<PropertyMetadata> {
         return name;
     }
     
+    /**
+     * Checks if this property is a group.
+     *
+     * @return true, if it is a group
+     */
+    public boolean isGroup() {
+        return group;
+    }
+
+    /**
+     * Get the list of constants associated with this metadata and their corresponding value
+     * @return
+     */
+    public Map<String, Object> getConstants() {
+        return constants;
+    }
+    
+    /**
+     * Add a constant for a specific instance and the corresponding value
+     * @return
+     */
+    public PropertyMetadata addConstant(String key, Object value) {
+        constants.put(key, value);
+        return this;
+    }
     
     /*
      * Comparable

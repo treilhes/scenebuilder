@@ -192,4 +192,13 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
         assert valueObject instanceof String;
         setValue(fxomInstance, (String) valueObject);
     }
+    
+    public static class TextAlignmentEnumerationPropertyMetadata extends EnumerationPropertyMetadata {
+
+        public TextAlignmentEnumerationPropertyMetadata(PropertyName name, boolean readWrite,
+                Enum<javafx.scene.text.TextAlignment> defaultValue, InspectorPath inspectorPath) {
+            super(name, javafx.scene.text.TextAlignment.class, readWrite, defaultValue, inspectorPath);
+        }
+        
+    }
 }

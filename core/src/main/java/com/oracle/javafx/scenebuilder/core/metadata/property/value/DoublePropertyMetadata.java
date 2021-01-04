@@ -35,123 +35,237 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Region;
 
 /**
- *
- * 
+ * Base class for double
  */
-public class DoublePropertyMetadata extends TextEncodablePropertyMetadata<java.lang.Double> {
-    
-    public enum DoubleKind {
-        COORDINATE,         // any double
-        NULLABLE_COORDINATE,// any double or null
-        SIZE,               // x >= 0
-        USE_COMPUTED_SIZE,      // x >= 0 or x == Region.USE_COMPUTED_SIZE
-        USE_PREF_SIZE,          // x >= 0 or x == Region.USE_COMPUTED_SIZE or x == Region.USE_PREF_SIZE
-        EFFECT_SIZE,        // 0 <= x <= 255.0
-        ANGLE,              // 0 <= x < 360
-        OPACITY,            // 0 <= x <= 1.0
-        PROGRESS,           // 0 <= x <= 1.0
-        PERCENTAGE          // -1 or 0 <= x <= 100.0
-    };
+public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java.lang.Double> {
 
-    private final DoubleKind kind;
-
-    public DoublePropertyMetadata(PropertyName name, DoubleKind kind,
-            boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+    public DoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
         super(name, Double.class, readWrite, defaultValue, inspectorPath);
-        assert (kind != DoubleKind.NULLABLE_COORDINATE) || (defaultValue == null);
-        this.kind = kind;
-    }
-    
-    public DoubleKind getKind() {
-        return kind;
+        //constants.put("MAX_VALUE", Double.MAX_VALUE); //NOI18N
+        setMin(-Double.MAX_VALUE);
+        setMax(Double.MAX_VALUE);
     }
     
     public boolean isValidValue(Double value) {
-        final boolean result;
-        
-        if (kind == DoubleKind.NULLABLE_COORDINATE) {
-            result = true;
-        } else if (value == null) {
-            result = false;
-        } else {
-            switch(kind) {
-                case COORDINATE:
-                    result = true;
-                    break;
-                case SIZE:
-                    result = (0 <= value);
-                    break;
-                case USE_COMPUTED_SIZE:
-                    result = ((0 <= value) || (value == Region.USE_COMPUTED_SIZE));
-                    break;
-                case USE_PREF_SIZE:
-                    result = (0 <= value) 
-                            || (value == Region.USE_COMPUTED_SIZE)
-                            || (value == Region.USE_PREF_SIZE);
-                    break;
-                case PERCENTAGE:
-                    result = (value == -1) || ((0 <= value) && (value <= 100.0));
-                    break;
-                case EFFECT_SIZE:
-                case ANGLE:
-                case OPACITY:
-                case PROGRESS:
-                    result = true;
-                    break;
-
-                default:
-                    assert false;
-                    result = false;
-                    break;
-            }
-        }
-        
-        return result;
+        return true;
     }
     
     public Double getCanonicalValue(Double value) {
-        final Double result;
-        
-        if (value == null) {
-            result = null;
-        } else {
-            switch(kind) {
-                case COORDINATE:
-                case NULLABLE_COORDINATE:
-                case SIZE:
-                case USE_COMPUTED_SIZE:
-                case USE_PREF_SIZE:
-                    result = value;
-                    break;
-                case EFFECT_SIZE:
-                    result = Math.min(255.0, Math.max(0, value));
-                    break;
-                case ANGLE:
-                    result = Math.IEEEremainder(value, 360.0);
-                    break;
-                case OPACITY:
-                case PROGRESS:
-                    result = Math.min(1, Math.max(0, value));
-                    break;
-                default:
-                    assert false;
-                    result = value;
-                    break;
-            }
-        }
-        
-        return result;
+        return value;
     }
-
-    /*
-     * SingleValuePropertyMetadata
-     */
     
     @Override
     public Double makeValueFromString(String string) {
         return Double.valueOf(string);
     }
+    
+    /**
+     * Accept any double and null (Equivalent to old DoubleKind.NULLABLE_COORDINATE)
+     */
+    public static class NullableCoordinateDoublePropertyMetadata extends DoublePropertyMetadata {
+        public NullableCoordinateDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            constants.put("NULL", null);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return value != null;
+        }
+    }
+
+    /**
+     * Accept any double with x != null (Equivalent to old DoubleKind.COORDINATE)
+     */
+    public static class CoordinateDoublePropertyMetadata extends DoublePropertyMetadata {
+        public CoordinateDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return value != null;
+        }
+    }
+    
+    /**
+     * Accept any double x with x >= 0.0 (Equivalent to old DoubleKind.SIZE)
+     */
+    public static class SizeDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public SizeDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && 0 <= value;
+        }
+    }
+    
+    /**
+     * Accept any double x with x >= 0 or x == Region.USE_COMPUTED_SIZE (Equivalent to old DoubleKind.USE_COMPUTED_SIZE)
+     */
+    public static class ComputedSizeDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public ComputedSizeDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && ((0 <= value) || (value == Region.USE_COMPUTED_SIZE));
+        }
+    }
+
+    /**
+     * Accept any double x with x >= 0 or x == Region.USE_COMPUTED_SIZE or x == Region.USE_PREF_SIZE (Equivalent to old DoubleKind.USE_PREF_SIZE)
+     */
+    public static class ComputedAndPrefSizeDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public ComputedAndPrefSizeDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
+            constants.put("USE_PREF_SIZE", Region.USE_PREF_SIZE);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && ((0 <= value) || (value == Region.USE_COMPUTED_SIZE) || (value == Region.USE_PREF_SIZE));
+        }
+    }
+    
+    /**
+     * Accept any double x with 0 <= x <= 255.0 (Equivalent to old DoubleKind.EFFECT_SIZE)
+     */
+    public static class EffectSizeDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public EffectSizeDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            setMin(0.0);
+            setMax(255.0);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && (0 <= value) && (value <= 255.0);
+        }
+        
+        @Override
+        public Double getCanonicalValue(Double value) {
+            final Double result;
+            
+            if (value == null) {
+                result = null;
+            } else {
+                result = Math.min(255.0, Math.max(0, value));
+            }
+            
+            return result;
+        }
+    }
+    
+    /**
+     * Accept any double x with 0 <= x <= 360.0 (Equivalent to old DoubleKind.ANGLE)
+     */
+    public static class AngleDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public AngleDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && (0 <= value) && (value <= 360.0);
+        }
+        
+        @Override
+        public Double getCanonicalValue(Double value) {
+            final Double result;
+            
+            if (value == null) {
+                result = null;
+            } else {
+                result = Math.IEEEremainder(value, 360.0);
+            }
+            
+            return result;
+        }
+    }
+    
+    /**
+     * Accept any double x with 0 <= x <= 1.0 (Equivalent to old DoubleKind.OPACITY)
+     */
+    public static class OpacityDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public OpacityDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            setMin(0.0);
+            setMax(1.0);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && (0 <= value) && (value <= 1.0);
+        }
+        
+        @Override
+        public Double getCanonicalValue(Double value) {
+            final Double result;
+            
+            if (value == null) {
+                result = null;
+            } else {
+                result = Math.min(1, Math.max(0, value));
+            }
+            
+            return result;
+        }
+    }
+    
+    /**
+     * Accept any double x with 0 <= x <= 1.0 (Equivalent to old DoubleKind.PROGRESS)
+     */
+    public static class ProgressDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public ProgressDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            constants.put("INDETERMINATE", ProgressIndicator.INDETERMINATE_PROGRESS);
+            setMin(0.0);
+            setMax(1.0);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && (0 <= value) && (value <= 1.0);
+        }
+        
+        @Override
+        public Double getCanonicalValue(Double value) {
+            final Double result;
+            
+            if (value == null) {
+                result = null;
+            } else {
+                result = Math.min(1, Math.max(0, value));
+            }
+            
+            return result;
+        }
+    }
+    
+    /**
+     * Accept any double x with x == -1 or 0 <= x <= 100.0 (Equivalent to old DoubleKind.PERCENTAGE)
+     */
+    public static class PercentageDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+        public PercentageDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            setMin(0.0);
+            setMax(100.0);
+        }
+        
+        @Override
+        public boolean isValidValue(Double value) {
+            return super.isValidValue(value) && ((value == -1) || (0 <= value) && (value <= 100.0));
+        }
+    }
+
 }

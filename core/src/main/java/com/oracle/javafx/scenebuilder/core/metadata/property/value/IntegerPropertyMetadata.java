@@ -32,22 +32,30 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
+import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+
+import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 
 /**
  *
  * 
  */
-public class IntegerPropertyMetadata extends TextEncodablePropertyMetadata<Integer> {
+public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
 
     public IntegerPropertyMetadata(PropertyName name, boolean readWrite, 
             Integer defaultValue, InspectorPath inspectorPath) {
         super(name, Integer.class, readWrite, defaultValue, inspectorPath);
+        setMin(-Integer.MAX_VALUE);
+        setMax(Integer.MAX_VALUE);
     }
     
     public boolean isValidValue(Integer value) {
-        return (value != null) && (0 <= value);
+        return (value != null);
     }
 
     /*
@@ -58,4 +66,157 @@ public class IntegerPropertyMetadata extends TextEncodablePropertyMetadata<Integ
         return Integer.valueOf(string);
     }
     
+    public static class PositiveIntegerPropertyMetadata extends IntegerPropertyMetadata {
+
+        public PositiveIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+            setMin(0);
+        }
+        
+        @Override
+        public boolean isValidValue(Integer value) {
+            return super.isValidValue(value) && (0 <= value);
+        }
+    }
+    
+    public abstract static class GridIntegerPropertyMetadata extends PositiveIntegerPropertyMetadata {
+
+        public GridIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        public static GridPane getGridPane(SelectionState selectionState) {
+                FXOMObject commonParent = selectionState.getCommonParentObject();
+                if (commonParent == null) {
+                    return null;
+                }
+                Object parentObj = commonParent.getSceneGraphObject();
+                assert parentObj instanceof GridPane;
+                return (GridPane) parentObj;
+        }
+        
+        public static int getGridPaneColumnCount(GridPane gridPane) {
+            return gridPane.getColumnCount();
+        }
+
+        public static int getGridPaneRowCount(GridPane gridPane) {
+            return gridPane.getRowCount();
+        }
+        
+        public static int getRowSpanPropertyMaxIndex(SelectionState selectionState) {
+            int maxIndex = 0;
+            for (FXOMInstance instance : selectionState.getSelectedInstances()) {
+                assert instance.getSceneGraphObject() instanceof Node;
+                Integer index;
+                Node node = (Node) instance.getSceneGraphObject();
+                index = GridPane.getRowIndex(node);
+                if (index == null) {
+                    index = 0;
+                }
+                if (index > maxIndex) {
+                    maxIndex = index;
+                }
+            }
+            return maxIndex;
+        }
+        
+        public static int getColumnSpanPropertyMaxIndex(SelectionState selectionState) {
+            int maxIndex = 0;
+            for (FXOMInstance instance : selectionState.getSelectedInstances()) {
+                assert instance.getSceneGraphObject() instanceof Node;
+                Integer index;
+                Node node = (Node) instance.getSceneGraphObject();
+                index = GridPane.getColumnIndex(node);
+                if (index == null) {
+                    index = 0;
+                }
+                if (index > maxIndex) {
+                    maxIndex = index;
+                }
+            }
+            return maxIndex;
+        }
+    }
+    
+    public static class GridRowIndexIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
+
+        public GridRowIndexIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        @Override
+        public Integer getMax(SelectionState selectionState) {
+            GridPane gridPane = getGridPane(selectionState);
+            if (gridPane == null) {
+                // multi-selection from different GridPanes: not supported for now
+                return getMin(selectionState);
+            }
+            int nbRow = getGridPaneRowCount(gridPane);
+            // index start to 0
+            return nbRow - 1;
+        }
+    }
+    
+    public static class GridRowSpanIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
+
+        public GridRowSpanIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        @Override
+        public Integer getMax(SelectionState selectionState) {
+            GridPane gridPane = getGridPane(selectionState);
+            if (gridPane == null) {
+                // multi-selection from different GridPanes: not supported for now
+                return getMin(selectionState);
+            }
+            int nbRow = getGridPaneRowCount(gridPane);
+            int maxIndex = getRowSpanPropertyMaxIndex(selectionState);
+            return nbRow - maxIndex;
+        }
+    }
+    
+    public static class GridColumnIndexIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
+
+        public GridColumnIndexIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+
+        @Override
+        public Integer getMax(SelectionState selectionState) {
+            GridPane gridPane = getGridPane(selectionState);
+            if (gridPane == null) {
+                // multi-selection from different GridPanes: not supported for now
+                return getMin(selectionState);
+            }
+            int nbColumns = getGridPaneColumnCount(gridPane);
+            // index start to 0
+            return nbColumns - 1;
+        }
+    }
+    
+    public static class GridColumnSpanIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
+
+        public GridColumnSpanIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+                InspectorPath inspectorPath) {
+            super(name, readWrite, defaultValue, inspectorPath);
+        }
+        
+        @Override
+        public Integer getMax(SelectionState selectionState) {
+            GridPane gridPane = getGridPane(selectionState);
+            if (gridPane == null) {
+                // multi-selection from different GridPanes: not supported for now
+                return getMin(selectionState);
+            }
+            int nbColumns = getGridPaneColumnCount(gridPane);
+            int maxIndex = getColumnSpanPropertyMaxIndex(selectionState);
+            return nbColumns - maxIndex;
+        }
+    }
 }

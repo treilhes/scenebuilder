@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -51,15 +51,15 @@ public class PointLightPropertyMetadata extends ComplexPropertyMetadata<Light.Po
     private final ColorPropertyMetadata colorMetadata
             = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
             true, Color.WHITE, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata xMetadata
-            = new DoublePropertyMetadata(new PropertyName("x"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata yMetadata
-            = new DoublePropertyMetadata(new PropertyName("y"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata zMetadata
-            = new DoublePropertyMetadata(new PropertyName("z"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata xMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata yMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata zMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
     
     public PointLightPropertyMetadata(PropertyName name, boolean readWrite, 
             Light.Point defaultValue, InspectorPath inspectorPath) {

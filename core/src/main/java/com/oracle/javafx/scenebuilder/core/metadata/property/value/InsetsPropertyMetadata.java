@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.DoubleKind;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -46,18 +46,18 @@ import javafx.geometry.Insets;
  */
 public class InsetsPropertyMetadata extends ComplexPropertyMetadata<Insets> {
     
-    private final DoublePropertyMetadata topMetadata
-            = new DoublePropertyMetadata(new PropertyName("top"), 
-            DoubleKind.COORDINATE, true, Insets.EMPTY.getTop(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata bottomMetadata
-            = new DoublePropertyMetadata(new PropertyName("bottom"), 
-            DoubleKind.COORDINATE, true, Insets.EMPTY.getBottom(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata leftMetadata
-            = new DoublePropertyMetadata(new PropertyName("left"), 
-            DoubleKind.COORDINATE, true, Insets.EMPTY.getLeft(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata rightMetadata
-            = new DoublePropertyMetadata(new PropertyName("right"), 
-            DoubleKind.COORDINATE, true, Insets.EMPTY.getRight(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata topMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("top"), 
+            true, Insets.EMPTY.getTop(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata bottomMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("bottom"), 
+            true, Insets.EMPTY.getBottom(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata leftMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("left"), 
+            true, Insets.EMPTY.getLeft(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata rightMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("right"), 
+            true, Insets.EMPTY.getRight(), InspectorPath.UNUSED);
 
     
     public InsetsPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -36,7 +36,8 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -52,18 +53,18 @@ public class ImagePatternPropertyMetadata extends ComplexPropertyMetadata<ImageP
     private final ImagePropertyMetadata imageMetadata
             = new ImagePropertyMetadata(new PropertyName("image"), 
             true, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata xMetadata
-            = new DoublePropertyMetadata(new PropertyName("x"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata yMetadata
-            = new DoublePropertyMetadata(new PropertyName("y"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata widthMetadata
-            = new DoublePropertyMetadata(new PropertyName("width"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata heightMetadata
-            = new DoublePropertyMetadata(new PropertyName("height"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata xMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata yMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata widthMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("width"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata heightMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("height"), 
+            true, 0.0, InspectorPath.UNUSED);
     private final BooleanPropertyMetadata proportionalMetadata
             = new BooleanPropertyMetadata(new PropertyName("proportional"), 
             true, true, InspectorPath.UNUSED);

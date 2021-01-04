@@ -34,6 +34,8 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -45,12 +47,12 @@ import javafx.scene.text.Font;
  */
 public class FontPropertyMetadata extends ComplexPropertyMetadata<Font> {
 
-    private final StringPropertyMetadata nameMetadata
-            = new StringPropertyMetadata(new PropertyName("name"), //NOI18N
+    private final I18nStringPropertyMetadata nameMetadata
+            = new I18nStringPropertyMetadata(new PropertyName("name"), //NOI18N
             true, Font.getDefault().getName(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata sizeMetadata
-            = new DoublePropertyMetadata(new PropertyName("size"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata sizeMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("size"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
 
     
     public FontPropertyMetadata(PropertyName name, boolean readWrite, 

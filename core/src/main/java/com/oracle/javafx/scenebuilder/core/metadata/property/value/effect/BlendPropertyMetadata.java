@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -55,9 +55,9 @@ public class BlendPropertyMetadata extends ComplexPropertyMetadata<Blend> {
     private final EffectPropertyMetadata topInputMetadata
             = new EffectPropertyMetadata(new PropertyName("topInput"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata opacityMetadata
-            = new DoublePropertyMetadata(new PropertyName("opacity"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 1.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata opacityMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("opacity"), //NOI18N
+            true /* readWrite */, 1.0, InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata modeMetadata
             = new EnumerationPropertyMetadata(new PropertyName("mode"), //NOI18N
             BlendMode.class, true, BlendMode.SRC_OVER, InspectorPath.UNUSED);

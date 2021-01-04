@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -44,15 +45,15 @@ import javafx.geometry.Point3D;
  */
 public class Point3DPropertyMetadata extends ComplexPropertyMetadata<Point3D> {
 
-    private final DoublePropertyMetadata xMetadata
-            = new DoublePropertyMetadata(new PropertyName("x"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata yMetadata
-            = new DoublePropertyMetadata(new PropertyName("y"),  //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata zMetadata
-            = new DoublePropertyMetadata(new PropertyName("z"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata xMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata yMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"),  //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata zMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
 
     public Point3DPropertyMetadata(PropertyName name, boolean readWrite, 
             Point3D defaultValue, InspectorPath inspectorPath) {

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -46,9 +46,9 @@ import javafx.scene.paint.Stop;
  */
 public class StopPropertyMetadata extends ComplexPropertyMetadata<Stop> {
     
-    private final DoublePropertyMetadata offsetMetadata
-            = new DoublePropertyMetadata(new PropertyName("offset"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata offsetMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offset"), //NOI18N
+            true, 0.0, InspectorPath.UNUSED);
     private final ColorPropertyMetadata colorMetadata
             = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
             true, null, InspectorPath.UNUSED);

@@ -71,6 +71,8 @@ subprojects {
 		annotationProcessor 'org.projectlombok:lombok:1.18.16'
 		testCompileOnly 'org.projectlombok:lombok:1.18.16'
 		testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+		
+		testCompile "org.testfx:testfx-junit5:4.0.16-alpha"
         
     }
 

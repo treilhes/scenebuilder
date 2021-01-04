@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light.LightPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -56,24 +56,24 @@ public class LightingPropertyMetadata extends ComplexPropertyMetadata<Lighting> 
     private final EffectPropertyMetadata contentInputMetadata
             = new EffectPropertyMetadata(new PropertyName("contentInput"), //NOI18N
             true /* readWrite */, LIGHTING_DEFAULT.getContentInput(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata diffuseConstantMetadata
-            = new DoublePropertyMetadata(new PropertyName("diffuseConstant"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 
+    private final CoordinateDoublePropertyMetadata diffuseConstantMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("diffuseConstant"), //NOI18N
+            true /* readWrite */, 
             LIGHTING_DEFAULT.getDiffuseConstant(), InspectorPath.UNUSED);
     private final LightPropertyMetadata lightMetadata
             = new LightPropertyMetadata(new PropertyName("light"), //NOI18N
             true /* readWrite */, LIGHTING_DEFAULT.getLight(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata specularConstantMetadata
-            = new DoublePropertyMetadata(new PropertyName("specularConstant"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 
+    private final CoordinateDoublePropertyMetadata specularConstantMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("specularConstant"), //NOI18N
+            true /* readWrite */, 
             LIGHTING_DEFAULT.getSpecularConstant(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata specularExponentMetadata
-            = new DoublePropertyMetadata(new PropertyName("specularExponent"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 
+    private final CoordinateDoublePropertyMetadata specularExponentMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOI18N
+            true /* readWrite */, 
             LIGHTING_DEFAULT.getSpecularExponent(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata surfaceScaleMetadata
-            = new DoublePropertyMetadata(new PropertyName("surfaceScale"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 
+    private final CoordinateDoublePropertyMetadata surfaceScaleMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("surfaceScale"), //NOI18N
+            true /* readWrite */, 
             LIGHTING_DEFAULT.getSurfaceScale(), InspectorPath.UNUSED);
 
     public LightingPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -55,15 +55,14 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
 import com.oracle.javafx.scenebuilder.core.metadata.klass.CustomComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DurationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EventHandlerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.FontPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.DoubleKind;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StringListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.PaintPropertyMetadata;
@@ -216,14 +215,13 @@ class MetadataIntrospector {
                         (Integer)getDefaultValue(sample, propertyDescriptor.getReadMethod(), 0),
                         inspectorPath);
             } else if (propertyType == Double.class) {
-                result = new DoublePropertyMetadata(
+                result = new CoordinateDoublePropertyMetadata(
                         name,
-                        DoubleKind.COORDINATE,
                         readWrite,
                         (Double)getDefaultValue(sample, propertyDescriptor.getReadMethod(), 0.0),
                         inspectorPath);
             } else if (propertyType == String.class) {
-                result = new StringPropertyMetadata(
+                result = new I18nStringPropertyMetadata(
                         name,
                         readWrite,
                         (String)getDefaultValue(sample, propertyDescriptor.getReadMethod(), null),

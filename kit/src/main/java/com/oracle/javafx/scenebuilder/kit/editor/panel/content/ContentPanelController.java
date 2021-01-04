@@ -94,7 +94,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.Picker;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.ScrollPaneBooster;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.ParentRingColorPreference;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;

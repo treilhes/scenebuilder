@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.AnchorUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
@@ -109,11 +110,11 @@ public class AnchorPaneRelocater extends AbstractRelocater<AnchorPane> {
         } else {
             final Bounds parentLayoutBounds = sceneGraphObject.getParent().getLayoutBounds();
             if (originalLeftAnchor != null) {
-                final double leftAnchor = computeLeftAnchor(parentLayoutBounds, newLayoutBounds, newLayoutX);
+                final double leftAnchor = AnchorUtils.computeLeftAnchor(parentLayoutBounds, newLayoutBounds, newLayoutX);
                 AnchorPane.setLeftAnchor(sceneGraphObject, (double)Math.round(leftAnchor));
             }
             if (originalRightAnchor != null) {
-                final double rightAnchor = computeRightAnchor(parentLayoutBounds, newLayoutBounds, newLayoutX);
+                final double rightAnchor = AnchorUtils.computeRightAnchor(parentLayoutBounds, newLayoutBounds, newLayoutX);
                 AnchorPane.setRightAnchor(sceneGraphObject, (double)Math.round(rightAnchor));
             }
         }
@@ -126,11 +127,11 @@ public class AnchorPaneRelocater extends AbstractRelocater<AnchorPane> {
         } else {
             final Bounds parentLayoutBounds = sceneGraphObject.getParent().getLayoutBounds();
             if (originalTopAnchor != null) {
-                final double topAnchor = computeTopAnchor(parentLayoutBounds, newLayoutBounds, newLayoutY);
+                final double topAnchor = AnchorUtils.computeTopAnchor(parentLayoutBounds, newLayoutBounds, newLayoutY);
                 AnchorPane.setTopAnchor(sceneGraphObject, (double)Math.round(topAnchor));
             }
             if (originalBottomAnchor != null) {
-                final double bottomAnchor = computeBottomAnchor(parentLayoutBounds, newLayoutBounds, newLayoutY);
+                final double bottomAnchor = AnchorUtils.computeBottomAnchor(parentLayoutBounds, newLayoutBounds, newLayoutY);
                 AnchorPane.setBottomAnchor(sceneGraphObject, (double)Math.round(bottomAnchor));
             }
         }
@@ -207,85 +208,5 @@ public class AnchorPaneRelocater extends AbstractRelocater<AnchorPane> {
             }
         }
         return result;
-    }
-    
-    
-    
-    /*
-     * Public (static)
-     */
-    
-    public static double computeLeftAnchor(Bounds parentBounds, Bounds childBounds, double targetLayoutX) {
-        /*
-         *       o parent origin
-         *                               
-         *              +---------------------------------------------------+
-         *              |                                                   |
-         *              |                  o child origin                   |
-         *              |                                                   |
-         *              |                       +---------------------+     |
-         *              |                       |                     |     |
-         *              |                       |                     |     |
-         *              |                       |                     |     |
-         *              |                       +---------------------+     |
-         *              |                                                   |
-         *              |                                                   |
-         *              +------------------+----+---------------------------+
-         *              .                  .    .
-         *              .                  .    .
-         *              .                  .    .
-         *              x0                 .    x1
-         *                                 .
-         *                           targetLayoutX
-         * 
-         *  result = x1 - x0
-         */
-        
-        final double x0 = parentBounds.getMinX();
-        final double x1 = parentBounds.getMinX() + targetLayoutX + childBounds.getMinX();
-        return x1 - x0;
-    }
-    
-    public static double computeRightAnchor(Bounds parentBounds, Bounds childBounds, double targetLayoutX) {
-        /*
-         *       o parent origin
-         *                               
-         *              +---------------------------------------------------+
-         *              |                                                   |
-         *              |                  o child origin                   |
-         *              |                                                   |
-         *              |                       +---------------------+     |
-         *              |                       |                     |     |
-         *              |                       |                     |     |
-         *              |                       |                     |     |
-         *              |                       +---------------------+     |
-         *              |                                                   |
-         *              |                                                   |
-         *              +------------------+--------------------------------+
-         *                                 .                          .     .
-         *                                 .                          .     .
-         *                                 .                          .     .
-         *                                 .                          x0    x1
-         *                                 .
-         *                           targetLayoutX
-         * 
-         *  result = x1 - x0
-         */
-        
-        final double x0 = parentBounds.getMinX() + targetLayoutX + childBounds.getMaxX();
-        final double x1 = parentBounds.getMaxX();
-        return x1 - x0;
-    }
-    
-    public static double computeTopAnchor(Bounds parentBounds, Bounds childBounds, double targetLayoutY) {
-        final double y0 = parentBounds.getMinY();
-        final double y1 = parentBounds.getMinY() + targetLayoutY + childBounds.getMinY();
-        return y1 - y0;
-    }
-    
-    public static double computeBottomAnchor(Bounds parentBounds, Bounds childBounds, double targetLayoutY) {
-        final double y0 = parentBounds.getMinY() + targetLayoutY + childBounds.getMaxY();
-        final double y1 = parentBounds.getMaxY();
-        return y1 - y0;
     }
 }

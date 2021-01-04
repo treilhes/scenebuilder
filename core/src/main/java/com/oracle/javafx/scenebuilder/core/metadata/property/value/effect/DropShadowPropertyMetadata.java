@@ -36,7 +36,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -57,27 +59,27 @@ public class DropShadowPropertyMetadata extends ComplexPropertyMetadata<DropShad
     private final ColorPropertyMetadata colorMetadata
             = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
             true /* readWrite */, Color.BLACK, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata heightMetadata
-            = new DoublePropertyMetadata(new PropertyName("height"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.SIZE, true /* readWrite */, 21.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata heightMetadata
+            = new SizeDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            true /* readWrite */, 21.0, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata offsetXMetadata
-            = new DoublePropertyMetadata(new PropertyName("offsetX"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata offsetYMetadata
-            = new DoublePropertyMetadata(new PropertyName("offsetY"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata radiusMetadata
-            = new DoublePropertyMetadata(new PropertyName("radius"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, 10.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata spreadMetadata
-            = new DoublePropertyMetadata(new PropertyName("spread"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata widthMetadata
-            = new DoublePropertyMetadata(new PropertyName("width"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.OPACITY, true /* readWrite */, 21.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata offsetXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetX"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata offsetYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetY"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata radiusMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("radius"), //NOI18N
+            true /* readWrite */, 10.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata spreadMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("spread"), //NOI18N
+            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata widthMetadata
+            = new OpacityDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            true /* readWrite */, 21.0, InspectorPath.UNUSED);
 
     public DropShadowPropertyMetadata(PropertyName name, boolean readWrite, 
             DropShadow defaultValue, InspectorPath inspectorPath) {

@@ -37,7 +37,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -53,18 +53,18 @@ public class DisplacementMapPropertyMetadata extends ComplexPropertyMetadata<Dis
     private final EffectPropertyMetadata inputMetadata
             = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
             true /* readWrite */, null, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata offsetXMetadata
-            = new DoublePropertyMetadata(new PropertyName("offsetX"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, DEFAULT.getOffsetX(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata offsetYMetadata
-            = new DoublePropertyMetadata(new PropertyName("offsetY"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, DEFAULT.getOffsetY(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata scaleXMetadata
-            = new DoublePropertyMetadata(new PropertyName("scaleX"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, DEFAULT.getScaleX(), InspectorPath.UNUSED);
-    private final DoublePropertyMetadata scaleYMetadata
-            = new DoublePropertyMetadata(new PropertyName("scaleY"), //NOI18N
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true /* readWrite */, DEFAULT.getScaleY(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata offsetXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetX"), //NOI18N
+            true /* readWrite */, DEFAULT.getOffsetX(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata offsetYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetY"), //NOI18N
+            true /* readWrite */, DEFAULT.getOffsetY(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata scaleXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleX"), //NOI18N
+            true /* readWrite */, DEFAULT.getScaleX(), InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata scaleYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleY"), //NOI18N
+            true /* readWrite */, DEFAULT.getScaleY(), InspectorPath.UNUSED);
     private final BooleanPropertyMetadata wrapMetadata
             = new BooleanPropertyMetadata(new PropertyName("wrap"), //NOI18N
             true /* readWrite */, DEFAULT.isWrap(), InspectorPath.UNUSED);

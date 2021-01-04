@@ -34,6 +34,8 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
@@ -45,24 +47,18 @@ import javafx.geometry.Bounds;
  */
 public class BoundsPropertyMetadata extends ComplexPropertyMetadata<Bounds> {
 
-    private final DoublePropertyMetadata minXMetadata
-            = new DoublePropertyMetadata(new PropertyName("minx"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata minYMetadata
-            = new DoublePropertyMetadata(new PropertyName("minY"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata minZMetadata
-            = new DoublePropertyMetadata(new PropertyName("minZ"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata widthMetadata
-            = new DoublePropertyMetadata(new PropertyName("width"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata heightMetadata
-            = new DoublePropertyMetadata(new PropertyName("height"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata depthMetadata
-            = new DoublePropertyMetadata(new PropertyName("depth"), 
-            DoublePropertyMetadata.DoubleKind.SIZE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata minXMetadata = 
+            new CoordinateDoublePropertyMetadata(new PropertyName("minx"), true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata minYMetadata = 
+            new CoordinateDoublePropertyMetadata(new PropertyName("minY"), true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata minZMetadata = 
+            new CoordinateDoublePropertyMetadata(new PropertyName("minZ"), true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata widthMetadata = 
+            new SizeDoublePropertyMetadata(new PropertyName("width"), true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata heightMetadata = 
+            new SizeDoublePropertyMetadata(new PropertyName("height"), true, 0.0, InspectorPath.UNUSED);
+    private final SizeDoublePropertyMetadata depthMetadata = 
+            new SizeDoublePropertyMetadata(new PropertyName("depth"), true, 0.0, InspectorPath.UNUSED);
     
     
     public BoundsPropertyMetadata(PropertyName name, boolean readWrite, 

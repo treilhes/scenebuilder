@@ -38,6 +38,7 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -51,12 +52,12 @@ import javafx.scene.ImageCursor;
  */
 public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
     
-    private final DoublePropertyMetadata hotspotXMetadata
-            = new DoublePropertyMetadata(new PropertyName("hotspotX"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
-    private final DoublePropertyMetadata hotspotYMetadata
-            = new DoublePropertyMetadata(new PropertyName("hotspotY"), 
-            DoublePropertyMetadata.DoubleKind.COORDINATE, true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata hotspotXMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("hotspotX"), 
+            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata hotspotYMetadata
+            = new CoordinateDoublePropertyMetadata(new PropertyName("hotspotY"), 
+            true, 0.0, InspectorPath.UNUSED);
     private final ImagePropertyMetadata imageMetadata
             = new ImagePropertyMetadata(new PropertyName("image"), 
             true, null, InspectorPath.UNUSED);

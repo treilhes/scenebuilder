@@ -38,8 +38,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -60,6 +58,7 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
@@ -111,17 +110,14 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.P
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.MoveColumnJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.MoveRowJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob;
+import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob.SpanAction;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.AbstractWrapInJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.UnwrapJob;
-import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
-import com.oracle.javafx.scenebuilder.kit.glossary.AbstractGlossary;
-import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
-import com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.Utils;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -226,7 +222,7 @@ public class EditorController implements Editor {
 
     private final Selection selection = new Selection();
     private final JobManager jobManager;
-    private final MessageLog messageLog = new MessageLog();
+    private final MessageLogger messageLogger;
     private final ErrorReportImpl errorReport = new ErrorReportImpl();
     private final DragController dragController;
     private final InlineEditController inlineEditController;// = new InlineEditController(this);
@@ -243,8 +239,8 @@ public class EditorController implements Editor {
             = new SimpleObjectProperty<>();
     private final ObjectProperty<URL> fxmlLocationProperty;
             //= new SimpleObjectProperty<>();
-    private final ObjectProperty<AbstractGlossary> glossaryProperty
-            = new SimpleObjectProperty<>(new BuiltinGlossary());
+//    private final ObjectProperty<AbstractGlossary> glossaryProperty
+//            = new SimpleObjectProperty<>(new BuiltinGlossary());
 //    private final ObjectProperty<ResourceBundle> resourcesProperty
 //            = new SimpleObjectProperty<>(null);
 //    private final ObjectProperty<GluonTheme> gluonThemeProperty
@@ -299,6 +295,7 @@ public class EditorController implements Editor {
     	    @Autowired RootContainerWidthPreference rootContainerWidthPreference,
     	    @Autowired FileSystem fileSystem,
     	    @Autowired Dialog dialog,
+    	    @Autowired MessageLogger messageLogger,
     	    @Lazy @Autowired DragController dragController,
     	    @Lazy @Autowired DocumentManager documentManager,
     	    @Lazy @Autowired JobManager jobManager,
@@ -314,6 +311,7 @@ public class EditorController implements Editor {
     	this.fileSystem = fileSystem;
     	this.dialog = dialog;
     	this.dragController = dragController;
+    	this.messageLogger = messageLogger;
     	//this.sceneStyleSheetsPreference = sceneStyleSheets;
     	//this.themePreference = theme;
     	this.rootContainerHeightPreference = rootContainerHeightPreference;
@@ -571,36 +569,36 @@ public class EditorController implements Editor {
         return libraryProperty;
     }
 
-    /**
-     * Returns the glossary used by this editor.
-     *
-     * @return the glossary used by this editor (never null).
-     */
-    @Override
-    public AbstractGlossary getGlossary() {
-        return glossaryProperty.getValue();
-    }
+//    /**
+//     * Returns the glossary used by this editor.
+//     *
+//     * @return the glossary used by this editor (never null).
+//     */
+//    @Override
+//    public AbstractGlossary getGlossary() {
+//        return glossaryProperty.getValue();
+//    }
 
-    /**
-     * Sets the glossary used by this editor.
-     * The Inspector panel(s) connected to this editor will update
-     * their suggested lists in Code section.
-     *
-     * @param glossary the glossary to be used by this editor (never null).
-     */
-    public void setLibrary(AbstractGlossary glossary) {
-        assert glossary != null;
-        glossaryProperty.setValue(glossary);
-    }
-
-    /**
-     * The property holding the glossary used by this editor.
-     *
-     * @return the property holding the glossary used by this editor (never null).
-     */
-    public ObservableValue<AbstractGlossary> glossaryProperty() {
-        return glossaryProperty;
-    }
+//    /**
+//     * Sets the glossary used by this editor.
+//     * The Inspector panel(s) connected to this editor will update
+//     * their suggested lists in Code section.
+//     *
+//     * @param glossary the glossary to be used by this editor (never null).
+//     */
+//    public void setLibrary(AbstractGlossary glossary) {
+//        assert glossary != null;
+//        glossaryProperty.setValue(glossary);
+//    }
+//
+//    /**
+//     * The property holding the glossary used by this editor.
+//     *
+//     * @return the property holding the glossary used by this editor (never null).
+//     */
+//    public ObservableValue<AbstractGlossary> glossaryProperty() {
+//        return glossaryProperty;
+//    }
 
 //    /**
 //     * Returns the resource bundle used by this editor.
@@ -905,8 +903,8 @@ public class EditorController implements Editor {
      * @return  the message log associated to this editor.
      */
     @Override
-    public MessageLog getMessageLog() {
-        return messageLog;
+    public MessageLogger getMessageLog() {
+        return messageLogger;
     }
 
     /**
@@ -1061,12 +1059,12 @@ public class EditorController implements Editor {
                 break;
             }
             case DECREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.DECREASE_COLUMN_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.DECREASE_COLUMN_SPAN).extend();
                 jobManager.push(job);
                 break;
             }
             case DECREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.DECREASE_ROW_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.DECREASE_ROW_SPAN).extend();
                 jobManager.push(job);
                 break;
             }
@@ -1086,12 +1084,12 @@ public class EditorController implements Editor {
                 break;
             }
             case INCREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.INCREASE_COLUMN_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.INCREASE_COLUMN_SPAN).extend();
                 jobManager.push(job);
                 break;
             }
             case INCREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.INCREASE_ROW_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.INCREASE_ROW_SPAN).extend();
                 jobManager.push(job);
                 break;
             }
@@ -1319,12 +1317,12 @@ public class EditorController implements Editor {
                 break;
             }
             case DECREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.DECREASE_COLUMN_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.DECREASE_COLUMN_SPAN).extend();
                 result = job.isExecutable();
                 break;
             }
             case DECREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.DECREASE_ROW_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.DECREASE_ROW_SPAN).extend();
                 result = job.isExecutable();
                 break;
             }
@@ -1344,12 +1342,12 @@ public class EditorController implements Editor {
                 break;
             }
             case INCREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.INCREASE_COLUMN_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.INCREASE_COLUMN_SPAN).extend();
                 result = job.isExecutable();
                 break;
             }
             case INCREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, EditAction.INCREASE_ROW_SPAN).extend();
+                final Job job = new SpanJob(context, this, SpanAction.INCREASE_ROW_SPAN).extend();
                 result = job.isExecutable();
                 break;
             }
@@ -1834,50 +1832,14 @@ public class EditorController implements Editor {
      * @return true if the 'wrap' action is permitted.
      */
     public boolean canPerformWrap(Class<?> wrappingClass) {
-        if (getClassesSupportingWrapping().contains(wrappingClass) == false) {
+        if (AbstractWrapInJob.getClassesSupportingWrapping().contains(wrappingClass) == false) {
             return false;
         }
         final AbstractWrapInJob job = AbstractWrapInJob.getWrapInJob(context, this, wrappingClass);
         return job.extend().isExecutable();
     }
 
-    private static List<Class<?>> classesSupportingWrapping;
-
-    /**
-     * Return the list of classes that can be passed to
-     * {@link EditorController#performWrap(java.lang.Class)}.
-     *
-     * @return the list of classes.
-     */
-    public synchronized static Collection<Class<?>> getClassesSupportingWrapping() {
-        if (classesSupportingWrapping == null) {
-            classesSupportingWrapping = new ArrayList<>();
-            classesSupportingWrapping.add(javafx.scene.layout.AnchorPane.class);
-            classesSupportingWrapping.add(javafx.scene.layout.BorderPane.class);
-            classesSupportingWrapping.add(javafx.scene.control.ButtonBar.class);
-            classesSupportingWrapping.add(javafx.scene.control.DialogPane.class);
-            classesSupportingWrapping.add(javafx.scene.layout.FlowPane.class);
-            classesSupportingWrapping.add(javafx.scene.layout.GridPane.class);
-            classesSupportingWrapping.add(javafx.scene.Group.class);
-            classesSupportingWrapping.add(javafx.scene.layout.HBox.class);
-            classesSupportingWrapping.add(javafx.scene.layout.Pane.class);
-            classesSupportingWrapping.add(javafx.scene.control.ScrollPane.class);
-            classesSupportingWrapping.add(javafx.scene.control.SplitPane.class);
-            classesSupportingWrapping.add(javafx.scene.layout.StackPane.class);
-            classesSupportingWrapping.add(javafx.scene.control.TabPane.class);
-            classesSupportingWrapping.add(javafx.scene.text.TextFlow.class);
-            classesSupportingWrapping.add(javafx.scene.layout.TilePane.class);
-            classesSupportingWrapping.add(javafx.scene.control.TitledPane.class);
-            classesSupportingWrapping.add(javafx.scene.control.ToolBar.class);
-            classesSupportingWrapping.add(javafx.scene.layout.VBox.class);
-            classesSupportingWrapping.add(javafx.scene.Scene.class);
-            classesSupportingWrapping.add(javafx.stage.Stage.class);
-            classesSupportingWrapping = Collections.unmodifiableList(classesSupportingWrapping);
-        }
-
-        return classesSupportingWrapping;
-    }
-
+    
     /**
      * Performs the copy control action.
      */
@@ -2348,15 +2310,25 @@ public class EditorController implements Editor {
     public void performSetEffect(Class<? extends Effect> effectClass) {
         assert canPerformSetEffect(); // (1)
 
-        final Effect effect = Utils.newInstance(effectClass);
-        final PropertyName pn = new PropertyName("effect"); //NOI18N
+        try {
+            //final Effect effect = Utils.newInstance(effectClass);
+            
+            //TODO use a factory here, expecting a noarg constructor is bad
+            final Effect effect = effectClass.getDeclaredConstructor().newInstance();
+            
+            final PropertyName pn = new PropertyName("effect"); //NOI18N
 
-        final PropertyMetadata pm
-                = Metadata.getMetadata().queryProperty(Node.class, pn);
-        assert pm instanceof ValuePropertyMetadata;
-        final ValuePropertyMetadata vpm = (ValuePropertyMetadata) pm;
-        final Job job = new ModifySelectionJob(context, vpm, effect, this).extend();
-        getJobManager().push(job);
+            final PropertyMetadata pm
+                    = Metadata.getMetadata().queryProperty(Node.class, pn);
+            assert pm instanceof ValuePropertyMetadata;
+            final ValuePropertyMetadata vpm = (ValuePropertyMetadata) pm;
+            final Job job = new ModifySelectionJob(context, vpm, effect, this).extend();
+            getJobManager().push(job);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            //TODO mange exception here
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -2501,7 +2473,7 @@ public class EditorController implements Editor {
         }
         jobManager.clear();
         selection.clear();
-        messageLog.clear();
+        messageLogger.clear();
         errorReport.setFxomDocument(newFxomDocument);
         fxomDocumentProperty.setValue(newFxomDocument);
 
@@ -2545,7 +2517,7 @@ public class EditorController implements Editor {
 
     private void updateEditorController(String messageKey, Path target) {
         final String targetFileName = target.getFileName().toString();
-        getMessageLog().logInfoMessage(messageKey, targetFileName);
+        messageLogger.logInfoMessage(messageKey, targetFileName);
         getErrorReport().forget();
         if (targetFileName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOI18N
             getErrorReport().cssFileDidChange(target);
