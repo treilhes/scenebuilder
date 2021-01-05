@@ -45,6 +45,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
 
@@ -61,7 +62,6 @@ public class JobManagerImpl implements JobManager {
 
 	private static final int UNDO_STACK_MAX_SIZE = 50;
 
-    private final Editor editor;
     private final int undoStackMaxSize;
     private final List<Job> undoStack = new ArrayList<>();
     private final List<Job> redoStack = new ArrayList<>();
@@ -73,11 +73,12 @@ public class JobManagerImpl implements JobManager {
 
     public JobManagerImpl(
     		@Autowired ApplicationContext context,
+    		@Autowired DocumentManager documentManager,
     		@Autowired @Lazy Editor editor) {
         assert editor != null;
         this.context = context;
-        this.editor = editor;
         this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
+        revision.addListener((ob,o,n) -> documentManager.dirty().onNext(true));
     }
 
 

@@ -40,7 +40,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
@@ -70,18 +69,15 @@ public class PreviewMenuProvider implements MenuItemProvider {
     private final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
     private final static String SHOW_PREVIEW_IN_DIALOG_ID = "showPreviewInDialog";
 
-    private final PreviewMenuController previewMenuController;
     private final DocumentManager documentManager;
+    private final PreviewMenuController previewMenuController;
     private final PreviewWindowController previewWindowController;
-    private final Editor editor;
 
     public PreviewMenuProvider(
             @Autowired DocumentManager documentManager,
-            @Autowired Editor editor,
             @Autowired  @Lazy PreviewMenuController previewMenuController,
             @Autowired  @Lazy PreviewWindowController previewWindowController) {
         this.documentManager = documentManager;
-        this.editor = editor;
         this.previewMenuController = previewMenuController;
         this.previewWindowController = previewWindowController;
     }
@@ -120,11 +116,9 @@ public class PreviewMenuProvider implements MenuItemProvider {
             menu = new MenuItem(I18N.getString("menu.title.show.preview.in.window"));
             menu.setId(SHOW_PREVIEW_IN_WINDOW_ID);
             menu.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyboardModifier.control()));
-            menu.setOnMenuValidation((e) -> menu.setDisable(editor.getFxomDocument() == null));
-            menu.setOnAction((e) -> {
-                previewMenuController.performOpenPreviewWindow();
-            });
-
+            menu.setOnAction((e) -> previewMenuController.performOpenPreviewWindow());
+            
+            documentManager.fxomDocument().subscribe(fd -> menu.setDisable(fd == null));
             return menu;
         }
     }
@@ -155,12 +149,9 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
             menu = new MenuItem(I18N.getString("menu.title.show.preview.in.dialog"));
             menu.setId(SHOW_PREVIEW_IN_DIALOG_ID);
-            menu.setOnMenuValidation((e) -> menu.setDisable(editor.getFxomDocument() == null
-                    || !(editor.getFxomDocument().getSceneGraphRoot() instanceof DialogPane)));
-            menu.setOnAction((e) -> {
-                previewMenuController.performOpenPreviewWindow();
-            });
-
+            menu.setOnAction((e) -> previewMenuController.performOpenPreviewWindow());
+            
+            documentManager.fxomDocument().subscribe(fd -> menu.setDisable(fd == null || !(fd.getSceneGraphRoot() instanceof DialogPane)));
             return menu;
         }
     }
@@ -209,6 +200,21 @@ public class PreviewMenuProvider implements MenuItemProvider {
                         getStringFromDouble(previewWindowController.getRoot().prefWidth(-1)),
                         getStringFromDouble(previewWindowController.getRoot().prefHeight(-1))));
             });
+            
+            documentManager.fxomDocument().subscribe(fd -> {
+                boolean disabled = fd == null;
+                
+                if (disabled) {
+                    menu.getItems().forEach(m -> m.setDisable(disabled));
+                } else {
+                    menu.getItems().forEach(m -> {
+                        Size size = (Size) m.getUserData();
+                        boolean previewIsValid = previewWindowController.getStage().isShowing() && !fd.is3D() && fd.isNode()
+                                && previewWindowController.sizeDoesFit(size);
+                        m.setDisable(!previewIsValid);
+                    });
+                }
+            });
 
             return menu;
         }
@@ -223,20 +229,12 @@ public class PreviewMenuProvider implements MenuItemProvider {
             return res;
         }
 
-        private void updateMenuItemDisableState(MenuItem m) {
-            Size size = (Size) m.getUserData();
-            boolean disabledByFxom = editor.getFxomDocument() == null;
-            boolean previewIsValid = previewWindowController.getStage().isShowing() && !editor.is3D() && editor.isNode()
-                    && previewWindowController.sizeDoesFit(size);
-            m.setDisable(disabledByFxom || !previewIsValid);
-        }
 
         private RadioMenuItem createSizeMenu(Size size, ToggleGroup sizeToggle) {
             RadioMenuItem mi = new RadioMenuItem(size.toString());
             mi.setToggleGroup(sizeToggle);
             mi.setOnAction(e -> previewMenuController.performChangePreviewSize(size));
             mi.setUserData(size);
-            mi.setOnMenuValidation((e) -> updateMenuItemDisableState(mi));
             return mi;
         }
     }

@@ -204,7 +204,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     // has to call performInitialization (turned public), a path we do not want
     // to take.
     private void performInitialization() {
-        SelectionState selectionState = new SelectionState(getEditorController());
+        SelectionState selectionState = new SelectionState(getEditorController().getSelection());
         
         if (controllerClassEditor == null) {
             controllerClassEditor = (ControllerClassEditor) editorFactorysession.getControllerClassEditor(selectionState);

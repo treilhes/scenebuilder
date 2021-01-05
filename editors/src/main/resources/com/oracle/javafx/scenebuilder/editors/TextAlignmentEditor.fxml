@@ -44,7 +44,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="@../images/text-alignment-left.png" smooth="false" />
+            <Image url="@images/text-alignment-left.png" smooth="false" />
           </image>
         </ImageView>
       </graphic>
@@ -56,7 +56,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="@../images/text-alignment-center.png" smooth="false" />
+            <Image url="@images/text-alignment-center.png" smooth="false" />
           </image>
         </ImageView>
       </graphic>
@@ -65,7 +65,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="@../images/text-alignment-right.png" smooth="false" />
+            <Image url="@images/text-alignment-right.png" smooth="false" />
           </image>
         </ImageView>
       </graphic>
@@ -74,7 +74,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="@../images/text-alignment-justify.png" smooth="false" />
+            <Image url="@images/text-alignment-justify.png" smooth="false" />
           </image>
         </ImageView>
       </graphic>

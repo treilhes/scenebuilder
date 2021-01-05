@@ -126,7 +126,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.effect.Effect;
@@ -220,7 +219,7 @@ public class EditorController implements Editor {
 
 
 
-    private final Selection selection = new Selection();
+    private final Selection selection;
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
     private final ErrorReportImpl errorReport = new ErrorReportImpl();
@@ -284,6 +283,7 @@ public class EditorController implements Editor {
 	private final FileSystem fileSystem;
 	private final Dialog dialog;
     private I18nResourceProvider resourceConfig;
+    private final DocumentManager documentManager;
 
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
@@ -296,6 +296,7 @@ public class EditorController implements Editor {
     	    @Autowired FileSystem fileSystem,
     	    @Autowired Dialog dialog,
     	    @Autowired MessageLogger messageLogger,
+    	    @Autowired Selection selection,
     	    @Lazy @Autowired DragController dragController,
     	    @Lazy @Autowired DocumentManager documentManager,
     	    @Lazy @Autowired JobManager jobManager,
@@ -312,6 +313,8 @@ public class EditorController implements Editor {
     	this.dialog = dialog;
     	this.dragController = dragController;
     	this.messageLogger = messageLogger;
+    	this.selection = selection;
+    	this.documentManager = documentManager;
     	//this.sceneStyleSheetsPreference = sceneStyleSheets;
     	//this.themePreference = theme;
     	this.rootContainerHeightPreference = rootContainerHeightPreference;
@@ -2375,50 +2378,7 @@ public class EditorController implements Editor {
         getJobManager().push(addTooltipJob);
    }
 
-    /**
-     * @treatAsPrivate
-     *
-     * @return true if the current FXOM document represents a 3D layout, false
-     *         otherwise.
-     */
-    @Override
-    public boolean is3D() {
-        boolean res = false;
-        FXOMDocument doc = getFxomDocument();
-
-        if (doc != null) {
-            Object sgroot = doc.getSceneGraphRoot();
-
-            if (sgroot instanceof Node) {
-                final Bounds rootBounds = ((Node)sgroot).getLayoutBounds();
-                res = (rootBounds.getDepth() > 0);
-            }
-        }
-        return res;
-    }
-
-
-    /**
-     * @treatAsPrivate
-     *
-     * @return true if the current FXOM document is an instance of a Node, false
-     * otherwise.
-     */
-    @Override
-    public boolean isNode() {
-        boolean res = false;
-        FXOMDocument doc = getFxomDocument();
-
-        if (doc != null) {
-            Object sgroot = doc.getSceneGraphRoot();
-
-            if (sgroot instanceof Node) {
-                res = true;
-            }
-        }
-
-        return res;
-    }
+    
 
     /**
      * @treatAsPrivate
@@ -2477,6 +2437,8 @@ public class EditorController implements Editor {
         errorReport.setFxomDocument(newFxomDocument);
         fxomDocumentProperty.setValue(newFxomDocument);
 
+        documentManager.fxomDocument().onNext(newFxomDocument);
+        
         updateFileWatcher(newFxomDocument);
 
 

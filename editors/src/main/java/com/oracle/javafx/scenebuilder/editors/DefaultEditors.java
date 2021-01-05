@@ -82,8 +82,8 @@ import com.oracle.javafx.scenebuilder.editors.EnumEditor.GenericEnumEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.BoundsPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.EffectPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.FontPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.GenericPaintPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.KeyCombinationPopupEditor;
-import com.oracle.javafx.scenebuilder.editors.popupeditors.PaintPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.Rectangle2DPopupEditor;
 
 @Component
@@ -132,7 +132,7 @@ public class DefaultEditors implements EditorMapProvider {
         editorsMap.put(EffectPropertyMetadata.class, EffectPopupEditor.class);
         
         editorsMap.put(FontPropertyMetadata.class, FontPopupEditor.class);
-        editorsMap.put(PaintPropertyMetadata.class, PaintPopupEditor.class);
+        editorsMap.put(PaintPropertyMetadata.class, GenericPaintPopupEditor.class);
         editorsMap.put(ImagePropertyMetadata.class, ImageEditor.class);
         editorsMap.put(BoundsPropertyMetadata.class, BoundsPopupEditor.class);
         editorsMap.put(Point3DPropertyMetadata.class, Point3DEditor.class);

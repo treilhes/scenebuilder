@@ -61,7 +61,6 @@ import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
@@ -117,7 +116,6 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -244,7 +242,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private SplitController documentSplitController;
 
     private FileTime loadFileTime;
-    private Job saveJob;
+    
     private EventHandler<KeyEvent> mainKeyEventFilter;
 
 	private final LeftVisiblePreference leftVisiblePreference;
@@ -258,6 +256,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final List<DisposeWithDocument> finalizations;
 	private final Dialog dialog;
     private final SceneBuilderManager sceneBuilderManager;
+    private boolean dirty;
 
 
     /*
@@ -386,8 +385,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         documentPreferencesController.readFromJavaPreferences();
 //        pathPreference.readFromJavaPreferences();
 
-        //PrefTests.doDocTest(docPref);
-
+        documentManager.dirty().subscribe(d -> dirty = d);
 
         //this.documentManager = documentManager;
         this.editorController.setLibrary(mainController.getUserLibrary());
@@ -404,7 +402,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             // - when using accelerators vs using menu items
             // - depending on the focused control (TextField vs ComboBox)
             //
-            // On SB side, we decide for now to consume events that may be handled natively
+            // On SB side,5 we decide for now to consume events that may be handled natively
             // so ALL actions are defined in our ApplicationMenu class.
             //
             // This may be revisit when platform implementation will be more reliable.
@@ -1045,11 +1043,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     @Override
-	public boolean isDocumentDirty() {
-        return getEditorController().getJobManager().getCurrentJob() != saveJob;
-    }
-
-    @Override
 	public boolean isUnused() {
         /*
          * A document window controller is considered as "unused" if: //NOI18N
@@ -1206,13 +1199,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
         //documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
 
-        // Monitor the status of the document to set status icon accordingly in message bar
-        getEditorController().getJobManager().revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
-        	messageBarController.setDocumentDirty(isDocumentDirty());
-        	documentManager.dirty().onNext(isDocumentDirty());
-        });
-
-
+       
         libraryPanelController.getLibraryLabel().bind(Bindings.createStringBinding(() -> {
 
             return MainController.getSingleton().getUserLibrary().isExploring() ? I18N.getString("library.exploring") : I18N.getString("library");
@@ -1700,8 +1687,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
 
         if (result.equals(ActionStatus.DONE)) {
-            messageBarController.setDocumentDirty(false);
-            saveJob = getEditorController().getJobManager().getCurrentJob();
+            documentManager.dirty().onNext(false);
         }
 
         return result;
@@ -1889,8 +1875,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                     // Now performs a regular save action
                     result = performSaveAction();
                     if (result.equals(ActionStatus.DONE)) {
-                        messageBarController.setDocumentDirty(false);
-                        saveJob = getEditorController().getJobManager().getCurrentJob();
+                        documentManager.dirty().onNext(false);
                     }
 
                     // Keep track of the user choice for next time
@@ -2079,6 +2064,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         			I18N.getString("alert.messagebox.failure.details"),
         			ioe);
         }
+    }
+    @Override
+    public boolean isDocumentDirty() {
+        return dirty;
     }
 
 

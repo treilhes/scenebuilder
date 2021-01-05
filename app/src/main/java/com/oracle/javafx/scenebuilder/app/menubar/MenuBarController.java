@@ -1834,8 +1834,8 @@ public class MenuBarController implements InitializingBean {
             boolean res = (documentWindowController != null)
                     && (documentWindowController.getPreviewWindowController() != null)
                     && documentWindowController.getPreviewWindowController().getStage().isShowing()
-                    && ! documentWindowController.getEditorController().is3D()
-                    && documentWindowController.getEditorController().isNode()
+                    && ! documentWindowController.getEditorController().getFxomDocument().is3D()
+                    && documentWindowController.getEditorController().getFxomDocument().isNode()
                     && documentWindowController.getPreviewWindowController().sizeDoesFit(size);
             return res;
         }
@@ -1858,8 +1858,8 @@ public class MenuBarController implements InitializingBean {
                 res = (size == currentSize)
                         && documentWindowController.getPreviewWindowController().getStage().isShowing()
                         && ! documentWindowController.getPreviewWindowController().userResizedPreviewWindow()
-                        && ! documentWindowController.getEditorController().is3D()
-                        && documentWindowController.getEditorController().isNode();
+                        && ! documentWindowController.getEditorController().getFxomDocument().is3D()
+                        && documentWindowController.getEditorController().getFxomDocument().isNode();
             }
 
             return res;
@@ -1876,8 +1876,8 @@ public class MenuBarController implements InitializingBean {
 
                 if (documentWindowController.getPreviewWindowController() != null
                         && documentWindowController.getPreviewWindowController().getStage().isShowing()
-                        && ! documentWindowController.getEditorController().is3D()
-                        && documentWindowController.getEditorController().isNode()) {
+                        && ! documentWindowController.getEditorController().getFxomDocument().is3D()
+                        && documentWindowController.getEditorController().getFxomDocument().isNode()) {
                         title = I18N.getString("menu.title.size.preferred.with.value",
                                 getStringFromDouble(documentWindowController.getPreviewWindowController().getRoot().prefWidth(-1)),
                                 getStringFromDouble(documentWindowController.getPreviewWindowController().getRoot().prefHeight(-1)));

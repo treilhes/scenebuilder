@@ -40,76 +40,129 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
+import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
+import javafx.beans.value.ChangeListener;
 import lombok.Getter;
 
 public interface DocumentManager {
-	Subject<Boolean> dirty();
-	Subject<Boolean> saved();
-	Subject<StylesheetProvider2> stylesheetConfig();
-	Subject<I18nResourceProvider> i18nResourceConfig();
-	Subject<FXOMDocument> fxomDocument();
+    Subject<Boolean> dirty();
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	public class DocumentManagerImpl implements InitializingBean, DocumentManager {
+    Subject<Boolean> saved();
 
-		private DocumentSubjects subjects;
+    Subject<StylesheetProvider2> stylesheetConfig();
 
-		public DocumentManagerImpl() {
-			subjects = new DocumentSubjects();
-		}
+    Subject<I18nResourceProvider> i18nResourceConfig();
 
-		@Override
-		public void afterPropertiesSet() throws Exception {
-		}
+    Subject<FXOMDocument> fxomDocument();
 
-		@Override
-		public Subject<Boolean> dirty() {
-			return subjects.getDirty();
-		}
+    Subject<SelectionState> selectionDidChange();
 
-		@Override
-		public Subject<Boolean> saved() {
-			return subjects.getSaved();
-		}
+    Subject<Integer> sceneGraphRevisionDidChange();
 
-		@Override
-		public Subject<StylesheetProvider2> stylesheetConfig() {
-			return subjects.getStylesheetConfig();
-		}
+    Subject<Integer> cssRevisionDidChange();
 
-		@Override
-		public Subject<I18nResourceProvider> i18nResourceConfig() {
-			return subjects.getI18nResourceConfig();
-		}
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    public class DocumentManagerImpl implements InitializingBean, DocumentManager {
 
-		@Override
-		public Subject<FXOMDocument> fxomDocument() {
-			return subjects.getFxomDocument();
-		}
+        private DocumentSubjects subjects;
 
-	}
+        private FXOMDocument lastFXOMDocument = null;
+        private ChangeListener<? super Number> sceneGraphRevisionChangeListener = (ob, o,
+                n) -> sceneGraphRevisionDidChange().onNext(n.intValue());
+        private ChangeListener<? super Number> cssRevisionChangeListener = (ob, o, n) -> cssRevisionDidChange()
+                .onNext(n.intValue());
 
-	public class DocumentSubjects extends SubjectManager {
+        public DocumentManagerImpl() {
+            subjects = new DocumentSubjects();
 
-		private @Getter ReplaySubject<Boolean> dirty;
-		private @Getter ReplaySubject<Boolean> saved;
-		private @Getter ReplaySubject<StylesheetProvider2> stylesheetConfig;
-		private @Getter ReplaySubject<I18nResourceProvider> i18nResourceConfig;
-		private @Getter ReplaySubject<FXOMDocument> fxomDocument;
+            fxomDocument().subscribe(fd -> {
+                if (lastFXOMDocument != null) {
+                    lastFXOMDocument.sceneGraphRevisionProperty().removeListener(sceneGraphRevisionChangeListener);
+                    lastFXOMDocument.cssRevisionProperty().removeListener(cssRevisionChangeListener);
+                }
+                if (fd != null) {
+                    fd.sceneGraphRevisionProperty().addListener(sceneGraphRevisionChangeListener);
+                    fd.cssRevisionProperty().addListener(cssRevisionChangeListener);
+                    lastFXOMDocument = fd;
+                }
+            });
+        }
 
+        @Override
+        public void afterPropertiesSet() throws Exception {
+        }
 
-		public DocumentSubjects() {
-			dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1));
-			saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1));
-			stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
-			i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
-			fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));
-		}
+        @Override
+        public Subject<Boolean> dirty() {
+            return subjects.getDirty();
+        }
 
-	}
+        @Override
+        public Subject<Boolean> saved() {
+            return subjects.getSaved();
+        }
+
+        @Override
+        public Subject<StylesheetProvider2> stylesheetConfig() {
+            return subjects.getStylesheetConfig();
+        }
+
+        @Override
+        public Subject<I18nResourceProvider> i18nResourceConfig() {
+            return subjects.getI18nResourceConfig();
+        }
+
+        @Override
+        public Subject<FXOMDocument> fxomDocument() {
+            return subjects.getFxomDocument();
+        }
+
+        @Override
+        public Subject<SelectionState> selectionDidChange() {
+            return subjects.getSelectionState();
+        }
+
+        @Override
+        public Subject<Integer> sceneGraphRevisionDidChange() {
+            return subjects.getSceneGraphRevisionDidChange();
+        }
+
+        @Override
+        public Subject<Integer> cssRevisionDidChange() {
+            return subjects.getCssRevisionDidChange();
+        }
+    }
+
+    public class DocumentSubjects extends SubjectManager {
+
+        private @Getter ReplaySubject<Boolean> dirty;
+        private @Getter ReplaySubject<Boolean> saved;
+        private @Getter ReplaySubject<StylesheetProvider2> stylesheetConfig;
+        private @Getter ReplaySubject<I18nResourceProvider> i18nResourceConfig;
+        private @Getter ReplaySubject<FXOMDocument> fxomDocument;
+        private @Getter ReplaySubject<SelectionState> selectionState;
+
+        private @Getter PublishSubject<Integer> sceneGraphRevisionDidChange;
+        private @Getter PublishSubject<Integer> cssRevisionDidChange;
+
+        public DocumentSubjects() {
+            dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1));
+            saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1));
+            stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
+            i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
+            fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));
+            selectionState = wrap(DocumentSubjects.class, "selectionState", ReplaySubject.create(1));
+
+            sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange",
+                    PublishSubject.create());
+            cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create());
+        }
+
+    }
 }

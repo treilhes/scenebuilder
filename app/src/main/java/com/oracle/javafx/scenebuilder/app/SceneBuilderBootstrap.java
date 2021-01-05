@@ -58,6 +58,7 @@ import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowControl
 import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
@@ -91,6 +92,7 @@ import javafx.stage.Stage;
 		WelcomeDialogWindowController.class,
 		PreferencesController.class,
 		BuiltinLibrary.class,
+		Selection.class,
 		ComponentClassMetadatas.class,
 		Metadata.class,
 		MenuBarController.class,

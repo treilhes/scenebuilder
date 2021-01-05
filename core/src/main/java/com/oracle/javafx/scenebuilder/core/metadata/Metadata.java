@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyGroupMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPathComparator;
@@ -181,15 +182,23 @@ public class Metadata implements InitializingBean {
         final Set<PropertyMetadata> propertyMetadataSet = queryProperties(componentClass);
         final Iterator<PropertyMetadata> iterator = propertyMetadataSet.iterator();
         PropertyMetadata result = null;
-                
+
         while ((result == null) && iterator.hasNext()) {
             final PropertyMetadata propertyMetadata = iterator.next();
             if (propertyMetadata.getName().equals(targetName)) {
-                result = propertyMetadata;
+                return propertyMetadata;
+            }
+            
+            if (propertyMetadata.isGroup()) {
+                PropertyGroupMetadata pgm = (PropertyGroupMetadata)propertyMetadata;
+                for (int i=0; i < pgm.getProperties().length; i++) {
+                    if (pgm.getProperties()[i].getName().equals(targetName)) {
+                        return pgm.getProperties()[i];
+                    }
+                }
             }
         }
-        
-        return result;
+        return null;
     }
 
     public ValuePropertyMetadata queryValueProperty(FXOMInstance fxomInstance, PropertyName targetName) {

@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -50,7 +51,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
 
 import javafx.animation.FadeTransition;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -62,7 +62,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
+ 
 /**
  *
  */
@@ -92,13 +92,16 @@ public class MessageBarController extends AbstractFxmlPanelController {
     private final ImageView fileDirtyImage;
     private Tooltip statusLabelTooltip = null;
     private final ApplicationContext context;
+    private final MessageLogger messageLogger;
 
     public MessageBarController(
             @Autowired ApplicationContext context,
             @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired MessageLogger messageLogger,
             @Autowired EditorController editorController) {
         super(sceneBuilderManager, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.context = context;
+        this.messageLogger = messageLogger;
         // Initialize file dirty image
         final URL fileDirtyURL = MessageBarController.class.getResource("file-dirty.png"); //NOI18N
         assert fileDirtyURL != null;
@@ -170,16 +173,14 @@ public class MessageBarController extends AbstractFxmlPanelController {
         messageButton.setVisible(false);
 
         // Listens to the message log
-        getEditorController().getMessageLog().revisionProperty().addListener(
-                (ChangeListener<Number>) (ov, t, t1) -> messageLogDidChange());
-        getEditorController().getMessageLog().numOfWarningMessagesProperty().addListener(
-                (ChangeListener<Number>) (ov, t, t1) -> {
-                    String numberOfMessages = Integer.toString(t1.intValue());
-                    if (t1.intValue() > 9) {
-                        numberOfMessages = "*"; //NOI18N
-                    }
-                    messageButton.setText(numberOfMessages);
-                });
+        messageLogger.revisionProperty().addListener((ov, t, t1) -> messageLogDidChange());
+        messageLogger.numOfWarningMessagesProperty().addListener((ov, t, t1) -> {
+            String numberOfMessages = Integer.toString(t1.intValue());
+            if (t1.intValue() > 9) {
+                numberOfMessages = "*"; // NOI18N
+            }
+            messageButton.setText(numberOfMessages);
+        });
 
         statusLabelTooltip = statusLabel.getTooltip();
 
@@ -205,9 +206,8 @@ public class MessageBarController extends AbstractFxmlPanelController {
     private void messageLogDidChange() {
         assert messageLabel != null;
 
-        final MessageEntry entry
-                = getEditorController().getMessageLog().getYoungestEntry();
-        int logSize = getEditorController().getMessageLog().getEntries().size();
+        final MessageEntry entry = messageLogger.getYoungestEntry();
+        int logSize = messageLogger.getEntries().size();
 
         // When an old message is dismissed the message log changes but there's
         // no need to display anything in the message bar.
@@ -225,7 +225,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
             // button. But as soon as a message panel is opened it means one or
             // more message is being displayed so we do not alter the message button.
             if (messageWindowController == null || ! messageWindowController.isWindowOpened()) {
-                if (getEditorController().getMessageLog().getWarningEntryCount() == 0) {
+                if (messageLogger.getWarningEntryCount() == 0) {
                     messageButton.setVisible(false);
                     messageButton.setManaged(false);
                 } else {
@@ -247,7 +247,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
                 messageLabel.setVisible(false);
                 messageLabel.setGraphic(null);
                 messageLabel.setManaged(false);
-                if (getEditorController().getMessageLog().getWarningEntryCount() == 0) {
+                if (messageLogger.getWarningEntryCount() == 0) {
                     messageButton.setVisible(false);
                     messageButton.setManaged(false);
                 }
@@ -258,7 +258,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
                 HBox.setHgrow(messagePart, Priority.NEVER);
             });
             showHost.play();
-        } else if (getEditorController().getMessageLog().getEntryCount() == 0) {
+        } else if (messageLogger.getEntryCount() == 0) {
             messageButton.setVisible(false);
             messageButton.setManaged(false);
 

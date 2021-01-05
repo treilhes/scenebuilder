@@ -37,6 +37,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup.Type;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -54,6 +61,9 @@ import javafx.scene.layout.GridPane;
  * 
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class Selection {
     
     private AbstractSelectionGroup group;
@@ -62,6 +72,15 @@ public class Selection {
     private long lastListenerInvocationTime;
     private int updateDepth;
     
+    
+    
+    public Selection(
+            @Autowired DocumentManager documentManager
+            ) {
+        super();
+        revision.addListener((ob,o,n) -> documentManager.selectionDidChange().onNext(new SelectionState(this)));
+    }
+
     /**
      * Returns the property holding the revision number of this selection.
      * Selection class adds +1 to this number each time the selection changes.

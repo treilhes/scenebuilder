@@ -33,13 +33,9 @@
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
 
@@ -55,9 +51,6 @@ import javafx.scene.shape.Rectangle;
 /**
  * Popup editor for the Paint property.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class PaintPopupEditor extends PopupEditor {
 
     private final Rectangle graphic = new Rectangle(20, 10);

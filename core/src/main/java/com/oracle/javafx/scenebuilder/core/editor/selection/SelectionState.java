@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.core.editor.selection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -58,8 +57,8 @@ public class SelectionState {
     private FXOMObject commonParentObject;
     private final Set<FXOMInstance> unresolvedInstances = new HashSet<>();
 
-    public SelectionState(Editor editorController) {
-        this.selection = editorController.getSelection();
+    public SelectionState(Selection selection) {
+        this.selection = selection;
         initialize();
     }
 

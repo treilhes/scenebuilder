@@ -63,7 +63,18 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
      * @param inspectorPath the inspector path
      */
     public ValuePropertyMetadata(PropertyName name, boolean readWrite, InspectorPath inspectorPath) {
-        super(name, false);
+        this(name, false, readWrite, inspectorPath);
+    }
+    
+    /**
+     * Instantiates a new value property metadata.
+     *
+     * @param name the property name
+     * @param readWrite Is the property writable?
+     * @param inspectorPath the inspector path
+     */
+    protected ValuePropertyMetadata(PropertyName name, boolean isGroup, boolean readWrite, InspectorPath inspectorPath) {
+        super(name, isGroup);
         this.readWrite = readWrite;
         this.inspectorPath = inspectorPath;
     }

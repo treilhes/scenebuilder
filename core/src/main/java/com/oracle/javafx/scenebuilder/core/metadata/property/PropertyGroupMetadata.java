@@ -43,7 +43,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     private final ValuePropertyMetadata[] properties;
 
     public PropertyGroupMetadata(PropertyName name, ValuePropertyMetadata... properties) {
-        super(name, Arrays.stream(properties).anyMatch(p -> p.isReadWrite()), properties[0].getInspectorPath());
+        super(name, true, Arrays.stream(properties).anyMatch(p -> p.isReadWrite()), properties[0].getInspectorPath());
         this.properties = properties;
     }
 

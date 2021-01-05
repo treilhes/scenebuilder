@@ -534,7 +534,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Listen the Scene stylesheets changes
         documentManager.stylesheetConfig().subscribe(s -> updateInspector());
 
-        selectionState = new SelectionState(editorController);
+        selectionState = new SelectionState(editorController.getSelection());
         viewModeChanged(null, getViewMode());
         expandedSectionChanged();
 
@@ -581,7 +581,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      */
     private void updateInspector() {
         if (isInspectorLoaded() && hasFxomDocument()) {
-            SelectionState newSelectionState = new SelectionState(editorController);
+            SelectionState newSelectionState = new SelectionState(editorController.getSelection());
             if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
                 selectionState = newSelectionState;
                 rebuild();
@@ -662,7 +662,12 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        System.out.println("Refresh all the editors in use...");
 
         if (session != null) {
-            session.clear();
+            session.forEach((e) -> {
+                e.reset(e.getPropertyMeta(), selectionState);
+                setEditorValueFromSelection(e);
+            }, lastPropertyEditorValueChanged);
+            
+            lastPropertyEditorValueChanged = null;
         }
         
         //TODO below code is mandatory so uncomment fast

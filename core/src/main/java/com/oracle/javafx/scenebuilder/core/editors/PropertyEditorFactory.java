@@ -33,9 +33,11 @@
 package com.oracle.javafx.scenebuilder.core.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -176,6 +178,21 @@ public class PropertyEditorFactory {
         
         public void clear() {
             releaseEditors(editorsInUse);
+            editorsInUse.clear();
+        }
+        
+        public void reset(SelectionState selectionState, PropertyEditor... excludedEditors) {
+            List<PropertyEditor> excluded = Arrays.asList(excludedEditors);
+            editorsInUse.stream()
+                .filter(e -> !excluded.contains(e))
+                .forEach(e -> e.reset(e.getPropertyMeta(), selectionState));
+        }
+        
+        public void forEach(Consumer<PropertyEditor> doSomething, PropertyEditor... excludedEditors) {
+            List<PropertyEditor> excluded = Arrays.asList(excludedEditors);
+            editorsInUse.stream()
+                .filter(e -> !excluded.contains(e))
+                .forEach(e -> doSomething.accept(e));
         }
 
         public PropertyEditor getFxIdEditor(SelectionState selectionState) {

@@ -66,7 +66,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.ParallelCamera;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.control.ButtonType;
@@ -113,6 +112,7 @@ public class PreviewWindowController extends AbstractWindowController {
     private final long DELAYED = 1000; // milliseconds
 	private StylesheetProvider2 stylesheetConfig;
     private I18nResourceProvider resourceConfig;
+    private FXOMDocument fxomDocument;
 
     /**
      * The type of Camera used by the Preview panel.
@@ -132,24 +132,18 @@ public class PreviewWindowController extends AbstractWindowController {
         
         makeRoot();
         
-        this.editorController.fxomDocumentProperty().addListener(
-                (ChangeListener<FXOMDocument>) (ov, od, nd) -> {
-                    assert editorController.getFxomDocument() == nd;
-                    if (od != null) {
-                        od.sceneGraphRevisionProperty().removeListener(fxomDocumentRevisionListener);
-                        od.cssRevisionProperty().removeListener(cssRevisionListener);
-                    }
-                    if (nd != null) {
-                        nd.sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
-                        nd.cssRevisionProperty().addListener(cssRevisionListener);
-                        requestUpdate(DELAYED);
-                    }
-                });
-
-        if (editorController.getFxomDocument() != null) {
-            editorController.getFxomDocument().sceneGraphRevisionProperty().addListener(fxomDocumentRevisionListener);
-            editorController.getFxomDocument().cssRevisionProperty().addListener(cssRevisionListener);
-        }
+        documentManager.fxomDocument().subscribe(fd -> {
+           fxomDocument = fd;
+        });
+        
+        documentManager.sceneGraphRevisionDidChange().subscribe(rev -> {
+            //requestUpdate(DELAYED);
+            requestUpdate(IMMEDIATE);
+        });
+        
+        documentManager.cssRevisionDidChange().subscribe(rev -> {
+            requestUpdate(IMMEDIATE);
+        });
 
         documentManager.stylesheetConfig().subscribe(s -> {
         	stylesheetConfig = s;
@@ -160,6 +154,8 @@ public class PreviewWindowController extends AbstractWindowController {
             resourceConfig = s;
             requestUpdate(DELAYED);
         });
+        
+        documentManager.dirty().subscribe(dirty -> isDirty |= dirty);
 
         this.editorController.sampleDataEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
     }
@@ -213,7 +209,6 @@ public class PreviewWindowController extends AbstractWindowController {
     }
 
     public void openDialog() {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
         assert fxomDocument != null;
         // We clone the FXOMDocument
         FXOMDocument clone;
@@ -245,22 +240,6 @@ public class PreviewWindowController extends AbstractWindowController {
         isDirty = true;
     }
 
-//    @Override
-//    protected void toolStylesheetDidChange(String oldStylesheet) {
-//        // Preview window ignores the tool style sheet.
-//        // Unlike other windows, its styling is driven by the user design.
-//    }
-
-    /*
-     * Private
-     */
-
-    private final ChangeListener<Number> fxomDocumentRevisionListener
-            = (observable, oldValue, newValue) -> requestUpdate(DELAYED);
-
-    private final ChangeListener<Number> cssRevisionListener
-            = (observable, oldValue, newValue) -> requestUpdate(IMMEDIATE);
-
     /**
      * We use the provided delay before refreshing the content of the preview.
      * If further modification is brought to the layout before expiration of it
@@ -281,7 +260,6 @@ public class PreviewWindowController extends AbstractWindowController {
             // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the Platform.runLater
             Platform.runLater(() -> {
-                final FXOMDocument fxomDocument = editorController.getFxomDocument();
                 String themeStyleSheetString = null;
                 if (fxomDocument != null) {
                     // We clone the FXOMDocument
@@ -408,8 +386,6 @@ public class PreviewWindowController extends AbstractWindowController {
     // 1280x800 may exceed the capability of the user screen: should we greyed
     // relevant size values accordingly in Preview menu ?
     private void updateWindowSize() {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
-
         if (fxomDocument != null) {
             // A size setup action taken from menu bar has priority over a resize
             // done directly on the Preview window.
@@ -446,9 +422,7 @@ public class PreviewWindowController extends AbstractWindowController {
     }
 
     private void updateWindowTitle() {
-        final FXOMDocument fxomDocument
-                = editorController.getFxomDocument();
-        getStage().setTitle(Utils.makeTitle(fxomDocument));
+        getStage().setTitle(fxomDocument == null ? "Undefined" : Utils.makeTitle(fxomDocument));
     }
 
     public void setCameraType(PreviewWindowController.CameraType ct) {
@@ -491,9 +465,9 @@ public class PreviewWindowController extends AbstractWindowController {
     // camera to become able to display it.
     Node updateAutoResizeTransform(Node whatever) {
         Node res = whatever;
-        assert editorController.getFxomDocument() != null;
+        assert fxomDocument != null;
 
-        if (editorController.is3D() && autoResize3DContent) {
+        if (fxomDocument.is3D() && autoResize3DContent) {
             res.getTransforms().clear();
             final Bounds rootBounds = res.getLayoutBounds();
             // Content is 3D.

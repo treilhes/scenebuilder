@@ -53,6 +53,7 @@ import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
@@ -442,5 +443,37 @@ public class FXOMDocument {
     public static interface SceneGraphHolder {
         public void fxomDocumentWillRefreshSceneGraph(FXOMDocument fxomDocument);
         public void fxomDocumentDidRefreshSceneGraph(FXOMDocument fxomDocument);
+    }
+    
+    /**
+     * 
+     * @return true if the current FXOM document represents a 3D layout, false
+     *         otherwise.
+     */
+    public boolean is3D() {
+        boolean res = false;
+        Object sgroot = getSceneGraphRoot();
+
+        if (sgroot instanceof Node) {
+            final Bounds rootBounds = ((Node)sgroot).getLayoutBounds();
+            res = (rootBounds.getDepth() > 0);
+        }
+        return res;
+    }
+
+
+    /**
+     *
+     * @return true if the current FXOM document is an instance of a Node, false
+     * otherwise.
+     */
+    public boolean isNode() {
+        boolean res = false;
+        Object sgroot = getSceneGraphRoot();
+
+        if (sgroot instanceof Node) {
+            res = true;
+        }
+        return res;
     }
 }
