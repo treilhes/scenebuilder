@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -78,7 +78,7 @@ public abstract class AbstractPanelController  {
     private Parent panelRoot;
 
     /** The tool stylesheet config. */
-    private StylesheetProvider2 toolStylesheetConfig;
+    private StylesheetProvider toolStylesheetConfig;
 
     /** The scene builder manager. */
     private final SceneBuilderManager sceneBuilderManager;
@@ -308,7 +308,7 @@ public abstract class AbstractPanelController  {
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */
-    protected void toolStylesheetDidChange(StylesheetProvider2 newToolStylesheetConfig) {
+    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
 
         if (panelRoot == null) { // nothing to style so return
             return;

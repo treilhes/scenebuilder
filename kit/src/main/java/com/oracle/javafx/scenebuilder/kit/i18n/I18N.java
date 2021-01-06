@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
+import com.oracle.javafx.scenebuilder.api.i18n.I18NControl;
 
 /**
  *

@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
@@ -90,7 +90,7 @@ public class StyleClassEditor extends InlineListEditor {
 
     private Map<String, String> cssClassesMap;
 
-    private StylesheetProvider2 stylesheetConfig;
+    private StylesheetProvider stylesheetConfig;
     private List<String> themeClasses;
     private Set<FXOMInstance> selectedInstances;
 

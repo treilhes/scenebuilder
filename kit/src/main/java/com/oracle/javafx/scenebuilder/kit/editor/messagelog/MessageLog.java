@@ -40,12 +40,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.beans.property.IntegerProperty;
@@ -71,8 +73,12 @@ public class MessageLog implements MessageLogger{
      * Public
      */
 
-    public MessageLog() {
+    public MessageLog(
+            @Autowired DocumentManager documentManager
+            ) {
         super();
+        
+        documentManager.fxomDocument().subscribe(fd -> clear());
     }
 
     @Override
@@ -84,6 +90,7 @@ public class MessageLog implements MessageLogger{
         logMessage(MessageLogEntry.Type.WARNING, bundle, warningKey, arguments);
     }
 
+    @Override
     public void logInfoMessage(String infoKey, Object... arguments) {
         logInfoMessage(infoKey, I18N.getBundle(), arguments);
     }

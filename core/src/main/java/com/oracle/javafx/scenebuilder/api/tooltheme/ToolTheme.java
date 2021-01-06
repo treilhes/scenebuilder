@@ -33,12 +33,12 @@
 package com.oracle.javafx.scenebuilder.api.tooltheme;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
 /**
  * Theme contract supported by Scene Builder Kit.
  */
-public interface ToolTheme extends StylesheetProvider2 {
+public interface ToolTheme extends StylesheetProvider {
 
 	public static String name(Class<? extends ToolTheme> cls) {
 		ToolThemeMeta themeMeta = cls.getAnnotation(ToolThemeMeta.class);

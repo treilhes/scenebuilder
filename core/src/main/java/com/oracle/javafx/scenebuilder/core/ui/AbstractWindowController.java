@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
@@ -77,7 +77,7 @@ public abstract class AbstractWindowController {
     private final boolean sizeToScene; // true by default
 
     /** The tool stylesheet config. */
-    private StylesheetProvider2 toolStylesheetConfig;
+    private StylesheetProvider toolStylesheetConfig;
 
     /** The scene builder manager. */
     private final SceneBuilderManager sceneBuilderManager;
@@ -262,7 +262,7 @@ public abstract class AbstractWindowController {
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */
-    protected void toolStylesheetDidChange(StylesheetProvider2 newToolStylesheetConfig) {
+    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
 
         if (root == null) { // nothing to style so return
             return;

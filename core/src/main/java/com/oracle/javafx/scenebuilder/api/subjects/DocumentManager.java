@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
@@ -53,8 +53,10 @@ public interface DocumentManager {
     Subject<Boolean> dirty();
 
     Subject<Boolean> saved();
+    
+    Subject<Boolean> closed();
 
-    Subject<StylesheetProvider2> stylesheetConfig();
+    Subject<StylesheetProvider> stylesheetConfig();
 
     Subject<I18nResourceProvider> i18nResourceConfig();
 
@@ -107,9 +109,14 @@ public interface DocumentManager {
         public Subject<Boolean> saved() {
             return subjects.getSaved();
         }
+        
+        @Override
+        public Subject<Boolean> closed() {
+            return subjects.getClosed();
+        }
 
         @Override
-        public Subject<StylesheetProvider2> stylesheetConfig() {
+        public Subject<StylesheetProvider> stylesheetConfig() {
             return subjects.getStylesheetConfig();
         }
 
@@ -143,7 +150,8 @@ public interface DocumentManager {
 
         private @Getter ReplaySubject<Boolean> dirty;
         private @Getter ReplaySubject<Boolean> saved;
-        private @Getter ReplaySubject<StylesheetProvider2> stylesheetConfig;
+        private @Getter ReplaySubject<Boolean> closed;
+        private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
         private @Getter ReplaySubject<I18nResourceProvider> i18nResourceConfig;
         private @Getter ReplaySubject<FXOMDocument> fxomDocument;
         private @Getter ReplaySubject<SelectionState> selectionState;
@@ -154,6 +162,7 @@ public interface DocumentManager {
         public DocumentSubjects() {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1));
             saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1));
+            closed = wrap(DocumentSubjects.class, "closed", ReplaySubject.create(1));
             stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
             i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
             fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));

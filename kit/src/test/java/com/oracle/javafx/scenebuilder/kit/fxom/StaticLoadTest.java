@@ -92,7 +92,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoadWithoutEventHandler() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoadWithoutEventHandler.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -107,7 +107,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoad() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoad.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);

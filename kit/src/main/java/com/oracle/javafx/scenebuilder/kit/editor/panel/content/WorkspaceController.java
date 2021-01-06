@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Workspace;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -93,7 +93,7 @@ public class WorkspaceController implements Workspace{
     private double scaling = 1.0;
     private RuntimeException layoutException;
     private EditorController editorController;
-    private StylesheetProvider2 stylesheetConfig = null;
+    private StylesheetProvider stylesheetConfig = null;
 
     private FXOMDocument fxomDocument;
 

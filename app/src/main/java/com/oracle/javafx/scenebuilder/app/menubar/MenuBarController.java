@@ -216,8 +216,6 @@ public class MenuBarController implements InitializingBean {
     @FXML
     private MenuItem toggleAlignmentGuidesMenuItem;
     @FXML
-    private MenuItem showSampleControllerMenuItem;
-    @FXML
     private Menu zoomMenu;
 
     // Modify
@@ -617,7 +615,6 @@ public class MenuBarController implements InitializingBean {
         assert toggleOutlinesMenuItem != null;
         assert toggleSampleDataMenuItem != null;
         assert toggleAlignmentGuidesMenuItem != null;
-        assert showSampleControllerMenuItem != null;
         assert zoomMenu != null;
         assert zoomMenu.getItems().isEmpty();
 
@@ -941,7 +938,6 @@ public class MenuBarController implements InitializingBean {
                 return I18N.getString(titleKey);
             }
         });
-        showSampleControllerMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SHOW_SAMPLE_CONTROLLER));
         updateZoomMenu();
 
         /*

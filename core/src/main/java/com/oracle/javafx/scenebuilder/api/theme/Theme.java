@@ -37,7 +37,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 /**
  * Theme contract supported by Scene Builder Kit.
  */
-public interface Theme extends StylesheetProvider2 {
+public interface Theme extends StylesheetProvider {
 
 	Class<? extends AbstractGroup> getThemeGroupClass();
 

@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.api;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
@@ -44,6 +45,10 @@ public interface ErrorReport {
 
 	List<ErrorReportEntry> query(FXOMObject fxomObject, boolean b);
 
+	void forget();
+	
+	void cssFileDidChange(Path target);
+	
 	public interface ErrorReportEntry {
 
 		public enum Type {
@@ -68,6 +73,5 @@ public interface ErrorReport {
 
 		}
 	}
-
 
 }

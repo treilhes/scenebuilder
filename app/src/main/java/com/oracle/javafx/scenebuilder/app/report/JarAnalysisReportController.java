@@ -44,12 +44,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.library.util.JarReport;
 import com.oracle.javafx.scenebuilder.library.util.JarReportEntry;
@@ -78,7 +79,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     @FXML
     Label timestampLabel;
 
-    private final EditorController editorController;
+    private final Library library;
     private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; // NOI18N
     private final SimpleDateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(TIMESTAMP_PATTERN);
     private int prefixCounter = 0;
@@ -86,11 +87,14 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
 
     public JarAnalysisReportController(
             @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired EditorController editorController,
-            @Autowired DocumentWindowController document) {
+            @Autowired Library library,
+            @Autowired DocumentManager documentManager,
+            @Autowired Document document) {
         super(sceneBuilderManager, JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
                 I18N.getBundle(), document.getStage()); // NOI18N
-        this.editorController = editorController;
+        this.library = library;
+        
+        documentManager.closed().subscribe(c -> closeWindow());
     }
 
     @FXML
@@ -137,7 +141,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
         assert textFlow != null;
         assert timestampLabel != null;
 
-        UserLibrary lib = (UserLibrary) editorController.getLibrary();
+        UserLibrary lib = (UserLibrary) library;
         lib.getJarReports().addListener((ListChangeListener<JarReport>) change -> update());
 
         update();
@@ -150,7 +154,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
 
             updateTimeStampLabel();
 
-            UserLibrary lib = (UserLibrary) editorController.getLibrary();
+            UserLibrary lib = (UserLibrary) library;
 
             for (JarReport report : lib.getJarReports()) {
                 for (JarReportEntry entry : report.getEntries()) {
@@ -211,7 +215,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     }
 
     private void updateTimeStampLabel() {
-        UserLibrary lib = (UserLibrary) editorController.getLibrary();
+        UserLibrary lib = (UserLibrary) library;
         Date date = (Date) lib.getExplorationDate();
         String timestampValue = TIMESTAMP_DATE_FORMAT.format(date);
         timestampLabel.setText(I18N.getString("jar.analysis.report.timestamp", timestampValue));

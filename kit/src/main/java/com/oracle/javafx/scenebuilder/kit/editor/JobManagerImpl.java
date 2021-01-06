@@ -78,7 +78,10 @@ public class JobManagerImpl implements JobManager {
         assert editor != null;
         this.context = context;
         this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
+        
         revision.addListener((ob,o,n) -> documentManager.dirty().onNext(true));
+        
+        documentManager.fxomDocument().subscribe(fxom -> clear());
     }
 
 

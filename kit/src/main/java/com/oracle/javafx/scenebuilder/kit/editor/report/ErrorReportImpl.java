@@ -40,7 +40,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -58,18 +65,29 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class ErrorReportImpl implements ErrorReport {
 
     private final Map<FXOMNode, List<ErrorReportEntry>> entries = new HashMap<>();
     private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
     private FXOMDocument fxomDocument;
     private boolean dirty = true;
+    
+    public ErrorReportImpl(
+            @Autowired DocumentManager documentManager
+            ) {
+        super();
+        documentManager.fxomDocument().subscribe(fd -> setFxomDocument(fd));
+    }
 
-    public void setFxomDocument(FXOMDocument fxomDocument) {
+    private void setFxomDocument(FXOMDocument fxomDocument) {
         this.fxomDocument = fxomDocument;
         forget();
     }
 
+    @Override
     public void forget() {
         this.entries.clear();
         this.dirty = true;
@@ -114,6 +132,7 @@ public class ErrorReportImpl implements ErrorReport {
         return Collections.unmodifiableMap(entries);
     }
 
+    @Override
     public void cssFileDidChange(Path cssPath) {
         if (cssParsingReports.containsKey(cssPath)) {
             cssParsingReports.remove(cssPath);

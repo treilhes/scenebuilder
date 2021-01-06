@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
@@ -94,9 +94,7 @@ public class PreviewWindowController extends AbstractWindowController {
     private CameraType cameraType;
     private boolean autoResize3DContent = true;
     private static final String NID_PREVIEW_ROOT = "previewRoot"; //NOI18N
-//    private Theme editorControllerTheme;
-//    private GluonTheme editorControllerGluonTheme;
-//    private GluonSwatch editorControllerGluonSwatch;
+
     private ObservableList<File> sceneStyleSheet;
     private Size currentSize = Size.SIZE_PREFERRED;
     private boolean sizeChangedFromMenu = false;
@@ -110,7 +108,7 @@ public class PreviewWindowController extends AbstractWindowController {
     private boolean isDirty = true;
     private final long IMMEDIATE = 0; // milliseconds
     private final long DELAYED = 1000; // milliseconds
-	private StylesheetProvider2 stylesheetConfig;
+	private StylesheetProvider stylesheetConfig;
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
 
@@ -156,7 +154,7 @@ public class PreviewWindowController extends AbstractWindowController {
         });
         
         documentManager.dirty().subscribe(dirty -> isDirty |= dirty);
-
+        documentManager.closed().subscribe(c -> closeWindow());
         this.editorController.sampleDataEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
     }
 

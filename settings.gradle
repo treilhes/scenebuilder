@@ -1,2 +1,2 @@
 rootProject.name = 'SceneBuilder'
-include 'core', 'defaultx', 'app', 'kit', 'gluon', 'filesystem', 'preview','sb','library','controls','document','jobs','editors'
+include 'core', 'defaultx', 'app', 'kit', 'gluon', 'filesystem', 'preview','sb','library','controls','document','jobs','editors','source-view','source-gen'

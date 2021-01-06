@@ -48,7 +48,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.core.editors.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -193,13 +193,19 @@ public class CssInternal {
 //        return new ArrayList<>(themeClasses);
 //    }
 
-    public static List<String> getThemeStyleClasses(StylesheetProvider2 stylesheetConfig) {
+    public static List<String> getThemeStyleClasses(StylesheetProvider stylesheetConfig) {
         // TODO maybe some other css are needed here
-        String themeStyleSheet = stylesheetConfig.getUserAgentStylesheet();
+        //TODO check updated function
+//        String themeStyleSheet = stylesheetConfig.getUserAgentStylesheet();
         Set<String> themeClasses = new HashSet<>();
         // For Theme css, we need to get the text css (.css) to be able to parse it.
         // (instead of the default binary format .bss)
-        themeClasses.addAll(getStyleClasses(Deprecation.getThemeTextStylesheet(themeStyleSheet)));
+        if (stylesheetConfig.getUserAgentStylesheet() != null) {
+            themeClasses.addAll(getStyleClasses(Deprecation.getThemeTextStylesheet(stylesheetConfig.getUserAgentStylesheet())));
+        }
+        stylesheetConfig.getStylesheets().stream().filter(s -> s != null)
+            .forEach(s -> themeClasses.addAll(getStyleClasses(Deprecation.getThemeTextStylesheet(s))));
+        
         return new ArrayList<>(themeClasses);
     }
 
@@ -213,7 +219,7 @@ public class CssInternal {
 //        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
 //    }
 
-    public static Map<String, String> getStyleClassesMap(StylesheetProvider2 stylesheetConfig, Editor editorController,
+    public static Map<String, String> getStyleClassesMap(StylesheetProvider stylesheetConfig, Editor editorController,
             Set<FXOMInstance> instances) {
         Map<String, String> classesMap = new TreeMap<>();
         Object fxRoot = null;
@@ -225,7 +231,7 @@ public class CssInternal {
             classesMap.putAll(getFxObjectClassesMap(fxObject, fxRoot));
         }
 
-        StylesheetProvider2 sp = stylesheetConfig;
+        StylesheetProvider sp = stylesheetConfig;
 
         if (sp != null) {
             List<File> sceneStyleSheets = sp.getStylesheets().stream().map(s -> new File(s)).filter(f -> f.exists())

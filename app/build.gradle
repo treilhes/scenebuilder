@@ -20,6 +20,8 @@ dependencies {
 	implementation project(':document')
 	implementation project(':editors')
 	implementation project(':jobs')
+	implementation project(':source-view')
+	implementation project(':source-gen')
 }
 
 run {

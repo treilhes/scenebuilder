@@ -125,7 +125,7 @@ public class GluonComponentClassMetadatas {
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/Gluon_BottomNavigation.fxml"), null, null,
                             getClass().getResource("nodeicons/Gluon_BottomNavigation.png"),
-                            getClass().getResource("nodeicons/Gluon_BottomNavigation@2x.png"), TAG_GLUON));
+                            getClass().getResource("nodeicons/Gluon_BottomNavigation@2x.png"), TAG_GLUON + "XXX"));
         }
     }
 

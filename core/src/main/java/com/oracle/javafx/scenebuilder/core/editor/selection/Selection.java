@@ -79,6 +79,7 @@ public class Selection {
             ) {
         super();
         revision.addListener((ob,o,n) -> documentManager.selectionDidChange().onNext(new SelectionState(this)));
+        documentManager.fxomDocument().subscribe(fxom -> clear());
     }
 
     /**

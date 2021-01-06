@@ -36,7 +36,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
 
@@ -45,7 +45,7 @@ import io.reactivex.subjects.Subject;
 import lombok.Getter;
 
 public interface SceneBuilderManager {
-	Subject<StylesheetProvider2> stylesheetConfig();
+	Subject<StylesheetProvider> stylesheetConfig();
 
 	@Component
 	@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
@@ -62,7 +62,7 @@ public interface SceneBuilderManager {
 		}
 
 		@Override
-		public Subject<StylesheetProvider2> stylesheetConfig() {
+		public Subject<StylesheetProvider> stylesheetConfig() {
 			return subjects.getStylesheetConfig();
 		}
 
@@ -70,7 +70,7 @@ public interface SceneBuilderManager {
 
 	public class SceneBuilderSubjects extends SubjectManager {
 
-		private @Getter ReplaySubject<StylesheetProvider2> stylesheetConfig;
+		private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
 
 
 		public SceneBuilderSubjects() {

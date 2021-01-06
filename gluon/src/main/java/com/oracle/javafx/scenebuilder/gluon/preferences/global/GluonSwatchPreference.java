@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
 
 import javafx.scene.Node;
@@ -70,7 +69,7 @@ public class GluonSwatchPreference extends EnumPreference<GluonSwatch> implement
 	/**
      * Gluon Swatch
      */
-    public enum GluonSwatch implements StylesheetProvider {
+    public enum GluonSwatch {
         BLUE,
         CYAN,
         DEEP_ORANGE,
@@ -101,7 +100,6 @@ public class GluonSwatchPreference extends EnumPreference<GluonSwatch> implement
             return I18N.getString(lowerCaseSwatch);
         }
 
-        @Override
         public String getStylesheetURL() {
             return GlistenStyleClasses.impl_loadResource("swatch_" + name().toLowerCase(Locale.ROOT) + ".gls");
         }

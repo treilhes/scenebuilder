@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider2;
+import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import lombok.Getter;
@@ -92,7 +92,7 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
 		sceneBuilderManager.stylesheetConfig().onNext(getActionConfig());
 	}
 
-	public static class ApplyToolCssConfig implements StylesheetProvider2 {
+	public static class ApplyToolCssConfig implements StylesheetProvider {
 		private @Getter @Setter String userAgentStylesheet;
 		private @Getter List<String> stylesheets = new ArrayList<>();
 	}

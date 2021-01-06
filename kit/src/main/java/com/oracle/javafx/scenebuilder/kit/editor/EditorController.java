@@ -54,6 +54,7 @@ import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Library;
@@ -113,7 +114,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob.SpanAction;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.AbstractWrapInJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.UnwrapJob;
-import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
@@ -222,7 +222,7 @@ public class EditorController implements Editor {
     private final Selection selection;
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
-    private final ErrorReportImpl errorReport = new ErrorReportImpl();
+    private final ErrorReport errorReport;
     private final DragController dragController;
     private final InlineEditController inlineEditController;// = new InlineEditController(this);
     private final ContextMenuController contextMenuController;// = new ContextMenuController(this);
@@ -297,6 +297,7 @@ public class EditorController implements Editor {
     	    @Autowired Dialog dialog,
     	    @Autowired MessageLogger messageLogger,
     	    @Autowired Selection selection,
+    	    @Autowired ErrorReport errorReport,
     	    @Lazy @Autowired DragController dragController,
     	    @Lazy @Autowired DocumentManager documentManager,
     	    @Lazy @Autowired JobManager jobManager,
@@ -315,6 +316,7 @@ public class EditorController implements Editor {
     	this.messageLogger = messageLogger;
     	this.selection = selection;
     	this.documentManager = documentManager;
+    	this.errorReport = errorReport;
     	//this.sceneStyleSheetsPreference = sceneStyleSheets;
     	//this.themePreference = theme;
     	this.rootContainerHeightPreference = rootContainerHeightPreference;
@@ -916,7 +918,7 @@ public class EditorController implements Editor {
      * @return  the error report associated to this editor.
      */
     @Override
-    public ErrorReportImpl getErrorReport() {
+    public ErrorReport getErrorReport() {
         return errorReport;
     }
 
@@ -2431,13 +2433,12 @@ public class EditorController implements Editor {
         } else {
             newFxomDocument = null;
         }
-        jobManager.clear();
-        selection.clear();
-        messageLogger.clear();
-        errorReport.setFxomDocument(newFxomDocument);
-        fxomDocumentProperty.setValue(newFxomDocument);
 
         documentManager.fxomDocument().onNext(newFxomDocument);
+        
+        fxomDocumentProperty.setValue(newFxomDocument);
+
+        
         
         updateFileWatcher(newFxomDocument);
 
@@ -2520,10 +2521,5 @@ public class EditorController implements Editor {
     public Stage getOwnerWindow() {
         return ownerWindow;
     }
-
-    public EditorController getMe() {
-    	return this;
-    }
-
 
 }

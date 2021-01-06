@@ -32,7 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.theme;
 
-@FunctionalInterface
+import java.util.List;
+
 public interface StylesheetProvider {
-    String getStylesheetURL();
+    String getUserAgentStylesheet();
+    List<String> getStylesheets();
 }

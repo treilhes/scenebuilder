@@ -123,7 +123,6 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <Menu fx:id="zoomMenu" mnemonicParsing="true" text="%menu.title.zoom" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="showSampleControllerMenuItem" mnemonicParsing="true" text="%menu.title.show.sample.controller.skeleton" />
           </items>
         </Menu>
         <Menu fx:id="insertMenu" mnemonicParsing="true" text="%menu.title.insert">

@@ -86,7 +86,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPrefere
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
@@ -110,9 +109,10 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelC
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
-import com.oracle.javafx.scenebuilder.kit.skeleton.SkeletonWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
+import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
+import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonWindowController;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -169,8 +169,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         SET_RESOURCE,
         REMOVE_RESOURCE,
         REVEAL_RESOURCE,
-        HELP,
-        SHOW_SAMPLE_CONTROLLER
+        HELP
     }
 
     public enum DocumentEditAction {
@@ -257,6 +256,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final Dialog dialog;
     private final SceneBuilderManager sceneBuilderManager;
     private boolean dirty;
+    private final ApplicationContext context;
 
 
     /*
@@ -328,6 +328,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         super(sceneBuilderManager, DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
                 I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         //DocumentScope.setCurrentScope(this);
+        this.context = context;
         this.sceneBuilderManager = sceneBuilderManager;
         this.editorController = editorController;
         this.recentItemsPreference = recentItemsPreference;
@@ -664,10 +665,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 result = canPerformSelectNone();
                 break;
 
-            case SHOW_SAMPLE_CONTROLLER:
-                result = editorController.getFxomDocument() != null;
-                break;
-
             case TOGGLE_LIBRARY_PANEL:
             case TOGGLE_DOCUMENT_PANEL:
             case TOGGLE_CSS_PANEL:
@@ -928,16 +925,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case HELP:
                 performHelp();
-                break;
-
-            case SHOW_SAMPLE_CONTROLLER:
-                if (skeletonWindowController == null) {
-                    skeletonWindowController = new SkeletonWindowController(
-                            sceneBuilderManager, editorController,
-                            Utils.makeTitle(editorController.getFxomDocument()), getStage());
-                    //skeletonWindowController.setToolStylesheet(getToolStylesheet());
-                }
-                skeletonWindowController.openWindow();
                 break;
 
             default:
@@ -1688,6 +1675,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
         if (result.equals(ActionStatus.DONE)) {
             documentManager.dirty().onNext(false);
+            documentManager.saved().onNext(true);
         }
 
         return result;
@@ -1874,10 +1862,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
                     // Now performs a regular save action
                     result = performSaveAction();
-                    if (result.equals(ActionStatus.DONE)) {
-                        documentManager.dirty().onNext(false);
-                    }
-
+                    
                     // Keep track of the user choice for next time
                     fileSystem.updateNextInitialDirectory(fxmlFile);
 

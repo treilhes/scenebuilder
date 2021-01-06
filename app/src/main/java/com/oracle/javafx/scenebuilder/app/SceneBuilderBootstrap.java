@@ -66,6 +66,7 @@ import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
+import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
 import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
@@ -93,6 +94,7 @@ import javafx.stage.Stage;
 		PreferencesController.class,
 		BuiltinLibrary.class,
 		Selection.class,
+		ErrorReportImpl.class,
 		ComponentClassMetadatas.class,
 		Metadata.class,
 		MenuBarController.class,
@@ -112,6 +114,7 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.kit.preferences",
 			"com.oracle.javafx.scenebuilder.kit.library.user",
 			"com.oracle.javafx.scenebuilder.kit.editor.messagelog",
+			"com.oracle.javafx.scenebuilder.kit.skeleton",
 			"com.oracle.javafx.scenebuilder.api.subjects",
 			"com.oracle.javafx.scenebuilder.app",
 			"com.oracle.javafx.scenebuilder.ext",
@@ -123,6 +126,8 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.document",
 			"com.oracle.javafx.scenebuilder.editors",
 			"com.oracle.javafx.scenebuilder.jobs",
+			"com.oracle.javafx.scenebuilder.sourcegen",
+			"com.oracle.javafx.scenebuilder.sourceview",
 			"com.oracle.javafx.scenebuilder.app.actions"
 			})
 public class SceneBuilderBootstrap extends JavafxApplication {
