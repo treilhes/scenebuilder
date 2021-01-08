@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.reposi
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenRepositorySystem;
@@ -57,7 +56,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 public class RepositoryDialogController extends AbstractFxmlWindowController {
 
@@ -116,13 +114,12 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     private final MavenRepositoriesPreferences repositoryPreferences;
 
 
-    public RepositoryDialogController(
-            SceneBuilderManager sceneBuilderManager,
+    protected RepositoryDialogController(
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(sceneBuilderManager, LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.owner = owner;
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;
@@ -212,7 +209,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         cancel();
     }
 

@@ -56,6 +56,7 @@ import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -180,6 +181,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
 	private final FileSystem fileSystem;
     private final SceneBuilderManager sceneBuilderManager;
     private final Dialog dialog;
+    private final ApplicationContext context;
 
     /*
      * Public
@@ -192,6 +194,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public LibraryPanelController(
+            @Autowired ApplicationContext context,
     		@Autowired Editor editor,
     		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired FileSystem fileSystem,
@@ -209,6 +212,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
     		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
     		) { //, UserLibrary library) {
         super(sceneBuilderManager, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editor); //NOI18N
+        this.context = context;
         this.sceneBuilderManager = sceneBuilderManager;
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.dialog = dialog;
@@ -876,8 +880,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                         stage.toFront();
                     }
 
-                    final ImportWindowController iwc
-                            = new ImportWindowController(sceneBuilderManager, dialog, this, jarFiles, mavenPreferences, (Stage) window);
+                    final ImportWindowController iwc = context.getBean(ImportWindowController.class, dialog, this, jarFiles, mavenPreferences, (Stage) window);
                     //iwc.setToolStylesheet(getEditorController().getToolStylesheet());
                     // See comment in OnDragDropped handle set in method startListeningToDrop.
                     ButtonID userChoice = iwc.showAndWait();
@@ -904,7 +907,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                     stage.toFront();
                 }
 
-                final ImportWindowController iwc = new ImportWindowController(sceneBuilderManager, dialog, this, Arrays.asList(folder), mavenPreferences, (Stage) window);
+                final ImportWindowController iwc = context.getBean(ImportWindowController.class, dialog, this, Arrays.asList(folder), mavenPreferences, (Stage) window);
                 //iwc.setToolStylesheet(getEditorController().getToolStylesheet());
                 // See comment in OnDragDropped handle set in method startListeningToDrop.
                 ButtonID userChoice = iwc.showAndWait();

@@ -47,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.Pr
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -63,7 +62,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * Preferences window controller.
@@ -91,11 +89,11 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     private List<UserPreference<?>> globalPreferences;
     private List<UserPreference<?>> documentPreferences;
 
-    public PreferencesWindowController(@Autowired SceneBuilderManager sceneBuilderManager,
+    public PreferencesWindowController(
             @Autowired DocumentWindowController documentWindowController,
             @Autowired List<ManagedGlobalPreference> globalPreferences,
             @Autowired List<ManagedDocumentPreference> documentPreferences) {
-        super(sceneBuilderManager, PreferencesWindowController.class.getResource("Preferences.fxml"), // NOI18N
+        super(PreferencesWindowController.class.getResource("Preferences.fxml"), // NOI18N
                 I18N.getBundle(), documentWindowController.getStage());
         this.ownerWindow = documentWindowController.getStage();
 
@@ -163,7 +161,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         super.closeWindow();
     }
 

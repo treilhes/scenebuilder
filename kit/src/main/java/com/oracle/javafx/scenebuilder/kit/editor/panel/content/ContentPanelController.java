@@ -215,9 +215,14 @@ public class ContentPanelController extends AbstractFxmlPanelController
         super(sceneBuilderManager, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
         this.context = context;
         this.editorController = editorController;
+        
+        //TODO try to use getBean without parameters
         this.editModeController = context.getBean(EditModeController.class, context, this);
+        //TODO try to use getBean without parameters
         this.pickModeController = context.getBean(PickModeController.class, this);
+        //TODO try to use getBean without parameters
         this.workspaceController = context.getBean(WorkspaceController.class, editorController, documentManager);
+        
         this.hudWindowController = hudWindowController;
 //        this.editModeController = editModeController;
 //        this.pickModeController = pickModeController;

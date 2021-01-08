@@ -53,9 +53,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.library.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.BuiltinSectionComparator;
@@ -79,6 +84,8 @@ import javafx.collections.ObservableList;
  *
  *
  */
+@Component//("userLibrary")
+@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
     public enum State { READY, WATCHING }
@@ -121,17 +128,15 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
     /*
      * Public
      */
-    // Constructor for test only
-    public UserLibrary(File path) {
-        this(path, null, null, null);
-    }
-
-    public UserLibrary(File path, MavenArtifactsPreferences preferences, UILogger uiLogger, BuiltinLibrary builtinLibrary) {
-        this.path = path;
-        this.uiLogger = uiLogger;
+    protected UserLibrary(
+            @Autowired FileSystem fileSystem,
+            @Autowired MavenArtifactsPreferences mavenPreferences,
+            @Autowired UILogger logger,
+            @Autowired BuiltinLibrary builtinLibrary) {
+        this.path = fileSystem.getUserLibraryFolder();
+        this.uiLogger = logger;
         this.builtinLibrary = builtinLibrary;
-        this.preferences = preferences;
-
+        this.preferences = mavenPreferences;
     }
 
     @Override
@@ -518,21 +523,4 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
                 break;
         }
     }
-    /*
-     * Debug
-     */
-
-    public static void main(String[] args) throws Exception {
-        final File path = new File("/Users/elp/Desktop/MyLib"); //NOI18N
-        final UserLibrary lib = new UserLibrary(path);
-        lib.startWatching();
-        System.out.println("Starting to watch for 20 s"); //NOI18N
-        Thread.sleep(20 * 1000);
-        System.out.println("Stopping to watch for 20 s"); //NOI18N
-        lib.stopWatching();
-        Thread.sleep(20 * 1000);
-        System.out.println("Exiting"); //NOI18N
-    }
-
-
 }

@@ -36,16 +36,21 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
 
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 import lombok.Getter;
 
 public interface SceneBuilderManager {
-	Subject<StylesheetProvider> stylesheetConfig();
+    Subject<Boolean> closed();
+    Subject<Document> documentOpened();
+    Subject<Document> documentClosed();
+    Subject<StylesheetProvider> stylesheetConfig();
 
 	@Component
 	@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
@@ -66,15 +71,34 @@ public interface SceneBuilderManager {
 			return subjects.getStylesheetConfig();
 		}
 
+		@Override
+        public Subject<Boolean> closed() {
+            return subjects.getClosed();
+        }
+		
+		@Override
+        public Subject<Document> documentOpened() {
+            return subjects.getDocumentOpened();
+        }
+		
+		@Override
+        public Subject<Document> documentClosed() {
+            return subjects.getDocumentClosed();
+        }
 	}
 
 	public class SceneBuilderSubjects extends SubjectManager {
 
 		private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
-
+		private @Getter PublishSubject<Boolean> closed;
+		private @Getter PublishSubject<Document> documentOpened;
+		private @Getter PublishSubject<Document> documentClosed;
 
 		public SceneBuilderSubjects() {
+		    closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create());
 		    stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
+		    documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create());
+		    documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create());
 		}
 
 	}

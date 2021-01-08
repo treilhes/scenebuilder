@@ -295,6 +295,13 @@ public class SceneBuilderBeanFactory {
         private static Map<UUID, Map<String, Object>> scopes = new ConcurrentHashMap<>();
 
         /**
+         * Gets the current scope.
+         *
+         */
+        public static synchronized Document getCurrentScope() {
+            return (Document)scopes.get(currentScope).get(SCOPE_OBJECT_NAME);
+        }
+        /**
          * Sets the current scope.
          *
          * @param scopedDocument the new current scope

@@ -64,6 +64,6 @@
     <Accordion fx:id="libAccordion" prefHeight="-1.0" prefWidth="-1.0" />
   </children>
   <stylesheets>
-    <URL value="@../../../css/ThemeDefault.css" />
+    <URL value="@../../../../sb/css/ThemeDefault.css" />
   </stylesheets>
 </StackPane>

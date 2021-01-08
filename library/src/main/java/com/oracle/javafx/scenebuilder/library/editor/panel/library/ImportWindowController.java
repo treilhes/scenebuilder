@@ -49,9 +49,13 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
@@ -81,12 +85,14 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class ImportWindowController extends AbstractModalDialog {
 
     public enum PrefSize {
@@ -151,19 +157,17 @@ public class ImportWindowController extends AbstractModalDialog {
 
     @FXML
     ToggleButton checkAllUncheckAllToggle;
-    private final SceneBuilderManager sceneBuilderManager;
     
     private final Dialog dialog;
 
 
-    public ImportWindowController(SceneBuilderManager sceneBuilderManager, Dialog dialog, LibraryPanelController lpc,  List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
-        this(sceneBuilderManager, dialog, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
+    protected ImportWindowController(Dialog dialog, LibraryPanelController lpc,  List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
+        this(dialog, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
     }
 
-    public ImportWindowController(SceneBuilderManager sceneBuilderManager, Dialog dialog, LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
+    protected ImportWindowController(Dialog dialog, LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
             boolean copyFilesToUserLibraryDir, List<String> artifactsFilter) {
-        super(sceneBuilderManager, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.sceneBuilderManager = sceneBuilderManager;
+        super(ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         libPanelController = lpc;
         importFiles = new ArrayList<>(files);
         this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
@@ -285,7 +289,7 @@ public class ImportWindowController extends AbstractModalDialog {
      * AbstractFxmlWindowController
      */
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         cancelButtonPressed(null);
     }
 

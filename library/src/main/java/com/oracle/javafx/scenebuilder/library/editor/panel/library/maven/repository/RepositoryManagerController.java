@@ -34,10 +34,11 @@ package com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.reposi
 
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationContext;
+
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.preset.MavenPresets;
@@ -52,7 +53,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * Controller for the JAR/FXML Library dialog.
@@ -70,16 +70,18 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final MavenSetting mavenSetting;
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationContext context;
 
-    public RepositoryManagerController(
-            SceneBuilderManager sceneBuilderManager,
+    //private final SceneBuilderManager sceneBuilderManager;
+
+    protected RepositoryManagerController(
+            ApplicationContext context,
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(sceneBuilderManager, LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.sceneBuilderManager = sceneBuilderManager;
+        super(LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
+        this.context = context;
         this.owner = owner;
         this.editorController = editorController;
         this.repositoryPreferences = repositoryPreferences;
@@ -100,7 +102,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         close();
     }
 
@@ -147,7 +149,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     }
 
     private void repositoryDialog(Repository repository) {
-        RepositoryDialogController repositoryDialogController = new RepositoryDialogController(sceneBuilderManager,
+        RepositoryDialogController repositoryDialogController = context.getBean(RepositoryDialogController.class,
                 editorController, mavenSetting, repositoryPreferences, getStage());
         repositoryDialogController.openWindow();
         repositoryDialogController.setRepository(repository);

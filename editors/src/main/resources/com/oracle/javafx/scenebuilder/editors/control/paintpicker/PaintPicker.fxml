@@ -38,7 +38,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 
-<VBox fx:id="root_vbox" alignment="CENTER" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.PaintPickerController">
+<VBox fx:id="root_vbox" alignment="CENTER" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPickerController">
   <children>
     <HBox>
       <children>

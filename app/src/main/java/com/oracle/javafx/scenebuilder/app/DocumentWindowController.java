@@ -65,7 +65,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
@@ -96,6 +95,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
+import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
@@ -103,16 +103,15 @@ import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
+import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
-import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonWindowController;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -134,7 +133,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -219,9 +217,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     // - PreviewWindowController
     // - SkeletonWindowController
     // - JarAnalysisReportController
-    private final PreviewWindowController previewWindowController;
-    private SkeletonWindowController skeletonWindowController = null;
-    private JarAnalysisReportController jarAnalysisReportController = null;
+    //private final PreviewWindowController previewWindowController;
+	//private SkeletonWindowController skeletonWindowController = null;
+	//private JarAnalysisReportController jarAnalysisReportController = null;
 
     @FXML private StackPane contentPanelHost;
     @FXML private StackPane messageBarHost;
@@ -254,9 +252,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final List<InitWithDocument> initializations;
 	private final List<DisposeWithDocument> finalizations;
 	private final Dialog dialog;
-    private final SceneBuilderManager sceneBuilderManager;
     private boolean dirty;
     private final ApplicationContext context;
+    private final UserLibrary library;
 
 
     /*
@@ -272,7 +270,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Autowired WildcardImportsPreference wildcardImportsPreference,
 			@Autowired FileSystem fileSystem,
 			@Autowired Dialog dialog,
-			@Autowired SceneBuilderManager sceneBuilderManager,
+			@Autowired UserLibrary library,
 			//@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
 			@Lazy @Autowired PathPreference pathPreference,
 
@@ -325,17 +323,16 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired List<InitWithDocument> initializations,
 			@Lazy @Autowired List<DisposeWithDocument> finalizations
 			) {
-        super(sceneBuilderManager, DocumentWindowController.class.getResource("DocumentWindow.fxml"), //NOI18N
-                I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
+        super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         //DocumentScope.setCurrentScope(this);
         this.context = context;
-        this.sceneBuilderManager = sceneBuilderManager;
         this.editorController = editorController;
         this.recentItemsPreference = recentItemsPreference;
         //this.toolThemePreference = toolThemePreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
         this.menuBarController = menuBarController;
         this.fileSystem = fileSystem;
+        this.library = library;
         this.dialog = dialog;
         this.contentPanelController = contentPanelController;
         this.documentManager = documentManager;
@@ -343,7 +340,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //this.hierarchyPanelController = hierarchyPanelController;
         //this.infoPanelController = infoPanelController;
         this.documentPanelController = documentPanelController;
-        this.previewWindowController = previewWindowController;
+        //this.previewWindowController = previewWindowController;
 
         this.inspectorPanelController = inspectorPanelController;
         this.cssPanelController = cssPanelController;
@@ -378,7 +375,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.documentVisiblePreference=documentVisiblePreference;
         this.libraryVisiblePreference=libraryVisiblePreference;
 
-        this.jarAnalysisReportController = jarAnalysisReportController;
+        //this.jarAnalysisReportController = jarAnalysisReportController;
 
         this.initializations = initializations;
         this.finalizations = finalizations;
@@ -557,9 +554,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //        return infoPanelController;
 //    }
 
-    public PreviewWindowController getPreviewWindowController() {
-        return previewWindowController;
-    }
+//    public PreviewWindowController getPreviewWindowController() {
+//        return previewWindowController;
+//    }
 
 //    public SceneStyleSheetMenuController getSceneStyleSheetMenuController() {
 //        return sceneStyleSheetMenuController;
@@ -1189,9 +1186,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
        
         libraryPanelController.getLibraryLabel().bind(Bindings.createStringBinding(() -> {
 
-            return MainController.getSingleton().getUserLibrary().isExploring() ? I18N.getString("library.exploring") : I18N.getString("library");
+            return library.isExploring() ? I18N.getString("library.exploring") : I18N.getString("library");
 
-        }, MainController.getSingleton().getUserLibrary().exploringProperty()));
+        }, library.exploringProperty()));
     }
 
     @Override
@@ -1267,7 +1264,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         if (performCloseAction() == ActionStatus.DONE) {
             DocumentScope.removeScope(this);
         }
@@ -1278,27 +1275,27 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         DocumentScope.setCurrentScope(this);
     }
 
-    public boolean isFrontDocumentWindow() {
-        return getStage().isFocused()
-                || (previewWindowController != null && previewWindowController.getStage().isFocused())
-                || (skeletonWindowController != null && skeletonWindowController.getStage().isFocused())
-                || (jarAnalysisReportController != null && jarAnalysisReportController.getStage().isFocused());
-    }
-
-    public void performCloseFrontDocumentWindow() {
-        if (getStage().isFocused()) {
-            performCloseAction();
-        } else if (previewWindowController != null
-                && previewWindowController.getStage().isFocused()) {
-            previewWindowController.closeWindow();
-        } else if (skeletonWindowController != null
-                && skeletonWindowController.getStage().isFocused()) {
-            skeletonWindowController.closeWindow();
-        } else if (jarAnalysisReportController != null
-                && jarAnalysisReportController.getStage().isFocused()) {
-            jarAnalysisReportController.closeWindow();
-        }
-    }
+//    public boolean isFrontDocumentWindow() {
+//        return getStage().isFocused()
+//                || (previewWindowController != null && previewWindowController.getStage().isFocused())
+//                || (skeletonWindowController != null && skeletonWindowController.getStage().isFocused())
+//                || (jarAnalysisReportController != null && jarAnalysisReportController.getStage().isFocused());
+//    }
+//
+//    public void performCloseFrontDocumentWindow() {
+//        if (getStage().isFocused()) {
+//            performCloseAction();
+//        } else if (previewWindowController != null
+//                && previewWindowController.getStage().isFocused()) {
+//            previewWindowController.closeWindow();
+//        } else if (skeletonWindowController != null
+//                && skeletonWindowController.getStage().isFocused()) {
+//            skeletonWindowController.closeWindow();
+//        } else if (jarAnalysisReportController != null
+//                && jarAnalysisReportController.getStage().isFocused()) {
+//            jarAnalysisReportController.closeWindow();
+//        }
+//    }
 
 
 //    @Override

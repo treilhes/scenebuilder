@@ -47,8 +47,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Library;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
@@ -64,7 +62,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -86,15 +83,11 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     private boolean dirty = false;
 
     public JarAnalysisReportController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired Library library,
-            @Autowired DocumentManager documentManager,
             @Autowired Document document) {
-        super(sceneBuilderManager, JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
+        super(JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
                 I18N.getBundle(), document.getStage()); // NOI18N
         this.library = library;
-        
-        documentManager.closed().subscribe(c -> closeWindow());
     }
 
     @FXML
@@ -113,7 +106,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         getStage().close();
     }
 

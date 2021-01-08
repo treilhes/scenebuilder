@@ -59,7 +59,7 @@ public class DialogController implements Dialog {
     
     @Override
     public void showErrorAndWait(Window owner, String title, String message, String detail, Throwable cause) {
-        final ErrorDialog errorDialog = (ErrorDialog)context.getBean("errorDialog", sceneBuilderManager, owner);
+        final ErrorDialog errorDialog = (ErrorDialog)context.getBean("errorDialog", owner);
         errorDialog.setTitle(title);
         errorDialog.setMessage(message);
         errorDialog.setDetails(detail);
@@ -85,7 +85,7 @@ public class DialogController implements Dialog {
     }
     @Override
     public Alert customAlert(Window owner) {
-        return (Alert)context.getBean("alertDialog", sceneBuilderManager, owner);
+        return (Alert)context.getBean("alertDialog", owner);
     }
     
 	@Override

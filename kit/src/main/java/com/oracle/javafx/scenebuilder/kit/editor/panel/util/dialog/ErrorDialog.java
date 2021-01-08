@@ -40,7 +40,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.stage.Window;
@@ -54,13 +53,12 @@ import javafx.stage.Window;
 public class ErrorDialog extends AlertDialog {
 
     private final ApplicationContext context;
-    private final SceneBuilderManager sceneBuilderManager;
+    //private final SceneBuilderManager sceneBuilderManager;
 
     private String debugInfo;
 
-    protected ErrorDialog(ApplicationContext context, SceneBuilderManager sceneBuilderManager, Window owner) {
-        super(sceneBuilderManager, owner);
-        this.sceneBuilderManager = sceneBuilderManager;
+    protected ErrorDialog(ApplicationContext context, Window owner) {
+        super(owner);
         this.context = context;
     }
 
@@ -110,7 +108,7 @@ public class ErrorDialog extends AlertDialog {
     }
 
     private void showDetailsDialog() {
-        final TextViewDialog detailDialog = context.getBean(TextViewDialog.class, sceneBuilderManager, null);
+        final TextViewDialog detailDialog = context.getBean(TextViewDialog.class);
         detailDialog.setText(debugInfo);
         detailDialog.showAndWait();
     }

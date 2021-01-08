@@ -38,14 +38,9 @@ import java.util.logging.Logger;
 
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.target.LazyInitTargetSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Scope;
 
-import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -72,7 +67,6 @@ import com.oracle.javafx.scenebuilder.kit.preferences.PreferenceEditorFactoryImp
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -112,13 +106,13 @@ import javafx.stage.Stage;
 			"com.oracle.javafx.scenebuilder.api.preferences",
 			"com.oracle.javafx.scenebuilder.app.preferences",
 			"com.oracle.javafx.scenebuilder.kit.preferences",
-			"com.oracle.javafx.scenebuilder.kit.library.user",
 			"com.oracle.javafx.scenebuilder.kit.editor.messagelog",
 			"com.oracle.javafx.scenebuilder.kit.skeleton",
 			"com.oracle.javafx.scenebuilder.api.subjects",
 			"com.oracle.javafx.scenebuilder.app",
 			"com.oracle.javafx.scenebuilder.ext",
 			"com.oracle.javafx.scenebuilder.gluon",
+			"com.oracle.javafx.scenebuilder.library",
 			"com.oracle.javafx.scenebuilder.fs",
 			"com.oracle.javafx.scenebuilder.sb",
 			"com.oracle.javafx.scenebuilder.controls",
@@ -220,20 +214,6 @@ public class SceneBuilderBootstrap extends JavafxApplication {
 //            MenuBarController.getSystemMenuBarController();
 //        }
 		EffectPicker.getEffectClasses();
-	}
-
-	@Bean
-	@Qualifier("userlibrary")
-	@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-	public UserLibrary getUserLibrary(
-	        @Autowired MavenArtifactsPreferences mavenPreferences,
-	        @Autowired FileSystem fileSystem,
-	        @Autowired UILogger logger,
-			@Autowired BuiltinLibrary builtinLibrary) {
-		// Creates the user library
-		return new UserLibrary(fileSystem.getUserLibraryFolder(), mavenPreferences, logger, builtinLibrary);
-//                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
-//                () -> mavenPreferences.getArtifactsFilter());
 	}
 
 	@Bean

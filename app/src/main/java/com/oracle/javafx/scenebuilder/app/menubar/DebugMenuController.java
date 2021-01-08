@@ -48,7 +48,6 @@ import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
 import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
@@ -108,17 +107,17 @@ class DebugMenuController {
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM ENDS"); //NOI18N
         });
 
-        /*
-         * Tool theme
-         */
-        final MenuItem useDefaultThemeMenuItem = new MenuItem();
-        useDefaultThemeMenuItem.setText("Use Default Theme"); //NOI18N
-        useDefaultThemeMenuItem.setOnAction(t -> MainController.getSingleton().performControlAction(MainController.ApplicationControlAction.USE_DEFAULT_THEME,
-                DebugMenuController.this.documentWindowController));
-        final MenuItem useDarkThemeMenuItem = new MenuItem();
-        useDarkThemeMenuItem.setText("Use Dark Theme"); //NOI18N
-        useDarkThemeMenuItem.setOnAction(t -> MainController.getSingleton().performControlAction(MainController.ApplicationControlAction.USE_DARK_THEME,
-                DebugMenuController.this.documentWindowController));
+//        /*
+//         * Tool theme
+//         */
+//        final MenuItem useDefaultThemeMenuItem = new MenuItem();
+//        useDefaultThemeMenuItem.setText("Use Default Theme"); //NOI18N
+//        useDefaultThemeMenuItem.setOnAction(t -> MainController.getSingleton().performControlAction(MainController.ApplicationControlAction.USE_DEFAULT_THEME,
+//                DebugMenuController.this.documentWindowController));
+//        final MenuItem useDarkThemeMenuItem = new MenuItem();
+//        useDarkThemeMenuItem.setText("Use Dark Theme"); //NOI18N
+//        useDarkThemeMenuItem.setOnAction(t -> MainController.getSingleton().performControlAction(MainController.ApplicationControlAction.USE_DARK_THEME,
+//                DebugMenuController.this.documentWindowController));
 
         /*
          * Undo/redo stack
@@ -134,9 +133,9 @@ class DebugMenuController {
         menu.getItems().add(libraryFolderMenu);
         menu.getItems().add(new SeparatorMenuItem());
         menu.getItems().add(layoutMenuItem);
-        menu.getItems().add(new SeparatorMenuItem());
-        menu.getItems().add(useDefaultThemeMenuItem);
-        menu.getItems().add(useDarkThemeMenuItem);
+//        menu.getItems().add(new SeparatorMenuItem());
+//        menu.getItems().add(useDefaultThemeMenuItem);
+//        menu.getItems().add(useDarkThemeMenuItem);
         menu.getItems().add(new SeparatorMenuItem());
         menu.getItems().add(undoRedoStack);
     }

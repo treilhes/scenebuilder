@@ -47,4 +47,8 @@ public interface Library {
 
 	Comparator<String> getSectionComparator();
 
+//	SimpleBooleanProperty exploringProperty();
+//
+//    boolean isExploring();
+
 }

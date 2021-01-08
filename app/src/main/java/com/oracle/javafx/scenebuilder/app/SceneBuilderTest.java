@@ -46,11 +46,11 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyItem;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractGenericHandles;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.HierarchyItem;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -80,6 +80,7 @@ import javafx.scene.control.TreeItem;
  * - ...
  *
  */
+@Deprecated
 public class SceneBuilderTest {
 
     /**
@@ -389,24 +390,24 @@ public class SceneBuilderTest {
      */
     public static String getVersionString() {
         // FIXME give a implementation of SceneBuilderManager to this constructor
-        AboutWindowController awc = new AboutWindowController(null, new VersionSetting());
+        AboutWindowController awc = new AboutWindowController(new VersionSetting());
         return awc.getBuildInfo();
     }
 
 
-    /**
-     * Closes the preview window associated to a document window.
-     * Performs nothing if documentScene is not a scene associated to a
-     * document window or if preview window is not opened.
-     *
-     * @param documentScene a scene holding a document window
-     */
-    public static void closePreviewWindow(Scene documentScene) {
-        final DocumentWindowController dwc = lookupWindowController(documentScene);
-        if (dwc != null) {
-            dwc.getPreviewWindowController().closeWindow();
-        }
-    }
+//    /**
+//     * Closes the preview window associated to a document window.
+//     * Performs nothing if documentScene is not a scene associated to a
+//     * document window or if preview window is not opened.
+//     *
+//     * @param documentScene a scene holding a document window
+//     */
+//    public static void closePreviewWindow(Scene documentScene) {
+//        final DocumentWindowController dwc = lookupWindowController(documentScene);
+//        if (dwc != null) {
+//            dwc.getPreviewWindowController().closeWindow();
+//        }
+//    }
 
     /**
      * Starts the application in test mode.

@@ -44,12 +44,16 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.version.Version;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController;
@@ -76,12 +80,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 
 /**
  * Controller for the JAR Maven dialog.
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class SearchMavenDialogController extends AbstractFxmlWindowController {
 
     @FXML
@@ -113,9 +119,11 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     private DefaultArtifact artifact;
     private final Stage owner;
 
+    private final ApplicationContext context;
 
-    public SearchMavenDialogController(
-            SceneBuilderManager sceneBuilderManager,
+
+    protected SearchMavenDialogController(
+            ApplicationContext context,
     		Editor editorController,
     		Dialog dialog,
     		LibraryPanelController libraryPanelController,
@@ -123,7 +131,8 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(sceneBuilderManager, LibraryPanelController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(LibraryPanelController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        this.context = context;
         this.userLibrary = (UserLibrary) editorController.getLibrary();
         this.owner = owner;
         this.editorController = editorController;
@@ -172,7 +181,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
                         }
 
                         final ImportWindowController iwc
-                                = new ImportWindowController(sceneBuilderManager, dialog, libraryPanelController,files, mavenPreferences,
+                                = context.getBean(ImportWindowController.class, dialog, libraryPanelController,files, mavenPreferences,
                                     (Stage) installButton.getScene().getWindow(), false,
                                     mavenPreferences.getArtifactsFilter());
                         //iwc.setToolStylesheet(editorController.getToolStylesheet());
@@ -182,7 +191,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
                             updatePreferences(mavenArtifact);
                             logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
                         }
-                        this.onCloseRequest(null);
+                        this.onCloseRequest();
                     }
                 } else if (nv.equals(Worker.State.CANCELLED) || nv.equals(Worker.State.FAILED)) {
                     logInfoMessage("log.user.maven.failed", getArtifactCoordinates());
@@ -210,7 +219,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         cancel();
     }
 

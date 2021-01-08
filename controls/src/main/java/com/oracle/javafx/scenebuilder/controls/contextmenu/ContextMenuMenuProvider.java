@@ -38,7 +38,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 
@@ -61,13 +61,13 @@ public class ContextMenuMenuProvider implements MenuItemProvider {
 	}
 
 	@Override
-	public List<MenuAttachment> menuItems() {
+	public List<MenuItemAttachment> menuItems() {
 		return Arrays.asList(
 				new ContextMenuMenuAttachment()
 				);
 	}
 
-	public class ContextMenuMenuAttachment implements MenuAttachment {
+	public class ContextMenuMenuAttachment implements MenuItemAttachment {
 
 		private Menu menu = null;
 

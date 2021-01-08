@@ -36,7 +36,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root_vbox" alignment="TOP_LEFT" maxWidth="-1.0" prefWidth="-1.0" spacing="8.0" style="" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oracle.javafx.scenebuilder.kit.util.control.effectpicker.EffectPickerController">
+<VBox fx:id="root_vbox" alignment="TOP_LEFT" maxWidth="-1.0" prefWidth="-1.0" spacing="8.0" style="" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPickerController">
   <children>
     <HBox fx:id="effects_path_hbox" alignment="CENTER_LEFT" maxWidth="-1.0" minWidth="100.0" spacing="4.0" />
     <VBox fx:id="props_vbox" />

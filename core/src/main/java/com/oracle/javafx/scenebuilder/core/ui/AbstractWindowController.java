@@ -36,6 +36,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
@@ -79,8 +82,7 @@ public abstract class AbstractWindowController {
     /** The tool stylesheet config. */
     private StylesheetProvider toolStylesheetConfig;
 
-    /** The scene builder manager. */
-    private final SceneBuilderManager sceneBuilderManager;
+    private SceneBuilderManager sceneBuilderManager;
 
     /**
      * Instantiates a new abstract window controller.
@@ -88,8 +90,8 @@ public abstract class AbstractWindowController {
      * @param sceneBuilderManager the scene builder manager
      * @param owner the owner
      */
-    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, Stage owner) {
-        this(sceneBuilderManager, owner, true);
+    public AbstractWindowController(Stage owner) {
+        this(owner, true);
     }
 
     /**
@@ -99,15 +101,57 @@ public abstract class AbstractWindowController {
      * @param owner the owner
      * @param sizeToScene the size to scene
      */
-    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, Stage owner, boolean sizeToScene) {
+    public AbstractWindowController(Stage owner, boolean sizeToScene) {
         this.owner = owner;
         this.sizeToScene = sizeToScene;
-        this.sceneBuilderManager = sceneBuilderManager;
     }
+    
+    /**
+     * Injected by the DI framework
+     * @param documentManager the document manager
+     */
+    @Autowired
+    @Lazy
+    protected void setDocumentManager(DocumentManager documentManager) {
+        documentManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
+            onCloseRequest();
+            closeWindow();
+        });
+    }
+    
+    /**
+     * Injected by the DI framework
+     * @param sceneBuilderManager the scene builder manager
+     */
+    @Autowired
+    protected void setSceneBuilderManager(SceneBuilderManager sceneBuilderManager) {
+        this.sceneBuilderManager = sceneBuilderManager;
+        sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
+            onCloseRequest();
+            closeWindow();
+        });
+    }
+    
+
+    /**
+     * Set the root of this panel controller. This routine must be invoked by
+     * subclass's makePanel() routine.
+     *
+     * @param root the root panel (non null).
+     */
+    public void setRoot(Parent root) {
+        assert root != null;
+        this.root = root;
+        
+        sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+            toolStylesheetDidChange(s);
+        });
+    }
+
 
     /** The close request handler. */
     private final EventHandler<WindowEvent> closeRequestHandler = event -> {
-        onCloseRequest(event);
+        onCloseRequest();
         event.consume();
     };
 
@@ -210,7 +254,7 @@ public abstract class AbstractWindowController {
      *
      * @param event the event
      */
-    public abstract void onCloseRequest(WindowEvent event);
+    public abstract void onCloseRequest();
 
     /**
      * On focus.
@@ -238,23 +282,6 @@ public abstract class AbstractWindowController {
     /*
      * For subclasses
      */
-
-    /**
-     * Set the root of this panel controller. This routine must be invoked by
-     * subclass's makePanel() routine.
-     *
-     * @param root the root panel (non null).
-     */
-    public void setRoot(Parent root) {
-        assert root != null;
-        this.root = root;
-
-        if (sceneBuilderManager != null) {
-            sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
-                toolStylesheetDidChange(s);
-            });
-        }
-    }
 
     /**
      * Replaces old Stylesheet config by the tool style sheet assigned to this

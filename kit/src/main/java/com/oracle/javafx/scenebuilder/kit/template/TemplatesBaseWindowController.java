@@ -37,7 +37,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
@@ -46,7 +45,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowController {
 
@@ -65,15 +63,14 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     private Consumer<Template> onTemplateChosen;
 
     public TemplatesBaseWindowController(
-            SceneBuilderManager sceneBuilderManager,
             URL fxmlURL,
             ResourceBundle resources,
             Stage owner) {
-        super(sceneBuilderManager, fxmlURL, resources, owner);
+        super(fxmlURL, resources, owner);
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         getStage().hide();
     }
 

@@ -42,7 +42,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
@@ -59,7 +58,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
-import javafx.stage.WindowEvent;
 
 @Component
 @Lazy
@@ -80,12 +78,11 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private final WindowIconSetting windowIconSetting;
 
     private WelcomeDialogWindowController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired MainController sceneBuilderApp,
     		@Autowired WindowIconSetting windowIconSetting,
     		@Autowired RecentItemsPreference recentItemsPreference,
     		@Autowired RecentItemsSizePreference recentItemsSizePreference) {
-        super(sceneBuilderManager, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
+        super(WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
                 null); // We want it to be a top level window so we're setting the owner to null.
 
@@ -97,7 +94,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         getStage().hide();
     }
 

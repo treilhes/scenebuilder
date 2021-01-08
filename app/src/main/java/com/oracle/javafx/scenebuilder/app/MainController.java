@@ -54,6 +54,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
@@ -104,9 +105,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         NEW_FILE,
         NEW_TEMPLATE,
         OPEN_FILE,
-        CLOSE_FRONT_WINDOW,
-        USE_DEFAULT_THEME,
-        USE_DARK_THEME,
+        //CLOSE_FRONT_WINDOW,
+        //USE_DEFAULT_THEME,
+        //USE_DARK_THEME,
         SHOW_PREFERENCES,
         EXIT
     }
@@ -222,7 +223,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 break;
 
             case NEW_TEMPLATE:
-                final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class, sceneBuilderManager, source.getStage());
+                final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class);
                 templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
                 templatesWindowController.openWindow();
                 break;
@@ -231,9 +232,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 performOpenFile(source);
                 break;
 
-            case CLOSE_FRONT_WINDOW:
-                performCloseFrontWindow();
-                break;
+//            case CLOSE_FRONT_WINDOW:
+//                performCloseFrontWindow();
+//                break;
 
 //            case USE_DEFAULT_THEME:
 //                performUseToolTheme(ToolTheme.DEFAULT);
@@ -270,9 +271,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 result = true;
                 break;
 
-            case CLOSE_FRONT_WINDOW:
-                result = windowList.isEmpty() == false;
-                break;
+//            case CLOSE_FRONT_WINDOW:
+//                result = windowList.isEmpty() == false;
+//                break;
 
 //            case USE_DEFAULT_THEME:
 //                result = toolTheme != ToolTheme.DEFAULT;
@@ -398,16 +399,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
      * AppPlatform.AppNotificationHandler
      */
     @Override
+    //TODO there are some Gluon adherence here
     public void handleLaunch(List<String> files) {
         boolean showWelcomeDialog = files.isEmpty();
 
-        //MavenPreferences mavenPreferences = PreferencesController.getSingleton().getMavenPreferences();
-        // Creates the user library
-//        userLibrary = new UserLibrary(AppPlatform.getUserLibraryFolder(),
-//                () -> mavenPreferences.getArtifactsPathsWithDependencies(),
-//                () -> mavenPreferences.getArtifactsFilter());
-
         userLibrary = context.getBean(UserLibrary.class);
+        //userLibrary = (UserLibrary)context.getBean("userLibrary");
         userLibrary.setOnUpdatedJarReports(jarReports -> {
             boolean shouldShowImportGluonJarAlert = false;
             for (JarReport jarReport : jarReports) {
@@ -423,7 +420,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             if (shouldShowImportGluonJarAlert) {
                 Platform.runLater(() -> {
                     MainController sceneBuilderApp = MainController.getSingleton();
-                    DocumentWindowController dwc = sceneBuilderApp.getFrontDocumentWindow();
+                    Document dwc = sceneBuilderApp.getFrontDocumentWindow();
                     if (dwc == null) {
                         dwc = sceneBuilderApp.getDocumentWindowControllers().get(0);
                     }
@@ -632,22 +629,27 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         documentWindowController.openWindow();
     }
 
-    private void performCloseFrontWindow() {
-        for (DocumentWindowController dwc : windowList) {
-            if (dwc.isFrontDocumentWindow()) {
-                dwc.performCloseFrontDocumentWindow();
-                break;
-            }
-        }
-    }
+//    private void performCloseFrontWindow() {
+//        for (DocumentWindowController dwc : windowList) {
+//            if (dwc.isFrontDocumentWindow()) {
+//                dwc.performCloseFrontDocumentWindow();
+//                break;
+//            }
+//        }
+//    }
 
-    public DocumentWindowController getFrontDocumentWindow() {
-        for (DocumentWindowController dwc : windowList) {
-            if (dwc.isFrontDocumentWindow()) {
-                return dwc;
-            }
+    public Document getFrontDocumentWindow() {
+//        for (DocumentWindowController dwc : windowList) {
+//            if (dwc.isFrontDocumentWindow()) {
+//                return dwc;
+//            }
+//        }
+        try {
+            return DocumentScope.getCurrentScope();
+        } catch (Exception e) {
+            return null;
         }
-        return null;
+        
     }
 
     private void performOpenFiles(List<File> fxmlFiles,

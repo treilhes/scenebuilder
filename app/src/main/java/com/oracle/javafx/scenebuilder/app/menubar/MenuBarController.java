@@ -59,8 +59,11 @@ import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
@@ -71,6 +74,7 @@ import com.oracle.javafx.scenebuilder.app.MainController.ApplicationControlActio
 import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
@@ -81,6 +85,7 @@ import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.library.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.library.LibraryItemNameComparator;
+import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -141,8 +146,8 @@ public class MenuBarController implements InitializingBean {
     private MenuItem saveAsMenuItem;
     @FXML
     private MenuItem revertMenuItem;
-    @FXML
-    private MenuItem closeMenuItem;
+//    @FXML
+//    private MenuItem closeMenuItem;
     @FXML
     private MenuItem revealMenuItem;
     @FXML
@@ -157,8 +162,8 @@ public class MenuBarController implements InitializingBean {
     private MenuItem revealIncludedFileMenuItem;
     @FXML
     private MenuItem showPreferencesMenuItem;
-    @FXML
-    private MenuItem exitMenuItem;
+//    @FXML
+//    private MenuItem exitMenuItem;
 
     // Edit
     @FXML
@@ -341,23 +346,34 @@ public class MenuBarController implements InitializingBean {
     private final RecentItemsPreference recentItemsPreference;
     private final BuiltinLibrary builtinLibrary;
     private final DebugMenuController debugMenuController; // Initialized lazily
+    private final List<MenuProvider> menuProviders;
     private final List<MenuItemProvider> menuItemProviders;
 
+    private final PreviewWindowController previewWindowController;
+
+    private FXOMDocument fxomDocument;
 
     public MenuBarController(
             @Autowired ApplicationContext context,
             @Autowired BuiltinLibrary builtinLibrary,
             @Autowired RecentItemsPreference recentItemsPreference,
+            @Autowired DocumentManager documentManager,
+            @Autowired(required = false) List<MenuProvider> menuProviders,
             @Autowired(required = false) List<MenuItemProvider> menuItemProviders,
             @Autowired @Lazy DocumentWindowController documentWindowController,
-            @Autowired @Lazy DebugMenuController debugMenuController
+            @Autowired @Lazy DebugMenuController debugMenuController,
+            @Autowired @Lazy PreviewWindowController previewWindowController
             ) {
         this.context = context;
         this.builtinLibrary = builtinLibrary;
         this.recentItemsPreference = recentItemsPreference;
+        this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
         this.documentWindowController = documentWindowController;
         this.debugMenuController = debugMenuController;
+        this.previewWindowController = previewWindowController;
+        
+        documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
     }
 
     public void buildMenuMap(MenuBar menuBar) {
@@ -389,141 +405,271 @@ public class MenuBarController implements InitializingBean {
 
         MenuBar menuBar = getMenuBar();
         buildMenuMap(menuBar);
+        populateMenus();
+        populateMenuItems();
+    }
+    
+    private void populateMenus() {
+        if (menuProviders != null && !menuProviders.isEmpty()) {
 
+            List<MenuProvider> validProviders = menuProviders.stream()
+                   .filter(mp -> mp != null && mp.menus() != null && !mp.menus().isEmpty())
+                   .collect(Collectors.toList());
+
+           List<MenuAttachment> validAttachments = validProviders.stream()
+                   .flatMap(mp -> mp.menus().stream())
+                   .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenu() != null)
+                   .collect(Collectors.toList());
+
+           boolean hasInvalidProviders = menuProviders.size() > validProviders.size();
+           List<MenuProvider> invalidProviders = hasInvalidProviders
+                   ? menuProviders.stream().filter(m -> !validProviders.contains(m)).collect(Collectors.toList())
+                   : null;
+
+           boolean atLeastOneInserted = true;
+           while (!validAttachments.isEmpty() && atLeastOneInserted) {
+               atLeastOneInserted = false;
+
+               ListIterator<MenuAttachment> it = validAttachments.listIterator();
+               while (it.hasNext()) {
+                   boolean inserted = false;
+                   MenuAttachment ma = it.next();
+                   MenuItem targetCandidate = menuMap.get(ma.getTargetId());
+
+                   if (targetCandidate != null && !targetCandidate.getClass().isAssignableFrom(Menu.class)) {
+                       continue;
+                   }
+
+                   Menu target = (Menu)targetCandidate;
+                   
+                   if (ma.getMenu().getId() == null) {
+                       ma.getMenu().setId(ma.getClass().getSimpleName());
+                   }
+
+                   try {
+                    switch (ma.getPositionRequest()) {
+                           case AsFirstSibling: {
+                               menuBar.getMenus().add(0, ma.getMenu());
+                               inserted = true;
+                               break;
+                           }
+                           case AsLastSibling: {
+                               menuBar.getMenus().add(ma.getMenu());
+                               inserted = true;
+                               break;
+                           }
+                           case AsPreviousSibling: {
+                               if (target != null) {
+                                   int index = menuBar.getMenus().indexOf(target);
+                                   menuBar.getMenus().add(index, ma.getMenu());
+                                   inserted = true;
+                               }
+                               break;
+                           }
+                           case AsNextSibling: {
+                               if (target != null) {
+                                   int index = menuBar.getMenus().indexOf(target);
+                                   menuBar.getMenus().add(index + 1, ma.getMenu());
+                                   inserted = true;
+                               }
+                               break;
+                           }
+                           case AfterPreviousSeparator: {
+                               throw new RuntimeException("Invalid position request for menu");
+                           }
+                           case BeforeNextSeparator: {
+                               throw new RuntimeException("Invalid position request for menu");
+                           }
+                           case AsFirstChild: {
+                               if (target == null) {
+                                   menuBar.getMenus().add(0, ma.getMenu());
+                                   inserted = true;
+                               }
+                               break;
+                           }
+                           case AsLastChild: {
+                               if (target == null) {
+                                   menuBar.getMenus().add(ma.getMenu());
+                                   inserted = true;
+                               }
+                               break;
+                           }
+                           default:
+                               throw new RuntimeException("Invalid position request for menu");
+                       }
+                } catch (Exception e) {
+                    Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                            "Unable to add all the provided menu in the menuBar", e);
+                }
+
+                   if (inserted) {
+                       dynamicMenu.add(ma.getMenu());
+                       menuMap.put(ma.getMenu().getId(), ma.getMenu());
+                       it.remove();
+                       atLeastOneInserted = true;
+                   }
+               
+               }
+           }
+
+           if (invalidProviders != null) {
+               invalidProviders.forEach(mip -> {
+                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                           "Invalid MenuProviders submitted {0}", mip.getClass().getName());
+               });
+           }
+           if (validAttachments.size() > 0) {
+               Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                       "Unable to add all the provided menu in the menuBar");
+               validAttachments.forEach(ma -> {
+                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                           "Unable to attach {0} to id {1} using {2}", new String[] { ma.getClass().getName(),
+                                   ma.getTargetId(), ma.getPositionRequest().toString() });
+               });
+           }
+       }
+    }
+    
+    private void populateMenuItems() {
         if (menuItemProviders != null && !menuItemProviders.isEmpty()) {
 
-             List<MenuItemProvider> validProviders = menuItemProviders.stream()
-                    .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
-                    .collect(Collectors.toList());
+            List<MenuItemProvider> validProviders = menuItemProviders.stream()
+                   .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
+                   .collect(Collectors.toList());
 
-            List<MenuAttachment> validAttachments = validProviders.stream()
-                    .flatMap(mip -> mip.menuItems().stream())
-                    .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
-                    .collect(Collectors.toList());
+           List<MenuItemAttachment> validAttachments = validProviders.stream()
+                   .flatMap(mip -> mip.menuItems().stream())
+                   .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
+                   .collect(Collectors.toList());
 
-            boolean hasInvalidProviders = menuItemProviders.size() > validProviders.size();
-            List<MenuItemProvider> invalidProviders = hasInvalidProviders
-                    ? menuItemProviders.stream().filter(m -> !validProviders.contains(m)).collect(Collectors.toList())
-                    : null;
+           boolean hasInvalidProviders = menuItemProviders.size() > validProviders.size();
+           List<MenuItemProvider> invalidProviders = hasInvalidProviders
+                   ? menuItemProviders.stream().filter(m -> !validProviders.contains(m)).collect(Collectors.toList())
+                   : null;
 
-            boolean atLeastOneInserted = true;
-            while (!validAttachments.isEmpty() && atLeastOneInserted) {
-                atLeastOneInserted = false;
+           boolean atLeastOneInserted = true;
+           while (!validAttachments.isEmpty() && atLeastOneInserted) {
+               atLeastOneInserted = false;
 
-                ListIterator<MenuAttachment> it = validAttachments.listIterator();
-                while (it.hasNext()) {
-                    boolean inserted = false;
-                    MenuAttachment ma = it.next();
-                    MenuItem target = menuMap.get(ma.getTargetId());
+               ListIterator<MenuItemAttachment> it = validAttachments.listIterator();
+               while (it.hasNext()) {
+                   boolean inserted = false;
+                   MenuItemAttachment ma = it.next();
+                   MenuItem target = menuMap.get(ma.getTargetId());
 
-                    if (target != null) {
+                   if (target != null) {
 
-                        if (ma.getMenuItem().getId() == null) {
-                            ma.getMenuItem().setId(ma.getClass().getSimpleName());
-                        }
+                       if (ma.getMenuItem().getId() == null) {
+                           ma.getMenuItem().setId(ma.getClass().getSimpleName());
+                       }
 
+                       try {
                         switch (ma.getPositionRequest()) {
-                            case AsFirstSibling: {
-                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                                items.add(0, ma.getMenuItem());
-                                inserted = true;
-                                break;
-                            }
-                            case AsLastSibling: {
-                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                                items.add(ma.getMenuItem());
-                                inserted = true;
-                                break;
-                            }
-                            case AsPreviousSibling: {
-                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                                int index = items.indexOf(target);
-                                items.add(index, ma.getMenuItem());
-                                inserted = true;
-                                break;
-                            }
-                            case AsNextSibling: {
-                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                                int index = items.indexOf(target);
-                                items.add(index + 1, ma.getMenuItem());
-                                inserted = true;
-                                break;
-                            }
-                            case AfterPreviousSeparator: {
-                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                                int index = items.indexOf(target);
-                                int insertAt = 0;
-                                for (int i = index; i >= 0; i--) {
-                                    if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
-                                        insertAt = i + 1;
-                                        break;
-                                    }
-                                }
-                                items.add(insertAt, ma.getMenuItem());
-                                inserted = true;
-                                break;
-                            }
-                            case BeforeNextSeparator: {
-                                ObservableList<MenuItem> items = target.getParentMenu().getItems();
-                                int index = items.indexOf(target);
-                                int insertAt = items.size();
-                                for (int i = index; i < items.size(); i++) {
-                                    if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
-                                        insertAt = i;
-                                        break;
-                                    }
-                                }
-                                items.add(insertAt, ma.getMenuItem());
-                                inserted = true;
-                                break;
-                            }
-                        case AsFirstChild: {
-                            if (target instanceof Menu) {
-                                Menu m = (Menu)target;
-                                m.getItems().add(0, ma.getMenuItem());
-                                inserted = true;
-                            }
-                            break;
-                        }
-                        case AsLastChild: {
-                            if (target instanceof Menu) {
-                                Menu m = (Menu)target;
-                                m.getItems().add(ma.getMenuItem());
-                                inserted = true;
-                            }
-                            break;
-                        }
-                        default:
-                            break;
+                               case AsFirstSibling: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   items.add(0, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
+                               case AsLastSibling: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   items.add(ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
+                               case AsPreviousSibling: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   int index = items.indexOf(target);
+                                   items.add(index, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
+                               case AsNextSibling: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   int index = items.indexOf(target);
+                                   items.add(index + 1, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
+                               case AfterPreviousSeparator: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   int index = items.indexOf(target);
+                                   int insertAt = 0;
+                                   for (int i = index; i >= 0; i--) {
+                                       if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                                           insertAt = i + 1;
+                                           break;
+                                       }
+                                   }
+                                   items.add(insertAt, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
+                               case BeforeNextSeparator: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   int index = items.indexOf(target);
+                                   int insertAt = items.size();
+                                   for (int i = index; i < items.size(); i++) {
+                                       if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                                           insertAt = i;
+                                           break;
+                                       }
+                                   }
+                                   items.add(insertAt, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
+                               case AsFirstChild: {
+                                   if (target instanceof Menu) {
+                                       Menu m = (Menu)target;
+                                       m.getItems().add(0, ma.getMenuItem());
+                                       inserted = true;
+                                   }
+                                   break;
+                               }
+                               case AsLastChild: {
+                                   if (target instanceof Menu) {
+                                       Menu m = (Menu)target;
+                                       m.getItems().add(ma.getMenuItem());
+                                       inserted = true;
+                                   }
+                                   break;
+                               }
+                               default:
+                                   throw new RuntimeException("Invalid position request for menuItem");
 
-                        }
-
-                        if (inserted) {
-                            dynamicMenu.add(ma.getMenuItem());
-                            menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
-                            it.remove();
-                            atLeastOneInserted = true;
-                        }
+                           }
+                    } catch (Exception e) {
+                        Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                                "Unable to add the provided menuItem in the menuBar", e);
                     }
-                }
-            }
 
-            if (invalidProviders != null) {
-                invalidProviders.forEach(mip -> {
-                    Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                            "Invalid MenuItemProviders submitted {0}", mip.getClass().getName());
-                });
-            }
-            if (validAttachments.size() > 0) {
-                Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                        "Unable to add all the provided menu in the menuBar");
-                validAttachments.forEach(ma -> {
-                    Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                            "Unable to attach {0} to id {1} using {2}", new String[] { ma.getClass().getName(),
-                                    ma.getTargetId(), ma.getPositionRequest().toString() });
-                });
-            }
-        }
+                       if (inserted) {
+                           dynamicMenu.add(ma.getMenuItem());
+                           menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
+                           it.remove();
+                           atLeastOneInserted = true;
+                       }
+                   }
+               }
+           }
+
+           if (invalidProviders != null) {
+               invalidProviders.forEach(mip -> {
+                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                           "Invalid MenuItemProviders submitted {0}", mip.getClass().getName());
+               });
+           }
+           if (validAttachments.size() > 0) {
+               Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                       "Unable to add all the provided menuItem in the menuBar");
+               validAttachments.forEach(ma -> {
+                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
+                           "Unable to attach {0} to id {1} using {2}", new String[] { ma.getClass().getName(),
+                                   ma.getTargetId(), ma.getPositionRequest().toString() });
+               });
+           }
+       }
     }
 
     public MenuBar getMenuBar() {
@@ -578,7 +724,7 @@ public class MenuBarController implements InitializingBean {
         assert saveMenuItem != null;
         assert saveAsMenuItem != null;
         assert revertMenuItem != null;
-        assert closeMenuItem != null;
+        //assert closeMenuItem != null;
         assert revealMenuItem != null;
         assert importFxmlMenuItem != null;
         assert importMediaMenuItem != null;
@@ -586,7 +732,7 @@ public class MenuBarController implements InitializingBean {
         assert editIncludedFileMenuItem != null;
         assert revealIncludedFileMenuItem != null;
         assert showPreferencesMenuItem != null;
-        assert exitMenuItem != null;
+        //assert exitMenuItem != null;
 
         assert undoMenuItem != null;
         assert redoMenuItem != null;
@@ -692,7 +838,6 @@ public class MenuBarController implements InitializingBean {
                     menuBar.setUseSystemMenuBar(true);
                 }
             });
-            exitMenuItem.getParentMenu().getItems().remove(exitMenuItem);
         }
 
         /*
@@ -759,11 +904,8 @@ public class MenuBarController implements InitializingBean {
                 return title;
             }
         });
-        closeMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.CLOSE_FRONT_WINDOW));
-        closeMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.W, modifier));
         showPreferencesMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.SHOW_PREFERENCES));
         showPreferencesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.COMMA, modifier));
-        exitMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.EXIT));
 
         /*
          * Edit menu
@@ -1810,10 +1952,8 @@ public class MenuBarController implements InitializingBean {
     }
 
     private void updatePreviewWindowSize(Size size) {
-        if (documentWindowController != null
-                && documentWindowController.getPreviewWindowController() != null
-                && documentWindowController.getPreviewWindowController().getStage().isShowing()) {
-            documentWindowController.getPreviewWindowController().setSize(size);
+        if (previewWindowController.getStage().isShowing()) {
+            previewWindowController.setSize(size);
         }
     }
 
@@ -1827,35 +1967,33 @@ public class MenuBarController implements InitializingBean {
 
         @Override
         public boolean canPerform() {
-            boolean res = (documentWindowController != null)
-                    && (documentWindowController.getPreviewWindowController() != null)
-                    && documentWindowController.getPreviewWindowController().getStage().isShowing()
-                    && ! documentWindowController.getEditorController().getFxomDocument().is3D()
-                    && documentWindowController.getEditorController().getFxomDocument().isNode()
-                    && documentWindowController.getPreviewWindowController().sizeDoesFit(size);
+            boolean res = (fxomDocument != null)
+                    && previewWindowController.getStage().isShowing()
+                    && ! fxomDocument.is3D()
+                    && fxomDocument.isNode()
+                    && previewWindowController.sizeDoesFit(size);
             return res;
         }
 
         @Override
         public void perform() {
-            assert documentWindowController != null;
-            assert documentWindowController.getPreviewWindowController() != null;
-            documentWindowController.getPreviewWindowController().setSize(size);
+            assert previewWindowController != null;
+            previewWindowController.setSize(size);
         }
 
         @Override
         public boolean isSelected() {
             boolean res;
 
-            if (documentWindowController == null || documentWindowController.getPreviewWindowController() == null) {
+            if (previewWindowController == null) {
                 res = false;
             } else {
-                Size currentSize = documentWindowController.getPreviewWindowController().getSize();
+                Size currentSize = previewWindowController.getSize();
                 res = (size == currentSize)
-                        && documentWindowController.getPreviewWindowController().getStage().isShowing()
-                        && ! documentWindowController.getPreviewWindowController().userResizedPreviewWindow()
-                        && ! documentWindowController.getEditorController().getFxomDocument().is3D()
-                        && documentWindowController.getEditorController().getFxomDocument().isNode();
+                        && previewWindowController.getStage().isShowing()
+                        && ! previewWindowController.userResizedPreviewWindow()
+                        && ! fxomDocument.is3D()
+                        && fxomDocument.isNode();
             }
 
             return res;
@@ -1870,13 +2008,13 @@ public class MenuBarController implements InitializingBean {
             if (size == Size.SIZE_PREFERRED) {
                 String title = I18N.getString("menu.title.size.preferred");
 
-                if (documentWindowController.getPreviewWindowController() != null
-                        && documentWindowController.getPreviewWindowController().getStage().isShowing()
-                        && ! documentWindowController.getEditorController().getFxomDocument().is3D()
-                        && documentWindowController.getEditorController().getFxomDocument().isNode()) {
+                if (previewWindowController != null
+                        && previewWindowController.getStage().isShowing()
+                        && ! fxomDocument.is3D()
+                        && fxomDocument.isNode()) {
                         title = I18N.getString("menu.title.size.preferred.with.value",
-                                getStringFromDouble(documentWindowController.getPreviewWindowController().getRoot().prefWidth(-1)),
-                                getStringFromDouble(documentWindowController.getPreviewWindowController().getRoot().prefHeight(-1)));
+                                getStringFromDouble(previewWindowController.getRoot().prefWidth(-1)),
+                                getStringFromDouble(previewWindowController.getRoot().prefHeight(-1)));
                 }
 
                 return title;

@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
@@ -86,11 +86,11 @@ public class ThemeMenuProvider implements MenuItemProvider {
 	}
 
 	@Override
-	public List<MenuAttachment> menuItems() {
+	public List<MenuItemAttachment> menuItems() {
 		return Arrays.asList(new ThemeAttachment());
 	}
 
-	public class ThemeAttachment implements MenuAttachment {
+	public class ThemeAttachment implements MenuItemAttachment {
 
 		private final List<Class<? extends Theme>> themeClasses;
 

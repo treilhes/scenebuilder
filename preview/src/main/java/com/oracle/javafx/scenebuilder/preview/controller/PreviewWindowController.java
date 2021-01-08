@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +52,6 @@ import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -77,7 +77,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Modality;
-import javafx.stage.WindowEvent;
 
 /**
  * Controller for Window when calling "Show Preview in Window"
@@ -85,7 +84,7 @@ import javafx.stage.WindowEvent;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class PreviewWindowController extends AbstractWindowController {
+public class PreviewWindowController extends AbstractWindowController implements InitializingBean {
 
     private final Editor editorController;
     private Timer timer = null;
@@ -111,6 +110,7 @@ public class PreviewWindowController extends AbstractWindowController {
 	private StylesheetProvider stylesheetConfig;
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
+    private final DocumentManager documentManager;
 
     /**
      * The type of Camera used by the Preview panel.
@@ -121,42 +121,50 @@ public class PreviewWindowController extends AbstractWindowController {
     }
 
     public PreviewWindowController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired Editor editorController,
+//            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired DocumentManager documentManager,
             @Autowired Document document) {
-        super(sceneBuilderManager, document.getStage());
+        super(document.getStage());
         this.editorController = editorController;
+        this.documentManager = documentManager;
         
+    }
+    
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
         makeRoot();
-        
+
+        documentManager.dirty().subscribe(dirty -> isDirty |= dirty);
+
         documentManager.fxomDocument().subscribe(fd -> {
-           fxomDocument = fd;
+            fxomDocument = fd;
         });
-        
+
         documentManager.sceneGraphRevisionDidChange().subscribe(rev -> {
-            //requestUpdate(DELAYED);
+            // requestUpdate(DELAYED);
             requestUpdate(IMMEDIATE);
         });
-        
+
         documentManager.cssRevisionDidChange().subscribe(rev -> {
             requestUpdate(IMMEDIATE);
         });
 
         documentManager.stylesheetConfig().subscribe(s -> {
-        	stylesheetConfig = s;
-        	requestUpdate(DELAYED);
+            stylesheetConfig = s;
+            requestUpdate(DELAYED);
         });
 
         documentManager.i18nResourceConfig().subscribe(s -> {
             resourceConfig = s;
             requestUpdate(DELAYED);
         });
-        
-        documentManager.dirty().subscribe(dirty -> isDirty |= dirty);
-        documentManager.closed().subscribe(c -> closeWindow());
-        this.editorController.sampleDataEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
+
+        this.editorController.sampleDataEnabledProperty()
+                .addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
     }
+
 
 //    /*
 //     * AbstractWindowController
@@ -172,7 +180,7 @@ public class PreviewWindowController extends AbstractWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         if (timer != null) {
             timer.cancel();
             timer = null;

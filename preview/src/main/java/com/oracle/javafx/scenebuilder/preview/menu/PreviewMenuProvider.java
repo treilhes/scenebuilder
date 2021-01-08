@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -83,13 +83,13 @@ public class PreviewMenuProvider implements MenuItemProvider {
     }
 
     @Override
-    public List<MenuAttachment> menuItems() {
+    public List<MenuItemAttachment> menuItems() {
         return Arrays.asList(new LaunchPreviewWindowAttachment(), new LaunchPreviewDialogAttachment(),
-                MenuAttachment.separator(SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
+                MenuItemAttachment.separator(SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
                 new ChangePreviewSizeAttachment());
     }
 
-    public class LaunchPreviewWindowAttachment implements MenuAttachment {
+    public class LaunchPreviewWindowAttachment implements MenuItemAttachment {
 
         private MenuItem menu = null;
 
@@ -123,7 +123,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
         }
     }
 
-    public class LaunchPreviewDialogAttachment implements MenuAttachment {
+    public class LaunchPreviewDialogAttachment implements MenuItemAttachment {
 
         private MenuItem menu = null;
 
@@ -156,7 +156,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
         }
     }
 
-    public class ChangePreviewSizeAttachment implements MenuAttachment {
+    public class ChangePreviewSizeAttachment implements MenuItemAttachment {
 
         private Menu menu = null;
 

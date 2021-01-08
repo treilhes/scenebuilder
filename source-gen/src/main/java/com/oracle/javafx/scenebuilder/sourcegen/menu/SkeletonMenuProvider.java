@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -69,11 +69,11 @@ public class SkeletonMenuProvider implements MenuItemProvider {
     }
 
     @Override
-    public List<MenuAttachment> menuItems() {
+    public List<MenuItemAttachment> menuItems() {
         return Arrays.asList(new OpenSkeletonWindowAttachment());
     }
 
-    public class OpenSkeletonWindowAttachment implements MenuAttachment {
+    public class OpenSkeletonWindowAttachment implements MenuItemAttachment {
 
         private MenuItem menu = null;
 

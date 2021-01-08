@@ -40,7 +40,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menuBar">
       <menus>
@@ -75,10 +75,8 @@
                     <MenuItem fx:id="revealIncludedFileMenuItem" mnemonicParsing="true" text="%menu.title.reveal.included.default" />
                 </items>
             </Menu>
-            <MenuItem fx:id="closeMenuItem" mnemonicParsing="true" text="%menu.title.close" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="showPreferencesMenuItem" mnemonicParsing="false" text="%menu.title.preferences" />
-            <MenuItem fx:id="exitMenuItem" mnemonicParsing="true" text="%menu.title.quit" />
           </items>
         </Menu>
         <Menu fx:id="editMenu" mnemonicParsing="true" text="%menu.title.edit">

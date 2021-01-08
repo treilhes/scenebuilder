@@ -37,7 +37,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
@@ -53,7 +52,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -89,8 +87,8 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
      * Public
      */
 
-    public AbstractModalDialog(SceneBuilderManager sceneBuilderManager, URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
-        super(sceneBuilderManager, getContainerFxmlURL(), I18N.getBundle());
+    public AbstractModalDialog(URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
+        super(getContainerFxmlURL(), I18N.getBundle());
         this.owner = owner;
         this.contentFxmlURL = contentFxmlURL;
         this.contentResources = contentResources;
@@ -315,7 +313,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         // Closing the window is equivalent to clicking the Cancel button
         cancelButtonPressed(null);
     }

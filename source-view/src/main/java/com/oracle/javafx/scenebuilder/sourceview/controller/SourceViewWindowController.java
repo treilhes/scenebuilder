@@ -43,7 +43,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -55,7 +54,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -75,11 +73,10 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
     private final WildcardImportsPreference wildcardImportsPreference;
     
     public SourceViewWindowController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired DocumentManager documentManager,
             @Autowired Document document,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
-        super(sceneBuilderManager, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
+        super(SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N
         
         this.documentManager = documentManager;
@@ -106,7 +103,7 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         getStage().close();
     }
 

@@ -43,7 +43,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -56,7 +55,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -79,15 +77,12 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
     private final DocumentManager documentManager;
     
     public SkeletonWindowController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired DocumentManager documentManager,
             @Autowired Document document) {
-        super(sceneBuilderManager, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle(),
+        super(SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N
         
         this.documentManager = documentManager;
-        
-        documentManager.closed().subscribe(c -> closeWindow());
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {
@@ -110,7 +105,7 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         getStage().close();
     }
 

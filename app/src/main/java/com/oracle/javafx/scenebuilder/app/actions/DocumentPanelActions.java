@@ -41,9 +41,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.document.DocumentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.DisplayOptionPreference;
+import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
+import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 
 public class DocumentPanelActions {
 

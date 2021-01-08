@@ -50,7 +50,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
  *
  * @treatAsPrivate
  */
-@Component
+@Component//("builtinLibrary")
 @org.springframework.beans.factory.annotation.Qualifier("builtin")
 public class BuiltinLibrary extends AbstractLibrary implements InitializingBean {
 

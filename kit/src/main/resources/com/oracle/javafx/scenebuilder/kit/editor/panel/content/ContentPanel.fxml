@@ -82,6 +82,6 @@
     </StackPane>
   </content>
   <stylesheets>
-    <URL value="@../../../css/ThemeDefault.css" />
+    <URL value="@../../../../sb/css/ThemeDefault.css" />
   </stylesheets>
 </ScrollPane>

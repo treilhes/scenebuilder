@@ -92,7 +92,7 @@
       </GridPane>
    </children>
    <stylesheets>
-      <URL value="@../../../css/ThemeDefault.css" />
+      <URL value="@../../../../sb/css/ThemeDefault.css" />
       <URL value="@libraryDialog.css" />
    </stylesheets>
 </AnchorPane>

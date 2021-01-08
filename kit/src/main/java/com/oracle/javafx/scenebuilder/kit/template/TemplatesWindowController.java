@@ -33,31 +33,25 @@
 
 package com.oracle.javafx.scenebuilder.kit.template;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class TemplatesWindowController extends TemplatesBaseWindowController {
-    private final Window owner;
-
     public TemplatesWindowController(
-            SceneBuilderManager sceneBuilderManager,
-            Stage owner) {
-        super(sceneBuilderManager, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
-                I18N.getBundle(), owner);
-        this.owner = owner;
+            @Autowired Document document) {
+        super(TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
+                I18N.getBundle(), document.getStage());
     }
 
     @Override
@@ -68,7 +62,7 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         getStage().hide();
     }
 
@@ -80,14 +74,6 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
     protected void controllerDidCreateStage() {
         super.controllerDidCreateStage();
         getStage().setTitle(I18N.getString("template.dialog.title"));
-
-        if (this.owner == null) {
-            // Window will be application modal
-            getStage().initModality(Modality.APPLICATION_MODAL);
-        } else {
-            // Window will be window modal
-            getStage().initOwner(this.owner);
-            getStage().initModality(Modality.WINDOW_MODAL);
-        }
+        getStage().initModality(Modality.WINDOW_MODAL);
     }
 }

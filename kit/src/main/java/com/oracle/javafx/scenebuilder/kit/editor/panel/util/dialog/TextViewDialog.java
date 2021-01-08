@@ -39,7 +39,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 
@@ -48,7 +47,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
-import javafx.stage.Window;
 
 /**
  * A modal dialog which displays a piece of text and provides a Close button
@@ -67,8 +65,8 @@ public class TextViewDialog extends AbstractModalDialog {
      * Protected
      */
 
-    protected TextViewDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
-        super(sceneBuilderManager, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, owner); //NOI18N
+    protected TextViewDialog() {
+        super(TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null); //NOI18N
         setOKButtonVisible(false);
         setActionButtonVisible(true);
         setCancelButtonTitle(I18N.getString("label.close"));

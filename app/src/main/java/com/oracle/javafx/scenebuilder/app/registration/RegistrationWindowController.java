@@ -45,9 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.global.RegistrationOptInPreference;
@@ -60,7 +59,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -89,13 +87,12 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     private final RegistrationOptInPreference registrationOptInPreference;
 
     public RegistrationWindowController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired DocumentWindowController window,
+            @Autowired Document window,
             @Autowired Tracking tracking,
             @Autowired RegistrationHashPreference registrationHashPreference,
             @Autowired RegistrationEmailPreference registrationEmailPreference,
             @Autowired RegistrationOptInPreference registrationOptInPreference) {
-        super(sceneBuilderManager, RegistrationWindowController.class.getResource("Registration.fxml"), // NOI18N
+        super(RegistrationWindowController.class.getResource("Registration.fxml"), // NOI18N
                 I18N.getBundle(), window.getStage());
         this.owner = window.getStage();
         this.tracking = tracking;
@@ -105,10 +102,8 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         cancelUserRegistration();
-
-        event.consume();
     }
 
     @Override

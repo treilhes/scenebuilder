@@ -37,7 +37,6 @@ import java.net.URL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
@@ -61,8 +60,8 @@ public class AlertDialog extends AbstractModalDialog  implements Alert {
 
     private Runnable actionRunnable;
 
-    public AlertDialog(SceneBuilderManager sceneBuilderManager, Window owner) {
-        super(sceneBuilderManager, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner); //NOI18N
+    public AlertDialog(Window owner) {
+        super(AlertDialog.class.getResource("AlertDialog.fxml"), null, owner); //NOI18N
     }
 
     @Override

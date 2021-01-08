@@ -38,10 +38,10 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.app.MainController;
 import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -51,12 +51,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
-import javafx.stage.WindowEvent;
 
 /**
  *
  */
 @Component
+@Lazy
 public final class AboutWindowController extends AbstractFxmlWindowController {
 
     @FXML
@@ -74,11 +74,9 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     private final String LOG_FILE_NAME;
 
     public AboutWindowController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired VersionSetting versionSetting
             ) {
-        super(sceneBuilderManager, AboutWindowController.class.getResource("About.fxml"), //NOI18N
-                I18N.getBundle());
+        super(AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
         this.LOG_FILE_NAME = "scenebuilder-" + versionSetting.getSceneBuilderVersion() + ".log"; //NOI18N
 
         try (InputStream in = getClass().getResourceAsStream("about.properties")) { //NOI18N
@@ -105,7 +103,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onCloseRequest(WindowEvent event) {
+    public void onCloseRequest() {
         closeWindow();
     }
 
