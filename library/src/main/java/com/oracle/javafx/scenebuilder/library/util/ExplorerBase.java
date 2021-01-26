@@ -1,0 +1,155 @@
+/*
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.oracle.javafx.scenebuilder.library.util;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+
+abstract class ExplorerBase {
+
+    private final List<LibraryFilter> filters;
+    
+    public ExplorerBase(List<LibraryFilter> filters) {
+        this.filters = filters == null ? new ArrayList<>() : filters;
+    }
+    
+    static Object instantiateWithFXMLLoader(Class<?> klass, ClassLoader classLoader) throws IOException {
+        Object result;
+
+        final String fxmlText = JarExplorer.makeFxmlText(klass);
+        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); //NOI18N
+
+        final FXMLLoader fxmlLoader = new FXMLLoader();
+        try {
+            fxmlLoader.setClassLoader(classLoader);
+            result = fxmlLoader.load(new ByteArrayInputStream(fxmlBytes));
+        } catch(IOException x) {
+            throw x;
+        } catch(RuntimeException|Error x) {
+            throw new IOException(x);
+        }
+
+        return result;
+    }
+    
+    public static String makeFxmlText(Class<?> klass) {
+        final StringBuilder result = new StringBuilder();
+
+        /*
+         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
+         * 
+         * <?import a.b.C?>
+         * 
+         * <C/>
+         */
+
+        result.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); //NOI18N
+
+        result.append("<?import "); //NOI18N
+        result.append(klass.getCanonicalName());
+        result.append("?>"); //NOI18N
+        result.append("<"); //NOI18N
+        result.append(klass.getSimpleName());
+        result.append("/>\n"); //NOI18N
+
+        return result.toString();
+    }
+
+
+    String makeClassName(String entryName, String separator) {
+        final String result;
+
+        if (! entryName.endsWith(".class")) { //NOI18N
+            result = null;
+        } else if (entryName.contains("$")) { //NOI18N
+            // We skip inner classes for now
+            result = null;
+        } else {
+            final int endIndex = entryName.length()-6; // ".class" -> 6 //NOI18N
+            result = entryName.substring(0, endIndex).replace(separator, "."); //NOI18N
+        }
+
+        return result;
+    }
+
+    JarReportEntry exploreEntry(String entryName, ClassLoader classLoader, String className) {
+        JarReportEntry.Status status;
+        Throwable entryException;
+        Class<?> entryClass = null;
+
+        // Filtering out what starts with com.javafx. is bound to DTL-6378.
+        if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
+            status = JarReportEntry.Status.IGNORED;
+            entryClass = null;
+            entryException = null;
+        } else {
+            try {
+                // Some reading explaining why using Class.forName is not appropriate:
+                // http://blog.osgi.org/2011/05/what-you-should-know-about-class.html
+                // http://blog.bjhargrave.com/2007/09/classforname-caches-defined-class-in.html
+                // http://stackoverflow.com/questions/8100376/class-forname-vs-classloader-loadclass-which-to-use-for-dynamic-loading
+                entryClass = classLoader.loadClass(className); // Note: static intializers of entryClass are not run, this doesn't seem to be an issue
+
+                if (Modifier.isAbstract(entryClass.getModifiers())
+                        || !Node.class.isAssignableFrom(entryClass)) {
+                    status = JarReportEntry.Status.IGNORED;
+                    entryClass = null;
+                    entryException = null;
+                } else {
+                    instantiateWithFXMLLoader(entryClass, classLoader);
+                    status = JarReportEntry.Status.OK;
+                    entryException = null;
+                }
+            } catch (RuntimeException | IOException x) {
+                status = JarReportEntry.Status.CANNOT_INSTANTIATE;
+                entryException = x;
+            } catch (Error | ClassNotFoundException x) {
+                status = JarReportEntry.Status.CANNOT_LOAD;
+                entryClass = null;
+                entryException = x;
+            }
+        }
+
+        return new JarReportEntryImpl(entryName, status, entryException, entryClass, className);
+    }
+}

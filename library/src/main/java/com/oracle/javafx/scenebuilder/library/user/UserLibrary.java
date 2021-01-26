@@ -68,7 +68,6 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.library.util.JarReportImpl;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -389,7 +388,7 @@ public class UserLibrary extends AbstractLibrary implements Library, Initializin
         return new File(getPath(), filterFileName);
     }
 
-    void updateJarReports(Collection<JarReportImpl> newJarReports) {
+    void updateJarReports(Collection<JarReport> newJarReports) {
         previousJarReports.setAll(jarReports);
         jarReports.setAll(newJarReports);
     }

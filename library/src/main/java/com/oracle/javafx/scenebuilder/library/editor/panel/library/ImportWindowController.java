@@ -34,6 +34,8 @@ package com.oracle.javafx.scenebuilder.library.editor.panel.library;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -103,6 +105,8 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class ImportWindowController extends AbstractModalDialog {
+
+    private static final Logger LOGGER = Logger.getLogger(ImportWindowController.class.getSimpleName());
 
     public enum PrefSize {
 
@@ -536,7 +540,13 @@ public class ImportWindowController extends AbstractModalDialog {
                 importList.setCellFactory(CheckBoxListCell.forListView(importRequired));
 
                 for (JarReportImpl jarReport : jarReportList) {
+                    Path file = jarReport.getJar();
+                    String jarName = file.getName(file.getNameCount() - 1).toString();
+                    StringBuilder sb = new StringBuilder(
+                            I18N.getString("log.info.explore." + (Files.isDirectory(file) ? "folder" : "jar") + ".results", jarName))
+                            .append("\n");
                     for (JarReportEntry e : jarReport.getEntries()) {
+                        sb.append("> ").append(e.toString()).append("\n");
                         if ((e.getStatus() == JarReportEntry.Status.OK) && e.isNode()) {
                             boolean checked = true;
                             final String canonicalName = e.getKlass().getCanonicalName();
@@ -557,8 +567,16 @@ public class ImportWindowController extends AbstractModalDialog {
                                         updateOKButtonTitle(numOfComponentToImport);
                                         updateSelectionToggleText(numOfComponentToImport);
                                     });
+                        } else {
+                            if (e.getException() != null) {
+                                StringWriter sw = new StringWriter();
+                                PrintWriter pw = new PrintWriter(sw);
+                                e.getException().printStackTrace(pw);
+                                sb.append(">> " + sw.toString());
+                            }
                         }
                     }
+                    LOGGER.info(sb.toString());
                 }
                 userLib.getExplorationJarReports().addAll(jarReportList);
                 

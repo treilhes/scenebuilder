@@ -1,5 +1,7 @@
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.8' apply false
+    id 'maven'
+    id 'org.openjfx.javafxplugin' version '0.0.9' apply false
+    id 'org.beryx.runtime' version '1.11.4' apply false
     //id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
 
@@ -99,8 +101,6 @@ subprojects {
 clean {
     delete "dist"
 }
-
-apply plugin: 'maven'
 
 uploadArchives {
     repositories {

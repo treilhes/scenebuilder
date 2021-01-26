@@ -91,13 +91,19 @@ public class AppPlatform {
 
         final boolean result;
         messageBox = new MessageBox<>(fileSystem.getMessageBoxFolder(), MessageBoxMessage.class, 1000 /* ms */);
+        // Fix Start: Github Issue #301
+        final List<String> parametersUnnamed = new ArrayList<>(parameters.getUnnamed());
+        if (EditorPlatform.IS_MAC) {
+            parametersUnnamed.removeIf(p -> p.startsWith("-psn"));
+        }
+        // Fix End
         if (messageBox.grab(new MessageBoxDelegate(notificationHandler))) {
-            notificationHandler.handleLaunch(parameters.getUnnamed());
+            notificationHandler.handleLaunch(parametersUnnamed);
             result = true;
         } else {
             result = false;
             final MessageBoxMessage unamedParameters
-                    = new MessageBoxMessage(parameters.getUnnamed());
+                    = new MessageBoxMessage(parametersUnnamed);
             try {
                 messageBox.sendMessage(unamedParameters);
             } catch(InterruptedException x) {

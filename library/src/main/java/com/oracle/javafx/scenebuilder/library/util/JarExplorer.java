@@ -54,17 +54,16 @@ import javafx.scene.Node;
  *
  * 
  */
-public class JarExplorer {
+public class JarExplorer extends ExplorerBase {
     
     private final Path jar;
-    private final List<LibraryFilter> filters;
     
     public JarExplorer(Path jar, List<LibraryFilter> filters) {
+        super(filters);
         assert jar != null;
         assert jar.isAbsolute();
         
         this.jar = jar;
-        this.filters = filters == null ? new ArrayList<>() : filters;
     }
     
     public JarReportImpl explore(ClassLoader classLoader) throws IOException {
@@ -74,53 +73,10 @@ public class JarExplorer {
             final Enumeration<JarEntry> e = jarFile.entries();
             while (e.hasMoreElements()) {
                 final JarEntry entry = e.nextElement();
-                JarReportEntryImpl explored = exploreEntry(entry, classLoader);
+                JarReportEntry explored = exploreEntry(entry, classLoader);
                 if (explored.getStatus() != Status.IGNORED)
                     result.getEntries().add(explored);
             }
-        }
-        
-        return result;
-    }
-    
-    public static String makeFxmlText(Class<?> klass) {
-        final StringBuilder result = new StringBuilder();
-        
-        /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
-         * 
-         * <?import a.b.C?>
-         * 
-         * <C/>
-         */
-        
-        result.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); //NOI18N
-        
-        result.append("<?import "); //NOI18N
-        result.append(klass.getCanonicalName());
-        result.append("?>"); //NOI18N
-        result.append("<"); //NOI18N
-        result.append(klass.getSimpleName());
-        result.append("/>\n"); //NOI18N
-        
-        return result.toString();
-    }
-    
-    
-    public static Object instantiateWithFXMLLoader(Class<?> klass, ClassLoader classLoader) throws IOException {
-        Object result;
-        
-        final String fxmlText = makeFxmlText(klass);
-        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); //NOI18N
-
-        final FXMLLoader fxmlLoader = new FXMLLoader();
-        try {
-            fxmlLoader.setClassLoader(classLoader);
-            result = fxmlLoader.load(new ByteArrayInputStream(fxmlBytes));
-        } catch(IOException x) {
-            throw x;
-        } catch(RuntimeException|Error x) {
-            throw new IOException(x);
         }
         
         return result;
@@ -130,70 +86,13 @@ public class JarExplorer {
      * Private
      */
     
-    private JarReportEntryImpl exploreEntry(JarEntry entry, ClassLoader classLoader) {
-        JarReportEntryImpl.Status status;
-        Throwable entryException;
-        Class<?> entryClass = null;
-        String className;
-        
+    private JarReportEntry exploreEntry(JarEntry entry, ClassLoader classLoader) {
         if (entry.isDirectory()) {
-            status = JarReportEntry.Status.IGNORED;
-            entryClass = null;
-            entryException = null;
-            className = null;
+            return new JarReportEntryImpl(entry.getName(), JarReportEntry.Status.IGNORED, null, null, null);
         } else {
-            className = makeClassName(entry.getName());
-
-            if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
-                status = JarReportEntry.Status.IGNORED;
-                entryClass = null;
-                entryException = null;
-            } else {
-                try {
-                    // Some reading explaining why using Class.forName is not appropriate:
-                    // http://blog.osgi.org/2011/05/what-you-should-know-about-class.html
-                    // http://blog.bjhargrave.com/2007/09/classforname-caches-defined-class-in.html
-                    // http://stackoverflow.com/questions/8100376/class-forname-vs-classloader-loadclass-which-to-use-for-dynamic-loading
-                    entryClass = classLoader.loadClass(className); // Note: static intializers of entryClass are not run, this doesn't seem to be an issue
-
-                    if (Modifier.isAbstract(entryClass.getModifiers())
-                            || !Node.class.isAssignableFrom(entryClass)) {
-                        status = JarReportEntry.Status.IGNORED;
-                        entryClass = null;
-                        entryException = null;
-                    } else {
-                        instantiateWithFXMLLoader(entryClass, classLoader);
-                        status = JarReportEntry.Status.OK;
-                        entryException = null;
-                    }
-                } catch (RuntimeException | IOException x) {
-                    status = JarReportEntry.Status.CANNOT_INSTANTIATE;
-                    entryException = x;
-                } catch (Error | ClassNotFoundException x) {
-                    status = JarReportEntry.Status.CANNOT_LOAD;
-                    entryClass = null;
-                    entryException = x;
-                }
-            }
+            String className = makeClassName(entry.getName(), "/");
+            return super.exploreEntry(entry.getName(), classLoader, className);
         }
-        
-        return new JarReportEntryImpl(entry.getName(), status, entryException, entryClass, className);
     }
-    
-    
-    private String makeClassName(String entryName) {
-        final String result;
-        
-        if (entryName.endsWith(".class") == false) { //NOI18N
-            result = null;
-        } else if (entryName.contains("$")) { //NOI18N
-            // We skip inner classes for now
-            result = null;
-        } else {
-            final int endIndex = entryName.length()-6; // ".class" -> 6 //NOI18N
-            result = entryName.substring(0, endIndex).replace("/", "."); //NOI18N
-        }
-        
-        return result;
-    }
+
 }

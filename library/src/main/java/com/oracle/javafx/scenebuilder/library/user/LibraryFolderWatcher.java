@@ -47,6 +47,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -67,7 +68,6 @@ import com.oracle.javafx.scenebuilder.library.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.library.util.FolderExplorer;
 import com.oracle.javafx.scenebuilder.library.util.JarExplorer;
-import com.oracle.javafx.scenebuilder.library.util.JarReportImpl;
 
 /**
  *
@@ -75,11 +75,17 @@ import com.oracle.javafx.scenebuilder.library.util.JarReportImpl;
  */
 class LibraryFolderWatcher implements Runnable {
 
+    private static final Logger LOGGER = Logger.getLogger(LibraryFolderWatcher.class.getSimpleName());
+
 	private final BuiltinLibrary builtinLibrary;
     private final UserLibrary library;
     private final List<LibraryFilter> filters;
 
     private enum FILE_TYPE {FXML, JAR, FOLDER_MARKER};
+
+    private static final List<String> JAVAFX_MODULES = Arrays.asList(
+            "javafx-base", "javafx-graphics", "javafx-controls",
+            "javafx-fxml", "javafx-media", "javafx-web", "javafx-swing");
 
     public LibraryFolderWatcher(UserLibrary library, BuiltinLibrary builtinLibrary, List<LibraryFilter> filters) {
         this.library = library;
@@ -351,23 +357,42 @@ class LibraryFolderWatcher implements Runnable {
         }
 
         // 2)
-        final List<JarReportImpl> jarOrFolderReports = new ArrayList<>();
+        final List<JarReport> jarOrFolderReports = new ArrayList<>();
         
         for (Path currentJarOrFolder : jarsOrFolders) {
-            if (LibraryUtil.isJarPath(currentJarOrFolder)) {
-                Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.jar", currentJarOrFolder));
-                final JarExplorer explorer = new JarExplorer(currentJarOrFolder, filters);
-                JarReportImpl jarReport = explorer.explore(classLoader);
-                jarOrFolderReports.add(jarReport);
-            }
-            else if (Files.isDirectory(currentJarOrFolder)) {
-                Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.folder", currentJarOrFolder));
-                final FolderExplorer explorer = new FolderExplorer(currentJarOrFolder, filters);
-                JarReportImpl jarReport = explorer.explore(classLoader);
-                jarOrFolderReports.add(jarReport);
+            String jarName = currentJarOrFolder.getName(currentJarOrFolder.getNameCount() - 1).toString();
+            if (JAVAFX_MODULES.stream().anyMatch(jarName::startsWith)) {
+                continue;
             }
 
-            Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.end", currentJarOrFolder));
+            JarReport jarReport;
+            String resultText = "";
+            if (LibraryUtil.isJarPath(currentJarOrFolder)) {
+                LOGGER.info(I18N.getString("log.info.explore.jar", currentJarOrFolder));
+                final JarExplorer explorer = new JarExplorer(currentJarOrFolder, filters);
+                jarReport = explorer.explore(classLoader);
+                resultText = I18N.getString("log.info.explore.jar.results", jarName);
+            }
+            else if (Files.isDirectory(currentJarOrFolder)) {
+                LOGGER.info(I18N.getString("log.info.explore.folder", currentJarOrFolder));
+                final FolderExplorer explorer = new FolderExplorer(currentJarOrFolder, filters);
+                jarReport = explorer.explore(classLoader);
+                resultText = I18N.getString("log.info.explore.folder.results", jarName);
+            } else {
+                continue;
+            }
+
+            jarOrFolderReports.add(jarReport);
+            
+            StringBuilder sb = new StringBuilder(resultText).append("\n");
+            if (jarReport.getEntries().isEmpty()) {
+                sb.append("> ").append(I18N.getString("log.info.explore.no.results"));
+            } else {
+                jarReport.getEntries().forEach(entry -> sb.append("> ").append(entry.toString()).append("\n"));
+            }
+            LOGGER.info(sb.toString());
+
+            LOGGER.info(I18N.getString("log.info.explore.end", currentJarOrFolder));
 
         }
 
