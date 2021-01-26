@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
 import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
@@ -63,93 +64,126 @@ import javafx.scene.control.ToggleGroup;
 @Lazy
 public class GluonMenuProvider implements MenuItemProvider {
 
-	private final static String THEME_MENU_ID = "themeMenu";
-	private final GluonSwatchPreference gluonSwatchPreference;
-	private final ThemePreference themePreference;
-	private final ApplicationContext context;
+    private final static String THEME_MENU_ID = "themeMenu";
+    private final static String ABOUT_MENU_ID = "aboutMenuItem";
+    private final GluonSwatchPreference gluonSwatchPreference;
+    private final ThemePreference themePreference;
+    private final ApplicationContext context;
+    private final UpdateController updateController;
 
-	public GluonMenuProvider(
-			@Autowired ApplicationContext context,
-			@Autowired @Lazy ThemePreference themePreference,
-			@Autowired @Lazy GluonSwatchPreference gluonSwatchPreference
-			) {
-		this.context = context;
-		this.gluonSwatchPreference = gluonSwatchPreference;
-		this.themePreference = themePreference;
-	}
+    public GluonMenuProvider(
+            @Autowired ApplicationContext context,
+            @Autowired UpdateController updateController, 
+            @Autowired @Lazy ThemePreference themePreference,
+            @Autowired @Lazy GluonSwatchPreference gluonSwatchPreference) {
+        this.context = context;
+        this.gluonSwatchPreference = gluonSwatchPreference;
+        this.themePreference = themePreference;
+        this.updateController = updateController;
+    }
 
-	@Override
-	public List<MenuItemAttachment> menuItems() {
-		return Arrays.asList(
-				new GluonThemeAttachment()
-				);
-	}
+    @Override
+    public List<MenuItemAttachment> menuItems() {
+        return Arrays.asList(
+                new GluonThemeAttachment(),
+                new GluonCheckUpdateAttachment());
+    }
 
-	public class GluonThemeAttachment implements MenuItemAttachment {
+    public class GluonCheckUpdateAttachment implements MenuItemAttachment {
 
-		private Menu gluonSwatchMenu = null;
+        private MenuItem checkMenu = null;
 
-		public GluonThemeAttachment() {}
+        public GluonCheckUpdateAttachment() {
+        }
 
-		@Override
-		public String getTargetId() {
-			return THEME_MENU_ID;
-		}
+        @Override
+        public String getTargetId() {
+            return ABOUT_MENU_ID;
+        }
 
-		@Override
-		public PositionRequest getPositionRequest() {
-			return PositionRequest.AsNextSibling;
-		}
+        @Override
+        public PositionRequest getPositionRequest() {
+            return PositionRequest.AsPreviousSibling;
+        }
 
-		@Override
-		public MenuItem getMenuItem() {
+        @Override
+        public MenuItem getMenuItem() {
 
-			if (gluonSwatchMenu != null) {
-				return gluonSwatchMenu;
-			}
+            if (checkMenu != null) {
+                return checkMenu;
+            }
 
-			gluonSwatchMenu = new Menu(I18N.getString("menu.title.gluon.swatch"));
+            checkMenu = new Menu(I18N.getString("menu.title.check.updates"));
+            checkMenu.setOnAction((e) -> updateController.checkUpdates());
 
-			ToggleGroup tg = new ToggleGroup();
+            return checkMenu;
+        }
+    }
 
-			boolean disabled =  isMenuDisabled();
+    public class GluonThemeAttachment implements MenuItemAttachment {
 
-			Arrays.stream(GluonSwatch.values()).forEach(g -> {
-				RadioMenuItem mi = new RadioMenuItem(g.toString());
-				mi.setToggleGroup(tg);
-				mi.setUserData(g);
-				mi.setGraphic(g.createGraphic());
-				mi.setDisable(disabled);
-				mi.setSelected(gluonSwatchPreference.getValue() == g);
-				mi.setOnAction((e) -> gluonSwatchPreference.setValue((GluonSwatch) mi.getUserData()));
-				gluonSwatchMenu.getItems().add(mi);
-			});
+        private Menu gluonSwatchMenu = null;
 
-			gluonSwatchPreference.getObservableValue().addListener((ob, o, n) -> {
-				updateMenu();
-				context.getBean(ApplyCssContentAction.class).extend().checkAndPerform();
-			});
-			themePreference.getObservableValue().addListener((ob, o, n) -> {
-				updateMenu();
-			});
-			return gluonSwatchMenu;
-		}
+        public GluonThemeAttachment() {
+        }
 
-		private void updateMenu() {
-			boolean disable =  isMenuDisabled();
-			gluonSwatchMenu.getItems().stream()
-				.filter(mi -> mi.getClass().isAssignableFrom(RadioMenuItem.class))
-				.forEach(mi -> {
-					RadioMenuItem rmi = (RadioMenuItem)mi;
-					rmi.setDisable(disable);
-					rmi.setSelected(gluonSwatchPreference.getValue() == mi.getUserData());
-				});
-		}
-	}
+        @Override
+        public String getTargetId() {
+            return THEME_MENU_ID;
+        }
 
-	public boolean isMenuDisabled() {
-		Class<? extends Theme> theme = themePreference.getValue();
-		return theme != GluonThemesList.GluonMobileLight.class
-				&& theme != GluonThemesList.GluonMobileDark.class;
-	}
+        @Override
+        public PositionRequest getPositionRequest() {
+            return PositionRequest.AsNextSibling;
+        }
+
+        @Override
+        public MenuItem getMenuItem() {
+
+            if (gluonSwatchMenu != null) {
+                return gluonSwatchMenu;
+            }
+
+            gluonSwatchMenu = new Menu(I18N.getString("menu.title.gluon.swatch"));
+
+            ToggleGroup tg = new ToggleGroup();
+
+            boolean disabled = isMenuDisabled();
+
+            Arrays.stream(GluonSwatch.values()).forEach(g -> {
+                RadioMenuItem mi = new RadioMenuItem(g.toString());
+                mi.setToggleGroup(tg);
+                mi.setUserData(g);
+                mi.setGraphic(g.createGraphic());
+                mi.setDisable(disabled);
+                mi.setSelected(gluonSwatchPreference.getValue() == g);
+                mi.setOnAction((e) -> gluonSwatchPreference.setValue((GluonSwatch) mi.getUserData()));
+                gluonSwatchMenu.getItems().add(mi);
+            });
+
+            gluonSwatchPreference.getObservableValue().addListener((ob, o, n) -> {
+                updateMenu();
+                context.getBean(ApplyCssContentAction.class).extend().checkAndPerform();
+            });
+            themePreference.getObservableValue().addListener((ob, o, n) -> {
+                updateMenu();
+            });
+            return gluonSwatchMenu;
+        }
+
+        private void updateMenu() {
+            boolean disable = isMenuDisabled();
+            gluonSwatchMenu.getItems().stream().filter(mi -> mi.getClass().isAssignableFrom(RadioMenuItem.class))
+                    .forEach(mi -> {
+                        RadioMenuItem rmi = (RadioMenuItem) mi;
+                        rmi.setDisable(disable);
+                        rmi.setSelected(gluonSwatchPreference.getValue() == mi.getUserData());
+                    });
+        }
+    }
+
+    public boolean isMenuDisabled() {
+        Class<? extends Theme> theme = themePreference.getValue();
+        return theme != GluonThemesList.GluonMobileLight.class && theme != GluonThemesList.GluonMobileDark.class;
+    }
 }

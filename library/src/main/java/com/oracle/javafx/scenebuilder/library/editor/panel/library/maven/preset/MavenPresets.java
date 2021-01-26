@@ -42,6 +42,7 @@ public class MavenPresets {
     public static final String MAVEN = "Maven Central";
     public static final String JCENTER = "Jcenter";
     public static final String SONATYPE = "Sonatype";
+    //TODO GLUON
     public static final String GLUON_NEXUS = "Gluon Nexus";
     public static final String LOCAL = "Local";
     

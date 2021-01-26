@@ -356,8 +356,16 @@ public class CssInternal {
 
     // If this property is ruled by CSS, return a CssPropAuthorInfo. Otherwise
     // returns null.
-    public static CssPropAuthorInfo getCssInfo(Object fxObject, ValuePropertyMetadata prop) {
+    public static CssPropAuthorInfo getCssInfo(Map<StyleableProperty, List<Style>> cssState, ValuePropertyMetadata prop) {
         CssPropAuthorInfo info = null;
+        if (cssState != null) {
+            info = getCssInfoFromState(cssState, prop);
+        }
+        return info;
+    }
+    
+     public static Map<StyleableProperty, List<Style>> getCssState(Object fxObject) {
+
         Node node = null;
 
         if (fxObject instanceof Node) {
@@ -369,14 +377,14 @@ public class CssInternal {
             }
         }
         if (node != null) {
-            info = getCssInfoForNode(node, prop);
+            return collectCssState(node);
         }
-        return info;
+        return null;
     }
 
-    private static CssPropAuthorInfo getCssInfoForNode(Node node, ValuePropertyMetadata prop) {
+    private static CssPropAuthorInfo getCssInfoFromState(Map<StyleableProperty, List<Style>> cssState, ValuePropertyMetadata prop) {
         @SuppressWarnings("rawtypes")
-        Map<StyleableProperty, List<Style>> map = collectCssState(node);
+        Map<StyleableProperty, List<Style>> map = cssState;
         for (@SuppressWarnings("rawtypes")
         Map.Entry<StyleableProperty, List<Style>> entry : map.entrySet()) {// NOI18N
             StyleableProperty<?> beanProp = entry.getKey();
@@ -418,9 +426,10 @@ public class CssInternal {
         return null;
     }
 
-    public static boolean isCssRuled(Object fxObject, ValuePropertyMetadata prop) {
-        return getCssInfo(fxObject, prop) != null;
-    }
+    // TODO this method was not used
+//    public static boolean isCssRuled(Object fxObject, ValuePropertyMetadata prop) {
+//        return getCssInfo(fxObject, prop) != null;
+//    }
 
     
 

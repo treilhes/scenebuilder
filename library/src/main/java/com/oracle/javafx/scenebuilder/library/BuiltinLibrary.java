@@ -38,10 +38,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.library.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
@@ -52,13 +52,9 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
  */
 @Component//("builtinLibrary")
 @org.springframework.beans.factory.annotation.Qualifier("builtin")
-public class BuiltinLibrary extends AbstractLibrary implements InitializingBean {
+public class BuiltinLibrary extends AbstractLibrary {
 
     private final BuiltinSectionComparator sectionComparator = new BuiltinSectionComparator();
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-    }
 
     /*
      * Library

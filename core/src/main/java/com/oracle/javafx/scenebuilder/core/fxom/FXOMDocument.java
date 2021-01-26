@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.sampledata.SampleDataGenerator;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
@@ -77,7 +76,7 @@ public class FXOMDocument {
     private SceneGraphHolder sceneGraphHolder;
     private int updateDepth;
 
-    private boolean hasGluonControls;
+    //private boolean hasGluonControls;
 
     private List<Class<?>> initialDeclaredClasses;
 
@@ -100,8 +99,6 @@ public class FXOMDocument {
             // Keeps this.fxomRoot == null
             // Keeps this.sceneGraphRoot == null
         }
-
-        hasGluonControls = fxmlText.contains(EditorPlatform.GLUON_PACKAGE);
     }
 
 
@@ -425,10 +422,6 @@ public class FXOMDocument {
     public void endHoldingSceneGraph() {
         assert sceneGraphHolder != null;
         sceneGraphHolder = null;
-    }
-
-    public boolean hasGluonControls() {
-        return hasGluonControls;
     }
 
     /**

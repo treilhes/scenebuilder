@@ -36,11 +36,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -82,51 +79,36 @@ public abstract class AbstractWindowController {
     /** The tool stylesheet config. */
     private StylesheetProvider toolStylesheetConfig;
 
-    private SceneBuilderManager sceneBuilderManager;
+    private final Api api;
 
     /**
      * Instantiates a new abstract window controller.
      *
-     * @param sceneBuilderManager the scene builder manager
+     * @param api the scene builder api
      * @param owner the owner
      */
-    public AbstractWindowController(Stage owner) {
-        this(owner, true);
+    public AbstractWindowController(Api api, Stage owner) {
+        this(api, owner, true);
     }
 
     /**
      * Instantiates a new abstract window controller.
      *
-     * @param sceneBuilderManager the scene builder manager
+     * @param api the scene builder api
      * @param owner the owner
      * @param sizeToScene the size to scene
      */
-    public AbstractWindowController(Stage owner, boolean sizeToScene) {
+    public AbstractWindowController(Api api, Stage owner, boolean sizeToScene) {
+        this.api = api;
         this.owner = owner;
         this.sizeToScene = sizeToScene;
-    }
-    
-    /**
-     * Injected by the DI framework
-     * @param documentManager the document manager
-     */
-    @Autowired
-    @Lazy
-    protected void setDocumentManager(DocumentManager documentManager) {
-        documentManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
+        
+        api.getApiDoc().getDocumentManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
             onCloseRequest();
             closeWindow();
         });
-    }
-    
-    /**
-     * Injected by the DI framework
-     * @param sceneBuilderManager the scene builder manager
-     */
-    @Autowired
-    protected void setSceneBuilderManager(SceneBuilderManager sceneBuilderManager) {
-        this.sceneBuilderManager = sceneBuilderManager;
-        sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
+        
+        api.getSceneBuilderManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
             onCloseRequest();
             closeWindow();
         });
@@ -143,7 +125,7 @@ public abstract class AbstractWindowController {
         assert root != null;
         this.root = root;
         
-        sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+        api.getSceneBuilderManager().stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
             toolStylesheetDidChange(s);
         });
     }
@@ -197,12 +179,12 @@ public abstract class AbstractWindowController {
      *
      * @return the stage object of this window (never null).
      */
-    public Stage getStage() {
+    public Stage getStage(boolean renew) {
         assert Platform.isFxApplicationThread();
 
-        if (stage == null) {
+        if (stage == null || renew) {
             stage = new Stage();
-            stage.initOwner(owner);
+            stage.initOwner(this.owner);
             stage.setOnCloseRequest(closeRequestHandler);
             stage.focusedProperty().addListener(focusHandler);
             stage.setScene(getScene());
@@ -211,14 +193,20 @@ public abstract class AbstractWindowController {
                 stage.sizeToScene();
             }
             // By default we set the same icons as the owner
-            if (owner != null) {
-                stage.getIcons().addAll(owner.getIcons());
+            if (this.owner != null) {
+                stage.getIcons().addAll(this.owner.getIcons());
+            } else if (api.getIconSetting() != null) {
+                api.getIconSetting().setWindowIcon(stage);
             }
 
             controllerDidCreateStage();
         }
 
         return stage;
+    }
+    
+    public Stage getStage() {
+        return getStage(false);
     }
 
     /**
@@ -399,6 +387,10 @@ public abstract class AbstractWindowController {
         return res;
     }
 
+    public Api getApi() {
+        return api;
+    }
+
     // Compute the percentage of the surface of stageRect which is rendered in
     // the given screen and write the result in sortedScreens (percentage is
     // rounded and turned into a String so that we benefit natural order sorting.
@@ -416,4 +408,5 @@ public abstract class AbstractWindowController {
 //        }
 //    }
 
+    
 }

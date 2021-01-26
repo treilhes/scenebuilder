@@ -154,7 +154,24 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
 
     @Override
     public void addValueListener(ChangeListener<Object> listener) {
-        getPropertyEditors().forEach(e -> e.addValueListener(listener));
+        //TODO the change event occur for each group member modification
+        // it may be better to handle the change as a whole
+        // why? after reseting the anchorsEditor you need 4 * Ctrl+Z to rollback instead of only one 
+        ChangeListener<Object> sharedListener = (ob, o, n) -> {
+            List<AbstractPropertyEditor> subEditors = getPropertyEditors();
+            Object[] oldValue = new Object[subEditors.size()];
+            Object[] newValue = new Object[subEditors.size()];
+            
+            for (int i=0; i < subEditors.size(); i++) {
+                AbstractPropertyEditor subEditor = subEditors.get(i);
+                
+                oldValue[i] = subEditor.valueProperty() == ob ? o : subEditor.getValue();
+                newValue[i] = subEditor.getValue();
+            }
+            
+            listener.changed(ob, oldValue, newValue);
+        };
+        getPropertyEditors().forEach(e -> e.addValueListener(sharedListener));
     }
 
     @Override

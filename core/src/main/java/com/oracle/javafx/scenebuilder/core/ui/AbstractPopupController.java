@@ -61,6 +61,10 @@ public abstract class AbstractPopupController {
 
     /** The anchor window. */
     private Window anchorWindow;
+    
+    public AbstractPopupController() {
+        super();
+    }
 
     /**
      * Returns the root FX object of this popup.

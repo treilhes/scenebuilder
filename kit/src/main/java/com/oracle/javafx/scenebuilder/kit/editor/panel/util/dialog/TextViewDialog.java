@@ -35,9 +35,11 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
@@ -65,8 +67,9 @@ public class TextViewDialog extends AbstractModalDialog {
      * Protected
      */
 
-    protected TextViewDialog() {
-        super(TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null); //NOI18N
+    protected TextViewDialog(
+            @Autowired Api api) {
+        super(api, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null); //NOI18N
         setOKButtonVisible(false);
         setActionButtonVisible(true);
         setCancelButtonTitle(I18N.getString("label.close"));

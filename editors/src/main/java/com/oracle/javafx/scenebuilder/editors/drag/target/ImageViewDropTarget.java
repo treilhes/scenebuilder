@@ -45,10 +45,10 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.BackupSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.UpdateSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.BackupSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.UpdateSelectionJob;
 
 import javafx.scene.image.ImageView;
 

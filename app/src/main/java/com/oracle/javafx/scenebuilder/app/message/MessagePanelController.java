@@ -37,12 +37,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
 
@@ -73,53 +71,21 @@ public class MessagePanelController extends AbstractFxmlPanelController {
     @FXML private GridPane gridPane;
     @FXML private Button clearButton;
 
+    public MessagePanelController(
+            @Autowired Api api) {
+        super(api, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle()); //NOI18N
+    }
+
     @FXML
     public void onClear(ActionEvent event) {
-        getEditorController().getMessageLog().clear();
+        getApi().getApiDoc().getMessageLogger().clear();
     }
-
-    public MessagePanelController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired Editor editorController) {
-        super(sceneBuilderManager, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle(), editorController); //NOI18N
-    }
-
-
+    
     public void setPanelWidth(double panelWidth) {
         this.panelWidth = panelWidth;
         if (scrollPane != null) {
             updateScrollPaneWidth();
         }
-    }
-
-
-    /*
-     * AbstractPanelController
-     */
-
-    @Override
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
-        // Nothing to do
-    }
-
-    @Override
-    protected void sceneGraphRevisionDidChange() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void cssRevisionDidChange() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void jobManagerRevisionDidChange() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void editorSelectionDidChange() {
-        // Nothing to do
     }
 
     /*
@@ -134,7 +100,7 @@ public class MessagePanelController extends AbstractFxmlPanelController {
         assert clearButton != null;
 
         // Listens to the message log
-        getEditorController().getMessageLog().revisionProperty().addListener(
+        getApi().getApiDoc().getMessageLogger().revisionProperty().addListener(
                 (ChangeListener<Number>) (ov, t, t1) -> messageLogDidChange());
 
         updateScrollPaneWidth();
@@ -152,10 +118,10 @@ public class MessagePanelController extends AbstractFxmlPanelController {
         gridPane.getChildren().clear();
         int rowIndex = 0;
         int columnIndex = 0;
-        for (MessageEntry mle : getEditorController().getMessageLog().getEntries()) {
+        for (MessageEntry mle : getApi().getApiDoc().getMessageLogger().getEntries()) {
             if (mle.getType() == MessageLogEntry.Type.WARNING) {
                 Button dismissButton = new Button("x"); //NOI18N
-                dismissButton.addEventHandler(MouseEvent.MOUSE_RELEASED, t -> getEditorController().getMessageLog().clearEntry(mle));
+                dismissButton.addEventHandler(MouseEvent.MOUSE_RELEASED, t -> getApi().getApiDoc().getMessageLogger().clearEntry(mle));
                 StackPane paneForButton = new StackPane();
                 paneForButton.getChildren().add(dismissButton);
                 paneForButton.setAlignment(Pos.CENTER_RIGHT);

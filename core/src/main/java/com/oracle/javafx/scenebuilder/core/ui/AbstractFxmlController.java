@@ -35,12 +35,10 @@ package com.oracle.javafx.scenebuilder.core.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
  * AbstractFxmlController is the abstract base class for all the
@@ -62,8 +60,8 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
      * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
      * @param editorController  the editor controller (cannot be null)
      */
-    protected AbstractFxmlController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, Editor editorController) {
-        super(sceneBuilderManager ,editorController);
+    protected AbstractFxmlController(Api api, URL fxmlURL) {
+        super(api);
         this.fxmlURL = fxmlURL;
         assert fxmlURL != null : "Check the name of the FXML file used by "
                 + getClass().getSimpleName();
@@ -123,28 +121,4 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
         // 2) getRoot().getScene() might be null
         // 3) getRoot().getScene().getWindow() might be null
 
-    @Override
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
-        // Ignored
-    }
-
-    @Override
-    protected void sceneGraphRevisionDidChange() {
-        // Ignored
-    }
-
-    @Override
-    protected void cssRevisionDidChange() {
-        // Ignored
-    }
-
-    @Override
-    protected void jobManagerRevisionDidChange() {
-        // Ignored
-    }
-
-    @Override
-    protected void editorSelectionDidChange() {
-        // Ignored
-    }
 }

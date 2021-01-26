@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.api;
 import java.io.File;
 import java.net.URL;
 
+import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -54,6 +55,7 @@ public interface Editor {
 
 	public Selection getSelection();
 
+	//TODO to remove
 	public FXOMDocument getFxomDocument();
 
 	public Stage getOwnerWindow();
@@ -64,9 +66,11 @@ public interface Editor {
 
 	public boolean isSelectionNode();
 
-	public Library getLibrary();
+	//public Library getLibrary();
 
 	public boolean canPerformControlAction(ControlAction copy);
+	
+	public void performEditAction(EditAction editAction);
 
 	public JobManager getJobManager();
 
@@ -88,7 +92,7 @@ public interface Editor {
 
 	public boolean canGetFxmlText();
 
-	public ObservableValue<FXOMDocument> fxomDocumentProperty();
+//	public ObservableValue<FXOMDocument> fxomDocumentProperty();
 
 //	public ObservableValue<String> toolStylesheetProperty();
 
@@ -112,9 +116,9 @@ public interface Editor {
 
 	public boolean isPickModeEnabled();
 
-	public boolean canPerformInsert(LibraryItem item);
-
-	public void performInsert(LibraryItem item);
+//	public boolean canPerformInsert(LibraryItem item);
+//
+//	public void performInsert(LibraryItem item);
 
 	public ObservableValue<Library> libraryProperty();
 
@@ -126,4 +130,71 @@ public interface Editor {
 
     public void textEditingSessionDidEnd();
 
+    /**
+     * An 'edit' action is an action which modifies the document associated
+     * to this editor. It makes the document dirty and pushes a
+     * new item on the undo/redo stack.
+     */
+    public enum EditAction {
+        // Candidates for Edit menu
+        CUT,
+        PASTE,
+        PASTE_INTO,
+        DUPLICATE,
+        DELETE,
+        TRIM,
+        TOGGLE_FX_ROOT,
+        // Candidates for Modify menu
+        FIT_TO_PARENT,
+        USE_COMPUTED_SIZES,
+        ADD_CONTEXT_MENU,
+        ADD_TOOLTIP,
+        SET_SIZE_335x600,
+        SET_SIZE_900x600,
+        SET_SIZE_320x240,
+        SET_SIZE_640x480,
+        SET_SIZE_1280x800,
+        SET_SIZE_1920x1080,
+        // Candidates for Modify/GridPane menu
+        MOVE_ROW_ABOVE,
+        MOVE_ROW_BELOW,
+        MOVE_COLUMN_BEFORE,
+        MOVE_COLUMN_AFTER,
+        ADD_ROW_ABOVE,
+        ADD_ROW_BELOW,
+        ADD_COLUMN_BEFORE,
+        ADD_COLUMN_AFTER,
+        INCREASE_ROW_SPAN,
+        DECREASE_ROW_SPAN,
+        INCREASE_COLUMN_SPAN,
+        DECREASE_COLUMN_SPAN,
+        // Candidates for Arrange menu
+        BRING_TO_FRONT,
+        SEND_TO_BACK,
+        BRING_FORWARD,
+        SEND_BACKWARD,
+        UNWRAP,
+        WRAP_IN_ANCHOR_PANE,
+        WRAP_IN_BORDER_PANE,
+        WRAP_IN_BUTTON_BAR,
+        WRAP_IN_DIALOG_PANE,
+        WRAP_IN_FLOW_PANE,
+        WRAP_IN_GRID_PANE,
+        WRAP_IN_GROUP,
+        WRAP_IN_HBOX,
+        WRAP_IN_PANE,
+        WRAP_IN_SCROLL_PANE,
+        WRAP_IN_SPLIT_PANE,
+        WRAP_IN_STACK_PANE,
+        WRAP_IN_TAB_PANE,
+        WRAP_IN_TEXT_FLOW,
+        WRAP_IN_TILE_PANE,
+        WRAP_IN_TITLED_PANE,
+        WRAP_IN_TOOL_BAR,
+        WRAP_IN_VBOX,
+        WRAP_IN_SCENE,
+        WRAP_IN_STAGE
+    }
+
+    
 }

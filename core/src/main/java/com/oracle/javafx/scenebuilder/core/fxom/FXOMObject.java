@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -735,10 +734,6 @@ public abstract class FXOMObject extends FXOMNode {
         assert parentCollection == null;
         assert newParentCollection.getItems().contains(this);
         parentCollection = newParentCollection;
-    }
-    
-    public boolean isGluon() {
-        return sceneGraphObject != null && sceneGraphObject.getClass().getName().startsWith(EditorPlatform.GLUON_PACKAGE);
     }
 
     

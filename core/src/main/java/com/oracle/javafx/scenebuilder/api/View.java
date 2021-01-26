@@ -40,4 +40,6 @@ public interface View {
 	String getName();
 	Parent getRoot();
 	ViewManager getViewManager();
+	ViewSearch getSearchController();
+	ViewContent getViewController();
 }

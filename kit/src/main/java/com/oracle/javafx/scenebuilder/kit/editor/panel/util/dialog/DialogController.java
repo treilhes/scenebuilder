@@ -33,12 +33,12 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 
 import javafx.stage.Window;
@@ -46,20 +46,17 @@ import javafx.stage.Window;
 @Component
 public class DialogController implements Dialog {
 
-    private final ApplicationContext context;
-	private final SceneBuilderManager sceneBuilderManager;
+    private final Api api;
 
     public DialogController(
-            @Autowired ApplicationContext context,
-            @Autowired SceneBuilderManager sceneBuilderManager) {
-	    this.context = context;
-	    this.sceneBuilderManager = sceneBuilderManager;
+            @Autowired @Lazy Api api) {
+	    this.api = api;
 	}
 
     
     @Override
     public void showErrorAndWait(Window owner, String title, String message, String detail, Throwable cause) {
-        final ErrorDialog errorDialog = (ErrorDialog)context.getBean("errorDialog", owner);
+        final ErrorDialog errorDialog = (ErrorDialog)api.getContext().getBean("errorDialog", api, owner);
         errorDialog.setTitle(title);
         errorDialog.setMessage(message);
         errorDialog.setDetails(detail);
@@ -85,7 +82,7 @@ public class DialogController implements Dialog {
     }
     @Override
     public Alert customAlert(Window owner) {
-        return (Alert)context.getBean("alertDialog", owner);
+        return (Alert)api.getContext().getBean("alertDialog", api, owner);
     }
     
 	@Override

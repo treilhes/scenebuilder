@@ -37,10 +37,10 @@ import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.FilePreference;
+import com.oracle.javafx.scenebuilder.extension.DefaultFolders;
 
 @Component
 public class InitialDirectoryPreference extends FilePreference implements ManagedGlobalPreference {
@@ -51,7 +51,7 @@ public class InitialDirectoryPreference extends FilePreference implements Manage
      *                                                                         *
      **************************************************************************/
     public static final String PREFERENCE_KEY = "initialDirectory"; //NOI18N
-    public static final File PREFERENCE_DEFAULT_VALUE = FileSystem.USER_HOME;
+    public static final File PREFERENCE_DEFAULT_VALUE = DefaultFolders.USER_HOME;
 
 	public InitialDirectoryPreference(
 			@Autowired PreferencesContext preferencesContext) {

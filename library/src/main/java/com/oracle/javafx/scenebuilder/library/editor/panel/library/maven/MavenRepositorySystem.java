@@ -88,7 +88,7 @@ import org.eclipse.aether.version.Version;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.preset.MavenPresets;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.Repository;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 
 public class MavenRepositorySystem {
 

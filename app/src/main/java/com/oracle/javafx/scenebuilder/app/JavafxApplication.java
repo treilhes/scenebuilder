@@ -32,12 +32,21 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.extension.ExtensionLoader;
 
 import javafx.application.Application;
 import javafx.application.HostServices;
@@ -45,35 +54,55 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
- * Below class is based on Josh Long tutorial "Spring with Javafx"
- * video: https://spring.io/blog/2019/01/16/spring-tips-javafx
- * source: https://github.com/spring-tips/javafx
+ * Below class is based on Josh Long tutorial "Spring with Javafx" video:
+ * https://spring.io/blog/2019/01/16/spring-tips-javafx source:
+ * https://github.com/spring-tips/javafx
+ * 
  * @author ptreilhes
  *
  */
 public class JavafxApplication extends Application {
+    
+    private static Logger logger = LoggerFactory.getLogger(JavafxApplication.class);
 
     private ConfigurableApplicationContext context;
 
     @Override
     public void init() throws Exception {
+        
         ApplicationContextInitializer<GenericApplicationContext> initializer = new ApplicationContextInitializer<GenericApplicationContext>() {
             @Override
             public void initialize(GenericApplicationContext genericApplicationContext) {
+                
                 genericApplicationContext.registerBean(Application.class, () -> JavafxApplication.this);
                 genericApplicationContext.registerBean(Parameters.class, () -> getParameters());
                 genericApplicationContext.registerBean(HostServices.class, () -> getHostServices());
+                
             }
         };
 
-        this.context = new SpringApplicationBuilder().sources(this.getClass())
-        		.initializers(initializer)
+        ExtensionLoader loader = new ExtensionLoader();
+        Map<UUID, Extension> extensions = loader.loadExtensions();
+        
+        extensions.entrySet().forEach(e -> logger.info("Loading extension {} id: {}", e.getValue().getClass().getSimpleName(), e.getKey().toString()));
+
+        List<Class<?>> sources = loader.loadExtensions().values().stream().map(c -> c.getClass()).collect(Collectors.toList());
+        sources.add(0, this.getClass());
+//        for (Extension ext:exts) {
+//            if (!ext.components().isEmpty()) {
+//                clsss.addAll(ext.components());
+//          }
+//        }
+        System.out.println();
+        this.context = new SpringApplicationBuilder()
+                .sources(sources.toArray(new Class<?>[0])).initializers(initializer)
                 .build().run(getParameters().getRaw().toArray(new String[0]));
+        
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	// we can't use injection here so publish an event
+        // we can't use injection here so publish an event
         this.context.publishEvent(new StageReadyEvent(primaryStage));
     }
 
@@ -86,11 +115,11 @@ public class JavafxApplication extends Application {
     public class StageReadyEvent extends ApplicationEvent {
 
         /**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+         * 
+         */
+        private static final long serialVersionUID = 1L;
 
-		public Stage getStage() {
+        public Stage getStage() {
             return Stage.class.cast(getSource());
         }
 

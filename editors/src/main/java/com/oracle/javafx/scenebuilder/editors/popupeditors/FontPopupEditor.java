@@ -51,7 +51,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
@@ -59,7 +59,7 @@ import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.editors.BoundedDoubleEditor;
+import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -91,15 +91,12 @@ public class FontPopupEditor extends PopupEditor {
     private FontStyleEditor fontStyleEditor;
     private BoundedDoubleEditor sizeEditor;
     private final MessageLogger messageLogger;
-    private final Dialog dialog;
 
     public FontPopupEditor(
-            @Autowired Dialog dialog,
-            @Autowired MessageLogger messageLogger
+            @Autowired Api api
             ) {
-        super(dialog);
-        this.dialog = dialog;
-        this.messageLogger = messageLogger;
+        super(api);
+        this.messageLogger = api.getApiDoc().getMessageLogger();
     }
 
 //    private void initialize(Editor editorController) {
@@ -155,11 +152,11 @@ public class FontPopupEditor extends PopupEditor {
     public void initializePopupContent() {
         root = FXMLUtils.load(this, "FontPopupEditor.fxml"); //NOI18N
         // Add the editors in the scene graph
-        familyEditor = new FontFamilyEditor(dialog, "", "", getFamilies(messageLogger), messageLogger);//NOI18N
+        familyEditor = new FontFamilyEditor(getApi(), "", "", getFamilies(messageLogger), messageLogger);//NOI18N
         familySp.getChildren().add(familyEditor.getValueEditor());
-        fontStyleEditor = new FontStyleEditor(dialog, "", "", new ArrayList<>(), messageLogger);//NOI18N
+        fontStyleEditor = new FontStyleEditor(getApi(), "", "", new ArrayList<>(), messageLogger);//NOI18N
         styleSp.getChildren().add(fontStyleEditor.getValueEditor());
-        sizeEditor = new BoundedDoubleEditor(dialog, "", "", getPredefinedFontSizes(), 1.0, 96.0, true);//NOI18N
+        sizeEditor = new BoundedDoubleEditor(getApi(), "", "", getPredefinedFontSizes(), 1.0, 96.0, true);//NOI18N
         sizeEditor.setMinMaxForSliderOnly(true);
         commitOnFocusLost(sizeEditor);
         sizeSp.getChildren().add(sizeEditor.getValueEditor());
@@ -230,8 +227,8 @@ public class FontPopupEditor extends PopupEditor {
         private List<String> families;
         private String family = null;
 
-        public FontFamilyEditor(Dialog dialog, String name, String defaultValue, List<String> families, MessageLogger messageLogger) {
-            super(dialog);
+        public FontFamilyEditor(Api api, String name, String defaultValue, List<String> families, MessageLogger messageLogger) {
+            super(api);
             preInit(Type.ALPHA, families);
             initialize(families, messageLogger);
             this.reset(name, defaultValue);
@@ -273,8 +270,8 @@ public class FontPopupEditor extends PopupEditor {
 
         private String style = null;
 
-        public FontStyleEditor(Dialog dialog, String name, String defaultValue, List<String> suggestedList, MessageLogger messageLogger) {
-            super(dialog);
+        public FontStyleEditor(Api api, String name, String defaultValue, List<String> suggestedList, MessageLogger messageLogger) {
+            super(api);
             preInit(Type.ALPHA, suggestedList);
             initialize(messageLogger);
             this.reset(name, defaultValue);

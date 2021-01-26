@@ -46,6 +46,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Size;
@@ -121,13 +122,12 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     public PreviewWindowController(
+            @Autowired Api api,
             @Autowired Editor editorController,
-//            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired DocumentManager documentManager,
             @Autowired Document document) {
-        super(document.getStage());
+        super(api, document.getStage());
         this.editorController = editorController;
-        this.documentManager = documentManager;
+        this.documentManager = api.getApiDoc().getDocumentManager();
         
     }
     

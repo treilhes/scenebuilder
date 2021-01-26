@@ -42,10 +42,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -71,7 +70,6 @@ public class FxIdEditor extends AutoSuggestEditor {
     //private Editor editorController;
     private final MessageLogger messageLog;
     private final Glossary glossary;
-    private FXOMDocument fxomDocument;
 
 //    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
 //        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOI18N
@@ -79,15 +77,10 @@ public class FxIdEditor extends AutoSuggestEditor {
 //    }
     
     public FxIdEditor(
-            @Autowired Dialog dialog,
-            @Autowired MessageLogger messageLog,
-            @Autowired Glossary glossary,
-            @Autowired DocumentManager documentManager) {
-        super(dialog); //NOI18N
-        this.messageLog = messageLog;
-        this.glossary = glossary;
-        
-        documentManager.fxomDocument().subscribe(fxom -> this.fxomDocument = fxom);
+            @Autowired Api api) {
+        super(api); //NOI18N
+        this.messageLog = api.getApiDoc().getMessageLogger();
+        this.glossary = api.getGlossary();
         
         preInit(Type.ALPHA, new ArrayList<>());
         initialize();
@@ -135,11 +128,13 @@ public class FxIdEditor extends AutoSuggestEditor {
 //    }
 
     private List<String> getFxIdsInUse() {
+        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         FXOMFxIdIndex fxomIndex = new FXOMFxIdIndex(fxomDocument);
         return new ArrayList<>(fxomIndex.getFxIds().keySet());
     }
 
     private String getControllerClass() {
+        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         return fxomDocument == null ? null : fxomDocument.getFxomRoot().getFxController();
     }
     
@@ -148,6 +143,7 @@ public class FxIdEditor extends AutoSuggestEditor {
         if (controllerClass == null || hasMultipleSelection(selectionState)) {
             return Collections.emptyList();
         }
+        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         URL location = null;
         if (fxomDocument != null) {
             location = fxomDocument.getLocation();

@@ -40,14 +40,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLogEntry;
 
 import javafx.animation.FadeTransition;
@@ -95,13 +93,11 @@ public class MessageBarController extends AbstractFxmlPanelController {
     private final MessageLogger messageLogger;
 
     public MessageBarController(
-            @Autowired ApplicationContext context,
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired MessageLogger messageLogger,
-            @Autowired EditorController editorController) {
-        super(sceneBuilderManager, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle(), editorController); //NOI18N
-        this.context = context;
-        this.messageLogger = messageLogger;
+            @Autowired Api api
+            ) {
+        super(api, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle()); //NOI18N
+        this.context = api.getContext();
+        this.messageLogger = api.getApiDoc().getMessageLogger();
         // Initialize file dirty image
         final URL fileDirtyURL = MessageBarController.class.getResource("file-dirty.png"); //NOI18N
         assert fileDirtyURL != null;
@@ -126,35 +122,6 @@ public class MessageBarController extends AbstractFxmlPanelController {
             messageWindowController.openWindow(messageBox);
         }
     }
-
-    /*
-     * AbstractPanelController
-     */
-    @Override
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
-        // Nothing to do
-    }
-
-    @Override
-    protected void sceneGraphRevisionDidChange() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void cssRevisionDidChange() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void jobManagerRevisionDidChange() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void editorSelectionDidChange() {
-        // Nothing to do
-    }
-
     /*
      * AbstractFxmlPanelController
      */

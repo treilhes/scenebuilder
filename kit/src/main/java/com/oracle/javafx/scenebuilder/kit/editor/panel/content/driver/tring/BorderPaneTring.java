@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

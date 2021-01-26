@@ -52,13 +52,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -254,14 +255,10 @@ public class CssPanelController extends AbstractFxmlViewController {
     *
     */
 	public CssPanelController(
-	        @Autowired SceneBuilderManager sceneBuilderManager,
+	        @Autowired Api api,
 			@Autowired Editor editor,
 			@Autowired Delegate delegate,
 			@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-			@Autowired FileSystem fileSystem,
-
-			@Lazy @Autowired DocumentManager documentManager,
-
 			@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
 			@Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
 			@Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction,
@@ -269,12 +266,12 @@ public class CssPanelController extends AbstractFxmlViewController {
 			@Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction,
 			@Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction,
 			@Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction) {
-		super(sceneBuilderManager, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle(), editor);
+		super(api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
 		this.editorController = editor;
-		this.documentManager = documentManager;
+		this.documentManager = api.getApiDoc().getDocumentManager();
 		this.applicationDelegate = delegate;
 		this.sceneBuilderFactory = sceneBuilderFactory;
-		this.fileSystem = fileSystem;
+		this.fileSystem = api.getFileSystem();
 		this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
 
 		this.viewTableAction = viewTableAction;
@@ -283,6 +280,12 @@ public class CssPanelController extends AbstractFxmlViewController {
 		this.copyStyleablePathAction = copyStyleablePathAction;
 		this.showStyledOnlyAction = showStyledOnlyAction;
 		this.splitDefaultsAction = splitDefaultsAction;
+		
+		api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        api.getApiDoc().getDocumentManager().cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
+        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
+
 	}
 
 	/*
@@ -299,42 +302,27 @@ public class CssPanelController extends AbstractFxmlViewController {
 				.addListener((ob, o, n) -> setTableColumnsOrderingReversed(n));
 	}
 
-    /*
-     * AbstractPanelController
-     */
-    @Override
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
+	protected void fxomDocumentDidChange(FXOMDocument newDocument) {
         if (isCssPanelLoaded() && hasFxomDocument()) {
             updateSelectedObject();
             refresh();
         }
     }
 
-    @Override
-    protected void sceneGraphRevisionDidChange() {
+	protected void sceneGraphRevisionDidChange() {
         // System.out.println("CssPanelController.sceneGraphRevisionDidChange() called!");
         if (isCssPanelLoaded() && hasFxomDocument()) {
             refresh();
         }
     }
 
-    @Override
-    protected void cssRevisionDidChange() {
+	protected void cssRevisionDidChange() {
         // System.out.println("CssPanelController.cssRevisionDidChange() called!");
         if (isCssPanelLoaded() && hasFxomDocument()) {
             refresh();
         }
     }
 
-    @Override
-    protected void jobManagerRevisionDidChange() {
-        // FXOMDocument has been modified by a job.
-        // getEditorController().getJobManager().getLastJob()
-        // is the job responsible of the change.
-        // Since sceneGraphRevisionDidChange() will be called in this case, nothing to do here.
-    }
-
-    @Override
     protected void editorSelectionDidChange() {
         if (isCssPanelLoaded() && hasFxomDocument() && !dragOnGoing) {
             updateSelectedObject();
@@ -808,7 +796,7 @@ public class CssPanelController extends AbstractFxmlViewController {
     }
 
     private boolean hasFxomDocument() {
-        return getEditorController().getFxomDocument() != null;
+        return getApi().getApiDoc().getDocumentManager().fxomDocument().get() != null;
     }
 
     private boolean isPickMode() {
@@ -847,7 +835,7 @@ public class CssPanelController extends AbstractFxmlViewController {
     }
 
     private void addSubStructure(Node componentRootNode, Item parentItem, Node node) {
-        FXOMDocument fxomDoc = getEditorController().getFxomDocument();
+        FXOMDocument fxomDoc = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         assert fxomDoc != null;
         Node enclosingNode = getEnclosingNode(fxomDoc, node);
         // The componentRootNode can be a skin structure (Tab, Column), in this case the enclosingNode
@@ -1095,9 +1083,10 @@ public class CssPanelController extends AbstractFxmlViewController {
         @Override
         public void handle(ActionEvent event) {
             try {
+                //TODO allow external css doc provided by extensions
                 // XXX jfdenise, for now can't do better than opening the file, no Anchor per property...
                 // Retrieve defining class
-            	fileSystem.open(EditorPlatform.JAVADOC_HOME
+            	fileSystem.open(Documentation.DEFAULT_JAVADOC_HOME
                         + "javafx.graphics/javafx/scene/doc-files/cssref.html#" + //NOI18N
                         item.getTarget().getClass().getSimpleName().toLowerCase(Locale.ROOT));
             } catch (IOException ex) {
@@ -2314,5 +2303,7 @@ public class CssPanelController extends AbstractFxmlViewController {
 		return defaultsSplit;
 	}
 
-
+    public Editor getEditorController() {
+        return editorController;
+    }
 }

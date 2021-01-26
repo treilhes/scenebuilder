@@ -49,7 +49,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
@@ -60,8 +60,8 @@ import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowC
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenRepositorySystem;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.application.Platform;
@@ -86,7 +86,7 @@ import javafx.stage.Stage;
  * Controller for the JAR Maven dialog.
  */
 @Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class SearchMavenDialogController extends AbstractFxmlWindowController {
 
@@ -123,17 +123,16 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
 
 
     protected SearchMavenDialogController(
-            ApplicationContext context,
+            Api api,
     		Editor editorController,
-    		Dialog dialog,
     		LibraryPanelController libraryPanelController,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(LibraryPanelController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.context = context;
-        this.userLibrary = (UserLibrary) editorController.getLibrary();
+        super(api, LibraryPanelController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        this.context = api.getContext();
+        this.userLibrary = (UserLibrary) editorController.libraryProperty().getValue();
         this.owner = owner;
         this.editorController = editorController;
         this.mavenPreferences = mavenPreferences;
@@ -181,7 +180,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
                         }
 
                         final ImportWindowController iwc
-                                = context.getBean(ImportWindowController.class, dialog, libraryPanelController,files, mavenPreferences,
+                                = context.getBean(ImportWindowController.class, api, libraryPanelController,files, mavenPreferences,
                                     (Stage) installButton.getScene().getWindow(), false,
                                     mavenPreferences.getArtifactsFilter());
                         //iwc.setToolStylesheet(editorController.getToolStylesheet());
@@ -250,7 +249,12 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
             protected void updateItem(DefaultArtifact item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null && !empty) {
-                    setText(item.getGroupId() + ":" + item.getArtifactId());
+                    String suffix = "";
+                    if (item.getProperties() != null && item.getProperties().containsKey("Repository")) {
+                        suffix = "  [" + item.getProperties().get("Repository").toString() + "]";
+                    }
+                    //TODO uncomment for details
+                    setText(item.getGroupId() + ":" + item.getArtifactId());// + ":" + item.getBaseVersion() + suffix);
                 } else {
                     setText(null);
                 }

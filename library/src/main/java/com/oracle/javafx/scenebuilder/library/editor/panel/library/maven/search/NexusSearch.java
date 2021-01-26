@@ -58,7 +58,6 @@ public class NexusSearch implements Search {
 
     // nexus
     private static final String URL_PREFIX = "/service/local/data_index?q=";
-    private static final String URL_PREFIX_CLASS = "https://nexus.gluonhq.com/nexus/service/local/data_index?cn=";
     private static final String URL_SUFFIX = "&from=";
     
     private final HttpClient client;

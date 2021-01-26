@@ -52,9 +52,9 @@ import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyPath;
 import com.oracle.javafx.scenebuilder.editors.drag.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.BackupSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.UpdateSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.BackupSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.UpdateSelectionJob;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;

@@ -60,7 +60,7 @@ public class SceneBuilderMenuController {
     }
 
     public void performCloseCurrentDocument() {
-        documentManager.closed().onNext(true);
+        documentManager.closed().set(true);
     }
 
     public void performCloseSceneBuilder() {

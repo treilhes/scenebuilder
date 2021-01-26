@@ -39,10 +39,10 @@ import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyItem;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 import javafx.collections.ObservableList;
@@ -72,12 +72,11 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
 
 
     public HierarchyTreeViewController(
-    		ApplicationContext context,
-    		SceneBuilderManager sceneBuilderManager,
+    		Api api,
     		Editor editorController,
     		ParentRingColorPreference parentRingColorPreference) {
-        super(sceneBuilderManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController); //NOI18N
-        this.context = context;
+        super(api, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController); //NOI18N
+        this.context = api.getContext();
         this.parentRingColorPreference = parentRingColorPreference;
     }
 

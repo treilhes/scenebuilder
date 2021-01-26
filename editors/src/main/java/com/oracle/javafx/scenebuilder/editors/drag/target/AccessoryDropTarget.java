@@ -38,18 +38,18 @@ import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsAccessoryJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
+import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
+import com.oracle.javafx.scenebuilder.job.editor.InsertAsAccessoryJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;

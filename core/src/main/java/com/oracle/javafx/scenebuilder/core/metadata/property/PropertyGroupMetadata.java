@@ -98,7 +98,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
             Object value = values[i];
             ValuePropertyMetadata property = getProperties()[i];
             
-            assert value.getClass().isAssignableFrom(property.getClass());
+            assert value == null || value.getClass().isAssignableFrom(property.getValueClass());
             
             property.setValueObject(fxomInstance, value);
         }

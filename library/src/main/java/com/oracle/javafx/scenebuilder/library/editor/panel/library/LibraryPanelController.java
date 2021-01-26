@@ -61,15 +61,18 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.Library;
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
@@ -86,12 +89,14 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.library.LibraryItemNameComparator;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.library.preferences.global.DisplayModePreference;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -128,7 +133,7 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class LibraryPanelController extends AbstractFxmlViewController {
+public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
 
     private String searchPattern;
     ArrayList<LibraryItem> searchData = new ArrayList<>();
@@ -173,7 +178,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
     private final Action revealCustomFolderAction;
     private final Action showJarAnalysisReportAction;
 
-    private final UserLibrary userLibrary;
+    private final Library userLibrary;
 	private final MavenArtifactsPreferences mavenPreferences;
     private final DisplayModePreference displayModePreference;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
@@ -182,6 +187,10 @@ public class LibraryPanelController extends AbstractFxmlViewController {
     private final SceneBuilderManager sceneBuilderManager;
     private final Dialog dialog;
     private final ApplicationContext context;
+    private final LibraryController libraryController;
+    private DocumentManager documentManager;
+    private FXOMDocument fxomDocument;
+    private final Editor editorController;
 
     /*
      * Public
@@ -194,30 +203,30 @@ public class LibraryPanelController extends AbstractFxmlViewController {
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public LibraryPanelController(
-            @Autowired ApplicationContext context,
-    		@Autowired Editor editor,
-    		@Autowired SceneBuilderManager sceneBuilderManager,
-    		@Autowired FileSystem fileSystem,
-    		@Autowired Dialog dialog,
-    		@Autowired MavenArtifactsPreferences mavenPreferences,
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-    		@Autowired DisplayModePreference displayModePreference,
-    		@Autowired AccordionAnimationPreference accordionAnimationPreference,
-    		@Autowired UserLibrary userLibrary,
-    		@Autowired @Qualifier("libraryPanelActions.ViewAsListAction") Action viewAsListAction,
-    		@Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction,
-    		@Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
-    		@Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction,
-    		@Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
-    		@Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
-    		) { //, UserLibrary library) {
-        super(sceneBuilderManager, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle(), editor); //NOI18N
-        this.context = context;
-        this.sceneBuilderManager = sceneBuilderManager;
+            @Autowired Api api,
+            @Autowired Editor editor,
+            @Autowired MavenArtifactsPreferences mavenPreferences,
+            @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+            @Autowired DisplayModePreference displayModePreference,
+            @Autowired AccordionAnimationPreference accordionAnimationPreference,
+            @Autowired LibraryController libraryController,
+            @Autowired @Qualifier("libraryPanelActions.ViewAsListAction") Action viewAsListAction,
+            @Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction,
+            @Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
+            @Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction,
+            @Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
+            @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
+            ) { //, UserLibrary library) {
+        super(api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
+        this.context = api.getContext();
+        this.editorController = editor;
+        this.sceneBuilderManager = api.getSceneBuilderManager();
         this.sceneBuilderFactory = sceneBuilderFactory;
-        this.dialog = dialog;
-        this.userLibrary = userLibrary;
-        this.fileSystem = fileSystem;
+        this.dialog = api.getApiDoc().getDialog();
+        this.userLibrary = api.getApiDoc().getLibrary();
+        this.libraryController = libraryController;
+        this.documentManager = api.getApiDoc().getDocumentManager();
+        this.fileSystem = api.getFileSystem();
         this.mavenPreferences = mavenPreferences;
         this.displayModePreference = displayModePreference;
         this.accordionAnimationPreference = accordionAnimationPreference;
@@ -229,6 +238,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
         this.revealCustomFolderAction = revealCustomFolderAction;
         this.showJarAnalysisReportAction = showJarAnalysisReportAction;
 
+        documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
         startListeningToLibrary();
 
     }
@@ -297,47 +307,6 @@ public class LibraryPanelController extends AbstractFxmlViewController {
         this.animateAccordion = animate;
         libAccordion.getPanes().forEach(tp -> tp.setAnimated(animate));
     }
-    /*
-     * AbstractPanelController
-     */
-
-    /**
-     * @treatAsPrivate FXOM document did change.
-     * @param oldDocument the previous fxom document or null
-     */
-    @Override
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
-    }
-
-    /**
-     * @treatAsPrivate User scene graph did change.
-     */
-    @Override
-    protected void sceneGraphRevisionDidChange() {
-    }
-
-    /**
-     * @treatAsPrivate User scene graph did change.
-     */
-    @Override
-    protected void cssRevisionDidChange() {
-    }
-
-    /**
-     * @treatAsPrivate Job manager revision did change.
-     */
-    @Override
-    protected void jobManagerRevisionDidChange() {
-        // FXOMDocument has been modified by a job.
-        // Library panel should probably not care for now.
-    }
-
-    /**
-     * @treatAsPrivate Selection did change.
-     */
-    @Override
-    protected void editorSelectionDidChange() {
-    }
 
     /*
      * AbstractFxmlPanelController
@@ -362,6 +331,12 @@ public class LibraryPanelController extends AbstractFxmlViewController {
         startListeningToDrop();
         populateLibraryPanel();
         setUserLibraryPathString();
+        
+        getLibraryLabel().bind(Bindings.createStringBinding(() -> {
+
+            return userLibrary.exploringProperty().get() ? I18N.getString("library.exploring") : I18N.getString("library");
+
+        }, userLibrary.exploringProperty()));
     }
 
     private void displayModeDidChange(DISPLAY_MODE displayMode) {
@@ -529,19 +504,22 @@ public class LibraryPanelController extends AbstractFxmlViewController {
     // ordering.
     // First TitledPane is expanded.
     private void populateLibraryPanel() {
+        final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb
+            = param -> new LibraryListCell(this.libraryController);
+        
         // libData is backend structure for all that we put in the Accordion.
         LinkedHashMap<String, ArrayList<LibraryItem>> libData = new LinkedHashMap<>();
-        TreeSet<String> sectionNames = new TreeSet<>(getEditorController().getLibrary().getSectionComparator());
+        TreeSet<String> sectionNames = new TreeSet<>(userLibrary.getSectionComparator());
         List<TitledPane> panes = libAccordion.getPanes();
 
-        getEditorController().getLibrary().getItems().addListener(libraryItemListener);
+        userLibrary.getItems().addListener(libraryItemListener);
 
         searchData.clear();
         getLibList().getItems().clear();
 
-        if (getEditorController().getLibrary().getItems().size() > 0) {
+        if (userLibrary.getItems().size() > 0) {
             // Construct a sorted set of all lib section names.
-            for (LibraryItem item : getEditorController().getLibrary().getItems()) {
+            for (LibraryItem item : userLibrary.getItems()) {
                 sectionNames.add(item.getSection());
             }
 
@@ -551,7 +529,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
             }
 
             // Add each LibraryItem to the appropriate set.
-            for (LibraryItem item : getEditorController().getLibrary().getItems()) {
+            for (LibraryItem item : userLibrary.getItems()) {
                 libData.get(item.getSection()).add(item);
             }
 
@@ -656,9 +634,6 @@ public class LibraryPanelController extends AbstractFxmlViewController {
     // is never called, probably because it is the ListView which has the focus.
     private final EventHandler<KeyEvent> keyEventHandler = e -> handleKeyEvent(e);
 
-    private final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb
-            = param -> new LibraryListCell(getEditorController());
-
 	private void handleKeyEvent(KeyEvent e) {
         // On ENTER we try to insert the item which is selected within the Library.
         if (e.getCode() == KeyCode.ENTER) {
@@ -673,8 +648,8 @@ public class LibraryPanelController extends AbstractFxmlViewController {
             final LibraryListItem listitem = (LibraryListItem)rawItem;
             final LibraryItem item = listitem.getLibItem();
 
-            if (getEditorController().canPerformInsert(item)) {
-                getEditorController().performInsert(item);
+            if (libraryController.canPerformInsert(item)) {
+                libraryController.performInsert(item);
             }
 
             e.consume();
@@ -693,7 +668,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                 jarAndFxmlFiles.clear();
                 t.setDropCompleted(true);
                 // Drop gesture is only valid when the Library is an instance of UserLibrary
-                if (getEditorController().getLibrary() instanceof UserLibrary) {
+                if (userLibrary instanceof UserLibrary) {
                     Dragboard db = t.getDragboard();
                     if (db.hasFiles()) {
                         final List<File> files = db.getFiles();
@@ -787,7 +762,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
         if (hasDependencies) {
             userLibraryUpdateRejected();
         } else {
-            ((UserLibrary) getEditorController().getLibrary()).stopWatching();
+            ((UserLibrary) userLibrary).stopWatching();
 
             try {
                 // The selection can be multiple, in which case each asset is
@@ -814,7 +789,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                     sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
                 }
 
-                ((UserLibrary) getEditorController().getLibrary()).startWatching();
+                ((UserLibrary) userLibrary).startWatching();
             }
         }
     }
@@ -880,7 +855,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                         stage.toFront();
                     }
 
-                    final ImportWindowController iwc = context.getBean(ImportWindowController.class, dialog, this, jarFiles, mavenPreferences, (Stage) window);
+                    final ImportWindowController iwc = context.getBean(ImportWindowController.class, getApi(), this, jarFiles, mavenPreferences, (Stage) window);
                     //iwc.setToolStylesheet(getEditorController().getToolStylesheet());
                     // See comment in OnDragDropped handle set in method startListeningToDrop.
                     ButtonID userChoice = iwc.showAndWait();
@@ -907,7 +882,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
                     stage.toFront();
                 }
 
-                final ImportWindowController iwc = context.getBean(ImportWindowController.class, dialog, this, Arrays.asList(folder), mavenPreferences, (Stage) window);
+                final ImportWindowController iwc = context.getBean(ImportWindowController.class, getApi(), this, Arrays.asList(folder), mavenPreferences, (Stage) window);
                 //iwc.setToolStylesheet(getEditorController().getToolStylesheet());
                 // See comment in OnDragDropped handle set in method startListeningToDrop.
                 ButtonID userChoice = iwc.showAndWait();
@@ -974,7 +949,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
 
         // Here we deactivate the UserLib so that it unlocks the files contained
         // in the lib dir in the file system meaning (especially on Windows).
-        ((UserLibrary) getEditorController().getLibrary()).stopWatching();
+        ((UserLibrary) userLibrary).stopWatching();
 
         try {
             for (File file : files) {
@@ -999,7 +974,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
             }
         }
 
-        ((UserLibrary) getEditorController().getLibrary()).startWatching();
+        ((UserLibrary) userLibrary).startWatching();
 
         if (errorCount > 0) {
             dialog.showErrorAndWait(
@@ -1088,11 +1063,11 @@ public class LibraryPanelController extends AbstractFxmlViewController {
         URL location;
 
         location = fxmlFile.toURI().toURL();
-        FXOMDocument fxomDocument =
+        FXOMDocument newFxomDocument =
                 new FXOMDocument(FXOMDocument.readContentFromURL(location), location,
-                        getEditorController().getFxomDocument().getClassLoader(),
-                        getEditorController().getFxomDocument().getResources());
-        res = hasDependencies(fxomDocument.getFxomRoot());
+                        fxomDocument.getClassLoader(),
+                        fxomDocument.getResources());
+        res = hasDependencies(newFxomDocument.getFxomRoot());
 
         return res;
     }
@@ -1185,7 +1160,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
     }
 
     private void setUserLibraryPathString() {
-        if (getEditorController().getLibrary() instanceof UserLibrary
+        if (userLibrary instanceof UserLibrary
                 && userLibraryPathString == null) {
             userLibraryPathString = fileSystem.getUserLibraryFolder().getAbsolutePath();
             assert userLibraryPathString != null;
@@ -1284,7 +1259,7 @@ public class LibraryPanelController extends AbstractFxmlViewController {
 
                 // DTL-6439. The custom library menu shall be enabled only
                 // in the case there is a user library directory on disk.
-                Library lib = getEditorController().getLibrary();
+                Library lib = userLibrary;
                 if (lib instanceof UserLibrary) {
                     File userLibDir = fileSystem.getUserLibraryFolder();
                     if (userLibDir.canRead()) {
@@ -1306,9 +1281,14 @@ public class LibraryPanelController extends AbstractFxmlViewController {
 		return customLibraryMenu;
 	}
 
-	public StringProperty getLibraryLabel() {
+	@Override
+    public StringProperty getLibraryLabel() {
 		return getViewController().textProperty();
 	}
+
+    public Editor getEditorController() {
+        return editorController;
+    }
 
 
 }

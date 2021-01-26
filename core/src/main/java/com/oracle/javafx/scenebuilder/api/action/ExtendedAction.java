@@ -56,16 +56,16 @@ public class ExtendedAction<T extends AbstractAction> extends AbstractAction {
 
 	@SuppressWarnings("unchecked")
 	public ExtendedAction(T action) {
-		super(action.getContext());
+		super(action.getApi());
 
 		this.action = action;
 
 		ResolvableType resolvable = ResolvableType.forClassWithGenerics(ActionExtension.class, action.getClass());
-		String[] beanNamesForType = getContext().getBeanNamesForType(resolvable);
+		String[] beanNamesForType = getApi().getContext().getBeanNamesForType(resolvable);
 
 		if (beanNamesForType.length > 0) {
 			extensions = Arrays.asList(beanNamesForType).stream()
-					.map(b -> (ActionExtension<T>)getContext().getBean(b)).collect(Collectors.toList());
+					.map(b -> (ActionExtension<T>)getApi().getContext().getBean(b)).collect(Collectors.toList());
 		}
 
 		if (extensions != null) {

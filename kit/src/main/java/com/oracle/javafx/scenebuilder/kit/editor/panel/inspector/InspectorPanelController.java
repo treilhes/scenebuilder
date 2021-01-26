@@ -42,6 +42,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
@@ -55,6 +56,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -63,9 +65,9 @@ import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.core.editors.CssPropAuthorInfo;
@@ -87,20 +89,23 @@ import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.editors.GenericEditor;
-import com.oracle.javafx.scenebuilder.editors.ToggleGroupEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.job.ModifyCacheHintJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyFxIdJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.togglegroup.ModifySelectionToggleGroupJob;
+import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.job.editor.ModifyCacheHintJob;
+import com.oracle.javafx.scenebuilder.job.editor.ModifySelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
+import com.oracle.javafx.scenebuilder.job.editor.togglegroup.ModifySelectionToggleGroupJob;
 import com.oracle.javafx.scenebuilder.kit.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.css.Style;
+import javafx.css.StyleableProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
@@ -243,14 +248,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      * Public
      */
     public InspectorPanelController(
-    		@Autowired ApplicationContext context,
-    		@Autowired SceneBuilderManager sceneBuilderManager,
-    		@Autowired FileSystem fileSystem,
+    		@Autowired Api api,
     		@Autowired Editor editorController,
     		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired PropertyEditorFactory propertyEditorFactory,
-    		@Lazy @Autowired DocumentManager documentManager,
     		@Autowired AccordionAnimationPreference accordionAnimationPreference,
     		@Autowired @Qualifier("inspectorPanelActions.ShowAllAction") Action showAllAction,
     		@Autowired @Qualifier("inspectorPanelActions.ShowEditedAction") Action showEditedAction,
@@ -258,11 +260,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
     		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction
     		) {
-        super(sceneBuilderManager, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle(), editorController);
-        this.context = context;
-        this.fileSystem = fileSystem;
+        super(api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
+        this.context = api.getContext();
+        this.fileSystem = api.getFileSystem();
         this.editorController = editorController;
-        this.documentManager = documentManager;
+        this.documentManager = api.getApiDoc().getDocumentManager();
         this.session = propertyEditorFactory.newSession();
 //        this.availableCharsets = CharsetEditor.getStandardCharsets();
         this.sceneBuilderFactory = sceneBuilderFactory;
@@ -283,6 +285,13 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         expandedSectionProperty.setValue(SectionId.PROPERTIES);
         expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
+        
+        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        api.getApiDoc().getDocumentManager().cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
+        .subscribe(c -> cssRevisionDidChange());
+        
+        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
     }
 
@@ -435,10 +444,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         accordion.getPanes().forEach(tp -> tp.setAnimated(animate));
     }
 
-    /*
-     * AbstractPanelController
-     */
-    @Override
     protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
 //        System.out.println("FXOM Document changed : " + getEditorController().getFxomDocument());
         if (isInspectorLoaded() && hasFxomDocument()) {
@@ -447,7 +452,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
     }
 
-    @Override
     protected void sceneGraphRevisionDidChange() {
 //        System.out.println("Scene graph changed.");
         if (!dragOnGoing) {
@@ -455,7 +459,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
     }
 
-    @Override
     protected void cssRevisionDidChange() {
 //        System.out.println("CSS changed.");
         Platform.runLater(() -> {
@@ -465,15 +468,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         });
     }
 
-    @Override
-    protected void jobManagerRevisionDidChange() {
-        // FXOMDocument has been modified by a job.
-        // getEditorController().getJobManager().getLastJob()
-        // is the job responsible of the change.
-        // Since sceneGraphRevisionDidChange() will be called in this case, nothing to do here.
-    }
-
-    @Override
     protected void editorSelectionDidChange() {
 //        System.out.println("Selection changed.");
         // DTL-6570 should be resolved before this assertion is back.
@@ -631,6 +625,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private void rebuild() {
+        selectionState.clearSelectionCssState();
+        
 //        System.out.println("Inspector rebuild() called !");
         // The inspector structure has changed :
         // - selection changed
@@ -641,6 +637,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // TBD: we could optimize this by only refreshing values if
         //      same element class + same container class + same search pattern.
         clearSections();
+        
         if (getViewMode() == ViewMode.SECTION) {
             buildExpandedSection();
         } else {
@@ -754,6 +751,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         Iterator<Entry<InspectorPath, ValuePropertyMetadata>> iter = propMetaSection.entrySet().iterator();
         //Set<PropertyName> groupProperties = new HashSet<>();
+        
         while (iter.hasNext()) {
             // Loop on properties
             Entry<InspectorPath, ValuePropertyMetadata> entry = iter.next();
@@ -809,7 +807,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private PropertyEditor getInitializedPropertyEditor(ValuePropertyMetadata propMeta) {
         PropertyEditor propertyEditor = getPropertyEditor(propMeta);
-
         setEditorValueFromSelection(propertyEditor);
         handlePropertyEditorChanges(propertyEditor);
         return propertyEditor;
@@ -1090,22 +1087,22 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         HBox propNameNode;
         String propNameText;
         
-        //if (editor instanceof AbstractPropertyEditor) {
+        if (editor instanceof AbstractPropertyEditor) {
             propNameNode = ((AbstractPropertyEditor) editor).getPropNameNode();
             propNameText = ((AbstractPropertyEditor) editor).getPropertyNameText();
             editorLayout = ((AbstractPropertyEditor) editor).getLayoutFormat();
             
             //TODO check if the group code commented below is well handled
-//        } else {
-//            // PropertiesEditor
-//            propNameNode = ((PropertiesEditor) editor).getNameNode();
-//            propNameText = ((PropertiesEditor) editor).getPropertyNameText();
-//            if (getViewMode() == ViewMode.SECTION) {
-//                editorLayout = LayoutFormat.SIMPLE_LINE_NO_NAME;
-//            } else {
-//                editorLayout = LayoutFormat.DOUBLE_LINE;
-//            }
-//        }
+        } else {
+            // PropertiesEditor
+            propNameNode = ((AbstractPropertiesEditor) editor).getNameNode();
+            propNameText = ((AbstractPropertiesEditor) editor).getPropertyNameText();
+            if (getViewMode() == ViewMode.SECTION) {
+                editorLayout = LayoutFormat.SIMPLE_LINE_NO_NAME;
+            } else {
+                editorLayout = LayoutFormat.DOUBLE_LINE;
+            }
+        }
         propNameNode.setFocusTraversable(false);
         MenuButton menu = editor.getMenu();
         // For SQE tests
@@ -1184,6 +1181,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Handle the value change
         propertyEditor.addValueListener((ov, oldValue, newValue) -> {
 //                System.out.println("Value change : " + newValue);
+            
             if (!propertyEditor.isUpdateFromModel()) {
                 lastPropertyEditorValueChanged = propertyEditor;
                 updateValueInModel(propertyEditor, oldValue, newValue);
@@ -1347,6 +1345,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         if (propertyEditor instanceof FxIdEditor) {
             setFxIdFromSelection(propertyEditor);
+            return;
         }
         
         // Determine the property value
@@ -1374,7 +1373,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                 isIndeterminate = true;
             }
 
-            cssInfo = CssInternal.getCssInfo(instance.getSceneGraphObject(), propMeta);
+            Map<StyleableProperty, List<Style>> cssState = selectionState.getCssState(instance);
+            cssInfo = CssInternal.getCssInfo(cssState, propMeta);
             if (cssInfo != null) {
                 isRuledByCss = true;
             }
@@ -2144,5 +2144,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 		return getViewController().getRoot();
 	}
 
+    public Editor getEditorController() {
+        return editorController;
+    }
 
+	
 }

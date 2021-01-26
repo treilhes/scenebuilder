@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.TreeTableViewResizePolicyPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.ColumnResizePolicyEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ColumnResizePolicyEditor;
 
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeTableView;

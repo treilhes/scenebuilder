@@ -55,8 +55,11 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.JarReport;
+import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
@@ -64,8 +67,7 @@ import com.oracle.javafx.scenebuilder.library.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.library.util.FolderExplorer;
 import com.oracle.javafx.scenebuilder.library.util.JarExplorer;
-import com.oracle.javafx.scenebuilder.library.util.JarReport;
-import com.oracle.javafx.scenebuilder.library.util.JarReportEntry;
+import com.oracle.javafx.scenebuilder.library.util.JarReportImpl;
 
 /**
  *
@@ -75,12 +77,14 @@ class LibraryFolderWatcher implements Runnable {
 
 	private final BuiltinLibrary builtinLibrary;
     private final UserLibrary library;
+    private final List<LibraryFilter> filters;
 
     private enum FILE_TYPE {FXML, JAR, FOLDER_MARKER};
 
-    public LibraryFolderWatcher(UserLibrary library, BuiltinLibrary builtinLibrary) {
+    public LibraryFolderWatcher(UserLibrary library, BuiltinLibrary builtinLibrary, List<LibraryFilter> filters) {
         this.library = library;
         this.builtinLibrary = builtinLibrary;
+        this.filters = filters;
     }
 
     /*
@@ -347,37 +351,25 @@ class LibraryFolderWatcher implements Runnable {
         }
 
         // 2)
-        final List<JarReport> jarOrFolderReports = new ArrayList<>();
-//        boolean shouldShowImportGluonJarAlert = false;
+        final List<JarReportImpl> jarOrFolderReports = new ArrayList<>();
+        
         for (Path currentJarOrFolder : jarsOrFolders) {
             if (LibraryUtil.isJarPath(currentJarOrFolder)) {
                 Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.jar", currentJarOrFolder));
-                final JarExplorer explorer = new JarExplorer(currentJarOrFolder);
-                JarReport jarReport = explorer.explore(classLoader);
+                final JarExplorer explorer = new JarExplorer(currentJarOrFolder, filters);
+                JarReportImpl jarReport = explorer.explore(classLoader);
                 jarOrFolderReports.add(jarReport);
             }
             else if (Files.isDirectory(currentJarOrFolder)) {
                 Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.folder", currentJarOrFolder));
-                final FolderExplorer explorer = new FolderExplorer(currentJarOrFolder);
-                JarReport jarReport = explorer.explore(classLoader);
+                final FolderExplorer explorer = new FolderExplorer(currentJarOrFolder, filters);
+                JarReportImpl jarReport = explorer.explore(classLoader);
                 jarOrFolderReports.add(jarReport);
             }
 
             Logger.getLogger(this.getClass().getSimpleName()).info(I18N.getString("log.info.explore.end", currentJarOrFolder));
 
-            //            if (jarReport.hasGluonControls()) {
-//                // We check if the jar has already been imported to avoid showing the import gluon jar
-//                // alert every time Scene Builder starts for jars that have already been imported
-//                if (!hasGluonJarBeenImported(jarReport.getJar().getFileName().toString())) {
-//                    shouldShowImportGluonJarAlert = true;
-//                }
-//
-//            }
         }
-
-//        if (shouldShowImportGluonJarAlert && onImportingGluonControls != null) {
-//            onImportingGluonControls.run();
-//        }
 
         // 3)
         final List<LibraryItemImpl> newItems = new ArrayList<>();

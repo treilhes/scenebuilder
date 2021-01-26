@@ -36,11 +36,12 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 
 import javafx.scene.image.Image;
 
@@ -50,11 +51,11 @@ import javafx.scene.image.Image;
  *
  * @treatAsPrivate
  */
-public class HierarchyItemBorderPane extends HierarchyItem {
+public class HierarchyItemBorderPane extends HierarchyItemBase {
 
     private final Accessory position;
     // The accessory owner. Used for the equals method.
-    private final DesignHierarchyMask owner;
+    private final HierarchyMask owner;
 
     /**
      * Creates a hierarchy item.
@@ -64,7 +65,7 @@ public class HierarchyItemBorderPane extends HierarchyItem {
      * @param position The position of the FX object within the BorderPane
      */
     public HierarchyItemBorderPane(
-            final DesignHierarchyMask owner,
+            final HierarchyMask owner,
             final FXOMObject fxomObject,
             final Accessory position) {
         assert owner != null;
@@ -118,7 +119,7 @@ public class HierarchyItemBorderPane extends HierarchyItem {
      *
      * @return the DesignHierarchyMask owner
      */
-    public DesignHierarchyMask getOwner() {
+    public HierarchyMask getOwner() {
         return owner;
     }
 

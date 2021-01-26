@@ -40,45 +40,10 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menuBar">
       <menus>
-        <Menu fx:id="fileMenu" mnemonicParsing="true" text="%menu.title.file">
-          <items>
-            <MenuItem fx:id="newMenuItem" mnemonicParsing="true" text="%menu.title.new" />
-            <MenuItem fx:id="newTemplateMenuItem" mnemonicParsing="true" text="%menu.title.new.template" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="openMenuItem" mnemonicParsing="true" text="%menu.title.open" />
-            <Menu fx:id="openRecentMenu" mnemonicParsing="true" text="%menu.title.open.recent">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-              </items>
-            </Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="saveMenuItem" mnemonicParsing="true" text="%menu.title.save" />
-            <MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" text="%menu.title.save.as" />
-            <MenuItem fx:id="revertMenuItem" mnemonicParsing="true" text="%menu.title.revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="revealMenuItem" mnemonicParsing="true" text="Reveal (setup at runtime)" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu fx:id="importMenu" mnemonicParsing="false" text="%menu.title.import">
-              <items>
-                <MenuItem fx:id="importFxmlMenuItem" mnemonicParsing="false" text="%menu.title.import.fxml" />
-                <MenuItem fx:id="importMediaMenuItem" mnemonicParsing="false" text="%menu.title.import.media" />
-              </items>
-            </Menu>
-            <Menu fx:id="includeMenu" mnemonicParsing="false" text="%menu.title.include">
-                <items>
-                    <MenuItem fx:id="includeFileMenuItem" mnemonicParsing="false" text="%menu.title.include.fxml" />
-                    <MenuItem fx:id="editIncludedFileMenuItem" mnemonicParsing="true" text="%menu.title.edit.included.default" />
-                    <MenuItem fx:id="revealIncludedFileMenuItem" mnemonicParsing="true" text="%menu.title.reveal.included.default" />
-                </items>
-            </Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="showPreferencesMenuItem" mnemonicParsing="false" text="%menu.title.preferences" />
-          </items>
-        </Menu>
         <Menu fx:id="editMenu" mnemonicParsing="true" text="%menu.title.edit">
           <items>
             <MenuItem fx:id="undoMenuItem" mnemonicParsing="true" text="%menu.title.undo" />
@@ -215,7 +180,6 @@
         <Menu fx:id="helpMenu" mnemonicParsing="false" text="%menu.title.help">
           <items>
             <MenuItem fx:id="helpMenuItem" mnemonicParsing="true" text="%menu.title.scene.builder.help" />
-            <MenuItem fx:id="checkUpdatesMenuItem" mnemonicParsing="true" text="%menu.title.check.updates" />
             <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="%menu.title.about" />
           </items>
         </Menu>

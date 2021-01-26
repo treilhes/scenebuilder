@@ -35,15 +35,20 @@ package com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.reposi
 import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.preset.MavenPresets;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.dialog.RepositoryDialogController;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -57,6 +62,9 @@ import javafx.stage.Stage;
 /**
  * Controller for the JAR/FXML Library dialog.
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Lazy
 public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     @FXML
@@ -75,13 +83,13 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     //private final SceneBuilderManager sceneBuilderManager;
 
     protected RepositoryManagerController(
-            ApplicationContext context,
+            Api api,
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
-        this.context = context;
+        super(api, LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
+        this.context = api.getContext();
         this.owner = owner;
         this.editorController = editorController;
         this.repositoryPreferences = repositoryPreferences;
@@ -150,7 +158,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     private void repositoryDialog(Repository repository) {
         RepositoryDialogController repositoryDialogController = context.getBean(RepositoryDialogController.class,
-                editorController, mavenSetting, repositoryPreferences, getStage());
+                getApi(), editorController, mavenSetting, repositoryPreferences, getStage());
         repositoryDialogController.openWindow();
         repositoryDialogController.setRepository(repository);
         repositoryDialogController.getStage().showingProperty().addListener(new InvalidationListener() {

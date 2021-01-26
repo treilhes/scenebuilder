@@ -41,13 +41,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Main;
+import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsSizePreference;
-import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
-import com.oracle.javafx.scenebuilder.kit.template.Template;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
+import com.oracle.javafx.scenebuilder.kit.template.TemplateImpl;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesBaseWindowController;
 
 import javafx.event.ActionEvent;
@@ -61,7 +63,7 @@ import javafx.stage.Modality;
 
 @Component
 @Lazy
-public class WelcomeDialogWindowController extends TemplatesBaseWindowController {
+public class WelcomeDialogWindowController extends TemplatesBaseWindowController implements WelcomeDialog {
 
     @FXML
     private VBox recentDocuments;
@@ -69,20 +71,21 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private Button emptyApp;
 
-    private final MainController sceneBuilderApp;
+    private final Main sceneBuilderApp;
 
 	private final RecentItemsPreference recentItemsPreference;
 
 	private final RecentItemsSizePreference recentItemsSizePreference;
 
-    private final WindowIconSetting windowIconSetting;
+    private final IconSetting windowIconSetting;
 
     private WelcomeDialogWindowController(
-    		@Autowired MainController sceneBuilderApp,
-    		@Autowired WindowIconSetting windowIconSetting,
+            @Autowired Api api,
+    		@Autowired Main sceneBuilderApp,
+    		@Autowired IconSetting windowIconSetting,
     		@Autowired RecentItemsPreference recentItemsPreference,
     		@Autowired RecentItemsSizePreference recentItemsSizePreference) {
-        super(WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
+        super(api, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
                 null); // We want it to be a top level window so we're setting the owner to null.
 
@@ -146,7 +149,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
             recentDocument.setTooltip(new Tooltip(recentItem));
         }
 
-        emptyApp.setUserData(Template.EMPTY_APP);
+        emptyApp.setUserData(TemplateImpl.EMPTY_APP);
 
         setOnTemplateChosen(sceneBuilderApp::performNewTemplate);
         setupTemplateButtonHandlers();
@@ -168,8 +171,8 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private void openDocument() {
         // Right now there is only one window open by default
-        DocumentWindowController documentWC = sceneBuilderApp.getDocumentWindowControllers().get(0);
-        sceneBuilderApp.performControlAction(MainController.ApplicationControlAction.OPEN_FILE, documentWC);
+        Document documentWC = sceneBuilderApp.getDocumentWindowControllers().get(0);
+        sceneBuilderApp.performControlAction(Main.ApplicationControlAction.OPEN_FILE, documentWC);
         getStage().hide();
     }
 }

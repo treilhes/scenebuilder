@@ -36,8 +36,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 /**
@@ -48,8 +47,8 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 @Lazy
 public class GenericPaintPopupEditor extends PaintPopupEditor {
 
-    public GenericPaintPopupEditor(Dialog dialog, MessageLogger messageLogger) {
-        super(dialog, messageLogger);
+    public GenericPaintPopupEditor(Api api) {
+        super(api);
     }
     
 }

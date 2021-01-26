@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;

@@ -46,7 +46,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -105,15 +105,12 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         KeyCombination.META_ANY, KeyCombination.META_DOWN,
         KeyCombination.SHIFT_ANY, KeyCombination.SHIFT_DOWN,
         KeyCombination.SHORTCUT_ANY, KeyCombination.SHORTCUT_DOWN};
-    private final Dialog dialog;
 
     public KeyCombinationPopupEditor(
-            @Autowired Dialog dialog,
-            @Autowired MessageLogger messageLogger
+            @Autowired Api api
             ) {
-        super(dialog);
-        this.dialog = dialog;
-        this.messageLogger = messageLogger;
+        super(api);
+        this.messageLogger = api.getApiDoc().getMessageLogger();
     }
 
     //
@@ -132,7 +129,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
             keyCodesStr.add(keyCode.getName());
         }
 
-        mainKey = new MainKey(dialog, keyCodesStr, messageLogger);
+        mainKey = new MainKey(getApi(), keyCodesStr, messageLogger);
         mainKeySp.getChildren().add(mainKey.getNode());
 
         clearAllBt.setText(I18N.getString("inspector.keycombination.clear"));
@@ -182,6 +179,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         return gridPane;
     }
 
+    @Override
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         super.reset(propMeta, selectionState);
     }
@@ -431,8 +429,8 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         private MessageLogger messageLogger;
         String mainKey = null;
 
-        public MainKey(Dialog dialog, List<String> suggestedKeys, MessageLogger messageLogger) {
-            super(dialog); //NOI18N
+        public MainKey(Api api, List<String> suggestedKeys, MessageLogger messageLogger) {
+            super(api); //NOI18N
             preInit(Type.ALPHA, suggestedKeys);
             initialize(messageLogger);
         }

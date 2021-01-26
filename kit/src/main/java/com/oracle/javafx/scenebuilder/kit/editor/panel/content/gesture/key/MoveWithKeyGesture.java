@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.editor.job.RelocateSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

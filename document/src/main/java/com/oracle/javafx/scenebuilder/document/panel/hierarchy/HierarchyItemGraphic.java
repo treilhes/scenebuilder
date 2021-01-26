@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 import java.net.URL;
 import java.util.Objects;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -48,10 +49,10 @@ import javafx.scene.image.Image;
  *
  * @treatAsPrivate
  */
-public class HierarchyItemGraphic extends HierarchyItem {
+public class HierarchyItemGraphic extends HierarchyItemBase {
     
     // The accessory owner. Used for the equals method.
-    private final DesignHierarchyMask owner;
+    private final HierarchyMask owner;
 
     /**
      * Creates a hierarchy item.
@@ -60,7 +61,7 @@ public class HierarchyItemGraphic extends HierarchyItem {
      * @param fxomObject The FX object represented by this item
      */
     public HierarchyItemGraphic(
-            final DesignHierarchyMask owner, 
+            final HierarchyMask owner, 
             final FXOMObject fxomObject) {
         assert owner != null;
         this.owner = owner;
@@ -110,7 +111,7 @@ public class HierarchyItemGraphic extends HierarchyItem {
      *
      * @return the DesignHierarchyMask owner
      */
-    public DesignHierarchyMask getOwner() {
+    public HierarchyMask getOwner() {
         return owner;
     }
 

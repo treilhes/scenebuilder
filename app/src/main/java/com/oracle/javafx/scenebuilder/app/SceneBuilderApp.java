@@ -43,9 +43,10 @@ public class SceneBuilderApp {
 	 * TODO is this comment still relevant?
      * Normally ignored in correctly deployed JavaFX application.
      * But on Mac OS, this method seems to be called by the javafx launcher.
+	 * @throws Exception 
      */
 	public static void main(String[] args) {
-		Application.launch(SceneBuilderBootstrap.class, args);
+        Application.launch(SceneBuilderBootstrap.class, args);
 	}
 
 }

@@ -32,8 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.library.editor.panel.library;
 
+import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController.PrefSize;
-import com.oracle.javafx.scenebuilder.library.util.JarReportEntry;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

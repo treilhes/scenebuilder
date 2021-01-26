@@ -38,16 +38,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.DocumentPanel;
+import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
@@ -69,7 +68,7 @@ import javafx.scene.layout.StackPane;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class DocumentPanelController extends AbstractFxmlViewController {
+public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
 
 	private final AbstractHierarchyPanelController hierarchyPanelController;
@@ -103,8 +102,7 @@ public class DocumentPanelController extends AbstractFxmlViewController {
      */
     //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public DocumentPanelController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
-    		@Autowired Editor editor,
+            @Autowired Api api,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
     		@Autowired HierarchyPanelController hierarchyPanelController,
     		@Autowired InfoPanelController infoPanelController,
@@ -114,7 +112,7 @@ public class DocumentPanelController extends AbstractFxmlViewController {
     		@Autowired @Qualifier("documentPanelActions.ShowFxIdAction") Action showFxIdAction,
     		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction
     		) { //, UserLibrary library) {
-        super(sceneBuilderManager, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle(), editor); //NOI18N
+        super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
@@ -223,35 +221,4 @@ public class DocumentPanelController extends AbstractFxmlViewController {
 		// TODO Auto-generated method stub
 		return "RRRRRRRRR";
 	}
-
-	@Override
-	protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void sceneGraphRevisionDidChange() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void cssRevisionDidChange() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void jobManagerRevisionDidChange() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void editorSelectionDidChange() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

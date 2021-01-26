@@ -182,7 +182,9 @@
  ******************************************************************************/
 
 .theme-presets .split-pane {
-    -fx-background-color: -sb-base-dark;
+    //-fx-background-color: -sb-base-dark;
+	//-fx-background-color: white;
+	-fx-background-color: -sb-content-background;
     -fx-background-insets: 0;
     -fx-padding: 0;
 }
@@ -336,10 +338,12 @@
 
 .theme-presets .jar-import-num-of-items-label {
     -fx-font-size : 0.875em;
+	-fx-text-fill: black;
 }
 
 .theme-presets .jar-import-class-name-label {
-    -fx-text-fill: -sb-content-text-dimmed;
+    //-fx-text-fill: -sb-content-text-dimmed;
+	-fx-text-fill: black;
     -fx-font-size : 0.875em;
 }
 

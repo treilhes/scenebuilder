@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.DragSource;
@@ -52,7 +53,6 @@ import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.Handles;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -188,6 +188,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 	private final ParentRingColorPreference parentRingColorPreference;
 	private final EditorController editorController;
 	private final ApplicationContext context;
+    private FXOMDocument oldDocument;
 
     /*
      * Public
@@ -199,8 +200,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param editorController the editor controller (never null).
      */
     public ContentPanelController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
-    		@Autowired ApplicationContext context,
+            @Autowired Api api,
     		@Autowired EditorController editorController,
     		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
     		@Autowired BackgroundImagePreference backgroundImagePreference,
@@ -212,8 +212,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
 //    		@Autowired @Lazy PickModeController pickModeController,
 //    		@Autowired WorkspaceController workspaceController
     		) {
-        super(sceneBuilderManager, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle(), editorController); //NOI18N
-        this.context = context;
+        super(api, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle()); //NOI18N
+        this.context = api.getContext();
         this.editorController = editorController;
         
         //TODO try to use getBean without parameters
@@ -232,7 +232,9 @@ public class ContentPanelController extends AbstractFxmlPanelController
         this.backgroundImagePreference = backgroundImagePreference;
         this.parentRingColorPreference = parentRingColorPreference;
 
-
+        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(s -> editorSelectionDidChange());
+        api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
     }
 
     @FXML
@@ -244,15 +246,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
         editorController.getDragController().dropTargetProperty().addListener((ChangeListener<DropTarget>) (ov, t, t1) -> dropTargetDidChange()
         );
 
-//        editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t, t1) -> themeDidChange()
-//        );
-//
-//        editorController.gluonSwatchProperty().addListener(((observable, oldValue, newValue) -> themeDidChange()));
-//
-//        editorController.gluonThemeProperty().addListener(((observable, oldValue, newValue) -> themeDidChange()));
-
-//        editorController.sceneStyleSheetProperty().addListener((ListChangeListener<File>) change -> sceneStyleSheetsDidChange()
-//        );
         editorController.pickModeEnabledProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> pickModeDidChange()
         );
 
@@ -612,6 +605,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param sceneY y coordinate of a scene point
      * @return an FXOMObject that matches (sceneGraphNode, sceneX, sceneY)
      */
+    @Override
     public FXOMObject searchWithNode(Node sceneGraphNode, double sceneX, double sceneY) {
        final FXOMObject result;
 
@@ -786,6 +780,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param fxomObject an fxom object
      * @return null or the associated handles
      */
+    @Override
     public Handles<?> lookupHandles(FXOMObject fxomObject) {
         final Handles<?> result;
 
@@ -830,15 +825,14 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
     /**
      * @treatAsPrivate fxom document has changed
-     * @param oldDocument old fxom document
+     * @param fxomDocument the new fxom document
      */
-    @Override
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
+    protected void fxomDocumentDidChange(FXOMDocument fxomDocument) {
         if (oldDocument != null) {
             assert oldDocument.getSceneGraphHolder() == this;
             oldDocument.endHoldingSceneGraph();
         }
-        final FXOMDocument fxomDocument = getEditorController().getFxomDocument();
+
         if (fxomDocument != null) {
             assert fxomDocument.getSceneGraphHolder() == null;
             fxomDocument.beginHoldingSceneGraph(this);
@@ -869,26 +863,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
     /**
-     * @treatAsPrivate user scene graph has changed
-     */
-    @Override
-    protected void sceneGraphRevisionDidChange() {
-        // Everything is done by fxomDocumentDidRefreshSceneGraph().
-        // Nothing to do here.
-    }
-
-    /**
-     * @treatAsPrivate
-     */
-    @Override
-    protected void cssRevisionDidChange() {
-        // Nothing to do here.
-    }
-
-    /**
      * @treatAsPrivate job manager revision has changed
      */
-    @Override
     protected void jobManagerRevisionDidChange() {
         getEditorController().setPickModeEnabled(false);
     }
@@ -896,7 +872,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
     /**
      * @treatAsPrivate selection has changed
      */
-    @Override
     protected void editorSelectionDidChange() {
         if (currentModeController != null) {
             currentModeController.editorSelectionDidChange();
@@ -1146,29 +1121,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
         }
     }
 
-
-//    private void themeDidChange() {
-//        if (contentGroup != null) {
-//            final Theme theme = getEditorController().getTheme();
-//            final GluonSwatch gluonSwatch = getEditorController().getGluonSwatch();
-//            final GluonTheme gluonTheme = getEditorController().getGluonTheme();
-//            final String themeStyleSheet = theme.getStylesheetURL();
-//            workspaceController.setThemeStyleSheet(themeStyleSheet, theme, gluonSwatch, gluonTheme);
-//        }
-//    }
-
-
-    private void sceneStyleSheetsDidChange() {
-//        if (contentGroup != null) {
-//            final List<File> sceneStyleSheets = getEditorController().getSceneStyleSheets();
-//            final List<String> sceneStyleSheetURLs = new ArrayList<>();
-//            for (File f : sceneStyleSheets) {
-//                sceneStyleSheetURLs.add(f.toURI().toString());
-//            }
-//            workspaceController.setPreviewStyleSheets(sceneStyleSheetURLs);
-//        }
-    }
-
     private void pickModeDidChange() {
         final AbstractModeController newModeController;
         if (getEditorController().isPickModeEnabled()) {
@@ -1303,4 +1255,11 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
         return result;
     }
+
+    @Override
+    public EditorController getEditorController() {
+        return editorController;
+    }
+    
+    
 }

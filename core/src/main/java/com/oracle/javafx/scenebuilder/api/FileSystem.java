@@ -40,14 +40,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 
 public interface FileSystem {
-
-    public static String APP_FOLDER_NAME = "Scene BuilderX";
-
-	public static File USER_HOME = new File(System.getProperty("user.home")); //NOI18N
 
     File getMessageBoxFolder();
 
@@ -191,5 +188,9 @@ public interface FileSystem {
         final File libFile = getUserLibraryFolder();
         return totalSize < libFile.getFreeSpace();
     }
+
+    File getUserExtensionsFolder();
+
+    File getUserExtensionFolder(UUID extensionId);
 
 }

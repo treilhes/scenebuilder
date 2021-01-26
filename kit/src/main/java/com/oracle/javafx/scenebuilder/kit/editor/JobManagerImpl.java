@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.job.reference.UpdateReferencesJob;
+import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -79,7 +79,7 @@ public class JobManagerImpl implements JobManager {
         this.context = context;
         this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
         
-        revision.addListener((ob,o,n) -> documentManager.dirty().onNext(true));
+        revision.addListener((ob,o,n) -> documentManager.dirty().set(true));
         
         documentManager.fxomDocument().subscribe(fxom -> clear());
     }

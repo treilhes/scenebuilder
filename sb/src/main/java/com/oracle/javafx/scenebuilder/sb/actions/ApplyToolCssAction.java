@@ -36,11 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
@@ -64,10 +63,9 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
 	private final SceneBuilderManager sceneBuilderManager;
 
 	public ApplyToolCssAction(
-			@Autowired ApplicationContext context,
-			@Autowired @Lazy SceneBuilderManager sceneBuilderManager) {
-		super(context);
-		this.sceneBuilderManager = sceneBuilderManager;
+	        @Autowired Api api) {
+		super(api);
+		this.sceneBuilderManager = api.getSceneBuilderManager();
 	}
 
 	public synchronized ApplyToolCssConfig getActionConfig() {

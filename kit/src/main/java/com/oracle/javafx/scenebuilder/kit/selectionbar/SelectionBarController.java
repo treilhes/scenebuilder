@@ -38,9 +38,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -76,44 +75,36 @@ public class SelectionBarController extends AbstractFxmlPanelController {
     private final Image selectionChevronImage;
 
     public SelectionBarController(
-            SceneBuilderManager sceneBuilderManager,
-            Editor editorController) {
-        super(sceneBuilderManager, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle(), editorController); //NOI18N
+            Api api) {
+        super(api, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle()); //NOI18N
 
         // Initialize selection chevron image
         final URL selectionChevronURL = SelectionBarController.class.getResource("selection-chevron.png"); //NOI18N
         assert selectionChevronURL != null;
         selectionChevronImage = new Image(selectionChevronURL.toExternalForm());
+        
+        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
     }
 
-    /*
-     * AbstractPanelController
-     */
-    @Override
     protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
         if (pathBox != null) {
             updateSelectionBar();
         }
     }
 
-    @Override
     protected void sceneGraphRevisionDidChange() {
         if (pathBox != null) {
             updateSelectionBar();
         }
     }
 
-    @Override
-    protected void cssRevisionDidChange() {
-        // Nothing to do here
-    }
-
-    @Override
     protected void jobManagerRevisionDidChange() {
         sceneGraphRevisionDidChange();
     }
 
-    @Override
     protected void editorSelectionDidChange() {
         if (pathBox != null) {
             updateSelectionBar();
@@ -137,7 +128,7 @@ public class SelectionBarController extends AbstractFxmlPanelController {
      * Private
      */
     private void updateSelectionBar() {
-        final Selection selection = getEditorController().getSelection();
+        final Selection selection = getApi().getApiDoc().getSelection();
 
         pathBox.getChildren().clear();
 
@@ -235,9 +226,9 @@ public class SelectionBarController extends AbstractFxmlPanelController {
     };
 
     private void handleSelect(FXOMObject fxomObject) {
-        final Selection selection = getEditorController().getSelection();
+        final Selection selection = getApi().getApiDoc().getSelection();
 
-        assert fxomObject.getFxomDocument() == getEditorController().getFxomDocument();
+        assert fxomObject.getFxomDocument() == getApi().getApiDoc().getDocumentManager().fxomDocument().get();
 
         selection.select(fxomObject);
     }

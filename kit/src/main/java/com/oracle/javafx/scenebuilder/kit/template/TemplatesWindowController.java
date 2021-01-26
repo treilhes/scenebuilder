@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -49,8 +50,9 @@ import javafx.stage.Modality;
 @Lazy
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     public TemplatesWindowController(
+            @Autowired Api api,
             @Autowired Document document) {
-        super(TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
+        super(api, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
                 I18N.getBundle(), document.getStage());
     }
 

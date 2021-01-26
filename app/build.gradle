@@ -14,14 +14,21 @@ dependencies {
     implementation project(':gluon')
     implementation project(':filesystem')
     implementation project(':sb')
-	implementation project(':preview')
+	implementation project(':inspector')
 	implementation project(':library')
 	implementation project(':controls')
 	implementation project(':document')
 	implementation project(':editors')
 	implementation project(':jobs')
+	implementation project(':preview')
 	implementation project(':source-view')
 	implementation project(':source-gen')
+	implementation project(':extension-library')
+	implementation project(':preference-editor')
+	implementation project(':templates')
+	implementation project(':update-manager')
+	implementation project(':certificate-manager')
+	//implementation project(':help-features')
 }
 
 run {

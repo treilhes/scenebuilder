@@ -37,10 +37,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ViewContent;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlController;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
@@ -94,9 +93,8 @@ public class ViewController extends AbstractFxmlController implements ViewConten
      * @param editor the editor
      */
     public ViewController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired Editor editor) {
-        super(sceneBuilderManager, ViewController.class.getResource("View.fxml"), editor);
+            @Autowired Api api) {
+        super(api, ViewController.class.getResource("View.fxml"));
     }
 
     /**

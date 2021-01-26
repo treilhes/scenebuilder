@@ -37,11 +37,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
@@ -64,10 +63,9 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 	private final DocumentManager documentManager;
 
 	public ApplyI18nContentAction(
-			@Autowired ApplicationContext context,
-			@Autowired @Lazy DocumentManager documentManager) {
-		super(context);
-		this.documentManager = documentManager;
+	        @Autowired Api api) {
+		super(api);
+		this.documentManager = api.getApiDoc().getDocumentManager();
 	}
 
 	public synchronized ApplyI18nContentConfig getActionConfig() {
@@ -89,7 +87,7 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 	@Override
 	public void perform() {
 		assert getActionConfig() != null;
-		documentManager.i18nResourceConfig().onNext(getActionConfig());
+		documentManager.i18nResourceConfig().set(getActionConfig());
 	}
 
 	public static class ApplyI18nContentConfig implements I18nResourceProvider {

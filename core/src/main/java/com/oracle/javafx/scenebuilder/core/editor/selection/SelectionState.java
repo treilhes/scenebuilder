@@ -32,12 +32,19 @@
  */
 package com.oracle.javafx.scenebuilder.core.editor.selection;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
+
+import javafx.css.Style;
+import javafx.css.StyleableProperty;
 
 /*
  *   This class represents the selection state:
@@ -57,6 +64,22 @@ public class SelectionState {
     private FXOMObject commonParentObject;
     private final Set<FXOMInstance> unresolvedInstances = new HashSet<>();
 
+    // TEMP CSS PERF ADD
+    private final Map<FXOMInstance, Map<StyleableProperty, List<Style>>> selectionCssState = new HashMap<>();
+    public void clearSelectionCssState() {
+        selectionCssState.clear();
+    }
+    public Map<StyleableProperty, List<Style>> getCssState(FXOMInstance instance) {
+        if (selectionCssState.containsKey(instance)) {
+            return selectionCssState.get(instance);
+        } else {
+            Map<StyleableProperty, List<Style>> state = CssInternal.getCssState(instance.getSceneGraphObject());
+            selectionCssState.put(instance, state);
+            return state;
+        }
+    }
+    // TEMP CSS PERF ADD
+    
     public SelectionState(Selection selection) {
         this.selection = selection;
         initialize();

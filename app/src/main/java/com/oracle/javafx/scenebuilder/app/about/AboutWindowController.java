@@ -41,9 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.About;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
@@ -57,28 +58,28 @@ import javafx.stage.Modality;
  */
 @Component
 @Lazy
-public final class AboutWindowController extends AbstractFxmlWindowController {
+public final class AboutWindowController extends AbstractFxmlWindowController implements About {
 
     @FXML
     private GridPane vbox;
     @FXML
     private TextArea textArea;
 
-    private String sbBuildInfo;
     private String sbBuildVersion;
     private String sbBuildDate;
     private String sbBuildJavaVersion;
+    private String sbBuildInfo;
+    
     // The resource bundle contains two keys: about.copyright and about.copyright.open
     private String sbAboutCopyrightKeyName;
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
     private final String LOG_FILE_NAME;
 
     public AboutWindowController(
-            @Autowired VersionSetting versionSetting
+            @Autowired @Lazy Api api
             ) {
-        super(AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
-        this.LOG_FILE_NAME = "scenebuilder-" + versionSetting.getSceneBuilderVersion() + ".log"; //NOI18N
-
+        super(api, AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
+        
         try (InputStream in = getClass().getResourceAsStream("about.properties")) { //NOI18N
 
             if (in != null) {
@@ -93,6 +94,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
         } catch (IOException ex) {
             // We go with default values
         }
+        this.LOG_FILE_NAME = "scenebuilder-" + sbBuildVersion + ".log"; //NOI18N
     }
 
     @FXML
@@ -143,20 +145,24 @@ public final class AboutWindowController extends AbstractFxmlWindowController {
         return text.toString();
     }
 
-    /**
-     *
-     * @treatAsPrivate
-     */
+    @Override
     public String getBuildJavaVersion() {
         return sbBuildJavaVersion;
     }
 
-    /**
-     *
-     * @treatAsPrivate
-     */
+    @Override
     public String getBuildInfo() {
         return sbBuildInfo;
+    }
+
+    @Override
+    public String getBuildVersion() {
+        return sbBuildVersion;
+    }
+
+    @Override
+    public String getBuildDate() {
+        return sbBuildDate;
     }
 
     private StringBuilder getVersionParagraph() {

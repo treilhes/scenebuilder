@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.library;
 import java.util.Comparator;
 import java.util.Locale;
 
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 
 /**
  *

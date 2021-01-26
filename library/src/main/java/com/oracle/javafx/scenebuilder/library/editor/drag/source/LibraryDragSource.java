@@ -36,8 +36,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DragSourceShadow;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;

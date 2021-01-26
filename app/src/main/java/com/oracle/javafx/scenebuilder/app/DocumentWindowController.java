@@ -44,7 +44,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,11 +56,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -84,8 +86,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPrefer
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.app.report.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
@@ -97,10 +97,9 @@ import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
-import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
@@ -108,13 +107,11 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelC
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
+//import com.oracle.javafx.scenebuilder.library.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -141,48 +138,7 @@ import javafx.stage.Stage;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DocumentWindowController extends AbstractFxmlWindowController implements Document, InitializingBean {
 
-    public enum DocumentControlAction {
-        COPY,
-        SELECT_ALL,
-        SELECT_NONE,
-        SAVE_FILE,
-        SAVE_AS_FILE,
-        REVERT_FILE,
-        CLOSE_FILE,
-        REVEAL_FILE,
-        GOTO_CONTENT,
-        GOTO_PROPERTIES,
-        GOTO_LAYOUT,
-        GOTO_CODE,
-        TOGGLE_LIBRARY_PANEL,
-        TOGGLE_DOCUMENT_PANEL,
-        TOGGLE_CSS_PANEL,
-        TOGGLE_LEFT_PANEL,
-        TOGGLE_RIGHT_PANEL,
-        TOGGLE_OUTLINES_VISIBILITY,
-        TOGGLE_GUIDES_VISIBILITY,
-        SHOW_PREVIEW_WINDOW,
-        SHOW_PREVIEW_DIALOG,
-        ADD_SCENE_STYLE_SHEET,
-        SET_RESOURCE,
-        REMOVE_RESOURCE,
-        REVEAL_RESOURCE,
-        HELP
-    }
-
-    public enum DocumentEditAction {
-        DELETE,
-        CUT,
-        PASTE,
-        IMPORT_FXML,
-        IMPORT_MEDIA,
-        INCLUDE_FXML
-    }
-
-    public enum ActionStatus {
-        CANCELLED,
-        DONE
-    }
+    
 
     private EditorController editorController;
     private final FileSystem fileSystem;
@@ -191,7 +147,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final DocumentPanelController documentPanelController;
     private final InspectorPanelController inspectorPanelController;
     private final CssPanelController cssPanelController;
-    private final LibraryPanelController libraryPanelController;
+    private final LibraryPanel libraryPanelController;
     private final SelectionBarController selectionBarController;
     private final MessageBarController messageBarController;
     private final WildcardImportsPreference wildcardImportsPreference;
@@ -252,9 +208,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final List<InitWithDocument> initializations;
 	private final List<DisposeWithDocument> finalizations;
 	private final Dialog dialog;
-    private boolean dirty;
     private final ApplicationContext context;
-    private final UserLibrary library;
 
 
     /*
@@ -262,15 +216,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
      */
 
 	public DocumentWindowController(
-			@Autowired ApplicationContext context,
-			@Autowired MainController mainController,
+	        @Autowired Api api,
 			//@Autowired GlobalPreferences preferences,
 			@Autowired RecentItemsPreference recentItemsPreference,
 			//@Autowired ToolThemePreference toolThemePreference,
 			@Autowired WildcardImportsPreference wildcardImportsPreference,
-			@Autowired FileSystem fileSystem,
-			@Autowired Dialog dialog,
-			@Autowired UserLibrary library,
 			//@Lazy @Autowired I18NResourcePreference i18NResourcePreference,
 			@Lazy @Autowired PathPreference pathPreference,
 
@@ -278,7 +228,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
 
 			@Lazy @Autowired EditorController editorController,
-			@Lazy @Autowired DocumentManager documentManager,
 			//@Autowired DocumentsManager documentManager,
 			@Lazy @Autowired MenuBarController menuBarController,
 
@@ -290,7 +239,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 			@Lazy @Autowired InspectorPanelController inspectorPanelController,
 			@Lazy @Autowired CssPanelController cssPanelController,
-			@Lazy @Autowired LibraryPanelController libraryPanelController,
+			@Lazy @Autowired LibraryPanel libraryPanelController,
 			@Lazy @Autowired SelectionBarController selectionBarController,
 			@Lazy @Autowired MessageBarController messageBarController,
 			//@Lazy @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
@@ -319,23 +268,22 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 			//@Lazy @Autowired PreviewWindowController previewWindowController,
 			//@Lazy @Autowired SkeletonWindowController skeletonWindowController,
-			@Lazy @Autowired JarAnalysisReportController jarAnalysisReportController,
-			@Lazy @Autowired List<InitWithDocument> initializations,
-			@Lazy @Autowired List<DisposeWithDocument> finalizations
+			//@Lazy @Autowired JarAnalysisReportController jarAnalysisReportController,
+			@Lazy @Autowired(required = false) List<InitWithDocument> initializations,
+			@Lazy @Autowired(required = false) List<DisposeWithDocument> finalizations
 			) {
-        super(DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
+        super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
         //DocumentScope.setCurrentScope(this);
-        this.context = context;
+        this.context = api.getContext();
         this.editorController = editorController;
         this.recentItemsPreference = recentItemsPreference;
         //this.toolThemePreference = toolThemePreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
         this.menuBarController = menuBarController;
-        this.fileSystem = fileSystem;
-        this.library = library;
-        this.dialog = dialog;
+        this.fileSystem = api.getFileSystem();
+        this.dialog = api.getApiDoc().getDialog();
         this.contentPanelController = contentPanelController;
-        this.documentManager = documentManager;
+        this.documentManager = api.getApiDoc().getDocumentManager();
         this.documentPreferencesController = documentPreferencesController;
         //this.hierarchyPanelController = hierarchyPanelController;
         //this.infoPanelController = infoPanelController;
@@ -383,10 +331,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         documentPreferencesController.readFromJavaPreferences();
 //        pathPreference.readFromJavaPreferences();
 
-        documentManager.dirty().subscribe(d -> dirty = d);
-
         //this.documentManager = documentManager;
-        this.editorController.setLibrary(mainController.getUserLibrary());
+        //this.editorController.setLibrary(library);
 
         mainKeyEventFilter = event -> {
             //------------------------------------------------------------------
@@ -522,14 +468,17 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 
 
-	public EditorController getEditorController() {
+	@Override
+    public EditorController getEditorController() {
         return editorController;
     }
 
+    @Override
     public MenuBarController getMenuBarController() {
         return menuBarController;
     }
 
+    @Override
     public ContentPanelController getContentPanelController() {
         return contentPanelController;
     }
@@ -538,6 +487,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return inspectorPanelController;
     }
 
+    @Override
     public DocumentPanelController getDocumentPanelController() {
 		return documentPanelController;
 	}
@@ -590,6 +540,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return documentSplitController;
     }
 
+    @Override
     public void loadFromFile(File fxmlFile) throws IOException {
         final URL fxmlURL = fxmlFile.toURI().toURL();
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -602,9 +553,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //TODO remove after checking the new watching system is operational in EditorController or in filesystem
         //watchingController.update();
 
-        WarnThemeAlert.showAlertIfRequired(themePreference, editorController.getFxomDocument(), getStage());
+        //WarnThemeAlert.showAlertIfRequired(themePreference, editorController.getFxomDocument(), getStage());
     }
 
+    @Override
     public void loadFromURL(URL fxmlURL, boolean refreshThemeFromDocumentPreferences) {
         assert fxmlURL != null;
         try {
@@ -633,7 +585,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public void reload() throws IOException {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        
         assert (fxomDocument != null) && (fxomDocument.getLocation() != null);
         final URL fxmlURL = fxomDocument.getLocation();
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -647,6 +600,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public boolean canPerformControlAction(DocumentControlAction controlAction) {
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean result;
 
         switch(controlAction) {
@@ -683,8 +637,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //                break;
 
             case SAVE_FILE:
-                result = isDocumentDirty()
-                        || editorController.getFxomDocument().getLocation() == null; // Save new empty document
+                result = isDocumentDirty() || fxomDocument.getLocation() == null; // Save new empty document
                 break;
 
             case SAVE_AS_FILE:
@@ -694,12 +647,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case REVERT_FILE:
                 result = isDocumentDirty()
-                        && editorController.getFxomDocument().getLocation() != null;
+                        && fxomDocument.getLocation() != null;
                 break;
 
             case REVEAL_FILE:
-                result = (editorController.getFxomDocument() != null)
-                        && (editorController.getFxomDocument().getLocation() != null);
+                result = (fxomDocument != null) && (fxomDocument.getLocation() != null);
                 break;
 
             case GOTO_CONTENT:
@@ -931,6 +883,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     public boolean canPerformEditAction(DocumentEditAction editAction) {
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean result;
 
         switch(editAction) {
@@ -949,7 +902,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             case INCLUDE_FXML:
                 // Cannot include as root or if the document is not saved yet
-                final FXOMDocument fxomDocument = editorController.getFxomDocument();
                 result = (fxomDocument != null)
                         && (fxomDocument.getFxomRoot() != null)
                         && (fxomDocument.getLocation() != null);
@@ -1034,8 +986,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
          *  2) it is not dirty
          *  3) it is unamed
          */
-
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean noFxmlText = (fxomDocument == null) || (fxomDocument.getFxomRoot() == null);
         final boolean clean = !isDocumentDirty();
         final boolean noName = (fxomDocument != null) && (fxomDocument.getLocation() == null);
@@ -1050,45 +1001,21 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     @Override
 	public boolean hasContent() {
-    	final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean noFxmlText = (fxomDocument == null) || (fxomDocument.getFxomRoot() == null);
         return noFxmlText;
     }
     @Override
 	public boolean hasName() {
-    	final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
     	final boolean hasName = (fxomDocument != null) && (fxomDocument.getLocation() != null);
         return hasName;
     }
     @Override
 	public String getName() {
-    	final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
     	final String name = hasName() ? fxomDocument.getLocation().toExternalForm() : "";
         return name;
-    }
-
-    public static class TitleComparator implements Comparator<DocumentWindowController> {
-
-        @Override
-        public int compare(DocumentWindowController d1, DocumentWindowController d2) {
-            final int result;
-
-            assert d1 != null;
-            assert d2 != null;
-
-            if (d1 == d2) {
-                result = 0;
-            } else {
-                final String t1 = d1.getStage().getTitle();
-                final String t2 = d2.getStage().getTitle();
-                assert t1 != null;
-                assert t2 != null;
-                result = t1.compareTo(t2);
-            }
-
-            return result;
-        }
-
     }
 
     public void initializeCssPanel() {
@@ -1099,6 +1026,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
 
+    @Override
     public void updatePreferences() {
 
         final URL fxmlLocation = getEditorController().getFxmlLocation();
@@ -1184,11 +1112,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
 
        
-        libraryPanelController.getLibraryLabel().bind(Bindings.createStringBinding(() -> {
-
-            return library.isExploring() ? I18N.getString("library.exploring") : I18N.getString("library");
-
-        }, library.exploringProperty()));
+        
     }
 
     @Override
@@ -1657,22 +1581,23 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     private void updateStageTitle() {
         if (contentPanelHost != null) {
-            getStage().setTitle(Utils.makeTitle(editorController.getFxomDocument()));
+            final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+            getStage().setTitle(Utils.makeTitle(fxomDocument));
         } // else controllerDidLoadFxml() will invoke me again
     }
 
     ActionStatus performSaveOrSaveAsAction() {
         final ActionStatus result;
-
-        if (editorController.getFxomDocument().getLocation() == null) {
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        if (fxomDocument.getLocation() == null) {
             result = performSaveAsAction();
         } else {
             result = performSaveAction();
         }
 
         if (result.equals(ActionStatus.DONE)) {
-            documentManager.dirty().onNext(false);
-            documentManager.saved().onNext(true);
+            documentManager.dirty().set(false);
+            documentManager.saved().set(true);
         }
 
         return result;
@@ -1687,7 +1612,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     private ActionStatus performSaveAction() {
-        final FXOMDocument fxomDocument = editorController.getFxomDocument();
+        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         assert fxomDocument != null;
         assert fxomDocument.getLocation() != null;
 
@@ -1824,7 +1749,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 }
 
                 // Checks if fxmlFile is the name of an already opened document
-                final DocumentWindowController dwc
+                final Document dwc
                         = MainController.getSingleton().lookupDocumentWindowControllers(newLocation);
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());
@@ -1876,8 +1801,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 
     private void performRevertAction() {
-        assert editorController.getFxomDocument() != null;
-        assert editorController.getFxomDocument().getLocation() != null;
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        assert fxomDocument != null;
+        assert fxomDocument.getLocation() != null;
 
         final Alert d = dialog.customAlert(getStage());
         d.setMessage(I18N.getString("alert.revert.question.message", getStage().getTitle()));
@@ -1899,7 +1825,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
 
-    ActionStatus performCloseAction() {
+    @Override
+    public ActionStatus performCloseAction() {
 
         // Makes sure that our window is front
         getStage().toFront();
@@ -1916,7 +1843,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         // Checks if there are some pending changes
         final boolean closeConfirmed;
         if (isDocumentDirty()) {
-            
+            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             final Alert d = dialog.customAlert(getStage());
             d.setMessage(I18N.getString("alert.save.question.message", getStage().getTitle()));
             d.setDetails(I18N.getString("alert.save.question.details"));
@@ -1927,7 +1854,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             switch(d.showAndWait()) {
                 default:
                 case OK:
-                    if (editorController.getFxomDocument().getLocation() == null) {
+                    if (fxomDocument.getLocation() == null) {
                         closeConfirmed = (performSaveAsAction() == ActionStatus.DONE);
                     } else {
                         closeConfirmed = (performSaveAction() == ActionStatus.DONE);
@@ -1956,10 +1883,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 
     private void performRevealAction() {
-        assert editorController.getFxomDocument() != null;
-        assert editorController.getFxomDocument().getLocation() != null;
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        assert fxomDocument != null;
+        assert fxomDocument.getLocation() != null;
 
-        final URL location = editorController.getFxomDocument().getLocation();
+        final URL location = fxomDocument.getLocation();
 
         try {
             fileSystem.revealInFileBrowser(new File(location.toURI()));
@@ -2049,7 +1977,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
     @Override
     public boolean isDocumentDirty() {
-        return dirty;
+        return getApi().getApiDoc().getDocumentManager().dirty().get();
     }
 
 

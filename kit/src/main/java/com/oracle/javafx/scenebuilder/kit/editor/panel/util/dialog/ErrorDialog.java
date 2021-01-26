@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
@@ -57,9 +58,9 @@ public class ErrorDialog extends AlertDialog {
 
     private String debugInfo;
 
-    protected ErrorDialog(ApplicationContext context, Window owner) {
-        super(owner);
-        this.context = context;
+    protected ErrorDialog(Api api, Window owner) {
+        super(api, owner);
+        this.context = api.getContext();
     }
 
     @Override

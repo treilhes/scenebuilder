@@ -37,12 +37,15 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.library.util.JarReportEntry.Status;
+import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.JarReportEntry.Status;
+import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -54,22 +57,24 @@ import javafx.scene.Node;
 public class JarExplorer {
     
     private final Path jar;
+    private final List<LibraryFilter> filters;
     
-    public JarExplorer(Path jar) {
+    public JarExplorer(Path jar, List<LibraryFilter> filters) {
         assert jar != null;
         assert jar.isAbsolute();
         
         this.jar = jar;
+        this.filters = filters == null ? new ArrayList<>() : filters;
     }
     
-    public JarReport explore(ClassLoader classLoader) throws IOException {
-        final JarReport result = new JarReport(jar);
+    public JarReportImpl explore(ClassLoader classLoader) throws IOException {
+        final JarReportImpl result = new JarReportImpl(jar);
         
         try (JarFile jarFile = new JarFile(jar.toFile())) {
             final Enumeration<JarEntry> e = jarFile.entries();
             while (e.hasMoreElements()) {
                 final JarEntry entry = e.nextElement();
-                JarReportEntry explored = exploreEntry(entry, classLoader);
+                JarReportEntryImpl explored = exploreEntry(entry, classLoader);
                 if (explored.getStatus() != Status.IGNORED)
                     result.getEntries().add(explored);
             }
@@ -125,8 +130,8 @@ public class JarExplorer {
      * Private
      */
     
-    private JarReportEntry exploreEntry(JarEntry entry, ClassLoader classLoader) {
-        JarReportEntry.Status status;
+    private JarReportEntryImpl exploreEntry(JarEntry entry, ClassLoader classLoader) {
+        JarReportEntryImpl.Status status;
         Throwable entryException;
         Class<?> entryClass = null;
         String className;
@@ -138,12 +143,8 @@ public class JarExplorer {
             className = null;
         } else {
             className = makeClassName(entry.getName());
-            // Filtering out what starts with com.javafx. is bound to DTL-6378.
-            if (className == null || className.startsWith("java.") //NOI18N
-                    || className.startsWith("javax.") || className.startsWith("javafx.") //NOI18N
-                    || className.startsWith("com.oracle.javafx.scenebuilder.") //NOI18N
-                    || className.startsWith("com.javafx.")
-                    || className.startsWith(EditorPlatform.GLUON_PACKAGE)) { //NOI18N
+
+            if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
                 status = JarReportEntry.Status.IGNORED;
                 entryClass = null;
                 entryException = null;
@@ -176,7 +177,7 @@ public class JarExplorer {
             }
         }
         
-        return new JarReportEntry(entry.getName(), status, entryException, entryClass, className);
+        return new JarReportEntryImpl(entry.getName(), status, entryException, entryClass, className);
     }
     
     

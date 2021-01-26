@@ -45,28 +45,67 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
-import io.reactivex.subjects.Subject;
 import javafx.beans.value.ChangeListener;
 import lombok.Getter;
 
 public interface DocumentManager {
-    Subject<Boolean> dirty();
-
-    Subject<Boolean> saved();
     
-    Subject<Boolean> closed();
-
-    Subject<StylesheetProvider> stylesheetConfig();
-
-    Subject<I18nResourceProvider> i18nResourceConfig();
-
-    Subject<FXOMDocument> fxomDocument();
-
-    Subject<SelectionState> selectionDidChange();
-
-    Subject<Integer> sceneGraphRevisionDidChange();
-
-    Subject<Integer> cssRevisionDidChange();
+    /**
+     * The current "dirty" state has changed.
+     * The document contains unsaved changes if true
+     */
+    SubjectItem<Boolean> dirty();
+    /**
+     * The current "saved" state has changed.
+     * The document contains is saved if true
+     */
+    SubjectItem<Boolean> saved();
+    /**
+     * The current "closed" state has changed.
+     * The document has been closed if true
+     */
+    SubjectItem<Boolean> closed();
+    /**
+     * The current stylesheet configuration has changed.
+     * Because:</br>
+     * - A userAgentStylesheet file has been set
+     * - A stylesheet file has been added
+     * - A stylesheet file has been removed
+     */
+    SubjectItem<StylesheetProvider> stylesheetConfig();
+    /**
+     * The current i18n configuration has changed.
+     * Because:</br>
+     * - A property file has been added
+     * - A property file has been removed
+     */
+    SubjectItem<I18nResourceProvider> i18nResourceConfig();
+    /**
+     * The current fxomDocument has changed.
+     * Because:</br>
+     * - An empty document is loaded
+     * - An FXML file is loaded 
+     */
+    SubjectItem<FXOMDocument> fxomDocument();
+    /**
+     * The currently selected objects have changed.
+     */
+    SubjectItem<SelectionState> selectionDidChange();
+    
+    /**
+     * Revision is incremented each time the fxom document rebuilds the
+     * scene graph.
+     */
+    SubjectItem<Integer> sceneGraphRevisionDidChange();
+    /**
+     * Revision is incremented each time the fxom document forces FX to
+     * reload its stylesheets.
+     */
+    SubjectItem<Integer> cssRevisionDidChange();
+    /**
+     * The current classloader has changed.
+     */
+    SubjectItem<ClassLoader> classLoaderDidChange();
 
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -74,26 +113,53 @@ public interface DocumentManager {
 
         private DocumentSubjects subjects;
 
-        private FXOMDocument lastFXOMDocument = null;
-        private ChangeListener<? super Number> sceneGraphRevisionChangeListener = (ob, o,
-                n) -> sceneGraphRevisionDidChange().onNext(n.intValue());
-        private ChangeListener<? super Number> cssRevisionChangeListener = (ob, o, n) -> cssRevisionDidChange()
-                .onNext(n.intValue());
+        private final SubjectItem<Boolean> dirty;
+        private final SubjectItem<Boolean> saved;
+        private final SubjectItem<Boolean> closed;
+        private final SubjectItem<StylesheetProvider> stylesheetConfig;
+        private final SubjectItem<I18nResourceProvider> i18nResourceConfig;
+        private final SubjectItem<FXOMDocument> fxomDocument;
+        private final SubjectItem<SelectionState> selectionDidChange;
+        private final SubjectItem<Integer> sceneGraphRevisionDidChange;
+        private final SubjectItem<Integer> cssRevisionDidChange;
+        private final SubjectItem<ClassLoader> classLoaderDidChange;
+        
+        private ChangeListener<? super Number> sceneGraphRevisionChangeListener = 
+                (ob, o, n) -> sceneGraphRevisionDidChange().set(n.intValue());
+        private ChangeListener<? super Number> cssRevisionChangeListener = 
+                (ob, o, n) -> cssRevisionDidChange().set(n.intValue());
 
         public DocumentManagerImpl() {
             subjects = new DocumentSubjects();
 
-            fxomDocument().subscribe(fd -> {
-                if (lastFXOMDocument != null) {
-                    lastFXOMDocument.sceneGraphRevisionProperty().removeListener(sceneGraphRevisionChangeListener);
-                    lastFXOMDocument.cssRevisionProperty().removeListener(cssRevisionChangeListener);
-                }
-                if (fd != null) {
-                    fd.sceneGraphRevisionProperty().addListener(sceneGraphRevisionChangeListener);
-                    fd.cssRevisionProperty().addListener(cssRevisionChangeListener);
-                    lastFXOMDocument = fd;
-                }
-            });
+            dirty = new SubjectItem<Boolean>(subjects.getDirty()).set(false);
+            saved = new SubjectItem<Boolean>(subjects.getSaved()).set(false);
+            closed = new SubjectItem<Boolean>(subjects.getClosed());
+            stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
+            i18nResourceConfig = new SubjectItem<I18nResourceProvider>(subjects.getI18nResourceConfig());
+
+            fxomDocument = new SubjectItem<FXOMDocument>(subjects.getFxomDocument(), 
+                    (o, n) -> {
+                        if (o != null) {
+                            o.sceneGraphRevisionProperty().removeListener(sceneGraphRevisionChangeListener);
+                            o.cssRevisionProperty().removeListener(cssRevisionChangeListener);
+                        }
+                        if (n != null) {
+                            n.sceneGraphRevisionProperty().addListener(sceneGraphRevisionChangeListener);
+                            n.cssRevisionProperty().addListener(cssRevisionChangeListener);
+                        }
+                    }, 
+                    (s) -> {
+                        return s.doOnEach(fd -> System.out.println("EACH FD" + fd.isOnNext()))
+                        .doOnNext(fd -> System.out.println("NEXT FD" + fd.toString()))
+                        .doAfterNext(fd -> System.out.println("AFTERNEXT FD" + fd.toString()))
+                        .doOnSubscribe(fd -> System.out.println("doOnSubscribe FD" + fd.toString()));
+                    });
+            
+            selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionState());
+            sceneGraphRevisionDidChange = new SubjectItem<Integer>(subjects.getSceneGraphRevisionDidChange());
+            cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
+            classLoaderDidChange = new SubjectItem<ClassLoader>(subjects.getClassLoaderDidChange());
         }
 
         @Override
@@ -101,48 +167,53 @@ public interface DocumentManager {
         }
 
         @Override
-        public Subject<Boolean> dirty() {
-            return subjects.getDirty();
+        public SubjectItem<Boolean> dirty() {
+            return dirty;
         }
 
         @Override
-        public Subject<Boolean> saved() {
-            return subjects.getSaved();
+        public SubjectItem<Boolean> saved() {
+            return saved;
         }
         
         @Override
-        public Subject<Boolean> closed() {
-            return subjects.getClosed();
+        public SubjectItem<Boolean> closed() {
+            return closed;
         }
 
         @Override
-        public Subject<StylesheetProvider> stylesheetConfig() {
-            return subjects.getStylesheetConfig();
+        public SubjectItem<StylesheetProvider> stylesheetConfig() {
+            return stylesheetConfig;
         }
 
         @Override
-        public Subject<I18nResourceProvider> i18nResourceConfig() {
-            return subjects.getI18nResourceConfig();
+        public SubjectItem<I18nResourceProvider> i18nResourceConfig() {
+            return i18nResourceConfig;
         }
 
         @Override
-        public Subject<FXOMDocument> fxomDocument() {
-            return subjects.getFxomDocument();
+        public SubjectItem<FXOMDocument> fxomDocument() {
+            return fxomDocument;
         }
 
         @Override
-        public Subject<SelectionState> selectionDidChange() {
-            return subjects.getSelectionState();
+        public SubjectItem<SelectionState> selectionDidChange() {
+            return selectionDidChange;
         }
 
         @Override
-        public Subject<Integer> sceneGraphRevisionDidChange() {
-            return subjects.getSceneGraphRevisionDidChange();
+        public SubjectItem<Integer> sceneGraphRevisionDidChange() {
+            return sceneGraphRevisionDidChange;
         }
 
         @Override
-        public Subject<Integer> cssRevisionDidChange() {
-            return subjects.getCssRevisionDidChange();
+        public SubjectItem<Integer> cssRevisionDidChange() {
+            return cssRevisionDidChange;
+        }
+        
+        @Override
+        public SubjectItem<ClassLoader> classLoaderDidChange() {
+            return classLoaderDidChange;
         }
     }
 
@@ -158,6 +229,7 @@ public interface DocumentManager {
 
         private @Getter PublishSubject<Integer> sceneGraphRevisionDidChange;
         private @Getter PublishSubject<Integer> cssRevisionDidChange;
+        private @Getter ReplaySubject<ClassLoader> classLoaderDidChange;
 
         public DocumentSubjects() {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1));
@@ -167,6 +239,7 @@ public interface DocumentManager {
             i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
             fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));
             selectionState = wrap(DocumentSubjects.class, "selectionState", ReplaySubject.create(1));
+            classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1));
 
             sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange",
                     PublishSubject.create());

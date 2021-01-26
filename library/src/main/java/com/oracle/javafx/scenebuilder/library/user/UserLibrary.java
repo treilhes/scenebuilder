@@ -58,14 +58,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.library.AbstractLibrary;
+import com.oracle.javafx.scenebuilder.api.library.JarReport;
+import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.library.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.BuiltinSectionComparator;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.library.util.JarReport;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.util.JarReportImpl;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -86,11 +89,9 @@ import javafx.collections.ObservableList;
  */
 @Component//("userLibrary")
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class UserLibrary extends AbstractLibrary implements InitializingBean{
+public class UserLibrary extends AbstractLibrary implements Library, InitializingBean{
 
     public enum State { READY, WATCHING }
-
-    //public static final String TAG_USER_DEFINED = "Custom"; //NOI18N
 
     private final BuiltinLibrary builtinLibrary;
 
@@ -100,6 +101,9 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
     private final ObservableList<JarReport> jarReports = FXCollections.observableArrayList();
     private final ObservableList<JarReport> previousJarReports = FXCollections.observableArrayList();
+    
+    private final ObservableList<JarReport> explorationJarReports = FXCollections.observableArrayList();
+    
     private final ObservableList<Path> fxmlFileReports = FXCollections.observableArrayList();
     private final ObservableList<Path> previousFxmlFileReports = FXCollections.observableArrayList();
     private final SimpleIntegerProperty explorationCountProperty = new SimpleIntegerProperty();
@@ -125,6 +129,8 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
 
 	private final MavenArtifactsPreferences preferences;
 
+    private final List<LibraryFilter> filters;
+
     /*
      * Public
      */
@@ -132,11 +138,13 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
             @Autowired FileSystem fileSystem,
             @Autowired MavenArtifactsPreferences mavenPreferences,
             @Autowired UILogger logger,
-            @Autowired BuiltinLibrary builtinLibrary) {
+            @Autowired BuiltinLibrary builtinLibrary,
+            @Autowired(required = false) List<LibraryFilter> filters) {
         this.path = fileSystem.getUserLibraryFolder();
         this.uiLogger = logger;
         this.builtinLibrary = builtinLibrary;
         this.preferences = mavenPreferences;
+        this.filters = filters;
     }
 
     @Override
@@ -160,12 +168,19 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         this.additionalFilter = additionalFilter;
     }
 
+    @Override
     public File getPath() {
         return path;
     }
 
+    @Override
     public ObservableList<JarReport> getJarReports() {
         return jarReports;
+    }
+    
+    @Override
+    public ObservableList<JarReport> getExplorationJarReports() {
+        return explorationJarReports;
     }
 
     public ObservableList<JarReport> getPreviousJarReports() {
@@ -192,7 +207,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
             assert watcher == null;
             assert watcherThread == null;
 
-            watcher = new LibraryFolderWatcher(this, builtinLibrary);
+            watcher = new LibraryFolderWatcher(this, builtinLibrary, filters);
             watcherThread = new Thread(watcher);
             watcherThread.setName(watcher.getClass().getSimpleName() + "(" + path  + ")"); //NOI18N
             watcherThread.setDaemon(true);
@@ -237,7 +252,8 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         return explorationCountProperty;
     }
 
-    public Object getExplorationDate() {
+    @Override
+    public Date getExplorationDate() {
         return explorationDateProperty.get();
     }
 
@@ -305,6 +321,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         return res;
     }
 
+    @Override
     public void setOnUpdatedJarReports(Consumer<List<? extends JarReport>> onFinishedUpdatingJarReports) {
         if (this.jarReports.size() > 0) {
         	onFinishedUpdatingJarReports.accept(this.jarReports);
@@ -322,6 +339,23 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         }
     }
 
+    @Override
+    public void setOnUpdatedExploringJarReports(Consumer<List<? extends JarReport>> onFinishedExploringJarReports) {
+        if (this.explorationJarReports.size() > 0) {
+            onFinishedExploringJarReports.accept(this.explorationJarReports);
+        } else {
+            this.explorationJarReports.addListener(new ListChangeListener<JarReport>() {
+                @Override
+                public void onChanged(Change<? extends JarReport> c) {
+                    while (c.next()) {
+                        onFinishedExploringJarReports.accept(c.getAddedSubList());
+                    }
+                }
+            });
+        }
+    }
+    
+    @Override
     public final ReadOnlyBooleanProperty firstExplorationCompletedProperty() {
         return firstExplorationCompleted.getReadOnlyProperty();
     }
@@ -330,6 +364,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         return firstExplorationCompleted.get();
     }
 
+    @Override
     public SimpleBooleanProperty exploringProperty() {
         return exploring;
     }
@@ -354,7 +389,7 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
         return new File(getPath(), filterFileName);
     }
 
-    void updateJarReports(Collection<JarReport> newJarReports) {
+    void updateJarReports(Collection<JarReportImpl> newJarReports) {
         previousJarReports.setAll(jarReports);
         jarReports.setAll(newJarReports);
     }
@@ -523,4 +558,12 @@ public class UserLibrary extends AbstractLibrary implements InitializingBean{
                 break;
         }
     }
+
+    @Override
+    public List<LibraryFilter> getFilters() {
+        return filters;
+    }
+
+    
+    
 }

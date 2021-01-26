@@ -116,6 +116,7 @@ public class SearchService extends Service<Void> {
                     createSearchTask(new MavenSearch()),
                     createSearchTask(new NexusSearch(MavenPresets.SONATYPE, "http://oss.sonatype.org", "", "")),
                     createSearchTask(new JcenterSearch("", "")),
+                    //TODO GLUON
                     createSearchTask(new NexusSearch(MavenPresets.GLUON_NEXUS, "https://nexus.gluonhq.com/nexus", "", "")),
                     createSearchTask(new LocalSearch(userM2Repository)));
                 
@@ -131,6 +132,7 @@ public class SearchService extends Service<Void> {
                                 List<DefaultArtifact> list = new ArrayList<>(result);
                                 list.addAll(task.getValue());
                                 
+                                //TODO replace with add all
                                 result.setAll(getLatestVersions(
                                             list.stream()
                                                 .distinct()

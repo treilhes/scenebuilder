@@ -50,7 +50,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.RowConst
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.ModifyObjectJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.gridpane.GridPaneHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.resizer.GridPaneRowResizer;
 

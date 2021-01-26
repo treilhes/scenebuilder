@@ -93,4 +93,15 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	void beginInteraction();
 
+    FXOMObject searchWithNode(Node node, double x, double y);
+
+    /**
+     * Returns the handles associated an fxom object.
+     * Returns null if the fxom object is currently not selected or
+     * if content panel is not in 'edit mode'.
+     * @param fxomObject an fxom object
+     * @return null or the associated handles
+     */
+    Handles<?> lookupHandles(FXOMObject fxomObject);
+
 }

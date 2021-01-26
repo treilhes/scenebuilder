@@ -32,14 +32,20 @@
  */
 package com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.dialog;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.Repository;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -57,6 +63,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Lazy
 public class RepositoryDialogController extends AbstractFxmlWindowController {
 
     @FXML
@@ -115,11 +124,12 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
 
 
     protected RepositoryDialogController(
+            Api api,
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
             Stage owner) {
-        super(LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.owner = owner;
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;

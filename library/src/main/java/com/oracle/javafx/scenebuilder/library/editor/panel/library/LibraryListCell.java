@@ -34,38 +34,32 @@ package com.oracle.javafx.scenebuilder.library.editor.panel.library;
 
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
-import com.oracle.javafx.scenebuilder.library.editor.drag.source.LibraryDragSource;
+import com.oracle.javafx.scenebuilder.library.controller.LibraryController;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Window;
 
 /**
  * ListCell for the Library panel.
  * Used to dynamically construct items and their graphic, as well as set the cursor.
  * @param <T>
  */
-class LibraryListCell extends ListCell<LibraryListItem> {
-    private final Editor editorController;
+public class LibraryListCell extends ListCell<LibraryListItem> {
+    private final LibraryController libraryController;
 
     private final HBox graphic = new HBox();
     private final ImageView iconImageView = new ImageView();
@@ -74,9 +68,9 @@ class LibraryListCell extends ListCell<LibraryListItem> {
     private final Label sectionLabel = new Label();
 
 
-    public LibraryListCell(final Editor ec) {
+    public LibraryListCell(final LibraryController libraryController) {
         super();
-        this.editorController = ec;
+        this.libraryController = libraryController;
 
         graphic.getStyleClass().add("list-cell-graphic"); //NOI18N
         classNameLabel.getStyleClass().add("library-classname-label"); //NOI18N
@@ -95,29 +89,7 @@ class LibraryListCell extends ListCell<LibraryListItem> {
         // Mouse events
         this.addEventHandler(MouseEvent.ANY, mouseEventHandler);
 
-        setOnDragDetected(t -> {
-//                System.out.println("LibraryListCell - setOnDragDetected.handle");
-            final LibraryListItem listItem = LibraryListCell.this.getItem();
-            final FXOMDocument fxomDocument = editorController.getFxomDocument();
-
-            if ((listItem != null) && (fxomDocument != null)) {
-                final LibraryItem item = LibraryListCell.this.getItem().getLibItem();
-                if (item != null) {
-                    final ListView<LibraryListItem> list = LibraryListCell.this.getListView();
-                    final Dragboard db = list.startDragAndDrop(TransferMode.COPY);
-
-                    final Window ownerWindow = getScene().getWindow();
-                    final LibraryDragSource dragSource
-                            = new LibraryDragSource(item, fxomDocument, ownerWindow);
-                    assert editorController.getDragController().getDragSource() == null;
-                    assert dragSource.isAcceptable();
-                    editorController.getDragController().begin(dragSource);
-
-                    db.setContent(dragSource.makeClipboardContent());
-                    db.setDragView(dragSource.makeDragView());
-                }
-            }
-        });
+        setOnDragDetected(t -> libraryController.performDragDetected(this));
     }
 
     @Override
@@ -216,8 +188,8 @@ class LibraryListCell extends ListCell<LibraryListItem> {
              // On double click ask for addition of the drag able item on Content
             if (me.getClickCount() == 2 && me.getButton() == MouseButton.PRIMARY) {
                 if (!isEmpty() && !isSection && item != null) {
-                    if (editorController.canPerformInsert(item)) {
-                        editorController.performInsert(item);
+                    if (libraryController.canPerformInsert(item)) {
+                        libraryController.performInsert(item);
                     }
                 }
             }

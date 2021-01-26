@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 
 import javafx.stage.Stage;
@@ -48,23 +49,23 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
     private final URL fxmlURL;
     private final ResourceBundle resources;
 
-    public AbstractFxmlWindowController(URL fxmlURL, ResourceBundle resources) {
-        this(fxmlURL, resources, null);
+    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources) {
+        this(api, fxmlURL, resources, null);
     }
 
-    public AbstractFxmlWindowController(URL fxmlURL, ResourceBundle resources, boolean sizeToScene) {
-        this(fxmlURL, resources, null, sizeToScene);
+    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, boolean sizeToScene) {
+        this(api, fxmlURL, resources, null, sizeToScene);
     }
 
-    public AbstractFxmlWindowController(URL fxmlURL, ResourceBundle resources, Stage owner) {
-        super(owner);
+    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, Stage owner) {
+        super(api, owner);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.resources = resources;
     }
 
-    public AbstractFxmlWindowController(URL fxmlURL, ResourceBundle resources, Stage owner, boolean sizeToScene) {
-        super(owner, sizeToScene);
+    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, Stage owner, boolean sizeToScene) {
+        super(api, owner, sizeToScene);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.resources = resources;

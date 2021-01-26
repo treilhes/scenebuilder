@@ -35,11 +35,13 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.DropTarget;
+import com.oracle.javafx.scenebuilder.api.HierarchyDND;
+import com.oracle.javafx.scenebuilder.api.HierarchyItem;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.editors.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.editors.drag.target.RootDropTarget;
@@ -54,7 +56,7 @@ import javafx.scene.input.DragEvent;
  *
  * @treatAsPrivate
  */
-public class HierarchyDNDController {
+public class HierarchyDNDController implements HierarchyDND {
 
     private final AbstractHierarchyPanelController panelController;
     private final HierarchyTaskScheduler scheduler;

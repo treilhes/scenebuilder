@@ -35,7 +35,8 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.HierarchyItem;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
 
 import javafx.application.Platform;
@@ -75,7 +76,7 @@ public class HierarchyTaskScheduler {
     public void scheduleAddEmptyGraphicTask(final TreeItem<HierarchyItem> treeItem) {
         final HierarchyItem item = treeItem.getValue();
         assert item != null;
-        final DesignHierarchyMask owner = item.getMask();
+        final HierarchyMask owner = item.getMask();
         assert owner != null;
         timerTask = new TimerTask() {
             @Override

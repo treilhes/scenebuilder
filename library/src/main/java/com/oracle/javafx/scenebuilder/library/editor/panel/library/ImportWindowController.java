@@ -47,23 +47,29 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
+import java.util.function.UnaryOperator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.library.util.FolderExplorer;
 import com.oracle.javafx.scenebuilder.library.util.JarExplorer;
-import com.oracle.javafx.scenebuilder.library.util.JarReport;
-import com.oracle.javafx.scenebuilder.library.util.JarReportEntry;
+import com.oracle.javafx.scenebuilder.library.util.JarReportImpl;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -80,8 +86,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -97,12 +106,44 @@ public class ImportWindowController extends AbstractModalDialog {
 
     public enum PrefSize {
 
-        DEFAULT, TWO_HUNDRED_BY_ONE_HUNDRED, TWO_HUNDRED_BY_TWO_HUNDRED
+        DEFAULT(-1,-1), 
+        TWO_HUNDRED_BY_ONE_HUNDRED(200, 100), 
+        TWO_HUNDRED_BY_TWO_HUNDRED(200, 200),
+        SCREEN_640_480(640, 480),
+        SCREEN_800_600(800, 600),
+        SCREEN_1024_768(1024, 768),
+        CUSTOM(-2,-2);
+        
+        private double width;
+        private double height;
+
+        PrefSize(double width, double height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public double getWidth() {
+            return width;
+        }
+
+        public double getHeight() {
+            return height;
+        }
+        
+        @Override
+        public String toString() {
+            switch (this) {
+                case CUSTOM: return "Custom";
+                case DEFAULT: return I18N.getString("import.choice.builtin");
+                default:
+                    return Math.round(width) + " x " + Math.round(height);
+            }
+        }
     };
 
     final List<File> importFiles;
     private final LibraryPanelController libPanelController;
-    Task<List<JarReport>> exploringTask = null;
+    Task<List<JarReportImpl>> exploringTask = null;
     URLClassLoader importClassLoader;
     Node zeNode = new Label(I18N.getString("import.preview.unable"));
     double builtinPrefWidth;
@@ -135,10 +176,16 @@ public class ImportWindowController extends AbstractModalDialog {
     ListView<ImportRow> importList = new ListView<>();
 
     @FXML
-    ChoiceBox<String> defSizeChoice;
-
+    ChoiceBox<PrefSize> defSizeChoice;
+    
     @FXML
-    private Label sizeLabel;
+    private HBox customBox;
+    
+    @FXML
+    private IntegerField widthField;
+    
+    @FXML
+    private IntegerField heightField;
 
     @FXML
     private SplitPane topSplitPane;
@@ -161,20 +208,20 @@ public class ImportWindowController extends AbstractModalDialog {
     private final Dialog dialog;
 
 
-    protected ImportWindowController(Dialog dialog, LibraryPanelController lpc,  List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
-        this(dialog, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
+    protected ImportWindowController(Api api, LibraryPanelController lpc,  List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
+        this(api, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
     }
 
-    protected ImportWindowController(Dialog dialog, LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
+    protected ImportWindowController(Api api, LibraryPanelController lpc, List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner,
             boolean copyFilesToUserLibraryDir, List<String> artifactsFilter) {
-        super(ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         libPanelController = lpc;
         importFiles = new ArrayList<>(files);
         this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
         this.artifactsFilter = artifactsFilter;
         this.owner = owner;
         this.mavenPreferences = mavenPreferences;
-        this.dialog = dialog;
+        this.dialog = api.getApiDoc().getDialog();
     }
 
     /*
@@ -241,7 +288,7 @@ public class ImportWindowController extends AbstractModalDialog {
         try {
             closeClassLoader();
 
-            UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().getLibrary());
+            UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().libraryProperty().getValue());
 
             if (copyFilesToUserLibraryDir) {
                 // collect directories from importFiles and add to library.folders file
@@ -300,7 +347,9 @@ public class ImportWindowController extends AbstractModalDialog {
         assert topSplitPane.isVisible() == false;
         assert processingLabel != null;
         assert processingProgressIndicator != null;
-        assert sizeLabel != null;
+        assert customBox != null;
+        assert widthField != null;
+        assert heightField != null;
         assert previewGroup != null;
         assert importList != null;
         assert defSizeChoice != null;
@@ -318,14 +367,29 @@ public class ImportWindowController extends AbstractModalDialog {
         // Setup size choice box
         defSizeChoice.getItems().clear();
         // Care to have values in sync with definition of PrefSize
-        defSizeChoice.getItems().addAll(I18N.getString("import.choice.builtin"),
-                "200 x 100", "200 x 200"); //NOI18N
+        defSizeChoice.getItems().addAll(PrefSize.values()); //NOI18N
         defSizeChoice.getSelectionModel().selectFirst();
-        defSizeChoice.getSelectionModel().selectedIndexProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
-            assert t1 instanceof Integer;
-            updateSize((Integer)t1);
+        defSizeChoice.getSelectionModel().selectedItemProperty().addListener((ChangeListener<PrefSize>) (ov, t, t1) -> {
+            assert t1 instanceof PrefSize;
+            updateSize(t1);
         });
 
+        ChangeListener<String> sizeListener = (ob, o, n) -> {
+            updateZeNodeSize();
+        };
+        UnaryOperator<Change> integer4DigitFilter = change -> {
+            String input = change.getText();
+            if (input.matches("[0-9]*") && change.getControlNewText().length() <= 4) { 
+                return change;
+            }
+            return null;
+        };
+
+        widthField.setTextFormatter(new TextFormatter<>(integer4DigitFilter));
+        heightField.setTextFormatter(new TextFormatter<>(integer4DigitFilter));
+        widthField.textProperty().addListener(sizeListener);
+        heightField.textProperty().addListener(sizeListener);
+        
         // Setup Select All / Unselect All toggle
         // Initially all items are Selected.
         checkAllUncheckAllToggle.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
@@ -374,7 +438,7 @@ public class ImportWindowController extends AbstractModalDialog {
     // one and jar files found in the user library dir.
     List<File> buildListOfAllFiles(List<File> importFiles) throws IOException {
         final List<File> res = new ArrayList<>(importFiles);
-        File userLibraryDir = ((UserLibrary) libPanelController.getEditorController().getLibrary()).getPath();
+        File userLibraryDir = ((UserLibrary) libPanelController.getEditorController().libraryProperty().getValue()).getPath();
         if (userLibraryDir.exists()) {
             Path userLibraryPath = userLibraryDir.toPath();
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(userLibraryPath)) {
@@ -393,17 +457,19 @@ public class ImportWindowController extends AbstractModalDialog {
     }
 
     private void work() {
-        exploringTask = new Task<List<JarReport>>() {
+        exploringTask = new Task<List<JarReportImpl>>() {
 
             @Override
-            protected List<JarReport> call() throws Exception {
-                final List<JarReport> res = new ArrayList<>();
+            protected List<JarReportImpl> call() throws Exception {
+                final List<JarReportImpl> res = new ArrayList<>();
                 numOfImportedJar = importFiles.size();
                 // The classloader takes in addition all already existing
                 // jar files stored in the user lib dir.
                 final List<File> allFiles = buildListOfAllFiles(importFiles);
                 final URLClassLoader classLoader = getClassLoaderForFiles(allFiles);
                 int index = 1;
+                
+                List<LibraryFilter> filters = getApi().getApiDoc().getLibrary().getFilters();
                 for (File file : importFiles) {
                     if (isCancelled()) {
                         updateMessage(I18N.getString("import.work.cancelled"));
@@ -412,13 +478,13 @@ public class ImportWindowController extends AbstractModalDialog {
                     updateMessage(I18N.getString("import.work.exploring", file.getName()));
 //                    System.out.println("[" + index + "/" + max + "] Exploring file " + file.getName()); //NOI18N
                     if (file.isDirectory()) {
-                        final FolderExplorer explorer = new FolderExplorer(file.toPath());
-                        final JarReport jarReport = explorer.explore(classLoader);
+                        final FolderExplorer explorer = new FolderExplorer(file.toPath(), filters);
+                        final JarReportImpl jarReport = explorer.explore(classLoader);
                         res.add(jarReport);
                     }
                     else {
-                        final JarExplorer explorer = new JarExplorer(Paths.get(file.getAbsolutePath()));
-                        final JarReport jarReport = explorer.explore(classLoader);
+                        final JarExplorer explorer = new JarExplorer(Paths.get(file.getAbsolutePath()), filters);
+                        final JarReportImpl jarReport = explorer.explore(classLoader);
                         res.add(jarReport);
                     }
                     updateProgress(index, numOfImportedJar);
@@ -461,16 +527,15 @@ public class ImportWindowController extends AbstractModalDialog {
 
             try {
                 // We get the set of items which are already excluded prior to the current import.
-                UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().getLibrary());
+                UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().libraryProperty().getValue());
                 alreadyExcludedItems = userLib.getFilter();
 
-                List<JarReport> jarReportList = exploringTask.get(); // blocking call
+                List<JarReportImpl> jarReportList = exploringTask.get(); // blocking call
                 final Callback<ImportRow, ObservableValue<Boolean>> importRequired
                         = row -> row.importRequired();
                 importList.setCellFactory(CheckBoxListCell.forListView(importRequired));
 
-                boolean importingGluonControls = false;
-                for (JarReport jarReport : jarReportList) {
+                for (JarReportImpl jarReport : jarReportList) {
                     for (JarReportEntry e : jarReport.getEntries()) {
                         if ((e.getStatus() == JarReportEntry.Status.OK) && e.isNode()) {
                             boolean checked = true;
@@ -494,17 +559,9 @@ public class ImportWindowController extends AbstractModalDialog {
                                     });
                         }
                     }
-                    if (jarReport.hasGluonControls()) {
-                        importingGluonControls = true;
-                    }
                 }
-
-              //TODO uncomment and fix for full theme support
-//                if (importingGluonControls) {
-//                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(owner);
-//                    alert.showAndWait();
-//                }
-
+                userLib.getExplorationJarReports().addAll(jarReportList);
+                
                 // Sort based on the simple class name.
                 Collections.sort(importList.getItems(), new ImportRowComparator());
 
@@ -573,20 +630,33 @@ public class ImportWindowController extends AbstractModalDialog {
                 builtinPrefWidth = 0;
                 builtinPrefHeight = 0;
             }
-
+            
             if (builtinPrefWidth == 0 || builtinPrefHeight == 0) {
                 if (zeNode instanceof Region) { // must check instanceof: custom components are not necessarily regions..
-                    ((Region) zeNode).setPrefSize(200, 200);
-                    setSizeLabel(PrefSize.TWO_HUNDRED_BY_TWO_HUNDRED);
-                    defSizeChoice.getSelectionModel().select(2);
+                    updateSize(PrefSize.TWO_HUNDRED_BY_TWO_HUNDRED);
                 }
             } else {
-                setSizeLabel(PrefSize.DEFAULT);
-                defSizeChoice.getSelectionModel().selectFirst();
+                double rule = 200.0;
+                // resize builtin in case too large or too tiny
+                //if (builtinPrefWidth > rule || builtinPrefHeight > rule ) {
+                    if (builtinPrefWidth > builtinPrefHeight) {
+                        double coef = builtinPrefWidth / rule;
+                        builtinPrefWidth = rule;
+                        builtinPrefHeight = builtinPrefHeight / coef;
+                    } else {
+                        double coef = builtinPrefHeight / rule;
+                        builtinPrefHeight = rule;
+                        builtinPrefWidth = builtinPrefWidth / coef;
+                    }
+                //}
+                
+                updateSize(PrefSize.DEFAULT);
             }
+            updateZeNodeSize();
             previewGroup.getChildren().add(zeNode);
             defSizeChoice.setDisable(false);
             classNameLabel.setText(t1.getJarReportEntry().getKlass().getName());
+            
         });
 
         // We avoid to get an empty Preview area at first.
@@ -712,43 +782,42 @@ public class ImportWindowController extends AbstractModalDialog {
     // NOTE At the end of the day some tooling in metadata will supersedes the
     // use of this method that is only able to deal with a Region, ignoring all
     // other cases.
-    private void updateSize(Integer choice) {
+    private void updateSize(PrefSize prefSize) {
         if (zeNode instanceof Region) {
-            PrefSize prefSize = PrefSize.values()[choice];
-            switch (prefSize) {
-                case DEFAULT:
-                    ((Region) zeNode).setPrefSize(builtinPrefWidth, builtinPrefHeight);
-                    setSizeLabel(prefSize);
-                    break;
-                case TWO_HUNDRED_BY_ONE_HUNDRED:
-                    ((Region) zeNode).setPrefSize(200, 100);
-                    setSizeLabel(prefSize);
-                    break;
-                case TWO_HUNDRED_BY_TWO_HUNDRED:
-                    ((Region) zeNode).setPrefSize(200, 200);
-                    setSizeLabel(prefSize);
-                    break;
-                default:
-                    break;
-            }
-
-            defSizeChoice.getSelectionModel().select(choice);
+            setFieldSize(prefSize);
+            defSizeChoice.getSelectionModel().select(prefSize);
         }
     }
 
-    private void setSizeLabel(PrefSize ps) {
+    private void setFieldSize(PrefSize ps) {
+        widthField.setEditable(false);
+        heightField.setEditable(false);
+        
         switch (ps) {
+            case CUSTOM:
+                widthField.setEditable(true);
+                heightField.setEditable(true);
             case DEFAULT:
-                sizeLabel.setText(builtinPrefWidth + " x " + builtinPrefHeight); //NOI18N
-                break;
-            case TWO_HUNDRED_BY_ONE_HUNDRED:
-                sizeLabel.setText("200 x 100"); //NOI18N
-                break;
-            case TWO_HUNDRED_BY_TWO_HUNDRED:
-                sizeLabel.setText("200 x 200"); //NOI18N
+                widthField.setText(Integer.toString((int)builtinPrefWidth));
+                heightField.setText(Integer.toString((int)builtinPrefHeight));
+                customBox.setVisible(true);
                 break;
             default:
+                widthField.setText(Integer.toString((int)ps.getWidth()));
+                heightField.setText(Integer.toString((int)ps.getHeight()));
+                customBox.setVisible(false);
                 break;
+        }
+    }
+    
+    private void updateZeNodeSize() {
+        try {
+            Double witdh = Double.valueOf(widthField.getText());
+            Double height = Double.valueOf(heightField.getText());
+            ((Region) zeNode).setPrefSize(witdh, height);
+            ((Region) zeNode).setMaxSize(witdh, height);
+        } catch (NumberFormatException e) {
+            Logger.getLogger(ImportWindowController.class.getName()).log(Level.WARNING, "Unable to set the component size due to invalid format", e);
         }
     }
 }

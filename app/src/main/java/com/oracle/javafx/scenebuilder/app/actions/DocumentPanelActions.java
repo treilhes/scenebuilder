@@ -33,16 +33,16 @@
 package com.oracle.javafx.scenebuilder.app.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 
 public class DocumentPanelActions {
@@ -55,10 +55,10 @@ public class DocumentPanelActions {
 			descriptionKey = "action.description.show.info")
 	public static class ShowInfoAction extends Show {
 		public ShowInfoAction(
-				@Autowired ApplicationContext context,
+				@Autowired Api api,
 				@Autowired @Lazy DocumentPanelController documentPanelController,
 				@Autowired @Lazy DisplayOptionPreference displayOptionPreference) {
-			super(context, DisplayOption.INFO, documentPanelController, displayOptionPreference);
+			super(api, DisplayOption.INFO, documentPanelController, displayOptionPreference);
 		}
 	}
 
@@ -70,10 +70,10 @@ public class DocumentPanelActions {
 			descriptionKey = "action.description.show.fx.id")
 	public static class ShowFxIdAction extends Show {
 		public ShowFxIdAction(
-				@Autowired ApplicationContext context,
+				@Autowired Api api,
 				@Autowired @Lazy DocumentPanelController documentPanelController,
 				@Autowired @Lazy DisplayOptionPreference displayOptionPreference) {
-			super(context, DisplayOption.FXID, documentPanelController, displayOptionPreference);
+			super(api, DisplayOption.FXID, documentPanelController, displayOptionPreference);
 		}
 	}
 
@@ -85,10 +85,10 @@ public class DocumentPanelActions {
 			descriptionKey = "action.description.show.node.id")
 	public static class ShowNodeIdAction extends Show {
 		public ShowNodeIdAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy DocumentPanelController documentPanelController,
 				@Autowired @Lazy DisplayOptionPreference displayOptionPreference) {
-			super(context, DisplayOption.NODEID, documentPanelController, displayOptionPreference);
+			super(api, DisplayOption.NODEID, documentPanelController, displayOptionPreference);
 		}
 	}
 
@@ -98,8 +98,8 @@ public class DocumentPanelActions {
 		private final DisplayOptionPreference displayOptionPreference;
 		private final DisplayOption option;
 
-		public Show(ApplicationContext context, DisplayOption option, DocumentPanelController documentPanelController, DisplayOptionPreference displayOptionPreference) {
-			super(context);
+		public Show(Api api, DisplayOption option, DocumentPanelController documentPanelController, DisplayOptionPreference displayOptionPreference) {
+			super(api);
 			this.option = option;
 			this.documentPanelController = documentPanelController;
 			this.displayOptionPreference = displayOptionPreference;

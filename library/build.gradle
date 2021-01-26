@@ -1,4 +1,5 @@
 dependencies {
 	implementation project(':core')
+	implementation project(':jobs')
 	implementation project(':sb')
 }

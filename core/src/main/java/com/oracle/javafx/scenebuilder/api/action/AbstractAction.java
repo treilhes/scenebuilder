@@ -32,22 +32,21 @@
  */
 package com.oracle.javafx.scenebuilder.api.action;
 
-import org.springframework.context.ApplicationContext;
-
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import javafx.scene.input.KeyCombination;
 
 public abstract class AbstractAction implements Action {
 
-	private final ApplicationContext context;
 	private final String nameI18nKey;
 	private final String descriptionI18nKey;
 	private final String rawAccelerator;
 	private ExtendedAction<?> extendedAction;
+    private final Api api;
 
-	public AbstractAction(ApplicationContext context) {
-		this.context = context;
+	public AbstractAction(Api api) {
+	    this.api = api;
 
 		ActionMeta actionMeta = this.getClass().getAnnotation(ActionMeta.class);
 
@@ -96,12 +95,12 @@ public abstract class AbstractAction implements Action {
 			return (ExtendedAction<?>) this;
 		}
 		if (extendedAction == null) {
-			extendedAction = getContext().getBean(ExtendedAction.class, this);
+			extendedAction = api.getContext().getBean(ExtendedAction.class, this);
 		}
 		return extendedAction;
 	}
 
-	public ApplicationContext getContext() {
-		return context;
+	public Api getApi() {
+		return api;
 	}
 }

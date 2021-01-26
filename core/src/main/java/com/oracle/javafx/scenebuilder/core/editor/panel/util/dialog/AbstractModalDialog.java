@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -87,8 +88,8 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
      * Public
      */
 
-    public AbstractModalDialog(URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
-        super(getContainerFxmlURL(), I18N.getBundle());
+    public AbstractModalDialog(Api api, URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
+        super(api, getContainerFxmlURL(), I18N.getBundle());
         this.owner = owner;
         this.contentFxmlURL = contentFxmlURL;
         this.contentResources = contentResources;

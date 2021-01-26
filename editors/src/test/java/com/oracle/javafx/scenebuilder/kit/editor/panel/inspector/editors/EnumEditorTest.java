@@ -43,7 +43,7 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.EnumEditor;
+import com.oracle.javafx.scenebuilder.editors.control.EnumEditor;
 
 @ExtendWith(ApplicationExtension.class)
 public class EnumEditorTest {

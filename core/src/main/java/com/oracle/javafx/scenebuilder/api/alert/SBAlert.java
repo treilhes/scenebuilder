@@ -38,6 +38,9 @@ import javafx.stage.Stage;
 /**
  * All SB alerts should extend from this class to have a consistent look and feel
  */
+//TODO this class is only used by gluon, check if it is a duplicate of Dialog functionality
+// if it is move this class to Gluon extension
+// it is also used for update notification
 public class SBAlert extends Alert {
 
     public SBAlert(AlertType alertType, Stage owner) {

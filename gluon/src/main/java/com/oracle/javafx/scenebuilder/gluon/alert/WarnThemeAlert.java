@@ -38,6 +38,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
 import javafx.scene.control.ButtonBar;
@@ -74,17 +75,25 @@ public class WarnThemeAlert extends SBAlert {
     }
 
     public static void showAlertIfRequired(ThemePreference themePreference, FXOMObject fxomObject, Stage owner) {
-        if (!hasBeenShown && fxomObject != null && fxomObject.isGluon() && (themePreference.getValue() != GluonThemesList.GluonMobileLight.class
+        if (!hasBeenShown && fxomObject != null && isGluon(fxomObject) && (themePreference.getValue() != GluonThemesList.GluonMobileLight.class
                 && themePreference.getValue() != GluonThemesList.GluonMobileDark.class)) {
             new WarnThemeAlert(themePreference, owner).showAndWait();
         }
     }
 
     public static void showAlertIfRequired(ThemePreference themePreference, FXOMDocument fxomDocument, Stage owner) {
-        if (!hasBeenShown && fxomDocument != null && fxomDocument.hasGluonControls() && (themePreference.getValue() != GluonThemesList.GluonMobileLight.class
+        if (!hasBeenShown && fxomDocument != null && hasGluonControls(fxomDocument) && (themePreference.getValue() != GluonThemesList.GluonMobileLight.class
                 && themePreference.getValue() != GluonThemesList.GluonMobileDark.class)) {
             new WarnThemeAlert(themePreference, owner).showAndWait();
         }
     }
+    
+    private static boolean hasGluonControls(FXOMDocument fxomDocument) {
+        return fxomDocument.getFxmlText(false).contains(GluonConstants.GLUON_PACKAGE);
+    }
 
+    public static boolean isGluon(FXOMObject fxomObject) {
+        return fxomObject != null && fxomObject.getSceneGraphObject() != null 
+                && fxomObject.getSceneGraphObject().getClass().getName().startsWith(GluonConstants.GLUON_PACKAGE);
+    }
 }

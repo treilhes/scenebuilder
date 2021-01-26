@@ -33,26 +33,16 @@
 package com.oracle.javafx.scenebuilder.core.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
@@ -81,7 +71,7 @@ import javafx.scene.layout.RowConstraints;
 public class EditorUtils {
 
     static final String[] FXML_RESERVED_KEYWORDS = {"null"}; //NOI18N
-    private static final String FXINCLUDE_JAVADOC_URL = "https://openjfx.io/javadoc/11/javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html#include_elements";
+    //private static final String FXINCLUDE_JAVADOC_URL = "https://openjfx.io/javadoc/11/javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html#include_elements";
 
     public static void makeWidthStretchable(final Node node) {
         Parent p = node.getParent();
@@ -262,22 +252,22 @@ public class EditorUtils {
         return builder.toString();
     }
 
-    // Check if this could be moved in the Metadata classes.
-    // Get the component class metadata where a property is defined.
-    private static ComponentClassMetadata getDefiningClass(Class<?> clazz, PropertyName propName) {
-        Metadata metadata = Metadata.getMetadata();
-        ComponentClassMetadata<?> classMeta = metadata.queryComponentMetadata(clazz);
-        while (clazz != null) {
-            for (PropertyMetadata propMeta : classMeta.getProperties()) {
-                if (propMeta.getName().compareTo(propName) == 0) {
-                    return classMeta;
-                }
-            }
-            // Check the inherited classes
-            classMeta = classMeta.getParentMetadata();
-        }
-        return null;
-    }
+//    // Check if this could be moved in the Metadata classes.
+//    // Get the component class metadata where a property is defined.
+//    private static ComponentClassMetadata getDefiningClass(Class<?> clazz, PropertyName propName) {
+//        Metadata metadata = Metadata.getMetadata();
+//        ComponentClassMetadata<?> classMeta = metadata.queryComponentMetadata(clazz);
+//        while (clazz != null) {
+//            for (PropertyMetadata propMeta : classMeta.getProperties()) {
+//                if (propMeta.getName().compareTo(propName) == 0) {
+//                    return classMeta;
+//                }
+//            }
+//            // Check the inherited classes
+//            classMeta = classMeta.getParentMetadata();
+//        }
+//        return null;
+//    }
 
     private static class NextFrameTimer extends AnimationTimer {
 
@@ -410,48 +400,48 @@ public class EditorUtils {
         fadeTransition.play();
     }
 
-    protected static void openUrl(FileSystem fileSystem, Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) throws IOException {
-        Class<?> clazz = null;
-        // In case of static property, we don't care of the selectedClasses
-        if (selectedClasses != null) {
-            for (Class<?> cl : selectedClasses) {
-                clazz = cl;
-            }
-        }
-        PropertyName propertyName = propMeta.getName();
-        if (propMeta.isStaticProperty()) {
-            clazz = propertyName.getResidenceClass();
-        } else {
-            clazz = getDefiningClass(clazz, propertyName).getKlass();
-        }
-        String propNameStr = propertyName.getName();
-        // First char in uppercase
-        propNameStr = propNameStr.substring(0, 1).toUpperCase(Locale.ENGLISH) + propNameStr.substring(1);
-        String methodName;
-        String posfix;
-        if (clazz.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
-            posfix = "--";
-        } else {
-            posfix = "()";
-        }
-        if (propMeta.getValueClass() == Boolean.class) {
-            methodName = "is" + propNameStr + posfix; //NOI18N
-        } else if (propMeta.isStaticProperty()) {
-            methodName = "get" + propNameStr + "(" + Node.class.getName() + ")"; //NOI18N
-        } else {
-            methodName = "get" + propNameStr + posfix; //NOI18N
-        }
-
-        String url;
-        if (clazz.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
-            url = EditorPlatform.GLUON_JAVADOC_HOME;
-        } else {
-            url = EditorPlatform.JAVADOC_HOME + clazz.getModule().getName() + "/";
-        }
-        url += clazz.getName().replaceAll("\\.", "/") + ".html"; //NOI18N
-        url += "#" + methodName; //NOI18N
-        fileSystem.open(url);
-    }
+//    protected static void openUrl(FileSystem fileSystem, Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) throws IOException {
+//        Class<?> clazz = null;
+//        // In case of static property, we don't care of the selectedClasses
+//        if (selectedClasses != null) {
+//            for (Class<?> cl : selectedClasses) {
+//                clazz = cl;
+//            }
+//        }
+//        PropertyName propertyName = propMeta.getName();
+//        if (propMeta.isStaticProperty()) {
+//            clazz = propertyName.getResidenceClass();
+//        } else {
+//            clazz = getDefiningClass(clazz, propertyName).getKlass();
+//        }
+//        String propNameStr = propertyName.getName();
+//        // First char in uppercase
+//        propNameStr = propNameStr.substring(0, 1).toUpperCase(Locale.ENGLISH) + propNameStr.substring(1);
+//        String methodName;
+//        String posfix;
+//        if (clazz.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
+//            posfix = "--";
+//        } else {
+//            posfix = "()";
+//        }
+//        if (propMeta.getValueClass() == Boolean.class) {
+//            methodName = "is" + propNameStr + posfix; //NOI18N
+//        } else if (propMeta.isStaticProperty()) {
+//            methodName = "get" + propNameStr + "(" + Node.class.getName() + ")"; //NOI18N
+//        } else {
+//            methodName = "get" + propNameStr + posfix; //NOI18N
+//        }
+//
+//        String url;
+//        if (clazz.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
+//            url = EditorPlatform.GLUON_JAVADOC_HOME;
+//        } else {
+//            url = EditorPlatform.JAVADOC_HOME + clazz.getModule().getName() + "/";
+//        }
+//        url += clazz.getName().replaceAll("\\.", "/") + ".html"; //NOI18N
+//        url += "#" + methodName; //NOI18N
+//        fileSystem.open(url);
+//    }
 
     // Specific swap() function for an ObservableList:
     // Collections.swap() directly on the ObservableList generates a "duplicate children added" error

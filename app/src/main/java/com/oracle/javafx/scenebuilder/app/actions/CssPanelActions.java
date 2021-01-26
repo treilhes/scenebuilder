@@ -33,11 +33,11 @@
 package com.oracle.javafx.scenebuilder.app.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -58,10 +58,10 @@ public class CssPanelActions {
 		private final CssPanelController cssPanelController;
 
 		public ViewRulesAction(
-				@Autowired ApplicationContext context,
+				@Autowired Api api,
 				@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
 				@Autowired @Lazy CssPanelController cssPanelController) {
-			super(context);
+			super(api);
 			this.cssPanelMenuController = cssPanelMenuController;
 			this.cssPanelController = cssPanelController;
 		}
@@ -91,10 +91,10 @@ public class CssPanelActions {
 		private final CssPanelController cssPanelController;
 
 		public ViewTableAction(
-				@Autowired ApplicationContext context,
+				@Autowired Api api,
 				@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
 				@Autowired @Lazy CssPanelController cssPanelController) {
-			super(context);
+			super(api);
 			this.cssPanelMenuController = cssPanelMenuController;
 			this.cssPanelController = cssPanelController;
 		}
@@ -124,10 +124,10 @@ public class CssPanelActions {
 		private final CssPanelController cssPanelController;
 
 		public ViewTextAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
 				@Autowired @Lazy CssPanelController cssPanelController) {
-			super(context);
+			super(api);
 			this.cssPanelMenuController = cssPanelMenuController;
 			this.cssPanelController = cssPanelController;
 		}
@@ -156,9 +156,9 @@ public class CssPanelActions {
 		private final CssPanelMenuController cssPanelMenuController;
 
 		public CopyStyleablePathAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy CssPanelMenuController cssPanelMenuController) {
-			super(context);
+			super(api);
 			this.cssPanelMenuController = cssPanelMenuController;
 		}
 
@@ -185,10 +185,10 @@ public class CssPanelActions {
 		private final CssPanelController cssPanelController;
 
 		public SplitDefaultsAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
 				@Autowired @Lazy CssPanelController cssPanelController) {
-			super(context);
+			super(api);
 			this.cssPanelMenuController = cssPanelMenuController;
 			this.cssPanelController = cssPanelController;
 		}
@@ -216,10 +216,10 @@ public class CssPanelActions {
 		private final CssPanelController cssPanelController;
 
 		public ShowStyledOnlyAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
 				@Autowired @Lazy CssPanelController cssPanelController) {
-			super(context);
+			super(api);
 			this.cssPanelMenuController = cssPanelMenuController;
 			this.cssPanelController = cssPanelController;
 		}

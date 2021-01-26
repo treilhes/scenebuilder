@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.app.menubar;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +39,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -54,9 +51,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ControlAction;
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Document.DocumentControlAction;
+import com.oracle.javafx.scenebuilder.api.Document.DocumentEditAction;
+import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
+import com.oracle.javafx.scenebuilder.api.Main.ApplicationControlAction;
 import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
@@ -67,24 +67,15 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentControlAction;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController.DocumentEditAction;
 import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.app.MainController.ApplicationControlAction;
-import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController.EditAction;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.library.BuiltinSectionComparator;
-import com.oracle.javafx.scenebuilder.library.LibraryItemImpl;
-import com.oracle.javafx.scenebuilder.library.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.collections.ObservableList;
@@ -92,7 +83,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -112,56 +102,52 @@ import javafx.scene.layout.StackPane;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
-public class MenuBarController implements InitializingBean {
+public class MenuBarController implements com.oracle.javafx.scenebuilder.api.MenuBar, InitializingBean {
 
     private static MenuBarController systemMenuBarController; // For Mac only
-
-    private Menu insertCustomMenu;
 
     @FXML
     private MenuBar menuBar;
     @FXML
-    private Menu insertMenu;
-    @FXML
     private Menu addEffectMenu;
-    @FXML
-    private Menu fileMenu; // Useless as soon as Preferences menu item is implemented
+//    @FXML
+//    private Menu fileMenu; // Useless as soon as Preferences menu item is implemented
     @FXML
     private Menu previewMenu;
     @FXML
     private Menu windowMenu;
 
-    // File
-    @FXML
-    private MenuItem newMenuItem;
-    @FXML
-    private MenuItem newTemplateMenuItem;
-    @FXML
-    private MenuItem openMenuItem;
-    @FXML
-    private Menu openRecentMenu;
-    @FXML
-    private MenuItem saveMenuItem;
-    @FXML
-    private MenuItem saveAsMenuItem;
-    @FXML
-    private MenuItem revertMenuItem;
+//    // File
+//    @FXML
+//    private MenuItem newMenuItem;
+//    @FXML
+//    private MenuItem newTemplateMenuItem;
+//    @FXML
+//    private MenuItem openMenuItem;
+//    @FXML
+//    private Menu openRecentMenu;
+//    @FXML
+//    private MenuItem saveMenuItem;
+//    @FXML
+//    private MenuItem saveAsMenuItem;
+//    @FXML
+//    private MenuItem revertMenuItem;
 //    @FXML
 //    private MenuItem closeMenuItem;
-    @FXML
-    private MenuItem revealMenuItem;
-    @FXML
-    private MenuItem importFxmlMenuItem;
-    @FXML
-    private MenuItem importMediaMenuItem;
-    @FXML
-    private MenuItem includeFileMenuItem;
-    @FXML
-    private MenuItem editIncludedFileMenuItem;
-    @FXML
-    private MenuItem revealIncludedFileMenuItem;
-    @FXML
-    private MenuItem showPreferencesMenuItem;
+//    @FXML
+//    private MenuItem revealMenuItem;
+//    @FXML
+//    private MenuItem importFxmlMenuItem;
+//    @FXML
+//    private MenuItem importMediaMenuItem;
+//    @FXML
+//    private MenuItem includeFileMenuItem;
+//    @FXML
+//    private MenuItem editIncludedFileMenuItem;
+//    @FXML
+//    private MenuItem revealIncludedFileMenuItem;
+//    @FXML
+//    private MenuItem showPreferencesMenuItem;
 //    @FXML
 //    private MenuItem exitMenuItem;
 
@@ -329,8 +315,6 @@ public class MenuBarController implements InitializingBean {
     private MenuItem helpMenuItem;
     @FXML
     private MenuItem aboutMenuItem;
-    @FXML
-    private MenuItem checkUpdatesMenuItem;
 
     private static final KeyCombination.Modifier modifier = KeyboardModifier.control();
     private final Map<KeyCombination, MenuItem> keyToMenu = new HashMap<>();
@@ -344,7 +328,6 @@ public class MenuBarController implements InitializingBean {
     private final ApplicationContext context;
     private final DocumentWindowController documentWindowController;
     private final RecentItemsPreference recentItemsPreference;
-    private final BuiltinLibrary builtinLibrary;
     private final DebugMenuController debugMenuController; // Initialized lazily
     private final List<MenuProvider> menuProviders;
     private final List<MenuItemProvider> menuItemProviders;
@@ -355,7 +338,6 @@ public class MenuBarController implements InitializingBean {
 
     public MenuBarController(
             @Autowired ApplicationContext context,
-            @Autowired BuiltinLibrary builtinLibrary,
             @Autowired RecentItemsPreference recentItemsPreference,
             @Autowired DocumentManager documentManager,
             @Autowired(required = false) List<MenuProvider> menuProviders,
@@ -365,7 +347,6 @@ public class MenuBarController implements InitializingBean {
             @Autowired @Lazy PreviewWindowController previewWindowController
             ) {
         this.context = context;
-        this.builtinLibrary = builtinLibrary;
         this.recentItemsPreference = recentItemsPreference;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
@@ -418,7 +399,7 @@ public class MenuBarController implements InitializingBean {
 
            List<MenuAttachment> validAttachments = validProviders.stream()
                    .flatMap(mp -> mp.menus().stream())
-                   .filter(ma -> ma != null && ma.getTargetId() != null && ma.getPositionRequest() != null && ma.getMenu() != null)
+                   .filter(ma -> ma != null && ma.getPositionRequest() != null && ma.getMenu() != null)
                    .collect(Collectors.toList());
 
            boolean hasInvalidProviders = menuProviders.size() > validProviders.size();
@@ -682,6 +663,7 @@ public class MenuBarController implements InitializingBean {
         return menuBar;
     }
 
+    @Override
     public void setDebugMenuVisible(boolean visible) {
         if (isDebugMenuVisible() != visible) {
             if (visible) {
@@ -692,6 +674,7 @@ public class MenuBarController implements InitializingBean {
         }
     }
 
+    @Override
     public boolean isDebugMenuVisible() {
         return menuBar.getMenus().contains(debugMenuController.getMenu());
     }
@@ -712,26 +695,25 @@ public class MenuBarController implements InitializingBean {
 
         assert menuBar != null;
         assert menuBar.getParent() instanceof StackPane;
-        assert insertMenu != null;
         assert addEffectMenu != null;
-        assert fileMenu != null;
+        //assert fileMenu != null;
         assert windowMenu != null;
 
-        assert newMenuItem != null;
-        assert newTemplateMenuItem != null;
-        assert openMenuItem != null;
-        assert openRecentMenu != null;
-        assert saveMenuItem != null;
-        assert saveAsMenuItem != null;
-        assert revertMenuItem != null;
-        //assert closeMenuItem != null;
-        assert revealMenuItem != null;
-        assert importFxmlMenuItem != null;
-        assert importMediaMenuItem != null;
-        assert includeFileMenuItem != null;
-        assert editIncludedFileMenuItem != null;
-        assert revealIncludedFileMenuItem != null;
-        assert showPreferencesMenuItem != null;
+//        assert newMenuItem != null;
+//        assert newTemplateMenuItem != null;
+//        assert openMenuItem != null;
+//        assert openRecentMenu != null;
+//        assert saveMenuItem != null;
+//        assert saveAsMenuItem != null;
+//        assert revertMenuItem != null;
+//        //assert closeMenuItem != null;
+//        assert revealMenuItem != null;
+//        assert importFxmlMenuItem != null;
+//        assert importMediaMenuItem != null;
+//        assert includeFileMenuItem != null;
+//        assert editIncludedFileMenuItem != null;
+//        assert revealIncludedFileMenuItem != null;
+        //assert showPreferencesMenuItem != null;
         //assert exitMenuItem != null;
 
         assert undoMenuItem != null;
@@ -815,7 +797,6 @@ public class MenuBarController implements InitializingBean {
 
         assert helpMenuItem != null;
         assert aboutMenuItem != null;
-        assert checkUpdatesMenuItem != null;
 
         /*
          * To make MenuBar.fxml editable with SB 1.1, the menu bar is enclosed
@@ -840,72 +821,72 @@ public class MenuBarController implements InitializingBean {
             });
         }
 
-        /*
-         * Setup title of the Reveal menu item according the underlying o/s.
-         */
-        final String revealMenuKey;
-        if (EditorPlatform.IS_MAC) {
-            revealMenuKey = "menu.title.reveal.mac";
-        } else if (EditorPlatform.IS_WINDOWS) {
-            revealMenuKey = "menu.title.reveal.win.mnemonic";
-        } else {
-            assert EditorPlatform.IS_LINUX;
-            revealMenuKey = "menu.title.reveal.linux";
-        }
-        revealMenuItem.setText(I18N.getString(revealMenuKey));
-
-        /*
-         * File menu
-         */
-        newMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.NEW_FILE));
-        newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
-        newTemplateMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.NEW_TEMPLATE));
-        openMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.OPEN_FILE));
-        openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
-        openRecentMenu.setOnShowing(t -> updateOpenRecentMenuItems());
-        saveMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SAVE_FILE));
-        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, modifier));
-        saveAsMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SAVE_AS_FILE));
-        saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, modifier));
-        revertMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVERT_FILE));
-        revealMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVEAL_FILE));
-        importFxmlMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.IMPORT_FXML));
-        importMediaMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.IMPORT_MEDIA));
-        includeFileMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.INCLUDE_FXML));
-        editIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.EDIT_INCLUDED_FILE) {
-
-            @Override
-            public String getTitle() {
-                String title = I18N.getString("menu.title.edit.included.default");
-                if (documentWindowController != null) {
-                    final File file = documentWindowController.getEditorController().getIncludedFile();
-                    if (file != null) {
-                        title = I18N.getString("menu.title.edit.included", file.getName());
-                    }
-                }
-                return title;
-            }
-        });
-        revealIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.REVEAL_INCLUDED_FILE) {
-
-            @Override
-            public String getTitle() {
-                String title = I18N.getString("menu.title.reveal.included.default");
-                if (documentWindowController != null) {
-                    final File file = documentWindowController.getEditorController().getIncludedFile();
-                    if (file != null) {
-                        if (EditorPlatform.IS_MAC) {
-                            title = I18N.getString("menu.title.reveal.included.finder", file.getName());
-                        } else {
-                            title = I18N.getString("menu.title.reveal.included.explorer", file.getName());
-                        }
-                    }
-                }
-                return title;
-            }
-        });
-        showPreferencesMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.SHOW_PREFERENCES));
-        showPreferencesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.COMMA, modifier));
+//        /*
+//         * Setup title of the Reveal menu item according the underlying o/s.
+//         */
+//        final String revealMenuKey;
+//        if (EditorPlatform.IS_MAC) {
+//            revealMenuKey = "menu.title.reveal.mac";
+//        } else if (EditorPlatform.IS_WINDOWS) {
+//            revealMenuKey = "menu.title.reveal.win.mnemonic";
+//        } else {
+//            assert EditorPlatform.IS_LINUX;
+//            revealMenuKey = "menu.title.reveal.linux";
+//        }
+//        revealMenuItem.setText(I18N.getString(revealMenuKey));
+//
+//        /*
+//         * File menu
+//         */
+//        newMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.NEW_FILE));
+//        newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
+//        newTemplateMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.NEW_TEMPLATE));
+//        openMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.OPEN_FILE));
+//        openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
+//        openRecentMenu.setOnShowing(t -> updateOpenRecentMenuItems());
+//        saveMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SAVE_FILE));
+//        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, modifier));
+//        saveAsMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SAVE_AS_FILE));
+//        saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, modifier));
+//        revertMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVERT_FILE));
+//        revealMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.REVEAL_FILE));
+//        importFxmlMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.IMPORT_FXML));
+//        importMediaMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.IMPORT_MEDIA));
+//        includeFileMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.INCLUDE_FXML));
+//        editIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.EDIT_INCLUDED_FILE) {
+//
+//            @Override
+//            public String getTitle() {
+//                String title = I18N.getString("menu.title.edit.included.default");
+//                if (documentWindowController != null) {
+//                    final File file = documentWindowController.getEditorController().getIncludedFile();
+//                    if (file != null) {
+//                        title = I18N.getString("menu.title.edit.included", file.getName());
+//                    }
+//                }
+//                return title;
+//            }
+//        });
+//        revealIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.REVEAL_INCLUDED_FILE) {
+//
+//            @Override
+//            public String getTitle() {
+//                String title = I18N.getString("menu.title.reveal.included.default");
+//                if (documentWindowController != null) {
+//                    final File file = documentWindowController.getEditorController().getIncludedFile();
+//                    if (file != null) {
+//                        if (EditorPlatform.IS_MAC) {
+//                            title = I18N.getString("menu.title.reveal.included.finder", file.getName());
+//                        } else {
+//                            title = I18N.getString("menu.title.reveal.included.explorer", file.getName());
+//                        }
+//                    }
+//                }
+//                return title;
+//            }
+//        });
+//        showPreferencesMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.SHOW_PREFERENCES));
+//        showPreferencesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.COMMA, modifier));
 
         /*
          * Edit menu
@@ -1205,7 +1186,6 @@ public class MenuBarController implements InitializingBean {
         aboutMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.ABOUT));
         helpMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.HELP));
         helpMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.F1));
-        checkUpdatesMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.CHECK_UPDATES));
 
         /*
          * Put some generic handlers on each Menu and MenuItem.
@@ -1214,15 +1194,6 @@ public class MenuBarController implements InitializingBean {
         for (Menu m : menuBar.getMenus()) {
             setupMenuItemHandlers(m);
         }
-
-        /*
-         * Insert menu: we set what is statically known.
-         */
-        constructBuiltinPartOfInsertMenu();
-        constructCustomPartOfInsertMenu();
-
-        // The handler for Insert menu deals only with Custom sub-menu.
-        insertMenu.setOnMenuValidation(onCustomPartOfInsertMenuValidationHandler);
 
         windowMenu.setOnMenuValidation(onWindowMenuValidationHandler);
     }
@@ -1357,199 +1328,6 @@ public class MenuBarController implements InitializingBean {
         return result;
     }
 
-    private void updateOpenRecentMenuItems() {
-
-        final List<MenuItem> menuItems = new ArrayList<>();
-
-        final List<String> recentItems = recentItemsPreference.getValue();
-
-        final MenuItem clearMenuItem = new MenuItem(I18N.getString("menu.title.open.recent.clear"));
-        clearMenuItem.setOnAction(new ClearOpenRecentHandler());
-
-        if (recentItems.isEmpty()) {
-            clearMenuItem.setDisable(true);
-            menuItems.add(clearMenuItem);
-        } else {
-            clearMenuItem.setDisable(false);
-
-            final Map<String, Integer> recentItemsNames = new HashMap<>();
-            final List<String> recentItemsToRemove = new ArrayList<>();
-
-            // First pass to build recentItemsNames and recentItemsToRemove
-            for (String recentItem : recentItems) {
-                final File recentItemFile = new File(recentItem);
-                if (recentItemFile.exists()) {
-                    final String name = recentItemFile.getName();
-                    if (recentItemsNames.containsKey(name)) {
-                        recentItemsNames.replace(name, recentItemsNames.get(name) + 1);
-                    } else {
-                        recentItemsNames.put(name, 1);
-                    }
-                } else {
-                    // recent item file is still in preferences DB but has been removed from disk
-                    recentItemsToRemove.add(recentItem);
-                }
-            }
-            // Second pass to build MenuItems
-            for (String recentItem : recentItems) {
-                final File recentItemFile = new File(recentItem);
-                if (recentItemFile.exists()) {
-                    final String name = recentItemFile.getName();
-                    assert recentItemsNames.keySet().contains(name);
-                    final MenuItem mi;
-                    if (recentItemsNames.get(name) > 1) {
-                        // Several files with same name : display full path
-                        mi = new MenuItem(recentItem);
-                    } else {
-                        // Single file with this name : display file name only
-                        assert recentItemsNames.get(name) == 1;
-                        mi = new MenuItem(name);
-                    }
-                    mi.setOnAction(t -> {
-                        final File file = new File(recentItem);
-                        MainController.getSingleton().performOpenRecent(documentWindowController, file);
-                    });
-                    mi.setMnemonicParsing(false);
-                    menuItems.add(mi);
-                }
-            }
-
-            // Cleanup recent items preferences if needed
-            if (recentItemsToRemove.isEmpty() == false) {
-                recentItemsPreference.removeRecentItems(recentItemsToRemove);
-            }
-
-            menuItems.add(new SeparatorMenuItem());
-            menuItems.add(clearMenuItem);
-        }
-
-        openRecentMenu.getItems().setAll(menuItems);
-    }
-
-    /*
-     * Private (insert menu)
-     */
-    private final EventHandler<Event> onCustomPartOfInsertMenuValidationHandler
-            = t -> {
-        assert t.getSource() == insertMenu;
-        updateCustomPartOfInsertMenu();
-    };
-
-    private void updateCustomPartOfInsertMenu() {
-        assert insertMenu != null;
-        assert insertCustomMenu != null;
-
-        if (documentWindowController != null) {
-            final EditorController editorController = documentWindowController.getEditorController();
-            assert editorController.getLibrary() != null;
-
-            Set<LibraryItem> sectionItems = new TreeSet<>(new LibraryItemNameComparator());
-
-            // Collect custom items
-            for (LibraryItem li : editorController.getLibrary().getItems()) {
-                if (li.getSection().equals(DefaultSectionNames.TAG_USER_DEFINED)) {
-                    sectionItems.add(li);
-                }
-            }
-
-            // Make custom items visible and accessible via custom menu.
-            if (sectionItems.size() > 0) {
-                insertCustomMenu.getItems().clear();
-
-                for (LibraryItem li : sectionItems) {
-                    insertCustomMenu.getItems().add(makeMenuItemForLibraryItem(li));
-                }
-
-                insertCustomMenu.setVisible(true);
-            } else {
-                insertCustomMenu.setVisible(false);
-            }
-        }
-    }
-
-    // At constructing time we dunno if we've custom items then we keep it hidden.
-    private void constructCustomPartOfInsertMenu() {
-        assert insertMenu != null;
-        insertCustomMenu = makeMenuForLibrarySection(DefaultSectionNames.TAG_USER_DEFINED);
-        insertMenu.getItems().add(0, insertCustomMenu);
-        insertCustomMenu.setVisible(false);
-    }
-
-    // We consider the content of built-in library is static: it cannot change
-    // unless its implementation is modified.
-    private void constructBuiltinPartOfInsertMenu() {
-        assert insertMenu != null;
-        insertMenu.getItems().clear();
-
-        final Map<String, Set<LibraryItem>> sectionMap
-                = new TreeMap<>(new BuiltinSectionComparator());
-
-        for (LibraryItem li : builtinLibrary.getItems()) {
-            Set<LibraryItem> sectionItems = sectionMap.get(li.getSection());
-            if (sectionItems == null) {
-                sectionItems = new TreeSet<>(new LibraryItemNameComparator());
-                sectionMap.put(li.getSection(), sectionItems);
-            }
-            // Add all builtin Library items except the ContextMenu (see DTL-6831)
-            if (!ContextMenu.class.getSimpleName().equals(li.getName())) {
-                sectionItems.add(li);
-            }
-        }
-
-        for (Map.Entry<String, Set<LibraryItem>> e : sectionMap.entrySet()) {
-            final Menu sectionMenu = makeMenuForLibrarySection(e.getKey());
-            insertMenu.getItems().add(sectionMenu);
-            for (LibraryItem li : e.getValue()) {
-                sectionMenu.getItems().add(makeMenuItemForLibraryItem(li));
-            }
-        }
-    }
-
-    private Menu makeMenuForLibrarySection(String section) {
-        final Menu result = new Menu();
-        result.setText(section);
-        result.setOnShowing(t -> updateInsertMenuState(result));
-        return result;
-    }
-
-    private MenuItem makeMenuItemForLibraryItem(final LibraryItem li) {
-        final MenuItem result = new MenuItem();
-
-        result.setText(li.getName());
-        result.setUserData(li);
-        result.setOnAction(t -> handleInsertMenuAction(li));
-        return result;
-    }
-
-    private void updateInsertMenuState(Menu sectionMenu) {
-        if (documentWindowController != null && documentWindowController.getStage().isFocused()) {
-            final EditorController editorController = documentWindowController.getEditorController();
-            for (MenuItem menuItem : sectionMenu.getItems()) {
-                assert menuItem.getUserData() instanceof LibraryItemImpl;
-                final LibraryItemImpl li = (LibraryItemImpl) menuItem.getUserData();
-                final boolean enabled = editorController.canPerformInsert(li);
-                menuItem.setDisable(!enabled);
-            }
-        } else {
-            // See DTL-6017 and DTL-6554.
-            // This case is relevant on Mac only; on Win and Linux the top menu
-            // bar is part of the document window then even if some other non-modal
-            // window is opened (Preferences, Skeleton, Preview) one has to give
-            // focus to the document window to become able to open the Insert menu.
-            for (MenuItem menuItem : sectionMenu.getItems()) {
-                assert menuItem.getUserData() instanceof LibraryItemImpl;
-                menuItem.setDisable(true);
-            }
-        }
-    }
-
-    private void handleInsertMenuAction(LibraryItem li) {
-        if (documentWindowController != null) {
-            final EditorController editorController = documentWindowController.getEditorController();
-            editorController.performInsert(li);
-        }
-    }
-
     /*
      * Private (Add Effect menu)
      */
@@ -1579,23 +1357,23 @@ public class MenuBarController implements InitializingBean {
     private void handleOnWindowMenuValidation() {
         windowMenu.getItems().clear();
 
-        final List<DocumentWindowController> documentWindowControllers
+        final List<Document> documentWindowControllers
                 = MainController.getSingleton().getDocumentWindowControllers();
         if (documentWindowControllers.isEmpty()) {
             // Adds the "No window" menu item
             windowMenu.getItems().add(makeWindowMenuItem(null));
         } else {
-            final List<DocumentWindowController> sortedControllers
+            final List<Document> sortedControllers
                     = new ArrayList<>(documentWindowControllers);
-            Collections.sort(sortedControllers, new DocumentWindowController.TitleComparator());
+            Collections.sort(sortedControllers, new Document.TitleComparator());
 
-            for (DocumentWindowController dwc : sortedControllers) {
+            for (Document dwc : sortedControllers) {
                 windowMenu.getItems().add(makeWindowMenuItem(dwc));
             }
         }
     }
 
-    private MenuItem makeWindowMenuItem(final DocumentWindowController dwc) {
+    private MenuItem makeWindowMenuItem(final Document dwc) {
         final RadioMenuItem result = new RadioMenuItem();
         if (dwc != null) {
             result.setText(dwc.getStage().getTitle());
@@ -1613,9 +1391,9 @@ public class MenuBarController implements InitializingBean {
 
     private static class WindowMenuEventHandler implements EventHandler<ActionEvent> {
 
-        private final DocumentWindowController dwc;
+        private final Document dwc;
 
-        public WindowMenuEventHandler(DocumentWindowController dwc) {
+        public WindowMenuEventHandler(Document dwc) {
             this.dwc = dwc;
         }
 

@@ -49,6 +49,11 @@ import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
 import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
 @Component
 public class GluonThemesList implements ThemeProvider {
+    
+    /**
+     * scene builder specific tweaks to Gluon theme
+     */
+    public static final String GLUON_DOCUMENT_STYLESHEET = "com/oracle/javafx/scenebuilder/gluon/css/GluonDocument.css";
 
 	private GluonThemesList() {}
 
@@ -68,7 +73,7 @@ public class GluonThemesList implements ThemeProvider {
 			super(new DefaultThemesList.Modena().getUserAgentStylesheet(),
 					Arrays.asList(
 							GlistenStyleClasses.impl_loadResource("glisten.gls"),
-							"com/oracle/javafx/scenebuilder/gluon/css/GluonDocument.css",
+							GLUON_DOCUMENT_STYLESHEET,
 							gluonSwatchPreference.getValue().getStylesheetURL(),
 							GlistenStyleClasses.impl_loadResource("theme_light.gls")
 							)
@@ -84,7 +89,7 @@ public class GluonThemesList implements ThemeProvider {
 			super(new DefaultThemesList.Modena().getUserAgentStylesheet(),
 					Arrays.asList(
 							GlistenStyleClasses.impl_loadResource("glisten.gls"),
-							"com/oracle/javafx/scenebuilder/app/css/GluonDocument.css",
+							GLUON_DOCUMENT_STYLESHEET,
 							gluonSwatchPreference.getValue().getStylesheetURL(),
 							GlistenStyleClasses.impl_loadResource("theme_dark.gls")
 							)

@@ -38,7 +38,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,36 +50,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Document.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.Main;
+import com.oracle.javafx.scenebuilder.api.Template;
+import com.oracle.javafx.scenebuilder.api.TemplateType;
 import com.oracle.javafx.scenebuilder.api.UILogger;
-import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
+import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController.ActionStatus;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
-import com.oracle.javafx.scenebuilder.app.preferences.GlobalPreferences;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesWindowController;
-import com.oracle.javafx.scenebuilder.app.preferences.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.app.registration.RegistrationWindowController;
-import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
-import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
-import com.oracle.javafx.scenebuilder.app.tracking.Tracking;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
-import com.oracle.javafx.scenebuilder.kit.template.Template;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
-import com.oracle.javafx.scenebuilder.kit.template.Type;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
-import com.oracle.javafx.scenebuilder.library.util.JarReport;
+import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
 
 import javafx.application.Application.Parameters;
 import javafx.application.HostServices;
@@ -94,23 +90,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 @Component
+@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @DependsOn("i18n")
-public class MainController implements AppPlatform.AppNotificationHandler, ApplicationListener<JavafxApplication.StageReadyEvent>, UILogger {
-
-    public enum ApplicationControlAction {
-
-        ABOUT,
-        CHECK_UPDATES,
-        REGISTER,
-        NEW_FILE,
-        NEW_TEMPLATE,
-        OPEN_FILE,
-        //CLOSE_FRONT_WINDOW,
-        //USE_DEFAULT_THEME,
-        //USE_DARK_THEME,
-        SHOW_PREFERENCES,
-        EXIT
-    }
+public class MainController implements AppPlatform.AppNotificationHandler, ApplicationListener<JavafxApplication.StageReadyEvent>, UILogger, Main {
 
     private static MainController singleton;
 
@@ -127,24 +109,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     SceneBuilderBeanFactory sceneBuilderFactory;
 
     @Autowired
-    private UserLibrary userLibrary;
+    private Library userLibrary;
 
     @Autowired
-    private VersionSetting versionSetting;
-
-    @Autowired
-    private WindowIconSetting windowIconSetting;
-
-    @Autowired
-    private Tracking tracking;
-
-    @Autowired
-    private GlobalPreferences preferences;
+    private IconSetting windowIconSetting;
 
     @Autowired
     private RecentItemsPreference recentItemsPreference;
 
-    private final ObservableList<DocumentWindowController> windowList = FXCollections.observableArrayList();
+    private final ObservableList<Document> windowList = FXCollections.observableArrayList();
 
     //private UserLibrary userLibrary;
 
@@ -155,10 +128,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
 	private final FileSystem fileSystem;
 
-    private final SceneBuilderManager sceneBuilderManager;
-
     private final Dialog dialog;
-
+    private final List<InitWithSceneBuilder> initializations;
+    private final List<DisposeWithSceneBuilder> finalizations;
     /*
      * Public
      * //TODO delete in favor of injection
@@ -168,14 +140,16 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     public MainController(
-    		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired FileSystem fileSystem,
-    		@Autowired Dialog dialog
+    		@Autowired @Lazy Dialog dialog,
+    		@Lazy @Autowired(required = false) List<InitWithSceneBuilder> initializations,
+            @Lazy @Autowired(required = false) List<DisposeWithSceneBuilder> finalizations
     		) {
 
-    	this.sceneBuilderManager = sceneBuilderManager;
     	this.fileSystem = fileSystem;
     	this.dialog = dialog;
+    	this.initializations = initializations;
+    	this.finalizations = finalizations;
 
     	fileSystem.startWatcher();
 
@@ -198,7 +172,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     }
 
-    public void performControlAction(ApplicationControlAction a, DocumentWindowController source) {
+    @Override
+    public void performControlAction(ApplicationControlAction a, Document source) {
         switch (a) {
             case ABOUT:
                 AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
@@ -207,14 +182,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 windowIconSetting.setWindowIcon(aboutWindowController.getStage());
                 break;
 
-            case REGISTER:
-                final RegistrationWindowController registrationWindowController = context.getBean(RegistrationWindowController.class);
-                registrationWindowController.openWindow();
-                break;
+//            case REGISTER:
+//                final RegistrationWindowController registrationWindowController = context.getBean(RegistrationWindowController.class);
+//                registrationWindowController.openWindow();
+//                break;
 
-            case CHECK_UPDATES:
-                checkUpdates(source);
-                break;
+//            case CHECK_UPDATES:
+//                checkUpdates(source);
+//                break;
 
             case NEW_FILE:
                 final DocumentWindowController newWindow = makeNewWindow();
@@ -223,9 +198,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 break;
 
             case NEW_TEMPLATE:
-                final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class);
-                templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
-                templatesWindowController.openWindow();
+                performNewFromTemplate();
                 break;
 
             case OPEN_FILE:
@@ -254,6 +227,13 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
                 performExit();
                 break;
         }
+    }
+
+    @Override
+    public void performNewFromTemplate() {
+        final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class);
+        templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
+        templatesWindowController.openWindow();
     }
 
 
@@ -291,7 +271,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return result;
     }
 
-    public void performOpenRecent(DocumentWindowController source, final File fxmlFile) {
+    @Override
+    public void performOpenRecent(Document source, final File fxmlFile) {
         assert fxmlFile != null && fxmlFile.exists();
 
         final List<File> fxmlFiles = new ArrayList<>();
@@ -299,26 +280,27 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         performOpenFiles(fxmlFiles, source);
     }
 
-    public void documentWindowRequestClose(DocumentWindowController fromWindow) {
+    public void documentWindowRequestClose(Document fromWindow) {
         closeWindow(fromWindow);
     }
 
     //TODO comment this
-    public UserLibrary getUserLibrary() {
+    public Library getUserLibrary() {
         return userLibrary;
     }
 
-    public List<DocumentWindowController> getDocumentWindowControllers() {
+    @Override
+    public List<Document> getDocumentWindowControllers() {
         return Collections.unmodifiableList(windowList);
     }
 
-    public DocumentWindowController lookupDocumentWindowControllers(URL fxmlLocation) {
+    public Document lookupDocumentWindowControllers(URL fxmlLocation) {
         assert fxmlLocation != null;
 
-        DocumentWindowController result = null;
+        Document result = null;
         try {
             final URI fxmlURI = fxmlLocation.toURI();
-            for (DocumentWindowController dwc : windowList) {
+            for (Document dwc : windowList) {
                 final URL docLocation = dwc.getEditorController().getFxmlLocation();
                 if ((docLocation != null) && fxmlURI.equals(docLocation.toURI())) {
                     result = dwc;
@@ -333,10 +315,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return result;
     }
 
-    public DocumentWindowController lookupUnusedDocumentWindowController() {
-        DocumentWindowController result = null;
+    @Override
+    public Document lookupUnusedDocumentWindowController() {
+        Document result = null;
 
-        for (DocumentWindowController dwc : windowList) {
+        for (Document dwc : windowList) {
             if (dwc.isUnused()) {
                 result = dwc;
                 break;
@@ -352,11 +335,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         if (windowList.isEmpty()) {
             visible = false;
         } else {
-            final DocumentWindowController dwc = windowList.get(0);
+            final Document dwc = windowList.get(0);
             visible = dwc.getMenuBarController().isDebugMenuVisible();
         }
 
-        for (DocumentWindowController dwc : windowList) {
+        for (Document dwc : windowList) {
             dwc.getMenuBarController().setDebugMenuVisible(!visible);
         }
 
@@ -401,45 +384,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     @Override
     //TODO there are some Gluon adherence here
     public void handleLaunch(List<String> files) {
+        
+        initializations.forEach(a -> a.init());
+        
         boolean showWelcomeDialog = files.isEmpty();
 
-        userLibrary = context.getBean(UserLibrary.class);
-        //userLibrary = (UserLibrary)context.getBean("userLibrary");
-        userLibrary.setOnUpdatedJarReports(jarReports -> {
-            boolean shouldShowImportGluonJarAlert = false;
-            for (JarReport jarReport : jarReports) {
-                if (jarReport.hasGluonControls()) {
-                    // We check if the jar has already been imported to avoid showing the import gluon jar
-                    // alert every time Scene Builder starts for jars that have already been imported
-                    if (!hasGluonJarBeenImported(preferences, jarReport.getJar().getFileName().toString())) {
-                        shouldShowImportGluonJarAlert = true;
-                    }
-
-                }
-            }
-            if (shouldShowImportGluonJarAlert) {
-                Platform.runLater(() -> {
-                    MainController sceneBuilderApp = MainController.getSingleton();
-                    Document dwc = sceneBuilderApp.getFrontDocumentWindow();
-                    if (dwc == null) {
-                        dwc = sceneBuilderApp.getDocumentWindowControllers().get(0);
-                    }
-                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getStage());
-                    windowIconSetting.setWindowIcon(alert);
-                    if (showWelcomeDialog) {
-                        alert.initOwner(context.getBean(WelcomeDialogWindowController.class).getStage());
-                    }
-                    alert.showAndWait();
-                });
-            }
-            updateImportedGluonJars(preferences, jarReports);
-        });
-
+        
 //        userLibrary.explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
 //
 //        userLibrary.startWatching();
-
-        sendTrackingStartupInfo();
 
         if (showWelcomeDialog) {
             // Creates an empty document
@@ -447,6 +400,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             newWindow.updateWithDefaultContent();
             newWindow.openWindow();
 
+            //TODO allow a more easy usage of scenic
             // Show ScenicView Tool when the JVM is started with option -Dscenic.
             // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
             if (System.getProperty("scenic") != null) { //NOI18N
@@ -454,17 +408,6 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             }
 
             WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
-
-            wdwc.getStage().setOnHidden(event -> {
-                showUpdateDialogIfRequired(newWindow, () -> {
-                    if (!Platform.isFxApplicationThread()) {
-                        Platform.runLater(() -> showRegistrationDialogIfRequired(newWindow));
-                    } else {
-                        showRegistrationDialogIfRequired(newWindow);
-                    }
-
-                });
-            });
 
             // Unless we're on a Mac we're starting SB directly (fresh start)
             // so we're not opening any file and as such we should show the Welcome Dialog
@@ -477,34 +420,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     }
 
-    private void sendTrackingStartupInfo() {
-        boolean sendTrackingInfo = shouldSendTrackingInfo(preferences);
-
-        if (sendTrackingInfo) {
-            boolean update = false;
-            String hash = preferences.getRegistrationHash();
-            String email = preferences.getRegistrationEmail();
-            boolean optIn = preferences.isRegistrationOptIn();
-
-            tracking.sendTrackingInfo(Tracking.SCENEBUILDER_USAGE_TYPE, hash, email, optIn, update);
-        }
-    }
-
-    private boolean shouldSendTrackingInfo(GlobalPreferences recordGlobal) {
-        LocalDate date = recordGlobal.getLastSentTrackingInfoDate();
-        boolean sendTrackingInfo = true;
-        LocalDate now = LocalDate.now();
-
-        if (date != null) {
-            sendTrackingInfo = date.plusWeeks(1).isBefore(now);
-            if (sendTrackingInfo) {
-                recordGlobal.setLastSentTrackingInfoDate(now);
-            }
-        } else {
-            recordGlobal.setLastSentTrackingInfoDate(now);
-        }
-        return sendTrackingInfo;
-    }
+    
 
     @Override
     public void handleOpenFilesAction(List<String> files) {
@@ -519,14 +435,14 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         fileSystem.updateNextInitialDirectory(fileObjs.get(0));
 
         // Fix for #45
-        if (userLibrary.isFirstExplorationCompleted()) {
+        if (userLibrary.firstExplorationCompletedProperty().get()) {
             performOpenFiles(fileObjs, null);
         } else {
             // open files only after the first exploration has finished
             userLibrary.firstExplorationCompletedProperty().addListener(new InvalidationListener() {
                 @Override
                 public void invalidated(Observable observable) {
-                    if (userLibrary.isFirstExplorationCompleted()) {
+                    if (userLibrary.firstExplorationCompletedProperty().get()) {
                         performOpenFiles(fileObjs, null);
                         userLibrary.firstExplorationCompletedProperty().removeListener(this);
                     }
@@ -581,7 +497,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return result;
     }
 
-    private void closeWindow(DocumentWindowController w) {
+    private void closeWindow(Document w) {
         assert windowList.contains(w);
         windowList.remove(w);
         w.closeWindow();
@@ -594,7 +510,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     /*
      * Private (control actions)
      */
-    private void performOpenFile(DocumentWindowController fromWindow) {
+    private void performOpenFile(Document fromWindow) {
         final FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
@@ -608,8 +524,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
     }
 
+    @Override
     public void performNewTemplate(Template template) {
-        DocumentWindowController documentWC = getDocumentWindowControllers().get(0);
+        Document documentWC = getDocumentWindowControllers().get(0);
         loadTemplateInWindow(template, documentWC);
     }
 
@@ -618,12 +535,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         loadTemplateInWindow(template, newTemplateWindow);
     }
 
-    private void loadTemplateInWindow(Template template, DocumentWindowController documentWindowController) {
+    private void loadTemplateInWindow(Template template, Document documentWindowController) {
         final URL url = template.getFXMLURL();
         if (url != null) {
         	// TODO How to pass this boolean into the new Pref API ?
         	// template.getType() != Type.PHONE ? reload theme : do not reload
-            documentWindowController.loadFromURL(url, template.getType() != Type.PHONE);
+            documentWindowController.loadFromURL(url, template.getType() != TemplateType.PHONE);
         }
         Template.prepareDocument(documentWindowController.getEditorController(), template);
         documentWindowController.openWindow();
@@ -638,6 +555,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //        }
 //    }
 
+    @Override
     public Document getFrontDocumentWindow() {
 //        for (DocumentWindowController dwc : windowList) {
 //            if (dwc.isFrontDocumentWindow()) {
@@ -653,22 +571,22 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     private void performOpenFiles(List<File> fxmlFiles,
-                                  DocumentWindowController fromWindow) {
+                                  Document fromWindow) {
         assert fxmlFiles != null;
         assert fxmlFiles.isEmpty() == false;
 
         final Map<File, IOException> exceptions = new HashMap<>();
         for (File fxmlFile : fxmlFiles) {
             try {
-                final DocumentWindowController dwc
+                final Document dwc
                         = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
                 if (dwc != null) {
                     // fxmlFile is already opened
                     dwc.getStage().toFront();
                 } else {
                     // Open fxmlFile
-                    final DocumentWindowController hostWindow;
-                    final DocumentWindowController unusedWindow
+                    final Document hostWindow;
+                    final Document unusedWindow
                             = lookupUnusedDocumentWindowController();
                     if (unusedWindow != null) {
                         hostWindow = unusedWindow;
@@ -723,7 +641,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     private void performExit() {
 
         // Check if an editing session is on going
-        for (DocumentWindowController dwc : windowList) {
+        for (Document dwc : windowList) {
             if (dwc.getEditorController().isTextEditingSessionOnGoing()) {
                 // Check if we can commit the editing session
                 if (dwc.getEditorController().canGetFxmlText() == false) {
@@ -734,8 +652,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
 
         // Collects the documents with pending changes
-        final List<DocumentWindowController> pendingDocs = new ArrayList<>();
-        for (DocumentWindowController dwc : windowList) {
+        final List<Document> pendingDocs = new ArrayList<>();
+        for (Document dwc : windowList) {
             if (dwc.isDocumentDirty()) {
                 pendingDocs.add(dwc);
             }
@@ -750,7 +668,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             }
 
             case 1: {
-                final DocumentWindowController dwc0 = pendingDocs.get(0);
+                final Document dwc0 = pendingDocs.get(0);
                 exitConfirmed = dwc0.performCloseAction() == ActionStatus.DONE;
                 break;
             }
@@ -791,13 +709,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         // Exit if confirmed
         if (exitConfirmed) {
-            for (DocumentWindowController dwc : new ArrayList<>(windowList)) {
+            for (Document dwc : new ArrayList<>(windowList)) {
                 // Write to java preferences before closing
                 dwc.updatePreferences();
                 documentWindowRequestClose(dwc);
             }
             fileSystem.stopWatcher();
             logTimestamp(ACTION.STOP);
+            
+            finalizations.forEach(a -> a.dispose());
             // TODO (elp): something else here ?
             Platform.exit();
         }
@@ -829,154 +749,25 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
 
 
-    private void showUpdateDialogIfRequired(DocumentWindowController dwc, Runnable runAfterUpdateDialog) {
-    	versionSetting.getLatestVersion(latestVersion -> {
-            if (latestVersion == null) {
-                // This can be because the url was not reachable so we don't show the update dialog.
-                return;
-            }
-            try {
-                boolean showUpdateDialog = true;
-                if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
-                    if (isVersionToBeIgnored(preferences, latestVersion)) {
-                        showUpdateDialog = false;
-                    }
-
-                    if (!isUpdateDialogDateReached(preferences)) {
-                        showUpdateDialog = false;
-                    }
-                } else {
-                    showUpdateDialog = false;
-                }
-
-                if (showUpdateDialog) {
-                    Platform.runLater(() -> {
-                        UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
-                        dialog.setOnHidden(event -> runAfterUpdateDialog.run());
-                        dialog.showAndWait();
-                    });
-                } else {
-                    runAfterUpdateDialog.run();
-                }
-            } catch (NumberFormatException ex) {
-                Platform.runLater(() -> showVersionNumberFormatError(dwc));
-            }
-        });
-    }
-
-    private void checkUpdates(DocumentWindowController source) {
-    	versionSetting.getLatestVersion(latestVersion -> {
-            if (latestVersion == null) {
-                Platform.runLater(() -> {
-                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, getFrontDocumentWindow().getStage());
-                    alert.setTitle(I18N.getString("check_for_updates.alert.error.title"));
-                    alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
-                    alert.setContentText(I18N.getString("check_for_updates.alert.error.message"));
-                    alert.showAndWait();
-                });
-            }
-            try {
-                if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
-                    Platform.runLater(() -> {
-                        UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
-                        dialog.showAndWait();
-                    });
-                } else {
-                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION, getFrontDocumentWindow().getStage());
-                    alert.setTitle(I18N.getString("check_for_updates.alert.up_to_date.title"));
-                    alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
-                    alert.setContentText(I18N.getString("check_for_updates.alert.up_to_date.message"));
-                    alert.showAndWait();
-                }
-            } catch (NumberFormatException ex) {
-                Platform.runLater(() -> showVersionNumberFormatError(source));
-            }
-        });
-    }
-
-    private void showVersionNumberFormatError(DocumentWindowController dwc) {
-        SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, dwc.getStage());
-        // The version number format is not supported and this is most probably only happening
-        // in development so we don't localize the strings
-        alert.setTitle("Error");
-        alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
-        alert.setContentText("Version number format not supported. Maybe using SNAPSHOT or RC versions.");
-        alert.showAndWait();
-    }
-
-    private boolean isVersionToBeIgnored(GlobalPreferences recordGlobal, String latestVersion) {
-        String ignoreVersion = recordGlobal.getIgnoreVersion();
-        return latestVersion.equals(ignoreVersion);
-    }
-
-    private boolean isUpdateDialogDateReached(GlobalPreferences recordGlobal) {
-        LocalDate dialogDate = recordGlobal.getShowUpdateDialogDate();
-        if (dialogDate == null) {
-            return true;
-        } else if (dialogDate.isBefore(LocalDate.now())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void showRegistrationDialogIfRequired(DocumentWindowController dwc) {
-        String registrationHash = preferences.getRegistrationHash();
-        if (registrationHash == null) {
-            performControlAction(ApplicationControlAction.REGISTER, dwc);
-        } else {
-            String registrationEmail = preferences.getRegistrationEmail();
-            if (registrationEmail == null && Math.random() > 0.8) {
-                performControlAction(ApplicationControlAction.REGISTER, dwc);
-            }
-        }
-    }
+    
 
     @Override
 	public void logInfoMessage(String key) {
-        for (DocumentWindowController dwc : windowList) {
+        for (Document dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle());
         }
     }
 
     @Override
 	public void logInfoMessage(String key, Object... args) {
-        for (DocumentWindowController dwc : windowList) {
+        for (Document dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
         }
     }
 
-    private static void updateImportedGluonJars(GlobalPreferences preferences, List<? extends JarReport> jars) {
-        List<String> jarReportCollection = new ArrayList<>();
-        for (JarReport jarReport : jars) {
-            if (jarReport.hasGluonControls()) {
-                jarReportCollection.add(jarReport.getJar().getFileName().toString());
-            }
-        }
-        if (jarReportCollection.isEmpty()) {
-        	preferences.setImportedGluonJars(new String[0]);
-        } else {
-        	preferences.setImportedGluonJars(jarReportCollection.toArray(new String[0]));
-        }
-    }
-
-    private static boolean hasGluonJarBeenImported(GlobalPreferences preferences, String jar) {
-        String[] importedJars = preferences.getImportedGluonJars();
-        if (importedJars == null) {
-            return false;
-        }
-
-        for (String importedJar : importedJars) {
-            if (jar.equals(importedJar)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void applyToAllDocumentWindows(Consumer<DocumentWindowController> consumer) {
+    public static void applyToAllDocumentWindows(Consumer<Document> consumer) {
     	//TODO check if this is realy working, cause i've some doubts
-        for (DocumentWindowController dwc : getSingleton().getDocumentWindowControllers()) {
+        for (Document dwc : getSingleton().getDocumentWindowControllers()) {
             consumer.accept(dwc);
         }
     }

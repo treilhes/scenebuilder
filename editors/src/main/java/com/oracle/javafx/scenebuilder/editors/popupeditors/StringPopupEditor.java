@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
@@ -60,9 +60,9 @@ public class StringPopupEditor extends PopupEditor {
     private Parent root;
 
     public StringPopupEditor(
-            @Autowired Dialog dialog
+            @Autowired Api api
             ) {
-        super(dialog);
+        super(api);
     }
 
     //

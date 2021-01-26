@@ -44,10 +44,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -68,7 +70,10 @@ public class StaticLoadTest {
     private boolean thrown;
 
     @Mock
-    private BuiltinLibrary library;
+    private Library library;
+    @Mock
+    private FileSystem fileSystem;
+    private DocumentManager docManager = new DocumentManager.DocumentManagerImpl();
 
     public static class DummyApp extends Application {
         @Override
@@ -92,7 +97,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoadWithoutEventHandler() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, fileSystem, null, null, null, null, null, docManager, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoadWithoutEventHandler.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -107,7 +112,7 @@ public class StaticLoadTest {
     @Test
     public void testStaticLoad() throws IOException {
         thrown = false;
-        EditorController editorController = new EditorController(null, library, null, null, null, null, null, null, null, null, null, null, null, null);
+        EditorController editorController = new EditorController(null, library, null, null, fileSystem, null, null, null, null, null, docManager, null, null, null);
         final URL fxmlURL = StaticLoadTest.class.getResource("testStaticLoad.fxml");
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);

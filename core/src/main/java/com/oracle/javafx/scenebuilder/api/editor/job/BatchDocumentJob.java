@@ -38,6 +38,7 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
@@ -49,9 +50,12 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 public abstract class BatchDocumentJob extends CompositeJob {
 
     private List<Job> subJobs;
+    private FXOMDocument fxomDocument;
 
     public BatchDocumentJob(ApplicationContext context, Editor editor) {
         super(context, editor);
+        DocumentManager documentManager = context.getBean(DocumentManager.class);
+        fxomDocument = documentManager.fxomDocument().get();
     }
 
     @Override
@@ -70,8 +74,6 @@ public abstract class BatchDocumentJob extends CompositeJob {
 
     @Override
     public void execute() {
-        final FXOMDocument fxomDocument
-                = getEditorController().getFxomDocument();
         fxomDocument.beginUpdate();
         for (Job subJob : getSubJobs()) {
             subJob.execute();
@@ -81,8 +83,6 @@ public abstract class BatchDocumentJob extends CompositeJob {
 
     @Override
     public void undo() {
-        final FXOMDocument fxomDocument
-                = getEditorController().getFxomDocument();
         fxomDocument.beginUpdate();
         for (int i = getSubJobs().size() - 1; i >= 0; i--) {
             getSubJobs().get(i).undo();
@@ -92,8 +92,6 @@ public abstract class BatchDocumentJob extends CompositeJob {
 
     @Override
     public void redo() {
-        final FXOMDocument fxomDocument
-                = getEditorController().getFxomDocument();
         fxomDocument.beginUpdate();
         for (Job subJob : getSubJobs()) {
             subJob.redo();

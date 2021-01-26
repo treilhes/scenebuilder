@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.AnchorPropert
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.AnchorPaneConstraintsEditor;
+import com.oracle.javafx.scenebuilder.editors.control.AnchorPaneConstraintsEditor;
 
 @ExtendWith(ApplicationExtension.class)
 public class AnchorPaneConstraintsEditorTest {

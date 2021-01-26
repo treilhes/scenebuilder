@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -73,13 +74,13 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
     private final WildcardImportsPreference wildcardImportsPreference;
     
     public SourceViewWindowController(
-            @Autowired DocumentManager documentManager,
+            @Autowired Api api,
             @Autowired Document document,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
-        super(SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
+        super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N
         
-        this.documentManager = documentManager;
+        this.documentManager = api.getApiDoc().getDocumentManager();
         this.wildcardImportsPreference = wildcardImportsPreference;
     }
 

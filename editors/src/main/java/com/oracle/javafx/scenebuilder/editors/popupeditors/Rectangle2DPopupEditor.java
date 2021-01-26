@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
@@ -73,9 +73,9 @@ public class Rectangle2DPopupEditor extends PopupEditor {
     private Rectangle2D rectangle2D;
 
     public Rectangle2DPopupEditor(
-            @Autowired Dialog dialog
+            @Autowired Api api
             ) {
-        super(dialog);
+        super(api);
     }
 
     @Override

@@ -40,9 +40,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Glossary;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -64,18 +63,14 @@ public class ControllerClassEditor extends AutoSuggestEditor {
 
     private static final String PROPERTY_NAME = "Controller class"; //NOI18N
     private static final String DEFAULT_VALUE = null;
-    private FXOMDocument fxomDocument;
     private final Glossary glossary;
 
     public ControllerClassEditor(
-            @Autowired Dialog dialog,
-            @Autowired Glossary glossary,
-            @Autowired DocumentManager documentManager
+            @Autowired Api api
             ) {
-        super(dialog);
-        this.glossary = glossary;
+        super(api);
+        this.glossary = api.getGlossary();
         preInit(Type.ALPHA, new ArrayList<>());
-        documentManager.fxomDocument().subscribe(fxom -> this.fxomDocument = fxom);
         initialize();
     }
     
@@ -121,6 +116,7 @@ public class ControllerClassEditor extends AutoSuggestEditor {
     }
     
     private List<String> getSuggestedControllerClasses() {
+        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         return glossary.queryControllerClasses(fxomDocument == null ? null : fxomDocument.getLocation());
     }
 }

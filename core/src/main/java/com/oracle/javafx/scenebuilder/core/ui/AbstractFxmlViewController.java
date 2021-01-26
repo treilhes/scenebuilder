@@ -37,11 +37,10 @@ import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.View;
 import com.oracle.javafx.scenebuilder.api.ViewContent;
 import com.oracle.javafx.scenebuilder.api.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 
 import lombok.Getter;
@@ -75,8 +74,8 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
      *
      * @param editor  the editor controller (cannot be null)
      */
-    public AbstractFxmlViewController(SceneBuilderManager sceneBuilderManager, URL fxmlURL, ResourceBundle resources, Editor editor) {
-        super(sceneBuilderManager, fxmlURL, resources, editor); //NOI18N
+    public AbstractFxmlViewController(Api api, URL fxmlURL, ResourceBundle resources) {
+        super(api, fxmlURL, resources); //NOI18N
     }
 
 //	@Override

@@ -33,11 +33,11 @@
 package com.oracle.javafx.scenebuilder.app.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -55,9 +55,9 @@ public class InspectorPanelActions {
 			descriptionKey = "action.description.show.all")
 	public static class ShowAllAction extends Show {
 		public ShowAllAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy InspectorPanelController inspectorPanelController) {
-			super(context,ShowMode.ALL, inspectorPanelController);
+			super(api, ShowMode.ALL, inspectorPanelController);
 		}
 	}
 
@@ -69,9 +69,9 @@ public class InspectorPanelActions {
 			descriptionKey = "action.description.show.edited")
 	public static class ShowEditedAction extends Show {
 		public ShowEditedAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy InspectorPanelController inspectorPanelController) {
-			super(context,ShowMode.EDITED, inspectorPanelController);
+			super(api,ShowMode.EDITED, inspectorPanelController);
 		}
 	}
 
@@ -83,9 +83,9 @@ public class InspectorPanelActions {
 			descriptionKey = "action.description.view.by.section")
 	public static class ViewBySectionsAction extends View {
 		public ViewBySectionsAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy InspectorPanelController inspectorPanelController) {
-			super(context,ViewMode.SECTION, inspectorPanelController);
+			super(api,ViewMode.SECTION, inspectorPanelController);
 		}
 	}
 
@@ -97,9 +97,9 @@ public class InspectorPanelActions {
 			descriptionKey = "action.description.view.by.property.name")
 	public static class ViewByPropertyNameAction extends View {
 		public ViewByPropertyNameAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy InspectorPanelController inspectorPanelController) {
-			super(context,ViewMode.PROPERTY_NAME, inspectorPanelController);
+			super(api,ViewMode.PROPERTY_NAME, inspectorPanelController);
 		}
 	}
 
@@ -111,9 +111,9 @@ public class InspectorPanelActions {
 			descriptionKey = "action.description.view.by.property.type")
 	public static class ViewByPropertyTypeAction extends View {
 		public ViewByPropertyTypeAction(
-				@Autowired ApplicationContext context,
+		        @Autowired Api api,
 				@Autowired @Lazy InspectorPanelController inspectorPanelController) {
-			super(context,ViewMode.PROPERTY_TYPE, inspectorPanelController);
+			super(api,ViewMode.PROPERTY_TYPE, inspectorPanelController);
 		}
 	}
 
@@ -124,8 +124,8 @@ public class InspectorPanelActions {
 		private final InspectorPanelController inspectorPanelController;
 		private final ShowMode option;
 
-		public Show(ApplicationContext context, ShowMode option, InspectorPanelController inspectorPanelController) {
-			super(context);
+		public Show(Api api, ShowMode option, InspectorPanelController inspectorPanelController) {
+			super(api);
 			this.option = option;
 			this.inspectorPanelController = inspectorPanelController;
 		}
@@ -148,8 +148,8 @@ public class InspectorPanelActions {
 		private final InspectorPanelController inspectorPanelController;
 		private final ViewMode option;
 
-		public View(ApplicationContext context, ViewMode option, InspectorPanelController inspectorPanelController) {
-			super(context);
+		public View(Api api, ViewMode option, InspectorPanelController inspectorPanelController) {
+			super(api);
 			this.option = option;
 			this.inspectorPanelController = inspectorPanelController;
 		}

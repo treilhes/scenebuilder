@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
@@ -65,11 +65,10 @@ public class EffectPopupEditor extends PopupEditor {
     private List<MenuItem> effectMenuItems;
     
     public EffectPopupEditor(
-            @Autowired Dialog dialog,
-            @Autowired MessageLogger messageLogger
+            @Autowired Api api
             ) {
-        super(dialog);
-        this.messageLogger = messageLogger;
+        super(api);
+        this.messageLogger = api.getApiDoc().getMessageLogger();
     }
 
 

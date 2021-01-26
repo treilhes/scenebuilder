@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -64,8 +64,8 @@ public abstract class PopupEditor extends AbstractPropertyEditor implements Popu
     private Object value;
     private boolean initialized = false;
 
-    public PopupEditor(Dialog dialog) {
-        super(dialog);
+    public PopupEditor(Api api) {
+        super(api);
         initializeEditor();
     }
     

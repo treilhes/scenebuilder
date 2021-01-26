@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
@@ -127,45 +128,23 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     private FadeTransition fadeTransition = null;
     private boolean genericModesHandled = false;
     private final Dialog dialog;
+    private final Api api;
+    private Set<Class<?>> selectedClasses;
 
     
     public AbstractPropertyEditor(
-            Dialog dialog
+            Api api
             ) {
-        this.dialog = dialog;
+        this.api = api;
+        this.dialog = api.getApiDoc().getDialog();
         initialize();
     }
-
-    // Special constructor for elements which are not JavaFX properties (e.g fx:id, controllerClass)
-    // In this case, propMeta and selectedClasses are null.
-//    public AbstractPropertyEditor(Dialog dialog, String name, String defaultValue) {
-//        this.dialog = dialog;
-//        initialize();
-//        propName.setText(name);
-//        this.defaultValue = defaultValue;
-//    }
 
     private void initialize() {
         // Create a property link with a pretty name (e.g. layoutX ==> Layout X)
         propName = new Hyperlink();
         propName.setOnAction(event -> {
-        	System.out.println("REACTIVATE ME");
-        	//TODO reactivate the code below when editors are spring components
-//            try {
-//
-//                if (propMeta != null && selectedClasses != null) {
-//                    if (selectedClasses.size() <= 1) {
-//                        EditorUtils.openUrl(selectedClasses, propMeta);
-//                    }
-//                } else {
-//                    // Special case for non-properties (fx:id, ...)
-//                    EditorPlatform.open(EditorPlatform.JAVADOC_HOME
-//                            + "javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html"); //NOI18N
-//                }
-//                // Selection of multiple different classes ==> no link
-//            } catch (IOException ex) {
-//                System.err.println(ex.getMessage());
-//            }
+            getApi().getDocumentation().openDocumentationUrl(selectedClasses, propMeta);
         });
         propName.getStyleClass().add("property-link"); //NOI18N
         propName.setFocusTraversable(false);
@@ -692,6 +671,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     }
 
     private void setSelectedClasses(Set<Class<?>> selClasses) {
+        this.selectedClasses = selClasses;
         if (selClasses == null) {
             return;
         }
@@ -830,5 +810,9 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
 
     public void disableResetValueMenuItem() {
         resetvalueMenuItem.setDisable(true);
+    }
+
+    public Api getApi() {
+        return api;
     }
 }

@@ -37,9 +37,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlController;
 
@@ -68,9 +68,8 @@ public class SearchController extends AbstractFxmlController implements ViewSear
     private StackPane searchIcon;
 
     public SearchController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired Editor editor) {
-        super(sceneBuilderManager, SearchController.class.getResource("Search.fxml"), editor); //NOI18N
+            @Autowired Api api) {
+        super(api, SearchController.class.getResource("Search.fxml")); //NOI18N
     }
 
     @FXML

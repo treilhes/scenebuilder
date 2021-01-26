@@ -298,7 +298,7 @@ public class SceneBuilderBeanFactory {
          * Gets the current scope.
          *
          */
-        public static synchronized Document getCurrentScope() {
+        public static Document getCurrentScope() {
             return (Document)scopes.get(currentScope).get(SCOPE_OBJECT_NAME);
         }
         /**
@@ -306,7 +306,7 @@ public class SceneBuilderBeanFactory {
          *
          * @param scopedDocument the new current scope
          */
-        public static synchronized void setCurrentScope(Document scopedDocument) {
+        public static void setCurrentScope(Document scopedDocument) {
             if (scopedDocument == null) {
                 if (currentScope != null) {
                     currentScope = null;
@@ -365,7 +365,7 @@ public class SceneBuilderBeanFactory {
          * @return the instantiated bean
          */
         @Override
-        public synchronized Object get(String name, ObjectFactory<?> objectFactory) {
+        public Object get(String name, ObjectFactory<?> objectFactory) {
 
             if (SCOPE_OBJECT_NAME.equals(name) && ((currentScope == null)
                     || (currentScope != null && !scopes.get(currentScope).containsKey(name)))) {

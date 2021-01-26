@@ -44,6 +44,7 @@ import com.gluonhq.charm.glisten.control.BottomNavigation;
 import com.gluonhq.charm.glisten.control.DropdownButton;
 import com.gluonhq.charm.glisten.control.ExpansionPanel;
 import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -84,53 +85,9 @@ import javafx.stage.Stage;
 /**
  *
  */
-public class DesignHierarchyMask {
+public class DesignHierarchyMask implements HierarchyMask {
 
-    @Deprecated
-    public enum Accessory {
-        // True accessories
-
-        PLACEHOLDER,
-        TOOLTIP,
-        CONTEXT_MENU,
-        CLIP,
-        GRAPHIC,
-        // Single-valued sub-components treated as accessories
-        // TODO(elp) : verify that it is complete
-        CONTENT,
-        ROOT,
-        SCENE,
-        TOP,
-        BOTTOM,
-        LEFT,
-        RIGHT,
-        CENTER,
-        XAXIS,
-        YAXIS,
-        TREE_COLUMN,
-        EXPANDABLE_CONTENT,
-        HEADER,
-        DP_CONTENT {
-                    @Override
-                    public String toString() {
-                        return "CONTENT"; // NOI18N
-                    }
-                },
-        DP_GRAPHIC {
-                    @Override
-                    public String toString() {
-                        return "GRAPHIC"; // NOI18N
-                    }
-                },
-        // ExpansionPanel
-        EXPANDED_CONTENT,
-        COLLAPSED_CONTENT,
-        // ExpandedPanel
-        EX_CONTENT {
-            @Override
-            public String toString() { return "CONTENT"; }
-        }
-    }
+    
     @Deprecated
     private static final PropertyName graphicName = new PropertyName("graphic");
     @Deprecated

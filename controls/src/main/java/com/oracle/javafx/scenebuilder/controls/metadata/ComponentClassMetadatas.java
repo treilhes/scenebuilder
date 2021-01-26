@@ -1432,10 +1432,10 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.fitToWidthPropertyMetadata);
             getProperties().add(valueCatalog.hbarPolicyPropertyMetadata);
             
-            //getProperties().add(valueCatalog.hmaxPropertyMetadata);
-            //getProperties().add(valueCatalog.hminPropertyMetadata);
-            //getProperties().add(valueCatalog.hvaluePropertyMetadata);
-            getProperties().add(valueCatalog.hGroupPropertyMetadata);
+            getProperties().add(valueCatalog.hmaxPropertyMetadata);
+            getProperties().add(valueCatalog.hminPropertyMetadata);
+            getProperties().add(valueCatalog.hvaluePropertyMetadata);
+            //getProperties().add(valueCatalog.hGroupPropertyMetadata);
             
             getProperties().add(valueCatalog.minViewportHeightPropertyMetadata);
             getProperties().add(valueCatalog.minViewportWidthPropertyMetadata);
@@ -1446,10 +1446,10 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.vbarPolicyPropertyMetadata);
             getProperties().add(valueCatalog.viewportBoundsPropertyMetadata);
             
-            //getProperties().add(valueCatalog.vmaxPropertyMetadata);
-            //getProperties().add(valueCatalog.vminPropertyMetadata);
-            //getProperties().add(valueCatalog.vvaluePropertyMetadata);
-            getProperties().add(valueCatalog.vGroupPropertyMetadata);
+            getProperties().add(valueCatalog.vmaxPropertyMetadata);
+            getProperties().add(valueCatalog.vminPropertyMetadata);
+            getProperties().add(valueCatalog.vvaluePropertyMetadata);
+            //getProperties().add(valueCatalog.vGroupPropertyMetadata);
 
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/ScrollPane.fxml"), null, null,

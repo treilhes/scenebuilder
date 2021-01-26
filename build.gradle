@@ -62,8 +62,12 @@ subprojects {
         testCompile 'org.springframework.boot:spring-boot-starter-test:2.3.4.RELEASE'
   		
         implementation 'org.springframework.boot:spring-boot-starter:2.3.4.RELEASE'
+        
         implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
         implementation 'io.reactivex.rxjava2:rxjavafx:2.2.2'
+        //implementation 'io.reactivex.rxjava3:rxjava:3.0.9'
+        //implementation 'io.reactivex.rxjava2:rxjavafx:2.11.0-RC16'
+
         implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
         
         // Lombok
@@ -73,7 +77,9 @@ subprojects {
 		testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 		
 		testCompile "org.testfx:testfx-junit5:4.0.16-alpha"
-        
+		
+		testCompile "org.mock-server:mockserver-junit-jupiter:5.11.2"
+	
     }
 
     javafx {

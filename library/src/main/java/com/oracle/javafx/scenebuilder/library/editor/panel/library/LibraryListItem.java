@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.library.editor.panel.library;
 
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 
 /**
  * This class hosts either a LibraryItem or a library section name. The cell

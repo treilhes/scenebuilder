@@ -50,21 +50,22 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.Library;
-import com.oracle.javafx.scenebuilder.api.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
+import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
@@ -81,39 +82,36 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.job.editor.AddContextMenuToSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.AddTooltipToSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.BringForwardJob;
+import com.oracle.javafx.scenebuilder.job.editor.BringToFrontJob;
+import com.oracle.javafx.scenebuilder.job.editor.CutSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.DeleteSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.DuplicateSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.FitToParentSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.ImportFileJob;
+import com.oracle.javafx.scenebuilder.job.editor.IncludeFileJob;
+import com.oracle.javafx.scenebuilder.job.editor.ModifySelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.PasteIntoJob;
+import com.oracle.javafx.scenebuilder.job.editor.PasteJob;
+import com.oracle.javafx.scenebuilder.job.editor.SendBackwardJob;
+import com.oracle.javafx.scenebuilder.job.editor.SendToBackJob;
+import com.oracle.javafx.scenebuilder.job.editor.TrimSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.UseComputedSizesSelectionJob;
+import com.oracle.javafx.scenebuilder.job.editor.UsePredefinedSizeJob;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.AddColumnJob;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.AddRowJob;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.GridPaneJobUtils.Position;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.MoveColumnJob;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.MoveRowJob;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.v2.SpanJob;
+import com.oracle.javafx.scenebuilder.job.editor.gridpane.v2.SpanJob.SpanAction;
+import com.oracle.javafx.scenebuilder.job.editor.wrap.AbstractWrapInJob;
+import com.oracle.javafx.scenebuilder.job.editor.wrap.UnwrapJob;
 import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
-import com.oracle.javafx.scenebuilder.kit.editor.job.AddContextMenuToSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.AddTooltipToSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BringForwardJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BringToFrontJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.CutSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.DeleteSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.DuplicateSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.FitToParentSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.ImportFileJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.IncludeFileJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.ModifySelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.PasteIntoJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.PasteJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.SendBackwardJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.SendToBackJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.SetDocumentRootJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.TrimSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.UseComputedSizesSelectionJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.UsePredefinedSizeJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.AddColumnJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.AddRowJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.MoveColumnJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.MoveRowJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.gridpane.v2.SpanJob.SpanAction;
-import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.AbstractWrapInJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.wrap.UnwrapJob;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
@@ -151,74 +149,6 @@ import javafx.util.Callback;
 @Lazy
 public class EditorController implements Editor {
 
-    /**
-     * An 'edit' action is an action which modifies the document associated
-     * to this editor. It makes the document dirty and pushes a
-     * new item on the undo/redo stack.
-     */
-    public enum EditAction {
-        // Candidates for Edit menu
-        CUT,
-        PASTE,
-        PASTE_INTO,
-        DUPLICATE,
-        DELETE,
-        TRIM,
-        TOGGLE_FX_ROOT,
-        // Candidates for Modify menu
-        FIT_TO_PARENT,
-        USE_COMPUTED_SIZES,
-        ADD_CONTEXT_MENU,
-        ADD_TOOLTIP,
-        SET_SIZE_335x600,
-        SET_SIZE_900x600,
-        SET_SIZE_320x240,
-        SET_SIZE_640x480,
-        SET_SIZE_1280x800,
-        SET_SIZE_1920x1080,
-        // Candidates for Modify/GridPane menu
-        MOVE_ROW_ABOVE,
-        MOVE_ROW_BELOW,
-        MOVE_COLUMN_BEFORE,
-        MOVE_COLUMN_AFTER,
-        ADD_ROW_ABOVE,
-        ADD_ROW_BELOW,
-        ADD_COLUMN_BEFORE,
-        ADD_COLUMN_AFTER,
-        INCREASE_ROW_SPAN,
-        DECREASE_ROW_SPAN,
-        INCREASE_COLUMN_SPAN,
-        DECREASE_COLUMN_SPAN,
-        // Candidates for Arrange menu
-        BRING_TO_FRONT,
-        SEND_TO_BACK,
-        BRING_FORWARD,
-        SEND_BACKWARD,
-        UNWRAP,
-        WRAP_IN_ANCHOR_PANE,
-        WRAP_IN_BORDER_PANE,
-        WRAP_IN_BUTTON_BAR,
-        WRAP_IN_DIALOG_PANE,
-        WRAP_IN_FLOW_PANE,
-        WRAP_IN_GRID_PANE,
-        WRAP_IN_GROUP,
-        WRAP_IN_HBOX,
-        WRAP_IN_PANE,
-        WRAP_IN_SCROLL_PANE,
-        WRAP_IN_SPLIT_PANE,
-        WRAP_IN_STACK_PANE,
-        WRAP_IN_TAB_PANE,
-        WRAP_IN_TEXT_FLOW,
-        WRAP_IN_TILE_PANE,
-        WRAP_IN_TITLED_PANE,
-        WRAP_IN_TOOL_BAR,
-        WRAP_IN_VBOX,
-        WRAP_IN_SCENE,
-        WRAP_IN_STAGE
-    }
-
-
-
     private final Selection selection;
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
@@ -234,49 +164,16 @@ public class EditorController implements Editor {
     private double defaultRootContainerHeight = 400;
 
     private final ObjectProperty<Library> libraryProperty;
-    private final ObjectProperty<FXOMDocument> fxomDocumentProperty
-            = new SimpleObjectProperty<>();
     private final ObjectProperty<URL> fxmlLocationProperty;
-            //= new SimpleObjectProperty<>();
-//    private final ObjectProperty<AbstractGlossary> glossaryProperty
-//            = new SimpleObjectProperty<>(new BuiltinGlossary());
-//    private final ObjectProperty<ResourceBundle> resourcesProperty
-//            = new SimpleObjectProperty<>(null);
-//    private final ObjectProperty<GluonTheme> gluonThemeProperty
-//            = new SimpleObjectProperty<>();
-//    private final ObjectProperty<GluonSwatch> gluonSwatchProperty
-//            = new SimpleObjectProperty<>();
-//    private final ListProperty<File> sceneStyleSheetProperty
-//            = new SimpleListProperty<>();
     private final BooleanProperty pickModeEnabledProperty
             = new SimpleBooleanProperty(false);
     private final BooleanProperty sampleDataEnabledProperty
             = new SimpleBooleanProperty(false);
-//    private final SimpleStringProperty toolStylesheetProperty
-//            = new SimpleStringProperty(getBuiltinToolStylesheet());
- // -- Theme property
-//    private final ObjectProperty<Theme> themeProperty
-//            = new SimpleObjectProperty<>() {
-//        @Override
-//        protected void invalidated() {
-//            FXOMDocument fxomDocument = getFxomDocument();
-//            if (fxomDocument != null) {
-//                fxomDocument.refreshSceneGraph();
-//            }
-//        }
-//    };
 
     private Callback<Void, Boolean> requestTextEditingSessionEnd;
 
     private Stage ownerWindow;
 
-    private static String builtinToolStylesheet;
-
-
-    //private final SceneStyleSheetsPreference sceneStyleSheetsPreference;
-	//private final ThemePreference themePreference;
-//	private final GluonThemePreference gluonThemePreference;
-//	private final GluonSwatchPreference gluonSwatchPreference;
 	private final RootContainerHeightPreference rootContainerHeightPreference;
 	private final RootContainerWidthPreference rootContainerWidthPreference;
 	private final ApplicationContext context;
@@ -285,60 +182,47 @@ public class EditorController implements Editor {
     private I18nResourceProvider resourceConfig;
     private final DocumentManager documentManager;
 
+    private FXOMDocument fxomDocument;
+    private Library builtinLibrary;
+    private final Api api;
+    
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
     public EditorController(
-    		@Autowired ApplicationContext context,
-    		@Autowired Library builtinLibrary,
+            @Autowired Api api,
     		@Autowired RootContainerHeightPreference rootContainerHeightPreference,
     	    @Autowired RootContainerWidthPreference rootContainerWidthPreference,
-    	    @Autowired FileSystem fileSystem,
-    	    @Autowired Dialog dialog,
-    	    @Autowired MessageLogger messageLogger,
-    	    @Autowired Selection selection,
-    	    @Autowired ErrorReport errorReport,
     	    @Lazy @Autowired DragController dragController,
-    	    @Lazy @Autowired DocumentManager documentManager,
-    	    @Lazy @Autowired JobManager jobManager,
-    	    //@Lazy @Autowired SceneStyleSheetsPreference sceneStyleSheets,
-    	    //@Lazy @Autowired ThemePreference theme,
     	    @Lazy @Autowired InlineEditController inlineEditController,
     		@Lazy @Autowired ContextMenuController contextMenuController
-    		//,@Lazy @Autowired WatchingController watchingController
 
     		) {
-    	this.context = context;
-    	this.jobManager = jobManager;
-    	this.fileSystem = fileSystem;
-    	this.dialog = dialog;
+        this.api = api;
+    	this.context = api.getContext();
+    	this.jobManager = api.getApiDoc().getJobManager();
+    	this.fileSystem = api.getFileSystem();
+    	this.dialog = api.getApiDoc().getDialog();
     	this.dragController = dragController;
-    	this.messageLogger = messageLogger;
-    	this.selection = selection;
-    	this.documentManager = documentManager;
-    	this.errorReport = errorReport;
-    	//this.sceneStyleSheetsPreference = sceneStyleSheets;
-    	//this.themePreference = theme;
+    	this.messageLogger = api.getApiDoc().getMessageLogger();
+    	this.selection = api.getApiDoc().getSelection();
+    	this.documentManager = api.getApiDoc().getDocumentManager();
+    	this.errorReport = api.getApiDoc().getErrorReport();
     	this.rootContainerHeightPreference = rootContainerHeightPreference;
     	this.rootContainerWidthPreference = rootContainerWidthPreference;
-//    	this.gluonSwatchPreference = gluonSwatch;
-//    	this.gluonThemePreference = gluonTheme;
-
     	this.inlineEditController = inlineEditController;
     	this.contextMenuController = contextMenuController;
     	//this.watchingController = watchingController;
 
+    	this.builtinLibrary = api.getApiDoc().getLibrary();
 
-    	libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
+    	//libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
     	fxmlLocationProperty = new SimpleObjectProperty<>();
 
-    	jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
-
-
-    	documentManager.i18nResourceConfig().subscribe(s -> {
-            resourceConfig = s;
-            resourcesDidChange();
-        });
+    	//TODO remove below
+    	libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
+    	
+    	api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
 
 //	@Override
@@ -347,35 +231,20 @@ public class EditorController implements Editor {
 //	}
 
 	public void initialize() {
+	    jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
+        documentManager.i18nResourceConfig().subscribe(s -> {
+            resourceConfig = s;
+            resourcesDidChange();
+        });
+        
+        documentManager.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
+        documentManager.classLoaderDidChange().subscribe(cl -> libraryClassLoaderDidChange(cl));
+        
     	setDefaultRootContainerHeight(rootContainerHeightPreference.getValue());
     	rootContainerHeightPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerHeight(n));
 
     	setDefaultRootContainerWidth(rootContainerWidthPreference.getValue());
     	rootContainerWidthPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerWidth(n));
-
-//    	setTheme(themePreference.getValue());
-//    	themePreference.getObservableValue().addListener((ob, o, n) -> setTheme(n));
-//    	themeProperty().addListener((observable, oldValue, newValue) -> themePreference.setValue(newValue));
-
-//    	setGluonSwatch(gluonSwatchPreference.getValue());
-//        gluonSwatchPreference.getObservableValue().addListener((ob, o, n) -> setGluonSwatch(n));
-//    	gluonSwatchProperty().addListener((observable, oldValue, newValue) -> gluonSwatchPreference.setValue(newValue));
-//
-//    	setGluonTheme(gluonThemePreference.getValue());
-//        gluonThemePreference.getObservableValue().addListener((ob, o, n) -> setGluonTheme(n));
-//    	gluonThemeProperty().addListener((observable, oldValue, newValue) -> gluonThemePreference.setValue(newValue));
-
-
-
-//    	if (sceneStyleSheetsPreference.isValid()) {
-//    		Map<Boolean, List<String>> sceneStyleSheets = sceneStyleSheetsPreference.getValue().stream()
-//        			.collect(Collectors.groupingBy((s) -> new File(s).exists(), Collectors.toList()));
-//        	List<File> toInsert = sceneStyleSheets.containsKey(Boolean.TRUE) ? sceneStyleSheets.get(Boolean.TRUE).stream().map(File::new).collect(Collectors.toList()) : new ArrayList<>();
-//        	setSceneStyleSheets(FXCollections.observableList(toInsert));
-//        	sceneStyleSheetsPreference.getValue().removeAll(sceneStyleSheets.containsKey(Boolean.FALSE) ? sceneStyleSheets.get(Boolean.FALSE) : new ArrayList<>());
-//            sceneStyleSheetProperty().addListener((ov, t, t1) -> sceneStyleSheetsPreference.setValue(t1));
-//    	}
-
 
     }
 
@@ -538,41 +407,41 @@ public class EditorController implements Editor {
             fileSystem.updateNextInitialDirectory(newInitialDirectory);
         }
     }
+//
+//    /**
+//     * Returns the library used by this editor.
+//     *
+//     * @return the library used by this editor (never null).
+//     */
+//    @Override
+//    public Library getLibrary() {
+//        return libraryProperty.getValue();
+//    }
+//
+//    /**
+//     * Sets the library used by this editor.
+//     * When this method is called, user scene graph is fully rebuilt using
+//     * the new library and all panel refresh their contents.
+//     *
+//     * @param library the library to be used by this editor (never null).
+//     */
+//    public void setLibrary(Library library) {
+//        assert library != null;
+//        libraryProperty.getValue().classLoaderProperty().removeListener(libraryClassLoaderListener);
+//        libraryProperty.setValue(library);
+//        libraryProperty.getValue().classLoaderProperty().addListener(libraryClassLoaderListener);
+//        libraryClassLoaderDidChange();
+//    }
 
-    /**
-     * Returns the library used by this editor.
-     *
-     * @return the library used by this editor (never null).
-     */
-    @Override
-    public Library getLibrary() {
-        return libraryProperty.getValue();
-    }
-
-    /**
-     * Sets the library used by this editor.
-     * When this method is called, user scene graph is fully rebuilt using
-     * the new library and all panel refresh their contents.
-     *
-     * @param library the library to be used by this editor (never null).
-     */
-    public void setLibrary(Library library) {
-        assert library != null;
-        libraryProperty.getValue().classLoaderProperty().removeListener(libraryClassLoaderListener);
-        libraryProperty.setValue(library);
-        libraryProperty.getValue().classLoaderProperty().addListener(libraryClassLoaderListener);
-        libraryClassLoaderDidChange();
-    }
-
-    /**
-     * The property holding the library used by this editor.
-     *
-     * @return the property holding the library used by this editor (never null).
-     */
-    @Override
-    public ObservableValue<Library> libraryProperty() {
-        return libraryProperty;
-    }
+//    /**
+//     * The property holding the library used by this editor.
+//     *
+//     * @return the property holding the library used by this editor (never null).
+//     */
+//    @Override
+//    public ObservableValue<Library> libraryProperty() {
+//        return libraryProperty;
+//    }
 
 //    /**
 //     * Returns the glossary used by this editor.
@@ -734,7 +603,9 @@ public class EditorController implements Editor {
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
     public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
-        updateFxomDocument(fxmlText, fxmlLocation, new CombinedResourceBundle(resourceConfig.getBundles()), checkTheme);
+        updateFxomDocument(fxmlText, fxmlLocation, 
+                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()), 
+                checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
 
@@ -772,24 +643,24 @@ public class EditorController implements Editor {
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
 
-    /**
-     * The property holding the document associated to this editor.
-     * @return the property holding the document associated to this editor.
-     */
-    @Override
-    public ObservableValue<FXOMDocument> fxomDocumentProperty() {
-        return fxomDocumentProperty;
-    }
+//    /**
+//     * The property holding the document associated to this editor.
+//     * @return the property holding the document associated to this editor.
+//     */
+//    @Override
+//    public ObservableValue<FXOMDocument> fxomDocumentProperty() {
+//        return fxomDocumentProperty;
+//    }
 
-    /**
-     * Returns the document associated to this editor.
-     *
-     * @return the document associated to this editor.
-     */
-    @Override
-    public FXOMDocument getFxomDocument() {
-        return fxomDocumentProperty.getValue();
-    }
+//    /**
+//     * Returns the document associated to this editor.
+//     *
+//     * @return the document associated to this editor.
+//     */
+//    @Override
+//    public FXOMDocument getFxomDocument() {
+//        return fxomDocumentProperty.getValue();
+//    }
 
 //    /**
 //     * Returns the tool stylesheet associated to this editor controller.
@@ -1018,6 +889,7 @@ public class EditorController implements Editor {
      *
      * @param editAction the edit action to be performed.
      */
+    @Override
     public void performEditAction(EditAction editAction) {
         switch(editAction) {
             case ADD_CONTEXT_MENU: {
@@ -1725,97 +1597,97 @@ public class EditorController implements Editor {
         }
     }
 
-    /**
-     * Performs the 'insert' edit action. This action creates an object
-     * matching the specified library item and insert it in the document
-     * (according the selection state).
-     *
-     * @param libraryItem the library item describing the object to be inserted.
-     */
-    @Override
-    public void performInsert(LibraryItem libraryItem) {
-        final Job job;
-        final FXOMObject target;
-
-        assert canPerformInsert(libraryItem); // (1)
-
-        final FXOMDocument newItemDocument = libraryItem.instantiate();
-        assert newItemDocument != null; // Because (1)
-        final FXOMObject newObject = newItemDocument.getFxomRoot();
-        assert newObject != null;
-        newObject.moveToFxomDocument(getFxomDocument());
-        final FXOMObject rootObject = getFxomDocument().getFxomRoot();
-        if (rootObject == null) { // Empty document
-            final String description
-                    = I18N.getString("drop.job.insert.library.item", libraryItem.getName());
-            job = new SetDocumentRootJob(context, newObject, true /* usePredefinedSize */, description, this);
-
-        } else {
-            if (selection.isEmpty() || selection.isSelected(rootObject)) {
-                // No selection or root is selected -> we insert below root
-                target = rootObject;
-            } else {
-                // Let's use the common parent of the selected objects.
-                // It might be null if selection holds some non FXOMObject entries
-                target = selection.getAncestor();
-            }
-            job = new InsertAsSubComponentJob(context, newObject, target, -1, this);
-        }
-
-        jobManager.push(job.extend());
-
-        //TODO remove comment
-        //WarnThemeAlert.showAlertIfRequired(this, newObject, ownerWindow);
-    }
-
-    /**
-     * Returns true if the 'insert' action is permitted with the specified
-     * library item.
-     *
-     * @param libraryItem the library item describing the object to be inserted.
-     * @return true if the 'insert' action is permitted.
-     */
-    @Override
-    public boolean canPerformInsert(LibraryItem libraryItem) {
-        final FXOMObject targetCandidate;
-        final boolean result;
-
-        if (getFxomDocument() == null) {
-            result = false;
-        } else {
-            assert (libraryItem.getLibrary().getClassLoader() == null)
-                    || (libraryItem.getLibrary().getClassLoader() == getFxomDocument().getClassLoader());
-            final FXOMDocument newItemDocument = libraryItem.instantiate();
-            if (newItemDocument == null) {
-                // For some reason, library is unable to instantiate this item
-                result = false;
-            } else {
-                final FXOMObject newItemRoot = newItemDocument.getFxomRoot();
-                newItemRoot.moveToFxomDocument(getFxomDocument());
-                assert newItemDocument.getFxomRoot() == null;
-                final FXOMObject rootObject = getFxomDocument().getFxomRoot();
-                if (rootObject == null) { // Empty document
-                    final Job job = new SetDocumentRootJob(context,
-                            newItemRoot, true /* usePredefinedSize */, "unused", this).extend(); //NOI18N
-                    result = job.isExecutable();
-                } else {
-                    if (selection.isEmpty() || selection.isSelected(rootObject)) {
-                        // No selection or root is selected -> we insert below root
-                        targetCandidate = rootObject;
-                    } else {
-                        // Let's use the common parent of the selected objects.
-                        // It might be null if selection holds some non FXOMObject entries
-                        targetCandidate = selection.getAncestor();
-                    }
-                    final Job job = new InsertAsSubComponentJob(context,
-                            newItemRoot, targetCandidate, -1, this).extend();
-                    result = job.isExecutable();
-                }
-            }
-        }
-
-        return result;
-    }
+//    /**
+//     * Performs the 'insert' edit action. This action creates an object
+//     * matching the specified library item and insert it in the document
+//     * (according the selection state).
+//     *
+//     * @param libraryItem the library item describing the object to be inserted.
+//     */
+//    @Override
+//    public void performInsert(LibraryItem libraryItem) {
+//        final Job job;
+//        final FXOMObject target;
+//
+//        assert canPerformInsert(libraryItem); // (1)
+//
+//        final FXOMDocument newItemDocument = libraryItem.instantiate();
+//        assert newItemDocument != null; // Because (1)
+//        final FXOMObject newObject = newItemDocument.getFxomRoot();
+//        assert newObject != null;
+//        newObject.moveToFxomDocument(getFxomDocument());
+//        final FXOMObject rootObject = getFxomDocument().getFxomRoot();
+//        if (rootObject == null) { // Empty document
+//            final String description
+//                    = I18N.getString("drop.job.insert.library.item", libraryItem.getName());
+//            job = new SetDocumentRootJob(context, newObject, true /* usePredefinedSize */, description, this);
+//
+//        } else {
+//            if (selection.isEmpty() || selection.isSelected(rootObject)) {
+//                // No selection or root is selected -> we insert below root
+//                target = rootObject;
+//            } else {
+//                // Let's use the common parent of the selected objects.
+//                // It might be null if selection holds some non FXOMObject entries
+//                target = selection.getAncestor();
+//            }
+//            job = new InsertAsSubComponentJob(context, newObject, target, -1, this);
+//        }
+//
+//        jobManager.push(job.extend());
+//
+//        //TODO remove comment
+//        //WarnThemeAlert.showAlertIfRequired(this, newObject, ownerWindow);
+//    }
+//
+//    /**
+//     * Returns true if the 'insert' action is permitted with the specified
+//     * library item.
+//     *
+//     * @param libraryItem the library item describing the object to be inserted.
+//     * @return true if the 'insert' action is permitted.
+//     */
+//    @Override
+//    public boolean canPerformInsert(LibraryItem libraryItem) {
+//        final FXOMObject targetCandidate;
+//        final boolean result;
+//
+//        if (getFxomDocument() == null) {
+//            result = false;
+//        } else {
+//            assert (libraryItem.getLibrary().getClassLoader() == null)
+//                    || (libraryItem.getLibrary().getClassLoader() == getFxomDocument().getClassLoader());
+//            final FXOMDocument newItemDocument = libraryItem.instantiate();
+//            if (newItemDocument == null) {
+//                // For some reason, library is unable to instantiate this item
+//                result = false;
+//            } else {
+//                final FXOMObject newItemRoot = newItemDocument.getFxomRoot();
+//                newItemRoot.moveToFxomDocument(getFxomDocument());
+//                assert newItemDocument.getFxomRoot() == null;
+//                final FXOMObject rootObject = getFxomDocument().getFxomRoot();
+//                if (rootObject == null) { // Empty document
+//                    final Job job = new SetDocumentRootJob(context,
+//                            newItemRoot, true /* usePredefinedSize */, "unused", this).extend(); //NOI18N
+//                    result = job.isExecutable();
+//                } else {
+//                    if (selection.isEmpty() || selection.isSelected(rootObject)) {
+//                        // No selection or root is selected -> we insert below root
+//                        targetCandidate = rootObject;
+//                    } else {
+//                        // Let's use the common parent of the selected objects.
+//                        // It might be null if selection holds some non FXOMObject entries
+//                        targetCandidate = selection.getAncestor();
+//                    }
+//                    final Job job = new InsertAsSubComponentJob(context,
+//                            newItemRoot, targetCandidate, -1, this).extend();
+//                    result = job.isExecutable();
+//                }
+//            }
+//        }
+//
+//        return result;
+//    }
 
     /**
      * Performs the 'wrap' edit action. This action creates an object
@@ -2429,16 +2301,12 @@ public class EditorController implements Editor {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, getLibrary().getClassLoader(), resources);
+            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, builtinLibrary.getClassLoader(), resources);
         } else {
             newFxomDocument = null;
         }
 
-        documentManager.fxomDocument().onNext(newFxomDocument);
-        
-        fxomDocumentProperty.setValue(newFxomDocument);
-
-        
+        documentManager.fxomDocument().set(newFxomDocument);
         
         updateFileWatcher(newFxomDocument);
 
@@ -2448,6 +2316,11 @@ public class EditorController implements Editor {
 //            WarnThemeAlert.showAlertIfRequired(this, newFxomDocument, ownerWindow);
 //        }
     }
+
+//    private ResourceLoader getLibrary() {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
 
     private void updateFileWatcher(FXOMDocument fxomDocument) {
 
@@ -2490,20 +2363,21 @@ public class EditorController implements Editor {
         }
     }
 
-    private final ChangeListener<ClassLoader> libraryClassLoaderListener
-            = (ov, t, t1) -> libraryClassLoaderDidChange();
-
-    private void libraryClassLoaderDidChange() {
-        if (getFxomDocument() != null) {
+    private void fxomDocumentDidChange(FXOMDocument fxomDocument) {
+        this.fxomDocument = fxomDocument;
+    }
+    
+    private void libraryClassLoaderDidChange(ClassLoader classLoader) {
+        if (fxomDocument != null) {
             errorReport.forget();
-            getFxomDocument().setClassLoader(libraryProperty.get().getClassLoader());
+            fxomDocument.setClassLoader(classLoader);
         }
     }
 
     private void resourcesDidChange() {
         if (getFxomDocument() != null && resourceConfig != null) {
             errorReport.forget();
-            getFxomDocument().setResources(new CombinedResourceBundle(resourceConfig.getBundles()));
+            fxomDocument.setResources(new CombinedResourceBundle(resourceConfig.getBundles()));
         }
     }
 
@@ -2520,6 +2394,18 @@ public class EditorController implements Editor {
     @Override
     public Stage getOwnerWindow() {
         return ownerWindow;
+    }
+
+    //TODO to remove
+    @Override
+    public FXOMDocument getFxomDocument() {
+        return fxomDocument;
+    }
+
+    //TODO to remove
+    @Override
+    public ObservableValue<Library> libraryProperty() {
+        return libraryProperty;
     }
 
 }

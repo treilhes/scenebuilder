@@ -32,6 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Comparator;
+
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public interface Document {
@@ -42,4 +48,84 @@ public interface Document {
 	boolean hasName();
 	String getName();
 	Stage getStage();
+	void loadFromFile(File fxmlFile) throws IOException;
+    void openWindow();
+    Editor getEditorController();
+    MenuBar getMenuBarController();
+    
+    public static class TitleComparator implements Comparator<Document> {
+
+        @Override
+        public int compare(Document d1, Document d2) {
+            final int result;
+
+            assert d1 != null;
+            assert d2 != null;
+
+            if (d1 == d2) {
+                result = 0;
+            } else {
+                final String t1 = d1.getStage().getTitle();
+                final String t2 = d2.getStage().getTitle();
+                assert t1 != null;
+                assert t2 != null;
+                result = t1.compareTo(t2);
+            }
+
+            return result;
+        }
+
+    }
+
+    void loadFromURL(URL url, boolean b);
+    ActionStatus performCloseAction();
+    
+    public enum DocumentControlAction {
+        COPY,
+        SELECT_ALL,
+        SELECT_NONE,
+        SAVE_FILE,
+        SAVE_AS_FILE,
+        REVERT_FILE,
+        CLOSE_FILE,
+        REVEAL_FILE,
+        GOTO_CONTENT,
+        GOTO_PROPERTIES,
+        GOTO_LAYOUT,
+        GOTO_CODE,
+        TOGGLE_LIBRARY_PANEL,
+        TOGGLE_DOCUMENT_PANEL,
+        TOGGLE_CSS_PANEL,
+        TOGGLE_LEFT_PANEL,
+        TOGGLE_RIGHT_PANEL,
+        TOGGLE_OUTLINES_VISIBILITY,
+        TOGGLE_GUIDES_VISIBILITY,
+        SHOW_PREVIEW_WINDOW,
+        SHOW_PREVIEW_DIALOG,
+        ADD_SCENE_STYLE_SHEET,
+        SET_RESOURCE,
+        REMOVE_RESOURCE,
+        REVEAL_RESOURCE,
+        HELP
+    }
+
+    public enum DocumentEditAction {
+        DELETE,
+        CUT,
+        PASTE,
+        IMPORT_FXML,
+        IMPORT_MEDIA,
+        INCLUDE_FXML
+    }
+
+    public enum ActionStatus {
+        CANCELLED,
+        DONE
+    }
+
+    void updatePreferences();
+    void closeWindow();
+    Scene getScene();
+    Content getContentPanelController();
+    DocumentPanel getDocumentPanelController();
 }

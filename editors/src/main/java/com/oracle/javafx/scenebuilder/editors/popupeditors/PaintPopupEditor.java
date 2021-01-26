@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
@@ -75,10 +75,9 @@ public class PaintPopupEditor extends PopupEditor {
     };
 
     public PaintPopupEditor(
-            @Autowired Dialog dialog,
-            @Autowired MessageLogger messageLogger) {
-        super(dialog);
-        this.messageLogger = messageLogger;
+            @Autowired Api api) {
+        super(api);
+        this.messageLogger = api.getApiDoc().getMessageLogger();
     }
 
 

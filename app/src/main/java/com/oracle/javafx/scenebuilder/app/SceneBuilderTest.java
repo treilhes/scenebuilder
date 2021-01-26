@@ -38,18 +38,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.About;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.api.HierarchyItem;
+import com.oracle.javafx.scenebuilder.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
-import com.oracle.javafx.scenebuilder.app.settings.VersionSetting;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyItem;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyItemBase;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractGenericHandles;
 
 import javafx.geometry.Bounds;
@@ -155,7 +157,7 @@ public class SceneBuilderTest {
         assert documentScene != null;
 
         final Set<FXOMObject> result;
-        final DocumentWindowController dwc = lookupWindowController(documentScene);
+        final Document dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
@@ -184,7 +186,7 @@ public class SceneBuilderTest {
         assert node.getScene() != null;
 
         final FXOMObject result;
-        final DocumentWindowController dwc = lookupWindowController(node.getScene());
+        final Document dwc = lookupWindowController(node.getScene());
         if (dwc == null) {
             result = null;
         } else {
@@ -193,7 +195,7 @@ public class SceneBuilderTest {
             final double midY = (b.getMinY() + b.getMaxY()) / 2.0;
             final Point2D nodeCenter = node.localToScene(midX, midY, true /* rootScene */);
 
-            final ContentPanelController cpc = dwc.getContentPanelController();
+            final Content cpc = dwc.getContentPanelController();
             result = cpc.searchWithNode(node, nodeCenter.getX(), nodeCenter.getY());
         }
 
@@ -238,7 +240,7 @@ public class SceneBuilderTest {
         assert node.getScene() != null;
 
         final FXOMObject result;
-        final DocumentWindowController dwc = lookupWindowController(node.getScene());
+        final Document dwc = lookupWindowController(node.getScene());
         if (dwc == null) {
             result = null;
         } else {
@@ -255,8 +257,8 @@ public class SceneBuilderTest {
                 assert cell.isEmpty() == false;
                 if (cell.isVisible()) {
                     final Object item = cell.getItem();
-                    assert item instanceof HierarchyItem;
-                    final HierarchyItem hierarchyItem = (HierarchyItem) item;
+                    assert item instanceof HierarchyItemBase;
+                    final HierarchyItemBase hierarchyItem = (HierarchyItemBase) item;
                     result = hierarchyItem.getFxomObject();
                 } else {
                     result = null;
@@ -285,14 +287,14 @@ public class SceneBuilderTest {
         assert fxomObject != null;
 
         final Node result;
-        final DocumentWindowController dwc = lookupWindowController(documentScene);
+        final Document dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
-            final EditorController ec = dwc.getEditorController();
+            final Editor ec = dwc.getEditorController();
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
 
-            final AbstractHierarchyPanelController hpc = dwc.getDocumentPanelController().getHierarchyPanelController();
+            final HierarchyPanel hpc = dwc.getDocumentPanelController().getHierarchyPanelController();
             assert hpc != null;
             assert hpc.getPanelControl() != null;
             if (hpc.getPanelControl().isVisible()) {
@@ -321,12 +323,12 @@ public class SceneBuilderTest {
             Scene documentScene, FXOMObject fxomObject) {
         assert documentScene != null;
         assert fxomObject != null;
-        final DocumentWindowController dwc = lookupWindowController(documentScene);
+        final Document dwc = lookupWindowController(documentScene);
         if (dwc != null) {
-            final EditorController ec = dwc.getEditorController();
+            final Editor ec = dwc.getEditorController();
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
 
-            final AbstractHierarchyPanelController hpc
+            final HierarchyPanel hpc
                     = dwc.getDocumentPanelController().getHierarchyPanelController();
             assert hpc != null;
             assert hpc.getPanelControl() != null;
@@ -357,16 +359,16 @@ public class SceneBuilderTest {
         assert fxomObject != null;
 
         final Node result;
-        final DocumentWindowController dwc = lookupWindowController(documentScene);
+        final Document dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
-            final EditorController ec = dwc.getEditorController();
+            final Editor ec = dwc.getEditorController();
 
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
             assert ec.getSelection().isSelected(fxomObject);
 
-            final ContentPanelController cpc = dwc.getContentPanelController();
+            final Content cpc = dwc.getContentPanelController();
             final Handles<?> h = cpc.lookupHandles(fxomObject);
             if (h instanceof AbstractGenericHandles<?>) {
                 final AbstractGenericHandles<?> gh = (AbstractGenericHandles<?>) h;
@@ -389,8 +391,9 @@ public class SceneBuilderTest {
      * 'UNSET'.
      */
     public static String getVersionString() {
-        // FIXME give a implementation of SceneBuilderManager to this constructor
-        AboutWindowController awc = new AboutWindowController(new VersionSetting());
+        // FIXME give a implementation of Api to this constructor
+        // FIXME give a parameter to versionsetting or solve circular reference
+        About awc = new AboutWindowController(null);
         return awc.getBuildInfo();
     }
 
@@ -426,7 +429,7 @@ public class SceneBuilderTest {
     private static FXOMDocument lookupFxomDocument(Scene documentScene) {
         final FXOMDocument result;
 
-        final DocumentWindowController dwc = lookupWindowController(documentScene);
+        final Document dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
@@ -436,11 +439,11 @@ public class SceneBuilderTest {
         return result;
     }
 
-    private static DocumentWindowController lookupWindowController(Scene documentScene) {
-        DocumentWindowController result = null;
+    private static Document lookupWindowController(Scene documentScene) {
+        Document result = null;
 
         final MainController app = MainController.getSingleton();
-        for (DocumentWindowController c : app.getDocumentWindowControllers()) {
+        for (Document c : app.getDocumentWindowControllers()) {
             if (c.getScene() == documentScene) {
                 result = c;
                 break;

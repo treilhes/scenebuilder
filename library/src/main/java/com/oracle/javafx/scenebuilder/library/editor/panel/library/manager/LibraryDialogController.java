@@ -52,13 +52,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -69,8 +69,8 @@ import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenAr
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.RepositoryManagerController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.search.SearchMavenDialogController;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.library.preferences.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.beans.InvalidationListener;
@@ -114,35 +114,30 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     // libraryPanelController.copyFilesToUserLibraryDir(files)
     private final LibraryPanelController libraryPanelController;
     private final FileSystem fileSystem;
-    private final SceneBuilderManager sceneBuilderManager;
     private final Dialog dialog;
     private final ApplicationContext context;
 
     public LibraryDialogController(
-            @Autowired ApplicationContext context,
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired Editor editorController, 
+            @Autowired Api api,
+            @Autowired Editor editorController,
+            @Autowired UserLibrary userLibrary, 
             @Autowired LibraryPanelController libraryPanelController,
             @Autowired MavenSetting mavenSetting, 
             @Autowired MavenArtifactsPreferences mavenPreferences,
             @Autowired MavenRepositoriesPreferences repositoryPreferences, 
-            @Autowired Document document,
-            @Autowired FileSystem fileSystem, 
-            @Autowired Dialog dialog,
-            @Autowired UserLibrary userLibrary) {
-        super(LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
+            @Autowired Document document) {
+        super(api, LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N
         this.owner = document.getStage();
-        this.context = context;
-        this.sceneBuilderManager = sceneBuilderManager;
+        this.context = api.getContext();
         this.editorController = editorController;
         this.libraryPanelController = libraryPanelController;
         this.userLibrary = userLibrary;
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
         this.mavenSetting = mavenSetting;
-        this.fileSystem = fileSystem;
-        this.dialog = dialog;
+        this.fileSystem = api.getFileSystem();
+        this.dialog = api.getApiDoc().getDialog();
     }
 
     @Override
@@ -224,7 +219,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     @FXML
     private void manage() {
         RepositoryManagerController repositoryDialogController = context.getBean(RepositoryManagerController.class,
-                context, editorController, mavenSetting, repositoryPreferences, getStage());
+                getApi(), editorController, mavenSetting, repositoryPreferences, getStage());
         repositoryDialogController.openWindow();
     }
 
@@ -247,8 +242,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
     @FXML
     private void addRelease() {
-        SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class, context,
-                editorController, dialog, libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences,
+        SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class, getApi(),
+                editorController, libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences,
                 getStage());
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -264,8 +259,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
     @FXML
     private void addManually() {
-        MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class, context, editorController,
-                dialog, libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences, getStage());
+        MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class, getApi(), editorController,
+                libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences, getStage());
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override
@@ -345,7 +340,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             LibraryDialogListItem item = (LibraryDialogListItem) dialogListItem;
             if (Files.exists(item.getFilePath())) {
                 if (LibraryUtil.isJarPath(item.getFilePath()) || Files.isDirectory(item.getFilePath())) {
-                    final ImportWindowController iwc = context.getBean(ImportWindowController.class, dialog, libraryPanelController,
+                    final ImportWindowController iwc = context.getBean(ImportWindowController.class, getApi(), libraryPanelController,
                             Arrays.asList(item.getFilePath().toFile()), mavenPreferences, getStage());
                     //iwc.setToolStylesheet(editorController.getToolStylesheet());
                     // See comment in OnDragDropped handle set in method startListeningToDrop.
@@ -371,7 +366,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             List<String> filter = mavenPreferences.getArtifactFilter(mavenArtifact);
 
             // TODO remove this constructor call and use bean
-            final ImportWindowController iwc = context.getBean(ImportWindowController.class, dialog, libraryPanelController, files,
+            final ImportWindowController iwc = context.getBean(ImportWindowController.class, getApi(), libraryPanelController, files,
                     mavenPreferences, getStage(), false, filter);
             //iwc.setToolStylesheet(editorController.getToolStylesheet());
             AbstractModalDialog.ButtonID userChoice = iwc.showAndWait();

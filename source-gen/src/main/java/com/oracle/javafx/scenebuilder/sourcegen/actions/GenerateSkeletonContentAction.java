@@ -36,11 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
@@ -64,10 +63,9 @@ public class GenerateSkeletonContentAction extends AbstractAction implements Ini
 	private final DocumentManager documentManager;
 
 	public GenerateSkeletonContentAction(
-			@Autowired ApplicationContext context,
-			@Autowired @Lazy DocumentManager documentManager) {
-		super(context);
-		this.documentManager = documentManager;
+	        @Autowired Api api) {
+		super(api);
+		this.documentManager = api.getApiDoc().getDocumentManager();
 	}
 
 	public synchronized ApplyCssContentConfig getActionConfig() {
@@ -89,7 +87,7 @@ public class GenerateSkeletonContentAction extends AbstractAction implements Ini
 	@Override
 	public void perform() {
 		assert getActionConfig() != null;
-		documentManager.stylesheetConfig().onNext(getActionConfig());
+		documentManager.stylesheetConfig().set(getActionConfig());
 	}
 
 	public static class ApplyCssContentConfig implements StylesheetProvider {

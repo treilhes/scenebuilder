@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
@@ -94,8 +94,8 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
     }
     
     
-    public AutoSuggestEditor(Dialog dialog) {
-        super(dialog);
+    public AutoSuggestEditor(Api api) {
+        super(api);
     }
     
 //    public AutoSuggestEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, List<String> suggestedList) {

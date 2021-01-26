@@ -37,6 +37,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Template;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
@@ -63,10 +65,11 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     private Consumer<Template> onTemplateChosen;
 
     public TemplatesBaseWindowController(
+            Api api,
             URL fxmlURL,
             ResourceBundle resources,
             Stage owner) {
-        super(fxmlURL, resources, owner);
+        super(api, fxmlURL, resources, owner);
     }
 
     @Override
@@ -89,10 +92,10 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
         super.controllerDidLoadFxml();
         assert templateContainer != null;
 
-        basicDesktopApp.setUserData(Template.BASIC_DESKTOP_APP);
-        complexDesktopApp.setUserData(Template.COMPLEX_DESKTOP_APP);
-        emptyPhoneApp.setUserData(Template.EMPTY_PHONE_APP);
-        basicPhoneApp.setUserData(Template.BASIC_PHONE_APP);
+        basicDesktopApp.setUserData(TemplateImpl.BASIC_DESKTOP_APP);
+        complexDesktopApp.setUserData(TemplateImpl.COMPLEX_DESKTOP_APP);
+        emptyPhoneApp.setUserData(TemplateImpl.EMPTY_PHONE_APP);
+        basicPhoneApp.setUserData(TemplateImpl.BASIC_PHONE_APP);
     }
 
     protected void setupTemplateButtonHandlers() {
@@ -108,7 +111,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
                 Button button = (Button) child;
                 button.setOnAction(event -> {
                     getStage().hide();
-                    onTemplateChosen.accept((Template) button.getUserData());
+                    onTemplateChosen.accept((TemplateImpl) button.getUserData());
                 });
             }
         }

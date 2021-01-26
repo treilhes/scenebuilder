@@ -43,7 +43,7 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.CharsetEditor;
+import com.oracle.javafx.scenebuilder.editors.control.CharsetEditor;
 
 @ExtendWith(ApplicationExtension.class)
 public class CharsetEditorTest {

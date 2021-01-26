@@ -46,10 +46,10 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.kit.editor.job.BatchJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RelocateNodeJob;
-import com.oracle.javafx.scenebuilder.kit.editor.job.atomic.RemoveObjectJob;
+import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
+import com.oracle.javafx.scenebuilder.job.editor.InsertAsSubComponentJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.RelocateNodeJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
