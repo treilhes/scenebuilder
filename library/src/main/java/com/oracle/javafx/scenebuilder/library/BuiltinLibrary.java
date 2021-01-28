@@ -99,7 +99,7 @@ public class BuiltinLibrary extends AbstractLibrary {
         itemsProperty.add(item);
     }
 
-    private static String makeFxmlText(Class<?> componentClass) {
+    public static String makeFxmlText(Class<?> componentClass) {
         final StringBuilder sb = new StringBuilder();
 
         /*

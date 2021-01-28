@@ -45,7 +45,8 @@ public class DefaultLibraryFilter implements LibraryFilter {
         return className == null || className.startsWith("java.") //NOI18N
                 || className.startsWith("javax.") || className.startsWith("javafx.") //NOI18N
                 || className.startsWith("com.oracle.javafx.scenebuilder.") //NOI18N
-                || className.startsWith("com.javafx.");
+                || className.startsWith("com.javafx.")
+                || className.startsWith("module-info");
     }
 
 }

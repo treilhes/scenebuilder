@@ -431,7 +431,7 @@ class LibraryFolderWatcher implements Runnable {
                 if (!excludedItems.contains(canonicalName) &&
                     !artifactsFilter.contains(canonicalName)) {
                     final String name = e.getKlass().getSimpleName();
-                    final String fxmlText = JarExplorer.makeFxmlText(e.getKlass());
+                    final String fxmlText = BuiltinLibrary.makeFxmlText(e.getKlass());
                     result.add(new LibraryItemImpl(name, Qualifier.UNKNOWN, fxmlText, library));
                 }
             }

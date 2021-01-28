@@ -41,6 +41,7 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -56,7 +57,7 @@ abstract class ExplorerBase {
     static Object instantiateWithFXMLLoader(Class<?> klass, ClassLoader classLoader) throws IOException {
         Object result;
 
-        final String fxmlText = JarExplorer.makeFxmlText(klass);
+        final String fxmlText = BuiltinLibrary.makeFxmlText(klass);
         final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); //NOI18N
 
         final FXMLLoader fxmlLoader = new FXMLLoader();
@@ -71,30 +72,6 @@ abstract class ExplorerBase {
 
         return result;
     }
-    
-    public static String makeFxmlText(Class<?> klass) {
-        final StringBuilder result = new StringBuilder();
-
-        /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
-         * 
-         * <?import a.b.C?>
-         * 
-         * <C/>
-         */
-
-        result.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); //NOI18N
-
-        result.append("<?import "); //NOI18N
-        result.append(klass.getCanonicalName());
-        result.append("?>"); //NOI18N
-        result.append("<"); //NOI18N
-        result.append(klass.getSimpleName());
-        result.append("/>\n"); //NOI18N
-
-        return result.toString();
-    }
-
 
     String makeClassName(String entryName, String separator) {
         final String result;

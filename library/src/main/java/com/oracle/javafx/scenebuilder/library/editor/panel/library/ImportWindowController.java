@@ -67,6 +67,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.library.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 import com.oracle.javafx.scenebuilder.library.util.FolderExplorer;
@@ -618,7 +619,7 @@ public class ImportWindowController extends AbstractModalDialog {
 
         importList.getSelectionModel().selectedItemProperty().addListener((ChangeListener<ImportRow>) (ov, t, t1) -> {
             previewGroup.getChildren().clear();
-            final String fxmlText = JarExplorer.makeFxmlText(t1.getJarReportEntry().getKlass());
+            final String fxmlText = BuiltinLibrary.makeFxmlText(t1.getJarReportEntry().getKlass());
             try {
                 FXOMDocument fxomDoc = new FXOMDocument(fxmlText, null, importClassLoader, null);
                 zeNode = (Node) fxomDoc.getSceneGraphRoot();
