@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/app/src/main/java/com/oracle/javafx/scenebuilder/app/SceneBuilderApp.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.oracle.javafx.scenebuilder.app.SceneBuilderApp"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:${project_loc:/extension-api}/build/libs/extension-api-11.0.0-SNAPSHOT.jar&#13;&#10;-ea&#13;&#10;--module-path ${env_var:JAVAFX_11_LIB} &#13;&#10;--add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.web&#13;&#10;--add-opens javafx.fxml/javafx.fxml=ALL-UNNAMED &#13;&#10;--add-opens javafx.graphics/javafx.scene=ALL-UNNAMED&#13;&#10;--add-opens javafx.controls/javafx.scene.control=ALL-UNNAMED&#13;&#10;--add-opens javafx.controls/javafx.scene.control.skin=ALL-UNNAMED&#13;&#10;--add-opens javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED&#13;&#10;--add-opens javafx.controls/com.sun.javafx.scene.control.inputmap=ALL-UNNAMED&#13;&#10;--add-opens javafx.graphics/com.sun.javafx.scene.traversal=ALL-UNNAMED&#13;&#10;--add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED&#13;&#10;--add-exports javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED&#13;&#10;--add-exports javafx.graphics/com.sun.javafx.css=ALL-UNNAMED&#13;&#10;--add-exports javafx.graphics/com.sun.javafx.util=ALL-UNNAMED&#13;&#10;-Dlogging.level.org.springframework.beans.factory.support=ERROR&#13;&#10;-Dlogging.level.com.oracle.javafx.scenebuilder=DEBUG&#13;&#10;-Xverify:none"/>
+</launchConfiguration>
