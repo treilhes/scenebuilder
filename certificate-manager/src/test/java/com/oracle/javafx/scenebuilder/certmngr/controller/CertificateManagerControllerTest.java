@@ -32,22 +32,25 @@
  */
 package com.oracle.javafx.scenebuilder.certmngr.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-import java.io.InputStream;
-import java.net.URL;
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.Provider;
 import java.security.Security;
-import java.security.cert.Certificate;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.SSLHandshakeException;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,7 +58,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
 import org.mockserver.configuration.ConfigurationProperties;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.jupiter.MockServerExtension;
@@ -64,13 +66,13 @@ import org.mockserver.socket.PortFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableTrustManagerProvider;
+import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableX509TrustManager;
 
-import io.reactivex.rxjava3.observers.TestObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.TestObserver;
+import io.reactivex.schedulers.Schedulers;
 
 
 @ExtendWith(MockServerExtension.class)
@@ -82,26 +84,19 @@ public class CertificateManagerControllerTest {
     @TempDir
     static Path sharedTempDir;
     
+    @TempDir
+    static Path keystoreTempDir;
+    
+    static String storePassword = "password";
+
     private static NetworkManager nm = new NetworkManager.NetworkManagerImpl();
     private static ClientAndServer mockServer;
     private static String TEST_URL = "https://localhost:8887/test";
-    
-    static {
-        Security.insertProviderAt(new ReloadableTrustManagerProvider(nm), 1);
-    }
-    
-    Api api = Mockito.mock(Api.class);
-    FileSystem fs = Mockito.mock(FileSystem.class);
-    
-    
-    private void tmp() {
-        
-       
-    }
-    
+    protected final static long USER_TIMEOUT = 2;//seconds
     
     @BeforeAll
     public static void startMockServer() {
+        
         ConfigurationProperties.dynamicallyCreateCertificateAuthorityCertificate(true);
         ConfigurationProperties.directoryToSaveDynamicSSLCertificate(sharedTempDir.toString());
         
@@ -127,62 +122,170 @@ public class CertificateManagerControllerTest {
         mockServer.stop();
     }
     
+    private static HttpClient newClient() {
+        return HttpClientBuilder.create().setRetryHandler(new DefaultHttpRequestRetryHandler(0, false)).build();
+    }
+    
+    private static int keystoreCertificateCount(File store) {
+        try {
+            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+            if (store.exists()) {
+                logger.info("Counting certificates in store : {}", store.getAbsolutePath());
+                try (FileInputStream fis = new FileInputStream(store)){
+                    ks.load(fis, storePassword.toCharArray());
+                }
+                return ks.size();
+            }
+        } catch (Exception e) {
+            logger.error("Error while loading the store", e);
+        }
+        return 0;
+    }
+    
+    private static File newTrustManager(TestInfo testInfo) {
+        ReloadableX509TrustManager.reset();
+        
+        File truststore = new File(keystoreTempDir.toFile(), testInfo.getDisplayName() + ".jks");
+        Provider p = new ReloadableTrustManagerProvider(nm, truststore, storePassword.toCharArray(), USER_TIMEOUT);
+        Security.removeProvider(p.getName());
+        Security.insertProviderAt(p, 1);
+        return truststore;
+    }
+    
     @Test
-    void shouldThrowSslValidationEception() {
+    void shouldThrowSslValidationException(TestInfo testInfo) {
+        newTrustManager(testInfo);
+        
         HttpGet request = new HttpGet(TEST_URL);
-        CloseableHttpClient client = HttpClients.createDefault();
+        
+        // the handshake has failed
+        Assertions.assertThrows(SSLHandshakeException.class, () -> {
+            newClient().execute(request);
+        });
+    }
+    
+    @Test
+    void shouldThrowSslValidationExceptionAndNotSaveCertificateInStore(TestInfo testInfo) throws Exception {
+        File store = newTrustManager(testInfo);
+        TestObserver<?> trustRequestObserver = nm.trustRequest().test();
+        AtomicInteger requestedCertificatesCount = new AtomicInteger(-1);
+        Disposable disposable = nm.trustRequest()
+            .observeOn(Schedulers.io())
+            .subscribe(tr -> {
+                requestedCertificatesCount.set(tr.length);
+                nm.untrusted().set(tr);
+            });
+        
+        HttpGet request = new HttpGet(TEST_URL);
         
         Assertions.assertThrows(SSLHandshakeException.class, () -> {
-            client.execute(request);
+            newClient().execute(request);
         });
+        
+        trustRequestObserver.assertValueCount(1);
+        disposable.dispose();
+        
+        assertTrue(store.exists());
+        assertEquals(0, keystoreCertificateCount(store));
+        assertTrue(disposable.isDisposed());
     }
     
     @Test
-    void shouldLoadCertificate() throws Exception {
-        Mockito.when(fs.getApplicationDataFolder()).thenReturn(sharedTempDir.toFile());
-        Mockito.when(api.getFileSystem()).thenReturn(fs);
-        Mockito.when(api.getNetworkManager()).thenReturn(nm);
-        URL url = new URL(TEST_URL);
-        TestObserver<?> to = nm.trustRequest().test();
-        nm.trustRequest()
-        //.subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io())
-        .subscribe(tr -> {
-        //nm.trustRequest().subscribe(tr -> {
-            LoggerFactory.getLogger(CertificateManagerControllerTest.class).info(Thread.currentThread().getName());
-            LoggerFactory.getLogger(CertificateManagerControllerTest.class).info("RECEIVEDDDDDDD RRRRRREEEEEQQQQUUUUEEESSTSTT " + tr);
-           try {
-               Thread.sleep(5000) ;
-            }  catch (InterruptedException e) {
-                // gestion de l'erreur
-            }
-           LoggerFactory.getLogger(CertificateManagerControllerTest.class).info("AFTER RECEIVEDDDDDDD RRRRRREEEEEQQQQUUUUEEESSTSTT " + tr);
-           nm.trustedPermanently().set(tr);
+    void shouldSuccessAndSaveCertificateInStore(TestInfo testInfo) throws Exception {
+        File store = newTrustManager(testInfo);
+        TestObserver<?> trustRequestObserver = nm.trustRequest().test();
+        AtomicInteger requestedCertificatesCount = new AtomicInteger(-1);
+        Disposable disposable = nm.trustRequest()
+            .observeOn(Schedulers.io())
+            .subscribe(tr -> {
+                requestedCertificatesCount.set(tr.length);
+                nm.trustedPermanently().set(tr);
+            });
+        
+        HttpGet request = new HttpGet(TEST_URL);
+        
+        Assertions.assertDoesNotThrow(() -> {
+            newClient().execute(request);
         });
         
-        nm.trustedPermanently().subscribe(c -> {
-            LoggerFactory.getLogger(CertificateManagerControllerTest.class).info("SETVAL");
+        trustRequestObserver.assertValueCount(1);
+        disposable.dispose();
+        
+        assertTrue(store.exists());
+        assertEquals(requestedCertificatesCount.get(), keystoreCertificateCount(store));
+        assertTrue(disposable.isDisposed());
+    }
+
+    @Test
+    void shouldSuccessAndNotSaveCertificateInStore(TestInfo testInfo) throws Exception {
+        File store = newTrustManager(testInfo);
+        TestObserver<?> trustRequestObserver = nm.trustRequest().test();
+        
+        AtomicInteger requestedCertificatesCount = new AtomicInteger(-1);
+        Disposable disposable = nm.trustRequest()
+            .observeOn(Schedulers.io())
+            .subscribe(tr -> {
+                requestedCertificatesCount.set(tr.length);
+                nm.trustedTemporarily().set(tr);
+            });
+        
+        HttpGet request = new HttpGet(TEST_URL);
+        
+        // the handshake was successfull
+        Assertions.assertDoesNotThrow(() -> {
+            newClient().execute(request);
         });
         
-        CertificateManagerController cmc = new CertificateManagerController(api);
-        Certificate certificate = cmc.loadFromUrl(new URL(TEST_URL));
-        LoggerFactory.getLogger(CertificateManagerControllerTest.class).info("XXXXXXXXXXXXXXXXXXXXX");
-        
-        
-        to.assertValueCount(1);
-        //to.assertComplete();
-        LoggerFactory.getLogger(CertificateManagerControllerTest.class).info("END");
+        // a trust request has been sent
+        trustRequestObserver.assertValueCount(1);
+        disposable.dispose();
+        // the store was created
+        assertTrue(store.exists());
+        // the trust request contained certificates
+        assertTrue(requestedCertificatesCount.get() > 0);
+        // the truststore is empty
+        assertEquals(0, keystoreCertificateCount(store));
+        assertTrue(disposable.isDisposed());
     }
     
-	@Test
-	void shouldCreateValue(TestInfo testInfo) throws Exception {
-	    System.out.println("XXXXXXXXXXXx");
-	    HttpGet request = new HttpGet(TEST_URL);
-	    CloseableHttpClient client = HttpClients.createDefault();
-        HttpResponse response = client.execute(request);
-        InputStream dataStream = response.getEntity().getContent();
-        byte[] bytes = new byte[100];
-        IOUtils.readFully(dataStream, bytes);
-        System.out.println(new String(bytes));
-	}
+    
+    @Test
+    void shouldThrowSslValidationExceptionThenSuccessAndSaveCertificateInStore(TestInfo testInfo) throws Exception {
+        File store = newTrustManager(testInfo);
+        TestObserver<?> trustRequestObserver = nm.trustRequest().test();
+        AtomicInteger requestedCertificatesCount = new AtomicInteger(-1);
+        
+        Disposable disposable = nm.trustRequest()
+            .observeOn(Schedulers.io())
+            .subscribe(tr -> {
+                nm.untrusted().set(tr);
+            });
+        
+        HttpGet request = new HttpGet(TEST_URL);
+        
+        Assertions.assertThrows(SSLHandshakeException.class, () -> {
+            newClient().execute(request);
+        });
+        disposable.dispose();
+        
+        disposable = nm.trustRequest()
+            .observeOn(Schedulers.io())
+            .subscribe(tr -> {
+                requestedCertificatesCount.set(tr.length);
+                nm.trustedPermanently().set(tr);
+            });
+        
+        Assertions.assertDoesNotThrow(() -> {
+            newClient().execute(request);
+        });
+        
+        
+        
+        trustRequestObserver.assertValueCount(2);
+        disposable.dispose();
+        
+        assertTrue(store.exists());
+        assertEquals(requestedCertificatesCount.get(), keystoreCertificateCount(store));
+        assertTrue(disposable.isDisposed());
+    }
 }

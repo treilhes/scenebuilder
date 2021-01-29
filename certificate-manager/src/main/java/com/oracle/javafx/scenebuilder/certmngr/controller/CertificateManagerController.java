@@ -33,142 +33,32 @@
 package com.oracle.javafx.scenebuilder.certmngr.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Security;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.List;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.CertificateManager;
 import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableTrustManagerProvider;
-import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableX509TrustManager;
 
 @Component
-public class CertificateManagerController implements CertificateManager {
+public class CertificateManagerController {
     
-    private final static String KEYSTORE_PASSWORD = "scenebuilder";
+    protected final static String KEYSTORE_PASSWORD = "scenebuilder";
+    protected final static String KEYSTORE_FILENAME = "truststore.jks";
+    protected final static long USER_TIMEOUT = 30;//seconds
     private final Api api;
 
-    private KeyStore keystore;
-    
     public CertificateManagerController(
             @Autowired Api api
             ) {
         this.api = api;
-        Security.insertProviderAt(new ReloadableTrustManagerProvider(api.getNetworkManager(), keystoreFile(), KEYSTORE_PASSWORD.toCharArray()), 1);
+        Security.insertProviderAt(new ReloadableTrustManagerProvider(api.getNetworkManager(), keystoreFile(),
+                KEYSTORE_PASSWORD.toCharArray(), USER_TIMEOUT), 1);
     }
     
     private File keystoreFile() {
-        return new File(api.getFileSystem().getApplicationDataFolder(), "truststore.jks");
-    }
-    private void load() throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException {
-        File keystoreFile = keystoreFile();
-        
-        if (keystoreFile.exists()) {
-            try(FileInputStream fis = new FileInputStream(keystoreFile)){
-                keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-                keystore.load(fis, KEYSTORE_PASSWORD.toCharArray());
-            }
-        } else {
-            keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keystore.load(null);
-        }
+        return new File(api.getFileSystem().getApplicationDataFolder(), KEYSTORE_FILENAME);
     }
     
-//    private SSLContext getSSLContext() throws Exception {
-//        TrustManagerFactory trustMgrFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-//        trustMgrFactory.init(keystore);
-//        
-//        TrustManager[] trustManagers = new TrustManager[] {
-//                new ReloadableX509TrustManager(trustMgrFactory)
-//        };
-//        SSLContext sslContext = SSLContext.getInstance("TLS");
-//        sslContext.init(null, trustManagers, null);
-//        SSLContext.setDefault(sslContext);
-//        return sslContext;
-//    }
-
-    @Override
-    public Certificate loadFromUrl(URL url) {
-        String host = url.getHost();
-        int port = url.getPort() == -1 ? url.getDefaultPort() : url.getPort();
-        
-        try {
-            SSLContext context = SSLContext.getInstance("TLS");
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            ReloadableX509TrustManager defaultTrustManager = (ReloadableX509TrustManager)tmf.getTrustManagers()[0];
-            System.out.println();
-          context.init(null, new TrustManager[] {defaultTrustManager}, null);
-        SSLSocketFactory factory = context.getSocketFactory();
-        SSLSocket socket = (SSLSocket)factory.createSocket(host, port);
-        socket.setSoTimeout(10000);
-
-        try {
-        System.out.println("Starting SSL handshake...");
-        socket.startHandshake();
-        socket.close();
-        System.out.println();
-        System.out.println("No errors, certificate is already trusted");
-        } catch (SSLException e) {
-        System.out.println();
-        e.printStackTrace(System.out);
-        }
-
-        X509Certificate[] chain = null;//defaultTrustManager.chain;
-        if (chain == null) {
-            System.out.println("Could not obtain server certificate chain");
-            return null;
-        }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void trustPermanently(Certificate certificate) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void trustTemporarily(Certificate certificate) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void removeTrust(Certificate certificate) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public List<Certificate> listTrustedCertificates() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
-    
-    
-    
-
 }

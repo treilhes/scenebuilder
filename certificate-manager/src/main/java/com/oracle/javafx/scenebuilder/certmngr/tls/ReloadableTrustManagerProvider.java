@@ -52,17 +52,21 @@ public class ReloadableTrustManagerProvider extends Provider {
     private final File storeFile;
 
     private final char[] storePassword;
+
+    private final long userResponseTimeout;
     
     public ReloadableTrustManagerProvider(
             NetworkManager networkManager,
             File storeFile,
-            char[] storePassword
+            char[] storePassword,
+            long userResponseTimeout
             ) {
         
         super(ReloadableX509TrustManager.class.getSimpleName(), PROVIDER_VERSION, "Provider to manage SceneBuilder certificate at runtime");
         this.networkManager = networkManager;
         this.storeFile = storeFile;
         this.storePassword = storePassword;
+        this.userResponseTimeout = userResponseTimeout;
         put(TrustManagerFactory.class.getSimpleName() + "." + TrustManagerFactory.getDefaultAlgorithm(), ReloadableTrustManagerFactory.class.getName());
     }
 
@@ -76,6 +80,10 @@ public class ReloadableTrustManagerProvider extends Provider {
 
     public char[] getStorePassword() {
         return storePassword;
+    }
+
+    public long getUserResponseTimeout() {
+        return userResponseTimeout;
     }
 
 }

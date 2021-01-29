@@ -49,7 +49,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLEngine;
@@ -63,37 +62,48 @@ import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.ReplaySubject;
 
 public class ReloadableX509TrustManager extends X509ExtendedTrustManager implements X509TrustManager {
+    private static Logger logger = LoggerFactory.getLogger(ReloadableX509TrustManager.class);
+    
+    private static ArrayList<Certificate> certList;
+    private static KeyStore physicalStore;
     
     private final TrustManagerFactory originalTrustManagerFactory;
+    private final NetworkManager networkManager;
+    private final char[] physicalStorePassword;
+    private final File physicalStoreFile;
+    private final long userResponseTimeout;
+    
     private X509ExtendedTrustManager clientCertsTrustManager;
     private X509ExtendedTrustManager serverCertsTrustManager;
-    private static ArrayList<Certificate> certList;
-    private NetworkManager networkManager;
-    private static Logger logger = LoggerFactory.getLogger(ReloadableX509TrustManager.class);
+    
+    public static void reset() {
+        logger.info("Reseting in memory certificate list and physicalStore");
+        certList = null;
+        physicalStore = null;
+    }
 
-    private static KeyStore physicalStore;
-    private char[] physicalStorePassword;
-    private File physicalStoreFile;
-    private final CompositeDisposable disposables;
-    public ReloadableX509TrustManager(TrustManagerFactory originalTrustManagerFactory, NetworkManager networkManager, File physicalStoreFile, char[] physicalStorePassword) throws Exception {
+    public ReloadableX509TrustManager(TrustManagerFactory originalTrustManagerFactory, NetworkManager networkManager,
+            File physicalStoreFile, char[] physicalStorePassword, long userResponseTimeout) throws Exception {
 
         try {
             this.originalTrustManagerFactory = originalTrustManagerFactory;
             this.networkManager = networkManager;
             this.physicalStoreFile = physicalStoreFile;
             this.physicalStorePassword = physicalStorePassword;
-            this.disposables = new CompositeDisposable();
+            this.userResponseTimeout = userResponseTimeout;
             
             if (certList == null) {
+                logger.info("Initialization in memory certificates list");
                 certList = new ArrayList<>();
                 certList.addAll(getDefaultCertificates());
             }
             
             if (physicalStore == null) {
+                logger.info("Initialization physicalStore from : {}", physicalStoreFile.getAbsolutePath());
                 physicalStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 if (physicalStoreFile.exists()) {
                     try (FileInputStream fis = new FileInputStream(physicalStoreFile)){
@@ -162,6 +172,7 @@ public class ReloadableX509TrustManager extends X509ExtendedTrustManager impleme
                 physicalStore.setCertificateEntry(UUID.randomUUID().toString(), cert);
             }
             try (FileOutputStream fos = new FileOutputStream(physicalStoreFile)){
+                logger.info("Saving physicalStore to : {}", physicalStoreFile.getAbsolutePath());
                 physicalStore.store(fos, physicalStorePassword);
             }
         } catch (Exception e) {
@@ -220,41 +231,40 @@ public class ReloadableX509TrustManager extends X509ExtendedTrustManager impleme
     }
     
     private void handleNewCertificates(X509Certificate[] x509Certificates, CertificateException originalException) throws CertificateException {
-        final AtomicBoolean distrust = new AtomicBoolean(false);
-        
+        final CompositeDisposable disposables = new CompositeDisposable();
+        final ReplaySubject<Boolean> trustResponse = ReplaySubject.create();
+
         disposables.add(networkManager.trustedPermanently().filter(certs -> Arrays.equals(x509Certificates, certs))
                 .subscribe(c -> {
-            logger.info("Certificates trusted permanently" + this);
+            logger.info("Certificates trusted permanently");
             addCertificatesToPhysicalKeystore(Arrays.asList(x509Certificates));
             addCertificates(Arrays.asList(x509Certificates));
             disposables.dispose();
+            trustResponse.onNext(true);
         }));
+
         disposables.add(networkManager.trustedTemporarily().filter(certs -> Arrays.equals(x509Certificates, certs)).subscribe(c -> {
             logger.info("Certificates trusted temporarily");
             addCertificates(Arrays.asList(x509Certificates));
             disposables.dispose();
+            trustResponse.onNext(true);
         }));
+
         disposables.add(networkManager.untrusted().filter(certs -> Arrays.equals(x509Certificates, certs)).subscribe(c -> {
             logger.info("Certificates untrusted");
-            distrust.set(true);
             disposables.dispose();
+            trustResponse.onNext(false);
         }));
         
-        networkManager.trustRequest().set(x509Certificates);
-        logger.info("Waiting for user action");
+        boolean trusted = false;
         try {
-            Observable.merge(
-                    networkManager.untrusted().filter(certs -> Arrays.equals(x509Certificates, certs)),
-                    networkManager.trustedPermanently().filter(certs -> Arrays.equals(x509Certificates, certs)),
-                    networkManager.trustedTemporarily().filter(certs -> Arrays.equals(x509Certificates, certs)))
-            .timeout(30, TimeUnit.SECONDS)
-            .doOnError(e -> logger.error("blocking for certificate answer failed due to timeout", e))
-            .blockingFirst();
+            networkManager.trustRequest().set(x509Certificates);
+            trusted = trustResponse.timeout(userResponseTimeout, TimeUnit.SECONDS).blockingFirst();
         } catch (Exception te) {
-            throw originalException;
+            logger.info("user response timeout reached");
         }
-        logger.info("User did choose distrust :" + distrust.get());
-        if (distrust.get()) {
+        logger.info("User did choose trust :" + trusted);
+        if (!trusted) {
             throw originalException;
         }
     }

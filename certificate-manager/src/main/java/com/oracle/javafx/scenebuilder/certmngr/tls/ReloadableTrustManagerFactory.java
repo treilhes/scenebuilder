@@ -57,7 +57,8 @@ public class ReloadableTrustManagerFactory extends TrustManagerFactorySpi {
     private final ReloadableTrustManagerProvider trustProvider;
     private File storeFile;
     private char[] storePassword;
-
+    private long userResponseTimeout;
+    
     public ReloadableTrustManagerFactory() throws NoSuchAlgorithmException {
          List<Provider> defaultProviders = Arrays.stream(Security.getProviders())
             .filter(p -> p.getClass() != ReloadableTrustManagerProvider.class)
@@ -69,6 +70,7 @@ public class ReloadableTrustManagerFactory extends TrustManagerFactorySpi {
         this.networkManager = trustProvider.getNetworkManager();
         this.storeFile = trustProvider.getStoreFile();
         this.storePassword = trustProvider.getStorePassword();
+        this.userResponseTimeout = trustProvider.getUserResponseTimeout();
         
         Provider.Service service = getService(defaultProviders, TrustManagerFactory.class.getSimpleName(),
                 TrustManagerFactory.getDefaultAlgorithm());
@@ -98,7 +100,7 @@ public class ReloadableTrustManagerFactory extends TrustManagerFactorySpi {
     protected TrustManager[] engineGetTrustManagers() {
         try {
             return new TrustManager[]{
-                        new ReloadableX509TrustManager(defaultTrustManagerFactory, networkManager, storeFile, storePassword)
+                        new ReloadableX509TrustManager(defaultTrustManagerFactory, networkManager, storeFile, storePassword, userResponseTimeout)
                     };
         } catch (Exception e) {
             return new TrustManager[0];

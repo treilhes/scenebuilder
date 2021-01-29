@@ -41,7 +41,6 @@ import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerCont
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerMenuController;
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerWindowController;
 import com.oracle.javafx.scenebuilder.certmngr.i18n.I18NCertificateManager;
-import com.oracle.javafx.scenebuilder.certmngr.menu.CertificateManagerMenuProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 @Configuration
@@ -51,8 +50,7 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
                 CertificateManagerController.class,
                 CertificateManagerMenuController.class,
                 CertificateManagerWindowController.class,
-                I18NCertificateManager.class,
-                CertificateManagerMenuProvider.class
+                I18NCertificateManager.class
         })
 public class CertificateManagerExtension extends AbstractExtension {
 

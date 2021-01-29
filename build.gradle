@@ -53,6 +53,8 @@ subprojects {
         implementation 'org.eclipse.aether:aether-transport-file:1.1.0'
         implementation 'org.eclipse.aether:aether-transport-http:1.1.0'
         implementation 'org.apache.maven:maven-aether-provider:3.3.9'
+        // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+        implementation 'org.apache.commons:commons-lang3:3.11'
 
         implementation 'com.gluonhq:charm-glisten:5.0.0-jdk9'
 
