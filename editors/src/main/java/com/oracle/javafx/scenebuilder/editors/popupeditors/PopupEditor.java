@@ -71,7 +71,7 @@ public abstract class PopupEditor extends AbstractPropertyEditor implements Popu
     
     // Separate method to please FindBugs
     private void initializeEditor() {
-        FXMLUtils.load(this, "PopupEditor.fxml");
+        FXMLUtils.load(this, PopupEditor.class, "PopupEditor.fxml");
         // Lazy initialization of the editor,
         // the first time the popup is opened.
         popupMb.showingProperty().addListener((ChangeListener<Boolean>) (ov, previousVal, newVal) -> {

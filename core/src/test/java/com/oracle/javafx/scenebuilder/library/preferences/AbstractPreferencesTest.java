@@ -38,10 +38,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.springframework.context.support.GenericApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
+import com.oracle.javafx.scenebuilder.core.editors.MockObjects;
 
 class AbstractPreferencesTest {
 
@@ -81,7 +83,7 @@ class AbstractPreferencesTest {
 
 	private static PreferencesContext testGlobalPreferencesContext(TestInfo testInfo) {
 		return new PreferencesContext(
-				null, 
+				(GenericApplicationContext)MockObjects.buildApiMock().getContext(), 
 				testRootNode(testInfo.getTestMethod().get().getName()), 
 				testDocumentNode(testInfo.getTestMethod().get().getName())) {
 			@Override
@@ -94,7 +96,7 @@ class AbstractPreferencesTest {
 	private static PreferencesContext testDocumentPreferencesContext(TestInfo testInfo) {
 		
 		return new PreferencesContext(
-				null, 
+		        (GenericApplicationContext)MockObjects.buildApiMock().getContext(), 
 				testRootNode(testInfo.getTestMethod().get().getName()), 
 				testDocumentNode(testInfo.getTestMethod().get().getName())) {
 			@Override

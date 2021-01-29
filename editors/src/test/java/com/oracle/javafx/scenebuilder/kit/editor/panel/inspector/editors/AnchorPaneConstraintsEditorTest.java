@@ -41,7 +41,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.AnchorPropertyGroupMetadata;
@@ -71,28 +70,24 @@ public class AnchorPaneConstraintsEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(dialog);
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(dialog);
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
         
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(dialog);
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
         
         o.reset(someAnchorGroupProp(), selectionState);
     }

@@ -36,15 +36,9 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Glossary;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager.DocumentManagerImpl;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 @ExtendWith(ApplicationExtension.class)
@@ -56,44 +50,28 @@ public class FxIdEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        Glossary glossary = Mockito.mock(Glossary.class);
-        DocumentManager documentManager = new DocumentManagerImpl();
-        FxIdEditor o = new FxIdEditor(dialog, messageLogger, glossary, documentManager);
+        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        Glossary glossary = Mockito.mock(Glossary.class);
-        DocumentManager documentManager = new DocumentManagerImpl();
-        FxIdEditor o = new FxIdEditor(dialog, messageLogger, glossary, documentManager);
+        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        Glossary glossary = Mockito.mock(Glossary.class);
-        DocumentManager documentManager = new DocumentManagerImpl();
-        FxIdEditor o = new FxIdEditor(dialog, messageLogger, glossary, documentManager);
+        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
         
         o.reset((ValuePropertyMetadata)null, null);
     }
 
     @Test
     public void shouldResetTheInstanceForGroup() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        Glossary glossary = Mockito.mock(Glossary.class);
-        DocumentManager documentManager = new DocumentManagerImpl();
-        FxIdEditor o = new FxIdEditor(dialog, messageLogger, glossary, documentManager);
+        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
         
         o.reset((ValuePropertyMetadata)null, null);
     }

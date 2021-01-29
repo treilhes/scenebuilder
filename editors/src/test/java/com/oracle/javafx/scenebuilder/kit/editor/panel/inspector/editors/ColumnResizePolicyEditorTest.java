@@ -68,32 +68,32 @@ public class ColumnResizePolicyEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog);
+        
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog);
+        
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstanceForTableView() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog);
+        
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
         o.reset(someTableViewResizePolicyProp(), null);
     }
     
     @Test
     public void shouldResetTheInstanceForTreeTableView() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog);
+        
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
         o.reset(someTreeTableViewResizePolicyProp(), null);
     }

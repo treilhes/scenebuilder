@@ -59,24 +59,24 @@ public class EnumEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        EnumEditor o = new EnumEditor(dialog);
+        
+        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        EnumEditor o = new EnumEditor(dialog);
+        
+        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstanceForTableView() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        EnumEditor o = new EnumEditor(dialog);
+        
+        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
         
         o.reset(someEnumProp(), null);
     }

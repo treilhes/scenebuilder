@@ -50,7 +50,7 @@ public class ListOfStringPreference extends AbstractPreference<ObservableList<St
 	private final static String JOIN_SEPARATOR = "\\" + File.pathSeparator;
 	private final static String REGEX_JOIN_SEPARATOR = "\\"+ JOIN_SEPARATOR;
 	public ListOfStringPreference(PreferencesContext preferencesContext, String name, List<String> defaultValue) {
-		super(preferencesContext, name, FXCollections.observableArrayList(defaultValue), new SimpleObjectProperty<>(), false);
+		super(preferencesContext, name, defaultValue == null ? null : FXCollections.observableArrayList(defaultValue), new SimpleObjectProperty<>(), false);
 	}
 
 	@Override
@@ -70,15 +70,24 @@ public class ListOfStringPreference extends AbstractPreference<ObservableList<St
 	}
 
 	public Preference<ObservableList<String>> setValue(List<String> value) {
-	    super.getValue().clear();
-        super.getValue().addAll(value);
+	    if (value == null) {
+	        super.setValue(null);
+	    } else {
+	        super.getValue().clear();
+	        super.getValue().addAll(value);
+	    }
+	    
         return this;
 	}
 
 	@Override
     public Preference<ObservableList<String>> setValue(ObservableList<String> value) {
-	    super.getValue().clear();
-	    super.getValue().addAll(value);
+	    if (value == null) {
+            super.setValue(null);
+        } else {
+            super.getValue().clear();
+            super.getValue().addAll(value);
+        }
         return this;
     }
 

@@ -36,10 +36,9 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyGroupMetadata;
@@ -60,29 +59,25 @@ public class AbstractPropertyEditorTest {
     
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(dialog);
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         assertNotNull(o);
     }
     
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(dialog);
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         assertNotNull(o.getMenu());
     }
     
     @Test
     public void shouldResetTheInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(dialog);
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         o.reset(someIntProp(), null);
     }
     
     @Test
     public void shouldResetTheInstanceForGroup() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(dialog);
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         o.reset(someGroupProp(), null);
     }
     
@@ -101,8 +96,8 @@ public class AbstractPropertyEditorTest {
     private class AbstractPropertyEditorImpl extends AbstractPropertyEditor {
         boolean localIndeterminate = false;
         
-        public AbstractPropertyEditorImpl(Dialog dialog) {
-            super(dialog);
+        public AbstractPropertyEditorImpl(Api api) {
+            super(api);
         }
 
         @Override

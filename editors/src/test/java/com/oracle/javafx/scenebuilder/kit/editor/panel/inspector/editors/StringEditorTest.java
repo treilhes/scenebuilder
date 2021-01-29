@@ -59,24 +59,24 @@ public class StringEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        StringEditor o = new StringEditor(dialog);
+        
+        StringEditor o = new StringEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        StringEditor o = new StringEditor(dialog);
+        
+        StringEditor o = new StringEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        StringEditor o = new StringEditor(dialog);
+        
+        StringEditor o = new StringEditor(MockObjects.buildApiMock());
         
         o.reset(someMultilineStringProp(), null);
     }

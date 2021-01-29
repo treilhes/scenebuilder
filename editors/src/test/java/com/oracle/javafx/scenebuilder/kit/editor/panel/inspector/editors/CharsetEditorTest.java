@@ -58,24 +58,24 @@ public class CharsetEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        CharsetEditor o = new CharsetEditor(dialog);
+        
+        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        CharsetEditor o = new CharsetEditor(dialog);
+        
+        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
-        CharsetEditor o = new CharsetEditor(dialog);
+        
+        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
         
         o.reset(someCharsetStringProp(), null);
     }

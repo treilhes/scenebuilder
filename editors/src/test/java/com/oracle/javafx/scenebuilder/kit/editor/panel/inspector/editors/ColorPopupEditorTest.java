@@ -39,7 +39,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
@@ -61,27 +60,27 @@ public class ColorPopupEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
+        
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(dialog, messageLogger);
+        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        Dialog dialog = Mockito.mock(Dialog.class);
+        
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(dialog, messageLogger);
+        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        Dialog dialog = Mockito.mock(Dialog.class);
+        
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(dialog, messageLogger);
+        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
         
         o.reset(someColorProp(), null);
     }
