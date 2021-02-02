@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 
 /**
  *
@@ -75,7 +75,7 @@ public class UseComputedSizesSelectionJob extends BatchDocumentJob {
         } else if (selection.getGroup() instanceof GridSelectionGroup) {
             final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
             final FXOMObject gridPane = gsg.getParentObject();
-            final DesignHierarchyMask mask = new DesignHierarchyMask(gridPane);
+            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
             for (int index : gsg.getIndexes()) {
                 final FXOMObject constraints;
                 switch (gsg.getType()) {

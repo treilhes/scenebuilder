@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
@@ -120,7 +120,7 @@ public class AddColumnConstraintsJob extends BatchDocumentJob {
         }
         assert constraintsProperty instanceof FXOMPropertyC;
 
-        final DesignHierarchyMask mask = new DesignHierarchyMask(targetGridPane);
+        final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(targetGridPane);
 
         int shiftIndex = 0;
         int constraintsSize = mask.getColumnsConstraintsSize();

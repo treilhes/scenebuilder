@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.job.editor.gridpane.GridPaneJobUtils.Position;
 
 /**
@@ -143,7 +143,7 @@ public class AddRowJob extends BatchSelectionJob {
 
             final Set<Integer> targetIndexes = targetGridPanes.get(targetGridPane);
 
-            final DesignHierarchyMask mask = new DesignHierarchyMask(targetGridPane);
+            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(targetGridPane);
             final int rowsSize = mask.getRowsSize();
             final Iterator<Integer> iterator = targetIndexes.iterator();
 
@@ -232,8 +232,8 @@ public class AddRowJob extends BatchSelectionJob {
                     result.add(0);
                     break;
                 case BELOW:
-                    final DesignHierarchyMask mask
-                            = new DesignHierarchyMask(targetGridPane);
+                    final GridPaneHierarchyMask mask
+                            = new GridPaneHierarchyMask(targetGridPane);
                     final int size = mask.getRowsSize();
                     result.add(size - 1);
                     break;

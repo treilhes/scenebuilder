@@ -67,7 +67,7 @@ public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
 
         // Retrieve the new container property name to be used
         final PropertyName newContainerPropertyName
-                = newContainerMask.getSubComponentPropertyName();
+                = newContainerMask.getMainAccessory().getName();
         // Create the new container property
         final FXOMPropertyC newContainerProperty = new FXOMPropertyC(
                 newContainer.getFxomDocument(), newContainerPropertyName);

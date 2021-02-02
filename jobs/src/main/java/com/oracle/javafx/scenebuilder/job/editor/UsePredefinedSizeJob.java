@@ -38,6 +38,7 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -99,7 +100,10 @@ public class UsePredefinedSizeJob extends Job {
             if (fxomObject != null && fxomObject.getSceneGraphObject() instanceof Scene) {
                 // Set the size of the scene's root
                 DesignHierarchyMask mask = new DesignHierarchyMask(fxomObject);
-                fxomObject = mask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+                //TODO to check
+                Accessory accessory = mask.getAccessoryForPropertyName(DesignHierarchyMask.AccessoryProperty.ROOT);
+                fxomObject = mask.getAccessory(accessory);
+                
                 assert fxomObject != null;
             }
 

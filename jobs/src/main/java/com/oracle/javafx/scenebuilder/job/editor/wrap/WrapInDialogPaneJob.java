@@ -38,7 +38,6 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -82,11 +81,11 @@ public class WrapInDialogPaneJob extends AbstractWrapInJob {
 
         final DesignHierarchyMask newContainerMask
                 = new DesignHierarchyMask(newContainer);
-        assert newContainerMask.isAcceptingAccessory(Accessory.DP_CONTENT);
+        assert newContainerMask.isAcceptingAccessory(newContainerMask.getMainAccessory());
 
         // Retrieve the new container property name to be used
-        final PropertyName newContainerPropertyName
-                = new PropertyName("content"); //NOI18N
+        final PropertyName newContainerPropertyName = newContainerMask.getMainAccessory().getName();
+
         // Create the new container property
         final FXOMPropertyC newContainerProperty = new FXOMPropertyC(
                 newContainer.getFxomDocument(), newContainerPropertyName);

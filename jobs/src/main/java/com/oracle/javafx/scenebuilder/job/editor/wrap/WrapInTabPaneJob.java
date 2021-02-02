@@ -38,7 +38,6 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -89,7 +88,7 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
 
         // Retrieve the new container property name to be used
         final PropertyName newContainerPropertyName
-                = newContainerMask.getSubComponentPropertyName();
+                = newContainerMask.getMainAccessory().getName();
         // Create the new container property
         final FXOMPropertyC newContainerProperty = new FXOMPropertyC(
                 newContainer.getFxomDocument(), newContainerPropertyName);
@@ -98,11 +97,11 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
         final FXOMInstance tabContainer = makeNewContainerInstance(Tab.class);
         final DesignHierarchyMask tabContainerMask
                 = new DesignHierarchyMask(tabContainer);
-        assert tabContainerMask.isAcceptingAccessory(Accessory.CONTENT);
+        assert tabContainerMask.isAcceptingAccessory(tabContainerMask.getMainAccessory());
 
         // Retrieve the Tab sub container property name to be used
-        final PropertyName tabContainerPropertyName
-                = new PropertyName("content"); //NOI18N
+        final PropertyName tabContainerPropertyName = tabContainerMask.getMainAccessory().getName();
+
         // Create the Tab sub container property
         final FXOMPropertyC tabContainerProperty = new FXOMPropertyC(
                 tabContainer.getFxomDocument(), tabContainerPropertyName);

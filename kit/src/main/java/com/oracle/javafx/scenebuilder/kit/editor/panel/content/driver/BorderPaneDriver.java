@@ -38,11 +38,13 @@ import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.util.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.BorderPaneTring;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.tring.BorderPaneTring.BorderPanePosition;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -69,6 +71,7 @@ public class BorderPaneDriver extends AbstractNodeDriver {
         assert fxomObject instanceof FXOMInstance;
 
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
+        final BorderPaneHierarchyMask mask = new BorderPaneHierarchyMask(fxomObject);
         final BorderPane borderPane = (BorderPane) fxomInstance.getSceneGraphObject();
         final Point2D hitPoint = borderPane.sceneToLocal(sceneX, sceneY, true /* rootScene */);
         final double hitX = hitPoint.getX();
@@ -76,24 +79,24 @@ public class BorderPaneDriver extends AbstractNodeDriver {
 
         final Bounds layoutBounds = borderPane.getLayoutBounds();
         final Bounds centerBounds = BorderPaneTring.computeCenterBounds(borderPane);
-        final Bounds topBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.TOP);
-        final Bounds bottomBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.BOTTOM);
-        final Bounds leftBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.LEFT);
-        final Bounds rightBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, Accessory.RIGHT);
+        final Bounds topBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.TOP);
+        final Bounds bottomBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.BOTTOM);
+        final Bounds leftBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.LEFT);
+        final Bounds rightBounds = BorderPaneTring.computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.RIGHT);
 
         final Accessory targetAccessory;
         if (centerBounds.contains(hitX, hitY)) {
-            targetAccessory = Accessory.CENTER;
+            targetAccessory = mask.getCenterAccessory();
         } else if (topBounds.contains(hitX, hitY)) {
-            targetAccessory = Accessory.TOP;
+            targetAccessory = mask.getTopAccessory();
         } else if (bottomBounds.contains(hitX, hitY)) {
-            targetAccessory = Accessory.BOTTOM;
+            targetAccessory = mask.getBottomAccessory();
         } else if (leftBounds.contains(hitX, hitY)) {
-            targetAccessory = Accessory.LEFT;
+            targetAccessory = mask.getLeftAccessory();
         } else if (rightBounds.contains(hitX, hitY)) {
-            targetAccessory = Accessory.RIGHT;
+            targetAccessory = mask.getRightAccessory();
         } else {
-            targetAccessory = Accessory.CENTER;
+            targetAccessory = mask.getCenterAccessory();
         }
 
         return new AccessoryDropTarget(fxomInstance, targetAccessory);

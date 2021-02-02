@@ -32,9 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.Driver;
@@ -238,13 +236,13 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
                     candidates.add(m.getSubComponentAtIndex(i));
                 }
             } else {
-                final List<Accessory> accessories = Arrays.asList(
-                        Accessory.CONTENT,
-                        Accessory.CENTER,
-                        Accessory.BOTTOM, Accessory.TOP,
-                        Accessory.LEFT, Accessory.RIGHT,
-                        Accessory.XAXIS, Accessory.YAXIS);
-                for (Accessory accessory : accessories) {
+//                final List<Accessory> accessories = Arrays.asList(
+//                        Accessory.CONTENT,
+//                        Accessory.CENTER,
+//                        Accessory.BOTTOM, Accessory.TOP,
+//                        Accessory.LEFT, Accessory.RIGHT,
+//                        Accessory.XAXIS, Accessory.YAXIS);
+                for (Accessory accessory : m.getAccessories()) {
                     if (m.isAcceptingAccessory(accessory)) {
                         final FXOMObject fxomObject = m.getAccessory(accessory);
                         if (fxomObject != null) {

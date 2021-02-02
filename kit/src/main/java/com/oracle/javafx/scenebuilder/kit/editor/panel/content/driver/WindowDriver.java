@@ -80,12 +80,12 @@ public class WindowDriver extends AbstractDriver {
     public AbstractPring<?> makePring(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
         DesignHierarchyMask windowDesignHierarchyMask = new DesignHierarchyMask(fxomObject);
-        FXOMObject scene = windowDesignHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.SCENE);
+        FXOMObject scene = windowDesignHierarchyMask.getAccessory(windowDesignHierarchyMask.getMainAccessory());
         assert scene != null : "makePring should have only been called if the Window has a scene";
         assert scene.getSceneGraphObject() instanceof Scene;
         assert scene instanceof FXOMInstance;
         DesignHierarchyMask sceneDesignHierarchyMask = new DesignHierarchyMask(scene);
-        FXOMObject root = sceneDesignHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+        FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         assert root instanceof FXOMInstance;
@@ -111,7 +111,7 @@ public class WindowDriver extends AbstractDriver {
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
-        return new AccessoryDropTarget((FXOMInstance) fxomObject, DesignHierarchyMask.Accessory.SCENE);
+        return new AccessoryDropTarget((FXOMInstance) fxomObject);
     }
 
     @Override
@@ -123,14 +123,14 @@ public class WindowDriver extends AbstractDriver {
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
         DesignHierarchyMask windowDesignHierarchyMask = new DesignHierarchyMask(fxomObject);
-        FXOMObject scene = windowDesignHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.SCENE);
+        FXOMObject scene = windowDesignHierarchyMask.getAccessory(windowDesignHierarchyMask.getMainAccessory());
         if (scene == null) {
             return false;
         }
         assert scene.getSceneGraphObject() instanceof Scene;
         assert scene instanceof FXOMInstance;
         DesignHierarchyMask sceneDesignHierarchyMask = new DesignHierarchyMask(scene);
-        FXOMObject root = sceneDesignHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+        FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         Node rootNode = (Node) root.getSceneGraphObject();

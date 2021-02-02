@@ -51,7 +51,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
@@ -132,7 +132,7 @@ public class MoveRowJob extends BatchSelectionJob {
             return result;
         }
 
-        final DesignHierarchyMask mask = new DesignHierarchyMask(targetGridPane);
+        final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(targetGridPane);
         for (int targetIndex : targetIndexes) {
 
             final int positionIndex;

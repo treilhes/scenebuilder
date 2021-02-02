@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener.Change;
+import javafx.scene.Node;
 import lombok.Getter;
 
 /**
@@ -61,6 +63,9 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     
     /** The component properties. */
     private final ObservableSet<PropertyMetadata> properties = FXCollections.observableSet(new HashSet<>());
+    
+    /** The shadowed properties subset. */
+    private final Set<PropertyMetadata> shadowedProperties = new HashSet<>();
     
     /** The component properties values subset. */
     private final Set<ValuePropertyMetadata> values = new HashSet<>();
@@ -75,11 +80,20 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     private final Map<String, Qualifier> qualifiers = new HashMap<>();
     
     /** The free child positioning flag. default false */
-    private final boolean freeChildPositioning;
+    private boolean freeChildPositioning;
     
     /** The inherited parent metadata. */
     private final ComponentClassMetadata<?> parentMetadata;
 
+    /** true if the component deserves a resizing while used as top element of the layout. default: true */
+    private boolean resizeNeededWhenTopElement = true;
+    
+    /** if set operate a custom mutation on the original string */
+    private LabelMutation labelMutation = null;
+    
+    /** if set operate a custom mutation on the original string */
+    private final Map<ComponentPropertyMetadata, ChildLabelMutation> childLabelMutations = new HashMap<>();
+    
     /**
      * Instantiates a new component class metadata.
      *
@@ -139,6 +153,15 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     }
     
     /**
+     * Gets the component's shadowed properties (hidden).
+     *
+     * @return the properties
+     */
+    public Set<PropertyMetadata> getShadowedProperties() {
+        return shadowedProperties;
+    }
+    
+    /**
      * Gets the component's properties values subset.
      *
      * @return the values subset properties
@@ -158,7 +181,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
 
     /**
      * Gets the component's properties sub components subset for all the inheritance chain.
-     *
+     * which aren't shadowed
      * @return all the components subset properties
      */
     public Set<ComponentPropertyMetadata> getAllSubComponentProperties() {
@@ -166,68 +189,36 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         ComponentClassMetadata<?> current = this;
         
         while (current != null) {
-            result.addAll(current.getSubComponentProperties());
+            current.getSubComponentProperties().stream()
+                .filter(p -> !shadowedProperties.contains(p))
+                .forEach(p -> result.add(p));
             current = current.getParentMetadata();
         }
         
         return Collections.unmodifiableSet(result);
     }
+    
     /**
-     * Gets the sub component property.
-     * Components with more than one sub component properties are ignored 
-     * and those properties are treated as accessories
-     *
-     * @return the sub component property or null if none or more than one
+     * Gets the first main component's property for all the inheritance chain.
+     * which isn't shadowed
+     * @return all the components subset properties
      */
-    //TODO find a way to handle multiple sub component properties without using special cases "if"
-    //TODO enable handling future "multiple sub component properties" in a generic way
-    @Deprecated
-    public PropertyName getSubComponentProperty() {
-        //return getSubComponentPropertyV2();
-        PropertyName result = null;
-        Class<?> componentClass = getKlass();
+    public ComponentPropertyMetadata getMainComponentProperty() {
+        ComponentClassMetadata<?> current = this;
         
-        if (componentClass == javafx.scene.layout.BorderPane.class) {
-            // We consider that BorderPane has no subcomponents.
-            // left, right, bottom and top components are treated as "accessories".
-            result = null;
-        } else if (componentClass == javafx.scene.control.DialogPane.class) {
-            // We consider that DialogPane has no subcomponents.
-            // content, expanded content, header and graphic components are treated as "accessories".
-            result = null;
-        } else {
-            while ((result == null) && (componentClass != null)) {
-                result = getSubComponentProperty(componentClass);
-                componentClass = componentClass.getSuperclass();
+        while (current != null) {
+            Optional<ComponentPropertyMetadata> optional = current.getSubComponentProperties().stream()
+                .filter(p -> p.isMain())
+                .filter(p -> !shadowedProperties.contains(p))
+                .findFirst();
+            if (optional.isPresent()) {
+                return optional.get();
             }
+            current = current.getParentMetadata();
         }
-
-        return result;
+        return null;
     }
     
-    public PropertyName getSubComponentPropertyV2() {
-        PropertyName result = null;
-        ComponentClassMetadata<?> componentClass = this;
-        
-        if (getKlass() == javafx.scene.layout.BorderPane.class) {
-            // We consider that BorderPane has no subcomponents.
-            // left, right, bottom and top components are treated as "accessories".
-            result = null;
-        } else if (getKlass() == javafx.scene.control.DialogPane.class) {
-            // We consider that DialogPane has no subcomponents.
-            // content, expanded content, header and graphic components are treated as "accessories".
-            result = null;
-        } else {
-            while ((result == null) && (componentClass != null)) {
-                result = componentClass.getSubComponentProperties().size() == 1 ?
-                            componentClass.getSubComponentProperties().stream().findFirst().get().getName():
-                            null;
-                componentClass = componentClass.getParentMetadata();
-            }
-        }
-
-        return result;
-    }
 
     /**
      * Checks if is child positioning is free or constrained.
@@ -473,4 +464,47 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public interface ApplicabilityCheck<T> {
         boolean isApplicable(T object);
     }
+    
+    @FunctionalInterface
+    public interface LabelMutation {
+        String mutate(String originalLabel, Object object);
+    }
+    
+    @FunctionalInterface
+    public interface ChildLabelMutation {
+        String mutate(String originalLabel, Object object, Node child);
+    }
+
+    public boolean isResizeNeededWhenTopElement() {
+        return resizeNeededWhenTopElement;
+    }
+
+    protected ComponentClassMetadata<T> setResizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
+        this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
+        return this;
+    }
+
+    public LabelMutation getLabelMutation() {
+        return labelMutation;
+    }
+
+    protected ComponentClassMetadata<T> setLabelMutation(LabelMutation labelMutation) {
+        this.labelMutation = labelMutation;
+        return this;
+    }
+
+    public ChildLabelMutation getChildLabelMutations(ComponentPropertyMetadata cmp) {
+        return childLabelMutations.get(cmp);
+    }
+    
+    protected ComponentClassMetadata<T> setChildLabelMutation(ComponentPropertyMetadata cmp, ChildLabelMutation labelMutation) {
+        assert getAllSubComponentProperties().contains(cmp);
+        childLabelMutations.put(cmp, labelMutation);
+        return this;
+    }
+
+    protected void setFreeChildPositioning(boolean freeChildPositioning) {
+        this.freeChildPositioning = freeChildPositioning;
+    }
+    
 }

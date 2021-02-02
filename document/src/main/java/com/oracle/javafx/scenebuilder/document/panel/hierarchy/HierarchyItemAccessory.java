@@ -33,9 +33,11 @@
 package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -45,12 +47,13 @@ import javafx.scene.image.Image;
 
 /**
  * Object representing the data contained within the hierarchy TreeItems for the
- * Labeled/MenuItem/Tab/TableColumnBase/Tooltip/TreeItem graphic property.
+ * BorderPane top/right/bottom/left/center properties.
  *
  * @treatAsPrivate
  */
-public class HierarchyItemGraphic extends HierarchyItemBase {
-    
+public class HierarchyItemAccessory extends HierarchyItemBase {
+
+    private final Accessory position;
     // The accessory owner. Used for the equals method.
     private final HierarchyMask owner;
 
@@ -59,14 +62,17 @@ public class HierarchyItemGraphic extends HierarchyItemBase {
      *
      * @param owner The accessory owner
      * @param fxomObject The FX object represented by this item
+     * @param position The position of the FX object within the BorderPane
      */
-    public HierarchyItemGraphic(
-            final HierarchyMask owner, 
-            final FXOMObject fxomObject) {
+    public HierarchyItemAccessory(
+            final HierarchyMask owner,
+            final FXOMObject fxomObject,
+            final Accessory position) {
         assert owner != null;
         this.owner = owner;
         // fxomObject can be null for place holder items
         this.mask = fxomObject == null ? null : new DesignHierarchyMask(fxomObject);
+        this.position = position;
     }
 
     @Override
@@ -77,14 +83,15 @@ public class HierarchyItemGraphic extends HierarchyItemBase {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final HierarchyItemGraphic item = (HierarchyItemGraphic) obj;
+        final HierarchyItemAccessory item = (HierarchyItemAccessory) obj;
         if (!isEmpty()) {
             // If the place holder is not empty, we compare the fxom object
             assert getFxomObject() != null;
             return getFxomObject().equals(item.getFxomObject());
         } else {
             // If the place holder is empty, we compare the position + owner
-            return getOwner().equals(item.getOwner());
+            return getOwner().equals(item.getOwner())
+                    && getPosition().equals(item.getPosition());
         }
     }
 
@@ -93,12 +100,13 @@ public class HierarchyItemGraphic extends HierarchyItemBase {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.mask);
         hash = 37 * hash + Objects.hashCode(this.owner);
+        hash = 37 * hash + Objects.hashCode(this.position);
         return hash;
     }
 
     @Override
     public boolean isPlaceHolder() {
-        return true;
+        return position != null;
     }
 
     @Override
@@ -115,14 +123,23 @@ public class HierarchyItemGraphic extends HierarchyItemBase {
         return owner;
     }
 
+    /**
+     * Returns the BorderPane position represented by this item.
+     *
+     * @return the BorderPane position represented by this item.
+     */
+    public Accessory getPosition() {
+        return this.position;
+    }
+
     @Override
     public Image getPlaceHolderImage() {
-        return ImageUtils.getNodeIcon("Graphic.png"); //NOI18N
+        return ImageUtils.getImage(position.getPropertyMetadata().getIconUrl());
     }
 
     @Override
     public String getPlaceHolderInfo() {
-        return (mask != null ? null : I18N.getString("hierarchy.placeholder.insert.graphic"));
+        return (mask != null ? null : I18N.getString("hierarchy.placeholder.insert") + position.getName().getName().toUpperCase(Locale.getDefault()));
     }
 
     @Override
@@ -137,6 +154,6 @@ public class HierarchyItemGraphic extends HierarchyItemBase {
 
     @Override
     public String getClassNameInfo() {
-        return (mask == null ? null : mask.getClassNameInfo());
+        return (mask == null ? null : mask.getClassNameInfo(position));
     }
 }

@@ -53,7 +53,7 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
         super(context, contentPanelController, fxomInstance, Scene.class);
 
         final DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(getFxomObject());
-        final FXOMObject root = designHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+        final FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root instanceof FXOMInstance;
         assert root.getSceneGraphObject() instanceof Node;

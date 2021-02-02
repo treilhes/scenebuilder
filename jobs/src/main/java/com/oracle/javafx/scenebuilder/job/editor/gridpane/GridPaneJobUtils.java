@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup.T
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 
 import javafx.scene.layout.GridPane;
 
@@ -191,7 +191,7 @@ public class GridPaneJobUtils {
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
             final FXOMObject gridPane = gsg.getParentObject();
             final Type type = gsg.getType();
-            final DesignHierarchyMask mask = new DesignHierarchyMask(gridPane);
+            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
 
             switch (type) {
                 case COLUMN:

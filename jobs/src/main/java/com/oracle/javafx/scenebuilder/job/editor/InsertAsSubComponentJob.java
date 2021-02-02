@@ -107,7 +107,7 @@ public class InsertAsSubComponentJob extends BatchSelectionJob {
             final FXOMDocument fxomDocument = targetObject.getFxomDocument();
             final FXOMInstance targetInstance = (FXOMInstance) targetObject;
             final DesignHierarchyMask mask = new DesignHierarchyMask(targetObject);
-            final PropertyName subComponentName = mask.getSubComponentPropertyName();
+            final PropertyName subComponentName = mask.getMainAccessory() == null ? null : mask.getMainAccessory().getName();
             assert subComponentName != null;
 
             /*

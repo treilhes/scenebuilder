@@ -103,10 +103,12 @@ public class PasteIntoJob extends BatchSelectionJob {
                     } // Build InsertAsAccessory jobs for single source selection
                     else if (newObjects.size() == 1) {
                         final FXOMObject newObject = newObjects.get(0);
-                        final Accessory[] accessories = {Accessory.CONTENT,
-                            Accessory.CONTEXT_MENU, Accessory.GRAPHIC,
-                            Accessory.TOOLTIP};
-                        for (Accessory a : accessories) {
+                        //TODO need to add ordering to accessories to keep the same order as below
+//                        final Accessory[] accessories = {Accessory.CONTENT,
+//                            Accessory.CONTEXT_MENU, Accessory.GRAPHIC,
+//                            Accessory.TOOLTIP};
+                        
+                        for (Accessory a : targetMask.getAccessories()) {
                             if (targetMask.isAcceptingAccessory(a, newObject)
                                     && targetMask.getAccessory(a) == null) {
                                 final Job subJob = new InsertAsAccessoryJob(getContext(),

@@ -32,7 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -261,25 +263,42 @@ public class DragGesture extends AbstractGesture {
             newHitParentMask = m;
         }
 
-        // dragSource is a single Tooltip ?
+        
         if (dropTarget == null) {
-            if (dragSource.isSingleTooltipOnly()) {
+            List<Accessory> validTargets = new ArrayList<>();
+            for (Accessory a:m.getAccessories()) {
+                if (dragSource.getDraggedObjects().stream().allMatch(d -> a.isAccepting(d.getSceneGraphObject().getClass()))) {
+                    validTargets.add(a);
+                }
+            }
+            
+            if (validTargets.size() == 1) {
                 assert hitObject instanceof FXOMInstance;
-                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.TOOLTIP);
+                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, validTargets.get(0));
                 newHitParent = hitObject;
                 newHitParentMask = m;
             }
         }
-
-        // dragSource is a single ContextMenu ?
-        if (dropTarget == null) {
-            if (dragSource.isSingleContextMenuOnly()) {
-                assert hitObject instanceof FXOMInstance;
-                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.CONTEXT_MENU);
-                newHitParent = hitObject;
-                newHitParentMask = m;
-            }
-        }
+//        
+//        // dragSource is a single Tooltip ?
+//        if (dropTarget == null) {
+//            if (dragSource.isSingleTooltipOnly()) {
+//                assert hitObject instanceof FXOMInstance;
+//                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.TOOLTIP);
+//                newHitParent = hitObject;
+//                newHitParentMask = m;
+//            }
+//        }
+//
+//        // dragSource is a single ContextMenu ?
+//        if (dropTarget == null) {
+//            if (dragSource.isSingleContextMenuOnly()) {
+//                assert hitObject instanceof FXOMInstance;
+//                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.CONTEXT_MENU);
+//                newHitParent = hitObject;
+//                newHitParentMask = m;
+//            }
+//        }
 
         // hitObject is BorderPane ?
         if (dropTarget == null) {
@@ -302,15 +321,16 @@ public class DragGesture extends AbstractGesture {
             }
         }
 
+        //TODO !!! Check why Accessory.CONTENT seems to be a special case
         // hitObject accepts Accessory.CONTENT
-        if (dropTarget == null) {
-            if (m.isAcceptingAccessory(Accessory.CONTENT)) {
-                assert hitObject instanceof FXOMInstance;
-                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.CONTENT);
-                newHitParent = hitObject;
-                newHitParentMask = m;
-            }
-        }
+//        if (dropTarget == null) {
+//            if (m.isAcceptingAccessory(Accessory.CONTENT)) {
+//                assert hitObject instanceof FXOMInstance;
+//                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.CONTENT);
+//                newHitParent = hitObject;
+//                newHitParentMask = m;
+//            }
+//        }
 
         // hitObject parent is a container ?
         if (dropTarget == null) {

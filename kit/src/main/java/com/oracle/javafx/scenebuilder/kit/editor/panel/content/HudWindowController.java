@@ -56,7 +56,7 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * The Hud Window: <br><img src="doc-files\hud-window.png" alt="hud window"><br>
+ * The Hud Window: <br><img src="doc-files/hud-window-controller.png" alt="hud window"><br>
  * Appears when resizing a node in the Editor using the resizing handle<br>
  * Shows dynamic sizing informations while dragging the resizing handle
  * @treatAsPrivate

@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGro
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 
 /**
  * Job invoked when removing columns.
@@ -117,8 +117,8 @@ public class DeleteColumnJob extends BatchSelectionJob {
 
         final List<Job> result = new ArrayList<>();
 
-        final DesignHierarchyMask targetGridPaneMask
-                = new DesignHierarchyMask(targetGridPane);
+        final GridPaneHierarchyMask targetGridPaneMask
+                = new GridPaneHierarchyMask(targetGridPane);
         final int columnsSize = targetGridPaneMask.getColumnsSize();
         final Iterator<Integer> iterator = targetIndexes.iterator();
 

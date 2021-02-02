@@ -37,6 +37,7 @@ import java.util.TimerTask;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
 
 import javafx.application.Platform;
@@ -84,15 +85,20 @@ public class HierarchyTaskScheduler {
                 // JavaFX data should only be accessed on the JavaFX thread. 
                 // => we must wrap the code into a Runnable object and call the Platform.runLater
                 Platform.runLater(() -> {
-                    final TreeItem<HierarchyItem> graphicTreeItem
-                            = panelController.makeTreeItemGraphic(owner, null);
-                    // Add Graphic at first position
-                    treeItem.getChildren().add(0, graphicTreeItem);
-                    treeItem.setExpanded(true);
-                    final Cell<?> cell = panelController.getCell(treeItem);
-                    assert cell != null;
-                    panelController.setBorder(cell, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                    isAddEmptyGraphicTaskScheduled = false;
+                    
+                    for (Accessory accessory:owner.getAccessories()) {
+                      //TODO may be deletable
+//                      final TreeItem<HierarchyItem> graphicTreeItem
+//                              = panelController.makeTreeItemGraphic(owner, null);
+                      final TreeItem<HierarchyItem> graphicTreeItem = panelController.makeTreeItemAccessory(owner, null, accessory);
+                      // Add Graphic at first position
+                      treeItem.getChildren().add(0, graphicTreeItem);
+                      treeItem.setExpanded(true);
+                      final Cell<?> cell = panelController.getCell(treeItem);
+                      assert cell != null;
+                      panelController.setBorder(cell, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
+                      isAddEmptyGraphicTaskScheduled = false;                        
+                    }
                 });
             }
         };

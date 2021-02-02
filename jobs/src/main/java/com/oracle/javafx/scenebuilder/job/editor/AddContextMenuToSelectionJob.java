@@ -44,6 +44,7 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -64,7 +65,7 @@ import javafx.scene.control.ContextMenu;
  *
  */
 public class AddContextMenuToSelectionJob extends BatchSelectionJob {
-
+    
     private Map<FXOMObject, FXOMObject> contextMenuMap; // Initialized lazily
     private final ApplicationContext context;
     private final FXOMDocument fxomDocument;
@@ -93,10 +94,18 @@ public class AddContextMenuToSelectionJob extends BatchSelectionJob {
         final List<Job> result = new LinkedList<>();
         for (Map.Entry<FXOMObject, FXOMObject> e : contextMenuMap.entrySet()) {
             final FXOMObject fxomObject = e.getKey();
+            DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
+            Accessory contextMenuAccessory = designHierarchyMask
+                    .getAccessoryForPropertyName(DesignHierarchyMask.AccessoryProperty.CONTEXT_MENU);
+            
+            if (contextMenuAccessory == null) {
+                continue;
+            }
+            
             final FXOMObject contextMenuObject = e.getValue();
             final Job insertJob = new InsertAsAccessoryJob(getContext(),
                     contextMenuObject, fxomObject,
-                    DesignHierarchyMask.Accessory.CONTEXT_MENU,
+                    contextMenuAccessory,
                     getEditorController()).extend();
             result.add(insertJob);
         }

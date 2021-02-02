@@ -67,6 +67,17 @@ public class AccessoryDropTarget extends AbstractDropTarget {
         this.targetContainer = targetContainer;
         this.accessory = accessory;
     }
+    
+    /**
+     * Instantiates a new accessory drop target.
+     * The target accessory will be discovered at runtime
+     * It will be the first accessory accepting the object in the following order:
+     * mainAccessory > accessories iteration
+     * @param targetContainer the target container
+     */
+    public AccessoryDropTarget(FXOMInstance targetContainer) {
+        this(targetContainer, null);
+    }
 
     public Accessory getAccessory() {
         return accessory;

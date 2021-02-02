@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
@@ -135,8 +135,8 @@ public class ReIndexRowContentJob extends Job {
                 true /* shouldRefreshSceneGraph */, null);
 
         assert targetIndexes.isEmpty() == false;
-        final DesignHierarchyMask targetGridPaneMask
-                = new DesignHierarchyMask(targetGridPane);
+        final GridPaneHierarchyMask targetGridPaneMask
+                = new GridPaneHierarchyMask(targetGridPane);
         final PropertyName propertyName = new PropertyName(
                 "rowIndex", javafx.scene.layout.GridPane.class); //NOI18N
 

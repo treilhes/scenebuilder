@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Double?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.ArcTo?>
+<?import javafx.scene.shape.Box?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.ClosePath?>
+<?import javafx.scene.shape.CubicCurve?>
+<?import javafx.scene.shape.Cylinder?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.LineTo?>
+<?import javafx.scene.shape.MeshView?>
+<?import javafx.scene.shape.MoveTo?>
+<?import javafx.scene.shape.Path?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Polyline?>
+<?import javafx.scene.shape.QuadCurve?>
+<?import javafx.scene.shape.QuadCurveTo?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.shape.Sphere?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="898.0" prefWidth="1212.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Arc fill="DODGERBLUE" layoutX="148.0" layoutY="134.0" length="270.0" radiusX="109.0" radiusY="100.0" startAngle="45.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Box depth="100" height="100" layoutX="318.0" layoutY="134.0" width="100" />
+      <Circle fill="DODGERBLUE" layoutX="529.0" layoutY="134.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <CubicCurve controlX1="-50.0" controlX2="50.0" controlY1="-100.0" controlY2="100.0" endX="150.0" fill="DODGERBLUE" layoutX="822.0" layoutY="134.0" startX="-150.0" stroke="BLACK" />
+      <Cylinder height="100" layoutX="1090.0" layoutY="127.0" radius="20" />
+      <Ellipse fill="DODGERBLUE" layoutX="140.0" layoutY="349.0" radiusX="101.0" radiusY="80.0" stroke="BLACK" strokeType="INSIDE" />
+      <Line endX="100.0" layoutX="405.0" layoutY="338.0" startX="-100.0" />
+      <MeshView layoutX="606.0" layoutY="321.0" />
+      <Path fill="DODGERBLUE" layoutX="803.0" layoutY="231.0" stroke="BLACK" strokeType="INSIDE">
+          <elements>
+              <MoveTo x="100.0" />
+              <LineTo x="150.0" y="50.0" />
+              <ArcTo radiusX="30.0" radiusY="25" x="200.0" y="100.0" />
+              <QuadCurveTo controlX="300.0" controlY="300.0" y="150.0" />
+              <ClosePath />
+          </elements>
+      </Path>
+      <Polygon fill="DODGERBLUE" layoutX="124.0" layoutY="545.0" stroke="BLACK" strokeType="INSIDE">
+        <points>
+          <Double fx:value="-50.0" />
+          <Double fx:value="40.0" />
+          <Double fx:value="50.0" />
+          <Double fx:value="40.0" />
+          <Double fx:value="0.0" />
+          <Double fx:value="-60.0" />
+        </points>
+      </Polygon>
+      <Polyline fill="CHARTREUSE" layoutX="325.0" layoutY="525.0" strokeType="INSIDE">
+        <points>
+          <Double fx:value="-50.0" />
+          <Double fx:value="-40.0" />
+          <Double fx:value="50.0" />
+          <Double fx:value="-40.0" />
+          <Double fx:value="0.0" />
+          <Double fx:value="60.0" />
+          <Double fx:value="-50.0" />
+          <Double fx:value="-40.0" />
+        </points>
+      </Polyline>
+      <QuadCurve controlX="-21.0" controlY="-110.0" endX="61.0" endY="-19.0" fill="DODGERBLUE" layoutX="522.0" layoutY="560.0" startX="-50.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="645.0" layoutY="445.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+      <Sphere layoutX="973.0" layoutY="552.0" radius="50" />
+      <SVGPath content="M40,60 C42,48 44,30 25,32" layoutX="1085.0" layoutY="489.0" />
+      <Text layoutX="71.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="186.07464599609375">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Text>
+   </children>
+</Pane>

@@ -70,7 +70,8 @@ public class GluonComponentPropertyMetadataCatalog {
                     nodeMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         buttons_EXPANDEDPANEL_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.buttonsName,
                     buttonBaseMetadata,
@@ -100,24 +101,28 @@ public class GluonComponentPropertyMetadataCatalog {
                     expansionPanelMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         options_Option_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.optionsName,
                     optionMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         titleNodes_Node_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.titleNodesName,
                     nodeMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         toggles_ToggleButton_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.togglesName,
                     toggleButtonMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
     }
 }

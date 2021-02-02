@@ -65,7 +65,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
 
     private final FXOMObject newObject;
     private final FXOMObject targetObject;
-    private final Accessory accessory;
+    private Accessory accessory;
     private final FXOMDocument fxomDocument;
 
     public InsertAsAccessoryJob(ApplicationContext context, 
@@ -94,8 +94,26 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
         if (targetObject instanceof FXOMInstance) {
 
             final DesignHierarchyMask mask = new DesignHierarchyMask(targetObject);
-            if (mask.isAcceptingAccessory(accessory, newObject)
-                    && mask.getAccessory(accessory) == null) { // (1)
+            
+            if (accessory == null) {// check is main accessory is accepting this drop
+                if (mask.isAcceptingAccessory(mask.getMainAccessory(), newObject)
+                        //TODO mainaccessory may be a collection, this condition seems bad in this case
+                        && mask.getAccessory(mask.getMainAccessory()) == null) {
+                    accessory = mask.getMainAccessory();
+                }
+            }
+            
+            if (accessory == null) {// we will find the first accessory accepting this drop
+                for (Accessory a:mask.getAccessories()) {
+                    if (mask.isAcceptingAccessory(a, newObject)
+                            //TODO mainaccessory may be a collection, this condition seems bad in this case
+                            && mask.getAccessory(a) == null) {
+                        accessory = a;
+                    }
+                }
+            }
+            
+            if (accessory != null) { // (1)
 
                 final FXOMInstance targetInstance = (FXOMInstance) targetObject;
                 final PropertyName accessoryName = mask.getPropertyNameForAccessory(accessory);

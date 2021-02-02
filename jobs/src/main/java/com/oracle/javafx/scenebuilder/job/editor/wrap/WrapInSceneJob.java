@@ -92,9 +92,9 @@ public class WrapInSceneJob extends AbstractWrapInJob {
 
         final DesignHierarchyMask newContainerMask
                 = new DesignHierarchyMask(newContainer);
-        assert newContainerMask.isAcceptingAccessory(DesignHierarchyMask.Accessory.ROOT);
+        assert newContainerMask.isAcceptingAccessory(newContainerMask.getMainAccessory());
 
-        final FXOMObject dummyPane = newContainerMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+        final FXOMObject dummyPane = newContainerMask.getAccessory(newContainerMask.getMainAccessory());
         assert dummyPane != null;
 
         // Update children before adding them to the new container

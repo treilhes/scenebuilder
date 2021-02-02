@@ -400,13 +400,6 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             newWindow.updateWithDefaultContent();
             newWindow.openWindow();
 
-            //TODO allow a more easy usage of scenic
-            // Show ScenicView Tool when the JVM is started with option -Dscenic.
-            // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
-            if (System.getProperty("scenic") != null) { //NOI18N
-                Platform.runLater(new ScenicViewStarter(newWindow.getScene()));
-            }
-
             WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
 
             // Unless we're on a Mac we're starting SB directly (fresh start)
@@ -418,6 +411,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             handleOpenFilesAction(files);
         }
 
+      //TODO allow a more easy usage of scenic
+        // Show ScenicView Tool when the JVM is started with option -Dscenic.
+        // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
+        if (System.getProperty("scenic") != null) { //NOI18N
+            Platform.runLater(new ScenicViewStarter(context.getBean(Document.class).getScene()));
+        }
     }
 
     

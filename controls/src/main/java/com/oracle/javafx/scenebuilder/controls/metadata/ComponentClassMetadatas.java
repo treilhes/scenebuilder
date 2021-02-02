@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
 
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 
 //@Component
 public class ComponentClassMetadatas {
@@ -152,6 +153,7 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.BorderPane_alignmentPropertyMetadata);
             getProperties().add(valueCatalog.BorderPane_marginPropertyMetadata);
             getProperties().add(valueCatalog.FlowPane_marginPropertyMetadata);
+            //TODO move thos definitions in GridPaneMetadata, do the same for other detached properties
             getProperties().add(valueCatalog.GridPane_columnIndexPropertyMetadata);
             getProperties().add(valueCatalog.GridPane_columnSpanPropertyMetadata);
             getProperties().add(valueCatalog.GridPane_halignmentPropertyMetadata);
@@ -215,6 +217,8 @@ public class ComponentClassMetadatas {
         protected PaneMetadata(@Autowired RegionMetadata parent,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.layout.Pane.class, parent);
+            setFreeChildPositioning(true);
+            
             getProperties().add(componentCatalog.children_empty_PropertyMetadata);
 
             getQualifiers().put(Qualifier.DEFAULT,
@@ -610,8 +614,11 @@ public class ComponentClassMetadatas {
 
     @Component
     public static class WindowMetadata extends ComponentClassMetadata<javafx.stage.Window> {
-        protected WindowMetadata(@Autowired ValuePropertyMetadataCatalog valueCatalog) {
+        protected WindowMetadata(
+                @Autowired ValuePropertyMetadataCatalog valueCatalog,
+                @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.stage.Window.class, null);
+            getProperties().add(componentCatalog.scene_stage_PropertyMetadata);
             getProperties().add(valueCatalog.height_Double_COMPUTED_PropertyMetadata);
             getProperties().add(valueCatalog.onCloseRequestPropertyMetadata);
             getProperties().add(valueCatalog.onHiddenPropertyMetadata);
@@ -661,6 +668,8 @@ public class ComponentClassMetadatas {
         protected GroupMetadata(@Autowired ParentMetadata parent, @Autowired ValuePropertyMetadataCatalog valueCatalog,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.Group.class, parent);
+            setFreeChildPositioning(true);
+            
             getProperties().add(valueCatalog.autoSizeChildrenPropertyMetadata);
             getProperties().add(componentCatalog.children_empty_PropertyMetadata);
             getProperties().add(valueCatalog.pickOnBounds_false_PropertyMetadata);
@@ -1228,6 +1237,8 @@ public class ComponentClassMetadatas {
                 @Autowired ValuePropertyMetadataCatalog valueCatalog,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.control.MenuBar.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(valueCatalog.accessibleRole_MENU_BAR_PropertyMetadata);
             getProperties().add(componentCatalog.menusPropertyMetadata);
             getProperties().add(valueCatalog.styleClass_c18_PropertyMetadata);
@@ -1245,6 +1256,8 @@ public class ComponentClassMetadatas {
                 @Autowired ValuePropertyMetadataCatalog valueCatalog,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.control.MenuButton.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(valueCatalog.accessibleRole_MENU_BUTTON_PropertyMetadata);
             getProperties().add(valueCatalog.focusTraversable_true_PropertyMetadata);
             getProperties().add(componentCatalog.items_MenuItem_PropertyMetadata);
@@ -1603,7 +1616,8 @@ public class ComponentClassMetadatas {
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.stage.Stage.class, parent);
             getProperties().add(valueCatalog.alwaysOnTopPropertyMetadata);
-            getProperties().add(componentCatalog.scene_stage_PropertyMetadata);
+//not needed scene is part of window
+//            getProperties().add(componentCatalog.scene_stage_PropertyMetadata);
             getProperties().add(valueCatalog.fullScreenPropertyMetadata);
             getProperties().add(valueCatalog.fullScreenExitHintPropertyMetadata);
             getProperties().add(valueCatalog.iconifiedPropertyMetadata);
@@ -1785,6 +1799,8 @@ public class ComponentClassMetadatas {
                 @Autowired ValuePropertyMetadataCatalog valueCatalog,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.control.ToolBar.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(valueCatalog.accessibleRole_TOOL_BAR_PropertyMetadata);
             getProperties().add(componentCatalog.items_Node_PropertyMetadata);
             getProperties().add(valueCatalog.orientation_HORIZONTAL_PropertyMetadata);
@@ -1932,7 +1948,8 @@ public class ComponentClassMetadatas {
     public static class AnchorPaneMetadata extends ComponentClassMetadata<javafx.scene.layout.AnchorPane> {
         protected AnchorPaneMetadata(@Autowired PaneMetadata parent) {
             super(javafx.scene.layout.AnchorPane.class, parent);
-
+            setFreeChildPositioning(true);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(null, null, null, getClass().getResource("nodeicons/AnchorPane.png"),
                             getClass().getResource("nodeicons/AnchorPane@2x.png"), TAG_CONTAINERS));
@@ -2011,6 +2028,18 @@ public class ComponentClassMetadatas {
                     new Qualifier(getClass().getResource("fxml/GridPane.fxml"), null, null,
                             getClass().getResource("nodeicons/GridPane.png"),
                             getClass().getResource("nodeicons/GridPane@2x.png"), TAG_CONTAINERS));
+            
+            setLabelMutation((s, o) -> {
+                if (o instanceof GridPane) {
+                    return String.format("%s (%s x %s)", s, ((GridPane)o).getColumnCount(), ((GridPane)o).getRowCount());
+                } else {
+                    return s;
+                }
+            });
+            
+            setChildLabelMutation(componentCatalog.children_empty_PropertyMetadata, (s, o, c) -> {
+                return String.format("%s (%s, %s)", s, GridPane.getColumnIndex(c), GridPane.getRowIndex(c));
+            });
         }
     }
 

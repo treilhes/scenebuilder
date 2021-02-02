@@ -32,53 +32,26 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 public interface HierarchyMask {
-    @Deprecated
-    public enum Accessory {
-        // True accessories
-
-        PLACEHOLDER,
-        TOOLTIP,
-        CONTEXT_MENU,
-        CLIP,
-        GRAPHIC,
-        // Single-valued sub-components treated as accessories
-        // TODO(elp) : verify that it is complete
-        CONTENT,
-        ROOT,
-        SCENE,
-        TOP,
-        BOTTOM,
-        LEFT,
-        RIGHT,
-        CENTER,
-        XAXIS,
-        YAXIS,
-        TREE_COLUMN,
-        EXPANDABLE_CONTENT,
-        HEADER,
-        DP_CONTENT {
-                    @Override
-                    public String toString() {
-                        return "CONTENT"; // NOI18N
-                    }
-                },
-        DP_GRAPHIC {
-                    @Override
-                    public String toString() {
-                        return "GRAPHIC"; // NOI18N
-                    }
-                },
-        // ExpansionPanel
-        EXPANDED_CONTENT,
-        COLLAPSED_CONTENT,
-        // ExpandedPanel
-        EX_CONTENT {
-            @Override
-            public String toString() { return "CONTENT"; }
-        }
+    // TODO this must disapear when control project will contain owned jobs/drivers
+    public interface AccessoryProperty {
+        PropertyName ROOT = new PropertyName("root");
+        PropertyName CONTEXT_MENU = new PropertyName("contextMenu");
+        PropertyName TOOLTIP = new PropertyName("tooltip");
+    }
+    public interface Accessory {
+        PropertyName getName();
+        Class<?> getContentType();
+        boolean isCollection();
+        boolean isAccepting(Class<?> valueClass);
+        boolean isMain();
+        ComponentPropertyMetadata getPropertyMetadata();
     }
 
     public boolean isAcceptingAccessory(Accessory graphic);
@@ -87,7 +60,16 @@ public interface HierarchyMask {
 
     public boolean isAcceptingSubComponent();
 
+    public int getSubComponentCount(Accessory accessory);
+    
     public int getSubComponentCount();
 
+    public FXOMObject getSubComponentAtIndex(Accessory accessory, int i);
+    
     public FXOMObject getSubComponentAtIndex(int i);
+
+    public FXOMObject getFxomObject();
+
+    //new
+    public List<Accessory> getAccessories();
 }

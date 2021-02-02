@@ -36,7 +36,6 @@ import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.DropTarget;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AbstractDropTarget;
@@ -112,7 +111,7 @@ public class TabDriver extends AbstractDriver {
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
-        return new AccessoryDropTarget((FXOMInstance) fxomObject, Accessory.CONTENT);
+        return new AccessoryDropTarget((FXOMInstance) fxomObject);
     }
 
     @Override

@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.job.editor.DeleteObjectJob;
 
 /**
@@ -72,8 +72,8 @@ public class RemoveColumnContentJob extends BatchDocumentJob {
 
         assert targetGridPane instanceof FXOMInstance;
         assert targetIndexes.isEmpty() == false;
-        final DesignHierarchyMask targetGridPaneMask
-                = new DesignHierarchyMask(targetGridPane);
+        final GridPaneHierarchyMask targetGridPaneMask
+                = new GridPaneHierarchyMask(targetGridPane);
 
         for (int targetIndex : targetIndexes) {
             final List<FXOMObject> children

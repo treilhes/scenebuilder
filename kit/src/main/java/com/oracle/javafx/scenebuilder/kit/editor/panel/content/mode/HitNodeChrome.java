@@ -43,8 +43,11 @@ import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 
 /**
- *
- */
+*
+* Hit node chrome: <br><img src="doc-files/hit-node-chrome.png" alt="hit node chrome"><br>
+* Appears when picking mode is enabled
+* 
+*/
 public class HitNodeChrome extends AbstractDecoration<Object> {
 
     private Node hitNode;

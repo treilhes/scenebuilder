@@ -46,7 +46,6 @@ import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry.CSSParsingReport;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
@@ -325,17 +324,19 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
                         if (item.isPlaceHolder()) {
                             cell = HierarchyTreeCell.this;
-                        } else if (accessoryDropTarget.getAccessory() == Accessory.GRAPHIC) {
-                            // Check if an empty graphic TreeItem has been added
-                            final TreeItem<HierarchyItem> graphicTreeItem
-                                    = dndController.getEmptyGraphicTreeItemFor(treeItem);
-                            if (graphicTreeItem != null) {
-                                cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), graphicTreeItem);
-                            } else {
-                                final TreeItem<HierarchyItem> accessoryOwnerTreeItem1
-                                        = panelController.lookupTreeItem(dropTargetObject);
-                                cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), accessoryOwnerTreeItem1);
-                            }
+                            
+                            //TODO nothing to do like below
+//                        } else if (accessoryDropTarget.getAccessory() == Accessory.GRAPHIC) {
+//                            // Check if an empty graphic TreeItem has been added
+//                            final TreeItem<HierarchyItem> graphicTreeItem
+//                                    = dndController.getEmptyGraphicTreeItemFor(treeItem);
+//                            if (graphicTreeItem != null) {
+//                                cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), graphicTreeItem);
+//                            } else {
+//                                final TreeItem<HierarchyItem> accessoryOwnerTreeItem1
+//                                        = panelController.lookupTreeItem(dropTargetObject);
+//                                cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), accessoryOwnerTreeItem1);
+//                            }
                         } else {
                             final TreeItem<HierarchyItem> accessoryOwnerTreeItem2
                                     = panelController.lookupTreeItem(dropTargetObject);
@@ -833,7 +834,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         } else if (fxomNode instanceof FXOMObject) {
             final FXOMObject fxomObject = (FXOMObject) fxomNode;
             final DesignHierarchyMask mask = new DesignHierarchyMask(fxomObject);
-            result.append(mask.getClassNameInfo());
+            //TODO check if an accessory, maybe the main one must be passed here
+            result.append(mask.getClassNameInfo(null));
         }
 
         return result.toString();

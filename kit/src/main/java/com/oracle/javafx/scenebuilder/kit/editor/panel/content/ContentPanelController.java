@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Driver;
 import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.Handles;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -1243,12 +1244,10 @@ public class ContentPanelController extends AbstractFxmlPanelController
                     candidates.add(subComponent);
                 }
             }
-            for (DesignHierarchyMask.Accessory a : DesignHierarchyMask.Accessory.values()) {
-                if (m.isAcceptingAccessory(a)) {
-                    final FXOMObject accessoryObject = m.getAccessory(a);
-                    if ((accessoryObject != null) && accessoryObject.isNode()) {
-                        candidates.add(accessoryObject);
-                    }
+            for (Accessory a : m.getAccessories()) {
+                final FXOMObject accessoryObject = m.getAccessory(a);
+                if ((accessoryObject != null) && accessoryObject.isNode()) {
+                    candidates.add(accessoryObject);
                 }
             }
         }

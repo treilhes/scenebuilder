@@ -37,6 +37,7 @@ import java.util.List;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.metadata.util.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.BoundingBox;
@@ -50,6 +51,14 @@ import javafx.scene.layout.Region;
  *
  */
 public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
+    
+    public enum BorderPanePosition {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT,
+        CENTER
+    }
 
     private final Accessory targetAccessory;
     private final BorderPane borderPane = new BorderPane();
@@ -63,11 +72,14 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
     public BorderPaneTring(Content contentPanelController,
             FXOMInstance fxomInstance, DesignHierarchyMask.Accessory targetAccessory) {
         super(contentPanelController, fxomInstance, BorderPane.class);
-        assert (targetAccessory == Accessory.TOP)
-                || (targetAccessory == Accessory.BOTTOM)
-                || (targetAccessory == Accessory.LEFT)
-                || (targetAccessory == Accessory.RIGHT)
-                || (targetAccessory == Accessory.CENTER);
+        
+        final BorderPaneHierarchyMask m = new BorderPaneHierarchyMask(fxomInstance);
+        
+        assert (targetAccessory == m.getTopAccessory())
+                || (targetAccessory == m.getBottomAccessory())
+                || (targetAccessory == m.getLeftAccessory())
+                || (targetAccessory == m.getRightAccessory())
+                || (targetAccessory == m.getCenterAccessory());
 
         this.targetAccessory = targetAccessory;
 
@@ -82,11 +94,11 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         centerLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         centerLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
-        topLabel.setText(Accessory.TOP.toString());
-        bottomLabel.setText(Accessory.BOTTOM.toString());
-        leftLabel.setText(Accessory.LEFT.toString());
-        rightLabel.setText(Accessory.RIGHT.toString());
-        centerLabel.setText(Accessory.CENTER.toString());
+        topLabel.setText(m.getTopAccessory().getName().getName().toUpperCase());
+        bottomLabel.setText(m.getBottomAccessory().getName().getName().toUpperCase());
+        leftLabel.setText(m.getLeftAccessory().getName().getName().toUpperCase());
+        rightLabel.setText(m.getRightAccessory().getName().getName().toUpperCase());
+        centerLabel.setText(m.getCenterAccessory().getName().getName().toUpperCase());
 
         topLabel.getStyleClass().add(TARGET_RING_CLASS);
         topLabel.getStyleClass().add(BorderPane.class.getSimpleName());
@@ -99,12 +111,12 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         centerLabel.getStyleClass().add(TARGET_RING_CLASS);
         centerLabel.getStyleClass().add(BorderPane.class.getSimpleName());
 
-        final DesignHierarchyMask m = new DesignHierarchyMask(fxomInstance);
-        topLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.TOP) == null);
-        bottomLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.BOTTOM) == null);
-        leftLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.LEFT) == null);
-        rightLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.RIGHT) == null);
-        centerLabel.setVisible(m.getAccessory(DesignHierarchyMask.Accessory.CENTER) == null);
+        
+        topLabel.setVisible(m.getAccessory(m.getTopAccessory()) == null);
+        bottomLabel.setVisible(m.getAccessory(m.getBottomAccessory()) == null);
+        leftLabel.setVisible(m.getAccessory(m.getLeftAccessory()) == null);
+        rightLabel.setVisible(m.getAccessory(m.getRightAccessory()) == null);
+        centerLabel.setVisible(m.getAccessory(m.getCenterAccessory()) == null);
 
         borderPane.setTop(topLabel);
         borderPane.setBottom(bottomLabel);
@@ -138,7 +150,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
 
 
-    public static Bounds computeAreaBounds(Bounds lb, Bounds cb, Accessory area) {
+    public static Bounds computeAreaBounds(Bounds lb, Bounds cb, BorderPanePosition area) {
         assert lb != null;
         assert cb != null;
 
@@ -226,33 +238,33 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         final Bounds centerBounds = computeCenterBounds(getSceneGraphObject());
         centerLabel.setPrefSize(centerBounds.getWidth(), centerBounds.getHeight());
 
-        final Bounds topBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.TOP);
+        final Bounds topBounds = computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.TOP);
         topLabel.setPrefSize(topBounds.getWidth(), topBounds.getHeight());
 
-        final Bounds bottomBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.BOTTOM);
+        final Bounds bottomBounds = computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.BOTTOM);
         bottomLabel.setPrefSize(bottomBounds.getWidth(), bottomBounds.getHeight());
 
-        final Bounds leftBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.LEFT);
+        final Bounds leftBounds = computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.LEFT);
         leftLabel.setPrefSize(leftBounds.getWidth(), leftBounds.getHeight());
 
-        final Bounds rightBounds = computeAreaBounds(layoutBounds, centerBounds, Accessory.RIGHT);
+        final Bounds rightBounds = computeAreaBounds(layoutBounds, centerBounds, BorderPanePosition.RIGHT);
         rightLabel.setPrefSize(rightBounds.getWidth(), rightBounds.getHeight());
 
         final Label targetLabel;
-        switch(targetAccessory) {
-            case TOP:
+        switch(targetAccessory.getName().getName()) {
+            case "top":
                 targetLabel = topLabel;
                 break;
-            case BOTTOM:
+            case "bottom":
                 targetLabel = bottomLabel;
                 break;
-            case LEFT:
+            case "left":
                 targetLabel = leftLabel;
                 break;
-            case RIGHT:
+            case "right":
                 targetLabel = rightLabel;
                 break;
-            case CENTER:
+            case "center":
                 targetLabel = centerLabel;
                 break;
             default:

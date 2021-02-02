@@ -51,7 +51,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 /**
@@ -119,7 +119,7 @@ public class ModifySelectionJob extends BatchDocumentJob {
 
     private void handleGridSelectionGroup(AbstractSelectionGroup group, Set<FXOMInstance> candidates) {
         final GridSelectionGroup gsg = (GridSelectionGroup) group;
-        final DesignHierarchyMask mask = new DesignHierarchyMask(gsg.getAncestor());
+        final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gsg.getAncestor());
         for (int index : gsg.getIndexes()) {
             FXOMObject constraints = null;
             switch (gsg.getType()) {

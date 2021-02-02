@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.wrap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
@@ -50,8 +51,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.DialogPane;
-import javafx.scene.layout.BorderPane;
 
 /**
  * Utilities to build wrap jobs.
@@ -67,103 +66,28 @@ public class WrapJobUtils {
      * @param children
      * @return
      */
+    //TODO heavy change here, to check!!
     static PropertyName getContainerPropertyName(
-            final FXOMInstance container, final List<FXOMObject> children) {
+        final FXOMInstance container, final List<FXOMObject> children) {
         final DesignHierarchyMask mask = new DesignHierarchyMask(container);
-        final PropertyName result;
-
-        if (container.getSceneGraphObject() instanceof BorderPane) {
-            // wrap/unwrap the child of a BorderPane
-            assert mask.isAcceptingAccessory(Accessory.TOP);
-            assert mask.isAcceptingAccessory(Accessory.LEFT);
-            assert mask.isAcceptingAccessory(Accessory.CENTER);
-            assert mask.isAcceptingAccessory(Accessory.RIGHT);
-            assert mask.isAcceptingAccessory(Accessory.BOTTOM);
-            assert children != null && children.size() == 1; // wrap job is executable
+        
+        List<Accessory> allAccessories = new ArrayList<>();
+        if (mask.getMainAccessory() != null) {
+            allAccessories.add(mask.getMainAccessory());
+        }
+        allAccessories.addAll(mask.getAccessories());
+        
+        for (Accessory accessory:allAccessories) {
+            if (accessory.isCollection()) {
+                assert children != null && children.size() == 1; // wrap job is executable
+            } 
             final FXOMObject child = children.iterator().next();
-
-            final FXOMObject top = mask.getAccessory(Accessory.TOP);
-            final FXOMObject left = mask.getAccessory(Accessory.LEFT);
-            final FXOMObject center = mask.getAccessory(Accessory.CENTER);
-            final FXOMObject right = mask.getAccessory(Accessory.RIGHT);
-            final FXOMObject bottom = mask.getAccessory(Accessory.BOTTOM);
-            // Return same accessory as the child container one
-            if (child.equals(top)) {
-                result = mask.getPropertyNameForAccessory(Accessory.TOP);
-            } else if (child.equals(bottom)) {
-                result = mask.getPropertyNameForAccessory(Accessory.BOTTOM);
-            } else if (child.equals(center)) {
-                result = mask.getPropertyNameForAccessory(Accessory.CENTER);
-            } else if (child.equals(left)) {
-                result = mask.getPropertyNameForAccessory(Accessory.LEFT);
-            } else if (child.equals(right)) {
-                result = mask.getPropertyNameForAccessory(Accessory.RIGHT);
-            } else {
-                assert false;
-                result = null;
-            }
-        } else if (container.getSceneGraphObject() instanceof DialogPane) {
-            // wrap/unwrap the child of a DialodPane
-            assert mask.isAcceptingAccessory(Accessory.DP_CONTENT);
-            assert mask.isAcceptingAccessory(Accessory.DP_GRAPHIC);
-            assert mask.isAcceptingAccessory(Accessory.EXPANDABLE_CONTENT);
-            assert mask.isAcceptingAccessory(Accessory.HEADER);
-            assert children != null && children.size() == 1; // wrap job is executable
-            final FXOMObject child = children.iterator().next();
-
-            final FXOMObject content = mask.getAccessory(Accessory.DP_CONTENT);
-            final FXOMObject graphic = mask.getAccessory(Accessory.DP_GRAPHIC);
-            final FXOMObject expandableContent = mask.getAccessory(Accessory.EXPANDABLE_CONTENT);
-            final FXOMObject header = mask.getAccessory(Accessory.HEADER);
-            // Return same accessory as the child container one
-            if (child.equals(content)) {
-                result = mask.getPropertyNameForAccessory(Accessory.DP_CONTENT);
-            } else if (child.equals(graphic)) {
-                result = mask.getPropertyNameForAccessory(Accessory.DP_GRAPHIC);
-            } else if (child.equals(expandableContent)) {
-                result = mask.getPropertyNameForAccessory(Accessory.EXPANDABLE_CONTENT);
-            } else if (child.equals(header)) {
-                result = mask.getPropertyNameForAccessory(Accessory.HEADER);
-            } else {
-                assert false;
-                result = null;
-            }
-        } else if (mask.isAcceptingAccessory(Accessory.SCENE)) {
-            result = mask.getPropertyNameForAccessory(Accessory.SCENE);
-        } else if (mask.isAcceptingAccessory(Accessory.ROOT)) {
-            result = mask.getPropertyNameForAccessory(Accessory.ROOT);
-        } else if (mask.isAcceptingSubComponent()) {
-            result = mask.getSubComponentPropertyName();
-        } else {
-            assert mask.isAcceptingAccessory(Accessory.CONTENT)
-                    || mask.isAcceptingAccessory(Accessory.GRAPHIC);
-            assert children != null && children.size() == 1; // wrap job is executable
-            final FXOMObject child = children.iterator().next();
-
-            if (mask.isAcceptingAccessory(Accessory.GRAPHIC) == false) {
-                // Containers accepting CONTENT only
-                assert mask.isAcceptingAccessory(Accessory.CONTENT);
-                result = mask.getPropertyNameForAccessory(Accessory.CONTENT);
-            } else if (mask.isAcceptingAccessory(Accessory.CONTENT) == false) {
-                // Containers accepting GRAPHIC only
-                assert mask.isAcceptingAccessory(Accessory.GRAPHIC);
-                result = mask.getPropertyNameForAccessory(Accessory.GRAPHIC);
-            } else {
-                // Containers accepting both CONTENT and GRAPHIC
-                final FXOMObject content = mask.getAccessory(Accessory.CONTENT);
-                final FXOMObject graphic = mask.getAccessory(Accessory.GRAPHIC);
-                // Return same accessory as the child container one
-                if (child.equals(content)) {
-                    result = mask.getPropertyNameForAccessory(Accessory.CONTENT);
-                } else if (child.equals(graphic)) {
-                    result = mask.getPropertyNameForAccessory(Accessory.GRAPHIC);
-                } else {
-                    assert false;
-                    result = null;
-                }
+            final FXOMObject obj = mask.getAccessory(accessory);
+            if (child.equals(obj)) {
+                return mask.getPropertyNameForAccessory(accessory);
             }
         }
-        return result;
+        return null;
     }
 
     static Bounds getUnionOfBounds(final List<FXOMObject> fxomObjects) {

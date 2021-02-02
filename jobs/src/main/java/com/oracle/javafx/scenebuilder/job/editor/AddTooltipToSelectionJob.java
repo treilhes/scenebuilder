@@ -44,6 +44,7 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -64,7 +65,7 @@ import javafx.scene.control.Tooltip;
  *
  */
 public class AddTooltipToSelectionJob extends BatchSelectionJob {
-
+        
     private Map<FXOMObject, FXOMObject> tooltipMap; // Initialized lazily
     private final ApplicationContext context;
 
@@ -90,10 +91,17 @@ public class AddTooltipToSelectionJob extends BatchSelectionJob {
         final List<Job> result = new LinkedList<>();
         for (Map.Entry<FXOMObject, FXOMObject> e : tooltipMap.entrySet()) {
             final FXOMObject fxomObject = e.getKey();
+            DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
+            Accessory tooltipAccessory = designHierarchyMask
+                    .getAccessoryForPropertyName(DesignHierarchyMask.AccessoryProperty.TOOLTIP);
+            
+            if (tooltipAccessory == null) {
+                continue;
+            }
             final FXOMObject tooltipObject = e.getValue();
             final Job insertJob = new InsertAsAccessoryJob(getContext(),
                     tooltipObject, fxomObject,
-                    DesignHierarchyMask.Accessory.TOOLTIP,
+                    tooltipAccessory,
                     getEditorController()).extend();
             result.add(insertJob);
         }

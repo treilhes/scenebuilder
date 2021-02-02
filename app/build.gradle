@@ -30,6 +30,7 @@ dependencies {
 	implementation project(':update-manager')
 	implementation project(':certificate-manager')
 	//implementation project(':help-features')
+	
 }
 
 run {

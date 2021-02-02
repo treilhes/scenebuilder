@@ -38,7 +38,6 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
@@ -126,27 +125,33 @@ public class UnwrapJob extends BatchSelectionJob {
             // Check that the num and type of children can be added to the parent container
             final DesignHierarchyMask parentContainerMask
                     = new DesignHierarchyMask(parentContainer);
+            
             if (parentContainerMask.isAcceptingSubComponent()) {
-                return childrenCount >= 1;
+                if (parentContainerMask.getMainAccessory().isCollection()) {
+                    return childrenCount >= 1;
+                } else {
+                    final FXOMObject child = children.iterator().next();
+                    return parentContainerMask.isAcceptingAccessory(parentContainerMask.getMainAccessory(), child);
+                }
+                
             } else {
-                assert parentContainerMask.isAcceptingAccessory(Accessory.CONTENT)
-                        || parentContainerMask.isAcceptingAccessory(Accessory.GRAPHIC)
-                        || parentContainerMask.isAcceptingAccessory(Accessory.ROOT)
-                        || parentContainerMask.isAcceptingAccessory(Accessory.SCENE)
-                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
-                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof DialogPane;
+                // those cases are handled by sub component now
+                // TODO what about collection
+                // TODO whata about graphics
+//                assert parentContainerMask.isAcceptingAccessory(Accessory.CONTENT)
+//                        || parentContainerMask.isAcceptingAccessory(Accessory.GRAPHIC)
+//                        || parentContainerMask.isAcceptingAccessory(Accessory.ROOT)
+//                        || parentContainerMask.isAcceptingAccessory(Accessory.SCENE)
+//                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
+//                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof DialogPane;
+                assert parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
+                    || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof DialogPane;
                 if (childrenCount != 1) {
                     return false;
                 }
-
-                final FXOMObject child = children.iterator().next();
-                if (parentContainerMask.isAcceptingAccessory(Accessory.SCENE)) {
-                    return parentContainerMask.isAcceptingAccessory(Accessory.SCENE, child);
-                } else {
-                    return true;
-                }
             }
         }
+        return false;
     }
 
     @Override
@@ -369,9 +374,9 @@ public class UnwrapJob extends BatchSelectionJob {
                 if (tabs.size() >= 1) {
                     final FXOMObject tab = tabs.get(0);
                     final DesignHierarchyMask tabMask = new DesignHierarchyMask(tab);
-                    assert tabMask.isAcceptingAccessory(Accessory.CONTENT);
-                    if (tabMask.getAccessory(Accessory.CONTENT) != null) {
-                        result.add(tabMask.getAccessory(Accessory.CONTENT));
+                    assert tabMask.isAcceptingAccessory(tabMask.getMainAccessory());
+                    if (tabMask.getAccessory(tabMask.getMainAccessory()) != null) {
+                        result.add(tabMask.getAccessory(tabMask.getMainAccessory()));
                     }
                 }
             } else {
@@ -379,25 +384,9 @@ public class UnwrapJob extends BatchSelectionJob {
             }
         } else {
             // BorderPane => unwrap CENTER accessory
-            if (mask.isAcceptingAccessory(Accessory.CENTER)
-                    && mask.getAccessory(Accessory.CENTER) != null) {
-                result.add(mask.getAccessory(Accessory.CENTER));
-            } // DialogPane => unwrap DP_CONTENT accessory
-            else if (mask.isAcceptingAccessory(Accessory.DP_CONTENT)
-                    && mask.getAccessory(Accessory.DP_CONTENT) != null) {
-                result.add(mask.getAccessory(Accessory.DP_CONTENT));
-            } // ScrollPane => unwrap CONTENT accessory
-            else if (mask.isAcceptingAccessory(Accessory.CONTENT)
-                    && mask.getAccessory(Accessory.CONTENT) != null) {
-                result.add(mask.getAccessory(Accessory.CONTENT));
-            } // Scene => unwrap ROOT accessory
-            else if (mask.isAcceptingAccessory(Accessory.ROOT)
-                    && mask.getAccessory(Accessory.ROOT) != null) {
-                result.add(mask.getAccessory(Accessory.ROOT));
-            } // Window => unwrap SCENE accessory
-            else if (mask.isAcceptingAccessory(Accessory.SCENE)
-                    && mask.getAccessory(Accessory.SCENE) != null) {
-                result.add(mask.getAccessory(Accessory.SCENE));
+            if (mask.isAcceptingAccessory(mask.getMainAccessory())
+                    && mask.getAccessory(mask.getMainAccessory()) != null) {
+                result.add(mask.getAccessory(mask.getMainAccessory()));
             }
         }
         return result;

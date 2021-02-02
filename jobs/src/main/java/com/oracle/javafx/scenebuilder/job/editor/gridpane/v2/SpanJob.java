@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
@@ -84,7 +84,7 @@ public class SpanJob extends BatchDocumentJob {
             // Is that asset enclosed in a grid ?
             if (selectionGroup.getAncestor() != null
                     && selectionGroup.getAncestor().getSceneGraphObject() instanceof GridPane) {
-                DesignHierarchyMask gridDHM = new DesignHierarchyMask(selectionGroup.getAncestor());
+                GridPaneHierarchyMask gridDHM = new GridPaneHierarchyMask(selectionGroup.getAncestor());
                 int columnCount = gridDHM.getColumnsSize();
                 int rowCount = gridDHM.getRowsSize();
                 List<FXOMObject> items = ((ObjectSelectionGroup)selectionGroup).getSortedItems();

@@ -57,7 +57,6 @@ import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.Size;
@@ -80,8 +79,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardEncoder;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.AddContextMenuToSelectionJob;
@@ -1753,15 +1753,15 @@ public class EditorController implements Editor {
             // Otherwise, select all sub components of the common ancestor ??
             final FXOMObject ancestor = selection.getAncestor();
             assert ancestor != null; // Because of (1)
-            final DesignHierarchyMask mask = new DesignHierarchyMask(ancestor);
+            final BorderPaneHierarchyMask mask = new BorderPaneHierarchyMask(ancestor);
             final Set<FXOMObject> selectableObjects = new HashSet<>();
             // BorderPane special case : use accessories
             if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
-                final FXOMObject top = mask.getAccessory(Accessory.TOP);
-                final FXOMObject left = mask.getAccessory(Accessory.LEFT);
-                final FXOMObject center = mask.getAccessory(Accessory.CENTER);
-                final FXOMObject right = mask.getAccessory(Accessory.RIGHT);
-                final FXOMObject bottom = mask.getAccessory(Accessory.BOTTOM);
+                final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
+                final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
+                final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
+                final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
+                final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
                 for (FXOMObject accessoryObject : new FXOMObject[]{
                     top, left, center, right, bottom}) {
                     if (accessoryObject != null) {
@@ -1778,7 +1778,7 @@ public class EditorController implements Editor {
             final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
             final FXOMObject gridPane = gsg.getParentObject();
             assert gridPane instanceof FXOMInstance;
-            final DesignHierarchyMask gridPaneMask = new DesignHierarchyMask(gridPane);
+            final GridPaneHierarchyMask gridPaneMask = new GridPaneHierarchyMask(gridPane);
             int size = 0;
             switch (gsg.getType()) {
                 case ROW:
@@ -1823,14 +1823,14 @@ public class EditorController implements Editor {
                 // Cannot select all if all sub components are already selected
                 final FXOMObject ancestor = selection.getAncestor();
                 assert ancestor != null; // Because of (1)
-                final DesignHierarchyMask mask = new DesignHierarchyMask(ancestor);
+                final BorderPaneHierarchyMask mask = new BorderPaneHierarchyMask(ancestor);
                 // BorderPane special case : use accessories
                 if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
-                    final FXOMObject top = mask.getAccessory(Accessory.TOP);
-                    final FXOMObject left = mask.getAccessory(Accessory.LEFT);
-                    final FXOMObject center = mask.getAccessory(Accessory.CENTER);
-                    final FXOMObject right = mask.getAccessory(Accessory.RIGHT);
-                    final FXOMObject bottom = mask.getAccessory(Accessory.BOTTOM);
+                    final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
+                    final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
+                    final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
+                    final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
+                    final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
                     for (FXOMObject bpAccessoryObject : new FXOMObject[] {
                         top, left, center, right, bottom}) {
                         if (bpAccessoryObject != null
@@ -1901,7 +1901,7 @@ public class EditorController implements Editor {
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
             final FXOMObject gridPane = gsg.getParentObject();
-            final DesignHierarchyMask mask = new DesignHierarchyMask(gridPane);
+            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
             assert gridPane instanceof FXOMInstance;
             final Set<Integer> indexes = gsg.getIndexes();
             assert indexes.size() == 1; // Because of (1)
@@ -1952,7 +1952,7 @@ public class EditorController implements Editor {
                 return false;
             }
             final FXOMObject gridPane = gsg.getParentObject();
-            final DesignHierarchyMask mask = new DesignHierarchyMask(gridPane);
+            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
             int size = 0;
             switch (gsg.getType()) {
                 case ROW:

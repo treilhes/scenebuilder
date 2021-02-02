@@ -139,18 +139,19 @@ public class HierarchyDNDController implements HierarchyDND {
         // Cancel timer if any
         scheduler.cancelTimer();
 
-        // Remove empty tree item graphic if previously added by the scheduler
-        // when we exit the empty graphic TreeItem by the bottom
-        if (treeItem != null) {
-            final HierarchyItem item = treeItem.getValue();
-            assert item != null;
-            if (item instanceof HierarchyItemGraphic
-                    && item.isEmpty()
-                    && location == DroppingMouseLocation.BOTTOM) {
-                final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
-                parentTreeItem.getChildren().remove(treeItem);
-            }
-        }
+        //TODO nothing to remove anymore
+//        // Remove empty tree item graphic if previously added by the scheduler
+//        // when we exit the empty graphic TreeItem by the bottom
+//        if (treeItem != null) {
+//            final HierarchyItem item = treeItem.getValue();
+//            assert item != null;
+//            if (item instanceof HierarchyItemGraphic
+//                    && item.isEmpty()
+//                    && location == DroppingMouseLocation.BOTTOM) {
+//                final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
+//                parentTreeItem.getChildren().remove(treeItem);
+//            }
+//        }
     }
 
     /**
@@ -165,16 +166,17 @@ public class HierarchyDNDController implements HierarchyDND {
             final DragEvent event,
             final DroppingMouseLocation location) {
 
-        // Remove empty tree item graphic if previously added by the scheduler
-        // when we hover the empty graphic owner TreeItem on the top area
-        if (treeItem != null) {
-            final HierarchyItem item = treeItem.getValue();
-            assert item != null;
-            final TreeItem<HierarchyItem> graphicTreeItem = getEmptyGraphicTreeItemFor(treeItem);
-            if (graphicTreeItem != null && location == DroppingMouseLocation.TOP) {
-                treeItem.getChildren().remove(graphicTreeItem);
-            }
-        }
+        //nothing to remove anymore
+//        // Remove empty tree item graphic if previously added by the scheduler
+//        // when we hover the empty graphic owner TreeItem on the top area
+//        if (treeItem != null) {
+//            final HierarchyItem item = treeItem.getValue();
+//            assert item != null;
+//            final TreeItem<HierarchyItem> graphicTreeItem = getEmptyGraphicTreeItemFor(treeItem);
+//            if (graphicTreeItem != null && location == DroppingMouseLocation.TOP) {
+//                treeItem.getChildren().remove(graphicTreeItem);
+//            }
+//        }
 
         // First update drop target
         final Drag dragController
@@ -185,55 +187,56 @@ public class HierarchyDNDController implements HierarchyDND {
         // Then update transfer mode
         event.acceptTransferModes(dragController.getAcceptedTransferModes());
 
-        // Schedule adding empty graphic place holder job :
-        // The drop target must be a GRAPHIC AccessoryDropTarget
-        if (dragController.isDropAccepted()
-                && dropTarget instanceof AccessoryDropTarget
-                && ((AccessoryDropTarget) dropTarget).getAccessory() == Accessory.GRAPHIC) {
-            // Retrieve the GRAPHIC accessory owner
-            final TreeItem<HierarchyItem> graphicOwnerTreeItem;
-            if (treeItem != null) {
-                if (treeItem.getValue().isEmpty() == false) {
-                    graphicOwnerTreeItem = treeItem;
-                } else {
-                    // Empty graphic place holder
-                    // => the graphic owner is the parent
-                    graphicOwnerTreeItem = treeItem.getParent();
-                }
-            } else {
-                // TreeItem is null when dropping below the datas
-                // => the graphic owner is the root
-                graphicOwnerTreeItem = panelController.getRootItem();
-            }
-            assert graphicOwnerTreeItem != null;
-            assert graphicOwnerTreeItem.getValue().isEmpty() == false;
-            // Schedule adding empty graphic place holder if :
-            // - an empty graphic place holder has not yet been added
-            // - an empty graphic place holder has not yet been scheduled
-            if (getEmptyGraphicTreeItemFor(graphicOwnerTreeItem) == null
-                    && scheduler.isAddEmptyGraphicTaskScheduled() == false) {
-                scheduler.scheduleAddEmptyGraphicTask(graphicOwnerTreeItem);
-            }
-        }
+        //TODO nothing to add anymore
+//        // Schedule adding empty graphic place holder job :
+//        // The drop target must be a GRAPHIC AccessoryDropTarget
+//        if (dragController.isDropAccepted()
+//                && dropTarget instanceof AccessoryDropTarget
+//                && ((AccessoryDropTarget) dropTarget).getAccessory() == Accessory.GRAPHIC) {
+//            // Retrieve the GRAPHIC accessory owner
+//            final TreeItem<HierarchyItem> graphicOwnerTreeItem;
+//            if (treeItem != null) {
+//                if (treeItem.getValue().isEmpty() == false) {
+//                    graphicOwnerTreeItem = treeItem;
+//                } else {
+//                    // Empty graphic place holder
+//                    // => the graphic owner is the parent
+//                    graphicOwnerTreeItem = treeItem.getParent();
+//                }
+//            } else {
+//                // TreeItem is null when dropping below the datas
+//                // => the graphic owner is the root
+//                graphicOwnerTreeItem = panelController.getRootItem();
+//            }
+//            assert graphicOwnerTreeItem != null;
+//            assert graphicOwnerTreeItem.getValue().isEmpty() == false;
+//            // Schedule adding empty graphic place holder if :
+//            // - an empty graphic place holder has not yet been added
+//            // - an empty graphic place holder has not yet been scheduled
+//            if (getEmptyGraphicTreeItemFor(graphicOwnerTreeItem) == null
+//                    && scheduler.isAddEmptyGraphicTaskScheduled() == false) {
+//                scheduler.scheduleAddEmptyGraphicTask(graphicOwnerTreeItem);
+//            }
+//        }
     }
 
-    /**
-     * Returns the empty graphic TreeItem (if any) of the specified TreeItem,
-     * null otherwise.
-     *
-     * @param treeItem the TreeItem
-     * @return the empty graphic TreeItem
-     */
-    public TreeItem<HierarchyItem> getEmptyGraphicTreeItemFor(final TreeItem<HierarchyItem> treeItem) {
-        assert treeItem != null;
-        for (TreeItem<HierarchyItem> childTreeItem : treeItem.getChildren()) {
-            final HierarchyItem child = childTreeItem.getValue();
-            if (child instanceof HierarchyItemGraphic && child.isEmpty()) {
-                return childTreeItem;
-            }
-        }
-        return null;
-    }
+//    /**
+//     * Returns the empty graphic TreeItem (if any) of the specified TreeItem,
+//     * null otherwise.
+//     *
+//     * @param treeItem the TreeItem
+//     * @return the empty graphic TreeItem
+//     */
+//    public TreeItem<HierarchyItem> getEmptyGraphicTreeItemFor(final TreeItem<HierarchyItem> treeItem) {
+//        assert treeItem != null;
+//        for (TreeItem<HierarchyItem> childTreeItem : treeItem.getChildren()) {
+//            final HierarchyItem child = childTreeItem.getValue();
+//            if (child instanceof HierarchyItemGraphic && child.isEmpty()) {
+//                return childTreeItem;
+//            }
+//        }
+//        return null;
+//    }
 
     private DropTarget makeDropTarget(
             final TreeItem<HierarchyItem> treeItem,
@@ -273,9 +276,10 @@ public class HierarchyDNDController implements HierarchyDND {
             if (item.isPlaceHolder()) { // (1)
 
                 assert treeItem != rootTreeItem;
-                assert item instanceof HierarchyItemBorderPane
-                        || item instanceof HierarchyItemGraphic
-                        || item instanceof HierarchyItemDialogPane;
+                assert item instanceof HierarchyItemAccessory; 
+//                item instanceof HierarchyItemBorderPane
+//                        || item instanceof HierarchyItemGraphic
+//                        || item instanceof HierarchyItemDialogPane;
 
                 if (item.isEmpty()) {
                     // Set the drop target
@@ -283,16 +287,18 @@ public class HierarchyDNDController implements HierarchyDND {
                     assert parentTreeItem != null; // Because of (1)
                     dropTargetObject = parentTreeItem.getValue().getFxomObject();
                     // Set the accessory
-                    if (item instanceof HierarchyItemBorderPane) {
-                        accessory = ((HierarchyItemBorderPane) item).getPosition();
-                    } else if (item instanceof HierarchyItemDialogPane) {
-                        accessory = ((HierarchyItemDialogPane) item).getAccessory();
-                    } else if (item instanceof HierarchyItemExpansionPanel) {
-                        accessory = ((HierarchyItemExpansionPanel) item).getAccessory();
-                    } else if (item instanceof HierarchyItemExpandedPanel) {
-                        accessory = ((HierarchyItemExpandedPanel) item).getAccessory();
+                    if (item instanceof HierarchyItemAccessory) {
+                        accessory = ((HierarchyItemAccessory) item).getPosition();
+//                    } else if (item instanceof HierarchyItemBorderPane) {
+//                        accessory = ((HierarchyItemBorderPane) item).getPosition();
+//                    } else if (item instanceof HierarchyItemDialogPane) {
+//                        accessory = ((HierarchyItemDialogPane) item).getAccessory();
+//                    } else if (item instanceof HierarchyItemExpansionPanel) {
+//                        accessory = ((HierarchyItemExpansionPanel) item).getAccessory();
+//                    } else if (item instanceof HierarchyItemExpandedPanel) {
+//                        accessory = ((HierarchyItemExpandedPanel) item).getAccessory();
                     } else {
-                        accessory = Accessory.GRAPHIC;
+                        accessory = item.getMask().getAccessories().get(0);
                     }
                 } else {
                     // Set the drop target
@@ -437,23 +443,23 @@ public class HierarchyDNDController implements HierarchyDND {
                 else {
                     // Check if there is an accessory that can be accepted by the drop target.
                     // First we build the list of accessories that can be set by DND gesture.
-                    final Accessory[] accessories = {
-                        Accessory.TOP,
-                        Accessory.LEFT,
-                        Accessory.CENTER,
-                        Accessory.RIGHT,
-                        Accessory.BOTTOM,
-                        Accessory.CONTENT,
-                        Accessory.CONTEXT_MENU,
-                        Accessory.GRAPHIC,
-                        Accessory.TOOLTIP,
-                        Accessory.HEADER,
-                        Accessory.DP_GRAPHIC,
-                        Accessory.DP_CONTENT,
-                        Accessory.EXPANDABLE_CONTENT,
-                        Accessory.SCENE
-                    };
-                    for (Accessory a : accessories) {
+//                    final Accessory[] accessories = {
+//                        Accessory.TOP,
+//                        Accessory.LEFT,
+//                        Accessory.CENTER,
+//                        Accessory.RIGHT,
+//                        Accessory.BOTTOM,
+//                        Accessory.CONTENT,
+//                        Accessory.CONTEXT_MENU,
+//                        Accessory.GRAPHIC,
+//                        Accessory.TOOLTIP,
+//                        Accessory.HEADER,
+//                        Accessory.DP_GRAPHIC,
+//                        Accessory.DP_CONTENT,
+//                        Accessory.EXPANDABLE_CONTENT,
+//                        Accessory.SCENE
+//                    };
+                    for (Accessory a : dropTargetMask.getAccessories()) {
                         final AccessoryDropTarget dropTarget
                                 = new AccessoryDropTarget(dropTargetInstance, a);
                         // If the accessory drop target accepts the dragged objects,

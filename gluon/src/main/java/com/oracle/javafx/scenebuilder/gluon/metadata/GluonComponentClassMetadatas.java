@@ -55,6 +55,8 @@ public class GluonComponentClassMetadatas {
         protected ExpandedPanelMetadata(@Autowired RegionMetadata parent,
                 @Autowired GluonComponentPropertyMetadataCatalog componentCatalog) {
             super(com.gluonhq.charm.glisten.control.ExpansionPanel.ExpandedPanel.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(componentCatalog.content_EXPANDEDPANEL_PropertyMetadata);
             getProperties().add(componentCatalog.buttons_EXPANDEDPANEL_PropertyMetadata);
 
@@ -119,6 +121,8 @@ public class GluonComponentClassMetadatas {
                 @Autowired GluonValuePropertyMetadataCatalog valueCatalog,
                 @Autowired GluonComponentPropertyMetadataCatalog componentCatalog) {
             super(com.gluonhq.charm.glisten.control.BottomNavigation.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(valueCatalog.bottomNavigationTypePropertyMetadata);
             getProperties().add(componentCatalog.actionItems_Node_PropertyMetadata);
 
@@ -135,6 +139,8 @@ public class GluonComponentClassMetadatas {
         protected DropdownButtonMetadata(@Autowired ControlMetadata parent,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(com.gluonhq.charm.glisten.control.DropdownButton.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(componentCatalog.items_MenuItem_PropertyMetadata);
 
             getQualifiers().put(Qualifier.DEFAULT,
@@ -169,6 +175,8 @@ public class GluonComponentClassMetadatas {
                 @Autowired GluonValuePropertyMetadataCatalog valueCatalog,
                 @Autowired GluonComponentPropertyMetadataCatalog componentCatalog) {
             super(com.gluonhq.charm.glisten.control.ToggleButtonGroup.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(componentCatalog.toggles_ToggleButton_PropertyMetadata);
             getProperties().add(valueCatalog.selectionTypePropertyMetadata);
 
@@ -185,6 +193,8 @@ public class GluonComponentClassMetadatas {
         protected CollapsedPanelMetadata(@Autowired RegionMetadata parent,
                 @Autowired GluonComponentPropertyMetadataCatalog componentCatalog) {
             super(com.gluonhq.charm.glisten.control.ExpansionPanel.CollapsedPanel.class, parent);
+            setResizeNeededWhenTopElement(false);
+            
             getProperties().add(componentCatalog.titleNodes_Node_PropertyMetadata);
 
             getQualifiers().put(Qualifier.DEFAULT, new Qualifier(

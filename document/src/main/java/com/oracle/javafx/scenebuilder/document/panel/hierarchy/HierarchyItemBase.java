@@ -74,7 +74,7 @@ public class HierarchyItemBase implements HierarchyItem {
         assert fxomObject != null;
         this.mask = new DesignHierarchyMask(fxomObject);
     }
-
+    
     /**
      * Returns true if the specified object is a HierarchyItem and it defines
      * same non null FXOMObject.
@@ -130,6 +130,7 @@ public class HierarchyItemBase implements HierarchyItem {
      *
      * @return the information of the FX object represented by this item.
      */
+    @Override
     public String getDescription() {
         // Can be null for place holder items
         return mask == null ? null : mask.getDescription();
@@ -192,6 +193,7 @@ public class HierarchyItemBase implements HierarchyItem {
         return info;
     }
 
+    @Override
     public PropertyName getPropertyNameForDisplayInfo(final DisplayOption option) {
         assert mask != null;
         PropertyName propertyName = null;
@@ -208,6 +210,7 @@ public class HierarchyItemBase implements HierarchyItem {
         return propertyName;
     }
 
+    @Override
     public boolean isResourceKey(final DisplayOption option) {
         // Place holder items do not have display info
         if (mask == null) {
@@ -248,16 +251,19 @@ public class HierarchyItemBase implements HierarchyItem {
                 || (option == INFO && mask.hasDescription()));
     }
 
+    @Override
     public Image getPlaceHolderImage() {
         // No place holder
         return null;
     }
 
+    @Override
     public String getPlaceHolderInfo() {
         // No place holder
         return null;
     }
 
+    @Override
     public Image getClassNameIcon() {
         assert mask != null;
         return mask.getClassNameIcon();
@@ -268,8 +274,9 @@ public class HierarchyItemBase implements HierarchyItem {
         return mask.getClassNameIconURL();
     }
 
+    @Override
     public String getClassNameInfo() {
         assert mask != null;
-        return mask.getClassNameInfo();
+        return mask.getClassNameInfo(null);
     }
 }

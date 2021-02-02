@@ -55,6 +55,30 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
     /** Icon illustrating this placeholder. double sized */
     private final URL iconX2Url;
     
+    /** true if the component deserves a resizing while used as top element of the layout. default: false */
+    private boolean resizeNeededWhenTopElement = false;
+    
+    /** true if the component deserves a resizing while used as top element of the layout. default: false */
+    private boolean main = false;
+    
+    /**
+     * Instantiates a new component property metadata.
+     *
+     * @param name the property name
+     * @param classMetadata the owner component metadata
+     * @param collection true if it accepts a collection of components or only one
+     * @param iconUrl
+     * @param iconX2Url
+     * @param main true if it is the main placeholder
+     */
+    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url, boolean main) {
+        super(name, false);
+        this.classMetadata = classMetadata;
+        this.collection = collection;
+        this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
+        this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
+        this.main = main;
+    }
     /**
      * Instantiates a new component property metadata.
      *
@@ -63,11 +87,7 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
      * @param collection true if it accepts a collection of components or only one
      */
     public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url) {
-        super(name, false);
-        this.classMetadata = classMetadata;
-        this.collection = collection;
-        this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
-        this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
+        this(name, classMetadata, collection, iconUrl, iconX2Url, false);
     }
 
     /**
@@ -122,5 +142,18 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
         
         return super.equals(obj);
     }
+
+    public boolean isResizeNeededWhenTopElement() {
+        return resizeNeededWhenTopElement;
+    }
+
+    public ComponentPropertyMetadata setResizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
+        this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
+        return this;
+    }
+    public boolean isMain() {
+        return main;
+    }
    
+    
 }

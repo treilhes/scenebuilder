@@ -44,7 +44,6 @@ import com.oracle.javafx.scenebuilder.api.Tring;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.editors.drag.target.ContainerXYDropTarget;
 import com.oracle.javafx.scenebuilder.editors.drag.target.ContainerZDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.NodeHandles;
@@ -177,11 +176,13 @@ public abstract class AbstractNodeDriver extends AbstractDriver {
         if (mask.isFreeChildPositioning()) {
             result = new ContainerXYDropTarget(fxomInstance, sceneX, sceneY);
         } else {
-            if (mask.isAcceptingAccessory(DesignHierarchyMask.Accessory.CONTENT)) {
-                result = new AccessoryDropTarget(fxomInstance, DesignHierarchyMask.Accessory.CONTENT);
-            } else {
-                result = new ContainerZDropTarget(fxomInstance, null);
-            }
+            // content is a main accessory now
+//            if (mask.isAcceptingAccessory(DesignHierarchyMask.Accessory.CONTENT)) {
+//                result = new AccessoryDropTarget(fxomInstance, DesignHierarchyMask.Accessory.CONTENT);
+//            } else {
+//                result = new ContainerZDropTarget(fxomInstance, null);
+//            }
+            result = new ContainerZDropTarget(fxomInstance, null);
         }
 
         return result;

@@ -56,12 +56,12 @@ public class WindowHandles extends AbstractGenericHandles<Window> {
         super(context, contentPanelController, fxomInstance, Window.class);
 
         final DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomInstance);
-        FXOMObject scene = designHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.SCENE);
+        FXOMObject scene = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         if (scene == null) {
             sceneGraphObject = null;
         } else {
             DesignHierarchyMask sceneDesignHierarchyMask = new DesignHierarchyMask(scene);
-            FXOMObject root = sceneDesignHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+            FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
             assert root != null;
             assert root instanceof FXOMInstance;
             assert root.getSceneGraphObject() instanceof Node;

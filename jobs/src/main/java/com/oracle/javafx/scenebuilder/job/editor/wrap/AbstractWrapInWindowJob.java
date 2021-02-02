@@ -99,10 +99,10 @@ public class AbstractWrapInWindowJob extends AbstractWrapInJob {
         final List<Job> jobs = new ArrayList<>();
 
         final DesignHierarchyMask newContainerMask = new DesignHierarchyMask(newContainer);
-        assert newContainerMask.isAcceptingAccessory(DesignHierarchyMask.Accessory.SCENE);
+        assert newContainerMask.isAcceptingAccessory(newContainerMask.getMainAccessory());
 
         // Retrieve the new container property name to be used
-        final PropertyName newContainerPropertyName = new PropertyName("scene"); //NOI18N
+        final PropertyName newContainerPropertyName = newContainerMask.getMainAccessory().getName();
         // Create the new container property
         final FXOMPropertyC newContainerProperty = new FXOMPropertyC(
                 newContainer.getFxomDocument(), newContainerPropertyName);

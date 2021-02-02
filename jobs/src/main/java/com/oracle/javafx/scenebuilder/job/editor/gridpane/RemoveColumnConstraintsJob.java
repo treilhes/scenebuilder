@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.job.editor.DeleteObjectJob;
 
 /**
@@ -74,7 +74,7 @@ public class RemoveColumnConstraintsJob extends BatchDocumentJob {
         assert targetGridPane instanceof FXOMInstance;
         assert targetIndexes.isEmpty() == false;
 
-        final DesignHierarchyMask mask = new DesignHierarchyMask(targetGridPane);
+        final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(targetGridPane);
         for (int targetIndex : targetIndexes) {
             final FXOMObject targetConstraints
                     = mask.getColumnConstraintsAtIndex(targetIndex);

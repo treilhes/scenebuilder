@@ -126,31 +126,37 @@ public class ComponentPropertyMetadataCatalog {
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/BorderPane-bottom.png"),
-                    getClass().getResource("subcompicons/BorderPane-bottom@2x.png")); 
+                    getClass().getResource("subcompicons/BorderPane-bottom@2x.png"))
+                .setResizeNeededWhenTopElement(true);
         buttonsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.buttonsName,
                     nodeMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         centerPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.centerName,
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/BorderPane-center.png"),
-                    getClass().getResource("subcompicons/BorderPane-center@2x.png"));
+                    getClass().getResource("subcompicons/BorderPane-center@2x.png"))
+                .setResizeNeededWhenTopElement(true);
         children_c1_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.childrenName,
                     nodeMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null)
+                .setResizeNeededWhenTopElement(true);
         children_empty_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.childrenName,
                     nodeMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true)
+                .setResizeNeededWhenTopElement(true);
         clipPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.clipName,
                     nodeMetadata,
@@ -168,25 +174,30 @@ public class ComponentPropertyMetadataCatalog {
                     tableColumnMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         columns_TreeTableColumn_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.columnsName,
                     treeTableColumnMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         content_Node_NULL_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/DialogPane-content.png"),
-                    null);
+                    null,
+                    true)
+                .setResizeNeededWhenTopElement(true);
         content_Node_SEPARATOR_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
                     nodeMetadata,
                     false, /* unique */
                     null,
-                    null);
+                    null)
+                .setResizeNeededWhenTopElement(true);
         contextMenuPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contextMenuName,
                     contextMenuMetadata,
@@ -198,7 +209,8 @@ public class ComponentPropertyMetadataCatalog {
                     pathElementMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         expandableContentPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.expandableContentName,
                     nodeMetadata,
@@ -222,13 +234,17 @@ public class ComponentPropertyMetadataCatalog {
                     menuItemMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true)
+                .setResizeNeededWhenTopElement(true);
         items_Node_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.itemsName,
                     nodeMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true)
+                .setResizeNeededWhenTopElement(true);
         labelForPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.labelForName,
                     nodeMetadata,
@@ -240,19 +256,22 @@ public class ComponentPropertyMetadataCatalog {
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/BorderPane-left.png"),
-                    getClass().getResource("subcompicons/BorderPane-left@2x.png"));
+                    getClass().getResource("subcompicons/BorderPane-left@2x.png"))
+                .setResizeNeededWhenTopElement(true);
         menusPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.menusName,
                     menuMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         panesPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.panesName,
                     titledPaneMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         placeholderPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.placeholderName,
                     nodeMetadata,
@@ -264,13 +283,16 @@ public class ComponentPropertyMetadataCatalog {
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/BorderPane-right.png"),
-                    getClass().getResource("subcompicons/BorderPane-right@2x.png"));
+                    getClass().getResource("subcompicons/BorderPane-right@2x.png"))
+                .setResizeNeededWhenTopElement(true);
         root_scene_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.rootName,
                     nodeMetadata,
                     false, /* unique */
                     null,
-                    null);
+                    null,
+                    true)
+                .setResizeNeededWhenTopElement(true);
         rowConstraintsPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.rowConstraintsName,
                     rowConstraintsMetadata,
@@ -282,7 +304,9 @@ public class ComponentPropertyMetadataCatalog {
                     sceneMetadata,
                     false, /* unique */
                     null,
-                    null);
+                    null,
+                    true)
+                .setResizeNeededWhenTopElement(true);
         scopePropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.scopeName,
                     nodeMetadata,
@@ -312,7 +336,8 @@ public class ComponentPropertyMetadataCatalog {
                     tabMetadata,
                     true, /* collection */
                     null,
-                    null);
+                    null,
+                    true);
         textFormatterPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.textFormatterName,
                     textFormatterMetadata,
@@ -330,7 +355,8 @@ public class ComponentPropertyMetadataCatalog {
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/BorderPane-top.png"),
-                    getClass().getResource("subcompicons/BorderPane-top@2x.png"));
+                    getClass().getResource("subcompicons/BorderPane-top@2x.png"))
+                .setResizeNeededWhenTopElement(true);
         treeColumnPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.treeColumnName,
                     treeTableColumnMetadata,

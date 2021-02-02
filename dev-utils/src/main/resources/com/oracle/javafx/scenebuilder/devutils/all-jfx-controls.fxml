@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.web.HTMLEditor?>
+<?import javafx.scene.web.WebView?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="898.0" prefWidth="1212.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="29.0" layoutY="37.0" mnemonicParsing="false" text="Button" />
+      <CheckBox layoutX="115.0" layoutY="41.0" mnemonicParsing="false" text="CheckBox" />
+      <ChoiceBox layoutX="204.0" layoutY="37.0" prefWidth="150.0" />
+      <ColorPicker layoutX="370.0" layoutY="37.0" />
+      <ComboBox layoutX="531.0" layoutY="37.0" prefWidth="150.0" />
+      <DatePicker layoutX="698.0" layoutY="37.0" />
+      <HTMLEditor htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="25.0" layoutY="90.0" prefHeight="200.0" prefWidth="506.0" />
+      <Hyperlink layoutX="896.0" layoutY="38.0" text="Hyperlink" />
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="981.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="556.0" layoutY="94.0" text="Label" />
+      <ListView layoutX="648.0" layoutY="83.0" />
+      <MediaView fitHeight="200.0" fitWidth="200.0" layoutX="968.0" layoutY="255.0" />
+      <MenuBar layoutX="991.0" layoutY="206.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <MenuButton layoutX="542.0" layoutY="140.0" mnemonicParsing="false" text="MenuButton">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </MenuButton>
+      <Pagination layoutX="29.0" layoutY="310.0" />
+      <PasswordField layoutX="339.0" layoutY="310.0" />
+      <ProgressBar layoutX="29.0" layoutY="366.0" prefWidth="200.0" progress="0.0" />
+      <ProgressIndicator layoutX="564.0" layoutY="199.0" progress="0.0" />
+      <RadioButton layoutX="548.0" layoutY="266.0" mnemonicParsing="false" text="RadioButton" />
+      <ScrollBar layoutX="534.0" layoutY="316.0" />
+      <ScrollBar layoutX="925.0" layoutY="103.0" orientation="VERTICAL" />
+      <Separator layoutX="270.0" layoutY="374.0" prefWidth="200.0" />
+      <Separator layoutX="929.0" layoutY="235.0" orientation="VERTICAL" prefHeight="200.0" />
+      <Slider layoutX="500.0" layoutY="367.0" />
+      <Slider layoutX="29.0" layoutY="406.0" orientation="VERTICAL" />
+      <Spinner layoutX="86.0" layoutY="417.0" />
+      <SplitMenuButton layoutX="289.0" layoutY="417.0" mnemonicParsing="false" text="SplitMenuButton">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </SplitMenuButton>
+      <TableView layoutX="974.0" layoutY="476.0" prefHeight="200.0" prefWidth="200.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <TextArea layoutX="70.0" layoutY="464.0" />
+      <TextField layoutX="457.0" layoutY="417.0" />
+      <ToggleButton layoutX="552.0" layoutY="484.0" mnemonicParsing="false" text="ToggleButton" />
+      <TreeTableView layoutX="974.0" layoutY="684.0" prefHeight="200.0" prefWidth="200.0">
+        <columns>
+          <TreeTableColumn prefWidth="75.0" text="C1" />
+          <TreeTableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TreeTableView>
+      <TreeView layoutX="648.0" layoutY="491.0" />
+      <WebView layoutX="60.0" layoutY="669.0" prefHeight="200.0" prefWidth="495.0" />
+   </children>
+</Pane>

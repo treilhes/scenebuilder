@@ -78,7 +78,7 @@ public class SceneDriver extends AbstractDriver {
     public AbstractPring<?> makePring(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Scene;
         DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
-        FXOMObject root = designHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+        FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         assert root instanceof FXOMInstance;
@@ -104,7 +104,7 @@ public class SceneDriver extends AbstractDriver {
     @Override
     public AbstractDropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
-        return new AccessoryDropTarget((FXOMInstance) fxomObject, DesignHierarchyMask.Accessory.ROOT);
+        return new AccessoryDropTarget((FXOMInstance) fxomObject);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class SceneDriver extends AbstractDriver {
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Scene;
         DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
-        FXOMObject root = designHierarchyMask.getAccessory(DesignHierarchyMask.Accessory.ROOT);
+        FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         Node rootNode = (Node) root.getSceneGraphObject();
