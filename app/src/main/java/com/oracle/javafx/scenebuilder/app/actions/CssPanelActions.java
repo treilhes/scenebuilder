@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.CssPanelMenuController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 
 public class CssPanelActions {
 

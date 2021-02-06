@@ -40,9 +40,13 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import javafx.scene.Node;
 
 /**
- *
- *
- */
+*
+* Node handles: <br><img src="doc-files/node-handles.png" alt="node handles"><br>
+* Appears when resizing a 
+* <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/Node.html">javafx.scene.Node</a>
+* in the Editor<br>
+* Subclasses will use the same handles until a more specialized one has been registered
+*/
 public class NodeHandles extends AbstractNodeHandles<Node> {
 
     public NodeHandles(

@@ -40,9 +40,9 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.SectionId;
 
 import javafx.application.Platform;
 

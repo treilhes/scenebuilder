@@ -1,3 +1,8 @@
 dependencies {
 	implementation project(':core')
+	implementation project(':sb')
+	
+	//those moust be removed
+	implementation project(':jobs')
+	implementation project(':editors')
 }

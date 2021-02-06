@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 
 import javafx.scene.control.MenuItem;
 

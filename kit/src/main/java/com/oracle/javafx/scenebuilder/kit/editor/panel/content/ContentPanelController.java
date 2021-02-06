@@ -67,10 +67,10 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.AbstractDr
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.BorderPaneDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.CubicCurveDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.FlowPaneDriver;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.GridPaneDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.HBoxDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.LineDriver;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.NodeDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.PolygonDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.PolylineDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.QuadCurveDriver;
@@ -1061,7 +1061,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         } else if (sceneGraphObject instanceof TreeTableColumn) {
             result = new TreeTableColumnDriver(context, this);
         } else if (sceneGraphObject instanceof Node) {
-            result = new GenericDriver(context, this);
+            result = new NodeDriver(context, this);
         } else if (sceneGraphObject instanceof Scene) {
             result = new SceneDriver(context, this);
         } else if (sceneGraphObject instanceof Window) {

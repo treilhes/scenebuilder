@@ -52,9 +52,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 
 /**
- *
- *
- */
+*
+* Polyline handles: <br><img src="doc-files/polyline-handles.png" alt="polyline handles"><br>
+* Appears when resizing a 
+* <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Polyline.html">javafx.scene.shape.Polyline</a>
+* in the Editor<br>
+* Subclasses will use the same handles until a more specialized one has been registered
+*/
 public class PolylineHandles extends AbstractCurveHandles<Polyline> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();

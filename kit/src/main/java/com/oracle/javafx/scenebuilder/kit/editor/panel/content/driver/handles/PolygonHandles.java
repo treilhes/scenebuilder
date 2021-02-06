@@ -52,9 +52,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 
 /**
- *
- *
- */
+*
+* Polygon handles: <br><img src="doc-files/polygon-handles.png" alt="polygon handles"><br>
+* Appears when resizing a 
+* <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Polygon.html">javafx.scene.shape.Polygon</a>
+* in the Editor<br>
+* Subclasses will use the same handles until a more specialized one has been registered
+*/
 public class PolygonHandles extends AbstractCurveHandles<Polygon> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();

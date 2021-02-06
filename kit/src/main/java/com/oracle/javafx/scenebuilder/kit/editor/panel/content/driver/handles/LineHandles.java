@@ -49,9 +49,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 /**
- *
- *
- */
+*
+* Line handles: <br><img src="doc-files/line-handles.png" alt="line handles"><br>
+* Appears when resizing a 
+* <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Line.html">javafx.scene.shape.Line</a>
+* in the Editor<br>
+* Subclasses will use the same handles until a more specialized one has been registered
+*/
 public class LineHandles extends AbstractCurveHandles<Line> {
 
     private final Circle startHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);

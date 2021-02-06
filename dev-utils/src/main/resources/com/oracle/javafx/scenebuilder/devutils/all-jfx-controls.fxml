@@ -37,17 +37,16 @@
 <?import javafx.scene.web.HTMLEditor?>
 <?import javafx.scene.web.WebView?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="898.0" prefWidth="1212.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="898.0" prefWidth="1212.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="29.0" layoutY="37.0" mnemonicParsing="false" text="Button" />
-      <CheckBox layoutX="115.0" layoutY="41.0" mnemonicParsing="false" text="CheckBox" />
-      <ChoiceBox layoutX="204.0" layoutY="37.0" prefWidth="150.0" />
-      <ColorPicker layoutX="370.0" layoutY="37.0" />
-      <ComboBox layoutX="531.0" layoutY="37.0" prefWidth="150.0" />
-      <DatePicker layoutX="698.0" layoutY="37.0" />
+      <Button layoutX="29.0" layoutY="37.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="Button" />
+      <CheckBox layoutX="132.0" layoutY="41.0" mnemonicParsing="false" text="CheckBox" />
+      <ChoiceBox layoutX="221.0" layoutY="37.0" prefWidth="150.0" />
+      <ColorPicker layoutX="387.0" layoutY="37.0" />
+      <ComboBox layoutX="548.0" layoutY="37.0" prefWidth="150.0" />
+      <DatePicker layoutX="715.0" layoutY="37.0" />
       <HTMLEditor htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="25.0" layoutY="90.0" prefHeight="200.0" prefWidth="506.0" />
-      <Hyperlink layoutX="896.0" layoutY="38.0" text="Hyperlink" />
+      <Hyperlink layoutX="913.0" layoutY="38.0" text="Hyperlink" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="981.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="556.0" layoutY="94.0" text="Label" />
       <ListView layoutX="648.0" layoutY="83.0" />

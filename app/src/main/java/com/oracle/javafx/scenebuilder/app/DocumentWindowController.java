@@ -95,17 +95,17 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.css.CssPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 //import com.oracle.javafx.scenebuilder.library.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
@@ -623,6 +623,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             case TOGGLE_RIGHT_PANEL:
             case TOGGLE_OUTLINES_VISIBILITY:
             case TOGGLE_GUIDES_VISIBILITY:
+                result = true;
+                break;
 //            case SHOW_PREVIEW_WINDOW:
 //                result = true;
 //                break;

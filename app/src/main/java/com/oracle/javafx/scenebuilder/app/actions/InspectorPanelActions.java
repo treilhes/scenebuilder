@@ -41,9 +41,9 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.ShowMode;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.InspectorPanelController.ViewMode;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
 public class InspectorPanelActions {
 

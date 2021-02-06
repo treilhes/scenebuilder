@@ -42,9 +42,12 @@ import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
 /**
- *
- *
- */
+*
+* Resize Rudder: <br><img src="doc-files/resize-rudder.png" alt="Resize Rudder"><br>
+* Appears when resizing while preserving aspect ratio in the Editor<br>
+* Appear by default while resizing a <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Circle.html">javafx.scene.shape.Circle</a>
+* or by holding the SHIFT key for others  
+*/
 public class ResizeRudder extends AbstractRudder<Node> {
 
     private final Line diagonalLine = new Line();

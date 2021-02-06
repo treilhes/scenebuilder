@@ -38,12 +38,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.i18n.I18NInspector;
+import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 
 @Configuration
 @ComponentScan(
         basePackageClasses = {
-                I18NInspector.class
+                I18NInspector.class,
+                InspectorPanelController.class,
+                InspectorSectionIdPreference.class
         })
 public class InspectorExtension extends AbstractExtension {
     @Override
