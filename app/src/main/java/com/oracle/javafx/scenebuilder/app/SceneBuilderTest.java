@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyItemBase;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.driver.handles.AbstractGenericHandles;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractGenericHandles;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

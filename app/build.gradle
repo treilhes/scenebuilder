@@ -18,6 +18,7 @@ dependencies {
 	implementation project(':inspector')
 	implementation project(':library')
 	implementation project(':controls')
+	implementation project(':controls-tooling')
 	implementation project(':document')
 	implementation project(':editors')
 	implementation project(':jobs')

@@ -1,5 +1,5 @@
 rootProject.name = 'SceneBuilder'
-include 'core', 'defaultx', 'app', 'kit', 'gluon', 'filesystem', 'preview','sb','library','controls','document','jobs','editors','source-view','source-gen'
+include 'core', 'defaultx', 'app', 'kit', 'gluon', 'filesystem', 'preview','sb','library','controls','controls-tooling','document','jobs','editors','source-view','source-gen'
 include 'help-features','extension-api','extension-library','preference-editor','templates','inspector','update-manager','certificate-manager'
 include 'css-analyser', 'content-editor'
 include 'dev-utils'
