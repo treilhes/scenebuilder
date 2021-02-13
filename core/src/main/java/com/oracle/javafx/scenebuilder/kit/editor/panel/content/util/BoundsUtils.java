@@ -70,6 +70,10 @@ public class BoundsUtils {
         return new BoundingBox(minX, minY, maxX - minX, maxY - minY);
     }
     
+    public static Bounds to2DBounds(Bounds bounds) {
+        return new BoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY());
+    }
+    
     
     public static EdgeInfo distanceToEdges(Bounds b, double x, double y, Node node) {
         assert b != null;

@@ -53,7 +53,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -111,11 +110,8 @@ import com.oracle.javafx.scenebuilder.job.editor.gridpane.v2.SpanJob;
 import com.oracle.javafx.scenebuilder.job.editor.gridpane.v2.SpanJob.SpanAction;
 import com.oracle.javafx.scenebuilder.job.editor.wrap.AbstractWrapInJob;
 import com.oracle.javafx.scenebuilder.job.editor.wrap.UnwrapJob;
-import com.oracle.javafx.scenebuilder.kit.editor.drag.DragController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerHeightPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.RootContainerWidthPreference;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -153,15 +149,10 @@ public class EditorController implements Editor {
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
     private final ErrorReport errorReport;
-    private final DragController dragController;
+//    private final DragController dragController;
     private final InlineEditController inlineEditController;// = new InlineEditController(this);
     private final ContextMenuController contextMenuController;// = new ContextMenuController(this);
     //private final WatchingController watchingController;// = new WatchingController(this);
-
-    // At start-up the setter for the two variables below might be called by the
-    // Preferences controller.
-    private double defaultRootContainerWidth = 600;
-    private double defaultRootContainerHeight = 400;
 
     private final ObjectProperty<Library> libraryProperty;
     private final ObjectProperty<URL> fxmlLocationProperty;
@@ -170,12 +161,10 @@ public class EditorController implements Editor {
     private final BooleanProperty sampleDataEnabledProperty
             = new SimpleBooleanProperty(false);
 
-    private Callback<Void, Boolean> requestTextEditingSessionEnd;
+    //private Callback<Void, Boolean> requestTextEditingSessionEnd;
 
     private Stage ownerWindow;
 
-	private final RootContainerHeightPreference rootContainerHeightPreference;
-	private final RootContainerWidthPreference rootContainerWidthPreference;
 	private final ApplicationContext context;
 	private final FileSystem fileSystem;
 	private final Dialog dialog;
@@ -184,32 +173,28 @@ public class EditorController implements Editor {
 
     private FXOMDocument fxomDocument;
     private Library builtinLibrary;
-    private final Api api;
+    //private final Api api;
     
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
     public EditorController(
             @Autowired Api api,
-    		@Autowired RootContainerHeightPreference rootContainerHeightPreference,
-    	    @Autowired RootContainerWidthPreference rootContainerWidthPreference,
-    	    @Lazy @Autowired DragController dragController,
+//    	    @Lazy @Autowired DragController dragController,
     	    @Lazy @Autowired InlineEditController inlineEditController,
     		@Lazy @Autowired ContextMenuController contextMenuController
 
     		) {
-        this.api = api;
+        //this.api = api;
     	this.context = api.getContext();
     	this.jobManager = api.getApiDoc().getJobManager();
     	this.fileSystem = api.getFileSystem();
     	this.dialog = api.getApiDoc().getDialog();
-    	this.dragController = dragController;
+//    	this.dragController = dragController;
     	this.messageLogger = api.getApiDoc().getMessageLogger();
     	this.selection = api.getApiDoc().getSelection();
     	this.documentManager = api.getApiDoc().getDocumentManager();
     	this.errorReport = api.getApiDoc().getErrorReport();
-    	this.rootContainerHeightPreference = rootContainerHeightPreference;
-    	this.rootContainerWidthPreference = rootContainerWidthPreference;
     	this.inlineEditController = inlineEditController;
     	this.contextMenuController = contextMenuController;
     	//this.watchingController = watchingController;
@@ -230,7 +215,8 @@ public class EditorController implements Editor {
 //		initialize();
 //	}
 
-	public void initialize() {
+	@Override
+    public void initialize() {
 	    jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
         documentManager.i18nResourceConfig().subscribe(s -> {
             resourceConfig = s;
@@ -239,51 +225,6 @@ public class EditorController implements Editor {
         
         documentManager.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
         documentManager.classLoaderDidChange().subscribe(cl -> libraryClassLoaderDidChange(cl));
-        
-    	setDefaultRootContainerHeight(rootContainerHeightPreference.getValue());
-    	rootContainerHeightPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerHeight(n));
-
-    	setDefaultRootContainerWidth(rootContainerWidthPreference.getValue());
-    	rootContainerWidthPreference.getObservableValue().addListener((ob, o, n) -> setDefaultRootContainerWidth(n));
-
-    }
-
-    /**
-     * Get the width to use by default for the root container.
-     *
-     * @return default width for the root container.
-     */
-    @Override
-    public double getDefaultRootContainerWidth() {
-        return defaultRootContainerWidth;
-    }
-
-    /**
-     * Set the width to use by default for the root container.
-     *
-     * @param defaultRootContainerWidth the new root container's default width.
-     */
-    public void setDefaultRootContainerWidth(double defaultRootContainerWidth) {
-        this.defaultRootContainerWidth = defaultRootContainerWidth;
-    }
-
-    /**
-     * Get the height to use by default for the root container.
-     *
-     * @return default height for the root container.
-     */
-    @Override
-    public double getDefaultRootContainerHeight() {
-        return defaultRootContainerHeight;
-    }
-
-    /**
-     * Set the height to use by default for the root container.
-     *
-     * @param defaultRootContainerHeight the new root container's default height.
-     */
-    public void setDefaultRootContainerHeight(double defaultRootContainerHeight) {
-        this.defaultRootContainerHeight = defaultRootContainerHeight;
     }
 
     /**
@@ -303,6 +244,7 @@ public class EditorController implements Editor {
      * @return null or the fxml content being edited by this editor.
      * @param wildcardImports If the FXML should have wildcards in its imports.
      */
+    @Override
     public String getFxmlText(boolean wildcardImports) {
         final String result;
 
@@ -331,19 +273,21 @@ public class EditorController implements Editor {
      */
     @Override
     public boolean canGetFxmlText() {
-        final boolean result;
-
-        if (requestTextEditingSessionEnd == null) {
-            result = true;
-        } else {
-            result = requestTextEditingSessionEnd.call(null);
-            // If the callback returns true, then it should have call
-            // textEditingSessionDidEnd()
-            // => requestTextEditingSessionEnd should be null
-            assert (requestTextEditingSessionEnd == null) || (result == false);
-        }
-
-        return result;
+//        
+//        final boolean result;
+//
+//        if (requestTextEditingSessionEnd == null) {
+//            result = true;
+//        } else {
+//            result = requestTextEditingSessionEnd.call(null);
+//            // If the callback returns true, then it should have call
+//            // textEditingSessionDidEnd()
+//            // => requestTextEditingSessionEnd should be null
+//            assert (requestTextEditingSessionEnd == null) || (result == false);
+//        }
+//
+//        return result;
+        return inlineEditController.canGetFxmlText();
     }
 
     /**
@@ -358,8 +302,9 @@ public class EditorController implements Editor {
      */
     @Override
     public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd) {
-        assert requestTextEditingSessionEnd == null;
-        requestTextEditingSessionEnd = requestSessionEnd;
+//        assert requestTextEditingSessionEnd == null;
+//        requestTextEditingSessionEnd = requestSessionEnd;
+        inlineEditController.textEditingSessionDidBegin(requestSessionEnd);
     }
 
 
@@ -368,8 +313,9 @@ public class EditorController implements Editor {
      */
     @Override
     public void textEditingSessionDidEnd() {
-        assert requestTextEditingSessionEnd != null;
-        requestTextEditingSessionEnd = null;
+        //assert requestTextEditingSessionEnd != null;
+        //requestTextEditingSessionEnd = null;
+        inlineEditController.textEditingSessionDidEnd();
     }
 
     /*
@@ -377,7 +323,8 @@ public class EditorController implements Editor {
      */
     @Override
     public boolean isTextEditingSessionOnGoing() {
-        return requestTextEditingSessionEnd != null;
+        //return requestTextEditingSessionEnd != null;
+        return inlineEditController.isTextEditingSessionOnGoing();
     }
 
     /**
@@ -396,6 +343,7 @@ public class EditorController implements Editor {
      *
      * @param fxmlLocation null or the location of the fxml being edited.
      */
+    @Override
     public void setFxmlLocation(URL fxmlLocation) {
         fxmlLocationProperty.setValue(fxmlLocation);
         if (getFxomDocument() != null) {
@@ -539,6 +487,7 @@ public class EditorController implements Editor {
      *
      * @return true if content and preview panels should display sample data.
      */
+    @Override
     public boolean isSampleDataEnabled() {
         return sampleDataEnabledProperty.getValue();
     }
@@ -602,6 +551,7 @@ public class EditorController implements Editor {
      *                           Gluon controls and if so, the correct theme is set
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
+    @Override
     public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
         updateFxomDocument(fxmlText, fxmlLocation, 
                 new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()), 
@@ -746,6 +696,7 @@ public class EditorController implements Editor {
      *
      * @return the selected objects
      */
+    @Override
     public List<FXOMObject> getSelectedObjects() {
         // Collects all the selected objects
         final List<FXOMObject> selectedObjects = new ArrayList<>();
@@ -793,15 +744,15 @@ public class EditorController implements Editor {
         return errorReport;
     }
 
-    /**
-     * @treatAsPrivate Returns the drag controller associated to this editor.
-     *
-     * @return the drag controller associated to this editor.
-     */
-    @Override
-    public Drag getDragController() {
-        return dragController;
-    }
+//    /**
+//     * @treatAsPrivate Returns the drag controller associated to this editor.
+//     *
+//     * @return the drag controller associated to this editor.
+//     */
+//    @Override
+//    public Drag getDragController() {
+//        return dragController;
+//    }
 
     /**
      * @treatAsPrivate Returns the inline edit controller associated to this editor.
@@ -829,6 +780,7 @@ public class EditorController implements Editor {
      *
      * @return true if the undo action is permitted.
      */
+    @Override
     public boolean canUndo() {
         return jobManager.canUndo();
     }
@@ -838,6 +790,7 @@ public class EditorController implements Editor {
      *
      * @return null or the description of the action to be undone.
      */
+    @Override
     public String getUndoDescription() {
         return jobManager.getUndoDescription();
     }
@@ -845,6 +798,7 @@ public class EditorController implements Editor {
     /**
      * Performs the undo action.
      */
+    @Override
     public void undo() {
         jobManager.undo();
         assert getFxomDocument().isUpdateOnGoing() == false;
@@ -856,6 +810,7 @@ public class EditorController implements Editor {
      *
      * @return true if the redo action is permitted.
      */
+    @Override
     public boolean canRedo() {
         return jobManager.canRedo();
     }
@@ -865,6 +820,7 @@ public class EditorController implements Editor {
      *
      * @return null or the description of the action to be redone.
      */
+    @Override
     public String getRedoDescription() {
         return jobManager.getRedoDescription();
     }
@@ -872,6 +828,7 @@ public class EditorController implements Editor {
     /**
      * Performs the redo action.
      */
+    @Override
     public void redo() {
         jobManager.redo();
         assert getFxomDocument().isUpdateOnGoing() == false;
@@ -1147,6 +1104,7 @@ public class EditorController implements Editor {
      * @param editAction the edit action to be tested.
      * @return true if the specified edit action is permitted.
      */
+    @Override
     public boolean canPerformEditAction(EditAction editAction) {
         final boolean result;
         switch(editAction) {
@@ -1514,6 +1472,7 @@ public class EditorController implements Editor {
      *
      * @param fxmlFile the FXML file to be imported
      */
+    @Override
     public void performImportFxml(File fxmlFile) {
         performImport(fxmlFile);
     }
@@ -1527,6 +1486,7 @@ public class EditorController implements Editor {
      *
      * @param mediaFile the media file to be imported
      */
+    @Override
     public void performImportMedia(File mediaFile) {
         performImport(mediaFile);
     }
@@ -2173,6 +2133,7 @@ public class EditorController implements Editor {
      *
      * @return true if the 'set effect' action is permitted.
      */
+    @Override
     public boolean canPerformSetEffect() {
         return isSelectionNode();
     }
@@ -2184,6 +2145,7 @@ public class EditorController implements Editor {
      *
      * @param effectClass class of the effect to be added (never null)
      */
+    @Override
     public void performSetEffect(Class<? extends Effect> effectClass) {
         assert canPerformSetEffect(); // (1)
 
@@ -2387,6 +2349,7 @@ public class EditorController implements Editor {
 //        setPickModeEnabled(false);
     }
 
+    @Override
     public void setOwnerWindow(Stage ownerWindow) {
         this.ownerWindow = ownerWindow;
     }

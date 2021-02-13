@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
+
 import javafx.beans.property.Property;
 import javafx.scene.input.TransferMode;
 

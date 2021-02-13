@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Point2D;
 import javafx.scene.transform.Transform;
@@ -51,8 +50,8 @@ public abstract class AbstractResilientHandles<T> extends AbstractGenericHandles
     public AbstractResilientHandles(
     		ApplicationContext context,
     		Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(context, contentPanelController, fxomObject, sceneGraphClass);
+            Class<T> sceneGraphClass) {
+        super(context, contentPanelController, sceneGraphClass);
         getRootNode().setVisible(false);
     }
 

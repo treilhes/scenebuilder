@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -86,6 +87,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPrefer
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
@@ -103,8 +105,6 @@ import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 //import com.oracle.javafx.scenebuilder.library.controller.JarAnalysisReportController;
@@ -140,7 +140,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     
 
-    private EditorController editorController;
+    private Editor editorController;
     private final FileSystem fileSystem;
     private final MenuBarController menuBarController;
     private final ContentPanelController contentPanelController;
@@ -227,7 +227,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired PreviewWindowController previewWindowController,
 			@Lazy @Autowired DocumentPreferencesController documentPreferencesController,
 
-			@Lazy @Autowired EditorController editorController,
+			@Lazy @Autowired Editor editorController,
 			//@Autowired DocumentsManager documentManager,
 			@Lazy @Autowired MenuBarController menuBarController,
 
@@ -469,7 +469,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
 
 	@Override
-    public EditorController getEditorController() {
+    public Editor getEditorController() {
         return editorController;
     }
 

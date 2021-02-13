@@ -37,10 +37,13 @@ import java.util.UUID;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
+import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
 
 @ComponentScan(
         basePackageClasses = {
-                
+                RootContainerHeightPreference.class,
+                RootContainerWidthPreference.class
         })
 public class JobsExtension extends AbstractExtension {
 

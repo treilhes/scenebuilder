@@ -35,10 +35,12 @@ package com.oracle.javafx.scenebuilder.drivers.splitpane;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
 import javafx.geometry.Bounds;
@@ -58,6 +60,8 @@ import javafx.scene.shape.Line;
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
 */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
 
     private final Group grips = new Group();
@@ -65,15 +69,18 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
 
     public SplitPaneHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(context, contentPanelController, fxomInstance, SplitPane.class);
+    		Content contentPanelController) {
+        super(context, contentPanelController, SplitPane.class);
         this.context = context;
 
         getRootNode().getChildren().add(grips); // Above handles
     }
 
-
+    @Override
+    public void initialize() {
+        
+    }
+    
     /*
      * AbstractNodeHandles
      */

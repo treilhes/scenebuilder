@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -46,9 +45,8 @@ import javafx.scene.Node;
  */
 public abstract class AbstractCurveHandles<T extends Node> extends AbstractHandles<T> {
 
-    public AbstractCurveHandles(Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(contentPanelController, fxomObject, sceneGraphClass);
+    public AbstractCurveHandles(Content contentPanelController, Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
     }
 
     protected final ChangeListener<Number> coordinateListener

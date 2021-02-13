@@ -347,7 +347,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         for (FXOMObject child : children) {
 
             // Modify child LAYOUT bounds
-            if (newContainerMask.isFreeChildPositioning()) {
+            if (newContainerMask.getMainAccessory() != null && newContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 assert child.getSceneGraphObject() instanceof Node;
                 final Node childNode = (Node) child.getSceneGraphObject();
                 final Bounds childBounds = childNode.getLayoutBounds();
@@ -399,7 +399,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected void modifyNewContainer(final List<FXOMObject> children) {
         if (oldContainer != null) {
             final DesignHierarchyMask oldContainerMask = new DesignHierarchyMask(oldContainer);
-            if (oldContainerMask.isFreeChildPositioning()) {
+            if (oldContainerMask.getMainAccessory() != null && oldContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 final Bounds unionOfBounds = WrapJobUtils.getUnionOfBounds(children);
                 JobUtils.setLayoutX(newContainer, Node.class, unionOfBounds.getMinX());
                 JobUtils.setLayoutY(newContainer, Node.class, unionOfBounds.getMinY());

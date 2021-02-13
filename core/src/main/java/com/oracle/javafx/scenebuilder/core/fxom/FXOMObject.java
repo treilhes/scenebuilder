@@ -46,6 +46,7 @@ import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 /**
@@ -502,6 +503,27 @@ public abstract class FXOMObject extends FXOMNode {
         return sceneGraphObject instanceof Node;
     }
     
+    public boolean isParent() {
+        return sceneGraphObject instanceof Parent;
+    }
+    
+    public boolean hasParent() {
+        return isNode() && ((Node)sceneGraphObject).getParent() != null;
+    }
+    
+    /**
+     * Check if the object is in a detached graph which it does not have a parent node
+     * but the parent object does have one.
+     * It is the case for node added to clip, shape, ...
+     * 
+     * @return true if in detached graph/ false if is in the main graph
+     */
+    public boolean isDetachedGraph() {
+        return isNode() && ((Node)sceneGraphObject).getParent() == null 
+                && getParentObject() != null && getParentObject().isNode()
+                && ((Node)getParentObject().getSceneGraphObject()).getParent() != null;
+    }
+    
     public FXOMObject getClosestNode() {
         FXOMObject result;
         
@@ -511,6 +533,41 @@ public abstract class FXOMObject extends FXOMNode {
         }
         
         return result.isNode() ? result : null;
+    }
+    
+    public FXOMObject getClosestMainGraphNode() {
+        FXOMObject result;
+        FXOMObject current;
+        
+        result = this;
+        current = this;
+        while (current.getParentObject() != null) {
+            if (result == null && current.isNode() && ((Node)current.getSceneGraphObject()).getParent() != null) {
+                result = current;
+            } else if (result != null && current.isNode() && ((Node)current.getSceneGraphObject()).getParent() == null) {
+                result = null;
+            }
+            current = current.getParentObject();
+        }
+        
+        if (result != null) {
+            return result;
+        } else if (current.isNode()) {
+            return current;
+        } else {
+            return null;
+        }
+    }
+    
+    public FXOMObject getClosestParent() {
+        FXOMObject result;
+        
+        result = this;
+        while ((result.isParent() == false) && (result.getParentObject() != null)) {
+            result = result.getParentObject();
+        }
+        
+        return result.isParent() ? result : null;
     }
     
     public String getFxId() {
@@ -746,4 +803,5 @@ public abstract class FXOMObject extends FXOMNode {
         setNameSpaceFX(null);
         setNameSpaceFXML(null);
     }
+    
 }

@@ -33,13 +33,17 @@
 package com.oracle.javafx.scenebuilder.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ObservableValue;
+import javafx.scene.effect.Effect;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -74,13 +78,9 @@ public interface Editor {
 
 	public JobManager getJobManager();
 
-	public double getDefaultRootContainerWidth();
-
-	public double getDefaultRootContainerHeight();
-
 	public void performControlAction(ControlAction copy);
 
-	public Drag getDragController();
+	//public Drag getDragController();
 
 	public ContextMenu getContextMenuController();
 
@@ -195,6 +195,42 @@ public interface Editor {
         WRAP_IN_SCENE,
         WRAP_IN_STAGE
     }
+
+    public boolean canPerformEditAction(EditAction editAction);
+
+    public String getFxmlText(boolean wildcardImports);
+
+    public void initialize();
+
+    public void setFxmlTextAndLocation(String fxmlText, URL fxmlURL, boolean b) throws IOException;
+
+    public void setOwnerWindow(Stage stage);
+
+    public List<FXOMObject> getSelectedObjects();
+
+    public void performImportFxml(File fxmlFile);
+
+    public void performImportMedia(File mediaFile);
+
+    public void setFxmlLocation(URL newLocation);
+
+    public boolean isSampleDataEnabled();
+
+    public String getUndoDescription();
+
+    public boolean canRedo();
+
+    public void redo();
+
+    public void performSetEffect(Class<? extends Effect> effectClass);
+
+    public boolean canPerformSetEffect();
+
+    public void undo();
+
+    public String getRedoDescription();
+
+    public boolean canUndo();
 
     
 }

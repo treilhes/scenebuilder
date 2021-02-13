@@ -32,9 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.tab;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.drivers.tabpane.TabPaneDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -49,6 +53,8 @@ import javafx.scene.paint.Paint;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TabPring extends AbstractPring<Tab> {
 
     //
@@ -65,13 +71,17 @@ public class TabPring extends AbstractPring<Tab> {
     //
 
 
-    private final TabOutline tabOutline;
+    private TabOutline tabOutline;
 
     private Node tabNode; // Skin node representing the tab
 
-    public TabPring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Tab.class);
-        assert fxomInstance.getSceneGraphObject() instanceof Tab;
+    public TabPring(Content contentPanelController) {
+        super(contentPanelController, Tab.class);
+    }
+    
+    @Override
+    public void initialize() {
+        assert getFxomInstance().getSceneGraphObject() instanceof Tab;
 
         tabOutline = new TabOutline(getSceneGraphObject());
         tabOutline.getRingPath().getStyleClass().add(PARENT_RING_CLASS);

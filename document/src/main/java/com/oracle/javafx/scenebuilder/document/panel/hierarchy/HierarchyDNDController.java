@@ -34,17 +34,16 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.HierarchyDND;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.ContainerZDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
 
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.DragEvent;
@@ -180,7 +179,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
         // First update drop target
         final Drag dragController
-                = panelController.getEditorController().getDragController();
+                = panelController.getApi().getApiDoc().getDrag();
         final DropTarget dropTarget = makeDropTarget(treeItem, location);
         dragController.setDropTarget(dropTarget);
 
@@ -348,7 +347,7 @@ public class HierarchyDNDController implements HierarchyDND {
                             // If the parent accepts sub components,
                             // this is a reordering gesture and the target is the parent
                             final Drag dragController
-                                    = panelController.getEditorController().getDragController();
+                                    = panelController.getApi().getApiDoc().getDrag();
                             final DragSource dragSource = dragController.getDragSource();
                             final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
                             assert parentTreeItem != null; // Because of (2)
@@ -375,7 +374,7 @@ public class HierarchyDNDController implements HierarchyDND {
                                 // If the parent accepts sub components,
                                 // this is a reordering gesture and the target is the parent
                                 final Drag dragController
-                                        = panelController.getEditorController().getDragController();
+                                        = panelController.getApi().getApiDoc().getDrag();
                                 final DragSource dragSource = dragController.getDragSource();
                                 final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
                                 assert parentTreeItem != null; // Because of (3)
@@ -415,7 +414,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
         if (dropTargetObject instanceof FXOMInstance) {
             final Drag dragController
-                    = panelController.getEditorController().getDragController();
+                    = panelController.getApi().getApiDoc().getDrag();
             final DragSource dragSource = dragController.getDragSource();
             assert dragSource != null;
             final FXOMInstance dropTargetInstance = (FXOMInstance) dropTargetObject;
@@ -437,7 +436,7 @@ public class HierarchyDNDController implements HierarchyDND {
                             beforeChild = dropTargetMask.getSubComponentAtIndex(targetIndex);
                         }
                     }
-                    result = new ContainerZDropTarget(dropTargetInstance, beforeChild);
+                    result = new AccessoryDropTarget(dropTargetInstance, beforeChild);
                 } //
                 // Check if the drop target accepts accessories
                 else {

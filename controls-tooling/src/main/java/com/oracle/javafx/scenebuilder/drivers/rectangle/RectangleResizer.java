@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,25 +53,27 @@ import javafx.scene.shape.Rectangle;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class RectangleResizer extends AbstractResizer<Rectangle> {
 
-    private final double originalWidth;
-    private final double originalHeight;
+    private double originalWidth;
+    private double originalHeight;
     private final PropertyName widthName  = new PropertyName("width"); //NOI18N
     private final PropertyName heightName = new PropertyName("height"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public RectangleResizer(Rectangle sceneGraphObject) {
-        super(sceneGraphObject);
-        originalWidth  = sceneGraphObject.getWidth();
-        originalHeight = sceneGraphObject.getHeight();
+    public RectangleResizer() {
+        super();
         propertyNames.add(widthName);
         propertyNames.add(heightName);
     }
 
-    /*
-     * AbstractResizer
-     */
+    @Override
+    public void initialize() {
+        originalWidth  = sceneGraphObject.getWidth();
+        originalHeight = sceneGraphObject.getHeight();
+    }
     
     @Override
     public final Bounds computeBounds(double width, double height) {

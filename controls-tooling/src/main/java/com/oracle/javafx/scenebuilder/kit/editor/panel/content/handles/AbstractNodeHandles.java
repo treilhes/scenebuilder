@@ -49,8 +49,8 @@ public abstract class AbstractNodeHandles<T extends Node> extends AbstractGeneri
     public AbstractNodeHandles(
     		ApplicationContext context,
     		Content contentPanelController,
-            FXOMInstance fxomInstance, Class<T> sceneGraphObjectClass) {
-        super(context, contentPanelController, fxomInstance, sceneGraphObjectClass);
+            Class<T> sceneGraphObjectClass) {
+        super(context, contentPanelController, sceneGraphObjectClass);
     }
 
     public FXOMInstance getFxomInstance() {

@@ -330,7 +330,7 @@ public class UnwrapJob extends BatchSelectionJob {
             final double currentLayoutY = childNode.getLayoutY();
 
             // Modify child LAYOUT bounds
-            if (newContainerMask.isFreeChildPositioning()) {
+            if (newContainerMask.getMainAccessory() != null && newContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 final Point2D nextLayoutXY = oldContainerNode.localToParent(
                         currentLayoutX, currentLayoutY);
 

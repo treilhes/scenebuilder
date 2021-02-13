@@ -40,6 +40,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -55,19 +58,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMe
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Labeled;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextInputControl;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -75,6 +66,8 @@ import lombok.RequiredArgsConstructor;
  *
  */
 public class DesignHierarchyMask implements HierarchyMask {
+    
+    private static final Logger logger = LoggerFactory.getLogger(DesignHierarchyMask.class);
     
     private final FXOMObject fxomObject;
     private final List<Accessory> accessories;
@@ -94,11 +87,11 @@ public class DesignHierarchyMask implements HierarchyMask {
         this.subComponents = componentClassMetadata.getAllSubComponentProperties();
         
         this.accessories = this.subComponents.stream()
-            .map(cpm -> new AccessoryImpl(cpm))
+            .map(cpm -> new AccessoryImpl(this.componentClassMetadata, cpm))
             .collect(Collectors.toList());
         
         ComponentPropertyMetadata mainComponent = componentClassMetadata.getMainComponentProperty();
-        mainAccessory = mainComponent == null ? null : new AccessoryImpl(mainComponent);
+        mainAccessory = mainComponent == null ? null : new AccessoryImpl(this.componentClassMetadata, mainComponent);
         
         this.accessories.remove(mainAccessory);
     }
@@ -198,23 +191,21 @@ public class DesignHierarchyMask implements HierarchyMask {
             sceneGraphObject = fxomObject.getSceneGraphObject();
         }
 
-        if (sceneGraphObject == null) {
-            classNameInfo = prefix + fxomObject.getGlueElement().getTagName() + suffix;
-        } else {
-            if (sceneGraphObject instanceof Node) {
-                final Node node = (Node) sceneGraphObject;
-                classNameInfo = prefix + sceneGraphObject.getClass().getSimpleName() + suffix;
-                
-                if (componentClassMetadata.getLabelMutation() != null) {
-                    classNameInfo = componentClassMetadata.getLabelMutation().mutate(classNameInfo, sceneGraphObject);
-                }
-                if (accessory != null && componentClassMetadata.getParentMetadata() != null) {
-                    ChildLabelMutation childMutation = componentClassMetadata.getParentMetadata().getChildLabelMutations(accessory.getPropertyMetadata());
-                    if (childMutation != null) {
-                        classNameInfo = childMutation.mutate(classNameInfo, node.getParent(), node);
-                    }
+        if (sceneGraphObject == null && sceneGraphObject instanceof Node) {
+            final Node node = (Node) sceneGraphObject;
+            classNameInfo = prefix + sceneGraphObject.getClass().getSimpleName() + suffix;
+            
+            if (componentClassMetadata.getLabelMutation() != null) {
+                classNameInfo = componentClassMetadata.getLabelMutation().mutate(classNameInfo, sceneGraphObject);
+            }
+            if (accessory != null && componentClassMetadata.getParentMetadata() != null) {
+                ChildLabelMutation childMutation = componentClassMetadata.getParentMetadata().getChildLabelMutations(accessory.getPropertyMetadata());
+                if (childMutation != null) {
+                    classNameInfo = childMutation.mutate(classNameInfo, node.getParent(), node);
                 }
             }
+        } else {
+            classNameInfo = prefix + fxomObject.getGlueElement().getTagName() + suffix;
         }
 
         return classNameInfo;
@@ -227,8 +218,9 @@ public class DesignHierarchyMask implements HierarchyMask {
      * @return
      */
     public String getDescription() {
-        if (hasDescription()) { // (1)
-            final PropertyName propertyName = getPropertyNameForDescription();
+        final PropertyName propertyName = getPropertyNameForDescription();
+        if (propertyName != null) { // (1)
+            
             assert propertyName != null; // Because of (1)
             assert fxomObject instanceof FXOMInstance; // Because of (1)
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
@@ -294,60 +286,11 @@ public class DesignHierarchyMask implements HierarchyMask {
         return result;
     }
 
-    @Deprecated
-    public boolean hasDescription() {
-        final Object sceneGraphObject = fxomObject.getSceneGraphObject();
-        if (sceneGraphObject == null) {
-            // For now, handle display label for scenegraph objects only
-            return false;
-        }
-        return sceneGraphObject instanceof ComboBox
-                || sceneGraphObject instanceof Labeled
-                || sceneGraphObject instanceof Menu
-                || sceneGraphObject instanceof MenuItem
-                || sceneGraphObject instanceof Tab
-                || sceneGraphObject instanceof TableColumn
-                || sceneGraphObject instanceof Text
-                || sceneGraphObject instanceof TextInputControl
-                || sceneGraphObject instanceof TitledPane
-                || sceneGraphObject instanceof Tooltip
-                || sceneGraphObject instanceof TreeTableColumn
-                || sceneGraphObject instanceof Stage;
-    }
-
-    public boolean isResourceKey() {
-        if (hasDescription()) { // (1)
-            // Retrieve the unresolved description
-            final PropertyName propertyName = getPropertyNameForDescription();
-            assert propertyName != null; // Because of (1)
-            assert fxomObject instanceof FXOMInstance; // Because of (1)
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final ValuePropertyMetadata vpm
-                    = Metadata.getMetadata().queryValueProperty(fxomInstance, propertyName);
-            final Object description = vpm.getValueObject(fxomInstance); // unresolved value
-            final PrefixedValue pv = new PrefixedValue(description.toString());
-            return pv.isResourceKey();
-        }
-        return false;
-    }
-
-    public boolean isFreeChildPositioning() {
-        boolean result = false;
-        if (fxomObject instanceof FXOMInstance) {
-//            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-//            final Class<?> componentClass = fxomInstance.getDeclaredClass();
-//            result = componentClass == AnchorPane.class
-//                    || componentClass == Group.class
-//                    || componentClass == Pane.class;
-            result = componentClassMetadata.isFreeChildPositioning();
-        }
-        return result;
-    }
-
     @Override
     public boolean isAcceptingAccessory(Accessory accessory) {
+        assert accessory != null;
         //TODO an extra look must be given to implement the equal method of Accessoryimpl
-        return accessories.contains(accessory) || accessory == getMainAccessory();
+        return accessories.contains(accessory) || accessory.equals(getMainAccessory());
 //        final PropertyName propertyName = getPropertyNameForAccessory(accessory);
 //        final Class<?> valueClass = getClassForAccessory(accessory);
 //        return isAcceptingProperty(propertyName, valueClass);
@@ -367,8 +310,60 @@ public class DesignHierarchyMask implements HierarchyMask {
         } else {
             sceneGraphObject = fxomObject.getSceneGraphObject();
         }
-        return isAcceptingAccessory(accessory)
+        
+        boolean accept =isAcceptingAccessory(accessory)
                 && accessory.getContentType().isInstance(sceneGraphObject);
+        
+        if (logger.isDebugEnabled()) {
+            logger.info("object {} accepted into accessory:{} this object {}",
+                    getFxomObject() == null ? "null" : getFxomObject().getClass().getName(),
+                    accessory == null? "null" : accessory.getName().getName(),
+                    fxomObject == null ? "null" : fxomObject.getClass().getSimpleName());
+        }
+        
+        return accept;
+    }
+    
+    /**
+     * Returns true if this mask accepts the specified sub components.
+     *
+     * @param fxomObjects
+     * @return
+     */
+    public boolean isAcceptingAccessory(final Accessory accessory, final Collection<FXOMObject> fxomObjects) {
+        boolean accept = false;
+        if (accessory != null && getAccessories().contains(accessory)) {
+            final ComponentPropertyMetadata subComponentMetadata
+                    = accessory.getPropertyMetadata();
+            assert subComponentMetadata != null;
+            final Class<?> subComponentClass
+                    = subComponentMetadata.getClassMetadata().getKlass();
+            
+            accept = true;
+            for (FXOMObject obj : fxomObjects) {
+                final Object sceneGraphObject;
+                if (obj instanceof FXOMIntrinsic) {
+                    final FXOMIntrinsic intrinsicObj = (FXOMIntrinsic) obj;
+                    sceneGraphObject = intrinsicObj.getSourceSceneGraphObject();
+                } else {
+                    sceneGraphObject = obj.getSceneGraphObject();
+                }
+                if (!subComponentClass.isInstance(sceneGraphObject)) {
+                    accept = false;
+                    break;
+                }
+            }
+            
+        }
+        
+        if (accept && logger.isDebugEnabled()) {
+            logger.info("object {} accepted into accessory:{} those objects {}",
+                    getFxomObject() == null ? "null" : getFxomObject().getSceneGraphObject().getClass().getName(),
+                    accessory == null? "null" : accessory.getName().getName(),
+                    fxomObjects == null ? "null" : fxomObjects.stream().map(fxo -> fxo.getSceneGraphObject().getClass().getSimpleName()).collect(Collectors.toList()));
+        }
+        
+        return accept;
     }
 
     
@@ -496,30 +491,22 @@ public class DesignHierarchyMask implements HierarchyMask {
         return result;
     }
 
-    // TODO property name for description must come from metadata
     public PropertyName getPropertyNameForDescription() {
-        final Object sceneGraphObject = fxomObject.getSceneGraphObject();
-        if (sceneGraphObject == null) {
-            return null;
+        return componentClassMetadata.getDescriptionProperty();
+    }
+
+    public boolean isResourceKey(PropertyName propertyName) {
+        if (propertyName != null) { // (1)
+         // Retrieve the unresolved description
+            assert fxomObject instanceof FXOMInstance; // Because of (1)
+            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
+            final ValuePropertyMetadata vpm
+                    = Metadata.getMetadata().queryValueProperty(fxomInstance, propertyName);
+            final Object description = vpm.getValueObject(fxomInstance); // unresolved value
+            final PrefixedValue pv = new PrefixedValue(description.toString());
+            return pv.isResourceKey();
         }
-        PropertyName propertyName = null;
-        if (sceneGraphObject instanceof ComboBox) {
-            propertyName = new PropertyName("promptText");
-        } else if (sceneGraphObject instanceof Labeled
-                || sceneGraphObject instanceof Menu
-                || sceneGraphObject instanceof MenuItem
-                || sceneGraphObject instanceof Tab
-                || sceneGraphObject instanceof TableColumn
-                || sceneGraphObject instanceof TextInputControl
-                || sceneGraphObject instanceof TitledPane
-                || sceneGraphObject instanceof Text
-                || sceneGraphObject instanceof Tooltip
-                || sceneGraphObject instanceof TreeTableColumn) {
-            propertyName = new PropertyName("text");
-        } else if (sceneGraphObject instanceof Stage) {
-            propertyName = new PropertyName("title");
-        }
-        return propertyName;
+        return false;
     }
 
     public PropertyName getPropertyNameForAccessory(Accessory accessory) {
@@ -527,6 +514,14 @@ public class DesignHierarchyMask implements HierarchyMask {
     }
     
     public Accessory getAccessoryForPropertyName(PropertyName propertyName) {
+        if (propertyName == null) {
+            return null;
+        }
+        
+        if (getMainAccessory() != null && propertyName.equals(getMainAccessory().getName())) {
+            return getMainAccessory();
+        }
+        
         Optional<Accessory> result = accessories.stream().filter(a -> a.getName().equals(propertyName)).findFirst();
         return result.isEmpty() ? null : result.get();
     }
@@ -594,6 +589,7 @@ public class DesignHierarchyMask implements HierarchyMask {
     }
     @RequiredArgsConstructor
     public static class AccessoryImpl implements Accessory{
+        private final @Getter ComponentClassMetadata<?> owner;
         private final @Getter ComponentPropertyMetadata propertyMetadata;
 
         @Override
@@ -617,7 +613,7 @@ public class DesignHierarchyMask implements HierarchyMask {
             if (propertyMetadata == null) {
                 result = false;
             } else {
-                result = valueClass.isAssignableFrom(propertyMetadata.getClassMetadata().getKlass());
+                result = propertyMetadata.getClassMetadata().getKlass().isAssignableFrom(valueClass);
             }
 
             return result;
@@ -652,8 +648,12 @@ public class DesignHierarchyMask implements HierarchyMask {
                 return false;
             return true;
         }
-        
-        
+
+        @Override
+        public boolean isFreeChildPositioning() {
+            return owner.isFreeChildPositioning(propertyMetadata);
+        }
+
     }
     @Override
     public List<Accessory> getAccessories() {

@@ -171,6 +171,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.TilePane_marginPropertyMetadata);
             getProperties().add(valueCatalog.VBox_marginPropertyMetadata);
             getProperties().add(valueCatalog.VBox_vgrowPropertyMetadata);
+            
+            setFreeChildPositioning(componentCatalog.clipPropertyMetadata, true);
         }
     }
 
@@ -206,6 +208,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.snapToPixelPropertyMetadata);
             getProperties().add(valueCatalog.width_Double_ro_PropertyMetadata);
 
+            setFreeChildPositioning(componentCatalog.shapePropertyMetadata, true);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(null, null, null, getClass().getResource("nodeicons/Region.png"),
                             getClass().getResource("nodeicons/Region@2x.png"), TAG_MISCELLANEOUS));
@@ -217,9 +221,10 @@ public class ComponentClassMetadatas {
         protected PaneMetadata(@Autowired RegionMetadata parent,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.layout.Pane.class, parent);
-            setFreeChildPositioning(true);
             
             getProperties().add(componentCatalog.children_empty_PropertyMetadata);
+            
+            setFreeChildPositioning(componentCatalog.children_empty_PropertyMetadata, true);
 
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(null, null, null, getClass().getResource("nodeicons/Pane.png"),
@@ -267,6 +272,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.textOverrunPropertyMetadata);
             getProperties().add(valueCatalog.underlinePropertyMetadata);
             getProperties().add(valueCatalog.wrapTextPropertyMetadata);
+            
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
         }
     }
 
@@ -298,6 +305,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.promptTextPropertyMetadata);
             getProperties().add(valueCatalog.styleClass_c5_PropertyMetadata);
             getProperties().add(valueCatalog.value_Object_PropertyMetadata);
+            
+            setDescriptionProperty(valueCatalog.promptTextPropertyMetadata);
         }
     }
 
@@ -368,6 +377,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.styleClass_c51_PropertyMetadata);
             getProperties().add(valueCatalog.textPropertyMetadata);
             getProperties().add(componentCatalog.textFormatterPropertyMetadata);
+            
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
         }
     }
 
@@ -391,6 +402,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.textPropertyMetadata);
             getProperties().add(valueCatalog.visiblePropertyMetadata);
             getProperties().add(valueCatalog.width_Double_ro_PropertyMetadata);
+            
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
         }
     }
 
@@ -411,6 +424,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.textPropertyMetadata);
             getProperties().add(valueCatalog.visiblePropertyMetadata);
 
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/MenuItem.fxml"), null, null,
                             getClass().getResource("nodeicons/MenuItem.png"),
@@ -668,12 +683,13 @@ public class ComponentClassMetadatas {
         protected GroupMetadata(@Autowired ParentMetadata parent, @Autowired ValuePropertyMetadataCatalog valueCatalog,
                 @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.Group.class, parent);
-            setFreeChildPositioning(true);
             
             getProperties().add(valueCatalog.autoSizeChildrenPropertyMetadata);
             getProperties().add(componentCatalog.children_empty_PropertyMetadata);
             getProperties().add(valueCatalog.pickOnBounds_false_PropertyMetadata);
 
+            setFreeChildPositioning(componentCatalog.children_empty_PropertyMetadata, true);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(null, null, null, getClass().getResource("nodeicons/Group.png"),
                             getClass().getResource("nodeicons/Group@2x.png"), TAG_MISCELLANEOUS));
@@ -1629,6 +1645,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.resizable_Boolean_PropertyMetadata);
             getProperties().add(valueCatalog.titlePropertyMetadata);
 
+            setDescriptionProperty(valueCatalog.titlePropertyMetadata);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/Stage.fxml"), null, null,
                             getClass().getResource("nodeicons/Stage.png"),
@@ -1656,6 +1674,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.textPropertyMetadata);
             getProperties().add(componentCatalog.tooltipPropertyMetadata);
 
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
+                    
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/Tab.fxml"), null, null,
                             getClass().getResource("nodeicons/Tab.png"), getClass().getResource("nodeicons/Tab@2x.png"),
@@ -1839,6 +1859,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.x_NaN_PropertyMetadata);
             getProperties().add(valueCatalog.y_NaN_PropertyMetadata);
 
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/Tooltip.fxml"), null, null,
                             getClass().getResource("nodeicons/Tooltip.png"),
@@ -1946,9 +1968,11 @@ public class ComponentClassMetadatas {
 
     @Component
     public static class AnchorPaneMetadata extends ComponentClassMetadata<javafx.scene.layout.AnchorPane> {
-        protected AnchorPaneMetadata(@Autowired PaneMetadata parent) {
+        protected AnchorPaneMetadata(@Autowired PaneMetadata parent, 
+                @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.layout.AnchorPane.class, parent);
-            setFreeChildPositioning(true);
+            
+            setFreeChildPositioning(componentCatalog.children_empty_PropertyMetadata, true);
             
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(null, null, null, getClass().getResource("nodeicons/AnchorPane.png"),
@@ -2555,6 +2579,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.x_0_PropertyMetadata);
             getProperties().add(valueCatalog.y_0_PropertyMetadata);
 
+            setDescriptionProperty(valueCatalog.textPropertyMetadata);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/Text.fxml"), null, null,
                             getClass().getResource("nodeicons/Text.png"),

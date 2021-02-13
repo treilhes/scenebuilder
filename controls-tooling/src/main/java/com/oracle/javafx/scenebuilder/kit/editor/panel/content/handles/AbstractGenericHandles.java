@@ -38,9 +38,9 @@ import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Driver;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -93,11 +93,13 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
     private final LineTo lineTo2 = new LineTo();
     private final LineTo lineTo3 = new LineTo();
 	private final ApplicationContext context;
+    private final Driver driver;
 
     public AbstractGenericHandles(ApplicationContext context, Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphObjectClass) {
-        super(contentPanelController, fxomObject, sceneGraphObjectClass);
+            Class<T> sceneGraphObjectClass) {
+        super(contentPanelController, sceneGraphObjectClass);
         this.context = context;
+        this.driver = context.getBean(Driver.class);
 
         final Path shadow = new Path();
         final List<PathElement> shadowElements = shadow.getElements();
@@ -108,8 +110,6 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
         shadowElements.add(new ClosePath());
         shadow.getStyleClass().add("selection-rect");
         shadow.setMouseTransparent(true);
-
-        setupHandleImages();
 
         handleNW.setPickOnBounds(true);
         handleNE.setPickOnBounds(true);
@@ -142,6 +142,14 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
         rootNodeChildren.add(handleEE);
         rootNodeChildren.add(handleSS);
         rootNodeChildren.add(handleWW);
+    }
+    
+    
+
+    @Override
+    public void setFxomObject(FXOMObject fxomObject) {
+        super.setFxomObject(fxomObject);
+        setupHandleImages();
     }
 
     public Node getHandleNode(CardinalPoint cp) {
@@ -527,8 +535,6 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
 
 
     private boolean isResizable() {
-        final Driver driver
-                = getContentPanelController().lookupDriver(getFxomObject());
         return driver.makeResizer(getFxomObject()) != null;
     }
 

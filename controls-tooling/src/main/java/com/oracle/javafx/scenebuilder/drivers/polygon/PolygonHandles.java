@@ -38,11 +38,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 
@@ -60,6 +63,8 @@ import javafx.scene.shape.Polygon;
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
 */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class PolygonHandles extends AbstractCurveHandles<Polygon> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();
@@ -68,12 +73,14 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
 
     public PolygonHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Polygon.class);
+    		Content contentPanelController) {
+        super(contentPanelController, Polygon.class);
         this.context = context;
+    }
+    
+    @Override
+    public void initialize() {
         final List<Node> rootNodeChildren = getRootNode().getChildren();
-
         setupHandles(rootNodeChildren);
     }
 

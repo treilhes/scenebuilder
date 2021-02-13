@@ -37,27 +37,41 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.api.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide;
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.scene.Node;
 
 public abstract class AbstractCurveEditor<T extends Node> implements CurveEditor<T>{
 
-    protected final T sceneGraphObject;
+    protected FXOMObject fxomObject;
+    protected T sceneGraphObject;
 
-    public AbstractCurveEditor(T sceneGraphObject) {
-        assert sceneGraphObject != null;
-        this.sceneGraphObject = sceneGraphObject;
+    public AbstractCurveEditor() {
+    }
+    
+    public void setFxomObject(FXOMObject fxomObject) {
+        assert fxomObject != null;
+        assert fxomObject.getSceneGraphObject() instanceof Node;
+        this.fxomObject = fxomObject;
+        this.sceneGraphObject = (T)fxomObject.getSceneGraphObject();
     }
 
     @Override
     public T getSceneGraphObject() {
         return sceneGraphObject;
     }
+    
+    @Override
+    public FXOMObject getFxomObject() {
+        return fxomObject;
+    }
 
+    public abstract void initialize();
+    
     @Override
     public abstract EditCurveGuide createController(EnumMap<Tunable, Integer> tunableMap);
 

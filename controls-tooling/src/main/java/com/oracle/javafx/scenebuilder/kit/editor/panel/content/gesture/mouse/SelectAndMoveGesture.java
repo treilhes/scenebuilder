@@ -32,15 +32,23 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -53,10 +61,17 @@ import javafx.stage.Window;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
-    public SelectAndMoveGesture(Content contentPanelController) {
+    private final Drag drag;
+
+    public SelectAndMoveGesture(
+            @Autowired @Lazy Content contentPanelController,
+            @Autowired Drag drag) {
         super(contentPanelController);
+        this.drag = drag;
     }
 
     private FXOMObject hitObject;
@@ -190,8 +205,8 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
                     db.setContent(dragSource.makeClipboardContent());
                     db.setDragView(dragSource.makeDragView());
 
-                    assert editorController.getDragController().getDragSource() == null;
-                    editorController.getDragController().begin(dragSource);
+                    assert drag.getDragSource() == null;
+                    drag.begin(dragSource);
                 }
             }
         }
@@ -206,11 +221,12 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
             FXOMDocument document = fxomObject.getFxomDocument();
             assert document.getDisplayNode() != null;
             sceneGraphNode = document.getDisplayNode();
+            return sceneGraphNode.sceneToLocal(hitSceneX, hitSceneY, true /* rootScene */);
         } else {
             assert nodeObject.getSceneGraphObject() instanceof Node;
-            sceneGraphNode = (Node) nodeObject.getSceneGraphObject();
+            return CoordinateHelper.sceneToLocal(nodeObject, hitSceneX, hitSceneY, true /* rootScene */);
         }
-        return sceneGraphNode.sceneToLocal(hitSceneX, hitSceneY, true /* rootScene */);
+        
     }
 
     @Override

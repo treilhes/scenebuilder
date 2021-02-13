@@ -32,8 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.tablecolumn;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractGenericTring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.drivers.tableview.TableViewDesignInfoX;
 
@@ -46,14 +51,25 @@ import javafx.scene.control.TableView;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TableColumnTring extends AbstractGenericTring<Object> {
 
     private final TableViewDesignInfoX tableViewDesignInfo
             = new TableViewDesignInfoX();
 
-    public TableColumnTring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Object.class);
-        assert fxomInstance.getSceneGraphObject() instanceof TableColumn;
+    public TableColumnTring(Content contentPanelController) {
+        super(contentPanelController, Object.class);
+        
+    }
+    
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
+    }
+
+    @Override
+    public void initialize() {
+        assert getFxomInstance().getSceneGraphObject() instanceof TableColumn;
     }
 
     public FXOMInstance getFxomInstance() {

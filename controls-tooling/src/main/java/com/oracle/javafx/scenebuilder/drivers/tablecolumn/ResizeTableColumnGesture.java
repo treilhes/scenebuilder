@@ -50,6 +50,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
@@ -110,8 +111,8 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
         final double currentSceneX = getLastMouseEvent().getSceneX();
         final double currentSceneY = getLastMouseEvent().getSceneY();
         final TableView<?> tableView = resizer.getTableColumn().getTableView();
-        final Point2D start = tableView.sceneToLocal(startSceneX, startSceneY, true /* rootScene */);
-        final Point2D current = tableView.sceneToLocal(currentSceneX, currentSceneY, true /* rootScene */);
+        final Point2D start = CoordinateHelper.sceneToLocal(columnInstance.getParentObject(), startSceneX, startSceneY, true /* rootScene */);
+        final Point2D current = CoordinateHelper.sceneToLocal(columnInstance.getParentObject(), currentSceneX, currentSceneY, true /* rootScene */);
         final double dx = current.getX() - start.getX();
 
         resizer.updateWidth(dx);

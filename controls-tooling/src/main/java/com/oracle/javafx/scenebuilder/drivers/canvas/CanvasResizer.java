@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,28 +53,30 @@ import javafx.scene.canvas.Canvas;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class CanvasResizer extends AbstractResizer<Canvas> {
 
-    private final double originalWidth;
-    private final double originalHeight;
+    private double originalWidth;
+    private double originalHeight;
     private final PropertyName widthName = new PropertyName("width"); //NOI18N
     private final PropertyName heightName = new PropertyName("height"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public CanvasResizer(Canvas sceneGraphObject) {
-        super(sceneGraphObject);
-        originalWidth   = sceneGraphObject.getWidth();
-        originalHeight  = sceneGraphObject.getHeight();
+    public CanvasResizer() {
+        super();
         propertyNames.add(widthName);
         propertyNames.add(heightName);
+    }
+    
+    @Override
+    public void initialize() {
+        originalWidth   = sceneGraphObject.getWidth();
+        originalHeight  = sceneGraphObject.getHeight();
         assert sceneGraphObject.getLayoutBounds().equals(
                 computeBounds(originalWidth, originalHeight));
     }
 
-    /*
-     * AbstractResizer
-     */
-    
     @Override
     public final Bounds computeBounds(double width, double height) {
         return new BoundingBox(0, 0, Math.round(width), Math.round(height));

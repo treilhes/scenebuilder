@@ -32,8 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;
@@ -43,11 +49,14 @@ import javafx.scene.input.ZoomEvent;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ZoomGesture extends AbstractGesture {
 
     private Observer observer;
 
-    public ZoomGesture(Content contentPanelController) {
+    public ZoomGesture(
+            @Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);
     }
 

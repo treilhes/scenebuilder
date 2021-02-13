@@ -36,31 +36,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InheritanceMap<T> extends HashMap<Class<?>, T> {
+public class InheritanceMap<T> extends HashMap<Class<?>, Class<? extends T>> {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
-    public T getFirstInherited(Class<?> key) {
+    public Class<? extends T> getFirstInherited(Class<?> key) {
         Class<?> current = key;
-        T found = super.get(current);
-        while (found == null && current != null) {
-            current = key.getSuperclass();
-            found = super.get(current);
+        boolean found = containsKey(current);
+        while (!found && current != null) {
+            current = current.getSuperclass();
+            found = containsKey(current);
         }
-        return found;
+        if (found) {
+            return get(current);
+        }
+        return null;
     }
     
-    public List<T> getInheritedList(Class<?> key) {
+    public List<Class<? extends T>> getInheritedList(Class<?> key) {
         Class<?> current = key;
-        List<T> founds = new ArrayList<>();
+        List<Class<? extends T>> founds = new ArrayList<>();
         while (current != null) {
-            T obj = super.get(current);
-            
-            if (obj != null) {
-                founds.add(obj);
+            if (containsKey(current)) {
+                founds.add(get(current));
             }
-            current = key.getSuperclass();
+            current = current.getSuperclass();
         }
         return founds;
     }

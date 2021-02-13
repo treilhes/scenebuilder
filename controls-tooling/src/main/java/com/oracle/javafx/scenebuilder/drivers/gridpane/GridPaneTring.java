@@ -33,18 +33,24 @@
 
 package com.oracle.javafx.scenebuilder.drivers.gridpane;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget.ColumnArea;
-import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget.RowArea;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget.ColumnArea;
+import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget.RowArea;
 
 import javafx.scene.layout.GridPane;
 
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class GridPaneTring extends AbstractNodeTring<GridPane> {
 
     private final GridPaneMosaic mosaic
@@ -52,23 +58,28 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
                     false /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
 
-    public GridPaneTring(Content contentPanelController,
-            FXOMInstance fxomObject) {
-        super(contentPanelController, fxomObject, GridPane.class);
+    public GridPaneTring(Content contentPanelController) {
+        super(contentPanelController, GridPane.class);
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }
 
-    public void setupWithDropTarget(GridPaneDropTarget dropTarget) {
+    
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
         assert dropTarget != null;
-
+        assert dropTarget instanceof GridPaneDropTarget;
+        
+        GridPaneDropTarget gridPaneDropTarget = (GridPaneDropTarget)dropTarget;
+        mosaic.setGridPane((GridPane)gridPaneDropTarget.getTargetObject().getSceneGraphObject());
+        
         final int targetColumnIndex
-                = dropTarget.getTargetColumnIndex();
+                = gridPaneDropTarget.getTargetColumnIndex();
         final int targetRowIndex
-                = dropTarget.getTargetRowIndex();
+                = gridPaneDropTarget.getTargetRowIndex();
         final ColumnArea targetColumnArea
-                = dropTarget.getTargetColumnArea();
+                = gridPaneDropTarget.getTargetColumnArea();
         final RowArea targetRowArea
-                = dropTarget.getTargetRowArea();
+                = gridPaneDropTarget.getTargetRowArea();
 
         if ((targetColumnArea == ColumnArea.CENTER) && (targetRowArea == RowArea.CENTER)) {
             mosaic.setTargetCell(targetColumnIndex, targetRowIndex);
@@ -101,6 +112,11 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
             }
             mosaic.setTargetGap(targetGapColumnIndex, targetGapRowIndex);
         }
+    }
+
+    @Override
+    public void initialize() {
+        
     }
 
     /*

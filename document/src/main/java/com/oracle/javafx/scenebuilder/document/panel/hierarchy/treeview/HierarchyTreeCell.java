@@ -39,18 +39,19 @@ import java.util.Set;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry.CSSParsingReport;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
@@ -68,10 +69,9 @@ import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchy
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController.DroppingMouseLocation;
-import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.ContainerZDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.GridPaneDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
@@ -169,12 +169,15 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     private final JobManager jobManager;
 
     private final MessageLogger messageLogger;
+    
+    private final Drag drag;
 
     public HierarchyTreeCell(
     		ApplicationContext context,
     		final AbstractHierarchyPanelController c) {
         super();
         this.context = context;
+        this.drag = context.getBean(Drag.class);
         this.glossary = context.getBean(Glossary.class);
         this.jobManager = context.getBean(JobManager.class);
         this.messageLogger = context.getBean(MessageLogger.class);
@@ -269,8 +272,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         setOnDragOver(event -> {
             final TreeItem<HierarchyItem> treeItem
                     = HierarchyTreeCell.this.getTreeItem();
-            final Drag dragController
-                    = panelController.getEditorController().getDragController();
+            final Drag dragController = drag;
             final DroppingMouseLocation location = getDroppingMouseLocation(event);
 
             // Forward to the DND controller
@@ -309,7 +311,10 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 // Border is set either on the accessory place holder cell
                 // or on the accessory owner cell.
                 //==========================================================
-                if (dropTarget instanceof AccessoryDropTarget) {
+                
+                Accessory targetAccessory = dropTarget instanceof AccessoryDropTarget ? ((AccessoryDropTarget) dropTarget).findTargetAccessory(drag.getDragSource().getDraggedObjects()) : null;
+                
+                if (dropTarget instanceof AccessoryDropTarget && targetAccessory != null && !targetAccessory.isCollection()) {
 
                     final AccessoryDropTarget accessoryDropTarget = (AccessoryDropTarget) dropTarget;
                     final TreeCell<?> cell;
@@ -352,7 +357,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 // Need to handle the insert line indicator.
                 //==========================================================
                 else {
-                    assert dropTarget instanceof ContainerZDropTarget
+                    assert dropTarget instanceof AccessoryDropTarget
                             || dropTarget instanceof GridPaneDropTarget;
                     TreeItem<?> startTreeItem;
                     TreeCell<?> startCell, stopCell;

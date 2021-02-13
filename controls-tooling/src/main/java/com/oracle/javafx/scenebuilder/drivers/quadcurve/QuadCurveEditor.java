@@ -39,23 +39,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.QuadCurve;
-
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
 
-    private final double originalStartX;
-    private final double originalStartY;
-    private final double originalControlX;
-    private final double originalControlY;
-    private final double originalEndX;
-    private final double originalEndY;
+    private double originalStartX;
+    private double originalStartY;
+    private double originalControlX;
+    private double originalControlY;
+    private double originalEndX;
+    private double originalEndY;
 
     private final PropertyName startXName = new PropertyName("startX"); //NOI18N
     private final PropertyName startYName = new PropertyName("startY"); //NOI18N
@@ -65,16 +70,8 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
     private final PropertyName endYName = new PropertyName("endY"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
 
-    public QuadCurveEditor(QuadCurve sceneGraphObject) {
-        super(sceneGraphObject);
-
-        originalStartX = sceneGraphObject.getStartX();
-        originalStartY = sceneGraphObject.getStartY();
-        originalControlX = sceneGraphObject.getControlX();
-        originalControlY = sceneGraphObject.getControlY();
-        originalEndX = sceneGraphObject.getEndX();
-        originalEndY = sceneGraphObject.getEndY();
-
+    public QuadCurveEditor() {
+        super();
         propertyNames.add(startXName);
         propertyNames.add(startYName);
         propertyNames.add(controlXName);
@@ -83,6 +80,16 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
         propertyNames.add(endYName);
     }
 
+    @Override
+    public void initialize() {
+        originalStartX = sceneGraphObject.getStartX();
+        originalStartY = sceneGraphObject.getStartY();
+        originalControlX = sceneGraphObject.getControlX();
+        originalControlY = sceneGraphObject.getControlY();
+        originalEndX = sceneGraphObject.getEndX();
+        originalEndY = sceneGraphObject.getEndY();
+    }
+    
     @Override
     public EditCurveGuideController createController(EnumMap<Tunable, Integer> tunableMap) {
         final EditCurveGuideController result;

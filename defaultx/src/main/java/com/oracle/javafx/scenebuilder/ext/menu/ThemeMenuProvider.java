@@ -148,7 +148,7 @@ public class ThemeMenuProvider implements MenuItemProvider {
 
 			themePreference.getObservableValue().addListener((ob, o, n) -> {
 				theme.getItems().stream()
-					.filter(mi -> mi.getClass().isAssignableFrom(RadioMenuItem.class))
+					.filter(mi -> RadioMenuItem.class.isAssignableFrom(mi.getClass()))
 					.forEach(mi -> ((RadioMenuItem)mi).setSelected(themePreference.getValue() == mi.getUserData()));
 				context.getBean(ApplyCssContentAction.class).extend().checkAndPerform();
 			});

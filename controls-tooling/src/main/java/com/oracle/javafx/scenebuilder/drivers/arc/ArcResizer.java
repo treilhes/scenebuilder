@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,28 +53,35 @@ import javafx.scene.shape.Arc;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ArcResizer extends AbstractResizer<Arc> {
 
-    private final double originalRadiusX;
-    private final double originalRadiusY;
-    private final Bounds canonicalBounds;
+    private double originalRadiusX;
+    private double originalRadiusY;
+    private Bounds canonicalBounds;
     private final PropertyName radiusXName  = new PropertyName("radiusX"); //NOI18N
     private final PropertyName radiusYName = new PropertyName("radiusY"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public ArcResizer(Arc sceneGraphObject) {
-        super(sceneGraphObject);
-        originalRadiusX = sceneGraphObject.getRadiusX();
-        originalRadiusY = sceneGraphObject.getRadiusY();
-        canonicalBounds = computeCanonicalBounds();
+    public ArcResizer() {
+        super();
         propertyNames.add(radiusXName);
         propertyNames.add(radiusYName);
     }
-
+    
     /*
      * AbstractResizer
      */
     
+    @Override
+    public void initialize() {
+        originalRadiusX = sceneGraphObject.getRadiusX();
+        originalRadiusY = sceneGraphObject.getRadiusY();
+        canonicalBounds = computeCanonicalBounds();
+    }
+
+
     @Override
     public final Bounds computeBounds(double width, double height) {
         final double radiusX = Math.round(computeRadiusXForWidth(width));

@@ -36,6 +36,7 @@ import java.security.cert.X509Certificate;
 import java.util.Stack;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
@@ -54,7 +55,7 @@ import javafx.scene.control.TextArea;
  */
 @Component
 //@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-//@Lazy
+@Lazy
 public class CertificateManagerWindowController extends AbstractFxmlWindowController {
 
     @FXML
@@ -67,8 +68,7 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
     private X509Certificate[] currentCertificates = null;
 
     public CertificateManagerWindowController(
-            @Autowired Api api,
-            @Autowired Document document) {
+            @Autowired Api api) {
         super(api, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), I18N.getBundle(),
                 null); // NOI18N
         this.networkManager = api.getNetworkManager();

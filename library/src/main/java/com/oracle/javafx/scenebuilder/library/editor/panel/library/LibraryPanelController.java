@@ -63,6 +63,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -657,9 +658,11 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     }
 
     private void startListeningToDrop() {
+        
+        final Drag drag = getApi().getApiDoc().getDrag();
         libPane.setOnDragDropped(t -> {
 //                System.out.println("libPane onDragDropped");
-            DragSource dragSource = getEditorController().getDragController().getDragSource();
+            DragSource dragSource = drag.getDragSource();
             //TODO DocumentDragSource became DragSource, what about LibraryDragSource and ExternalDragSource
             if (dragSource instanceof DragSource) { // instanceof DocumentDragSource
                 processInternalImport(dragSource.getDraggedObjects());
@@ -721,7 +724,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
         libPane.setOnDragOver(t -> {
 //                System.out.println("libPane onDragOver");
-            DragSource dragSource = getEditorController().getDragController().getDragSource();
+            DragSource dragSource = drag.getDragSource();
             Dragboard db = t.getDragboard();
             // db has file when dragging a file from native file manager (Mac Finder, Windows Explorer, ...).
             // dragSource is not null if the user drags something from Hierarchy or Content panel.
@@ -732,8 +735,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
         // This one is called only if lib is the source of the drop.
         libPane.setOnDragDone(t -> {
-            assert getEditorController().getDragController().getDragSource() != null;
-            getEditorController().getDragController().end();
+            assert drag.getDragSource() != null;
+            drag.end();
             t.getDragboard().clear();
             t.consume();
         });

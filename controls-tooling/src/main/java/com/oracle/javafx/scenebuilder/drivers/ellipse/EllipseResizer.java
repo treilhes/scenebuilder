@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,25 +53,27 @@ import javafx.scene.shape.Ellipse;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class EllipseResizer extends AbstractResizer<Ellipse> {
 
-    private final double originalRadiusX;
-    private final double originalRadiusY;
+    private double originalRadiusX;
+    private double originalRadiusY;
     private final PropertyName radiusXName  = new PropertyName("radiusX"); //NOI18N
     private final PropertyName radiusYName = new PropertyName("radiusY"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public EllipseResizer(Ellipse sceneGraphObject) {
-        super(sceneGraphObject);
-        originalRadiusX = sceneGraphObject.getRadiusX();
-        originalRadiusY = sceneGraphObject.getRadiusY();
+    public EllipseResizer() {
+        super();
         propertyNames.add(radiusXName);
         propertyNames.add(radiusYName);
     }
 
-    /*
-     * AbstractResizer
-     */
+    @Override
+    public void initialize() {
+        originalRadiusX = sceneGraphObject.getRadiusX();
+        originalRadiusY = sceneGraphObject.getRadiusY();
+    }
     
     @Override
     public final Bounds computeBounds(double width, double height) {

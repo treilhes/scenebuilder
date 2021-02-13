@@ -37,34 +37,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 /**
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class PaneRelocater extends AbstractRelocater<Pane> {
 
-    private final double originalLayoutX;
-    private final double originalLayoutY;
+    private double originalLayoutX;
+    private double originalLayoutY;
     private final PropertyName layoutXName = new PropertyName("layoutX"); //NOI18N
     private final PropertyName layoutYName = new PropertyName("layoutY"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public PaneRelocater(Node sceneGraphObject) {
-        super(sceneGraphObject, Pane.class);
-        this.originalLayoutX = sceneGraphObject.getLayoutX();
-        this.originalLayoutY = sceneGraphObject.getLayoutY();
+    public PaneRelocater() {
+        super(Pane.class);
         propertyNames.add(layoutXName);
         propertyNames.add(layoutYName);
     }
     
+    @Override
+    public void initialize() {
+        this.originalLayoutX = sceneGraphObject.getLayoutX();
+        this.originalLayoutY = sceneGraphObject.getLayoutY();
+    }
     
     /*
      * AbstractRelocater

@@ -48,6 +48,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
@@ -122,8 +123,8 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
         final double startSceneY = getMousePressedEvent().getSceneY();
         final double currentSceneX = getLastMouseEvent().getSceneX();
         final double currentSceneY = getLastMouseEvent().getSceneY();
-        final Point2D start = gridPane.sceneToLocal(startSceneX, startSceneY, true /* rootScene */);
-        final Point2D current = gridPane.sceneToLocal(currentSceneX, currentSceneY, true /* rootScene */);
+        final Point2D start = CoordinateHelper.sceneToLocal(fxomInstance, startSceneX, startSceneY, true /* rootScene */);
+        final Point2D current = CoordinateHelper.sceneToLocal(fxomInstance, currentSceneX, currentSceneY, true /* rootScene */);
         final double dx = current.getX() - start.getX();
 
         resizer.updateWidth(dx);

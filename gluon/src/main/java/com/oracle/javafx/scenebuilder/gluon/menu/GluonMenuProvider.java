@@ -173,7 +173,7 @@ public class GluonMenuProvider implements MenuItemProvider {
 
         private void updateMenu() {
             boolean disable = isMenuDisabled();
-            gluonSwatchMenu.getItems().stream().filter(mi -> mi.getClass().isAssignableFrom(RadioMenuItem.class))
+            gluonSwatchMenu.getItems().stream().filter(mi -> RadioMenuItem.class.isAssignableFrom(mi.getClass()))
                     .forEach(mi -> {
                         RadioMenuItem rmi = (RadioMenuItem) mi;
                         rmi.setDisable(disable);

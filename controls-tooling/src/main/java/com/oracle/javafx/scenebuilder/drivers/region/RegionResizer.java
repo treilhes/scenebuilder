@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,14 +53,16 @@ import javafx.scene.layout.Region;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class RegionResizer extends AbstractResizer<Region> {
 
-    private final double originalMinWidth;
-    private final double originalMinHeight;
-    private final double originalPrefWidth;
-    private final double originalPrefHeight;
-    private final double originalMaxWidth;
-    private final double originalMaxHeight;
+    private double originalMinWidth;
+    private double originalMinHeight;
+    private double originalPrefWidth;
+    private double originalPrefHeight;
+    private double originalMaxWidth;
+    private double originalMaxHeight;
     private final PropertyName minWidthName  = new PropertyName("minWidth"); //NOI18N
     private final PropertyName minHeightName = new PropertyName("minHeight"); //NOI18N
     private final PropertyName prefWidthName  = new PropertyName("prefWidth"); //NOI18N
@@ -65,20 +71,24 @@ public class RegionResizer extends AbstractResizer<Region> {
     private final PropertyName maxHeightName = new PropertyName("maxHeight"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public RegionResizer(Region sceneGraphObject) {
-        super(sceneGraphObject);
-        originalMinWidth   = sceneGraphObject.getMinWidth();
-        originalMinHeight  = sceneGraphObject.getMinHeight();
-        originalPrefWidth  = sceneGraphObject.getPrefWidth();
-        originalPrefHeight = sceneGraphObject.getPrefHeight();
-        originalMaxWidth   = sceneGraphObject.getMaxWidth();
-        originalMaxHeight  = sceneGraphObject.getMaxHeight();
+    public RegionResizer() {
+        super();
         propertyNames.add(prefWidthName);
         propertyNames.add(prefHeightName);
         propertyNames.add(minWidthName);
         propertyNames.add(minHeightName);
         propertyNames.add(maxWidthName);
         propertyNames.add(maxHeightName);
+    }
+    
+    @Override
+    public void initialize() {
+        originalMinWidth   = sceneGraphObject.getMinWidth();
+        originalMinHeight  = sceneGraphObject.getMinHeight();
+        originalPrefWidth  = sceneGraphObject.getPrefWidth();
+        originalPrefHeight = sceneGraphObject.getPrefHeight();
+        originalMaxWidth   = sceneGraphObject.getMaxWidth();
+        originalMaxHeight  = sceneGraphObject.getMaxHeight();
     }
     
     public static String makeSizeString(double size) {
@@ -162,6 +172,7 @@ public class RegionResizer extends AbstractResizer<Region> {
         sceneGraphObject.setPrefHeight(originalPrefHeight);
         sceneGraphObject.setMaxWidth(originalMaxWidth);
         sceneGraphObject.setMaxHeight(originalMaxHeight);
+        sceneGraphObject.autosize();
     }
 
     @Override

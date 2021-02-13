@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+
 import javafx.collections.ObservableMap;
 import javafx.css.StyleableProperty;
 import javafx.fxml.FXMLLoader;
@@ -59,7 +61,6 @@ public class Deprecation {
     private Deprecation() {
         assert false;
     }
-
 
     // Deprecated stuff in Node
 //    // RT-21247 : Promote impl_getAllParentStylesheets to public API
@@ -123,7 +124,8 @@ public class Deprecation {
         Point2D p = node.sceneToLocal(sceneX, sceneY, true /* rootScene */);
 
         // check if the given node has the point inside it, or else we drop out
-        if (!node.contains(p)) return null;
+        if (!node.contains(p))
+            return null;
 
         // at this point we know that _at least_ the given node is a valid
         // answer to the given point, so we will return that if we don't find
@@ -134,7 +136,7 @@ public class Deprecation {
             // as we know that later nodes have a higher z-ordering, so they
             // should be picked before the earlier nodes.
             Node bestMatchingChild = null;
-            for (Node child : ((Parent)node).getChildrenUnmodifiable()) {
+            for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
                 p = child.sceneToLocal(sceneX, sceneY, true /* rootScene */);
                 if (child.contains(p)) {
                     bestMatchingChild = child;
@@ -163,7 +165,7 @@ public class Deprecation {
 
     // Returns the corresponding text css (.css) from a binary css (.bss)
     public static URL getThemeTextStylesheet(String binaryCssUrlStr) {
-        String textCssUrlStr = binaryCssUrlStr.replaceAll(".bss", ".css"); //NOI18N
+        String textCssUrlStr = binaryCssUrlStr.replaceAll(".bss", ".css"); // NOI18N
         try {
             return new URL(textCssUrlStr);
         } catch (MalformedURLException ex) {
@@ -178,13 +180,29 @@ public class Deprecation {
         return TreeView.getNodeLevel(item);
     }
 
+    @Deprecated
     public static Point2D localToLocal(Node source, double sourceX, double sourceY, Node target) {
         final Point2D sceneXY = source.localToScene(sourceX, sourceY, true /* rootScene */);
         return target.sceneToLocal(sceneXY, true /* rootScene */);
     }
 
+    @Deprecated
     public static Bounds localToLocal(Node source, Bounds sourceBounds, Node target) {
         final Bounds sceneBounds = source.localToScene(sourceBounds, true /* rootScene */);
         return target.sceneToLocal(sceneBounds, true /* rootScene */);
+    }
+    
+    //TODO not deprecated so move this in another class
+    public static Point2D localToLocal(FXOMObject source, double sourceX, double sourceY, Node target) {
+        final Point2D sceneXY = CoordinateHelper.localToScene(source, new Point2D(sourceX, sourceY), true /* rootScene */);
+        // Use the CoordinateHelper alternative when created
+        return target.sceneToLocal(sceneXY, true /* rootScene */);
+    }
+
+    //TODO not deprecated so move this in another class, implementation needed
+    public static Bounds localToLocal(FXOMObject source, Bounds sourceBounds, Node target) { 
+//        final Bounds sceneBounds = source.localToScene(sourceBounds, true /* rootScene */);
+//        return target.sceneToLocal(sceneBounds, true /* rootScene */);
+        return null;
     }
 }

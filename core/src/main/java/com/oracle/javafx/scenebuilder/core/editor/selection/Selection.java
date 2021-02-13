@@ -78,7 +78,7 @@ public class Selection {
             @Autowired DocumentManager documentManager
             ) {
         super();
-        documentManager.selectionDidChange().set(new SelectionState(this));
+        //documentManager.selectionDidChange().set(new SelectionState(this));
         revision.addListener((ob,o,n) -> documentManager.selectionDidChange().set(new SelectionState(this)));
         documentManager.fxomDocument().subscribe(fxom -> clear());
     }

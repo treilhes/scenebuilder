@@ -33,6 +33,8 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -61,6 +63,7 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
     /** true if the component deserves a resizing while used as top element of the layout. default: false */
     private boolean main = false;
     
+    private Set<PropertyName> disabledChildProperties = new HashSet<>();
     /**
      * Instantiates a new component property metadata.
      *
@@ -79,12 +82,15 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
         this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
         this.main = main;
     }
+    
     /**
      * Instantiates a new component property metadata.
      *
      * @param name the property name
-     * @param classMetadata the owner component metadata
+     * @param classMetadata the children components metadata accepted by this component property
      * @param collection true if it accepts a collection of components or only one
+     * @param iconUrl the icon url
+     * @param iconX2Url the icon X 2 url
      */
     public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url) {
         this(name, classMetadata, collection, iconUrl, iconX2Url, false);
@@ -155,5 +161,18 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
         return main;
     }
    
+    public ComponentPropertyMetadata disableChildProperty(PropertyName propertyName) {
+        if (!disabledChildProperties.contains(propertyName)) {
+            disabledChildProperties.add(propertyName);
+        }
+        return this;
+    }
     
+    public boolean isChildPropertyDisabled(PropertyName propertyName) {
+        return disabledChildProperties.contains(propertyName);
+    }
+    
+    public Set<PropertyName> getDisabledProperties() {
+        return disabledChildProperties;
+    }
 }

@@ -33,17 +33,17 @@
 package com.oracle.javafx.scenebuilder.api.control.rudder;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
  *
  *
  */
-public abstract class AbstractRudder<T> extends AbstractDecoration<T> {
+public abstract class AbstractRudder<T> extends AbstractDecoration<T> implements Rudder {
 
-    public AbstractRudder(Content contentPanelController, FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(contentPanelController, fxomObject, sceneGraphClass);
+    public AbstractRudder(Content contentPanelController, Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
     }
 
 }

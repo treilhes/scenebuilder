@@ -35,11 +35,17 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Driver;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.api.Pring;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.Pring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -55,6 +61,8 @@ import javafx.scene.shape.Rectangle;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
     private FXOMObject hitObject;
@@ -62,9 +70,13 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private Pring<?> scopeHilit;
     private final Set<FXOMObject> candidates = new HashSet<>();
     private final Rectangle marqueeRect = new Rectangle();
+    private final Driver driver;
 
-    public SelectWithMarqueeGesture(Content contentPanelController) {
+    public SelectWithMarqueeGesture(
+            @Autowired Driver driver,
+            @Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);
+        this.driver = driver;
     }
 
     public void setup(FXOMObject hitObject, FXOMObject scopeObject) {
@@ -138,8 +150,6 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
     private void showScopeHilit() {
         if (scopeObject != null) {
-            final Driver driver
-                    = contentPanelController.lookupDriver(scopeObject);
             final Group rudderLayer
                     = contentPanelController.getRudderLayer();
             assert driver != null;
@@ -207,8 +217,6 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
         final Set<FXOMObject> winners = new HashSet<>();
         for (FXOMObject candidate : candidates) {
-            final Driver driver
-                    = contentPanelController.lookupDriver(candidate);
             if ((driver != null) && driver.intersectsBounds(candidate, marqueeBounds)) {
                 winners.add(candidate);
             }

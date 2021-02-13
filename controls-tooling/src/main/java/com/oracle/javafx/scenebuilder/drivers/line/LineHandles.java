@@ -35,11 +35,14 @@ package com.oracle.javafx.scenebuilder.drivers.line;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 
@@ -57,6 +60,8 @@ import javafx.scene.shape.Line;
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
 */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class LineHandles extends AbstractCurveHandles<Line> {
 
     private final Circle startHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);
@@ -66,10 +71,13 @@ public class LineHandles extends AbstractCurveHandles<Line> {
 
     public LineHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Line.class);
+    		Content contentPanelController) {
+        super(contentPanelController, Line.class);
         this.context = context;
+    }
+    
+    @Override
+    public void initialize() {
         setupHandleState(startHandle);
         setupHandleState(endHandle);
 

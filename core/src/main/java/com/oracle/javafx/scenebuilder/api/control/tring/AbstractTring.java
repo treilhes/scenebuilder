@@ -33,9 +33,9 @@
 package com.oracle.javafx.scenebuilder.api.control.tring;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Tring;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
+import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.paint.Paint;
 
@@ -48,12 +48,13 @@ public abstract class AbstractTring<T> extends AbstractDecoration<T> implements 
     public static final String TARGET_RING_CLASS = "target-ring"; //NOI18N
     public static final String TARGET_CRACK_CLASS = "target-crack"; //NOI18N
 
-    public AbstractTring(Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(contentPanelController, fxomObject, sceneGraphClass);
+    public AbstractTring(Content contentPanelController, Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
     }
 
     @Override
     public abstract void changeStroke(Paint stroke);
 
+    public abstract void defineDropTarget(DropTarget dropTarget);
+     
 }

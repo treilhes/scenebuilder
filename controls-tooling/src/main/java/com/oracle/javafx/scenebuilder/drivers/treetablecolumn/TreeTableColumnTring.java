@@ -32,8 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.treetablecolumn;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractGenericTring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.drivers.treetableview.TreeTableViewDesignInfoX;
 
@@ -46,14 +51,24 @@ import javafx.scene.control.TreeTableView;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TreeTableColumnTring extends AbstractGenericTring<Object> {
 
     private final TreeTableViewDesignInfoX tableViewDesignInfo
             = new TreeTableViewDesignInfoX();
 
-    public TreeTableColumnTring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Object.class);
-        assert fxomInstance.getSceneGraphObject() instanceof TreeTableColumn;
+    public TreeTableColumnTring(Content contentPanelController) {
+        super(contentPanelController, Object.class);
+    }
+    
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
+    }
+    
+    @Override
+    public void initialize() {
+        assert getFxomInstance().getSceneGraphObject() instanceof TreeTableColumn;
     }
 
     public FXOMInstance getFxomInstance() {

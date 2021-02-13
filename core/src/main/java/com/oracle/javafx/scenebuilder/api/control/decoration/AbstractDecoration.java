@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.api.control.decoration;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Decoration;
+import com.oracle.javafx.scenebuilder.api.control.Decoration;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
@@ -52,29 +52,30 @@ import javafx.scene.transform.Transform;
  */
 public abstract class AbstractDecoration<T> implements Decoration<T> {
 
-
-
     private final Content contentPanelController;
-    private final FXOMObject fxomObject;
     private final Class<T> sceneGraphClass;
     private final Group rootNode = new Group();
+    private FXOMObject fxomObject;
     private T sceneGraphObject;
 
 
-    public AbstractDecoration(Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
+    public AbstractDecoration(Content contentPanelController, Class<T> sceneGraphClass) {
         assert contentPanelController != null;
-        assert fxomObject != null;
-        assert fxomObject.getSceneGraphObject() != null;
-        assert fxomObject.getFxomDocument() == contentPanelController.getEditorController().getFxomDocument();
         assert sceneGraphClass != null;
 
         this.contentPanelController = contentPanelController;
-        this.fxomObject = fxomObject;
         this.sceneGraphClass = sceneGraphClass;
-        this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
 
         this.rootNode.sceneProperty().addListener((ChangeListener<Scene>) (ov, v1, v2) -> rootNodeSceneDidChange());
+    }
+
+    @Override
+    public void setFxomObject(FXOMObject fxomObject) {
+        assert fxomObject != null;
+        assert fxomObject.getSceneGraphObject() != null;
+        assert fxomObject.getFxomDocument() == contentPanelController.getEditorController().getFxomDocument();
+        this.fxomObject = fxomObject;
+        this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
     }
 
     public Content getContentPanelController() {
@@ -161,8 +162,24 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
      */
 
     public Point2D sceneGraphObjectToDecoration(double x, double y) {
-        final Node proxy = getSceneGraphObjectProxy();
-        return Deprecation.localToLocal(proxy, x, y, getRootNode());
+//        final Node proxy = getSceneGraphObjectProxy();
+//        
+//        Point2D resultNew = null;
+//        boolean check = true;
+//        if (check) {
+//            Point2D sceneXY = fxomObject.localToScene(new Point2D(x, y));
+//            resultNew = getRootNode().sceneToLocal(sceneXY, true /* rootScene */);
+//            System.out.println("NEW " + resultNew.getX() + "," + resultNew.getY());
+//        }
+//        Point2D resultOld = Deprecation.localToLocal(proxy, x, y, getRootNode());
+//        System.out.println("OLD " + resultOld.getX() + "," + resultOld.getY());
+//        
+//        if (!resultOld.equals(resultNew)) {
+//            System.out.println("BUG");
+//        }
+        //return resultOld;
+        //return resultNew;
+        return Deprecation.localToLocal(getFxomObject(), x, y, getRootNode());
     }
 
     protected void startListeningToLayoutBounds(Node node) {

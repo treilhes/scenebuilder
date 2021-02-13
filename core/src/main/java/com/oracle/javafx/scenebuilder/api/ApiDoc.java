@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -41,19 +43,23 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
 public class ApiDoc {
     // ***************** Document scoped *********************
-    private final @Getter DocumentManager documentManager;
-    //private final @Getter Document document;
-    private final @Getter JobManager jobManager;
-    private final @Getter Dialog dialog;
-    private final @Getter MessageLogger messageLogger;
-    private final @Getter Selection selection;
-    private final @Getter ErrorReport errorReport;
-    private final @Getter Library library;
+    private @Getter @Autowired @Lazy DocumentManager documentManager;
+    //private @Getter Document document;
+    private @Getter @Autowired @Lazy JobManager jobManager;
+    private @Getter @Autowired @Lazy Dialog dialog;
+    private @Getter @Autowired @Lazy MessageLogger messageLogger;
+    private @Getter @Autowired @Lazy Selection selection;
+    private @Getter @Autowired @Lazy ErrorReport errorReport;
+    private @Getter @Autowired @Lazy Library library;
+    private @Getter @Autowired @Lazy Drag drag;
+    private @Getter @Autowired @Lazy ContextMenu contextMenu;
+    //private @Getter @Autowired @Lazy Editor editor;
+    private @Getter @Autowired @Lazy InlineEdit inlineEdit;
 }

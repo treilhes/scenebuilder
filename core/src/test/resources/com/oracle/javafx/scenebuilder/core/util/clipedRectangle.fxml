@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.SubScene?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SubScene fx:id="subScene" height="200.0" layoutX="100.0" layoutY="100.0" width="200.0"> 
+              <root> 
+			  <Pane fx:id="subpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
+			  <children>
+                <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="100.0" layoutY="100.0" stroke="BLACK" strokeType="INSIDE" width="100.0">
+					 <clip>
+						<Circle fx:id="circle" centerX="50.0" centerY="50.0" fill="DODGERBLUE" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
+					 </clip>
+				  </Rectangle>
+				  </children>
+				  </Pane>
+              </root> 
+            </SubScene>
+   </children>
+</Pane>

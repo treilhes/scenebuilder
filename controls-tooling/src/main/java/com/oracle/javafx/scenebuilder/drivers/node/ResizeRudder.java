@@ -32,9 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.node;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
 
 import javafx.geometry.Bounds;
@@ -49,19 +52,24 @@ import javafx.scene.shape.Line;
 * Appear by default while resizing a <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Circle.html">javafx.scene.shape.Circle</a>
 * or by holding the SHIFT key for others  
 */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ResizeRudder extends AbstractRudder<Node> {
 
     private final Line diagonalLine = new Line();
 
-    public ResizeRudder(Content contentPanelController,
-            FXOMObject fxomObject) {
-        super(contentPanelController, fxomObject, Node.class);
+    public ResizeRudder(Content contentPanelController) {
+        super(contentPanelController, Node.class);
 
         diagonalLine.setMouseTransparent(true);
         diagonalLine.getStyleClass().add("resize-rudder"); //NOI18N
         getRootNode().getChildren().add(diagonalLine);
     }
 
+    @Override
+    public void initialize() {
+        
+    }
 
     /*
      * AbstractRudder

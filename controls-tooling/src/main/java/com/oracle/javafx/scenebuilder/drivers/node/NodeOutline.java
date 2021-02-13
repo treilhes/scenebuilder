@@ -33,9 +33,12 @@
 
 package com.oracle.javafx.scenebuilder.drivers.node;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.outline.AbstractOutline;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -43,14 +46,18 @@ import javafx.scene.Node;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodeOutline extends AbstractOutline<Node> {
     
-    public NodeOutline(Content contentPanelController, 
-            FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Node.class);
+    public NodeOutline(Content contentPanelController) {
+        super(contentPanelController, Node.class);
     }
     
-    
+    @Override
+    public void initialize() {
+        
+    }
     /*
      * AbstractOutline
      */

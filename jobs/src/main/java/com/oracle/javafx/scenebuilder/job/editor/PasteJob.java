@@ -119,7 +119,7 @@ public class PasteJob extends BatchSelectionJob {
                     if (targetMask.isAcceptingSubComponent(newObjects)) {
 
                         final double relocateDelta;
-                        if (targetMask.isFreeChildPositioning()) {
+                        if (targetMask.getMainAccessory() != null && targetMask.getMainAccessory().isFreeChildPositioning()) {
                             final int pasteJobCount = countPasteJobs();
                             relocateDelta = 10.0 * (pasteJobCount + 1);
                         } else {

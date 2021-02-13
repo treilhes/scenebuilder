@@ -49,4 +49,33 @@ public interface InlineEdit {
 
 	public void startEditingSession(TextInputControl inlineEditor, Node inlineEditingBounds,
 			Callback<String, Boolean> requestCommit, Callback<Void, Boolean> requestRevert);
+
+    public boolean isWindowOpened();
+
+    /**
+     * Returns true if fxml content being edited can be returned safely.
+     * This method will return false if there is a text editing session on-going.
+     *
+     * @return true if fxml content being edited can be returned safely.
+     */
+    boolean canGetFxmlText();
+
+    /**
+     * Tells this editor that a text editing session has started.
+     * The editor controller may invoke the requestSessionEnd() callback
+     * if it needs the text editing session to stop. The callback should;
+     *   - either stop the text editing session, invoke textEditingSessionDidEnd()
+     *     and return true
+     *   - either keep the text editing session on-going and return false
+     *
+     * @param requestSessionEnd Callback that should end the text editing session or return false
+     */
+    void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd);
+
+    /**
+     * Tells this editor that the text editing session has ended.
+     */
+    void textEditingSessionDidEnd();
+
+    boolean isTextEditingSessionOnGoing();
 }

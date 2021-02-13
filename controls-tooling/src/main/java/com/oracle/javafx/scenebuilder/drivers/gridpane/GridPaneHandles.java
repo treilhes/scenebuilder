@@ -35,12 +35,14 @@ package com.oracle.javafx.scenebuilder.drivers.gridpane;
 import java.util.Collections;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
@@ -50,6 +52,8 @@ import javafx.scene.layout.GridPane;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
 
     private final GridPaneMosaic mosaic
@@ -60,11 +64,15 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
 
     public GridPaneHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(context, contentPanelController, fxomInstance, GridPane.class);
+    		Content contentPanelController) {
+        super(context, contentPanelController, GridPane.class);
         this.context = context;
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
+    }
+    
+    @Override
+    public void initialize() {
+        mosaic.setGridPane((GridPane)getFxomObject().getSceneGraphObject());
     }
 
     public void updateColumnRowSelection(GridSelectionGroup gsg) {

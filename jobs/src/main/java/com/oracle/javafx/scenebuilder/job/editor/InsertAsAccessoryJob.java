@@ -52,10 +52,12 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
+import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 
 /**
  * Job used to insert new FXOM objects into an accessory location.
@@ -66,12 +68,21 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
     private final FXOMObject newObject;
     private final FXOMObject targetObject;
     private Accessory accessory;
+    private final int targetIndex;
     private final FXOMDocument fxomDocument;
 
     public InsertAsAccessoryJob(ApplicationContext context, 
             FXOMObject newObject,
             FXOMObject targetObject,
             Accessory accessory,
+            Editor editor) {
+        this(context, newObject, targetObject, accessory, -1, editor);
+    }
+    public InsertAsAccessoryJob(ApplicationContext context, 
+            FXOMObject newObject,
+            FXOMObject targetObject,
+            Accessory accessory,
+            int targetIndex,
             Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
@@ -80,46 +91,109 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
         assert newObject != null;
         assert targetObject != null;
         assert accessory != null;
+        assert targetIndex >= -1;
         assert newObject.getFxomDocument() == fxomDocument;
         assert targetObject.getFxomDocument() == fxomDocument;
+        assert accessory != null;
 
         this.newObject = newObject;
         this.targetObject = targetObject;
         this.accessory = accessory;
+        this.targetIndex = targetIndex;
     }
 
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
+        
+        if (accessory == null) {
+            return result;
+        }
+            
         if (targetObject instanceof FXOMInstance) {
-
+            
             final DesignHierarchyMask mask = new DesignHierarchyMask(targetObject);
             
-            if (accessory == null) {// check is main accessory is accepting this drop
-                if (mask.isAcceptingAccessory(mask.getMainAccessory(), newObject)
-                        //TODO mainaccessory may be a collection, this condition seems bad in this case
-                        && mask.getAccessory(mask.getMainAccessory()) == null) {
-                    accessory = mask.getMainAccessory();
-                }
+            if (!mask.isAcceptingAccessory(accessory, newObject)) {
+                return result;
             }
             
-            if (accessory == null) {// we will find the first accessory accepting this drop
-                for (Accessory a:mask.getAccessories()) {
-                    if (mask.isAcceptingAccessory(a, newObject)
-                            //TODO mainaccessory may be a collection, this condition seems bad in this case
-                            && mask.getAccessory(a) == null) {
-                        accessory = a;
-                    }
-                }
-            }
+            final FXOMInstance targetInstance = (FXOMInstance) targetObject;
+            final PropertyName accessoryName = mask.getPropertyNameForAccessory(accessory);
+            assert accessoryName != null;
+
+            // Property has no value yet because of (1) or is a collection
             
-            if (accessory != null) { // (1)
+            if (accessory.isCollection()) {
+                /*
+                 * If accessory is a collection
+                 * Two cases:
+                 *  1) targetObject has no sub component yet
+                 *      => a new FXOMProperty must created
+                 *      => newObject must be added to this property using AddPropertyValueJob
+                 *      => new property must be added to targetObject using AddPropertyJob
+                 *  2) targetObject has already some sub components
+                 *      2.1) property is an FXOMPropertyC
+                 *          => newObject must be inserted amongst the existing values
+                 *      2.2) property is an empty FXOMPropertyT (see DTL-6206)
+                 *          => property must be replaced by an FXOMPropertyC
+                 *          => newObject must be inserted in the FXOMPropertyC
+                 */ 
+                
+                final FXOMProperty currentProperty
+                    = targetInstance.getProperties().get(accessoryName);
 
-                final FXOMInstance targetInstance = (FXOMInstance) targetObject;
-                final PropertyName accessoryName = mask.getPropertyNameForAccessory(accessory);
-                assert accessoryName != null;
+                final FXOMPropertyC targetProperty;
+                if (currentProperty instanceof FXOMPropertyC) {
+                    targetProperty = (FXOMPropertyC) currentProperty;
+                } else {
+                    targetProperty = new FXOMPropertyC(fxomDocument, accessoryName);
+                }
 
-                // Property has no value yet because of (1)
+                /*
+                 * RemovePropertyJob
+                 */
+                if (currentProperty instanceof FXOMPropertyT) {
+                    result.add(new RemovePropertyJob(getContext(), currentProperty, getEditorController()).extend());
+                }
+        
+                /*
+                 * AddPropertyValueJob
+                 */
+                final Job addValueJob
+                        = new AddPropertyValueJob(getContext(), newObject,
+                                targetProperty,
+                                targetIndex,
+                                getEditorController()).extend();
+                result.add(addValueJob);
+        
+                /*
+                 * AddPropertyJob
+                 */
+                if (targetProperty.getParentInstance() == null) {
+                    assert targetObject instanceof FXOMInstance;
+                    final Job addPropertyJob
+                            = new AddPropertyJob(getContext(), targetProperty, targetInstance,
+                            -1, getEditorController()).extend();
+                    result.add(addPropertyJob);
+                }
+        
+                /*
+                 * PrunePropertiesJob
+                 */
+                final Job pruneJob = new PrunePropertiesJob(getContext(), newObject, targetObject,
+                        getEditorController()).extend();
+                if (pruneJob.isExecutable()) {
+                    result.add(0, pruneJob);
+                }
+               
+            } else {
+                /*
+                 * If accessory is not a collection
+                 *      => a new FXOMProperty must created
+                 *      => newObject must be added to this property using AddPropertyValueJob
+                 *      => new property must be added to targetObject using AddPropertyJob
+                 */
                 FXOMProperty targetProperty = new FXOMPropertyC(fxomDocument, accessoryName);
 
                 final Job addValueJob
@@ -143,6 +217,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                     result.add(0, pruneJob);
                 }
             }
+        
         }
         return result;
     }

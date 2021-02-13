@@ -66,7 +66,7 @@ public abstract class Job {
     public abstract String getDescription();
 
     public ExtendedJob<?> extend() {
-    	if (this.getClass().isAssignableFrom(ExtendedJob.class)) {
+    	if (ExtendedJob.class.isAssignableFrom(this.getClass())) {
     		return (ExtendedJob<?>)this;
     	}
     	if (extendedJob == null) {

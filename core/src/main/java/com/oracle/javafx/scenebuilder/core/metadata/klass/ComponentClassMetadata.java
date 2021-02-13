@@ -80,13 +80,16 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     private final Map<String, Qualifier> qualifiers = new HashMap<>();
     
     /** The free child positioning flag. default false */
-    private boolean freeChildPositioning;
+    private final Map<ComponentPropertyMetadata, Boolean> freeChildPositioning = new HashMap<>();
     
     /** The inherited parent metadata. */
     private final ComponentClassMetadata<?> parentMetadata;
 
     /** true if the component deserves a resizing while used as top element of the layout. default: true */
     private boolean resizeNeededWhenTopElement = true;
+    
+    /** property used for object description */
+    private PropertyName descriptionProperty = null;
     
     /** if set operate a custom mutation on the original string */
     private LabelMutation labelMutation = null;
@@ -103,30 +106,29 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public ComponentClassMetadata(Class<T> klass, ComponentClassMetadata<?> parentMetadata) {
         super(klass);
         this.parentMetadata = parentMetadata;
-        this.freeChildPositioning = false; // TODO(elp)
         setupSetSync();
     } 
 
     private void setupSetSync() {
         properties.addListener((Change<? extends PropertyMetadata> e) -> {
             if (e.wasAdded() && e.getElementAdded() != null) {
-                if (e.getElementAdded().getClass().isAssignableFrom(ValuePropertyMetadata.class)) {
+                if (ValuePropertyMetadata.class.isAssignableFrom(e.getElementAdded().getClass())) {
                     if (e.getElementAdded().isGroup()) {
                         groups.add((PropertyGroupMetadata)e.getElementAdded());
                     } else {
                         values.add((ValuePropertyMetadata)e.getElementAdded());
                     }
-                } else if (e.getElementAdded().getClass().isAssignableFrom(ComponentPropertyMetadata.class)) {
+                } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementAdded().getClass())) {
                     subComponents.add((ComponentPropertyMetadata)e.getElementAdded());
                 } 
             } else if (e.wasRemoved() && e.getElementRemoved() != null) {
-                if (e.getElementRemoved().getClass().isAssignableFrom(ValuePropertyMetadata.class)) {
+                if (ValuePropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
                     if (e.getElementRemoved().isGroup()) {
                         groups.remove(e.getElementRemoved());
                     } else {
                         values.remove(e.getElementRemoved());
                     }
-                } else if (e.getElementRemoved().getClass().isAssignableFrom(ComponentPropertyMetadata.class)) {
+                } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
                     subComponents.remove(e.getElementRemoved());
                 } 
             }
@@ -225,8 +227,45 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      *
      * @return true, if is free child positioning
      */
-    public boolean isFreeChildPositioning() {
-        return freeChildPositioning;
+    public boolean isFreeChildPositioning(ComponentPropertyMetadata componentProperty) {
+        ComponentClassMetadata<?> current = this;
+        
+        while (current != null && !current.freeChildPositioning.containsKey(componentProperty)) {
+            current = current.getParentMetadata();
+        }
+        
+        if (current == null) {
+            return false;
+        }
+        
+        Boolean free = current.freeChildPositioning.get(componentProperty);
+        return free == null ? false : free;
+    }
+    
+    
+    
+    protected void setDescriptionProperty(ValuePropertyMetadata promptTextPropertyMetadata) {
+        this.descriptionProperty = promptTextPropertyMetadata.getName();
+    }
+
+    /**
+     * Get the property name used for the description
+     * A lookup is done on parents metadata
+     *
+     * @return the property name or null if none found
+     */
+    public PropertyName getDescriptionProperty() {
+        ComponentClassMetadata<?> current = this;
+        
+        while (current != null && current.descriptionProperty == null ) {
+            current = current.getParentMetadata();
+        }
+        
+        if (current == null) {
+            return null;
+        }
+        
+        return current.descriptionProperty;
     }
 
     /**
@@ -418,7 +457,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      * @return the applicable qualifiers sets
      */
     public Set<Qualifier> applicableQualifiers(Object sceneGraphObject) {
-        if (!sceneGraphObject.getClass().isAssignableFrom(getKlass()) || getQualifiers().size() == 0) {
+        if (!getKlass().isAssignableFrom(sceneGraphObject.getClass()) || getQualifiers().size() == 0) {
             return Collections.unmodifiableSet(new HashSet<>());
         }
         return Collections.unmodifiableSet(getQualifiers().values().stream().filter(q -> q.isApplicable(sceneGraphObject)).collect(Collectors.toSet()));
@@ -503,8 +542,8 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         return this;
     }
 
-    protected void setFreeChildPositioning(boolean freeChildPositioning) {
-        this.freeChildPositioning = freeChildPositioning;
+    protected void setFreeChildPositioning(ComponentPropertyMetadata componentProperty, boolean freeChildPositioning) {
+        this.freeChildPositioning.put(componentProperty, freeChildPositioning);
     }
     
 }

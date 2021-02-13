@@ -68,6 +68,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -75,7 +76,6 @@ import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.collections.ObservableList;
@@ -417,7 +417,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                    MenuAttachment ma = it.next();
                    MenuItem targetCandidate = menuMap.get(ma.getTargetId());
 
-                   if (targetCandidate != null && !targetCandidate.getClass().isAssignableFrom(Menu.class)) {
+                   if (targetCandidate != null && !Menu.class.isAssignableFrom(targetCandidate.getClass())) {
                        continue;
                    }
 
@@ -577,7 +577,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                                    int index = items.indexOf(target);
                                    int insertAt = 0;
                                    for (int i = index; i >= 0; i--) {
-                                       if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                                       if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
                                            insertAt = i + 1;
                                            break;
                                        }
@@ -591,7 +591,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                                    int index = items.indexOf(target);
                                    int insertAt = items.size();
                                    for (int i = index; i < items.size(); i++) {
-                                       if (items.get(i).getClass().isAssignableFrom(SeparatorMenuItem.class)) {
+                                       if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
                                            insertAt = i;
                                            break;
                                        }

@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

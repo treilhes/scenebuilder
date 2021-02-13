@@ -45,13 +45,14 @@ import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide;
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
-import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
+import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -60,11 +61,13 @@ import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -89,15 +92,24 @@ public class EditCurveGesture extends AbstractMouseGesture {
     private final EnumMap<Tunable, Integer> tunableMap = new EnumMap<>(Tunable.class);
 
 	private final ApplicationContext context;
-
+	private final Parent closestParent;
+	
     public EditCurveGesture(ApplicationContext context, Content contentPanelController, FXOMInstance fxomInstance, Tunable tunable) {
         super(contentPanelController);
-        assert contentPanelController.lookupDriver(fxomInstance) != null;
+        //assert contentPanelController.lookupDriver(fxomInstance) != null;
         assert fxomInstance.getSceneGraphObject() instanceof Node;
         this.context = context;
         this.fxomInstance = fxomInstance;
         tunableMap.put(tunable, -1);
-        editor = contentPanelController.lookupDriver(fxomInstance).makeCurveEditor(fxomInstance);
+        editor = context.getBean(Driver.class).makeCurveEditor(fxomInstance);
+        
+        FXOMObject parent = fxomInstance.getClosestParent(); 
+        if (parent != null && parent.getSceneGraphObject() != null) {
+            closestParent = ((Parent)parent.getSceneGraphObject());
+        } else {
+            closestParent = null;
+        }
+        assert closestParent != null;
     }
 
     public EnumMap<Tunable, Integer> getTunableMap() {
@@ -119,7 +131,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         if (tunableMap.containsKey(Tunable.SIDE) && mousePressedEvent.isShortcutDown()) {
             final double hitX = mousePressedEvent.getSceneX();
             final double hitY = mousePressedEvent.getSceneY();
-            insertionPoint = editor.getSceneGraphObject().sceneToLocal(hitX, hitY, true);
+            insertionPoint = CoordinateHelper.sceneToLocal(editor.getFxomObject(), hitX, hitY, true);
             inserted = true;
         } else if (tunableMap.containsKey(Tunable.VERTEX) && mousePressedEvent.isShortcutDown()) {
             removed = true;
@@ -149,7 +161,9 @@ public class EditCurveGesture extends AbstractMouseGesture {
         assert hitParent != null;
 
         DesignHierarchyMask hitParentMask = new DesignHierarchyMask(hitParent);
-        assert hitParentMask.isFreeChildPositioning();
+        
+        // no free child positioning is not needed here
+        //assert hitParentMask.getMainAccessory() != null && hitParentMask.getMainAccessory().isFreeChildPositioning();
 
         for (int i = 0, c = hitParentMask.getSubComponentCount(); i < c; i++) {
             final FXOMObject child = hitParentMask.getSubComponentAtIndex(i);
@@ -270,7 +284,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
     @Override
     protected void userDidCancel() {
         editor.revertToOriginalState();
-        editor.getSceneGraphObject().getParent().layout();
+        closestParent.layout();
         contentPanelController.getHudWindowController().closeWindow();
     }
 
@@ -279,7 +293,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
             return;
         }
         final Node sceneGraphObject = editor.getSceneGraphObject();
-        sceneGraphObject.getParent().layout();
+        closestParent.layout();
 
         final double currentSceneX = getLastMouseEvent().getSceneX();
         final double currentSceneY = getLastMouseEvent().getSceneY();
@@ -291,9 +305,9 @@ public class EditCurveGesture extends AbstractMouseGesture {
             current = controller.correct(current);
         }
 
-        current = sceneGraphObject.sceneToLocal(current.getX(), current.getY(), true);
+        current = CoordinateHelper.sceneToLocal(editor.getFxomObject(), current.getX(), current.getY(), true);
         editor.moveTunable(tunableMap, current.getX(), current.getY());
-        sceneGraphObject.getParent().layout();
+        closestParent.layout();
 
         updateHudWindow();
     }
@@ -335,7 +349,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         updateHudWindow();
 
         hudWindowController.setRelativePosition(CardinalPoint.E);
-        hudWindowController.openWindow(editor.getSceneGraphObject());
+        hudWindowController.openWindow((Node)editor.getFxomObject().getClosestMainGraphNode().getSceneGraphObject());
     }
 
     private void updateHudWindow() {

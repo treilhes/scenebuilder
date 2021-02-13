@@ -48,10 +48,10 @@ import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.ContentPanelController;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

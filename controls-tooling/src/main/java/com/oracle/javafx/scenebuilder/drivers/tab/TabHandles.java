@@ -33,8 +33,11 @@
 package com.oracle.javafx.scenebuilder.drivers.tab;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.drivers.tabpane.TabPaneDesignInfoX;
@@ -52,7 +55,8 @@ import javafx.scene.control.TabPane;
  *
  *
  */
-
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TabHandles extends AbstractResilientHandles<Tab> {
 
     /*
@@ -73,10 +77,12 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
 
     public TabHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(context, contentPanelController, fxomInstance, Tab.class);
-
+    		Content contentPanelController) {
+        super(context, contentPanelController, Tab.class);
+    }
+    
+    @Override
+    public void initialize() {
         getSceneGraphObject().tabPaneProperty().addListener(
                 (ChangeListener<TabPane>) (ov, v1, v2) -> tabPaneDidChange());
 

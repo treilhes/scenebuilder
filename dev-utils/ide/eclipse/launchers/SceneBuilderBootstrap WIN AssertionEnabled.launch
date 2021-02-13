@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/app/src/main/java/com/oracle/javafx/scenebuilder/app/SceneBuilderApp.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.oracle.javafx.scenebuilder.app.SceneBuilderApp"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:${project_loc:/extension-api}/build/libs/extension-api-11.0.0-SNAPSHOT.jar&#13;&#10;-ea&#13;&#10;--module-path ${env_var:JAVAFX_11_LIB} &#13;&#10;@${project_loc:/dev-utils}/module.config&#13;&#10;@${project_loc:/dev-utils}/log.config&#13;&#10;-Xverify:none"/>
+</launchConfiguration>

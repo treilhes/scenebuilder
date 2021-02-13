@@ -32,8 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.tab;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
@@ -46,13 +51,23 @@ import javafx.scene.paint.Paint;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TabTring extends AbstractTring<Tab> {
 
-    private final TabOutline tabOutline;
+    private TabOutline tabOutline;
 
-    public TabTring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Tab.class);
-        assert fxomInstance.getSceneGraphObject() instanceof Tab;
+    public TabTring(Content contentPanelController) {
+        super(contentPanelController, Tab.class);
+    }
+    
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
+    }
+    
+    @Override
+    public void initialize() {
+        assert getFxomInstance().getSceneGraphObject() instanceof Tab;
 
         tabOutline = new TabOutline(getSceneGraphObject());
         tabOutline.getRingPath().getStyleClass().add(TARGET_RING_CLASS);

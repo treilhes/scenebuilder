@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,21 +53,23 @@ import javafx.scene.text.Text;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TextResizer extends AbstractResizer<Text> {
 
-    private final double originalWrappingWidth;
+    private double originalWrappingWidth;
     private final PropertyName wrappingWidthName = new PropertyName("wrappingWidth"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public TextResizer(Text sceneGraphObject) {
-        super(sceneGraphObject);
-        originalWrappingWidth = sceneGraphObject.getWrappingWidth();
+    public TextResizer() {
+        super();
         propertyNames.add(wrappingWidthName);
     }
 
-    /*
-     * AbstractResizer
-     */
+    @Override
+    public void initialize() {
+        originalWrappingWidth = sceneGraphObject.getWrappingWidth();
+    }
     
     @Override
     public final Bounds computeBounds(double width, double height) {

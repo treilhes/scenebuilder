@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,7 +80,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
@@ -514,7 +517,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         clearSections();
 
         // Listen the drag property changes
-        getEditorController().getDragController().dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
+        getApi().getApiDoc().getDrag().dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
             if (newVal != null) {
 //                    System.out.println("Drag started !");
                 dragOnGoing = true;
@@ -1591,7 +1594,24 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private Set<ValuePropertyMetadata> getValuePropertyMetadata() {
-        return Metadata.getMetadata().queryValueProperties(getSelectedClasses());
+        Set<ValuePropertyMetadata> values = Metadata.getMetadata().queryValueProperties(getSelectedClasses());;
+        Set<PropertyName> disabledProperties = getDisabledPropertiesFromMetadata();
+        return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
+    }
+    
+    private Set<PropertyName> getDisabledPropertiesFromMetadata() {
+        Set<PropertyName> disabled = new HashSet<>();
+        getSelectedInstances().stream()
+            .filter(fxi -> fxi.getParentObject() != null && fxi.getParentProperty() != null)
+            .forEach(fxi -> {
+                FXOMObject parent = fxi.getParentObject();
+                FXOMProperty property = fxi.getParentProperty();
+                ComponentPropertyMetadata cpm = Metadata.getMetadata().queryComponentProperty(parent.getSceneGraphObject().getClass(), property.getName());
+                if (cpm != null) {
+                    disabled.addAll(cpm.getDisabledProperties());
+                }
+            });
+        return disabled;
     }
 
     private void clearSections() {

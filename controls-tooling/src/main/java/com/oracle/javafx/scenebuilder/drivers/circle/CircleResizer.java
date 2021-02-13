@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,21 +53,23 @@ import javafx.scene.shape.Circle;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class CircleResizer extends AbstractResizer<Circle> {
 
-    private final double originalRadius;
+    private double originalRadius;
     private final PropertyName radiusName = new PropertyName("radius"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public CircleResizer(Circle sceneGraphObject) {
-        super(sceneGraphObject);
-        originalRadius = sceneGraphObject.getRadius();
+    public CircleResizer() {
+        super();
         propertyNames.add(radiusName);
     }
 
-    /*
-     * AbstractResizer
-     */
+    @Override
+    public void initialize() {
+        originalRadius = sceneGraphObject.getRadius();
+    }
     
     @Override
     public final Bounds computeBounds(double width, double height) {

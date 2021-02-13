@@ -35,9 +35,12 @@ package com.oracle.javafx.scenebuilder.drivers.tablecolumn;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
@@ -59,7 +62,8 @@ import javafx.scene.shape.Line;
  *
  *
  */
-
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TableColumnHandles extends AbstractResilientHandles<Object> {
 
     /*
@@ -83,12 +87,14 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
 
     public TableColumnHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(context, contentPanelController, fxomInstance, Object.class);
+    		Content contentPanelController) {
+        super(context, contentPanelController, Object.class);
         this.context = context;
-
-        assert fxomInstance.getSceneGraphObject() instanceof TableColumn;
+    }
+    
+    @Override
+    public void initialize() {
+        assert getFxomInstance().getSceneGraphObject() instanceof TableColumn;
 
         getRootNode().getChildren().add(grips); // Above handles
 

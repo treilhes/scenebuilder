@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
+import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyEvent;
 
@@ -103,7 +104,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         final double sceneX = getLastMouseEvent().getSceneX();
         final double sceneY = getLastMouseEvent().getSceneY();
         final double[] newDividerPositions
-                = di.simulateDividerMove(splitPane, dividerIndex, sceneX, sceneY);
+                = di.simulateDividerMove(splitPaneInstance, dividerIndex, sceneX, sceneY);
         splitPane.setDividerPositions(newDividerPositions);
         splitPane.layout();
         updateHudWindow();
@@ -192,7 +193,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
                 break;
         }
         hudWindowController.setRelativePosition(cp);
-        hudWindowController.openWindow(getSplitPane());
+        hudWindowController.openWindow((Node)splitPaneInstance.getClosestMainGraphNode().getSceneGraphObject());
     }
 
     private void updateHudWindow() {

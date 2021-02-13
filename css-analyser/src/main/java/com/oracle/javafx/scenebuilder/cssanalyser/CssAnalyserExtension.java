@@ -47,7 +47,8 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
         basePackageClasses = {
                 I18NCssAnalyser.class,
                 CssPanelController.class,
-                CssTableColumnsOrderingReversedPreference.class
+                CssTableColumnsOrderingReversedPreference.class,
+                CssAnalyserModeProvider.class
         })
 public class CssAnalyserExtension extends AbstractExtension {
     @Override

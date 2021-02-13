@@ -42,6 +42,7 @@ import java.util.Set;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyPath;
 
 import javafx.scene.Node;
@@ -135,10 +136,12 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
             result = true;
         } else {
             final Set<FXOMObject> parents = new HashSet<>();
+            final Set<FXOMProperty> parentProperties = new HashSet<>();
             for (FXOMObject i : items) {
                 parents.add(i.getParentObject());
+                parentProperties.add(i.getParentProperty());
             }
-            result = parents.size() == 1;
+            result = parents.size() == 1 && parentProperties.size() == 1;
         }
         
         return result;
@@ -206,7 +209,6 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
         
         return result;
     }
-    
     
     /*
      * Cloneable

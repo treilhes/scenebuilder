@@ -33,9 +33,11 @@
 package com.oracle.javafx.scenebuilder.drivers.node;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
 import javafx.scene.Node;
@@ -48,12 +50,18 @@ import javafx.scene.Node;
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
 */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodeHandles extends AbstractNodeHandles<Node> {
 
     public NodeHandles(
     		ApplicationContext context,
-    		Content contentPanelController,
-            FXOMInstance fxomInstance) {
-        super(context, contentPanelController, fxomInstance, Node.class);
+    		Content contentPanelController) {
+        super(context, contentPanelController, Node.class);
+    }
+    
+    @Override
+    public void initialize() {
+        
     }
 }

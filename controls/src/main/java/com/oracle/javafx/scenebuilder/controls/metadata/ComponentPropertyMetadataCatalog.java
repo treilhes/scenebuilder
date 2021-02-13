@@ -134,7 +134,7 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         centerPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.centerName,
                     nodeMetadata,
@@ -155,7 +155,7 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true)
+                    true /* main accessory */)
                 .setResizeNeededWhenTopElement(true);
         clipPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.clipName,
@@ -175,21 +175,21 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         columns_TreeTableColumn_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.columnsName,
                     treeTableColumnMetadata,
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         content_Node_NULL_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/DialogPane-content.png"),
                     null,
-                    true)
+                    true /* main accessory */)
                 .setResizeNeededWhenTopElement(true);
         content_Node_SEPARATOR_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.contentName,
@@ -210,7 +210,7 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         expandableContentPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.expandableContentName,
                     nodeMetadata,
@@ -222,7 +222,11 @@ public class ComponentPropertyMetadataCatalog {
                     nodeMetadata,
                     false, /* unique */
                     getClass().getResource("subcompicons/DialogPane-graphic.png"),
-                    null);
+                    null)
+                    .disableChildProperty(PropertyNames.xName)
+                    .disableChildProperty(PropertyNames.yName)
+                    .disableChildProperty(PropertyNames.layoutXName)
+                    .disableChildProperty(PropertyNames.layoutYName);
         headerPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.headerName,
                     nodeMetadata,
@@ -235,7 +239,7 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true)
+                    true /* main accessory */)
                 .setResizeNeededWhenTopElement(true);
         items_Node_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.itemsName,
@@ -243,7 +247,7 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true)
+                    true /* main accessory */)
                 .setResizeNeededWhenTopElement(true);
         labelForPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.labelForName,
@@ -264,14 +268,14 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         panesPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.panesName,
                     titledPaneMetadata,
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         placeholderPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.placeholderName,
                     nodeMetadata,
@@ -305,7 +309,7 @@ public class ComponentPropertyMetadataCatalog {
                     false, /* unique */
                     null,
                     null,
-                    true)
+                    true /* main accessory */)
                 .setResizeNeededWhenTopElement(true);
         scopePropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.scopeName,
@@ -313,6 +317,9 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null);
+        //TODO New feature: add the capacity to hide child's properties.
+        // shape property does not support child translation/rotation
+        // so those properties does not need to be shown in the inspector
         shapePropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.shapeName,
                     shapeMetadata,
@@ -337,7 +344,7 @@ public class ComponentPropertyMetadataCatalog {
                     true, /* collection */
                     null,
                     null,
-                    true);
+                    true /* main accessory */);
         textFormatterPropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.textFormatterName,
                     textFormatterMetadata,

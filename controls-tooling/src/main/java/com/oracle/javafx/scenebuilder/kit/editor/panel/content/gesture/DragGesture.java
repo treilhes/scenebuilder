@@ -32,30 +32,29 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.Driver;
-import com.oracle.javafx.scenebuilder.api.DropTarget;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
+import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
-import com.oracle.javafx.scenebuilder.editors.drag.target.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.ContainerXYDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.ImageViewDropTarget;
-import com.oracle.javafx.scenebuilder.editors.drag.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.ContainerXYDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.MovingGuideController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUtils;
 
@@ -64,21 +63,21 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Window;
 
 /**
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class DragGesture extends AbstractGesture {
 
-    private static final Logger LOG = Logger.getLogger(DragGesture.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DragGesture.class);
 
     private final double MARGIN = 14.0;
 
@@ -95,9 +94,15 @@ public class DragGesture extends AbstractGesture {
     private boolean guidesDisabled;
     private Node shadow;
 
-    public DragGesture(Content contentPanelController) {
+    private final GenericDriver driver;
+
+    public DragGesture(
+            @Autowired Content contentPanelController,
+            @Autowired Drag dragController,
+            @Autowired GenericDriver driver) {
         super(contentPanelController);
-        this.dragController = contentPanelController.getEditorController().getDragController();
+        this.dragController = dragController;
+        this.driver = driver;
     }
 
     /*
@@ -200,7 +205,7 @@ public class DragGesture extends AbstractGesture {
          */
 
         if (lastDragEvent.isDropCompleted()) {
-            LOG.log(Level.WARNING, "Ignored dragOver() after dragDropped()"); //NOI18N
+            logger.warn("Ignored dragOver() after dragDropped()"); //NOI18N
         } else {
             dragOverGlassLayerBis();
         }
@@ -234,114 +239,30 @@ public class DragGesture extends AbstractGesture {
 
     private void dragOverHitObject(FXOMObject hitObject) {
         assert hitObject != null;
+        
+        logger.debug("dragOverHitObject {}", hitObject == null ? "null" : hitObject.getSceneGraphObject().getClass().getName());
 
-        final FXOMDocument fxomDocument
-                = contentPanelController.getEditorController().getFxomDocument();
-        final DragSource dragSource
-                = dragController.getDragSource();
-        final DesignHierarchyMask m
-                = new DesignHierarchyMask(hitObject);
-        final double hitX
-                = lastDragEvent.getSceneX();
-        final double hitY
-                = lastDragEvent.getSceneY();
+        final FXOMDocument fxomDocument = contentPanelController.getEditorController().getFxomDocument();
+        final DragSource dragSource = dragController.getDragSource();
+        final double hitX = lastDragEvent.getSceneX();
+        final double hitY = lastDragEvent.getSceneY();
 
         assert fxomDocument != null;
         assert dragSource != null;
 
         DropTarget dropTarget = null;
         FXOMObject newHitParent = null;
-        DesignHierarchyMask newHitParentMask = null;
-
-        // dragSource is a single ImageView ?
-        final boolean hitImageView = hitObject.getSceneGraphObject() instanceof ImageView;
-        final boolean externalDragSource = dragSource instanceof ExternalDragSource;
-
-        if (dragSource.isSingleImageViewOnly() && hitImageView && externalDragSource) {
-            dropTarget = new ImageViewDropTarget(hitObject);
-            newHitParent = hitObject;
-            newHitParentMask = m;
-        }
-
         
-        if (dropTarget == null) {
-            List<Accessory> validTargets = new ArrayList<>();
-            for (Accessory a:m.getAccessories()) {
-                if (dragSource.getDraggedObjects().stream().allMatch(d -> a.isAccepting(d.getSceneGraphObject().getClass()))) {
-                    validTargets.add(a);
-                }
-            }
-            
-            if (validTargets.size() == 1) {
-                assert hitObject instanceof FXOMInstance;
-                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, validTargets.get(0));
-                newHitParent = hitObject;
-                newHitParentMask = m;
-            }
-        }
-//        
-//        // dragSource is a single Tooltip ?
-//        if (dropTarget == null) {
-//            if (dragSource.isSingleTooltipOnly()) {
-//                assert hitObject instanceof FXOMInstance;
-//                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.TOOLTIP);
-//                newHitParent = hitObject;
-//                newHitParentMask = m;
-//            }
-//        }
-//
-//        // dragSource is a single ContextMenu ?
-//        if (dropTarget == null) {
-//            if (dragSource.isSingleContextMenuOnly()) {
-//                assert hitObject instanceof FXOMInstance;
-//                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.CONTEXT_MENU);
-//                newHitParent = hitObject;
-//                newHitParentMask = m;
-//            }
-//        }
-
-        // hitObject is BorderPane ?
-        if (dropTarget == null) {
-            if (hitObject.getSceneGraphObject() instanceof BorderPane) {
-                final Driver driver = contentPanelController.lookupDriver(hitObject);
-                //assert driver instanceof BorderPaneDriver;
-                dropTarget = driver.makeDropTarget(hitObject, hitX, hitY);
-                newHitParent = hitObject;
-                newHitParentMask = m;
-            }
-        }
-
-        // hitObject has sub-components (ie it is a container)
-        if (dropTarget == null) {
-            if (m.isAcceptingSubComponent()) {
-                final Driver driver = contentPanelController.lookupDriver(hitObject);
-                dropTarget = driver.makeDropTarget(hitObject, hitX, hitY);
-                newHitParent = hitObject;
-                newHitParentMask = m;
-            }
-        }
-
-        //TODO !!! Check why Accessory.CONTENT seems to be a special case
-        // hitObject accepts Accessory.CONTENT
-//        if (dropTarget == null) {
-//            if (m.isAcceptingAccessory(Accessory.CONTENT)) {
-//                assert hitObject instanceof FXOMInstance;
-//                dropTarget = new AccessoryDropTarget((FXOMInstance)hitObject, Accessory.CONTENT);
-//                newHitParent = hitObject;
-//                newHitParentMask = m;
-//            }
-//        }
-
-        // hitObject parent is a container ?
-        if (dropTarget == null) {
+        dropTarget = driver.makeDropTarget(hitObject, hitX, hitY);
+        if (dropTarget != null) {
+            newHitParent = hitObject;
+        } else {
+            // hitObject parent is a container ? second chance
             final FXOMObject hitObjectParent = hitObject.getParentObject();
             if (hitObjectParent != null) {
-                final DesignHierarchyMask mp = new DesignHierarchyMask(hitObjectParent);
-                if (mp.isAcceptingSubComponent()) {
-                    final Driver driver = contentPanelController.lookupDriver(hitObjectParent);
-                    dropTarget = driver.makeDropTarget(hitObjectParent, hitX, hitY);
+                dropTarget = driver.makeDropTarget(hitObjectParent, hitX, hitY);
+                if (dropTarget != null) {
                     newHitParent = hitObjectParent;
-                    newHitParentMask = mp;
                 }
             }
         }
@@ -349,13 +270,14 @@ public class DragGesture extends AbstractGesture {
         // Update movingGuideController
         if (newHitParent != hitParent) {
             hitParent = newHitParent;
-            hitParentMask = newHitParentMask;
+            hitParentMask = new DesignHierarchyMask(hitParent);
             if (hitParent == null) {
                 assert hitParentMask == null;
                 movingGuideController.clearSampleBounds();
             } else {
                 assert hitParentMask != null;
-                if (hitParentMask.isFreeChildPositioning() && dragSource.isNodeOnly()) {
+                if (hitParentMask.getMainAccessory() != null
+                        && hitParentMask.getMainAccessory().isFreeChildPositioning() && dragSource.isNodeOnly()) {
                     populateMovingGuideController();
                 } else {
                     movingGuideController.clearSampleBounds();
@@ -382,8 +304,7 @@ public class DragGesture extends AbstractGesture {
         if (!MathUtils.equals(guidedX , hitX) || !MathUtils.equals(guidedY, hitY)) {
             assert dropTarget != null;
             assert dropTarget instanceof ContainerXYDropTarget;
-            final Driver driver = contentPanelController.lookupDriver(dropTarget.getTargetObject());
-            dropTarget = driver.makeDropTarget(hitParent, guidedX, guidedY);
+            dropTarget = driver.makeDropTarget(hitParent, guidedX, guidedY); // create with new guided coord
             assert dropTarget instanceof ContainerXYDropTarget;
         }
 
@@ -505,7 +426,7 @@ public class DragGesture extends AbstractGesture {
 
     private void populateMovingGuideController() {
         assert hitParentMask != null;
-        assert hitParentMask.isFreeChildPositioning(); // (1)
+        assert hitParentMask.getMainAccessory() != null  && hitParentMask.getMainAccessory().isFreeChildPositioning(); // (1)
 
         movingGuideController.clearSampleBounds();
 

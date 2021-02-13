@@ -32,67 +32,29 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.node;
 
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import javafx.geometry.Bounds;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+
 import javafx.scene.Node;
 
 /**
  *
  *
  */
-public class NodePring extends AbstractGenericPring<Node> {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public class NodePring extends AbstractNodePring<Node> {
 
-    public NodePring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Node.class);
-    }
-
-    public FXOMInstance getFxomInstance() {
-        return (FXOMInstance) getFxomObject();
-    }
-
-
-    /*
-     * AbstractGenericPring
-     */
-
-    @Override
-    public Bounds getSceneGraphObjectBounds() {
-        return getSceneGraphObject().getLayoutBounds();
+    public NodePring(Content contentPanelController) {
+        super(contentPanelController, Node.class);
     }
 
     @Override
-    public Node getSceneGraphObjectProxy() {
-        return getSceneGraphObject();
+    public void initialize() {
+        
     }
-
-    @Override
-    protected void startListeningToSceneGraphObject() {
-        startListeningToLayoutBounds(getSceneGraphObject());
-        startListeningToLocalToSceneTransform(getSceneGraphObject());
-    }
-
-    @Override
-    protected void stopListeningToSceneGraphObject() {
-        stopListeningToLayoutBounds(getSceneGraphObject());
-        stopListeningToLocalToSceneTransform(getSceneGraphObject());
-    }
-
-    @Override
-    public AbstractGesture findGesture(Node node) {
-        final AbstractGesture result;
-
-        if (node == ringPath) {
-            result = new SelectWithPringGesture(getContentPanelController(),
-                    getFxomInstance());
-        } else {
-            result = null;
-        }
-
-        return result;
-    }
+    
 }

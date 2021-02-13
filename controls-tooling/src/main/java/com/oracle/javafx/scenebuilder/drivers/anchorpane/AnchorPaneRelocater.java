@@ -38,27 +38,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.AnchorUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
 /**
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class AnchorPaneRelocater extends AbstractRelocater<AnchorPane> {
-
-    private final double originalLayoutX;
-    private final double originalLayoutY;
-    private final Double originalLeftAnchor;
-    private final Double originalRightAnchor;
-    private final Double originalTopAnchor;
-    private final Double originalBottomAnchor;
+    
+    private double originalLayoutX;
+    private double originalLayoutY;
+    private Double originalLeftAnchor;
+    private Double originalRightAnchor;
+    private Double originalTopAnchor;
+    private Double originalBottomAnchor;
     private final PropertyName layoutXName = new PropertyName("layoutX");
     private final PropertyName layoutYName = new PropertyName("layoutY");
     private final PropertyName leftAnchorName = new PropertyName("leftAnchor", AnchorPane.class);
@@ -67,8 +72,12 @@ public class AnchorPaneRelocater extends AbstractRelocater<AnchorPane> {
     private final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class);
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public AnchorPaneRelocater(Node sceneGraphObject) {
-        super(sceneGraphObject, AnchorPane.class);
+    public AnchorPaneRelocater() {
+        super(AnchorPane.class);
+    }
+    
+    @Override
+    public void initialize() {
         this.originalLayoutX = sceneGraphObject.getLayoutX();
         this.originalLayoutY = sceneGraphObject.getLayoutY();
         this.originalLeftAnchor = AnchorPane.getLeftAnchor(sceneGraphObject);

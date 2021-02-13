@@ -41,7 +41,6 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractPopupController;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
@@ -75,17 +74,19 @@ public class InlineEditController implements InlineEdit{
     private static final double TEXT_INPUT_CONTROL_MIN_WIDTH = 15;
     private static final double TEXT_AREA_MIN_HEIGHT = 80;
     private static final double TEXT_FIELD_MIN_HEIGHT = 15;
-    private final EditorController editorController;
+    //private final EditorController editorController;
     private InlineEditPopupController popupController;
 
     private static final String NID_INLINE_EDITOR = "inlineEditor";
 
 
 
-    public InlineEditController(final EditorController editorController) {
-        this.editorController = editorController;
+    public InlineEditController() {
+            //@Autowired @Lazy EditorController editorController) {
+        //this.editorController = editorController;
     }
 
+    @Override
     public boolean isWindowOpened() {
         return (popupController == null) ? false : popupController.isWindowOpened();
     }
@@ -167,7 +168,8 @@ public class InlineEditController implements InlineEdit{
             final Callback<Void, Boolean> requestRevert) {
 
         assert editor != null && anchor != null && requestCommit != null;
-        assert getEditorController().isTextEditingSessionOnGoing() == false;
+        //assert getEditorController().isTextEditingSessionOnGoing() == false;
+        assert isTextEditingSessionOnGoing() == false;
 
         popupController = new InlineEditPopupController(editor, requestCommit);
 
@@ -208,13 +210,14 @@ public class InlineEditController implements InlineEdit{
         // Open the popup window and inform the editor controller that
         // an editing session has started.
         popupController.openWindow(anchor);
-        editorController.textEditingSessionDidBegin(
-                new EditingSessionDidBeginCallback(this));
+        requestTextEditingSessionEnd = new EditingSessionDidBeginCallback(this);
+        //editorController.textEditingSessionDidBegin(
+        //        new EditingSessionDidBeginCallback(this));
     }
 
-    public EditorController getEditorController() {
-        return editorController;
-    }
+//    public EditorController getEditorController() {
+//        return editorController;
+//    }
 
     InlineEditPopupController getPopupController() {
         return popupController;
@@ -232,7 +235,8 @@ public class InlineEditController implements InlineEdit{
         // otherwise keeps the editing session on-going
         if (commitSucceeded) {
             // First inform the editor controller that the editing session has ended
-            getEditorController().textEditingSessionDidEnd();
+            //getEditorController().textEditingSessionDidEnd();
+            textEditingSessionDidEnd();
             // Then close the window
             popupController.closeWindow();
         }
@@ -247,7 +251,8 @@ public class InlineEditController implements InlineEdit{
         // otherwise keeps the editing session on-going
         if (revertSucceeded) {
             // First inform the editor controller that the editing session has ended
-            getEditorController().textEditingSessionDidEnd();
+            //getEditorController().textEditingSessionDidEnd();
+            textEditingSessionDidEnd();
             // Then close the window
             popupController.closeWindow();
         }
@@ -330,7 +335,8 @@ public class InlineEditController implements InlineEdit{
             this.editor.focusedProperty().addListener((ChangeListener<Boolean>) (ov, oldValue, newValue) -> {
                 // The inline editing popup auto hide when loosing focus :
                 // need to commit inline editing on focus change
-                if (getEditorController().isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
+                //if (getEditorController().isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
+                if (isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
                         && newValue == false) {
                     requestCommitAndClose(requestCommit, editor.getText());
                 }
@@ -373,7 +379,8 @@ public class InlineEditController implements InlineEdit{
         protected void anchorXYDidChange() {
             // When resizing the window, the inline editor remains focused :
             // need to commit inline editing on X/Y change
-            if (getEditorController().isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
+            //if (getEditorController().isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
+            if (isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
                     && initialValue.equals(editor.getText()) == false) {
                 requestCommitAndClose(requestCommit, editor.getText());
             }
@@ -433,5 +440,67 @@ public class InlineEditController implements InlineEdit{
                     popupController.requestCommit,
                     popupController.editor.getText());
         }
+    }
+    
+    
+    
+    
+    private Callback<Void, Boolean> requestTextEditingSessionEnd;
+    /**
+     * Returns true if fxml content being edited can be returned safely.
+     * This method will return false if there is a text editing session on-going.
+     *
+     * @return true if fxml content being edited can be returned safely.
+     */
+    
+    @Override
+    public boolean canGetFxmlText() {
+        final boolean result;
+
+        if (requestTextEditingSessionEnd == null) {
+            result = true;
+        } else {
+            result = requestTextEditingSessionEnd.call(null);
+            // If the callback returns true, then it should have call
+            // textEditingSessionDidEnd()
+            // => requestTextEditingSessionEnd should be null
+            assert (requestTextEditingSessionEnd == null) || (result == false);
+        }
+
+        return result;
+    }
+
+    /**
+     * Tells this editor that a text editing session has started.
+     * The editor controller may invoke the requestSessionEnd() callback
+     * if it needs the text editing session to stop. The callback should;
+     *   - either stop the text editing session, invoke textEditingSessionDidEnd()
+     *     and return true
+     *   - either keep the text editing session on-going and return false
+     *
+     * @param requestSessionEnd Callback that should end the text editing session or return false
+     */
+    @Override
+    public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd) {
+        assert requestTextEditingSessionEnd == null;
+        requestTextEditingSessionEnd = requestSessionEnd;
+    }
+
+
+    /**
+     * Tells this editor that the text editing session has ended.
+     */
+    @Override
+    public void textEditingSessionDidEnd() {
+        assert requestTextEditingSessionEnd != null;
+        requestTextEditingSessionEnd = null;
+    }
+
+    /*
+     * Returns true if a text editing session is currently on going.
+     */
+    @Override
+    public boolean isTextEditingSessionOnGoing() {
+        return requestTextEditingSessionEnd != null;
     }
 }

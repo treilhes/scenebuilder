@@ -37,7 +37,6 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -62,8 +61,8 @@ public abstract class AbstractOutline<T> extends AbstractDecoration<T> implement
     private final LineTo lineTo3 = new LineTo();
 
     public AbstractOutline(Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(contentPanelController, fxomObject, sceneGraphClass);
+            Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
 
         final List<PathElement> ringElements = ringPath.getElements();
         ringElements.add(moveTo0);
@@ -74,6 +73,11 @@ public abstract class AbstractOutline<T> extends AbstractDecoration<T> implement
         ringPath.getStyleClass().add(OUTLINE_RING_CLASS);
         ringPath.setMouseTransparent(true);
         getRootNode().getChildren().add(ringPath);
+    }
+    
+    @Override
+    public void initialize() {
+        
     }
 
     /*

@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -327,6 +328,14 @@ public class Metadata implements InitializingBean {
             }
         }
         return result;
+    }
+    
+    public ComponentPropertyMetadata queryComponentProperty(Class<?> componentClass, PropertyName name) {
+        ComponentClassMetadata<?> classMetadata = queryComponentMetadata(componentClass);
+        Optional<ComponentPropertyMetadata> result = classMetadata.getAllSubComponentProperties().stream()
+            .filter(scp -> scp.getName().equals(name))
+            .findFirst();
+        return result.isEmpty() ? null : result.get();
     }
     
     public Set<ValuePropertyMetadata> queryValueProperties(Set<Class<?>> componentClasses) {

@@ -34,6 +34,9 @@ package com.oracle.javafx.scenebuilder.drivers.splitpane;
 
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -116,10 +119,11 @@ public class SplitPaneDesignInfoX  {
      * @return the array of divider positions after the simulated move
      */
 
-    public double[] simulateDividerMove(SplitPane splitPane, int dividerIndex, double sceneX, double sceneY) {
+    public double[] simulateDividerMove(FXOMObject fxomSplitPane, int dividerIndex, double sceneX, double sceneY) {
+        final SplitPane splitPane = (SplitPane)fxomSplitPane.getSceneGraphObject();
         final List<SplitPane.Divider> dividers = splitPane.getDividers();
         final double currentPos = dividers.get(dividerIndex).getPosition();
-        final Point2D p = splitPane.sceneToLocal(sceneX, sceneY, true /* rootScene */);
+        final Point2D p = CoordinateHelper.sceneToLocal(fxomSplitPane, sceneX, sceneY, true /* rootScene */);
         final double claimedPos = splitPaneLocalToDividerPosition(splitPane, p.getX(), p.getY(), true /* clamp */, false /* snap */);
         double minPos, maxPos, newPos;
         final double[] result;

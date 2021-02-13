@@ -33,13 +33,13 @@
 package com.oracle.javafx.scenebuilder.api.control.driver;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.Driver;
-import com.oracle.javafx.scenebuilder.api.DropTarget;
-import com.oracle.javafx.scenebuilder.api.Handles;
-import com.oracle.javafx.scenebuilder.api.Pring;
-import com.oracle.javafx.scenebuilder.api.Resizer;
-import com.oracle.javafx.scenebuilder.api.Tring;
+import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
+import com.oracle.javafx.scenebuilder.api.control.Handles;
+import com.oracle.javafx.scenebuilder.api.control.Pring;
+import com.oracle.javafx.scenebuilder.api.control.Resizer;
+import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;

@@ -33,10 +33,9 @@
 package com.oracle.javafx.scenebuilder.api.control.pring;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Pring;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Paint;
@@ -49,9 +48,8 @@ public abstract class AbstractPring<T> extends AbstractDecoration<T> implements 
 
     public static final String PARENT_RING_CLASS = "parent-ring"; //NOI18N
 
-    public AbstractPring(Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(contentPanelController, fxomObject, sceneGraphClass);
+    public AbstractPring(Content contentPanelController, Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
     }
 
     @Override

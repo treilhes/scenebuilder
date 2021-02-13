@@ -448,6 +448,8 @@ public class FXOMInstance extends FXOMObject {
     /* For FXOMProperty.addToParentInstance() private use only */
     void addProperty(FXOMProperty property) {
         assert property.getParentInstance() == this;
+//        assert property instanceof FXOMPropertyC || 
+//            (property instanceof FXOMPropertyT && properties.get(property.getName()) == null);
         assert properties.get(property.getName()) == null;
         properties.put(property.getName(), property);
     }

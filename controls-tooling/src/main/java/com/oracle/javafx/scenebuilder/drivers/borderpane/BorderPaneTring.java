@@ -34,12 +34,18 @@ package com.oracle.javafx.scenebuilder.drivers.borderpane;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -51,7 +57,11 @@ import javafx.scene.layout.Region;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
+    
+    private static final Logger logger = LoggerFactory.getLogger(BorderPaneTring.class);
     
     public enum BorderPanePosition {
         TOP,
@@ -61,29 +71,47 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         CENTER
     }
 
-    private final Accessory targetAccessory;
+    private Accessory targetAccessory;
     private final BorderPane borderPane = new BorderPane();
     private final Label topLabel = new Label();
     private final Label bottomLabel = new Label();
     private final Label leftLabel = new Label();
     private final Label rightLabel = new Label();
     private final Label centerLabel = new Label();
+    private BorderPaneHierarchyMask borderPaneHierarchyMask;
 
 
-    public BorderPaneTring(Content contentPanelController,
-            FXOMInstance fxomInstance, DesignHierarchyMask.Accessory targetAccessory) {
-        super(contentPanelController, fxomInstance, BorderPane.class);
+    public BorderPaneTring(Content contentPanelController) {
+        super(contentPanelController, BorderPane.class);
+    }
+    
+    private BorderPaneHierarchyMask getMask() {
+        if (borderPaneHierarchyMask == null || borderPaneHierarchyMask.getFxomObject() != getFxomObject()) {
+            borderPaneHierarchyMask = new BorderPaneHierarchyMask(getFxomInstance());
+        }
+        return borderPaneHierarchyMask;
+    }
+    
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
+        assert dropTarget instanceof AccessoryDropTarget;
         
-        final BorderPaneHierarchyMask m = new BorderPaneHierarchyMask(fxomInstance);
+        final AccessoryDropTarget accessoryDropTarget = (AccessoryDropTarget) dropTarget;
+        this.targetAccessory = accessoryDropTarget.getAccessory();
         
-        assert (targetAccessory == m.getTopAccessory())
-                || (targetAccessory == m.getBottomAccessory())
-                || (targetAccessory == m.getLeftAccessory())
-                || (targetAccessory == m.getRightAccessory())
-                || (targetAccessory == m.getCenterAccessory());
-
-        this.targetAccessory = targetAccessory;
-
+        logger.info("target accessory > {}", targetAccessory == null ? "null" : targetAccessory.getName().getName());
+        
+        assert (getMask().getTopAccessory().equals(targetAccessory)
+                || getMask().getBottomAccessory().equals(targetAccessory)
+                || getMask().getLeftAccessory().equals(targetAccessory)
+                || getMask().getRightAccessory().equals(targetAccessory)
+                || getMask().getCenterAccessory().equals(targetAccessory));
+    }
+    
+    @Override
+    public void initialize() {
+        assert this.targetAccessory != null;
+        
         topLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         topLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         bottomLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -95,11 +123,11 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         centerLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         centerLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
-        topLabel.setText(m.getTopAccessory().getName().getName().toUpperCase());
-        bottomLabel.setText(m.getBottomAccessory().getName().getName().toUpperCase());
-        leftLabel.setText(m.getLeftAccessory().getName().getName().toUpperCase());
-        rightLabel.setText(m.getRightAccessory().getName().getName().toUpperCase());
-        centerLabel.setText(m.getCenterAccessory().getName().getName().toUpperCase());
+        topLabel.setText(getMask().getTopAccessory().getName().getName().toUpperCase());
+        bottomLabel.setText(getMask().getBottomAccessory().getName().getName().toUpperCase());
+        leftLabel.setText(getMask().getLeftAccessory().getName().getName().toUpperCase());
+        rightLabel.setText(getMask().getRightAccessory().getName().getName().toUpperCase());
+        centerLabel.setText(getMask().getCenterAccessory().getName().getName().toUpperCase());
 
         topLabel.getStyleClass().add(TARGET_RING_CLASS);
         topLabel.getStyleClass().add(BorderPane.class.getSimpleName());
@@ -113,11 +141,11 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         centerLabel.getStyleClass().add(BorderPane.class.getSimpleName());
 
         
-        topLabel.setVisible(m.getAccessory(m.getTopAccessory()) == null);
-        bottomLabel.setVisible(m.getAccessory(m.getBottomAccessory()) == null);
-        leftLabel.setVisible(m.getAccessory(m.getLeftAccessory()) == null);
-        rightLabel.setVisible(m.getAccessory(m.getRightAccessory()) == null);
-        centerLabel.setVisible(m.getAccessory(m.getCenterAccessory()) == null);
+        topLabel.setVisible(getMask().getAccessory(getMask().getTopAccessory()) == null);
+        bottomLabel.setVisible(getMask().getAccessory(getMask().getBottomAccessory()) == null);
+        leftLabel.setVisible(getMask().getAccessory(getMask().getLeftAccessory()) == null);
+        rightLabel.setVisible(getMask().getAccessory(getMask().getRightAccessory()) == null);
+        centerLabel.setVisible(getMask().getAccessory(getMask().getCenterAccessory()) == null);
 
         borderPane.setTop(topLabel);
         borderPane.setBottom(bottomLabel);

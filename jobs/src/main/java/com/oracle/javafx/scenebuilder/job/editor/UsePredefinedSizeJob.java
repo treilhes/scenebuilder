@@ -52,6 +52,8 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
+import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
+import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -241,7 +243,7 @@ public class UsePredefinedSizeJob extends Job {
         assert size != Size.SIZE_PREFERRED;
 
         if (size == Size.SIZE_DEFAULT) {
-            return editor.getDefaultRootContainerWidth();
+            return getContext().getBean(RootContainerWidthPreference.class).getValue();
         }
         return size.getWidth();
     }
@@ -250,7 +252,7 @@ public class UsePredefinedSizeJob extends Job {
         assert size != Size.SIZE_PREFERRED;
 
         if (size == Size.SIZE_DEFAULT) {
-            return editor.getDefaultRootContainerHeight();
+            return getContext().getBean(RootContainerHeightPreference.class).getValue();
         }
 
         return size.getHeight();

@@ -5,7 +5,7 @@ dependencies {
 	//implementation project(':library')
 	implementation project(':jobs')
 	implementation project(':editors')
-	implementation project(':controls-tooling')
+	implementation project(':drag-and-drop')
 }
 
 jar {

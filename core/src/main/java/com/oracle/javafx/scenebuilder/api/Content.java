@@ -47,13 +47,14 @@ import javafx.scene.transform.Transform;
 
 public interface Content extends FXOMDocument.SceneGraphHolder {
 
+    // TODO delete ASAP
 	Editor getEditorController();
 
 	SubScene getContentSubScene();
 
 	Node getGlassLayer();
 
-	Driver lookupDriver(FXOMObject fxomInstance);
+	//Driver lookupDriver(FXOMObject fxomInstance);
 
 	FXOMObject pick(double hitX, double hitY, Set<FXOMObject> pickExcludes);
 
@@ -85,7 +86,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	Group getPringLayer();
 
-	void scrollToSelection();
+	void scrollToSelection();// TODO not working, need to investigate 
 
 	void reveal(FXOMObject fxomObject);
 
@@ -95,6 +96,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
     FXOMObject searchWithNode(Node node, double x, double y);
 
+    // TODO this is a test method, check if usage is needed
     /**
      * Returns the handles associated an fxom object.
      * Returns null if the fxom object is currently not selected or
@@ -102,6 +104,6 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
      * @param fxomObject an fxom object
      * @return null or the associated handles
      */
-    Handles<?> lookupHandles(FXOMObject fxomObject);
+    //Handles<?> lookupHandles(FXOMObject fxomObject);
 
 }

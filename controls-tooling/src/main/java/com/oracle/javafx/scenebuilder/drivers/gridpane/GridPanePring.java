@@ -33,9 +33,13 @@
 
 package com.oracle.javafx.scenebuilder.drivers.gridpane;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
@@ -49,6 +53,8 @@ import javafx.scene.paint.Paint;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class GridPanePring extends AbstractPring<GridPane> {
 
     private final GridPaneMosaic mosaic
@@ -56,11 +62,15 @@ public class GridPanePring extends AbstractPring<GridPane> {
                     true /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
 
-    public GridPanePring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, GridPane.class);
-
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
+    public GridPanePring(Content contentPanelController) {
+        super(contentPanelController, GridPane.class);
         getRootNode().getChildren().add(mosaic.getTopGroup());
+    }
+    
+    @Override
+    public void initialize() {
+        assert getFxomInstance().getSceneGraphObject() instanceof GridPane;
+        mosaic.setGridPane((GridPane)getFxomObject().getSceneGraphObject());
     }
 
     public FXOMInstance getFxomInstance() {

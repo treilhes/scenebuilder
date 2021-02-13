@@ -54,6 +54,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -76,8 +77,8 @@ import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Path;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.BeanPropertyState;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.PropertyState;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState.CssStyle;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.PropertyState;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
@@ -240,6 +241,8 @@ public class CssPanelController extends AbstractFxmlViewController {
 	private final DocumentManager documentManager;
 	private final FileSystem fileSystem;
 
+    private final Drag drag;
+
     /**
      * Should be implemented by the application.
      *
@@ -261,6 +264,7 @@ public class CssPanelController extends AbstractFxmlViewController {
 			@Autowired Delegate delegate,
 			@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
 			@Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
+			@Autowired Drag drag,
 			@Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
 			@Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction,
 			@Autowired @Qualifier("cssPanelActions.ViewTextAction") Action viewTextAction,
@@ -272,6 +276,7 @@ public class CssPanelController extends AbstractFxmlViewController {
 		this.documentManager = api.getApiDoc().getDocumentManager();
 		this.applicationDelegate = delegate;
 		this.sceneBuilderFactory = sceneBuilderFactory;
+		this.drag = drag;
 		this.fileSystem = api.getFileSystem();
 		this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
 
@@ -402,7 +407,7 @@ public class CssPanelController extends AbstractFxmlViewController {
         selectionPath.selected().addListener(selectionListener);
 
         // Listen the drag property changes
-        getEditorController().getDragController().dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
+        drag.dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
             if (newVal != null) {
 //                    System.out.println("Drag started !");
                 dragOnGoing = true;

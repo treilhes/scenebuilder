@@ -34,4 +34,6 @@ package com.oracle.javafx.scenebuilder.api;
 
 public interface Mode {
 
+    Object getModeId();
+
 }

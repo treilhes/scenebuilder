@@ -37,13 +37,20 @@ import java.util.UUID;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.HudWindowController;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 @Configuration
 @ComponentScan(
         basePackageClasses = {
-                I18NContentEditor.class
+                I18NContentEditor.class,
+                ContentPanelController.class,
+                ContentModeProvider.class,
+                HudWindowController.class,
+                WorkspaceController.class
         })
 public class ContentEditorExtension extends AbstractExtension {
     @Override

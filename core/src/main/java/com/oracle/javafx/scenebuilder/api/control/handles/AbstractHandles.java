@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 import java.net.URL;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Handles;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -64,9 +63,8 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
 
     private boolean enabled = true;
 
-    public AbstractHandles(Content contentPanelController,
-            FXOMObject fxomObject, Class<T> sceneGraphClass) {
-        super(contentPanelController, fxomObject, sceneGraphClass);
+    public AbstractHandles(Content contentPanelController, Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
     }
 
     public boolean isEnabled() {

@@ -51,7 +51,8 @@ import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
         EditorController.class, 
         SelectionBarController.class, 
         JobManagerImpl.class,
-        DialogController.class 
+        DialogController.class
+        
         }, 
         basePackages = {
                 "com.oracle.javafx.scenebuilder.kit.preferences",

@@ -35,7 +35,8 @@ package com.oracle.javafx.scenebuilder.api.control.resizer;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.api.Resizer;
+import com.oracle.javafx.scenebuilder.api.control.Resizer;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.geometry.Bounds;
@@ -47,18 +48,30 @@ import javafx.scene.Node;
  */
 public abstract class AbstractResizer<T extends Node> implements Resizer<T>{
 
-    protected final T sceneGraphObject;
+    protected FXOMObject fxomObject;
+    protected T sceneGraphObject;
 
-    public AbstractResizer(T sceneGraphObject) {
-        assert sceneGraphObject != null;
-        this.sceneGraphObject = sceneGraphObject;
+    public AbstractResizer() {}
+    
+    public void setFxomObject(FXOMObject fxomObject) {
+        assert fxomObject != null;
+        assert fxomObject.getSceneGraphObject() instanceof Node;
+        this.fxomObject = fxomObject;
+        this.sceneGraphObject = (T)fxomObject.getSceneGraphObject();
     }
 
     @Override
     public T getSceneGraphObject() {
         return sceneGraphObject;
     }
+    
+    @Override
+    public FXOMObject getFxomObject() {
+        return fxomObject;
+    }
 
+    @Override
+    public abstract void initialize();
     @Override
     public abstract Bounds computeBounds(double width, double height);
     @Override

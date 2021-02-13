@@ -32,12 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ControlAction;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
@@ -45,7 +48,6 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -68,7 +70,7 @@ import javafx.stage.WindowEvent;
 @Lazy
 public class ContextMenuController implements com.oracle.javafx.scenebuilder.api.ContextMenu {
 
-    private final EditorController editorController;
+    private final Editor editorController;
     private ContextMenu contextMenu; // Initialized lazily
 
     private MenuItem cutMenuItem;
@@ -146,9 +148,11 @@ public class ContextMenuController implements com.oracle.javafx.scenebuilder.api
     private final ChangeListener<Number> jobManagerRevisionListener
             = (observable, oldValue, newValue) -> jobManagerRevisionDidChange();
 
-    public ContextMenuController(final EditorController editorController) {
+    public ContextMenuController(
+            @Autowired JobManager jobManager,
+            @Autowired @Lazy Editor editorController) {
         this.editorController = editorController;
-        this.editorController.getJobManager().revisionProperty().addListener(jobManagerRevisionListener);
+        jobManager.revisionProperty().addListener(jobManagerRevisionListener);
     }
 
     @Override

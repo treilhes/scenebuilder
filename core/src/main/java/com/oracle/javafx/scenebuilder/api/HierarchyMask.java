@@ -51,6 +51,7 @@ public interface HierarchyMask {
         boolean isCollection();
         boolean isAccepting(Class<?> valueClass);
         boolean isMain();
+        boolean isFreeChildPositioning();
         ComponentPropertyMetadata getPropertyMetadata();
     }
 

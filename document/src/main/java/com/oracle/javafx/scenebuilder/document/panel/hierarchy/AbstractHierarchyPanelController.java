@@ -753,116 +753,6 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
                 treeItem.getChildren().add(makeTreeItemAccessory(mask, value, accessory));
             }
         });
-//        
-//        // Graphic (displayed at first position)
-//        //---------------------------------
-//        if (mask.isAcceptingAccessory(Accessory.GRAPHIC)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.GRAPHIC);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItemGraphic(mask, value));
-//            }
-//        }
-//
-//        // Tooltip (displayed at second position)
-//        //---------------------------------
-//        if (mask.isAcceptingAccessory(Accessory.TOOLTIP)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.TOOLTIP);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//
-//        // Context menu (displayed at third position)
-//        //---------------------------------
-//        if (mask.isAcceptingAccessory(Accessory.CONTEXT_MENU)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.CONTEXT_MENU);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//
-//        // Axis (chart)
-//        //---------------------------------
-//        if (mask.isAcceptingAccessory(Accessory.XAXIS)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.XAXIS);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//        if (mask.isAcceptingAccessory(Accessory.YAXIS)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.YAXIS);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//
-//        // Gluon ExpansionPanel
-//        for (Accessory accessory: new Accessory[]{
-//                Accessory.EXPANDED_CONTENT,
-//                Accessory.COLLAPSED_CONTENT
-//        }) {
-//            if (mask.isAcceptingAccessory(accessory)) {
-//                final FXOMObject value = mask.getAccessory(accessory);
-//                treeItem.getChildren().add(makeTreeItemExpansionPanel(mask, value, accessory));
-//            }
-//        }
-//
-//        // Gluon ExpandedPanel
-//        if (mask.isAcceptingAccessory(Accessory.EX_CONTENT)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.EX_CONTENT);
-//            treeItem.getChildren().add(makeTreeItemExpandedPanel(mask, value));
-//        }
-//
-//        // Content (ScrollPane, Tab...)
-//        //---------------------------------
-//        if (mask.isAcceptingAccessory(Accessory.CONTENT)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.CONTENT);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//
-//        if (mask.isAcceptingAccessory(Accessory.ROOT)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.ROOT);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//
-//        if (mask.isAcceptingAccessory(Accessory.SCENE)) {
-//            final FXOMObject value = mask.getAccessory(Accessory.SCENE);
-//            if (value != null) {
-//                treeItem.getChildren().add(makeTreeItem(value));
-//            }
-//        }
-//
-//        // Positionning
-//        //---------------------------------
-//        for (Accessory accessory : new Accessory[]{
-//            Accessory.TOP,
-//            Accessory.LEFT,
-//            Accessory.CENTER,
-//            Accessory.RIGHT,
-//            Accessory.BOTTOM}) {
-//            if (mask.isAcceptingAccessory(accessory)) {
-//                final FXOMObject value = mask.getAccessory(accessory);
-//                treeItem.getChildren().add(makeTreeItemBorderPane(mask, value, accessory));
-//            }
-//        }
-//
-//        // DialogPane
-//        //---------------------------------
-//        for (Accessory accessory : new Accessory[]{
-//            Accessory.HEADER,
-//            Accessory.DP_GRAPHIC,
-//            Accessory.DP_CONTENT,
-//            Accessory.EXPANDABLE_CONTENT}) {
-//            if (mask.isAcceptingAccessory(accessory)) {
-//                final FXOMObject value = mask.getAccessory(accessory);
-//                treeItem.getChildren().add(makeTreeItemDialogPane(mask, value, accessory));
-//            }
-//        }
-//
         // Sub components
         //---------------------------------
         if (mask.isAcceptingSubComponent()) {
@@ -1087,8 +977,8 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
                     db.setContent(dragSource.makeClipboardContent());
                     db.setDragView(dragSource.makeDragView());
                     // DragController.begin
-                    assert editor.getDragController().getDragSource() == null;
-                    editor.getDragController().begin(dragSource);
+                    assert getApi().getApiDoc().getDrag().getDragSource() == null;
+                    getApi().getApiDoc().getDrag().begin(dragSource);
                 }
 
             } else {
@@ -1101,8 +991,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
 
     private void handleOnDragDone(final DragEvent event) {
         // DragController update
-        final Drag dragController
-                = editor.getDragController();
+        final Drag dragController = getApi().getApiDoc().getDrag();
         assert shouldEndOnExit == false;
         dragController.end();
         event.getDragboard().clear();
@@ -1116,8 +1005,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
 
         // DragController update
-        final Drag dragController
-                = editor.getDragController();
+        final Drag dragController = getApi().getApiDoc().getDrag();
         dragController.commit();
         // Do not invoke dragController.end here because we always receive a
         // DRAG_EXITED event which will perform the termination
@@ -1136,8 +1024,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         // DragController update
         // The drag source is null if the drag gesture
         // has been started from outside (from the explorer / finder)
-        final Drag dragController
-                = editor.getDragController();
+        final Drag dragController = getApi().getApiDoc().getDrag();
         if (dragController.getDragSource() == null) { // Drag started externally
             final FXOMDocument fxomDocument
                     = editor.getFxomDocument();
@@ -1168,8 +1055,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
 
         // DragController update
-        final Drag dragController
-                = editor.getDragController();
+        final Drag dragController = getApi().getApiDoc().getDrag();
         dragController.setDropTarget(null);
         if (shouldEndOnExit) {
             dragController.end();

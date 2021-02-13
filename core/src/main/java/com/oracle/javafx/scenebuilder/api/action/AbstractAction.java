@@ -91,7 +91,7 @@ public abstract class AbstractAction implements Action {
 
 	@Override
 	public ExtendedAction<?> extend() {
-		if (this.getClass().isAssignableFrom(ExtendedAction.class)) {
+		if (ExtendedAction.class.isAssignableFrom(this.getClass())) {
 			return (ExtendedAction<?>) this;
 		}
 		if (extendedAction == null) {

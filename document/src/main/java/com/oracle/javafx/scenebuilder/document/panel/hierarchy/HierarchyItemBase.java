@@ -216,7 +216,7 @@ public class HierarchyItemBase implements HierarchyItem {
         if (mask == null) {
             return false;
         }
-        return option == INFO && mask.isResourceKey();
+        return option == INFO && mask.isResourceKey(mask.getPropertyNameForDescription());
     }
 
     @Override
@@ -248,7 +248,7 @@ public class HierarchyItemBase implements HierarchyItem {
         return mask != null
                 && (option == FXID
                 || option == NODEID
-                || (option == INFO && mask.hasDescription()));
+                || (option == INFO && mask.getPropertyNameForDescription() != null));
     }
 
     @Override

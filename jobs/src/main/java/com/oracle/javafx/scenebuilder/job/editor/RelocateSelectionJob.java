@@ -43,6 +43,7 @@ import java.util.Set;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
@@ -52,6 +53,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RelocateNodeJob;
 
 import javafx.geometry.Point2D;
@@ -158,7 +160,9 @@ public class RelocateSelectionJob extends BatchDocumentJob {
             if (osg.hasSingleParent()) {
                 final FXOMObject parent = osg.getAncestor();
                 final DesignHierarchyMask m = new DesignHierarchyMask(parent);
-                result = m.isFreeChildPositioning();
+                PropertyName parentPropertyName = osg.getHitItem().getParentProperty().getName();
+                Accessory parentAccessory = m.getAccessoryForPropertyName(parentPropertyName);
+                result = parentAccessory.isFreeChildPositioning();
             } else {
                 result = false;
             }

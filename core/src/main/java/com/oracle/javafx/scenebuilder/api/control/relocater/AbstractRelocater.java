@@ -35,6 +35,8 @@ package com.oracle.javafx.scenebuilder.api.control.relocater;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.javafx.scenebuilder.api.control.Relocater;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.geometry.Bounds;
@@ -45,24 +47,50 @@ import javafx.scene.Parent;
  *
  * 
  */
-public abstract class AbstractRelocater<T extends Parent> {
+public abstract class AbstractRelocater<T extends Parent> implements Relocater<T> {
     
-    protected final Node sceneGraphObject;
-    protected final Class<T> parentClass;
+    protected final Class<?> parentClass;
+    protected Node sceneGraphObject;
+    protected FXOMObject fxomObject;
 
-    public AbstractRelocater(Node sceneGraphObject, Class<T> parentClass) {
-        assert sceneGraphObject != null;
-        assert sceneGraphObject.getParent() != null;
-        assert sceneGraphObject.getParent().getClass() == parentClass;
-        this.sceneGraphObject = sceneGraphObject;
+    public AbstractRelocater(Class<?> parentClass) {
         this.parentClass = parentClass;
     }
     
+    public void setFxomObject(FXOMObject fxomObject) {
+        assert fxomObject.getSceneGraphObject() != null;
+        assert fxomObject.isNode();
+        assert fxomObject.hasParent() || fxomObject.isDetachedGraph();
+        
+        this.fxomObject = fxomObject;
+        this.sceneGraphObject = (Node)fxomObject.getSceneGraphObject();
+        
+        assert sceneGraphObject.getParent().getClass() == parentClass;
+    }
+    
+    @Override
+    public Node getSceneGraphObject() {
+        return this.sceneGraphObject;
+    }
+    
+    @Override
+    public FXOMObject getFxomObject() {
+        return this.fxomObject;
+    }
+    
+    @Override
+    public abstract void initialize();
+    @Override
     public abstract void moveToLayoutX(double newLayoutX, Bounds newLayoutBounds);
+    @Override
     public abstract void moveToLayoutY(double newLayoutY, Bounds newLayoutBounds);
+    @Override
     public abstract void revertToOriginalLocation();
 
+    @Override
     public abstract List<PropertyName> getPropertyNames();
+    @Override
     public abstract Object getValue(PropertyName propertyName);
+    @Override
     public abstract Map<PropertyName, Object> getChangeMap();
 }

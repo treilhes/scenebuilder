@@ -38,11 +38,19 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.DragGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.ZoomGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectWithMarqueeGesture;
 
 @Configuration
 @ComponentScan(
         basePackageClasses = {
-
+                DriverExtensionInitializer.class,
+                DragGesture.class,
+                ZoomGesture.class,
+                SelectWithMarqueeGesture.class,
+                SelectAndMoveGesture.class
         })
 public class BaseToolingExtension extends AbstractExtension {
 

@@ -37,7 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
@@ -49,27 +53,29 @@ import javafx.scene.image.ImageView;
  *
  * 
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ImageViewResizer extends AbstractResizer<ImageView> {
 
-    private final double originalFitWidth;
-    private final double originalFitHeight;
+    private double originalFitWidth;
+    private double originalFitHeight;
     private final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOI18N
     private final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOI18N
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
-    public ImageViewResizer(ImageView sceneGraphObject) {
-        super(sceneGraphObject);
-        originalFitWidth   = sceneGraphObject.getFitWidth();
-        originalFitHeight  = sceneGraphObject.getFitHeight();
+    public ImageViewResizer() {
+        super();
         propertyNames.add(fitWidthName);
         propertyNames.add(fitHeightName);
 //        assert BoundsUtils.equals(sceneGraphObject.getLayoutBounds(), 
 //                computeBounds(originalFitWidth, originalFitHeight));
     }
 
-    /*
-     * AbstractResizer
-     */
+    @Override
+    public void initialize() {
+        originalFitWidth   = sceneGraphObject.getFitWidth();
+        originalFitHeight  = sceneGraphObject.getFitHeight();
+    }
     
     @Override
     public final Bounds computeBounds(double width, double height) {

@@ -40,25 +40,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.oracle.javafx.scenebuilder.api.EditCurveGuide.Tunable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
 
 import javafx.collections.ObservableList;
 import javafx.scene.shape.Polygon;
-
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class PolygonEditor extends AbstractCurveEditor<Polygon> {
 
-    private final List<Double> originalPoints;
+    private List<Double> originalPoints;
 
     private final List<PropertyName> propertyNames = new ArrayList<>();
 
     private int vertexIndex = -1;
 
-    public PolygonEditor(Polygon sceneGraphObject) {
-        super(sceneGraphObject);
-
+    public PolygonEditor() {
+        super();
+    }
+    
+    @Override
+    public void initialize() {
         originalPoints = new ArrayList<>(sceneGraphObject.getPoints());
     }
 

@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.editors.drag.target;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.DropTarget;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 

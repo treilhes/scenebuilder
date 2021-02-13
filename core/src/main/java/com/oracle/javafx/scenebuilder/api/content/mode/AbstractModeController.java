@@ -46,6 +46,8 @@ public abstract class AbstractModeController implements Mode{
 
     protected final Content contentPanelController;
 
+    @Override
+    public abstract Object getModeId();
 
     public AbstractModeController(Content contentPanelController) {
         this.contentPanelController = contentPanelController;

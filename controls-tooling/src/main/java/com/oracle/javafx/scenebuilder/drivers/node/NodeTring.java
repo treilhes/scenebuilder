@@ -32,9 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.node;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.scene.Node;
 
@@ -42,9 +46,21 @@ import javafx.scene.Node;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodeTring extends AbstractNodeTring<Node> {
 
-    public NodeTring(Content contentPanelController, FXOMInstance fxomInstance) {
-        super(contentPanelController, fxomInstance, Node.class);
+    public NodeTring(Content contentPanelController) {
+        super(contentPanelController, Node.class);
+    }
+    
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
+        
+    }
+
+    @Override
+    public void initialize() {
+        
     }
 }

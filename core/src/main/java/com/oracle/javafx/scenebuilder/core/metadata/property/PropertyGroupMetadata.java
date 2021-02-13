@@ -70,7 +70,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
             Object value = values[i];
             ValuePropertyMetadata property = getProperties()[i];
             
-            assert value.getClass().isAssignableFrom(property.getClass());
+            assert property.getValueClass().isAssignableFrom(value.getClass());
             
             property.setValueInSceneGraphObject(fxomInstance, value);
         }
@@ -98,7 +98,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
             Object value = values[i];
             ValuePropertyMetadata property = getProperties()[i];
             
-            assert value == null || value.getClass().isAssignableFrom(property.getValueClass());
+            assert value == null || property.getValueClass().isAssignableFrom(value.getClass());
             
             property.setValueObject(fxomInstance, value);
         }

@@ -34,9 +34,15 @@ package com.oracle.javafx.scenebuilder.drivers.hbox;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -48,22 +54,42 @@ import javafx.scene.shape.Line;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class HBoxTring extends AbstractNodeTring<HBox> {
 
-    private final int targetIndex;
+    private int targetIndex = Integer.MIN_VALUE;
     private final Line crackLine = new Line();
 
-    public HBoxTring(Content contentPanelController,
-            FXOMInstance fxomInstance, int targetIndex) {
-        super(contentPanelController, fxomInstance, HBox.class);
-        assert targetIndex >= -1;
-        this.targetIndex = targetIndex;
-
+    public HBoxTring(Content contentPanelController) {
+        super(contentPanelController, HBox.class);
+        
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);
         crackLine.setMouseTransparent(true);
         getRootNode().getChildren().add(0, crackLine);
     }
 
+    @Override
+    public void defineDropTarget(DropTarget dropTarget) {
+        assert dropTarget instanceof AccessoryDropTarget; 
+        assert dropTarget.getTargetObject() instanceof FXOMInstance;
+        assert dropTarget.getTargetObject().getSceneGraphObject() instanceof HBox;
+        
+        final AccessoryDropTarget zDropTarget = (AccessoryDropTarget) dropTarget;
+        final int targetIndex;
+        if (zDropTarget.getBeforeChild() == null) {
+            targetIndex = -1;
+        } else {
+            targetIndex = zDropTarget.getBeforeChild().getIndexInParentProperty();
+        }
+        assert targetIndex >= -1;
+        this.targetIndex = targetIndex;
+    }
+
+    @Override
+    public void initialize() {
+        assert targetIndex >= -1;
+    }
 
     /*
      * AbstractGenericTring
