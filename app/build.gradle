@@ -10,11 +10,11 @@ archivesBaseName = "$rootProject.name"
 
 dependencies {
 	implementation project(':core')
-    implementation project(':kit')
-    implementation project(':defaultx')
-    implementation project(':gluon')
-    implementation project(':filesystem')
-    implementation project(':sb')
+	implementation project(':kit')
+	implementation project(':defaultx')
+	implementation project(':gluon')
+	implementation project(':filesystem')
+	implementation project(':sb')
 	implementation project(':inspector')
 	implementation project(':library')
 	implementation project(':controls')
@@ -32,8 +32,8 @@ dependencies {
 	implementation project(':certificate-manager')
 	implementation project(':content-editor')
 	implementation project(':css-analyser')
+	implementation project(':debug-menu')
 	//implementation project(':help-features')
-	
 }
 
 run {

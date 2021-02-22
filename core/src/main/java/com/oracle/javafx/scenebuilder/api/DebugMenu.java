@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-public interface MenuBar {
-
-
+public interface DebugMenu {
+    public void show();
+    public void hide();
 }

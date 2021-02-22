@@ -94,7 +94,7 @@ class CoordinateHelperTest {
     
     /**
      * Test if the java FX issue has been solved.
-     * Internal review ID: 9069120
+     * JDK-8262116 : Nodes used as clip or shape return invalid result for sceneToLocal/localToScene
      */
     @Test
     void testIfJavaFXIssueHasBeenSolved() {

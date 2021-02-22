@@ -70,9 +70,7 @@ import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
-import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
@@ -329,24 +327,24 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return result;
     }
 
-    public void toggleDebugMenu() {
-        final boolean visible;
-
-        if (windowList.isEmpty()) {
-            visible = false;
-        } else {
-            final Document dwc = windowList.get(0);
-            visible = dwc.getMenuBarController().isDebugMenuVisible();
-        }
-
-        for (Document dwc : windowList) {
-            dwc.getMenuBarController().setDebugMenuVisible(!visible);
-        }
-
-        if (EditorPlatform.IS_MAC) {
-            MenuBarController.getSystemMenuBarController().setDebugMenuVisible(!visible);
-        }
-    }
+//    public void toggleDebugMenu() {
+//        final boolean visible;
+//
+//        if (windowList.isEmpty()) {
+//            visible = false;
+//        } else {
+//            final Document dwc = windowList.get(0);
+//            visible = dwc.getMenuBarController().isDebugMenuVisible();
+//        }
+//
+//        for (Document dwc : windowList) {
+//            dwc.getMenuBarController().setDebugMenuVisible(!visible);
+//        }
+//
+//        if (EditorPlatform.IS_MAC) {
+//            MenuBarController.getSystemMenuBarController().setDebugMenuVisible(!visible);
+//        }
+//    }
 
     @Override
     public void onApplicationEvent(JavafxApplication.StageReadyEvent stageReadyEvent) {

@@ -30,9 +30,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.debugmenu.i18n;
 
-public interface MenuBar {
+import java.util.ResourceBundle;
 
+import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
+import com.oracle.javafx.scenebuilder.api.i18n.I18NControl;
+
+@Component
+public class I18NDebugMenu implements BundleProvider {
+
+    private static ResourceBundle bundle;
+
+    private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
+
+    @Override
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NDebugMenu.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDebugMenu",utf8EncodingControl); //NOI18N
+        }
+        return bundle;
+    }
 }
+

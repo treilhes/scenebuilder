@@ -44,7 +44,8 @@ import javafx.scene.Node;
 import javafx.scene.SubScene;
 
 /**
- * This class has been created has a workaround for the issue (Internal review ID: 9069120)
+ * This class has been created has a workaround for the issue :
+ * JDK-8262116 : Nodes used as clip or shape return invalid result for sceneToLocal/localToScene
  * When calculating position for nodes used as clip or as shape, the lack of parent
  * (getParent() return null) cause a calculation error. This class aims to solve this problem
  * until a valid fix is available 

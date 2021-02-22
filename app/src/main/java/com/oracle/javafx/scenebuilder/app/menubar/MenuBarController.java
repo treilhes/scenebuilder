@@ -328,7 +328,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private final ApplicationContext context;
     private final DocumentWindowController documentWindowController;
     private final RecentItemsPreference recentItemsPreference;
-    private final DebugMenuController debugMenuController; // Initialized lazily
     private final List<MenuProvider> menuProviders;
     private final List<MenuItemProvider> menuItemProviders;
 
@@ -343,7 +342,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             @Autowired(required = false) List<MenuProvider> menuProviders,
             @Autowired(required = false) List<MenuItemProvider> menuItemProviders,
             @Autowired @Lazy DocumentWindowController documentWindowController,
-            @Autowired @Lazy DebugMenuController debugMenuController,
             @Autowired @Lazy PreviewWindowController previewWindowController
             ) {
         this.context = context;
@@ -351,7 +349,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
         this.documentWindowController = documentWindowController;
-        this.debugMenuController = debugMenuController;
         this.previewWindowController = previewWindowController;
         
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
@@ -661,22 +658,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         }
 
         return menuBar;
-    }
-
-    @Override
-    public void setDebugMenuVisible(boolean visible) {
-        if (isDebugMenuVisible() != visible) {
-            if (visible) {
-                menuBar.getMenus().add(debugMenuController.getMenu());
-            } else {
-                menuBar.getMenus().remove(debugMenuController.getMenu());
-            }
-        }
-    }
-
-    @Override
-    public boolean isDebugMenuVisible() {
-        return menuBar.getMenus().contains(debugMenuController.getMenu());
     }
 
     public static synchronized MenuBarController getSystemMenuBarController() {
@@ -1820,16 +1801,4 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         return res;
     }
 
-    /**
-     * *************************************************************************
-     * Static inner class
-     * *************************************************************************
-     */
-    private class ClearOpenRecentHandler implements EventHandler<ActionEvent> {
-
-        @Override
-        public void handle(ActionEvent t) {
-            recentItemsPreference.clearRecentItems();
-        }
-    }
 }

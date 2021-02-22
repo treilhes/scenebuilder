@@ -30,9 +30,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.debugmenu;
 
-public interface MenuBar {
+import java.util.UUID;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
+import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
+import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuWindowController;
+import com.oracle.javafx.scenebuilder.debugmenu.i18n.I18NDebugMenu;
+import com.oracle.javafx.scenebuilder.debugmenu.menu.DebugMenuMenuProvider;
+import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+
+@Configuration
+@ComponentScan(
+        basePackageClasses = {
+                DebugMenuController.class,
+                DebugMenuWindowController.class,
+                I18NDebugMenu.class,
+                DebugMenuMenuProvider.class
+        })
+public class DebugMenuExtension extends AbstractExtension {
+    @Override
+    public UUID getId() {
+        return UUID.fromString("b97afbec-1861-4b39-9cee-4bd4f541afe3");
+    }
 }

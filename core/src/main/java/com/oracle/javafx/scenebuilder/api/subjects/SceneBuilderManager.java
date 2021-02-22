@@ -47,6 +47,7 @@ import io.reactivex.subjects.Subject;
 import lombok.Getter;
 
 public interface SceneBuilderManager {
+    SubjectItem<Boolean> debugMode();
     Subject<Boolean> closed();
     Subject<Document> documentOpened();
     Subject<Document> documentClosed();
@@ -56,10 +57,12 @@ public interface SceneBuilderManager {
 	@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 	public class SceneBuilderManagerImpl implements InitializingBean, SceneBuilderManager {
 
-		private SceneBuilderSubjects subjects;
+		private final SceneBuilderSubjects subjects;
+        private final SubjectItem<Boolean> debugMode;
 
 		public SceneBuilderManagerImpl() {
 			subjects = new SceneBuilderSubjects();
+			debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
 		}
 
 		@Override
@@ -85,6 +88,11 @@ public interface SceneBuilderManager {
         public Subject<Document> documentClosed() {
             return subjects.getDocumentClosed();
         }
+		
+		@Override
+        public SubjectItem<Boolean> debugMode() {
+            return debugMode;
+        }
 	}
 
 	public class SceneBuilderSubjects extends SubjectManager {
@@ -93,9 +101,11 @@ public interface SceneBuilderManager {
 		private @Getter PublishSubject<Boolean> closed;
 		private @Getter PublishSubject<Document> documentOpened;
 		private @Getter PublishSubject<Document> documentClosed;
+		private @Getter ReplaySubject<Boolean> debugMode;
 
 		public SceneBuilderSubjects() {
 		    closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create());
+		    debugMode = wrap(SceneBuilderSubjects.class, "debugMode", ReplaySubject.create(1));
 		    stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
 		    documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create());
 		    documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create());

@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.menubar;
+package com.oracle.javafx.scenebuilder.debugmenu.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,14 +41,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.DebugMenu;
 import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
@@ -66,21 +69,27 @@ import javafx.scene.control.SeparatorMenuItem;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-class DebugMenuController {
+public class DebugMenuController implements DebugMenu {
 
     private final Menu menu = new Menu("Debug"); //NOI18N
-    private final DocumentWindowController documentWindowController;
+    private final Document documentWindowController;
 	private final FileSystem fileSystem;
 	private final Dialog dialog;
+    private final DebugMenuWindowController debugMenuWindow;
 
     public DebugMenuController(
-    		@Autowired DocumentWindowController documentWindowController,
+    		@Autowired @Lazy Document documentWindowController,
     		@Autowired FileSystem fileSystem,
-    		@Autowired Dialog dialog) {
+    		@Autowired Dialog dialog,
+    		@Autowired SceneBuilderManager sceneBuilderManager,
+    		@Autowired @Lazy DebugMenuWindowController  debugMenuWindow) {
 
         this.documentWindowController = documentWindowController;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
+        this.debugMenuWindow = debugMenuWindow;
+        
+        menu.setVisible(false);
         /*
          * User Library Folder
          */
@@ -101,7 +110,7 @@ class DebugMenuController {
         layoutMenuItem.setText("Check \"localToSceneTransform Properties\" in Content Panel"); //NOI18N
         layoutMenuItem.setOnAction(t -> {
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM BEGINS"); //NOI18N
-            final ContentPanelController cpc
+            final Content cpc
                     = DebugMenuController.this.documentWindowController.getContentPanelController();
             checkLocalToSceneTransform(cpc.getRoot());
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM ENDS"); //NOI18N
@@ -138,6 +147,14 @@ class DebugMenuController {
 //        menu.getItems().add(useDarkThemeMenuItem);
         menu.getItems().add(new SeparatorMenuItem());
         menu.getItems().add(undoRedoStack);
+        
+        sceneBuilderManager.debugMode().subscribe(debug -> {
+            if (debug) {
+                show();
+            } else {
+                hide();
+            }
+        });
     }
 
     public Menu getMenu() {
@@ -221,6 +238,10 @@ class DebugMenuController {
 
     private MenuItem makeJobMenuItem(Job job) {
         final MenuItem result;
+        
+        if (job instanceof ExtendedJob) {
+            job = ((ExtendedJob<?>)job).getExtendedJob();
+        }
 
         if (job instanceof CompositeJob) {
             final CompositeJob compositeJob = (CompositeJob)job;
@@ -262,5 +283,15 @@ class DebugMenuController {
             targetMenu.getItems().add(new SeparatorMenuItem());
             addJobMenuItems(fixJobs, targetMenu);
         }
+    }
+
+    @Override
+    public void show() {
+        menu.setVisible(true);
+    }
+
+    @Override
+    public void hide() {
+        menu.setVisible(false);
     }
 }
