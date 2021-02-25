@@ -34,21 +34,29 @@ package com.oracle.javafx.scenebuilder.api.control;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
+import javafx.scene.Node;
+
 public interface Decoration<T> {
-	/**
+    /**
      * @treatAsPrivate
      */
     public enum State {
-        CLEAN,
-        NEEDS_RECONCILE,
-        NEEDS_REPLACE
+        CLEAN, NEEDS_RECONCILE, NEEDS_REPLACE
     }
-    
+
     void setFxomObject(FXOMObject fxomObject);
 
-    void initialize();
-    
-	State getState();
+    FXOMObject getFxomObject();
 
-	void reconcile();
+    State getState();
+
+    Node getRootNode();
+
+    void initialize();
+
+    void reconcile();
+
+    void update();
+
+    void setEnabled(boolean enabled);
 }

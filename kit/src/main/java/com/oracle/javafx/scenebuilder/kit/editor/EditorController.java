@@ -1736,7 +1736,7 @@ public class EditorController implements Editor {
         } else if (selection.getGroup() instanceof GridSelectionGroup) {
             // Select ALL rows / columns
             final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-            final FXOMObject gridPane = gsg.getParentObject();
+            final FXOMObject gridPane = gsg.getHitItem();
             assert gridPane instanceof FXOMInstance;
             final GridPaneHierarchyMask gridPaneMask = new GridPaneHierarchyMask(gridPane);
             int size = 0;
@@ -1860,7 +1860,7 @@ public class EditorController implements Editor {
         } else {
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final FXOMObject gridPane = gsg.getParentObject();
+            final FXOMObject gridPane = gsg.getHitItem();
             final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
             assert gridPane instanceof FXOMInstance;
             final Set<Integer> indexes = gsg.getIndexes();
@@ -1911,7 +1911,7 @@ public class EditorController implements Editor {
             if (indexes.size() != 1) {
                 return false;
             }
-            final FXOMObject gridPane = gsg.getParentObject();
+            final FXOMObject gridPane = gsg.getHitItem();
             final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
             int size = 0;
             switch (gsg.getType()) {
@@ -1952,7 +1952,7 @@ public class EditorController implements Editor {
         } else {
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final FXOMObject gridPane = gsg.getParentObject();
+            final FXOMObject gridPane = gsg.getHitItem();
             assert gridPane instanceof FXOMInstance;
             final Set<Integer> indexes = gsg.getIndexes();
             assert indexes.size() == 1; // Because of (1)

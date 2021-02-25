@@ -31,11 +31,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+package com.oracle.javafx.scenebuilder.contenteditor.guides;
 
 import java.util.Collections;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.core.guides.HorizontalLineIndex;
+import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
+import com.oracle.javafx.scenebuilder.core.guides.VerticalLineIndex;
+import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;

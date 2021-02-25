@@ -39,6 +39,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -73,8 +74,10 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
 
     @Override
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        enabledDidChange();
+        if (this.enabled != enabled){
+            this.enabled = enabled;
+            enabledDidChange();
+        }
     }
 
     @Override
@@ -155,4 +158,10 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
         return sideHandleDimImage;
     }
 
+    @Override
+    public void update(AbstractSelectionGroup selectionGroup) {
+        
+    }
+
+    
 }

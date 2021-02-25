@@ -34,16 +34,15 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
-import javafx.scene.transform.Transform;
 
 public interface Content extends FXOMDocument.SceneGraphHolder {
 
@@ -52,7 +51,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	SubScene getContentSubScene();
 
-	Node getGlassLayer();
+	Pane getGlassLayer();
 
 	//Driver lookupDriver(FXOMObject fxomInstance);
 
@@ -62,11 +61,11 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	boolean isGuidesVisible();
 
-	Group getHandleLayer();
+	//Group getHandleLayer();
 
-	Group getRudderLayer();
+	//Group getRudderLayer();
 
-	Transform computeSceneGraphToRudderLayerTransform(Node sceneGraphObject);
+	//Transform computeSceneGraphToRudderLayerTransform(Node sceneGraphObject);
 
 	Paint getGuidesColor();
 
@@ -84,7 +83,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	void endInteraction();
 
-	Group getPringLayer();
+	//Group getPringLayer();
 
 	void scrollToSelection();// TODO not working, need to investigate 
 
@@ -95,6 +94,8 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 	void beginInteraction();
 
     FXOMObject searchWithNode(Node node, double x, double y);
+
+    ModeManager getModeManager();
 
     // TODO this is a test method, check if usage is needed
     /**

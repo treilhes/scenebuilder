@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+package com.oracle.javafx.scenebuilder.contenteditor.guides;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.core.guides.AbstractSegment;
+import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
+import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;

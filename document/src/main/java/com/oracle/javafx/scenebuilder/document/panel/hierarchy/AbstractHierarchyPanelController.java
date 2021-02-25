@@ -54,7 +54,6 @@ import com.oracle.javafx.scenebuilder.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
-import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -520,12 +519,8 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         final List<FXOMObject> selectedFxomObjects = new ArrayList<>();
 
         if (getPanelControl() != null) {
-            if (selection.getGroup() instanceof ObjectSelectionGroup) {
-                final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-                selectedFxomObjects.addAll(osg.getItems());
-            } else if (selection.getGroup() instanceof GridSelectionGroup) {
-                final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-                selectedFxomObjects.add(gsg.getParentObject());
+            if (!selection.isEmpty()) {
+                selectedFxomObjects.addAll(selection.getGroup().getItems());
             }
 
             // Update selected items

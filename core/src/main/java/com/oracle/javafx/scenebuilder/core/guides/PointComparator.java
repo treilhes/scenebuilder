@@ -30,72 +30,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+package com.oracle.javafx.scenebuilder.core.guides;
 
-import javafx.scene.input.KeyEvent;
+import java.util.Comparator;
 
-/**
- *
- * 
- */
-public class DebugMouseGesture extends AbstractMouseGesture {
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
-    private final String title;
-    
-    public DebugMouseGesture(Content contentPanelController, String title) {
-        super(contentPanelController);
-        this.title = title;
-    }
+import javafx.geometry.Point2D;
 
-    /*
-     * AbstractMouseGesture
-     */
+public class PointComparator implements Comparator<Point2D> {
     
     @Override
-    protected void mousePressed() {
-        System.out.println("DebugMouseGesture.mousePressed");
-    }
+    public int compare(Point2D o1, Point2D o2) {
+        assert o1 != null;
+        assert o2 != null;
 
-    @Override
-    protected void mouseDragStarted() {
-        System.out.println("DebugMouseGesture.mouseDragStarted");
-    }
+        final int result;
 
-    @Override
-    protected void mouseDragged() {
-        System.out.println("DebugMouseGesture.mouseDragged");
-    }
+        if (o1 == o2) {
+            result = 0;
+        } else if (MathUtils.equals(o1.getX(), o2.getX()) && MathUtils.equals(o1.getY(), o2.getY())) {
+            result = 0;
+        } else {
+            double r1 = Math.sqrt(o1.getX() * o1.getX() + o1.getY() * o1.getY());
+            double r2 = Math.sqrt(o2.getX() * o2.getX() + o2.getY() * o2.getY());
+            result = Double.compare(r1, r2);
+        }
 
-    @Override
-    protected void mouseDragEnded() {
-        System.out.println("DebugMouseGesture.mouseDragEnded");
-    }
-
-    @Override
-    protected void mouseReleased() {
-        System.out.println("DebugMouseGesture.mouseReleased");
-    }
-
-    @Override
-    protected void keyEvent(KeyEvent e) {
-        System.out.println("DebugMouseGesture.keyEvent");
-    }
-
-    @Override
-    protected void userDidCancel() {
-        System.out.println("DebugMouseGesture.keyEvent");
+        return result;
     }
     
-    
-    /*
-     * Object
-     */
-    
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "[" + title + "]";
-    }
 }

@@ -40,6 +40,10 @@ import org.springframework.context.annotation.Configuration;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.HudWindowController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.WorkspaceController;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
@@ -50,7 +54,11 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
                 ContentPanelController.class,
                 ContentModeProvider.class,
                 HudWindowController.class,
-                WorkspaceController.class
+                WorkspaceController.class,
+                SelectWithMarqueeGesture.class,
+                SelectAndMoveGesture.class,
+                DragGesture.class,
+                ZoomGesture.class
         })
 public class ContentEditorExtension extends AbstractExtension {
     @Override

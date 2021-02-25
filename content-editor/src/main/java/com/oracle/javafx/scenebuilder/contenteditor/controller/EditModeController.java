@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.contenteditor.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,21 +50,25 @@ import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Gesture;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
-import com.oracle.javafx.scenebuilder.api.control.Decoration.State;
+import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
+import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
-import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
+import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -74,20 +79,12 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneHandles;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneTring;
 import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.DragGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectWithMarqueeGesture;
 
 import javafx.collections.ObservableList;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
@@ -97,7 +94,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
 /**
@@ -112,22 +108,17 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class EditModeController extends AbstractModeController
-implements Gesture.Observer {
+public class EditModeController extends AbstractModeController implements Gesture.Observer {
     
     public final static Object ID = EditModeController.class;
 
 	private final ApplicationContext context;
 	private final Driver driver;
 	
-    private final List<Handles<?>> handles = new ArrayList<>();
-    private final Set<FXOMObject> excludes = new HashSet<>();
-    private final SelectWithMarqueeGesture selectWithMarqueeGesture;
-    private final SelectAndMoveGesture selectAndMoveGesture;
-    private final ZoomGesture zoomGesture;
+    private SelectWithMarqueeGesture selectWithMarqueeGesture;
+    private SelectAndMoveGesture selectAndMoveGesture;
+    private ZoomGesture zoomGesture;
 
-    private Pring<?> pring;
-    private Tring<?> tring;
     private Gesture activeGesture;
     private Gesture glassGesture;
     private FXOMInstance inlineEditedObject;
@@ -143,10 +134,7 @@ implements Gesture.Observer {
     		@Autowired Driver driver,
     		@Autowired Drag drag,
     		@Autowired @Lazy Content contentPanelController,
-    		@Autowired @Lazy Editor editor,
-    		@Autowired SelectWithMarqueeGesture selectWithMarqueeGesture,
-    		@Autowired SelectAndMoveGesture selectAndMoveGesture,
-    		@Autowired ZoomGesture zoomGesture
+    		@Autowired @Lazy Editor editor
             ) {
         super(contentPanelController);
         this.context = context;
@@ -154,35 +142,55 @@ implements Gesture.Observer {
         this.driver = driver;
         this.drag = drag;
         this.editorController = editor;
-        this.selectWithMarqueeGesture = selectWithMarqueeGesture;
-        this.selectAndMoveGesture = selectAndMoveGesture;
-        this.zoomGesture = zoomGesture;
+        
+        Selection selection = api.getApiDoc().getSelection();
+        
+        newLayer(Outline.class, true, selection, 
+                // object selection
+                s -> collectNodes(),
+                // Handles creation
+                fxomObject -> driver.makeOutline(fxomObject));
+        
+        newLayer(Rudder.class, false, selection, 
+                // object selection
+                s -> s.getAncestor() == null ? new HashSet<>() : new HashSet<>(Arrays.asList(s.getAncestor())),
+                // Handles creation
+                fxomObject -> driver.makeRudder(fxomObject));
+        
+        newLayer(Pring.class, false, selection,
+                // object selection
+                s -> s.getAncestor() == null ? new HashSet<>() : new HashSet<>(Arrays.asList(s.getAncestor())),
+                // pring creation
+                fxomObject -> {
+                    Pring<?> pring = driver.makePring(fxomObject);
+                    if (pring != null) {
+                        pring.changeStroke(contentPanelController.getPringColor());
+                    }
+                    return pring;
+                });
+        
+        newLayer(Handles.class, false, selection, 
+                // object selection
+                s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
+                // Handles creation
+                fxomObject -> driver.makeHandles(fxomObject));
+        
+        newLayer(Tring.class, true, selection, 
+                s -> drag.isDropAccepted() && !(drag.getDropTarget() instanceof RootDropTarget) ? new HashSet<>(Arrays.asList(drag.getDropTarget().getTargetObject())) : null,
+                fxomObject -> {
+                    Tring<?> tring = driver.makeTring(drag.getDropTarget());
+                    if (tring != null) {
+                        tring.changeStroke(contentPanelController.getPringColor());
+                    }
+                    return tring;
+                });
+        
+        
     }
 
     @Override
     public Object getModeId() {
         return ID;
-    }
-    
-    /**
-     * Returns null or the handles associated to the specified fxom object.
-     *
-     * @param fxomObject an fxom object (never null)
-     * @return null or the handles associated to the specified fxom object.
-     */
-
-    public Handles<?> lookupHandles(FXOMObject fxomObject) {
-        assert fxomObject != null;
-
-        Handles<?> result = null;
-        for (Handles<?> h : handles) {
-            if (h.getFxomObject() == fxomObject) {
-                result = h;
-                break;
-            }
-        }
-
-        return result;
     }
 
     /*
@@ -208,22 +216,20 @@ implements Gesture.Observer {
     @Override
     public void willResignActive(AbstractModeController nextModeController) {
         stopListeningToInputEvents();
-
-        removeAllHandles();
-        removePring();
-        removeTring();
-
-        assert contentPanelController.getHandleLayer().getChildren().isEmpty();
-        assert contentPanelController.getPringLayer().getChildren().isEmpty();
-        assert contentPanelController.getRudderLayer().getChildren().isEmpty();
+        clearLayers();
     }
 
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
         assert contentPanelController.getGlassLayer() != null;
-        assert contentPanelController.getHandleLayer() != null;
-        assert contentPanelController.getPringLayer() != null;
-        assert contentPanelController.getRudderLayer() != null;
+        
+        if (this.selectWithMarqueeGesture == null) {
+            this.selectWithMarqueeGesture = context.getBean(SelectWithMarqueeGesture.class);
+            this.selectAndMoveGesture = context.getBean(SelectAndMoveGesture.class);
+            this.zoomGesture = context.getBean(ZoomGesture.class);
+        }
+        
+        getLayers().forEach(l -> l.enable());
 
         editorSelectionDidChange();
         startListeningToInputEvents();
@@ -231,8 +237,8 @@ implements Gesture.Observer {
 
     @Override
     public void editorSelectionDidChange() {
-        updateParentRing();
-        updateHandles();
+        getLayer(Pring.class).update();
+        getLayer(Handles.class).update();
         makeSelectionVisible();
     }
 
@@ -244,9 +250,9 @@ implements Gesture.Observer {
 
     @Override
     public void fxomDocumentDidRefreshSceneGraph() {
-        updateParentRing();
-        updateHandles();
-
+        getLayer(Pring.class).update();
+        getLayer(Handles.class).update();
+        
         // Object below the mouse may have changed : current glass gesture
         // must searched again.
         this.glassGesture = null;
@@ -254,7 +260,7 @@ implements Gesture.Observer {
 
     @Override
     public void dropTargetDidChange() {
-        updateTring();
+        getLayer(Tring.class).update();
     }
 
     /*
@@ -269,297 +275,12 @@ implements Gesture.Observer {
         // Walks trough the ancestor nodes of the first selected object and
         // makes sure that TabPane and Accordion are setup for displaying
         // this selected object.
-        if (handles.isEmpty() == false) {
-            contentPanelController.reveal(handles.get(0).getFxomObject());
+        Layer<Handles> layer = getLayer(Handles.class);
+        if (layer.getActiveItems().isEmpty() == false) {
+            contentPanelController.reveal(layer.getActiveItems().get(0).getFxomObject());
         }
     }
 
-    /*
-     * Private (pring)
-     */
-    private void updateParentRing() {
-        final Pring<?> newPring;
-
-        if (contentPanelController.isContentDisplayable()) {
-            final Selection selection = api.getApiDoc().getSelection();
-            if ((pring == null) || (pring.getFxomObject() != selection.getAncestor())) {
-                if (selection.getAncestor() != null) {
-                    newPring = makePring(selection.getAncestor());
-                } else {
-                    newPring = null;
-                }
-            } else {
-                switch(pring.getState()) {
-                    default:
-                    case CLEAN:
-                        newPring = pring;
-                        break;
-                    case NEEDS_RECONCILE:
-                        newPring = pring;
-                        pring.reconcile();
-                        break;
-                    case NEEDS_REPLACE:
-                        newPring = makePring(pring.getFxomObject());
-                        break;
-                }
-            }
-        } else {
-            // Document content cannot be displayed in content panel
-            newPring = null;
-        }
-
-        if (newPring != pring) {
-            final Group pringLayer = contentPanelController.getPringLayer();
-            if (pring != null) {
-                pringLayer.getChildren().remove(pring.getRootNode());
-            }
-            pring = newPring;
-            if (pring != null) {
-                pringLayer.getChildren().add(pring.getRootNode());
-            }
-        } else {
-            assert (pring == null) || pring.getState() == AbstractPring.State.CLEAN;
-        }
-    }
-
-    private Pring<?> makePring(FXOMObject fxomObject) {
-        final Pring<?> result;
-
-        if (driver != null) {
-            result = driver.makePring(fxomObject);
-            if (result != null) {
-                result.changeStroke(contentPanelController.getPringColor());
-            }
-        } else {
-            result = null;
-        }
-
-        return result;
-    }
-
-
-    private void removePring() {
-        if (pring != null) {
-            final Group pringLayer = contentPanelController.getPringLayer();
-            pringLayer.getChildren().remove(pring.getRootNode());
-            pring = null;
-        }
-    }
-
-    /*
-     * Private (tring)
-     */
-    private void updateTring() {
-        final Drag dragController = drag;
-        final Tring<?> newTring;
-
-        if (dragController.isDropAccepted()
-                && contentPanelController.isContentDisplayable()) {
-            final DropTarget dropTarget = dragController.getDropTarget();
-            if ((tring instanceof GridPaneTring) && (dropTarget instanceof GridPaneDropTarget)) {
-                // Let's reuse the GridPaneTring (because it's costly)
-                newTring = tring;
-                updateTring((GridPaneTring) tring, (GridPaneDropTarget) dropTarget);
-            } else {
-                newTring = makeTring(dragController.getDropTarget());
-            }
-        } else {
-            newTring = null;
-        }
-
-        if (newTring != tring) {
-            final Group rudderLayer = contentPanelController.getRudderLayer();
-            if (tring != null) {
-                rudderLayer.getChildren().remove(tring.getRootNode());
-            }
-            tring = newTring;
-            if (tring != null) {
-                rudderLayer.getChildren().add(tring.getRootNode());
-            }
-        } else {
-            assert (tring == null) || tring.getState() == State.CLEAN;
-        }
-    }
-
-    private void updateTring(GridPaneTring tring, GridPaneDropTarget dropTarget) {
-        assert tring != null;
-        assert dropTarget != null;
-
-        tring.defineDropTarget(dropTarget);
-    }
-
-    private Tring<?> makeTring(DropTarget dropTarget) {
-        final Tring<?> result;
-
-        if (dropTarget.getTargetObject() == null) {
-            assert dropTarget instanceof RootDropTarget;
-            result = null;
-        } else {
-            if (driver != null) {
-                result = driver.makeTring(dropTarget);
-                if (result != null) {
-                    result.changeStroke(contentPanelController.getPringColor());
-                }
-            } else {
-                result = null;
-            }
-        }
-
-        return result;
-    }
-
-    private void removeTring() {
-        if (tring != null) {
-            final Group rudderLayer = contentPanelController.getRudderLayer();
-            rudderLayer.getChildren().remove(tring.getRootNode());
-            tring = null;
-        }
-    }
-
-    /*
-     * Private (handles)
-     */
-
-    private void updateHandles() {
-        final Selection selection = api.getApiDoc().getSelection();
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            updateHandles((ObjectSelectionGroup) selection.getGroup());
-        } else if (selection.getGroup() instanceof GridSelectionGroup) {
-            updateHandles((GridSelectionGroup) selection.getGroup());
-        } else {
-            assert selection.getGroup() == null
-                    : "Implement updateHandles() for " + selection.getGroup();
-            // Selection is empty : removes all handles
-            removeAllHandles();
-        }
-
-        final boolean enabled = handles.size() == 1;
-        for (Handles<?> h : handles) {
-            h.setEnabled(enabled);
-        }
-    }
-
-    private void updateHandles(ObjectSelectionGroup osg) {
-        final List<Handles<?>> obsoleteHandles = new ArrayList<>();
-        final List<FXOMObject> incomingObjects = new ArrayList<>();
-
-        // Collects fxom objects from selection
-        if (contentPanelController.isContentDisplayable()) {
-            incomingObjects.addAll(osg.getItems());
-        }
-
-        // Collects obsolete handles
-        for (Handles<?> h : handles) {
-            if (incomingObjects.contains(h.getFxomObject())) {
-                // FXOM object associated to these handles is still selected
-                switch(h.getState()) {
-                    case CLEAN:
-                        incomingObjects.remove(h.getFxomObject());
-                        break;
-                    case NEEDS_RECONCILE:
-                        // scene graph associated to h has changed but h is still compatible
-                        h.reconcile();
-                        incomingObjects.remove(h.getFxomObject());
-                        break;
-                    case NEEDS_REPLACE:
-                        // h is no longer compatible with the new scene graph object
-                        obsoleteHandles.add(h);
-                        break;
-                }
-                // If h is grid pane handles reset the selected columns/rows
-                if (h instanceof GridPaneHandles) {
-                    final GridPaneHandles gph = (GridPaneHandles) h;
-                    gph.updateColumnRowSelection(null);
-                }
-            } else {
-                // FXOM object associated to these handles is no longer selected
-                // => handles become obsolete
-                obsoleteHandles.add(h);
-            }
-        }
-
-        // Let's create new handles for the incoming objects
-        excludes.clear();
-        final Group handleLayer = contentPanelController.getHandleLayer();
-        for (FXOMObject incomingObject : incomingObjects) {
-            
-            final Handles<?> newHandles = driver.makeHandles(incomingObject);
-            if (newHandles == null) {
-                // incomingObject cannot be managed by content panel (eg MenuItem)
-                excludes.add(incomingObject);
-            } else {
-                handleLayer.getChildren().add(newHandles.getRootNode());
-                handles.add(newHandles);
-            }
-        }
-
-        // Let's disconnect the obsolete handles
-        for (Handles<?> h : obsoleteHandles) {
-            handleLayer.getChildren().remove(h.getRootNode());
-            handles.remove(h);
-        }
-    }
-
-
-    private void updateHandles(GridSelectionGroup gsg) {
-        final List<Handles<?>> obsoleteHandles = new ArrayList<>();
-
-        // Collects obsolete handles
-        if (contentPanelController.isContentDisplayable()) {
-            for (Handles<?> h : handles) {
-                if (h.getFxomObject() == gsg.getParentObject()) {
-                    assert h instanceof GridPaneHandles;
-
-                    if (h.getState() == AbstractDecoration.State.NEEDS_RECONCILE) {
-                        // scene graph associated to h has changed but h is still compatible
-                        h.reconcile();
-                    } else {
-                        assert h.getState() == AbstractDecoration.State.CLEAN;
-                    }
-
-                    final GridPaneHandles gph = (GridPaneHandles) h;
-                    gph.updateColumnRowSelection(gsg);
-                } else {
-                    // FXOM object associated to these handles is no longer selected
-                    // => handles become obsolete
-                    obsoleteHandles.add(h);
-                }
-            }
-        } else {
-            // Document content is not displayed (because its root is not a node)
-            // => all handles are obsoletes
-            obsoleteHandles.addAll(handles);
-        }
-
-        // Let's create new handles for the incoming objects
-        excludes.clear();
-        final Group handleLayer = contentPanelController.getHandleLayer();
-        if (handles.size() == obsoleteHandles.size()) {
-            // No handles for grid pane row/column selection : creates one.
-            assert gsg.getParentObject().getSceneGraphObject() instanceof GridPane;
-            assert driver != null;
-            final Handles<?> newHandles = driver.makeHandles(gsg.getParentObject());
-            handleLayer.getChildren().add(newHandles.getRootNode());
-            handles.add(newHandles);
-            assert newHandles instanceof GridPaneHandles;
-            final GridPaneHandles gridPaneHandles = (GridPaneHandles) newHandles;
-            gridPaneHandles.updateColumnRowSelection(gsg);
-        }
-
-        // Let's disconnect the obsolete handles
-        for (Handles<?> h : obsoleteHandles) {
-            handleLayer.getChildren().remove(h.getRootNode());
-            handles.remove(h);
-        }
-    }
-
-    private void removeAllHandles() {
-        final Group handleLayer = contentPanelController.getHandleLayer();
-        for (Handles<?> h : new ArrayList<>(handles)) {
-            handleLayer.getChildren().remove(h.getRootNode());
-            handles.remove(h);
-        }
-    }
 
     private void startListeningToInputEvents() {
         final Node glassLayer = contentPanelController.getGlassLayer();
@@ -579,11 +300,11 @@ implements Gesture.Observer {
         glassLayer.setOnZoomStarted(e -> zoomStartedOnGlassLayer(e));
         glassLayer.setOnDragEntered(e -> dragEnteredGlassLayer(e));
 
-        final Node handleLayer = contentPanelController.getHandleLayer();
+        final Layer<Handles> handleLayer = getLayer(Handles.class);
         assert handleLayer.getOnMousePressed() == null;
         handleLayer.setOnMousePressed(e -> mousePressedOnHandleLayer(e));
 
-        final Node pringLayer = contentPanelController.getPringLayer();
+        final Layer<Pring> pringLayer = getLayer(Pring.class);
         assert pringLayer.getOnMousePressed() == null;
         pringLayer.setOnMousePressed(e -> mousePressedOnPringLayer(e));
     }
@@ -599,10 +320,10 @@ implements Gesture.Observer {
         glassLayer.setOnZoomStarted(null);
         glassLayer.setOnDragEntered(null);
 
-        final Node handleLayer = contentPanelController.getHandleLayer();
+        final Layer<Handles> handleLayer = getLayer(Handles.class);
         handleLayer.setOnMousePressed(null);
 
-        final Node pringLayer = contentPanelController.getPringLayer();
+        final Layer<Pring> pringLayer = getLayer(Pring.class);
         pringLayer.setOnMousePressed(null);
     }
 
@@ -949,6 +670,44 @@ implements Gesture.Observer {
             // So activeGesture may have switch back to null.
             assert (activeGesture == gesture) || (activeGesture == null);
         }
+    }
+
+    private Set<FXOMObject> collectNodes() {
+        final Set<FXOMObject> result = new HashSet<>();
+
+        final List<FXOMObject> candidates = new ArrayList<>();
+        final FXOMDocument fxomDocument = api.getApiDoc().getDocumentManager().fxomDocument().get();
+        
+        if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
+            candidates.add(fxomDocument.getFxomRoot());
+        }
+
+        while (candidates.isEmpty() == false) {
+            final FXOMObject candidate = candidates.get(0);
+            candidates.remove(0);
+            if (candidate.isNode()) {
+                final Node sgo = (Node) candidate.getSceneGraphObject();
+                //if (sgo.getScene() == getRoot().getScene()) {
+                if (sgo.getScene() == ((Node)fxomDocument.getSceneGraphRoot()).getScene()) {
+                    result.add(candidate);
+                }
+            }
+            final DesignHierarchyMask m = new DesignHierarchyMask(candidate);
+            if (m.isAcceptingSubComponent()) {
+                for (int i = 0, c = m.getSubComponentCount(); i < c; i++) {
+                    final FXOMObject subComponent = m.getSubComponentAtIndex(i);
+                    candidates.add(subComponent);
+                }
+            }
+            for (Accessory a : m.getAccessories()) {
+                final FXOMObject accessoryObject = m.getAccessory(a);
+                if ((accessoryObject != null) && accessoryObject.isNode()) {
+                    candidates.add(accessoryObject);
+                }
+            }
+        }
+
+        return result;
     }
 
 }

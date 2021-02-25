@@ -37,6 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
+import com.oracle.javafx.scenebuilder.core.guides.HorizontalLineIndex;
+import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
+import com.oracle.javafx.scenebuilder.core.guides.PointIndex;
+import com.oracle.javafx.scenebuilder.core.guides.VerticalLineIndex;
+import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

@@ -47,69 +47,74 @@ import io.reactivex.subjects.Subject;
 import lombok.Getter;
 
 public interface SceneBuilderManager {
+
     SubjectItem<Boolean> debugMode();
+
     Subject<Boolean> closed();
+
     Subject<Document> documentOpened();
+
     Subject<Document> documentClosed();
+
     Subject<StylesheetProvider> stylesheetConfig();
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-	public class SceneBuilderManagerImpl implements InitializingBean, SceneBuilderManager {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public class SceneBuilderManagerImpl implements InitializingBean, SceneBuilderManager {
 
-		private final SceneBuilderSubjects subjects;
+        private final SceneBuilderSubjects subjects;
         private final SubjectItem<Boolean> debugMode;
 
-		public SceneBuilderManagerImpl() {
-			subjects = new SceneBuilderSubjects();
-			debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
-		}
+        public SceneBuilderManagerImpl() {
+            subjects = new SceneBuilderSubjects();
+            debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
+        }
 
-		@Override
-		public void afterPropertiesSet() throws Exception {
-		}
+        @Override
+        public void afterPropertiesSet() throws Exception {
+        }
 
-		@Override
-		public Subject<StylesheetProvider> stylesheetConfig() {
-			return subjects.getStylesheetConfig();
-		}
+        @Override
+        public Subject<StylesheetProvider> stylesheetConfig() {
+            return subjects.getStylesheetConfig();
+        }
 
-		@Override
+        @Override
         public Subject<Boolean> closed() {
             return subjects.getClosed();
         }
-		
-		@Override
+
+        @Override
         public Subject<Document> documentOpened() {
             return subjects.getDocumentOpened();
         }
-		
-		@Override
+
+        @Override
         public Subject<Document> documentClosed() {
             return subjects.getDocumentClosed();
         }
-		
-		@Override
+
+        @Override
         public SubjectItem<Boolean> debugMode() {
             return debugMode;
         }
-	}
+    }
 
-	public class SceneBuilderSubjects extends SubjectManager {
+    public class SceneBuilderSubjects extends SubjectManager {
 
-		private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
-		private @Getter PublishSubject<Boolean> closed;
-		private @Getter PublishSubject<Document> documentOpened;
-		private @Getter PublishSubject<Document> documentClosed;
-		private @Getter ReplaySubject<Boolean> debugMode;
+        private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
+        private @Getter PublishSubject<Boolean> closed;
+        private @Getter PublishSubject<Document> documentOpened;
+        private @Getter PublishSubject<Document> documentClosed;
+        private @Getter ReplaySubject<Boolean> debugMode;
 
-		public SceneBuilderSubjects() {
-		    closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create());
-		    debugMode = wrap(SceneBuilderSubjects.class, "debugMode", ReplaySubject.create(1));
-		    stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
-		    documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create());
-		    documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create());
-		}
+        public SceneBuilderSubjects() {
+            closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create());
+            debugMode = wrap(SceneBuilderSubjects.class, "debugMode", ReplaySubject.create(1));
+            stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
+            documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create());
+            documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create());
+        }
 
-	}
+    }
 }

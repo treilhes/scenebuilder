@@ -32,9 +32,18 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.mode;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Mode;
+import com.oracle.javafx.scenebuilder.api.content.mode.Layer.LayerItemCreator;
+import com.oracle.javafx.scenebuilder.api.content.mode.Layer.LayerItemSelector;
+import com.oracle.javafx.scenebuilder.api.control.Decoration;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+
+import javafx.scene.Group;
 
 /**
  *
@@ -46,6 +55,8 @@ public abstract class AbstractModeController implements Mode{
 
     protected final Content contentPanelController;
 
+    private Map<Class<?>, Layer<?>> layers = new HashMap<>();
+    
     @Override
     public abstract Object getModeId();
 
@@ -56,7 +67,32 @@ public abstract class AbstractModeController implements Mode{
     public Content getContentPanelController() {
         return contentPanelController;
     }
-
+    
+    @Override
+    public <T extends Decoration<?>> void newLayer(Class<T> cls, boolean mouseTransparent, Selection selection, 
+            LayerItemSelector selector, LayerItemCreator<T> creator) {
+        Group layerUi = new Group();
+        layerUi.setMouseTransparent(mouseTransparent);
+        layerUi.setManaged(false);
+        contentPanelController.getGlassLayer().getChildren().add(layerUi);
+        GenericLayer<?> layer = new GenericLayer<>(cls, layerUi, selection, contentPanelController, selector, creator);
+        layers.put(cls, layer);
+    }
+    
+    @Override
+    public <T extends Decoration<?>> Layer<T> getLayer(Class<T> layerId) {
+        return (Layer<T>) layers.get(layerId);
+    }
+    
+    @Override
+    public Collection<Layer<?>> getLayers() {
+        return layers.values();
+    }
+    
+    protected void clearLayers() {
+        getLayers().forEach(l -> l.removeAll());
+    }
+    
     public abstract void willResignActive(AbstractModeController nextModeController);
     public abstract void didBecomeActive(AbstractModeController previousModeController);
 

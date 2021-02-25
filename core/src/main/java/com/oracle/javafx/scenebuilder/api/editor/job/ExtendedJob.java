@@ -49,117 +49,114 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class ExtendedJob<T extends Job> extends Job {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ExtendedJob.class);
 
-	private List<JobExtension<T>> extensions;
+    private List<JobExtension<T>> extensions;
 
-	private boolean extended = false;
-	private final Job job;
+    private boolean extended = false;
+    private final Job job;
 
-	@SuppressWarnings("unchecked")
-	public ExtendedJob(T job) {
-		super(job.getContext(), job.getEditorController());
-		this.job = job;
+    @SuppressWarnings("unchecked")
+    public ExtendedJob(T job) {
+        super(job.getContext(), job.getEditorController());
+        this.job = job;
 
-		ResolvableType resolvable = ResolvableType.forClassWithGenerics(JobExtension.class, job.getClass());
-		String[] beanNamesForType = getContext().getBeanNamesForType(resolvable);
+        ResolvableType resolvable = ResolvableType.forClassWithGenerics(JobExtension.class, job.getClass());
+        String[] beanNamesForType = getContext().getBeanNamesForType(resolvable);
 
-		if (beanNamesForType.length > 0) {
-			extensions = Arrays.asList(beanNamesForType).stream()
-					.map(b -> (JobExtension<T>)getContext().getBean(b)).collect(Collectors.toList());
-		}
+        if (beanNamesForType.length > 0) {
+            extensions = Arrays.asList(beanNamesForType).stream().map(b -> (JobExtension<T>) getContext().getBean(b))
+                    .collect(Collectors.toList());
+        }
 
-		if (extensions != null) {
-			extensions.forEach(ext -> ext.setExtendedJob(job));
-			extended = true;
-		}
+        if (extensions != null) {
+            extensions.forEach(ext -> ext.setExtendedJob(job));
+            extended = true;
+        }
 
-	}
+    }
 
-	@Override
-	public boolean isExecutable() {
-		return job.isExecutable();
-	}
+    @Override
+    public boolean isExecutable() {
+        return job.isExecutable();
+    }
 
-	@Override
-	public void execute() {
-		if (extended) {
-			extensions.stream().filter(ext -> ext.isExecutable()).forEach(ext -> {
-			    logger.debug("preExecute extension {}", ext.getClass().getName());
-			    ext.preExecute();
-			    logger.debug("preExecute extension {} done", ext.getClass().getName());
-			});
-		}
+    @Override
+    public void execute() {
+        if (extended) {
+            extensions.stream().filter(ext -> ext.isExecutable()).forEach(ext -> {
+                logger.debug("preExecute extension {}", ext.getClass().getName());
+                ext.preExecute();
+                logger.debug("preExecute extension {} done", ext.getClass().getName());
+            });
+        }
 
-		logger.debug("execute job {} : {}", job.getClass().getName(), job.getDescription());
-		job.execute();
-		logger.debug("execute job {} done", job.getClass().getName());
+        job.execute();
+        logger.debug("execute job {} : {} done", job.getClass().getName(), job.getDescription());
 
-		if (extended) {
-			extensions.stream().filter(ext -> ext.isExecutable()).forEach(ext -> {
-			    logger.debug("postExecute extension {}", ext.getClass().getName());
+        if (extended) {
+            extensions.stream().filter(ext -> ext.isExecutable()).forEach(ext -> {
+                logger.debug("postExecute extension {}", ext.getClass().getName());
                 ext.postExecute();
                 logger.debug("postExecute extension {} done", ext.getClass().getName());
-			});
-		}
-	}
+            });
+        }
+    }
 
-	@Override
-	public void undo() {
-		if (extended) {
-			extensions.forEach(ext -> {
-			    logger.debug("preUndo extension {}", ext.getClass().getName());
-			    ext.preUndo();
-			    logger.debug("preUndo extension {} done", ext.getClass().getName());
-			});
-		}
+    @Override
+    public void undo() {
+        if (extended) {
+            extensions.forEach(ext -> {
+                logger.debug("preUndo extension {}", ext.getClass().getName());
+                ext.preUndo();
+                logger.debug("preUndo extension {} done", ext.getClass().getName());
+            });
+        }
 
-		logger.debug("undo job {} : {}", job.getClass().getName(), job.getDescription());
-		job.undo();
-		logger.debug("undo job {} done", job.getClass().getName());
+        logger.debug("undo job {} : {}", job.getClass().getName(), job.getDescription());
+        job.undo();
+        logger.debug("undo job {} done", job.getClass().getName());
 
-		if (extended) {
-			extensions.forEach(ext -> {
-			    logger.debug("postUndo extension {}", ext.getClass().getName());
-			    ext.postUndo();
-			    logger.debug("postUndo extension {} done", ext.getClass().getName());
-			});
-		}
-	}
+        if (extended) {
+            extensions.forEach(ext -> {
+                logger.debug("postUndo extension {}", ext.getClass().getName());
+                ext.postUndo();
+                logger.debug("postUndo extension {} done", ext.getClass().getName());
+            });
+        }
+    }
 
-	@Override
-	public void redo() {
-		if (extended) {
-			extensions.forEach(ext -> {
-			    logger.debug("preRedo extension {}", ext.getClass().getName());
-			    ext.preRedo();
-			    logger.debug("preRedo extension {} done", ext.getClass().getName());
-			});
-		}
+    @Override
+    public void redo() {
+        if (extended) {
+            extensions.forEach(ext -> {
+                logger.debug("preRedo extension {}", ext.getClass().getName());
+                ext.preRedo();
+                logger.debug("preRedo extension {} done", ext.getClass().getName());
+            });
+        }
 
-		logger.debug("redo job {} : {}", job.getClass().getName(), job.getDescription());
-		job.redo();
-		logger.debug("redo job {} done", job.getClass().getName());
-		
-		if (extended) {
-			extensions.forEach(ext -> {
-			    logger.debug("postRedo extension {}", ext.getClass().getName());
-			    ext.postRedo();
-			    logger.debug("postRedo extension {} done", ext.getClass().getName());
-			});
-		}
-	}
+        logger.debug("redo job {} : {}", job.getClass().getName(), job.getDescription());
+        job.redo();
+        logger.debug("redo job {} done", job.getClass().getName());
 
-	@Override
-	public String getDescription() {
-		return job.getDescription();
-	}
+        if (extended) {
+            extensions.forEach(ext -> {
+                logger.debug("postRedo extension {}", ext.getClass().getName());
+                ext.postRedo();
+                logger.debug("postRedo extension {} done", ext.getClass().getName());
+            });
+        }
+    }
 
-	public Job getExtendedJob() {
-		return job;
-	}
+    @Override
+    public String getDescription() {
+        return job.getDescription();
+    }
 
-
+    public Job getExtendedJob() {
+        return job;
+    }
 
 }

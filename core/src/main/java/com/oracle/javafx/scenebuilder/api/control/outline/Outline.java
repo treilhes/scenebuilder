@@ -32,10 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.outline;
 
+import com.oracle.javafx.scenebuilder.api.control.Decoration;
+
 import javafx.scene.Node;
 
-public interface Outline {
+public interface Outline<T> extends Decoration<T>{
 
+    @Override
     Node getRootNode();
 
 }

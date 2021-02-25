@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.preferences.global;
+package com.oracle.javafx.scenebuilder.contenteditor.preferences.global;
 
 import java.net.URL;
 
@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference.BackgroundImage;
+import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference.BackgroundImage;
 
 import javafx.scene.Parent;
 import javafx.scene.image.Image;

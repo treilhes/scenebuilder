@@ -67,6 +67,7 @@ import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
@@ -487,7 +488,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     	DocumentScope.setCurrentScope(null);
 
         final DocumentWindowController result = sceneBuilderFactory.get(DocumentWindowController.class);
-
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
+        
         windowIconSetting.setWindowIcon(result.getStage());
 
         windowList.add(result);

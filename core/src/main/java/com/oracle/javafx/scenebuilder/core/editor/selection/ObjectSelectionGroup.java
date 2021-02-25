@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.core.editor.selection;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +52,7 @@ import javafx.scene.Node;
  */
 public class ObjectSelectionGroup extends AbstractSelectionGroup {
     
-    private final Set<FXOMObject> items = new HashSet<>();
+    
     private final FXOMObject hitItem;
     private final Object hitSceneGraphObject;
     private final Node hitNode;
@@ -76,10 +75,6 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
         this.hitNode = hitNode;
     }
     
-    public Set<FXOMObject> getItems() {
-        return Collections.unmodifiableSet(items);
-    }
-
     public FXOMObject getHitItem() {
         return hitItem;
     }

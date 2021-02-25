@@ -45,6 +45,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
+import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -59,12 +61,14 @@ public class ModeManagerController implements ModeManager {
     
     private AbstractModeController previousMode = null;
     private AbstractModeController currentMode = null;
-    
+
     public ModeManagerController(
             @Autowired ApplicationContext context,
+            @Autowired DocumentManager documentManager,
             @Autowired List<ModeProvider> modeProviders
             ) {
         super();
+
         modeProviders.forEach(mp -> {
             for (Class<? extends AbstractModeController> modeClass:mp.getModes()) {
                 AbstractModeController instance = context.getBean(modeClass);
@@ -75,6 +79,7 @@ public class ModeManagerController implements ModeManager {
                 }
             }
         });
+
     }
 
     /**
@@ -91,6 +96,7 @@ public class ModeManagerController implements ModeManager {
      * @param modeId the mode id to check
      * @return true if the mode identified by modeId is enabled.
      */
+    @Override
     public boolean isModeEnabled(Object modeId) {
         return currentMode != null && currentMode.getModeId() == modeId;
     }
@@ -160,5 +166,10 @@ public class ModeManagerController implements ModeManager {
         if (currentMode != null) {
             currentMode.fxomDocumentDidRefreshSceneGraph();
         }
+    }
+
+    @Override
+    public Mode getEnabledMode() {
+        return currentMode;
     }
 }

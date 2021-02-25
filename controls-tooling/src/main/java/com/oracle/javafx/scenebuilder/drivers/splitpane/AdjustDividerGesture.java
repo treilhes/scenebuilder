@@ -41,7 +41,10 @@ import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
+import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
@@ -64,6 +67,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     private final SplitPaneDesignInfoX di = new SplitPaneDesignInfoX();
     private double[] originalDividerPositions;
 	private final ApplicationContext context;
+    private Layer<Handles> handleLayer;
 
     private static final PropertyName dividerPositionsName
             = new PropertyName("dividerPositions"); //NOI18N
@@ -78,6 +82,12 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
         this.splitPaneInstance = splitPaneInstance;
         this.dividerIndex = dividerIndex;
+        
+        ModeManager modeManager = context.getBean(ModeManager.class);
+        if (modeManager.hasModeEnabled()) {
+            handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);
+        }
+        assert handleLayer != null;
     }
 
     /*
@@ -93,7 +103,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     protected void mouseDragStarted() {
         originalDividerPositions = getSplitPane().getDividerPositions();
         setupAndOpenHudWindow();
-        contentPanelController.getHandleLayer().setVisible(false);
+        handleLayer.disable();
         // Now same as mouseDragged
         mouseDragged();
     }
@@ -160,7 +170,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     protected void userDidCancel() {
         getSplitPane().setDividerPositions(originalDividerPositions);
         contentPanelController.getHudWindowController().closeWindow();
-        contentPanelController.getHandleLayer().setVisible(true);
+        handleLayer.enable();
         getSplitPane().layout();
     }
 

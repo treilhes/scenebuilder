@@ -32,6 +32,10 @@
  */
 package com.oracle.javafx.scenebuilder.core.editor.selection;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -40,7 +44,8 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
  * 
  */
 public abstract class AbstractSelectionGroup implements Cloneable {
-    
+    protected final Set<FXOMObject> items = new HashSet<>();
+    public abstract FXOMObject getHitItem();
     public abstract FXOMObject getAncestor();
     public abstract boolean isValid(FXOMDocument fxomDocument);
     
@@ -48,5 +53,9 @@ public abstract class AbstractSelectionGroup implements Cloneable {
     public AbstractSelectionGroup clone() throws CloneNotSupportedException
     {
         return (AbstractSelectionGroup) super.clone();
+    }
+
+    public Set<FXOMObject> getItems() {
+        return Collections.unmodifiableSet(items);
     }
 }

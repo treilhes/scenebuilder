@@ -1,5 +1,6 @@
 dependencies {
 	implementation project(':core')
 	implementation project(':sb')
-	implementation project(':controls-tooling')
+	implementation project(':jobs')
+	implementation project(':drag-and-drop')
 }

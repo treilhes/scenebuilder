@@ -81,7 +81,7 @@ public class GridPaneJobUtils {
         // Selection == GridPane rows or columns
         else if (asg instanceof GridSelectionGroup) {
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            result.add(gsg.getParentObject());
+            result.add(gsg.getHitItem());
         }
 
         return result;
@@ -189,7 +189,7 @@ public class GridPaneJobUtils {
 
         if (asg instanceof GridSelectionGroup) {
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final FXOMObject gridPane = gsg.getParentObject();
+            final FXOMObject gridPane = gsg.getHitItem();
             final Type type = gsg.getType();
             final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
 

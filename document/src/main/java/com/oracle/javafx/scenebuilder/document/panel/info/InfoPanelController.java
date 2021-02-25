@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.document.panel.info;
 
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +49,6 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
@@ -154,12 +151,9 @@ public class InfoPanelController extends AbstractFxmlPanelController {
         final Selection selection = getApi().getApiDoc().getSelection();
 
         final Set<IndexEntry> selectedEntries = new HashSet<>();
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-            selectedEntries.addAll(searchIndexEntries(osg.getItems()));
-        } else if (selection.getGroup() instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-            selectedEntries.addAll(searchIndexEntries(Collections.singleton(gsg.getParentObject())));
+        
+        if (!selection.isEmpty()){
+            selectedEntries.addAll(searchIndexEntries(selection.getGroup().getItems()));
         }
 
         final TableView<IndexEntry> tableView = leftTableColumn.getTableView();

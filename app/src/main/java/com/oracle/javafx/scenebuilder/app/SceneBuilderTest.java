@@ -45,8 +45,10 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -369,7 +371,11 @@ public class SceneBuilderTest {
             assert ec.getSelection().isSelected(fxomObject);
 
             final Content cpc = dwc.getContentPanelController();
-            final Handles<?> h = cpc.lookupHandles(fxomObject);
+            if (!cpc.getModeManager().isModeEnabled(EditModeController.ID)) {
+                cpc.getModeManager().enableMode(EditModeController.ID);
+            }
+            final Mode editMode = cpc.getModeManager().getEnabledMode();
+            final Handles<?> h = editMode.getLayer(Handles.class).lookup(fxomObject);
             if (h instanceof AbstractGenericHandles<?>) {
                 final AbstractGenericHandles<?> gh = (AbstractGenericHandles<?>) h;
                 result = gh.getHandleNode(cp);

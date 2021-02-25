@@ -73,6 +73,7 @@ public class GridSelectionGroup extends AbstractSelectionGroup {
         this.parentObject = parentObject;
         this.type = type;
         this.indexes.add(index);
+        this.items.add(parentObject);
     }
 
     public GridSelectionGroup(FXOMObject parentObject, Type type, Set<Integer> indexes) {
@@ -84,9 +85,11 @@ public class GridSelectionGroup extends AbstractSelectionGroup {
         this.parentObject = parentObject;
         this.type = type;
         this.indexes.addAll(indexes);
+        this.items.add(parentObject);
     }
-
-    public FXOMObject getParentObject() {
+    
+    @Override
+    public FXOMObject getHitItem() {
         return parentObject;
     }
 

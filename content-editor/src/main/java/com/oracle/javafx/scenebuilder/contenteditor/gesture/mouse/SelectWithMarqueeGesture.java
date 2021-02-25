@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
+package com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,10 +42,14 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
+import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -53,7 +57,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
@@ -71,14 +74,20 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private final Set<FXOMObject> candidates = new HashSet<>();
     private final Rectangle marqueeRect = new Rectangle();
     private final Driver driver;
+    private Layer<Rudder> rudderLayer;
+    private ModeManager modeManager;
 
     public SelectWithMarqueeGesture(
             @Autowired Driver driver,
-            @Autowired @Lazy Content contentPanelController) {
+            @Autowired @Lazy Content contentPanelController,
+            @Autowired @Lazy EditModeController editMode) {
         super(contentPanelController);
         this.driver = driver;
+        
+        rudderLayer = editMode.getLayer(Rudder.class);
+        assert rudderLayer != null;
     }
-
+    
     public void setup(FXOMObject hitObject, FXOMObject scopeObject) {
         assert (hitObject == null) || (hitObject.isDescendantOf(scopeObject) == false);
         this.hitObject = hitObject;
@@ -150,28 +159,27 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
     private void showScopeHilit() {
         if (scopeObject != null) {
-            final Group rudderLayer
-                    = contentPanelController.getRudderLayer();
+            
             assert driver != null;
             scopeHilit = driver.makePring(scopeObject);
             scopeHilit.changeStroke(contentPanelController.getPringColor());
-            rudderLayer.getChildren().add(scopeHilit.getRootNode());
+            rudderLayer.getLayerUI().getChildren().add(scopeHilit.getRootNode());
         }
     }
 
 
     private void hideScopeHilit() {
         if (scopeHilit != null) {
-            final Group rudderLayer = contentPanelController.getRudderLayer();
-            assert rudderLayer.getChildren().contains(scopeHilit.getRootNode());
-            rudderLayer.getChildren().remove(scopeHilit.getRootNode());
+            
+            assert rudderLayer.getLayerUI().getChildren().contains(scopeHilit.getRootNode());
+            rudderLayer.getLayerUI().getChildren().remove(scopeHilit.getRootNode());
             scopeHilit = null;
         }
     }
 
     private void showMarqueeRect() {
-        final Group rudderLayer = contentPanelController.getRudderLayer();
-        rudderLayer.getChildren().add(marqueeRect);
+        
+        rudderLayer.getLayerUI().getChildren().add(marqueeRect);
         updateMarqueeRect();
     }
 
@@ -186,9 +194,9 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
         final double xMax = Math.max(xPressed, xCurrent);
         final double yMax = Math.max(yPressed, yCurrent);
 
-        final Group rudderLayer = contentPanelController.getRudderLayer();
-        final Point2D p0 = rudderLayer.sceneToLocal(xMin, yMin, true /* rootScene */);
-        final Point2D p1 = rudderLayer.sceneToLocal(xMax, yMax, true /* rootScene */);
+        
+        final Point2D p0 = rudderLayer.getLayerUI().sceneToLocal(xMin, yMin, true /* rootScene */);
+        final Point2D p1 = rudderLayer.getLayerUI().sceneToLocal(xMax, yMax, true /* rootScene */);
 
         marqueeRect.setX(p0.getX());
         marqueeRect.setY(p0.getY());
@@ -197,8 +205,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     }
 
     private void hideMarqueeRect() {
-        final Group rudderLayer = contentPanelController.getRudderLayer();
-        rudderLayer.getChildren().remove(marqueeRect);
+        rudderLayer.getLayerUI().getChildren().remove(marqueeRect);
     }
 
 

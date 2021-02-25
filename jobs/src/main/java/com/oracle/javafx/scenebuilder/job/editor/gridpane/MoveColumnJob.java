@@ -90,7 +90,7 @@ public class MoveColumnJob extends BatchSelectionJob {
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
 
-            targetGridPane = gsg.getParentObject();
+            targetGridPane = gsg.getHitItem();
             targetIndexes.addAll(gsg.getIndexes());
 
             // Add sub jobs

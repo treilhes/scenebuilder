@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
+import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
@@ -59,4 +60,7 @@ public interface Driver {
 
     Relocater<?> makeRelocater(FXOMObject fxomObject);
 
+    Rudder<?> makeRudder(FXOMObject fxomObject);
+    
+    Outline makeOutline(FXOMObject fxomObject);
 }

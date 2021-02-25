@@ -37,6 +37,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.core.guides.AbstractSegment;
+import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
+import com.oracle.javafx.scenebuilder.core.guides.SegmentIndex;
+import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;

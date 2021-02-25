@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -51,7 +50,6 @@ import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 
@@ -66,13 +64,29 @@ import javafx.scene.input.MouseEvent;
 public class PickModeController extends AbstractModeController {
 
     private final Driver driver;
-    private HitNodeChrome hitNodeChrome;
+    //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
             @Autowired Driver driver,
+            @Autowired Selection selection,
     		@Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);
         this.driver = driver;
+        
+        newLayer(HitNodeChrome.class, false, selection,
+                // object selection
+                s -> s.getGroup().getItems(),
+                // pring creation
+                fxomObject -> {
+                    // TODO check consequence s of removed if ((hitNodeChrome == null)
+                    // || (hitNodeChrome.getFxomObject() != selection.getHitItem())
+                    // || (hitNodeChrome.getHitNode() != selection.getCheckedHitNode())) {
+                    if ((selection.getHitItem() != null) && (selection.getCheckedHitNode() != null)){
+                        return makeHitNodeChrome(selection.getHitItem(), selection.getCheckedHitNode());
+                    } else {
+                        return null;
+                    }
+                });
     }
 
 
@@ -89,21 +103,21 @@ public class PickModeController extends AbstractModeController {
     public void willResignActive(AbstractModeController nextModeController) {
         contentPanelController.getGlassLayer().setCursor(Cursor.DEFAULT);
         stopListeningToInputEvents();
-        removeHitNodeChrome();
+        clearLayers();
     }
 
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
         assert contentPanelController.getGlassLayer() != null;
-
-        updateHitNodeChrome();
+        getLayers().forEach(l -> l.enable());
+        getLayer(HitNodeChrome.class).update();
         startListeningToInputEvents();
         contentPanelController.getGlassLayer().setCursor(ImageUtils.getCSSCursor());
     }
 
     @Override
     public void editorSelectionDidChange() {
-        updateHitNodeChrome();
+        getLayer(HitNodeChrome.class).update();
     }
 
     @Override
@@ -114,7 +128,7 @@ public class PickModeController extends AbstractModeController {
 
     @Override
     public void fxomDocumentDidRefreshSceneGraph() {
-        updateHitNodeChrome();
+        getLayer(HitNodeChrome.class).update();
     }
 
     @Override
@@ -190,51 +204,6 @@ public class PickModeController extends AbstractModeController {
         }
     }
 
-
-    private void updateHitNodeChrome() {
-        final Selection selection = contentPanelController.getEditorController().getSelection();
-        final HitNodeChrome newChrome;
-
-        if ((hitNodeChrome == null)
-                || (hitNodeChrome.getFxomObject() != selection.getHitItem())
-                || (hitNodeChrome.getHitNode() != selection.getCheckedHitNode())) {
-            if ((selection.getHitItem() != null) && (selection.getCheckedHitNode() != null)){
-                newChrome = makeHitNodeChrome(selection.getHitItem(), selection.getCheckedHitNode());
-            } else {
-                newChrome = null;
-            }
-        } else {
-            switch(hitNodeChrome.getState()) {
-                default:
-                case CLEAN:
-                    newChrome = hitNodeChrome;
-                    break;
-                case NEEDS_RECONCILE:
-                    newChrome = hitNodeChrome;
-                    hitNodeChrome.reconcile();
-                    break;
-                case NEEDS_REPLACE:
-                    newChrome = makeHitNodeChrome(selection.getHitItem(), selection.getCheckedHitNode());
-                    assert newChrome.getState() == HitNodeChrome.State.CLEAN;
-                    break;
-            }
-        }
-
-        if (newChrome != hitNodeChrome) {
-            final Group rudderLayer = contentPanelController.getRudderLayer();
-            if (hitNodeChrome != null) {
-                rudderLayer.getChildren().remove(hitNodeChrome.getRootNode());
-            }
-            hitNodeChrome = newChrome;
-            if (hitNodeChrome != null) {
-                rudderLayer.getChildren().add(hitNodeChrome.getRootNode());
-            }
-        } else {
-            assert (hitNodeChrome == null) || hitNodeChrome.getState() == AbstractPring.State.CLEAN;
-        }
-    }
-
-
     private HitNodeChrome makeHitNodeChrome(FXOMObject hitItem, Node hitNode) {
         final HitNodeChrome result;
 
@@ -273,12 +242,4 @@ public class PickModeController extends AbstractModeController {
         return result;
     }
 
-
-    private void removeHitNodeChrome() {
-        if (hitNodeChrome != null) {
-            final Group rudderLayer = contentPanelController.getRudderLayer();
-            rudderLayer.getChildren().remove(hitNodeChrome.getRootNode());
-            hitNodeChrome = null;
-        }
-    }
 }

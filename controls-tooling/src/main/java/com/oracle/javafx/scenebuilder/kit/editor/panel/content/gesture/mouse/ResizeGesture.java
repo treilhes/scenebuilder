@@ -42,11 +42,15 @@ import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Resizer.Feature;
+import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -56,7 +60,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.drivers.node.ResizeRudder;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.RegionRectangle;
@@ -79,7 +82,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     private final FXOMInstance fxomInstance;
     private final CardinalPoint tunable;
-    private final ResizeRudder rudder;
+    //private final ResizeRudder rudder;
 
     private Resizer<?> resizer;
     private Relocater<?> relocater;
@@ -89,19 +92,30 @@ public class ResizeGesture extends AbstractMouseGesture {
     private boolean guidesDisabled;
 	private final ApplicationContext context;
 	private final GenericDriver driver;
+    private final ModeManager modeManager;
+    private Layer<Rudder> rudderLayer;
+    private Layer<Handles> handleLayer;
 
     public ResizeGesture(ApplicationContext context, Content contentPanelController, FXOMInstance fxomInstance, CardinalPoint tunable) {
         super(contentPanelController);
         this.context = context;
         this.driver = context.getBean(GenericDriver.class);
+        this.modeManager = context.getBean(ModeManager.class);
         
         //assert contentPanelController.lookupDriver(fxomInstance) != null;
         assert fxomInstance.getSceneGraphObject() instanceof Node;
         this.fxomInstance = fxomInstance;
         this.tunable = tunable;
         
-        this.rudder = new ResizeRudder(contentPanelController);
-        this.rudder.setFxomObject(fxomInstance);
+//        this.rudder = new ResizeRudder(contentPanelController);
+//        this.rudder.setFxomObject(fxomInstance);
+        
+        if (modeManager.hasModeEnabled()) {
+            rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
+            handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);
+        }
+        assert rudderLayer != null;
+        assert handleLayer != null;
     }
 
     /*
@@ -131,7 +145,8 @@ public class ResizeGesture extends AbstractMouseGesture {
         setupAndOpenHudWindow();
         showShadow();
 
-        contentPanelController.getHandleLayer().setVisible(false);
+        handleLayer.disable();
+        //contentPanelController.getHandleLayer().setVisible(false);
 
         // Now same as mouseDragged
         mouseDragged();
@@ -238,7 +253,10 @@ public class ResizeGesture extends AbstractMouseGesture {
         setRudderVisible(false);
         hideShadow();
         contentPanelController.getHudWindowController().closeWindow();
-        contentPanelController.getHandleLayer().setVisible(true);
+        
+        handleLayer.enable();
+        //contentPanelController.getHandleLayer().setVisible(true);
+        
         //resizer.getSceneGraphObject().getParent().layout();
         
         //support for detached graph (clip, shape,...)
@@ -348,18 +366,24 @@ public class ResizeGesture extends AbstractMouseGesture {
     }
 
     private void setRudderVisible(boolean visible) {
-        final boolean alreadyVisible = rudder.getRootNode().getParent() != null;
-
-        if (alreadyVisible != visible) {
-            final Group rudderLayer = contentPanelController.getRudderLayer();
-            if (visible) {
-                assert rudder.getRootNode().getParent() == null;
-                rudderLayer.getChildren().add(rudder.getRootNode());
-            } else {
-                assert rudder.getRootNode().getParent() == rudderLayer;
-                rudderLayer.getChildren().remove(rudder.getRootNode());
-            }
+        if (visible) {
+            rudderLayer.enable();
+        } else {
+            rudderLayer.disable();
         }
+//        
+//        final boolean alreadyVisible = rudder.getRootNode().getParent() != null;
+//
+//        if (alreadyVisible != visible) {
+//            final Group rudderLayer = contentPanelController.getRudderLayer();
+//            if (visible) {
+//                assert rudder.getRootNode().getParent() == null;
+//                rudderLayer.getChildren().add(rudder.getRootNode());
+//            } else {
+//                assert rudder.getRootNode().getParent() == rudderLayer;
+//                rudderLayer.getChildren().remove(rudder.getRootNode());
+//            }
+//        }
     }
 
 
@@ -433,7 +457,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         shadow = new RegionRectangle();
         shadow.getRegion().getStyleClass().add("resize-shadow");
         shadow.setMouseTransparent(true);
-        contentPanelController.getRudderLayer().getChildren().add(shadow);
+        rudderLayer.getLayerUI().getChildren().add(shadow);
 
         updateShadow();
     }
@@ -444,7 +468,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         final Node sceneGraphObject
                 = resizer.getSceneGraphObject();
         final Transform sceneGraphObjectTransform
-                = contentPanelController.computeSceneGraphToRudderLayerTransform(sceneGraphObject);
+                = rudderLayer.computeSceneGraphToLayerTransform(sceneGraphObject);
         shadow.getTransforms().clear();
         shadow.getTransforms().add(sceneGraphObjectTransform);
         shadow.setLayoutBounds(sceneGraphObject.getLayoutBounds());
@@ -452,7 +476,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     private void hideShadow() {
         assert shadow != null;
-        contentPanelController.getRudderLayer().getChildren().remove(shadow);
+        rudderLayer.getLayerUI().getChildren().remove(shadow);
         shadow = null;
     }
 
@@ -485,10 +509,9 @@ public class ResizeGesture extends AbstractMouseGesture {
 
         addToResizingGuideController(fxomInstance.getFxomDocument().getFxomRoot());
 
-        final Group rudderLayer = contentPanelController.getRudderLayer();
         final Group guideGroup = resizingGuideController.getGuideGroup();
         assert guideGroup.isMouseTransparent();
-        rudderLayer.getChildren().add(guideGroup);
+        rudderLayer.getLayerUI().getChildren().add(guideGroup);
     }
 
 
@@ -514,9 +537,8 @@ public class ResizeGesture extends AbstractMouseGesture {
     private void dismantleResizingGuideController() {
         assert resizingGuideController != null;
         final Group guideGroup = resizingGuideController.getGuideGroup();
-        final Group rudderLayer = contentPanelController.getRudderLayer();
-        assert rudderLayer.getChildren().contains(guideGroup);
-        rudderLayer.getChildren().remove(guideGroup);
+        assert rudderLayer.getLayerUI().getChildren().contains(guideGroup);
+        rudderLayer.getLayerUI().getChildren().remove(guideGroup);
         resizingGuideController = null;
     }
 }

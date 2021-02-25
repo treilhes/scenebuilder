@@ -67,6 +67,7 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
     @Override
     public void defineDropTarget(DropTarget dropTarget) {
         assert dropTarget != null;
+        // FIXME dropTarget is an AccessoryTarget on drag drop
         assert dropTarget instanceof GridPaneDropTarget;
         
         GridPaneDropTarget gridPaneDropTarget = (GridPaneDropTarget)dropTarget;

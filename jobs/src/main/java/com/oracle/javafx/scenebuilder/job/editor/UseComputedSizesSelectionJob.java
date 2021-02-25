@@ -74,7 +74,7 @@ public class UseComputedSizesSelectionJob extends BatchDocumentJob {
             }
         } else if (selection.getGroup() instanceof GridSelectionGroup) {
             final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-            final FXOMObject gridPane = gsg.getParentObject();
+            final FXOMObject gridPane = gsg.getHitItem();
             final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
             for (int index : gsg.getIndexes()) {
                 final FXOMObject constraints;

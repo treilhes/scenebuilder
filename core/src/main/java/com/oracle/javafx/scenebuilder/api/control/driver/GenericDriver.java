@@ -49,16 +49,20 @@ import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
+import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.AbstractInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.api.control.intersect.IntersectsBoundsCheck;
+import com.oracle.javafx.scenebuilder.api.control.outline.AbstractOutline;
+import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -280,6 +284,40 @@ public class GenericDriver extends AbstractDriver {
             return intersectsBoundsCheck.intersectsBounds(fxomObject, bounds);
         }
         return false;
+    }
+
+
+    @Override
+    public Rudder makeRudder(FXOMObject fxomObject) {
+        AbstractRudder<?> rudder = (AbstractRudder)make(Rudder.class, fxomObject);
+        if (rudder != null) {
+            rudder.setFxomObject(fxomObject);
+            rudder.initialize();
+        }
+        if (logger.isInfoEnabled()) {
+            logger.info("driver makeRudder returned {} for object {}",
+                    rudder == null ? "null" : rudder.getClass().getName(),
+                    fxomObject.getSceneGraphObject() == null ? "null"
+                            : fxomObject.getSceneGraphObject().getClass().getName());
+        }
+        return rudder;
+    }
+    
+    @Override
+    public Outline makeOutline(FXOMObject fxomObject) {
+        AbstractOutline<?> outline = (AbstractOutline)make(Outline.class, fxomObject);
+        if (outline != null) {
+            outline.setFxomObject(fxomObject);
+            outline.initialize();
+        }
+        
+        if (logger.isInfoEnabled()) {
+            logger.info("driver makeOutline returned {} for object {}",
+                    outline == null ? "null" : outline.getClass().getName(),
+                    fxomObject.getSceneGraphObject() == null ? "null"
+                            : fxomObject.getSceneGraphObject().getClass().getName());
+        }
+        return outline;
     }
 
 }

@@ -257,19 +257,7 @@ public class Selection {
     
     
     public FXOMObject getHitItem() {
-        final FXOMObject result;
-        
-        if (group instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) group;
-            result = osg.getHitItem();
-        } else if (group instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) group;
-            result = gsg.getParentObject();
-        } else {
-            result = null;
-        }
-        
-        return result;
+        return group.getHitItem();
     }
     
     public Node getCheckedHitNode() {

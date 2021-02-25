@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor.controller;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -49,28 +48,25 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.AlignmentGuidesColorPreference;
+import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.drivers.node.NodeOutline;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUnion;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.Picker;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.ScrollPaneBooster;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.AlignmentGuidesColorPreference;
-import com.oracle.javafx.scenebuilder.kit.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 import javafx.event.Event;
@@ -99,8 +95,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.NonInvertibleTransformException;
-import javafx.scene.transform.Transform;
 
 /**
  * This class creates and controls the <b>Content Panel</b> of Scene Builder Kit.
@@ -121,9 +115,9 @@ public class ContentPanelController extends AbstractFxmlPanelController
     @FXML private Group contentGroup;
     @FXML private Pane glassLayer;
     @FXML private Group outlineLayer;
-    @FXML private Group pringLayer;
-    @FXML private Group handleLayer;
-    @FXML private Group rudderLayer;
+    //@FXML private Group pringLayer;
+    //@FXML private Group handleLayer;
+    //@FXML private Group rudderLayer;
 
     private boolean guidesVisible = true;
     private Paint pringColor = Color.rgb(238, 168, 47);
@@ -139,7 +133,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
     private boolean tracingEvents; // For debugging purpose
 
     private final Picker picker = new Picker();
-    private final List<NodeOutline> outlines = new ArrayList<>();
 	private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
 	private final BackgroundImagePreference backgroundImagePreference;
 	private final ParentRingColorPreference parentRingColorPreference;
@@ -646,33 +639,33 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
 
-    /**
-     * @treatAsPrivate Returns the parent ring layer container.
-     * @return the parent ring layer container.
-     */
-    @Override
-    public Group getPringLayer() {
-        return pringLayer;
-    }
-
-
-    /**
-     * @treatAsPrivate Returns the handle layer container.
-     * @return the handle layer container.
-     */
-    @Override
-    public Group getHandleLayer() {
-        return handleLayer;
-    }
-
-    /**
-     * @treatAsPrivate Returns the rudder layer container.
-     * @return the rudder layer container.
-     */
-    @Override
-    public Group getRudderLayer() {
-        return rudderLayer;
-    }
+//    /**
+//     * @treatAsPrivate Returns the parent ring layer container.
+//     * @return the parent ring layer container.
+//     */
+//    @Override
+//    public Group getPringLayer() {
+//        return pringLayer;
+//    }
+//
+//
+//    /**
+//     * @treatAsPrivate Returns the handle layer container.
+//     * @return the handle layer container.
+//     */
+//    @Override
+//    public Group getHandleLayer() {
+//        return handleLayer;
+//    }
+//
+//    /**
+//     * @treatAsPrivate Returns the rudder layer container.
+//     * @return the rudder layer container.
+//     */
+//    @Override
+//    public Group getRudderLayer() {
+//        return rudderLayer;
+//    }
 
 
     /**
@@ -685,32 +678,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
 
-    /**
-     * Computes the transform that projects from local coordinates of a
-     * scene graph object to the rudder layer local coordinates.
-     * @param sceneGraphObject a scene graph object
-     * @return transform from sceneGraphObject local coordinates to rudder local coordinates
-     */
-    @Override
-    public Transform computeSceneGraphToRudderLayerTransform(Node sceneGraphObject) {
-        assert sceneGraphObject != null;
-        assert sceneGraphObject.getScene() == rudderLayer.getScene();
-
-        final Transform t1 = sceneGraphObject.getLocalToSceneTransform();
-        final Transform t2 = contentSubScene.getLocalToSceneTransform();
-        final Transform t3 = rudderLayer.getLocalToSceneTransform();
-        final Transform result;
-
-        try {
-            final Transform i3 = t3.createInverse();
-            result = i3.createConcatenation(t2).createConcatenation(t1);
-        } catch(NonInvertibleTransformException x) {
-            throw new RuntimeException(x);
-        }
-
-        return result;
-    }
-
+    
 
     /**
      * @treatAsPrivate Returns the hud window controller.
@@ -809,10 +777,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
             fxomDocument.refreshSceneGraph();
         }
 
-        if (isOutlinesVisible()) {
-            updateOutlines();
-        }
-        
         modeManager.fxomDocumentDidChange(oldDocument);
 
         resetViewport();
@@ -875,20 +839,20 @@ public class ContentPanelController extends AbstractFxmlPanelController
         assert outlineLayer != null;
         assert outlineLayer.isMouseTransparent();
         assert outlineLayer.isFocusTraversable() == false;
-        assert pringLayer != null;
-        assert pringLayer.isMouseTransparent() == false;
-        assert pringLayer.isFocusTraversable() == false;
-        assert handleLayer != null;
-        assert handleLayer.isMouseTransparent() == false;
-        assert handleLayer.isFocusTraversable() == false;
-        assert rudderLayer != null;
-        assert rudderLayer.isMouseTransparent() == true;
-        assert rudderLayer.isFocusTraversable() == false;
+//        assert pringLayer != null;
+//        assert pringLayer.isMouseTransparent() == false;
+//        assert pringLayer.isFocusTraversable() == false;
+//        assert handleLayer != null;
+//        assert handleLayer.isMouseTransparent() == false;
+//        assert handleLayer.isFocusTraversable() == false;
+//        assert rudderLayer != null;
+//        assert rudderLayer.isMouseTransparent() == true;
+//        assert rudderLayer.isFocusTraversable() == false;
 
         outlineLayer.setManaged(false);
-        pringLayer.setManaged(false);
-        handleLayer.setManaged(false);
-        rudderLayer.setManaged(false);
+//        pringLayer.setManaged(false);
+//        handleLayer.setManaged(false);
+//        rudderLayer.setManaged(false);
 
         // Remove fake content used to help design
         backgroundPane.setText(""); //NOI18N
@@ -935,9 +899,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
         //  - new scene graph must replace the old one below contentHook
         //  - mode controller must be informed so that it can updates handles
         workspaceController.sceneGraphDidChange();
-        if (isOutlinesVisible()) {
-            updateOutlines();
-        }
         modeManager.fxomDocumentDidRefreshSceneGraph();
    }
 
@@ -995,129 +956,26 @@ public class ContentPanelController extends AbstractFxmlPanelController
         assert contentGroup.isVisible();
 
         contentGroup.setVisible(false);
-        updateOutlines();
+        modeManager.enableMode(EditModeController.class);
+        modeManager.getEnabledMode().getLayer(Outline.class).update();
     }
 
     private void endShowingOutlines() {
         assert contentGroup.isVisible() == false;
-
-        final List<Node> outlineNodes = outlineLayer.getChildren();
-        for (Outline o : outlines) {
-            assert outlineNodes.contains(o.getRootNode());
-            outlineNodes.remove(o.getRootNode());
-        }
-        outlines.clear();
+        modeManager.enableMode(EditModeController.class);
+        modeManager.getEnabledMode().getLayer(Outline.class).disable();
         contentGroup.setVisible(true);
     }
-
-    private void updateOutlines() {
-        assert isOutlinesVisible();
-
-        // Collects fxom objects associated to a node in the fxom document
-        final List<FXOMObject> allNodes = collectNodes();
-
-        for (int i = 0, count = allNodes.size(); i < count; i++) {
-            assert allNodes.get(i) instanceof FXOMInstance;
-            final FXOMInstance nodeInstance = (FXOMInstance) allNodes.get(i);
-            if (i < outlines.size()) {
-                final NodeOutline currentOutline = outlines.get(i);
-                if (currentOutline.getFxomObject() != nodeInstance) {
-                    replaceOutline(i, nodeInstance);
-               } else {
-                    switch(currentOutline.getState()) {
-                        case CLEAN:
-                            break;
-                        case NEEDS_RECONCILE:
-                            // scene graph associated to currentOutline has changed but h is still compatible
-                            currentOutline.reconcile();
-                            break;
-                        case NEEDS_REPLACE:
-                            // currentOutline is no longer compatible with the new scene graph object
-                            replaceOutline(i, nodeInstance);
-                            break;
-                    }
-                }
-            } else {
-                addOutline(outlines.size(), nodeInstance);
-            }
-        }
-        for (int i = allNodes.size(), count = outlines.size(); i < count; i++) {
-            removeOutline(allNodes.size());
-        }
-        assert outlines.size() == allNodes.size();
-    }
-
-    private void addOutline(int i, FXOMInstance nodeInstance) {
-        assert outlines.size() == outlineLayer.getChildren().size();
-
-        // TODO temporary
-        final NodeOutline newOutline = new NodeOutline(this);
-        newOutline.setFxomObject(nodeInstance);
-        newOutline.initialize();
-        
-        outlines.add(i, newOutline);
-        outlineLayer.getChildren().add(i, newOutline.getRootNode());
-
-        assert outlines.size() == outlineLayer.getChildren().size();
-        assert outlines.get(i).getRootNode() == outlineLayer.getChildren().get(i);
-    }
-
-    private void replaceOutline(int i, FXOMInstance nodeInstance) {
-        removeOutline(i);
-        addOutline(i, nodeInstance);
-    }
-
-
-    private void removeOutline(int i) {
-        assert outlines.size() == outlineLayer.getChildren().size();
-        assert outlines.get(i).getRootNode() == outlineLayer.getChildren().get(i);
-
-        outlines.remove(i);
-        outlineLayer.getChildren().remove(i);
-
-        assert outlines.size() == outlineLayer.getChildren().size();
-    }
-
-    private List<FXOMObject> collectNodes() {
-        final List<FXOMObject> result = new ArrayList<>();
-
-        final List<FXOMObject> candidates = new ArrayList<>();
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
-        
-        if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
-            candidates.add(fxomDocument.getFxomRoot());
-        }
-
-        while (candidates.isEmpty() == false) {
-            final FXOMObject candidate = candidates.get(0);
-            candidates.remove(0);
-            if (candidate.isNode()) {
-                final Node sgo = (Node) candidate.getSceneGraphObject();
-                if (sgo.getScene() == getRoot().getScene()) {
-                    result.add(candidate);
-                }
-            }
-            final DesignHierarchyMask m = new DesignHierarchyMask(candidate);
-            if (m.isAcceptingSubComponent()) {
-                for (int i = 0, c = m.getSubComponentCount(); i < c; i++) {
-                    final FXOMObject subComponent = m.getSubComponentAtIndex(i);
-                    candidates.add(subComponent);
-                }
-            }
-            for (Accessory a : m.getAccessories()) {
-                final FXOMObject accessoryObject = m.getAccessory(a);
-                if ((accessoryObject != null) && accessoryObject.isNode()) {
-                    candidates.add(accessoryObject);
-                }
-            }
-        }
-
-        return result;
-    }
-
+    
     @Override
     public Editor getEditorController() {
         return editorController;
     }
 
+    @Override
+    public ModeManager getModeManager() {
+        return modeManager;
+    }
+
+    
 }

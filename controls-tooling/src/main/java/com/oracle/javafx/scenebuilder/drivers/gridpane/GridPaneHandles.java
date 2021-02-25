@@ -42,7 +42,9 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
@@ -60,13 +62,16 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
             = new GridPaneMosaic("handles", //NOI18N
                     true /* shouldShowTray */,
                     true /* shouldCreateSensors */ );
-	private ApplicationContext context;
+	private final ApplicationContext context;
+    private final Selection selection;
 
     public GridPaneHandles(
     		ApplicationContext context,
+    		Selection selection,
     		Content contentPanelController) {
         super(context, contentPanelController, GridPane.class);
         this.context = context;
+        this.selection = selection;
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }
     
@@ -75,12 +80,15 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
         mosaic.setGridPane((GridPane)getFxomObject().getSceneGraphObject());
     }
 
-    public void updateColumnRowSelection(GridSelectionGroup gsg) {
-
-        if (gsg == null) {
+    @Override
+    public void update() {
+        AbstractSelectionGroup group = selection.getGroup();
+        
+        if (group == null || !(group instanceof GridSelectionGroup)) {
             mosaic.setSelectedColumnIndexes(Collections.emptySet());
             mosaic.setSelectedRowIndexes(Collections.emptySet());
         } else {
+            GridSelectionGroup gsg = (GridSelectionGroup)group;
             switch(gsg.getType()) {
                 case COLUMN:
                     mosaic.setSelectedColumnIndexes(gsg.getIndexes());

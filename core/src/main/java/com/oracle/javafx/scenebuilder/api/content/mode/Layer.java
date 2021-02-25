@@ -30,17 +30,55 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.oracle.javafx.scenebuilder.api.content.mode;
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+import java.util.List;
+import java.util.Set;
 
-/**
- *
- */
-public abstract class AbstractSegment implements Comparable<AbstractSegment> {
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+
+import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.transform.Transform;
+
+public interface Layer<T> {
+    Class<T> getLayerId();
+    void update();
+    void enable();
+    void disable();
     
-    public abstract double getX1();
-    public abstract double getY1();
-    public abstract double getX2();
-    public abstract double getY2();
-    public abstract double getLength();
+    @FunctionalInterface
+    public interface LayerItemCreator<T> {
+        T create(FXOMObject fxomObject);
+    }
+    
+    @FunctionalInterface
+    public interface LayerItemSelector {
+        Set<FXOMObject> select(Selection selection);
+    }
+
+    /**
+     * Returns null or the layer associated to the specified fxom object.
+     *
+     * @param fxomObject an fxom object (never null)
+     * @return null or the handles associated to the specified fxom object.
+     */
+    T lookup(FXOMObject fxomObject);
+    List<T> getActiveItems();
+    Group getLayerUI();
+    void removeAll();
+    
+    void setOnMousePressed(EventHandler<? super MouseEvent> value);
+    EventHandler<? super MouseEvent> getOnMousePressed();
+    
+    /**
+     * Computes the transform that projects from local coordinates of a
+     * scene graph object to the layer local coordinates.
+     * @param sceneGraphObject a scene graph object
+     * @return transform from sceneGraphObject local coordinates to local coordinates
+     */
+    Transform computeSceneGraphToLayerTransform(Node sceneGraphObject);
 }

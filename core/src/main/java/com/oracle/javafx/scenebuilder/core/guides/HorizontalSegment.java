@@ -31,12 +31,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+package com.oracle.javafx.scenebuilder.core.guides;
 
 /**
  *
  */
-class HorizontalSegment extends AbstractSegment {
+public class HorizontalSegment extends AbstractSegment {
     
     private final double x1;
     private final double x2;

@@ -106,7 +106,12 @@ public interface DocumentManager {
      * The current classloader has changed.
      */
     SubjectItem<ClassLoader> classLoaderDidChange();
-
+    /**
+     * The main cycle of dependency injection loading is done
+     * The document's dependencies have been loaded if true
+     */
+    SubjectItem<Boolean> dependenciesLoaded();
+    
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
     public class DocumentManagerImpl implements InitializingBean, DocumentManager {
@@ -116,6 +121,7 @@ public interface DocumentManager {
         private final SubjectItem<Boolean> dirty;
         private final SubjectItem<Boolean> saved;
         private final SubjectItem<Boolean> closed;
+        private final SubjectItem<Boolean> dependenciesLoaded;
         private final SubjectItem<StylesheetProvider> stylesheetConfig;
         private final SubjectItem<I18nResourceProvider> i18nResourceConfig;
         private final SubjectItem<FXOMDocument> fxomDocument;
@@ -135,6 +141,7 @@ public interface DocumentManager {
             dirty = new SubjectItem<Boolean>(subjects.getDirty()).set(false);
             saved = new SubjectItem<Boolean>(subjects.getSaved()).set(false);
             closed = new SubjectItem<Boolean>(subjects.getClosed());
+            dependenciesLoaded = new SubjectItem<Boolean>(subjects.getDependenciesLoaded()).set(false);
             stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
             i18nResourceConfig = new SubjectItem<I18nResourceProvider>(subjects.getI18nResourceConfig());
 
@@ -215,6 +222,11 @@ public interface DocumentManager {
         public SubjectItem<ClassLoader> classLoaderDidChange() {
             return classLoaderDidChange;
         }
+        
+        @Override
+        public SubjectItem<Boolean> dependenciesLoaded() {
+            return dependenciesLoaded;
+        }
     }
 
     public class DocumentSubjects extends SubjectManager {
@@ -222,6 +234,7 @@ public interface DocumentManager {
         private @Getter ReplaySubject<Boolean> dirty;
         private @Getter ReplaySubject<Boolean> saved;
         private @Getter ReplaySubject<Boolean> closed;
+        private @Getter ReplaySubject<Boolean> dependenciesLoaded;
         private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
         private @Getter ReplaySubject<I18nResourceProvider> i18nResourceConfig;
         private @Getter ReplaySubject<FXOMDocument> fxomDocument;
@@ -235,6 +248,7 @@ public interface DocumentManager {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1));
             saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1));
             closed = wrap(DocumentSubjects.class, "closed", ReplaySubject.create(1));
+            dependenciesLoaded = wrap(DocumentSubjects.class, "dependenciesLoaded", ReplaySubject.create(1));
             stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
             i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
             fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));

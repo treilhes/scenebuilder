@@ -30,10 +30,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
 
-public interface Mode {
+package com.oracle.javafx.scenebuilder.core.guides;
 
-    Object getModeId();
+import java.util.Comparator;
 
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+
+/**
+ *
+ */
+public class VerticalLineComparator implements Comparator<VerticalSegment> {
+
+    @Override
+    public int compare(VerticalSegment o1, VerticalSegment o2) {
+        assert o1 != null;
+        assert o2 != null;
+        assert MathUtils.equals(o1.getX1(), o1.getX2());
+        assert MathUtils.equals(o2.getX1(), o2.getX2());
+        
+        final int result;
+        
+        if (o1 == o2) {
+            result = 0;
+        } else if (MathUtils.equals(o1.getX1(), o2.getX1())) {
+            result = 0;
+        } else if (o1.getX1() < o2.getX1()) {
+            result = +1;
+        } else {
+            result = -1;
+        }
+        
+        return result;
+    }
+    
 }

@@ -82,6 +82,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         return contentPanelController;
     }
 
+    @Override
     public FXOMObject getFxomObject() {
         return fxomObject;
     }
@@ -90,6 +91,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         return sceneGraphObject;
     }
 
+    @Override
     public Group getRootNode() {
         return rootNode;
     }
@@ -120,6 +122,15 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         updateSceneGraphObject();
         startListeningToSceneGraphObject();
         layoutDecoration();
+    }
+
+    
+    @Override
+    public void update() {}
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // always enabled by default
     }
 
     public Point2D sceneGraphObjectToDecoration(double x, double y, boolean snapToPixel) {

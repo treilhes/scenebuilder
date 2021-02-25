@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.content;
 
+import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 public interface ModeManager {
@@ -51,5 +52,9 @@ public interface ModeManager {
      * @return true if one mode is enabled.
      */
     boolean hasModeEnabled();
+    
+    boolean isModeEnabled(Object modeId);
+
+    Mode getEnabledMode();
 
 }

@@ -30,94 +30,72 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+
+import javafx.scene.input.KeyEvent;
 
 /**
  *
+ * 
  */
-class VerticalSegment extends AbstractSegment {
+public class DebugMouseGesture extends AbstractMouseGesture {
 
-    private final double x;
-    private final double y1;
-    private final double y2;
-    private final double length;
-
-    public VerticalSegment(double x, double y1, double y2) {
-        this.x = x;
-        this.y1 = y1;
-        this.y2 = y2;
-        this.length = Math.abs(y2 - y1);
+    private final String title;
+    
+    public DebugMouseGesture(Content contentPanelController, String title) {
+        super(contentPanelController);
+        this.title = title;
     }
 
     /*
-     * AbstractSegment
+     * AbstractMouseGesture
      */
+    
     @Override
-    public double getX1() {
-        return x;
+    protected void mousePressed() {
+        System.out.println("DebugMouseGesture.mousePressed");
     }
 
     @Override
-    public double getX2() {
-        return x;
+    protected void mouseDragStarted() {
+        System.out.println("DebugMouseGesture.mouseDragStarted");
     }
 
     @Override
-    public double getY1() {
-        return y1;
+    protected void mouseDragged() {
+        System.out.println("DebugMouseGesture.mouseDragged");
     }
 
     @Override
-    public double getY2() {
-        return y2;
+    protected void mouseDragEnded() {
+        System.out.println("DebugMouseGesture.mouseDragEnded");
     }
 
     @Override
-    public double getLength() {
-        return length;
+    protected void mouseReleased() {
+        System.out.println("DebugMouseGesture.mouseReleased");
     }
 
+    @Override
+    protected void keyEvent(KeyEvent e) {
+        System.out.println("DebugMouseGesture.keyEvent");
+    }
+
+    @Override
+    protected void userDidCancel() {
+        System.out.println("DebugMouseGesture.keyEvent");
+    }
+    
+    
     /*
      * Object
      */
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));
-        hash = 67 * hash + (int) (Double.doubleToLongBits(this.y1) ^ (Double.doubleToLongBits(this.y1) >>> 32));
-        hash = 67 * hash + (int) (Double.doubleToLongBits(this.y2) ^ (Double.doubleToLongBits(this.y2) >>> 32));
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final VerticalSegment other = (VerticalSegment) obj;
-        if (Double.doubleToLongBits(this.x) != Double.doubleToLongBits(other.x)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.y1) != Double.doubleToLongBits(other.y1)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.y2) != Double.doubleToLongBits(other.y2)) {
-            return false;
-        }
-        return true;
-    }
     
-
-    /*
-     * Comparable
-     */
     @Override
-    public int compareTo(AbstractSegment o) {
-        assert o != null;
-        return Double.compare(this.length, o.getLength());
+    public String toString() {
+        return getClass().getSimpleName() + "[" + title + "]";
     }
 }

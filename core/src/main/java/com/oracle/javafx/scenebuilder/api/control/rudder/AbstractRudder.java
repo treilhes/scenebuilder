@@ -40,7 +40,7 @@ import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
  *
  *
  */
-public abstract class AbstractRudder<T> extends AbstractDecoration<T> implements Rudder {
+public abstract class AbstractRudder<T> extends AbstractDecoration<T> implements Rudder<T> {
 
     public AbstractRudder(Content contentPanelController, Class<T> sceneGraphClass) {
         super(contentPanelController, sceneGraphClass);

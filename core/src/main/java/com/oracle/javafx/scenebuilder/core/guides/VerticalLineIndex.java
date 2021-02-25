@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+package com.oracle.javafx.scenebuilder.core.guides;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,7 @@ import javafx.geometry.Point2D;
 /**
  *
  */
-class VerticalLineIndex {
+public class VerticalLineIndex {
     
     private static final VerticalLineComparator comparator = new VerticalLineComparator();
     

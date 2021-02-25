@@ -40,7 +40,6 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.RegionRectan
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.transform.Transform;
 
 /**
 *
@@ -118,11 +117,12 @@ public class HitNodeChrome extends AbstractDecoration<Object> {
             assert hitNode.getScene() != null;
             assert hitNode.getScene() == closestNode.getScene();
 
-            final Transform t = getContentPanelController().computeSceneGraphToRudderLayerTransform(hitNode);
-            chrome.getTransforms().clear();
-            chrome.getTransforms().add(t);
+            //FIXME uncomment and solve
+//            final Transform t = getContentPanelController().computeSceneGraphToRudderLayerTransform(hitNode);
+//            chrome.getTransforms().clear();
+//            chrome.getTransforms().add(t);
+            
             chrome.setLayoutBounds(hitNode.getLayoutBounds());
-//            chrome.setLayoutBounds(new BoundingBox(0, 0, 20, 15));
             chrome.setVisible(true);
         }
     }

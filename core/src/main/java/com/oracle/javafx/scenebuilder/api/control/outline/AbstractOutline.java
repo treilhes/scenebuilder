@@ -49,7 +49,7 @@ import javafx.scene.shape.PathElement;
 /**
  *
  */
-public abstract class AbstractOutline<T> extends AbstractDecoration<T> implements Outline{
+public abstract class AbstractOutline<T> extends AbstractDecoration<T> implements Outline<T>{
 
     public static final String OUTLINE_RING_CLASS = "outline-ring"; //NOI18N
 

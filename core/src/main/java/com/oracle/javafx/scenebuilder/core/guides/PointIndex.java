@@ -31,36 +31,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides;
+package com.oracle.javafx.scenebuilder.core.guides;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
-/**
- *
- */
-class HorizontalLineComparator implements Comparator<HorizontalSegment> {
+import javafx.geometry.Point2D;
 
-    @Override
-    public int compare(HorizontalSegment o1, HorizontalSegment o2) {
-        assert o1 != null;
-        assert o2 != null;
-        assert MathUtils.equals(o1.getY1(), o1.getY2());
-        assert MathUtils.equals(o2.getY1(), o2.getY2());
-        
-        final int result;
-        
-        if (o1 == o2) {
-            result = 0;
-        } else if (MathUtils.equals(o1.getY1(), o2.getY1())) {
-            result = 0;
-        } else if (o1.getY1() < o2.getY1()) {
-            result = +1;
-        } else {
-            result = -1;
+public class PointIndex {
+
+    private static final PointComparator comparator = new PointComparator();
+
+    private final List<Point2D> points = new ArrayList<>();
+    private boolean sorted;
+
+
+    public void addPoint(Point2D point) {
+        points.add(point);
+        sorted = false;
+    }
+
+    public void clear() {
+        points.clear();
+    }
+
+    public boolean isEmpty() {
+        return points.isEmpty();
+    }
+
+    public List<Point2D> match(Point2D target, double threshold) {
+        assert threshold >= 0;
+
+        if (sorted == false) {
+            Collections.sort(points, comparator);
         }
-        
+        double bestDelta = Double.MAX_VALUE;
+        final List<Point2D> result = new ArrayList<>();
+        for (Point2D point : points) {
+            final double delta = Math.sqrt(Math.pow(target.getX() - point.getX(), 2) + Math.pow(target.getY() - point.getY(), 2));
+            if (delta < threshold) {
+                if (MathUtils.equals(delta, bestDelta)) {
+                    result.add(point);
+                } else if (delta < bestDelta) {
+                    bestDelta = delta;
+                    result.clear();
+                    result.add(point);
+                }
+            }
+        }
+
         return result;
     }
     
