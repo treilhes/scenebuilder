@@ -45,6 +45,8 @@ run {
 
 jar.enabled = false
 shadowJar {
+	mergeServiceFiles()
+	
     manifest {
         attributes 'Main-Class': mainClassName
     }
