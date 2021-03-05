@@ -69,7 +69,7 @@
             </ScrollPane>
             <VBox prefHeight="98.0" prefWidth="236.0">
                <children>
-                  <ToggleButton alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" styleClass="action-button" text="%welcome.new.project.label" textFill="WHITE">
+                  <ToggleButton alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openEmpty" selected="true" styleClass="action-button" text="%welcome.new.project.label" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>

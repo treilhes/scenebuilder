@@ -175,5 +175,11 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         sceneBuilderApp.performControlAction(Main.ApplicationControlAction.OPEN_FILE, documentWC);
         getStage().hide();
     }
+    
+    @FXML
+    private void openEmpty() {
+        getStage().hide();
+        sceneBuilderApp.performNewTemplate(TemplateImpl.EMPTY_APP);
+    }
 }
 
