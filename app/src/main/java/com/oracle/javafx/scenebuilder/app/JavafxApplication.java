@@ -45,6 +45,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.extension.ExtensionLoader;
 
@@ -73,7 +74,9 @@ public class JavafxApplication extends Application {
         ApplicationContextInitializer<GenericApplicationContext> initializer = new ApplicationContextInitializer<GenericApplicationContext>() {
             @Override
             public void initialize(GenericApplicationContext genericApplicationContext) {
-                
+                SceneBuilderLoadingProgress.get().initContext();
+                genericApplicationContext.addApplicationListener(SceneBuilderLoadingProgress.get().getProgressListener());
+                genericApplicationContext.addBeanFactoryPostProcessor(SceneBuilderLoadingProgress.get().getProgressListener());
                 genericApplicationContext.registerBean(Application.class, () -> JavafxApplication.this);
                 genericApplicationContext.registerBean(Parameters.class, () -> getParameters());
                 genericApplicationContext.registerBean(HostServices.class, () -> getHostServices());

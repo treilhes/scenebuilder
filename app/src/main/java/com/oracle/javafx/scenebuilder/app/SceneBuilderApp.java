@@ -34,6 +34,9 @@ package com.oracle.javafx.scenebuilder.app;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
+import com.oracle.javafx.scenebuilder.app.splash.SplashScreenPreloader;
+
 import javafx.application.Application;
 
 @SpringBootApplication
@@ -46,6 +49,8 @@ public class SceneBuilderApp {
 	 * @throws Exception 
      */
 	public static void main(String[] args) {
+	    System.setProperty("javafx.preloader", SplashScreenPreloader.class.getName());
+	    SceneBuilderLoadingProgress.get().start();
         Application.launch(SceneBuilderBootstrap.class, args);
 	}
 

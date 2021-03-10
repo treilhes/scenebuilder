@@ -159,7 +159,7 @@ public class SceneBuilderBeanFactory {
             factory.registerScope(SCOPE_DOCUMENT, new DocumentScope());
             factory.registerScope(SCOPE_THREAD, new ThreadScope());
             factory.addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
-
+            factory.addBeanPostProcessor(SceneBuilderLoadingProgress.get().getProgressListener());
             DefaultListableBeanFactory bf = (DefaultListableBeanFactory) factory;
             bf.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver() {
 
@@ -260,6 +260,7 @@ public class SceneBuilderBeanFactory {
                 loader.setLocation(controller.getFxmlURL());
                 loader.setResources(controller.getResources());
                 loader.setClassLoader(bean.getClass().getClassLoader());
+                
                 try {
                     controller.setRoot((Parent) loader.load());
                     controller.controllerDidLoadFxml();

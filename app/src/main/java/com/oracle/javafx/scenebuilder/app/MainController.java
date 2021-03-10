@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -52,6 +53,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
@@ -70,6 +72,7 @@ import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
@@ -384,6 +387,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     //TODO there are some Gluon adherence here
     public void handleLaunch(List<String> files) {
         
+        // defer dependency injection framework loading outside javafx thread
+        Task task = new Task(() -> {
         initializations.forEach(a -> a.init());
         
         boolean showWelcomeDialog = files.isEmpty();
@@ -393,17 +398,25 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //
 //        userLibrary.startWatching();
 
+
         if (showWelcomeDialog) {
             // Creates an empty document
             final DocumentWindowController newWindow = makeNewWindow();
-            newWindow.updateWithDefaultContent();
-            newWindow.openWindow();
+            
 
             WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
 
             // Unless we're on a Mac we're starting SB directly (fresh start)
             // so we're not opening any file and as such we should show the Welcome Dialog
-            wdwc.getStage().show();
+            
+            Platform.runLater(() -> {
+                newWindow.updateWithDefaultContent();
+                newWindow.openWindow();
+                wdwc.getStage().show();
+                SceneBuilderLoadingProgress.get().end();
+            });
+            
+            
 
         } else {
             // Open files passed as arguments by the platform
@@ -415,7 +428,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
         if (System.getProperty("scenic") != null) { //NOI18N
             Platform.runLater(new ScenicViewStarter(context.getBean(Document.class).getScene()));
-        }
+        }});
+        
+        Thread th = new Thread(task.getRunnable());
+        th.setDaemon(true);
+        th.start();
+
     }
 
     
@@ -491,7 +509,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
         
-        windowIconSetting.setWindowIcon(result.getStage());
+        Platform.runLater(() -> windowIconSetting.setWindowIcon(result.getStage()));
+        
 
         windowList.add(result);
         return result;
@@ -575,70 +594,93 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         assert fxmlFiles != null;
         assert fxmlFiles.isEmpty() == false;
 
+        final Map<File, Document> documents = new HashMap<>();
+        
         final Map<File, IOException> exceptions = new HashMap<>();
+        
+        //build dependency injections first
         for (File fxmlFile : fxmlFiles) {
-            try {
-                final Document dwc
-                        = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
-                if (dwc != null) {
-                    // fxmlFile is already opened
-                    dwc.getStage().toFront();
-                } else {
-                    // Open fxmlFile
-                    final Document hostWindow;
-                    final Document unusedWindow
-                            = lookupUnusedDocumentWindowController();
-                    if (unusedWindow != null) {
-                        hostWindow = unusedWindow;
+                try {
+                    final Document dwc = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
+                    if (dwc != null) {
+                        // fxmlFile is already opened
+                        dwc.getStage().toFront();
                     } else {
-                        hostWindow = makeNewWindow();
+                        // Open fxmlFile
+                        final Document hostWindow;
+                        final Document unusedWindow
+                                = lookupUnusedDocumentWindowController();
+                        if (unusedWindow != null) {
+                            hostWindow = unusedWindow;
+                        } else {
+                            hostWindow = makeNewWindow();
+                        }
+                        documents.put(fxmlFile, hostWindow);
                     }
-                    hostWindow.loadFromFile(fxmlFile);
+                } catch (IOException e) {
+                    exceptions.put(fxmlFile, e);
+                }
+        }
+
+        SceneBuilderLoadingProgress.get().end();
+        
+        // execute ui related loading now
+        Platform.runLater(() -> {
+            
+            
+            for (Entry<File, Document> entry:documents.entrySet()) {
+                File file = entry.getKey();
+                Document hostWindow = entry.getValue();
+                
+                try {
+                    hostWindow.loadFromFile(file);
                     hostWindow.openWindow();
+                } catch (IOException xx) {
+                    hostWindow.closeWindow();
+                    exceptions.put(file, xx);
                 }
-            } catch (IOException xx) {
-                exceptions.put(fxmlFile, xx);
-            }
-        }
-
-        switch (exceptions.size()) {
-            case 0: { // Good
-                // Update recent items with opened files
-            	recentItemsPreference.addRecentItems(fxmlFiles);
-                break;
-            }
-            case 1: {
-                final File fxmlFile = exceptions.keySet().iterator().next();
-                final Exception x = exceptions.get(fxmlFile);
-                dialog.showErrorAndWait(
-                        I18N.getString("alert.title.open"), 
-                        I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())), 
-                        I18N.getString("alert.open.failure1.details"), 
-                        x);
-                break;
-            }
-            default: {
-                if (exceptions.size() == fxmlFiles.size()) {
-                    // Open operation has failed for all the files
-                    dialog.showErrorAndWait(
-                            I18N.getString("alert.title.open"), 
-                            I18N.getString("alert.open.failureN.message"), 
-                            I18N.getString("alert.open.failureN.details")
-                            );
-                } else {
-                    // Open operation has failed for some files
-                    dialog.showErrorAndWait(
-                            I18N.getString("alert.title.open"), 
-                            I18N.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()), 
-                            I18N.getString("alert.open.failureMofN.details")
-                            );
+                
+                switch (exceptions.size()) {
+                    case 0: { // Good
+                        // Update recent items with opened files
+                        recentItemsPreference.addRecentItems(fxmlFiles);
+                        break;
+                    }
+                    case 1: {
+                        final File fxmlFile = exceptions.keySet().iterator().next();
+                        final Exception x = exceptions.get(fxmlFile);
+                        dialog.showErrorAndWait(
+                                I18N.getString("alert.title.open"), 
+                                I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())), 
+                                I18N.getString("alert.open.failure1.details"), 
+                                x);
+                        break;
+                    }
+                    default: {
+                        if (exceptions.size() == fxmlFiles.size()) {
+                            // Open operation has failed for all the files
+                            dialog.showErrorAndWait(
+                                    I18N.getString("alert.title.open"), 
+                                    I18N.getString("alert.open.failureN.message"), 
+                                    I18N.getString("alert.open.failureN.details")
+                                    );
+                        } else {
+                            // Open operation has failed for some files
+                            dialog.showErrorAndWait(
+                                    I18N.getString("alert.title.open"), 
+                                    I18N.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()), 
+                                    I18N.getString("alert.open.failureMofN.details")
+                                    );
+                        }
+                        break;
+                    }
                 }
-                break;
             }
-        }
+        });
     }
-
-    private void performExit() {
+    
+    
+   private void performExit() {
 
         // Check if an editing session is on going
         for (Document dwc : windowList) {

@@ -102,7 +102,6 @@ public class SceneBuilderBootstrap extends JavafxApplication {
         super.start(stage);
         launchLatch.countDown();
         setApplicationUncaughtExceptionHandler();
-
     }
 
     private void setApplicationUncaughtExceptionHandler() {
