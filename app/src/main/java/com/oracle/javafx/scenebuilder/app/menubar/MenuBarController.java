@@ -354,20 +354,15 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
     }
 
-    public void buildMenuMap(MenuBar menuBar) {
+    private void buildMenuMap(MenuBar menuBar) {
         if (menuMap != null) {
             return;
         }
         menuMap = new HashMap<>();
-        menuBar.getMenus().forEach(m -> {
-            addToMenuMap(m);
-            m.getItems().forEach(mi -> {
-                addToMenuMap(mi);
-            });
-        });
+        menuBar.getMenus().forEach(m -> addToMenuMap(m));
     }
 
-    public void addToMenuMap(MenuItem m) {
+    private void addToMenuMap(MenuItem m) {
         if (m.getId() != null && !m.getId().isEmpty()) {
             if (menuMap.containsKey(m.getId())) {
                 Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, "Duplicate id in menu map : {0}", m.getId());
@@ -375,6 +370,13 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 menuMap.put(m.getId(), m);
             }
         }
+        
+        if (m instanceof Menu) {
+            ((Menu)m).getItems().forEach(mi -> {
+                addToMenuMap(mi);
+            });
+        }
+        
     }
 
     @Override
@@ -482,7 +484,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
                    if (inserted) {
                        dynamicMenu.add(ma.getMenu());
-                       menuMap.put(ma.getMenu().getId(), ma.getMenu());
+                       addToMenuMap(ma.getMenu());
                        it.remove();
                        atLeastOneInserted = true;
                    }
@@ -624,7 +626,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
                        if (inserted) {
                            dynamicMenu.add(ma.getMenuItem());
-                           menuMap.put(ma.getMenuItem().getId(), ma.getMenuItem());
+                           addToMenuMap(ma.getMenuItem());
                            it.remove();
                            atLeastOneInserted = true;
                        }
