@@ -33,6 +33,7 @@ dependencies {
 	implementation project(':content-editor')
 	implementation project(':css-analyser')
 	implementation project(':debug-menu')
+	implementation project(':exporter')
 	//implementation project(':help-features')
 }
 
