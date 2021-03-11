@@ -63,7 +63,13 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
     /** true if the component deserves a resizing while used as top element of the layout. default: false */
     private boolean main = false;
     
+    
+    /** The requested order. component properties are ordered by "order" then by name */
+    private int order;
+    
     private Set<PropertyName> disabledChildProperties = new HashSet<>();
+    
+    
     /**
      * Instantiates a new component property metadata.
      *
@@ -74,13 +80,22 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
      * @param iconX2Url
      * @param main true if it is the main placeholder
      */
-    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url, boolean main) {
+    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url, boolean main, int order) {
         super(name, false);
         this.classMetadata = classMetadata;
         this.collection = collection;
         this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
         this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
         this.main = main;
+        this.order = order;
+    }
+    
+    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url, boolean main) {
+        this(name, classMetadata, collection, iconUrl, iconX2Url, main, 0);
+    }
+    
+    public ComponentPropertyMetadata(PropertyName name, ComponentClassMetadata<?> classMetadata, boolean collection, URL iconUrl, URL iconX2Url, int order) {
+        this(name, classMetadata, collection, iconUrl, iconX2Url, false, order);
     }
     
     /**
@@ -175,4 +190,10 @@ public class ComponentPropertyMetadata extends PropertyMetadata {
     public Set<PropertyName> getDisabledProperties() {
         return disabledChildProperties;
     }
+
+    public int getOrder() {
+        return order;
+    }
+    
+    
 }

@@ -34,12 +34,14 @@ package com.oracle.javafx.scenebuilder.core.metadata.klass;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
@@ -60,6 +62,9 @@ import lombok.Getter;
  * 
  */
 public class ComponentClassMetadata<T> extends ClassMetadata<T> {
+    
+    public static final Comparator<ComponentPropertyMetadata> COMPARATOR = Comparator.comparing( ComponentPropertyMetadata::getOrder )
+            .thenComparing(Comparator.comparing((cpm) -> cpm.getName().getName()));
     
     /** The component properties. */
     private final ObservableSet<PropertyMetadata> properties = FXCollections.observableSet(new HashSet<>());
@@ -178,7 +183,8 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      * @return the components subset properties
      */
     public Set<ComponentPropertyMetadata> getSubComponentProperties() {
-        return Collections.unmodifiableSet(subComponents);
+        return Collections.unmodifiableSet(
+                subComponents.stream().filter(c -> !shadowedProperties.contains(c)).collect(Collectors.toSet()));
     }
 
     /**
@@ -187,7 +193,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      * @return all the components subset properties
      */
     public Set<ComponentPropertyMetadata> getAllSubComponentProperties() {
-        HashSet<ComponentPropertyMetadata> result = new HashSet<>();
+        TreeSet<ComponentPropertyMetadata> result = new TreeSet<>(COMPARATOR);
         ComponentClassMetadata<?> current = this;
         
         while (current != null) {

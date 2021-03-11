@@ -1197,6 +1197,8 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.mnemonicParsing_false_PropertyMetadata);
             getProperties().add(valueCatalog.styleClass_c3_PropertyMetadata);
 
+            getShadowedProperties().add(componentCatalog.labelForPropertyMetadata);
+            
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/Label.fxml"), null, null,
                             getClass().getResource("nodeicons/Label.png"),
