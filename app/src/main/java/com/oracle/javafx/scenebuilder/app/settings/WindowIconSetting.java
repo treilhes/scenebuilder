@@ -47,7 +47,7 @@ public class WindowIconSetting extends AbstractSetting implements IconSetting {
 	public static final String APP_ICON_16 = WindowIconSetting.class.getResource("SceneBuilderLogo_16.png").toString();
     public static final String APP_ICON_32 = WindowIconSetting.class.getResource("SceneBuilderLogo_32.png").toString();
 
-	protected WindowIconSetting() {}
+	public WindowIconSetting() {}
 	
 	@Override
     public void setWindowIcon(Alert alert) {

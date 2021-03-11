@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.app.splash;
 import java.io.IOException;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
+import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 
 import javafx.application.Platform;
 import javafx.application.Preloader;
@@ -102,6 +103,7 @@ public class SplashScreenPreloader extends Preloader {
         this.scene = createPreloaderScene();
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);        
+        new WindowIconSetting().setWindowIcon(stage);
         stage.show();
     }
     
