@@ -30,59 +30,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.content.mode;
+package com.oracle.javafx.scenebuilder.devutils;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-import java.io.File;
-import java.util.List;
-import java.util.Set;
-
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.transform.Transform;
-
-public interface Layer<T> {
-    Class<T> getLayerId();
-    void update();
-    void enable();
-    void disable();
-    
-    @FunctionalInterface
-    public interface LayerItemCreator<T> {
-        T create(FXOMObject fxomObject);
-    }
-    
-    @FunctionalInterface
-    public interface LayerItemSelector {
-        Set<FXOMObject> select(Selection selection);
-    }
-
-    /**
-     * Returns null or the layer associated to the specified fxom object.
-     *
-     * @param fxomObject an fxom object (never null)
-     * @return null or the handles associated to the specified fxom object.
-     */
-    T lookup(FXOMObject fxomObject);
-    List<T> getActiveItems();
-    Group getLayerUI();
-    void removeAll();
-    
-    void setOnMousePressed(EventHandler<? super MouseEvent> value);
-    EventHandler<? super MouseEvent> getOnMousePressed();
-    
-    /**
-     * Computes the transform that projects from local coordinates of a
-     * scene graph object to the layer local coordinates.
-     * @param sceneGraphObject a scene graph object
-     * @return transform from sceneGraphObject local coordinates to local coordinates
-     */
-    Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject);
-    
-    
-    //TEMP
-    void save(File out);
+public class Test2 extends Application {
+   @Override
+public void start(Stage stage) {
+      //Creating nodes
+      TextField textField = new TextField();
+      PasswordField pwdField = new PasswordField();
+      //creating labels
+      Label label1 = new Label("_Email");
+      label1.setMnemonicParsing(true);
+      label1.setLabelFor(textField);
+      Label label2 = new Label("_Password");
+      label2.setMnemonicParsing(true);
+      label2.setLabelFor(pwdField);
+      //Adding labels for nodes
+      HBox box1 = new HBox(5);
+      box1.setPadding(new Insets(25, 5 , 5, 50));
+      box1.getChildren().addAll(label1, textField, label2, pwdField);
+      //Setting the stage
+      Scene scene = new Scene(box1, 595, 150, Color.BEIGE);
+      stage.setTitle("Check Box Example");
+      stage.setScene(scene);
+      stage.show();
+   }
+   public static void main(String args[]){
+      launch(args);
+   }
 }

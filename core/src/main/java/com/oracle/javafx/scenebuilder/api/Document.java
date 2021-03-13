@@ -41,17 +41,32 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public interface Document {
-	boolean isInited();
-	boolean isUnused();
-	boolean isDocumentDirty();
-	boolean hasContent();
-	boolean hasName();
-	String getName();
-	Stage getStage();
+    //API validated
+    boolean isInited();
+    boolean isUnused();
+    boolean isDocumentDirty();
+    boolean hasContent();
+    boolean hasName();
+    String getName();
+    Stage getStage();
+    ActionStatus save();
+    ActionStatus saveAs();
+    void closeWindow();
+    void revert();
+    
+    //API to be validated
+	
 	void loadFromFile(File fxmlFile) throws IOException;
     void openWindow();
     Editor getEditorController();
     MenuBar getMenuBarController();
+    void updatePreferences();
+    
+    Scene getScene();
+    Content getContentPanelController();
+    DocumentPanel getDocumentPanelController();
+    void updateWithDefaultContent();
+    
     
     public static class TitleComparator implements Comparator<Document> {
 
@@ -84,11 +99,11 @@ public interface Document {
         COPY,
         SELECT_ALL,
         SELECT_NONE,
-        SAVE_FILE,
-        SAVE_AS_FILE,
-        REVERT_FILE,
+        //SAVE_FILE,
+        //SAVE_AS_FILE,
+        //REVERT_FILE,
         CLOSE_FILE,
-        REVEAL_FILE,
+        //REVEAL_FILE,
         GOTO_CONTENT,
         GOTO_PROPERTIES,
         GOTO_LAYOUT,
@@ -113,9 +128,9 @@ public interface Document {
         DELETE,
         CUT,
         PASTE,
-        IMPORT_FXML,
-        IMPORT_MEDIA,
-        INCLUDE_FXML
+        //IMPORT_FXML,
+        //IMPORT_MEDIA,
+        //INCLUDE_FXML
     }
 
     public enum ActionStatus {
@@ -123,9 +138,9 @@ public interface Document {
         DONE
     }
 
-    void updatePreferences();
-    void closeWindow();
-    Scene getScene();
-    Content getContentPanelController();
-    DocumentPanel getDocumentPanelController();
+    void performImportFxml();
+    void performIncludeFxml();
+    void performRevealAction();
+    void performImportMedia();
+    
 }

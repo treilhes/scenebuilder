@@ -512,16 +512,35 @@ public abstract class FXOMObject extends FXOMNode {
     }
     
     /**
-     * Check if the object is in a detached graph which it does not have a parent node
-     * but the parent object does have one.
+     * Check if the object is in a detached graph
+     * It is in a detached graph if the parent is a node but sceneGraphObject parent is null
      * It is the case for node added to clip, shape, ...
      * 
      * @return true if in detached graph/ false if is in the main graph
      */
     public boolean isDetachedGraph() {
         return isNode() && ((Node)sceneGraphObject).getParent() == null 
-                && getParentObject() != null && getParentObject().isNode()
-                && ((Node)getParentObject().getSceneGraphObject()).getParent() != null;
+                && getParentObject() != null && getParentObject().isNode();
+    }
+    
+    /**
+     * Check if the object is viewable.
+     * A node is viewable if all the parents are instance of node
+     * 
+     * @return true if viewable
+     */
+    public boolean isViewable() {
+        if (!isNode()) {
+            return false;
+        }
+        FXOMObject parent = getParentObject();
+        while (parent != null) {
+            if (!parent.isNode()) {
+                return false;
+            }
+            parent = parent.getParentObject();
+        }
+        return true;
     }
     
     public FXOMObject getClosestNode() {

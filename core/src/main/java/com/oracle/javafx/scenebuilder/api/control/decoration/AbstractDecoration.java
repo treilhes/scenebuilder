@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.decoration;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.Decoration;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 
 import javafx.beans.value.ChangeListener;
@@ -73,6 +74,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
     public void setFxomObject(FXOMObject fxomObject) {
         assert fxomObject != null;
         assert fxomObject.getSceneGraphObject() != null;
+        assert sceneGraphClass.isAssignableFrom(fxomObject.getSceneGraphObject().getClass());
         assert fxomObject.getFxomDocument() == contentPanelController.getEditorController().getFxomDocument();
         this.fxomObject = fxomObject;
         this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
@@ -88,7 +90,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
     }
 
     public T getSceneGraphObject() {
-        return sceneGraphObject;
+        return (T)fxomObject.getSceneGraphObject();
     }
 
     @Override
@@ -245,6 +247,37 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
     protected void updateSceneGraphObject() {
         this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
     }
+    
+    /**
+     * Computes the transform that projects from local coordinates of a
+     * scene graph object to the rudder layer local coordinates.
+     * @param sceneGraphObject a scene graph object
+     * @return transform from sceneGraphObject local coordinates to rudder local coordinates
+     */
+    public Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject) {
+        assert fxomObject != null;
+        assert fxomObject.isNode();
+        
+        assert fxomObject.getSceneGraphObject() != null;
+        
+        // not needed for now CoordinateHelper does not depend on scene
+        // more shapes does not have any scene but clip does
+        //assert ((Node)fxomObject.getSceneGraphObject()).getScene() == getRootNode().getScene();
+
+        final Transform t1 = CoordinateHelper.localToSceneTransform(fxomObject);
+        final Transform t2 = contentPanelController.getContentSubScene().getLocalToSceneTransform();
+        final Transform t3 = getRootNode().getLocalToSceneTransform();
+        final Transform result;
+
+        try {
+            final Transform i3 = t3.createInverse();
+            result = i3.createConcatenation(t2).createConcatenation(t1);
+        } catch(NonInvertibleTransformException x) {
+            throw new RuntimeException(x);
+        }
+
+        return result;
+    }
 
     /*
      * Private
@@ -261,4 +294,5 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 
     private final ChangeListener<Scene> sceneListener
         = (ov, v1, v2) -> layoutDecoration();
+        
 }

@@ -42,8 +42,10 @@ import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
+import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
@@ -78,6 +80,8 @@ import com.oracle.javafx.scenebuilder.drivers.node.NodeHandles;
 import com.oracle.javafx.scenebuilder.drivers.node.NodeIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.drivers.node.NodeOutline;
 import com.oracle.javafx.scenebuilder.drivers.node.NodePring;
+import com.oracle.javafx.scenebuilder.drivers.node.NodeResizeGuide;
+import com.oracle.javafx.scenebuilder.drivers.node.NodeShadow;
 import com.oracle.javafx.scenebuilder.drivers.node.NodeTring;
 import com.oracle.javafx.scenebuilder.drivers.node.ResizeRudder;
 import com.oracle.javafx.scenebuilder.drivers.pane.PaneRelocater;
@@ -183,6 +187,8 @@ public class DriverExtensionInitializer {
         registry.registerExtension(Resizer.class);
         registry.registerExtension(Rudder.class);
         registry.registerExtension(Tring.class);
+        registry.registerExtension(ResizeGuide.class);
+        registry.registerExtension(Shadow.class);
 
         // AnchorPane
         registry.registerImplementationClass(Relocater.class, AnchorPane.class, AnchorPaneRelocater.class);
@@ -250,6 +256,8 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Pring.class, Node.class, NodePring.class);
         registry.registerImplementationClass(Rudder.class, Node.class, ResizeRudder.class);
         registry.registerImplementationClass(Tring.class, Node.class, NodeTring.class);
+        registry.registerImplementationClass(ResizeGuide.class, Node.class, NodeResizeGuide.class);
+        registry.registerImplementationClass(Shadow.class, Node.class, NodeShadow.class);
 
         // Pane
         registry.registerImplementationClass(Relocater.class, Pane.class, PaneRelocater.class);

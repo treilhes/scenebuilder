@@ -1371,14 +1371,7 @@ public class EditorController implements Editor {
                 performCopy();
                 break;
             }
-            case EDIT_INCLUDED_FILE: {
-                performEditIncludedFile();
-                break;
-            }
-            case REVEAL_INCLUDED_FILE: {
-                performRevealIncludedFile();
-                break;
-            }
+            
             case SELECT_ALL: {
                 performSelectAll();
                 break;
@@ -1425,11 +1418,6 @@ public class EditorController implements Editor {
         switch(controlAction) {
             case COPY: {
                 result = canPerformCopy();
-                break;
-            }
-            case EDIT_INCLUDED_FILE:
-            case REVEAL_INCLUDED_FILE: {
-                result = canPerformIncludedFileAction();
                 break;
             }
             case SELECT_ALL: {
@@ -2098,7 +2086,8 @@ public class EditorController implements Editor {
         return getIncludedFile() != null;
     }
 
-    private void performEditIncludedFile() {
+    @Override
+    public void performEditIncludedFxml() {
         assert canPerformIncludedFileAction(); // (1)
         final File includedFile = getIncludedFile();
         assert includedFile != null; // Because of (1)
@@ -2112,7 +2101,8 @@ public class EditorController implements Editor {
         }
     }
 
-    private void performRevealIncludedFile() {
+    @Override
+    public void performRevealIncludeFxml() {
         assert canPerformIncludedFileAction(); // (1)
         final File includedFile = getIncludedFile();
         assert includedFile != null; // Because of (1)

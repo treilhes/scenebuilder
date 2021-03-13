@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.api.content.gesture;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Gesture;
 
+import javafx.scene.Node;
 import javafx.scene.input.InputEvent;
 
 /**
@@ -42,6 +43,8 @@ import javafx.scene.input.InputEvent;
  *
  */
 public abstract class AbstractGesture implements Gesture {
+    
+    private static final String GESTURE = "GESTURE";
 
     protected final Content contentPanelController;
 
@@ -53,4 +56,42 @@ public abstract class AbstractGesture implements Gesture {
     public abstract void start(InputEvent e, Observer observer);
 
 
+    public static AbstractGesture lookupGesture(Node node) {
+        assert node != null;
+        assert node.isMouseTransparent() == false;
+
+        final AbstractGesture result;
+        final Object value = node.getProperties().get(GESTURE);
+        if (value instanceof AbstractGesture) {
+            result = (AbstractGesture) value;
+        } else {
+            assert value == null;
+            result = null;
+        }
+
+        return result;
+    }
+
+    public static void attachGesture(Node node, AbstractGesture gesture) {
+        assert node != null;
+        assert node.isMouseTransparent() == false;
+        assert lookupGesture(node) == null;
+
+        if (gesture == null) {
+            node.getProperties().remove(GESTURE);
+        } else {
+            node.getProperties().put(GESTURE, gesture);
+        }
+    }
+    
+    public static void detachGesture(Node node, AbstractGesture gesture) {
+        assert node != null;
+        assert node.isMouseTransparent() == false;
+        // TODO ReferenceUpdater job did replace all the fxom scenegraphobject instances, so we can't find anything there
+        // but animation may suffer from this expensive reload, so maybe one day it will be usefull
+        //assert lookupGesture(node) == gesture;
+
+        node.getProperties().remove(GESTURE);
+
+    }
 }

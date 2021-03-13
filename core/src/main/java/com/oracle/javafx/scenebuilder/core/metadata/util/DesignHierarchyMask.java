@@ -436,6 +436,11 @@ public class DesignHierarchyMask implements HierarchyMask {
             final ComponentPropertyMetadata subComponentMetadata
                     = mainAccessory.getPropertyMetadata();
             assert subComponentMetadata != null;
+            
+            if (!subComponentMetadata.isCollection() && getSubComponentCount(mainAccessory) >= 1) {
+                return false;
+            }
+            
             final Class<?> subComponentClass
                     = subComponentMetadata.getClassMetadata().getKlass();
             for (FXOMObject obj : fxomObjects) {
@@ -473,17 +478,20 @@ public class DesignHierarchyMask implements HierarchyMask {
     public List<FXOMObject> getSubComponents(Accessory accessory) {
 
         assert accessory.getName() != null;
-        assert accessory.isCollection();
+        // not true anymore main component can be a single element
+        //assert accessory.isCollection();
         assert fxomObject instanceof FXOMInstance;
 
         final PropertyName subComponentPropertyName = accessory.getName();
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
         final FXOMProperty fxomProperty
                 = fxomInstance.getProperties().get(subComponentPropertyName);
-
+        
         final List<FXOMObject> result;
         if (fxomProperty instanceof FXOMPropertyC) {
             result = ((FXOMPropertyC) fxomProperty).getValues();
+        //} if (fxomProperty instanceof FXOMPropertyT) {
+        //    result = ((FXOMPropertyT) fxomProperty).getValues();
         } else {
             result = Collections.emptyList();
         }

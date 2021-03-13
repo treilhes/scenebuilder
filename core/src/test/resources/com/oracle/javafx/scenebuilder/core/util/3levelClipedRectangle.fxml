@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="100.0" layoutY="100.0" stroke="BLACK" strokeType="INSIDE" width="200.0">
+         <clip>
+            <Circle fx:id="circleClip1" fill="DODGERBLUE" layoutX="100.0" layoutY="100.0" radius="100.0" stroke="BLACK" strokeType="INSIDE">
+               <clip>
+                  <Rectangle fx:id="rectangleClip2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="150.0" layoutX="-75.0" layoutY="-75.0" stroke="BLACK" strokeType="INSIDE" width="150.0">
+                     <clip>
+                        <Rectangle fx:id="rectangleClip3" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="75.0" layoutX="75.0" layoutY="75.0" stroke="BLACK" strokeType="INSIDE" width="75.0" />
+                     </clip>
+                  </Rectangle>
+               </clip>
+            </Circle>
+         </clip>
+      </Rectangle>
+      <Rectangle fx:id="expected" arcHeight="50.0" arcWidth="50.0" fill="#ff1f1f" height="75.0" layoutX="200.0" layoutY="200.0" stroke="BLACK" strokeType="INSIDE" width="75.0" />
+   </children>
+</Pane>

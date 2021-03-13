@@ -193,11 +193,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //                checkUpdates(source);
 //                break;
 
-            case NEW_FILE:
-                final DocumentWindowController newWindow = makeNewWindow();
-                newWindow.updateWithDefaultContent();
-                newWindow.openWindow();
-                break;
+//            case NEW_FILE:
+//                final DocumentWindowController newWindow = makeNewWindow();
+//                newWindow.updateWithDefaultContent();
+//                newWindow.openWindow();
+//                break;
 
             case NEW_TEMPLATE:
                 performNewFromTemplate();
@@ -245,7 +245,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             case ABOUT:
             case REGISTER:
             case CHECK_UPDATES:
-            case NEW_FILE:
+            //case NEW_FILE:
             case NEW_TEMPLATE:
             case OPEN_FILE:
             case SHOW_PREFERENCES:
@@ -502,6 +502,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     /*
      * Private
      */
+    @Override
     public DocumentWindowController makeNewWindow() {
     	DocumentScope.setCurrentScope(null);
 
@@ -524,23 +525,6 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     private static String displayName(String pathString) {
         return Paths.get(pathString).getFileName().toString();
-    }
-
-    /*
-     * Private (control actions)
-     */
-    private void performOpenFile(Document fromWindow) {
-        final FileChooser fileChooser = new FileChooser();
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
-                "*.fxml")); //NOI18N
-        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
-        final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
-        if (fxmlFiles != null) {
-            assert fxmlFiles.isEmpty() == false;
-            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
-            performOpenFiles(fxmlFiles, fromWindow);
-        }
     }
 
     @Override
@@ -589,6 +573,23 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         
     }
 
+    /*
+     * Private (control actions)
+     */
+    public void performOpenFile(Document fromWindow) {
+        final FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
+                "*.fxml")); //NOI18N
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
+        final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
+        if (fxmlFiles != null) {
+            assert fxmlFiles.isEmpty() == false;
+            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
+            performOpenFiles(fxmlFiles, fromWindow);
+        }
+    }
+    
     private void performOpenFiles(List<File> fxmlFiles,
                                   Document fromWindow) {
         assert fxmlFiles != null;

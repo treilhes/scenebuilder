@@ -365,10 +365,10 @@ public class ContextMenuController implements com.oracle.javafx.scenebuilder.api
         selectParentMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_PARENT));
         editIncludedFileMenuItem = new MenuItem(I18N.getString("menu.title.edit.included.default"));
         editIncludedFileMenuItem.setOnAction(onActionEventHandler);
-        editIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.EDIT_INCLUDED_FILE));
+        //editIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.EDIT_INCLUDED_FILE));
         revealIncludedFileMenuItem = new MenuItem(I18N.getString("menu.title.reveal.included.default"));
         revealIncludedFileMenuItem.setOnAction(onActionEventHandler);
-        revealIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.REVEAL_INCLUDED_FILE));
+        //revealIncludedFileMenuItem.setUserData(new ControlActionController(ControlAction.REVEAL_INCLUDED_FILE));
         cutMenuItem = new MenuItem(I18N.getString("menu.title.cut"));
         cutMenuItem.setOnAction(onActionEventHandler);
         cutMenuItem.setUserData(new EditActionController(EditAction.CUT));

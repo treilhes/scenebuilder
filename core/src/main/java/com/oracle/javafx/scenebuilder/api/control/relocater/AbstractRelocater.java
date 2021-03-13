@@ -41,13 +41,12 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 
 /**
  *
  * 
  */
-public abstract class AbstractRelocater<T extends Parent> implements Relocater<T> {
+public abstract class AbstractRelocater<T extends Node> implements Relocater<T> {
     
     protected final Class<?> parentClass;
     protected Node sceneGraphObject;
@@ -65,7 +64,8 @@ public abstract class AbstractRelocater<T extends Parent> implements Relocater<T
         this.fxomObject = fxomObject;
         this.sceneGraphObject = (Node)fxomObject.getSceneGraphObject();
         
-        assert sceneGraphObject.getParent().getClass() == parentClass;
+        assert fxomObject.getParentObject() == null || 
+                parentClass.isAssignableFrom(fxomObject.getParentObject().getSceneGraphObject().getClass());
     }
     
     @Override

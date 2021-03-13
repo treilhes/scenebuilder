@@ -232,5 +232,9 @@ public interface Editor {
 
     public boolean canUndo();
 
+    public void performEditIncludedFxml();
+
+    public void performRevealIncludeFxml();
+
     
 }

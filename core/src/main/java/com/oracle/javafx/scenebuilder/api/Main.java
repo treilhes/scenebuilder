@@ -42,7 +42,7 @@ public interface Main {
         ABOUT,
         CHECK_UPDATES,
         REGISTER,
-        NEW_FILE,
+        //NEW_FILE,
         NEW_TEMPLATE,
         OPEN_FILE,
         //CLOSE_FRONT_WINDOW,
@@ -67,5 +67,9 @@ public interface Main {
     void performNewTemplate(Template template);
 
     void performControlAction(ApplicationControlAction openFile, Document documentWC);
+
+    Document makeNewWindow();
+
+    void performOpenFile(Document document);
 
 }

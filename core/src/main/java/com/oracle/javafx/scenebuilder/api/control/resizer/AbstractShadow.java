@@ -30,59 +30,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.content.mode;
+package com.oracle.javafx.scenebuilder.api.control.resizer;
 
-import java.io.File;
-import java.util.List;
-import java.util.Set;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.Shadow;
+import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
 
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.transform.Transform;
+/**
+ *
+ *
+ */
+public abstract class AbstractShadow<T extends Node> extends AbstractDecoration<T> implements Shadow<T>{
 
-public interface Layer<T> {
-    Class<T> getLayerId();
-    void update();
-    void enable();
-    void disable();
-    
-    @FunctionalInterface
-    public interface LayerItemCreator<T> {
-        T create(FXOMObject fxomObject);
-    }
-    
-    @FunctionalInterface
-    public interface LayerItemSelector {
-        Set<FXOMObject> select(Selection selection);
+    public AbstractShadow(Content contentPanelController, Class<T> sceneGraphClass) {
+        super(contentPanelController, sceneGraphClass);
     }
 
-    /**
-     * Returns null or the layer associated to the specified fxom object.
-     *
-     * @param fxomObject an fxom object (never null)
-     * @return null or the handles associated to the specified fxom object.
-     */
-    T lookup(FXOMObject fxomObject);
-    List<T> getActiveItems();
-    Group getLayerUI();
-    void removeAll();
-    
-    void setOnMousePressed(EventHandler<? super MouseEvent> value);
-    EventHandler<? super MouseEvent> getOnMousePressed();
-    
-    /**
-     * Computes the transform that projects from local coordinates of a
-     * scene graph object to the layer local coordinates.
-     * @param sceneGraphObject a scene graph object
-     * @return transform from sceneGraphObject local coordinates to local coordinates
-     */
-    Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject);
-    
-    
-    //TEMP
-    void save(File out);
+    @Override
+    public Bounds getSceneGraphObjectBounds() {
+        return getSceneGraphObject().getLayoutBounds();
+    }
+
+    @Override
+    public Node getSceneGraphObjectProxy() {
+        return getSceneGraphObject();
+    }
+
+    @Override
+    protected void startListeningToSceneGraphObject() {
+        startListeningToLayoutBounds(getSceneGraphObject());
+        startListeningToLocalToSceneTransform(getSceneGraphObject());
+    }
+
+    @Override
+    protected void stopListeningToSceneGraphObject() {
+        stopListeningToLayoutBounds(getSceneGraphObject());
+        stopListeningToLocalToSceneTransform(getSceneGraphObject());
+    }
 }

@@ -30,59 +30,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.content.mode;
+package com.oracle.javafx.scenebuilder.drivers.node;
 
-import java.io.File;
-import java.util.List;
-import java.util.Set;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.RegionRectangle;
 
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 
-public interface Layer<T> {
-    Class<T> getLayerId();
-    void update();
-    void enable();
-    void disable();
-    
-    @FunctionalInterface
-    public interface LayerItemCreator<T> {
-        T create(FXOMObject fxomObject);
-    }
-    
-    @FunctionalInterface
-    public interface LayerItemSelector {
-        Set<FXOMObject> select(Selection selection);
+/**
+ *
+ * 
+ */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public class NodeShadow extends AbstractShadow<Node> {
+
+    private RegionRectangle shadow;
+
+    public NodeShadow(Content contentPanelController) {
+        super(contentPanelController, Node.class);
+        
     }
 
-    /**
-     * Returns null or the layer associated to the specified fxom object.
-     *
-     * @param fxomObject an fxom object (never null)
-     * @return null or the handles associated to the specified fxom object.
-     */
-    T lookup(FXOMObject fxomObject);
-    List<T> getActiveItems();
-    Group getLayerUI();
-    void removeAll();
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    protected void layoutDecoration() {
+        if (shadow == null) {
+            shadow = new RegionRectangle();
+            shadow.getRegion().getStyleClass().add("resize-shadow");
+            shadow.setMouseTransparent(true);
+            getRootNode().getChildren().add(shadow);
+        }
+        updateShadow();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+    }
     
-    void setOnMousePressed(EventHandler<? super MouseEvent> value);
-    EventHandler<? super MouseEvent> getOnMousePressed();
-    
-    /**
-     * Computes the transform that projects from local coordinates of a
-     * scene graph object to the layer local coordinates.
-     * @param sceneGraphObject a scene graph object
-     * @return transform from sceneGraphObject local coordinates to local coordinates
-     */
-    Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject);
-    
-    
-    //TEMP
-    void save(File out);
+    private void updateShadow() {
+        assert shadow != null;
+
+        final Node sceneGraphObject = getSceneGraphObject();
+        final Transform sceneGraphObjectTransform = computeSceneGraphToLayerTransform(getFxomObject());
+        shadow.getTransforms().clear();
+        shadow.getTransforms().add(sceneGraphObjectTransform);
+        shadow.setLayoutBounds(sceneGraphObject.getLayoutBounds());
+    }
+
 }

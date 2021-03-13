@@ -43,14 +43,17 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
+import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
+import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Resizer.Feature;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -62,7 +65,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.RegionRectangle;
 
 import javafx.event.EventType;
 import javafx.geometry.Bounds;
@@ -70,9 +72,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.transform.Transform;
 
 /**
  *
@@ -87,7 +89,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     private Resizer<?> resizer;
     private Relocater<?> relocater;
     private ResizingGuideController resizingGuideController;
-    private RegionRectangle shadow;
+    //private RegionRectangle shadow;
     private boolean snapEnabled;
     private boolean guidesDisabled;
 	private final ApplicationContext context;
@@ -95,6 +97,11 @@ public class ResizeGesture extends AbstractMouseGesture {
     private final ModeManager modeManager;
     private Layer<Rudder> rudderLayer;
     private Layer<Handles> handleLayer;
+    private Layer<ResizeGuide> resizeGuideLayer;
+    private Layer<Shadow> shadowLayer;
+    
+    private boolean matchWidth;
+    private boolean matchHeight;
 
     public ResizeGesture(ApplicationContext context, Content contentPanelController, FXOMInstance fxomInstance, CardinalPoint tunable) {
         super(contentPanelController);
@@ -102,25 +109,44 @@ public class ResizeGesture extends AbstractMouseGesture {
         this.driver = context.getBean(GenericDriver.class);
         this.modeManager = context.getBean(ModeManager.class);
         
-        //assert contentPanelController.lookupDriver(fxomInstance) != null;
         assert fxomInstance.getSceneGraphObject() instanceof Node;
         this.fxomInstance = fxomInstance;
         this.tunable = tunable;
         
-//        this.rudder = new ResizeRudder(contentPanelController);
-//        this.rudder.setFxomObject(fxomInstance);
-        
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
             handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);
+            resizeGuideLayer = modeManager.getEnabledMode().getLayer(ResizeGuide.class);
+            shadowLayer = modeManager.getEnabledMode().getLayer(Shadow.class);
         }
+        
         assert rudderLayer != null;
         assert handleLayer != null;
+        assert resizeGuideLayer != null;
+        assert shadowLayer != null;
     }
 
+    
+    
     /*
      * AbstractMouseGesture
      */
+
+    @Override
+    public void start(InputEvent e, Observer observer) {
+        AbstractGesture.attachGesture((Node)fxomInstance.getSceneGraphObject(), this);
+        super.start(e, observer);
+    }
+
+
+
+    @Override
+    protected void performTermination() {
+        AbstractGesture.detachGesture((Node)fxomInstance.getSceneGraphObject(), this);
+        super.performTermination();
+    }
+
+
 
     @Override
     protected void mousePressed() {
@@ -134,7 +160,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         assert resizer.getSceneGraphObject() == fxomInstance.getSceneGraphObject();
 
         relocater = driver.makeRelocater(resizer.getFxomObject());
-        
+
         if (relocater != null && contentPanelController.isGuidesVisible()) {
             setupResizingGuideController();
             assert resizingGuideController != null;
@@ -143,9 +169,11 @@ public class ResizeGesture extends AbstractMouseGesture {
         snapEnabled = getMousePressedEvent().isShiftDown();
 
         setupAndOpenHudWindow();
-        showShadow();
+        //showShadow();
 
         handleLayer.disable();
+        resizeGuideLayer.enable();
+        shadowLayer.enable();
         //contentPanelController.getHandleLayer().setVisible(false);
 
         // Now same as mouseDragged
@@ -154,10 +182,13 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     @Override
     protected void mouseDragged() {
+        resizeGuideLayer.update();
+        shadowLayer.update();
+        
         setRudderVisible(isSnapRequired());
         updateSceneGraphObjectSize();
         contentPanelController.getHudWindowController().updatePopupLocation();
-        updateShadow();
+        //updateShadow();
     }
 
     @Override
@@ -251,10 +282,12 @@ public class ResizeGesture extends AbstractMouseGesture {
             assert resizingGuideController == null;
         }
         setRudderVisible(false);
-        hideShadow();
+        //hideShadow();
         contentPanelController.getHudWindowController().closeWindow();
         
         handleLayer.enable();
+        resizeGuideLayer.disable();
+        shadowLayer.disable();
         //contentPanelController.getHandleLayer().setVisible(true);
         
         //resizer.getSceneGraphObject().getParent().layout();
@@ -350,7 +383,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         resizer.changeWidth(guidedLayoutBounds.getWidth());
         resizer.changeHeight(guidedLayoutBounds.getHeight());
         if (relocater != null) {
-            sceneGraphObject.getParent().layout();
+            ((Parent)fxomInstance.getClosestParent().getSceneGraphObject()).layout();
             relocater.moveToLayoutX(newLayoutX, guidedLayoutBounds);
             relocater.moveToLayoutY(newLayoutY, guidedLayoutBounds);
         }
@@ -361,17 +394,17 @@ public class ResizeGesture extends AbstractMouseGesture {
     }
 
 
-    private boolean isSnapRequired() {
+    public boolean isSnapRequired() {
         return snapEnabled || (resizer.getFeature() == Feature.SCALING);
     }
 
     private void setRudderVisible(boolean visible) {
-        if (visible) {
-            rudderLayer.enable();
-        } else {
-            rudderLayer.disable();
-        }
-//        
+//        if (visible) {
+//            rudderLayer.enable();
+//        } else {
+//            rudderLayer.disable();
+//        }
+ 
 //        final boolean alreadyVisible = rudder.getRootNode().getParent() != null;
 //
 //        if (alreadyVisible != visible) {
@@ -451,38 +484,37 @@ public class ResizeGesture extends AbstractMouseGesture {
     }
 
 
-    private void showShadow() {
-        assert shadow == null;
-
-        shadow = new RegionRectangle();
-        shadow.getRegion().getStyleClass().add("resize-shadow");
-        shadow.setMouseTransparent(true);
-        rudderLayer.getLayerUI().getChildren().add(shadow);
-
-        updateShadow();
-    }
-
-    private void updateShadow() {
-        assert shadow != null;
-
-        final Node sceneGraphObject
-                = resizer.getSceneGraphObject();
-        final Transform sceneGraphObjectTransform
-                = rudderLayer.computeSceneGraphToLayerTransform(sceneGraphObject);
-        shadow.getTransforms().clear();
-        shadow.getTransforms().add(sceneGraphObjectTransform);
-        shadow.setLayoutBounds(sceneGraphObject.getLayoutBounds());
-    }
-
-    private void hideShadow() {
-        assert shadow != null;
-        rudderLayer.getLayerUI().getChildren().remove(shadow);
-        shadow = null;
-    }
+//    private void showShadow() {
+//        assert shadow == null;
+//
+//        shadow = new RegionRectangle();
+//        shadow.getRegion().getStyleClass().add("resize-shadow");
+//        shadow.setMouseTransparent(true);
+//        rudderLayer.getLayerUI().getChildren().add(shadow);
+//
+//        updateShadow();
+//    }
+//
+//    private void updateShadow() {
+//        assert shadow != null;
+//
+//        final Node sceneGraphObject
+//                = resizer.getSceneGraphObject();
+//        final Transform sceneGraphObjectTransform
+//                = rudderLayer.computeSceneGraphToLayerTransform(sceneGraphObject);
+//        shadow.getTransforms().clear();
+//        shadow.getTransforms().add(sceneGraphObjectTransform);
+//        shadow.setLayoutBounds(sceneGraphObject.getLayoutBounds());
+//    }
+//
+//    private void hideShadow() {
+//        assert shadow != null;
+//        rudderLayer.getLayerUI().getChildren().remove(shadow);
+//        shadow = null;
+//    }
 
 
     private void setupResizingGuideController() {
-        final boolean matchWidth, matchHeight;
 
         switch(tunable) {
             case N:
@@ -541,4 +573,32 @@ public class ResizeGesture extends AbstractMouseGesture {
         rudderLayer.getLayerUI().getChildren().remove(guideGroup);
         resizingGuideController = null;
     }
+
+
+
+    public Bounds getResizedBounds(Bounds currentBounds, double dx, double dy) {
+        return tunable.getResizedBounds(currentBounds, dx, dy);
+    }
+
+
+
+    public Point2D clampVector(double dx, double dy) {
+        return tunable.clampVector(dx, dy);
+    }
+
+
+
+    public Bounds snapBounds(Bounds bounds, double ratio) {
+        return tunable.snapBounds(bounds, ratio);
+    }
+
+    public boolean isMatchWidth() {
+        return matchWidth;
+    }
+
+    public boolean isMatchHeight() {
+        return matchHeight;
+    }
+    
+    
 }

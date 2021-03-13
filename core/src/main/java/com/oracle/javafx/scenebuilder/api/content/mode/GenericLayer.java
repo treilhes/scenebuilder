@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.mode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,8 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.Decoration;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.core.util.IOUtils;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -144,11 +147,13 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
                     switch(h.getState()) {
                         case CLEAN:
                             incomingObjects.remove(h.getFxomObject());
+                            h.update();
                             break;
                         case NEEDS_RECONCILE:
                             // scene graph associated to h has changed but h is still compatible
                             h.reconcile();
                             incomingObjects.remove(h.getFxomObject());
+                            h.update();
                             break;
                         case NEEDS_REPLACE:
                             // h is no longer compatible with the new scene graph object
@@ -156,7 +161,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
                             break;
                     }
                     
-                    h.update();
+                    
                     //incomingObjects.remove(h.getFxomObject());
                 } else {
                     // FXOM object associated to these handles is no longer selected
@@ -172,7 +177,9 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
 
         // Let's create new handles for the incoming objects
         for (FXOMObject incomingObject : incomingObjects) {
-            
+            if (!incomingObject.isViewable()) {
+                continue;
+            }
             final T newItem = creator.create(incomingObject);
             if (newItem != null) {
                 detachableUI.getChildren().add(newItem.getRootNode());
@@ -217,11 +224,14 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
      * @return transform from sceneGraphObject local coordinates to rudder local coordinates
      */
     @Override
-    public Transform computeSceneGraphToLayerTransform(Node sceneGraphObject) {
-        assert sceneGraphObject != null;
-        assert sceneGraphObject.getScene() == getLayerUI().getScene();
+    public Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject) {
+        assert fxomObject != null;
+        assert fxomObject.isNode();
+        
+        assert fxomObject.getSceneGraphObject() != null;
+        assert ((Node)fxomObject.getSceneGraphObject()).getScene() == getLayerUI().getScene();
 
-        final Transform t1 = sceneGraphObject.getLocalToSceneTransform();
+        final Transform t1 = CoordinateHelper.localToSceneTransform(fxomObject);
         final Transform t2 = content.getContentSubScene().getLocalToSceneTransform();
         final Transform t3 = getLayerUI().getLocalToSceneTransform();
         final Transform result;
@@ -234,5 +244,13 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
         }
 
         return result;
+    }
+    
+    //TEMP 
+    
+    @Override
+    public void save(File out) {
+        IOUtils.saveAsPng(layerUI, new File(out,"layerUI.png"));
+        IOUtils.saveAsPng(detachableUI, new File(out,"detachableUI.png"));
     }
 }

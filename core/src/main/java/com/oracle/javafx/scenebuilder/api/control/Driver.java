@@ -62,5 +62,9 @@ public interface Driver {
 
     Rudder<?> makeRudder(FXOMObject fxomObject);
     
-    Outline makeOutline(FXOMObject fxomObject);
+    Outline<?> makeOutline(FXOMObject fxomObject);
+
+    ResizeGuide<?> makeResizeGuide(FXOMObject fxomObject);
+
+    Shadow<?> makeShadow(FXOMObject fxomObject);
 }

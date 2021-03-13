@@ -138,8 +138,6 @@ import javafx.stage.Stage;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DocumentWindowController extends AbstractFxmlWindowController implements Document, InitializingBean {
 
-    
-
     private Editor editorController;
     private final FileSystem fileSystem;
     private final MenuBarController menuBarController;
@@ -572,6 +570,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
 
+    @Override
     public void updateWithDefaultContent() {
         try {
             editorController.setFxmlTextAndLocation("", null, true); //NOI18N
@@ -638,23 +637,23 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //                result = false;
 //                break;
 
-            case SAVE_FILE:
-                result = isDocumentDirty() || fxomDocument.getLocation() == null; // Save new empty document
-                break;
-
-            case SAVE_AS_FILE:
+//            case SAVE_FILE:
+//                result = isDocumentDirty() || fxomDocument.getLocation() == null; // Save new empty document
+//                break;
+//
+//            case SAVE_AS_FILE:
             case CLOSE_FILE:
                 result = true;
                 break;
 
-            case REVERT_FILE:
-                result = isDocumentDirty()
-                        && fxomDocument.getLocation() != null;
-                break;
-
-            case REVEAL_FILE:
-                result = (fxomDocument != null) && (fxomDocument.getLocation() != null);
-                break;
+//            case REVERT_FILE:
+//                result = isDocumentDirty()
+//                        && fxomDocument.getLocation() != null;
+//                break;
+//
+//            case REVEAL_FILE:
+//                result = (fxomDocument != null) && (fxomDocument.getLocation() != null);
+//                break;
 
             case GOTO_CONTENT:
             case GOTO_PROPERTIES:
@@ -722,25 +721,25 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //                previewWindowController.openDialog();
 //                break;
 
-            case SAVE_FILE:
-                performSaveOrSaveAsAction();
-                break;
-
-            case SAVE_AS_FILE:
-                performSaveAsAction();
-                break;
-
-            case REVERT_FILE:
-                performRevertAction();
-                break;
+//            case SAVE_FILE:
+//                save();
+//                break;
+//
+//            case SAVE_AS_FILE:
+//                saveAs();
+//                break;
+//
+//            case REVERT_FILE:
+//                revert();
+//                break;
 
             case CLOSE_FILE:
                 performCloseAction();
                 break;
 
-            case REVEAL_FILE:
-                performRevealAction();
-                break;
+//            case REVEAL_FILE:
+//                performRevealAction();
+//                break;
 
             case GOTO_CONTENT:
                 contentPanelController.getGlassLayer().requestFocus();
@@ -897,17 +896,17 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 result = canPerformCut();
                 break;
 
-            case IMPORT_FXML:
-            case IMPORT_MEDIA:
-                result = true;
-                break;
-
-            case INCLUDE_FXML:
-                // Cannot include as root or if the document is not saved yet
-                result = (fxomDocument != null)
-                        && (fxomDocument.getFxomRoot() != null)
-                        && (fxomDocument.getLocation() != null);
-                break;
+//            case IMPORT_FXML:
+//            case IMPORT_MEDIA:
+//                result = true;
+//                break;
+//
+//            case INCLUDE_FXML:
+//                // Cannot include as root or if the document is not saved yet
+//                result = (fxomDocument != null)
+//                        && (fxomDocument.getFxomRoot() != null)
+//                        && (fxomDocument.getLocation() != null);
+//                break;
 
             case PASTE:
                 result = canPerformPaste();
@@ -934,17 +933,17 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 performCut();
                 break;
 
-            case IMPORT_FXML:
-                performImportFxml();
-                break;
-
-            case IMPORT_MEDIA:
-                performImportMedia();
-                break;
-
-            case INCLUDE_FXML:
-                performIncludeFxml();
-                break;
+//            case IMPORT_FXML:
+//                performImportFxml();
+//                break;
+//
+//            case IMPORT_MEDIA:
+//                performImportMedia();
+//                break;
+//
+//            case INCLUDE_FXML:
+//                performIncludeFxml();
+//                break;
 
             case PASTE:
                 performPaste();
@@ -1444,11 +1443,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
 
-    private void performImportFxml() {
+    @Override
+    public void performImportFxml() {
         fetchFXMLFile().ifPresent(fxmlFile -> getEditorController().performImportFxml(fxmlFile));
     }
 
-    private void performIncludeFxml() {
+    @Override
+    public void performIncludeFxml() {
         fetchFXMLFile().ifPresent(fxmlFile -> getEditorController().performIncludeFxml(fxmlFile));
     }
 
@@ -1472,7 +1473,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return Optional.ofNullable(fxmlFile);
     }
 
-    private void performImportMedia() {
+    @Override
+    public void performImportMedia() {
 
         final FileChooser fileChooser = new FileChooser();
         final ExtensionFilter imageFilter
@@ -1588,11 +1590,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         } // else controllerDidLoadFxml() will invoke me again
     }
 
-    ActionStatus performSaveOrSaveAsAction() {
+    @Override
+    public ActionStatus save() {
         final ActionStatus result;
         final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         if (fxomDocument.getLocation() == null) {
-            result = performSaveAsAction();
+            result = saveAs();
         } else {
             result = performSaveAction();
         }
@@ -1681,7 +1684,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
 
-    private ActionStatus performSaveAsAction() {
+    @Override
+    public ActionStatus saveAs() {
 
         final ActionStatus result;
         if (editorController.canGetFxmlText()) {
@@ -1802,7 +1806,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
 
-    private void performRevertAction() {
+    @Override
+    public void revert() {
         final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         assert fxomDocument != null;
         assert fxomDocument.getLocation() != null;
@@ -1857,7 +1862,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 default:
                 case OK:
                     if (fxomDocument.getLocation() == null) {
-                        closeConfirmed = (performSaveAsAction() == ActionStatus.DONE);
+                        closeConfirmed = (saveAs() == ActionStatus.DONE);
                     } else {
                         closeConfirmed = (performSaveAction() == ActionStatus.DONE);
                     }
@@ -1884,7 +1889,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
 
-    private void performRevealAction() {
+    @Override
+    public void performRevealAction() {
         final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         assert fxomDocument != null;
         assert fxomDocument.getLocation() != null;

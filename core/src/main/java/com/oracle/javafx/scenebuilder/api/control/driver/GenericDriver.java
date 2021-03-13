@@ -48,8 +48,10 @@ import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
+import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
@@ -61,7 +63,9 @@ import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
+import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
+import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -130,13 +134,12 @@ public class GenericDriver extends AbstractDriver {
     @Override
     public Relocater makeRelocater(FXOMObject fxomObject) {
         assert fxomObject.isNode();
-        assert fxomObject.hasParent() || fxomObject.isDetachedGraph();
+        final Node node = (Node)fxomObject.getSceneGraphObject();
         final FXOMObject parentObject = fxomObject.getParentObject();
         
         AbstractRelocater relocater = null;
         
-        if (parentObject == null) {// root element
-            final Node sceneGraphParent = ((Node)fxomObject.getSceneGraphObject()).getParent();
+        if (parentObject == null || node.getParent() == null) {// root element or detached graph
             relocater = new RootRelocater();
         } else {
             final Object sceneGraphParent = parentObject.getSceneGraphObject();
@@ -149,8 +152,7 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeRelocater returned {} for object {}",
                     relocater == null ? "null" : relocater.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    node == null ? "null" : node.getClass().getName());
         }
         
         return relocater;
@@ -318,6 +320,40 @@ public class GenericDriver extends AbstractDriver {
                             : fxomObject.getSceneGraphObject().getClass().getName());
         }
         return outline;
+    }
+    
+    @Override
+    public ResizeGuide<?> makeResizeGuide(FXOMObject fxomObject) {
+        AbstractResizeGuide<?> resizeGuide = (AbstractResizeGuide)make(ResizeGuide.class, fxomObject);
+        if (resizeGuide != null) {
+            resizeGuide.setFxomObject(fxomObject);
+            resizeGuide.initialize();
+        }
+        
+        if (logger.isInfoEnabled()) {
+            logger.info("driver makeResizeGuide returned {} for object {}",
+                    resizeGuide == null ? "null" : resizeGuide.getClass().getName(),
+                    fxomObject.getSceneGraphObject() == null ? "null"
+                            : fxomObject.getSceneGraphObject().getClass().getName());
+        }
+        return resizeGuide;
+    }
+    
+    @Override
+    public Shadow<?> makeShadow(FXOMObject fxomObject) {
+        AbstractShadow<?> shadow = (AbstractShadow)make(Shadow.class, fxomObject);
+        if (shadow != null) {
+            shadow.setFxomObject(fxomObject);
+            shadow.initialize();
+        }
+        
+        if (logger.isInfoEnabled()) {
+            logger.info("driver makeShadow returned {} for object {}",
+                    shadow == null ? "null" : shadow.getClass().getName(),
+                    fxomObject.getSceneGraphObject() == null ? "null"
+                            : fxomObject.getSceneGraphObject().getClass().getName());
+        }
+        return shadow;
     }
 
 }

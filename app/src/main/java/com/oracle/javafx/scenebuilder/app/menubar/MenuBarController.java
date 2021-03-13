@@ -75,7 +75,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.collections.ObservableList;
@@ -327,7 +326,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     private final ApplicationContext context;
     private final DocumentWindowController documentWindowController;
-    private final RecentItemsPreference recentItemsPreference;
     private final List<MenuProvider> menuProviders;
     private final List<MenuItemProvider> menuItemProviders;
 
@@ -337,7 +335,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     public MenuBarController(
             @Autowired ApplicationContext context,
-            @Autowired RecentItemsPreference recentItemsPreference,
             @Autowired DocumentManager documentManager,
             @Autowired(required = false) List<MenuProvider> menuProviders,
             @Autowired(required = false) List<MenuItemProvider> menuItemProviders,
@@ -345,7 +342,6 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             @Autowired @Lazy PreviewWindowController previewWindowController
             ) {
         this.context = context;
-        this.recentItemsPreference = recentItemsPreference;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
         this.documentWindowController = documentWindowController;

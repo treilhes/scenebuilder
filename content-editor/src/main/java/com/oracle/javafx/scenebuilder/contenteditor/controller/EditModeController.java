@@ -58,7 +58,9 @@ import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
+import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
@@ -150,12 +152,25 @@ public class EditModeController extends AbstractModeController implements Gestur
                 s -> collectNodes(),
                 // Handles creation
                 fxomObject -> driver.makeOutline(fxomObject));
+
+        newLayer(Shadow.class, true, selection, 
+                // object selection
+                s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
+                // Handles creation
+                fxomObject -> driver.makeShadow(fxomObject));
+
         
         newLayer(Rudder.class, false, selection, 
                 // object selection
                 s -> s.getAncestor() == null ? new HashSet<>() : new HashSet<>(Arrays.asList(s.getAncestor())),
                 // Handles creation
                 fxomObject -> driver.makeRudder(fxomObject));
+        
+        newLayer(ResizeGuide.class, true, selection, 
+                // object selection
+                s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
+                // Handles creation
+                fxomObject -> driver.makeResizeGuide(fxomObject));
         
         newLayer(Pring.class, false, selection,
                 // object selection
@@ -352,7 +367,8 @@ public class EditModeController extends AbstractModeController implements Gestur
         if (!selection.isEmpty() && selection.getGroup() instanceof ObjectSelectionGroup) {
             ObjectSelectionGroup selGroup = (ObjectSelectionGroup)selection.getGroup();
             
-            if (selGroup.getItems().size() == 1 
+            if (selGroup.getItems().size() == 1
+                    && selGroup.getHitItem().isViewable()
                     && selGroup.getHitItem().isDescendantOf(hitObject)
                     && CoordinateHelper.isHit(selGroup.getHitItem(), e.getSceneX(), e.getSceneY())) {
                 selectAndMoveGesture.setHitObject(selGroup.getHitItem());

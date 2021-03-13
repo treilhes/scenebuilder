@@ -42,6 +42,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
+import javafx.scene.transform.Transform;
 
 /**
  * This class has been created has a workaround for the issue :
@@ -207,5 +208,17 @@ public class CoordinateHelper {
     }
     
 
-    
+    public static Transform localToSceneTransform(FXOMObject fxomObject) {
+        
+        Node node = (Node)fxomObject.getSceneGraphObject();
+        Transform t = node.getLocalToParentTransform();
+        
+        while(fxomObject.getParentObject() != null) {
+            fxomObject = fxomObject.getParentObject();
+            node = (Node)fxomObject.getSceneGraphObject();
+            t = t.createConcatenation(node.getLocalToParentTransform());
+        }
+        
+        return t;
+    }
 }

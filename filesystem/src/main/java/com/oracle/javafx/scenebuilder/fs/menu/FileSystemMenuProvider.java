@@ -49,9 +49,11 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -78,14 +80,18 @@ public class FileSystemMenuProvider implements MenuProvider {
 
     private final Editor editor;
 
+    private final DocumentManager documentManager;
+
     public FileSystemMenuProvider(
             @Autowired  @Lazy FileSystemMenuController fileSystemMenuController,
             @Autowired RecentItemsPreference recentItemsPreference,
-            @Autowired Editor editor
+            @Autowired Editor editor,
+            @Autowired DocumentManager documentManager
             ) {
         this.fileSystemMenuController = fileSystemMenuController;
         this.recentItemsPreference = recentItemsPreference;
         this.editor = editor;
+        this.documentManager = documentManager;
     }
 
     @Override
@@ -169,6 +175,7 @@ public class FileSystemMenuProvider implements MenuProvider {
                     title = I18N.getString("menu.title.edit.included", file.getName());
                 }
                 editIncludedFileMenuItem.setText(title);
+                editIncludedFileMenuItem.setDisable(file == null);
             });
             
             revealIncludedFileMenuItem.setOnAction(e -> fileSystemMenuController.performRevealIncludeFxml());
@@ -183,7 +190,18 @@ public class FileSystemMenuProvider implements MenuProvider {
                     }
                 }
                 revealIncludedFileMenuItem.setText(title);
+                revealIncludedFileMenuItem.setDisable(file == null);
             });
+            
+            documentManager.dirty().subscribe(dirty -> {
+                FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+                
+                saveMenuItem.setDisable(!dirty);
+                revertMenuItem.setDisable(!dirty || fxomDocument == null || fxomDocument.getLocation() == null);
+                revealMenuItem.setDisable(fxomDocument != null && fxomDocument.getLocation() != null);
+                importFxmlMenuItem.setDisable(fxomDocument != null && fxomDocument.getFxomRoot() != null &&  fxomDocument.getLocation() != null);
+            });
+            
             return fileMenu;
         }
 

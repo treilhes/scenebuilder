@@ -35,21 +35,15 @@ package com.oracle.javafx.scenebuilder.fs.controller;
 import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
 /**
  *
@@ -60,104 +54,84 @@ import javafx.event.EventHandler;
 public class FileSystemMenuController {
 
     private final Editor editor;
-    private final ApplicationContext context;
-    private final JobManager jobManager;
-    private final Drag drag;
-    private FXOMDocument fxomDocument;
-    private SelectionState selectionState;
+    private final Main main;
+    private final Document document;
+    private final RecentItemsPreference recentItemsPreference;
 
 
     public FileSystemMenuController(
-            @Autowired ApplicationContext context, 
+            @Autowired Main main,
+            @Autowired Document document, 
             @Autowired Editor editor,
-            @Autowired JobManager jobManager, 
-            @Autowired Drag drag,
-            @Autowired @Lazy DocumentManager documentManager) {
-
-        this.context = context;
+            @Autowired RecentItemsPreference recentItemsPreference) {
+        this.main = main;
+        this.document = document;
         this.editor = editor;
-        this.jobManager = jobManager;
-        this.drag = drag;
-        documentManager.fxomDocument().subscribe(fxom -> this.fxomDocument = fxom);
-        documentManager.selectionDidChange().subscribe(s -> this.selectionState = s);
+        this.recentItemsPreference = recentItemsPreference;
+
     }
 
 
-    public Object performImportFxml() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performImportFxml() {
+        document.performImportFxml();
     }
 
 
-    public Object performIncludeFxml() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performIncludeFxml() {
+        document.performIncludeFxml();
     }
 
 
-    public Object performNew() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performNew() {
+        final Document newWindow = main.makeNewWindow();
+        newWindow.updateWithDefaultContent();
+        newWindow.openWindow();
     }
 
 
-    public Object performOpen() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performOpen() {
+        main.performOpenFile(document);
     }
 
 
-    public Object performReveal() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performReveal() {
+        document.performRevealAction();
     }
 
 
-    public Object performRevert() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performRevert() {
+        document.revert();
+    }
+
+    public void performSave() {
+        document.save();
     }
 
 
-    public Object performSave() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performSaveAs() {
+        document.saveAs();
     }
 
 
-    public Object performSaveAs() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public EventHandler<ActionEvent> performClearOpenRecent() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performClearOpenRecent() {
+        recentItemsPreference.clearRecentItems();
     }
 
 
     public void performOpenRecent(File file) {
-        // TODO Auto-generated method stub
-        
+        main.performOpenRecent(document, file);
     }
 
-
-    public Object performImportMedia() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performImportMedia() {
+        document.performImportMedia();
     }
 
-
-    public Object performEditIncludedFxml() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performEditIncludedFxml() {
+        editor.performEditIncludedFxml();
     }
 
-
-    public Object performRevealIncludeFxml() {
-        // TODO Auto-generated method stub
-        return null;
+    public void performRevealIncludeFxml() {
+        editor.performRevealIncludeFxml();
     }
 
 }

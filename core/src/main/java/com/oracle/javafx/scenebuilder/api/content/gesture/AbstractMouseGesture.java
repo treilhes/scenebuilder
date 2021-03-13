@@ -67,11 +67,11 @@ public abstract class AbstractMouseGesture extends AbstractGesture {
      * For subclasses
      */
 
-    protected MouseEvent getMousePressedEvent() {
+    public MouseEvent getMousePressedEvent() {
         return mousePressedEvent;
     }
 
-    protected MouseEvent getLastMouseEvent() {
+    public MouseEvent getLastMouseEvent() {
         return lastMouseEvent;
     }
 
@@ -165,7 +165,7 @@ public abstract class AbstractMouseGesture extends AbstractGesture {
     }
 
 
-    private void performTermination() {
+    protected void performTermination() {
         final Node glassLayer = contentPanelController.getGlassLayer();
         glassLayer.setOnDragDetected(null);
         glassLayer.setOnMouseReleased(null);

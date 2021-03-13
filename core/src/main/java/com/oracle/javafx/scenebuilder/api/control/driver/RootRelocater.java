@@ -39,11 +39,16 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 
 import javafx.geometry.Bounds;
-import javafx.scene.Group;
+import javafx.scene.Node;
 
-public class RootRelocater extends AbstractRelocater {
+/**
+ * The Class RootRelocater.
+ * Only for root or detached graph root
+ */
+public class RootRelocater extends AbstractRelocater<Node> {
 
     private double originalLayoutX;
     private double originalLayoutY;
@@ -52,7 +57,7 @@ public class RootRelocater extends AbstractRelocater {
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public RootRelocater() {
-        super(Group.class);
+        super(Node.class);
         propertyNames.add(layoutXName);
         propertyNames.add(layoutYName);
     }
@@ -96,9 +101,9 @@ public class RootRelocater extends AbstractRelocater {
         
         final Object result;
         if (propertyName.equals(layoutXName)) {
-            result = originalLayoutX;
+            result = getFxomObject().getParentObject() == null ? originalLayoutX : sceneGraphObject.getLayoutX();
         } else if (propertyName.equals(layoutYName)) {
-            result = originalLayoutY;
+            result = getFxomObject().getParentObject() == null ? originalLayoutY : sceneGraphObject.getLayoutY();
         } else {
             // Emergency code
             result = null;
@@ -110,6 +115,14 @@ public class RootRelocater extends AbstractRelocater {
     @Override
     public Map<PropertyName, Object> getChangeMap() {
         final Map<PropertyName, Object> result = new HashMap<>();
+        if (getFxomObject().getParentObject() != null) { // for detached graph (clip/shape)
+            if (MathUtils.equals(sceneGraphObject.getLayoutX(), originalLayoutX) == false) {
+                result.put(layoutXName, sceneGraphObject.getLayoutX());
+            }
+            if (MathUtils.equals(sceneGraphObject.getLayoutY(), originalLayoutY) == false) {
+                result.put(layoutYName, sceneGraphObject.getLayoutY());
+            }
+        }
         return result;
     }
 }

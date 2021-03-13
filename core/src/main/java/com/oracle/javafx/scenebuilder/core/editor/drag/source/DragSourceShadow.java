@@ -73,7 +73,9 @@ public class DragSourceShadow extends Group {
     
     public void setupForNode(Node node) {
         assert node != null;
-        assert node.getScene() != null;
+        
+        // shape don't have any scene but still need a shadow
+        //assert node.getScene() != null;
         
         // Snapshot node
         // Note : we setup snapshot view port with layout bounds.
