@@ -32,6 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
@@ -47,6 +50,8 @@ import javafx.scene.input.MouseEvent;
  *
  */
 public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
+    
+    private final static Logger logger = LoggerFactory.getLogger(SelectAndMoveInGridGesture.class);
 
     private final FXOMInstance gridPaneInstance;
     private final GridSelectionGroup.Type feature;
@@ -172,7 +177,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 //
 //            assert editorController.getDragController().getDragSource() == null;
 //            editorController.getDragController().begin(dragSource);
-            System.out.println("SelectAndMoveInGridGesture.mouseDragDetected: will start column/row drag...");
+            logger.debug("SelectAndMoveInGridGesture.mouseDragDetected: will start column/row drag...");
         }
         // else Case D.1.2 : drag gesture is ignored
 

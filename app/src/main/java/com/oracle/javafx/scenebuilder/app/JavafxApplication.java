@@ -96,7 +96,7 @@ public class JavafxApplication extends Application {
 //                clsss.addAll(ext.components());
 //          }
 //        }
-        System.out.println();
+
         this.context = new SpringApplicationBuilder()
                 .sources(sources.toArray(new Class<?>[0])).initializers(initializer)
                 .build().run(getParameters().getRaw().toArray(new String[0]));

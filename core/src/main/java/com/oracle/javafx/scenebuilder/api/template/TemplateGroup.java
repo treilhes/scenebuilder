@@ -30,21 +30,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.template;
 
-import java.net.URL;
-
-public interface Template {
-
-    URL getFXMLURL();
-
-    TemplateType getType();
-
-    public static void prepareDocument(Editor editorController, Template template) {
-        if (template.getType() == TemplateType.PHONE) {
-            editorController.performEditAction(Editor.EditAction.SET_SIZE_335x600);
-            //TODO GLUON uncomment and fix for full theme support and gluon extraction
-            //editorController.setTheme(Theme.GLUON_MOBILE_LIGHT);
-        }
-    }
+public interface TemplateGroup {
+    public String getOrderKey();
+    public String getName();
 }

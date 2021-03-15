@@ -31,7 +31,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.template;
+package com.oracle.javafx.scenebuilder.template.controller;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -41,6 +43,8 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.template.Template;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 import javafx.stage.Modality;
@@ -51,9 +55,11 @@ import javafx.stage.Modality;
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     public TemplatesWindowController(
             @Autowired Api api,
-            @Autowired Document document) {
+            @Autowired Document document,
+            @Autowired List<TemplateGroup> templateGroups,
+            @Autowired List<Template> templates) {
         super(api, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
-                I18N.getBundle(), document.getStage());
+                I18N.getBundle(), document.getStage(), templateGroups, templates);
     }
 
     @Override

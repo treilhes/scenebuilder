@@ -77,12 +77,11 @@ public class GluonInitializer implements InitWithSceneBuilder {
         
         Platform.runLater(() -> {
             context.getBean(WelcomeDialog.class).getStage().setOnHidden(event -> {
-                Document document = context.getBean(Document.class);
-                updateController.showUpdateDialogIfRequired(document, () -> {
+                updateController.showUpdateDialogIfRequired(context.getBean(Document.class), () -> {
                     if (!Platform.isFxApplicationThread()) {
-                        Platform.runLater(() -> registrationController.showRegistrationDialogIfRequired(document));
+                        Platform.runLater(() -> registrationController.showRegistrationDialogIfRequired(context.getBean(Document.class)));
                     } else {
-                        registrationController.showRegistrationDialogIfRequired(document);
+                        registrationController.showRegistrationDialogIfRequired(context.getBean(Document.class));
                     }
                 });
             });

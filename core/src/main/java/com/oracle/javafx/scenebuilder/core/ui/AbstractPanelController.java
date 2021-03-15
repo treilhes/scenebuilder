@@ -116,7 +116,6 @@ public abstract class AbstractPanelController  {
      * @param panelRoot the root panel (non null).
      */
     public void setRoot(Parent panelRoot) {
-        System.out.println("APC setPanelRoot " + this.getClass().getSimpleName() +  this);
         assert panelRoot != null;
         this.panelRoot = panelRoot;
 

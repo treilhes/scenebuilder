@@ -155,12 +155,6 @@ public interface DocumentManager {
                             n.sceneGraphRevisionProperty().addListener(sceneGraphRevisionChangeListener);
                             n.cssRevisionProperty().addListener(cssRevisionChangeListener);
                         }
-                    }, 
-                    (s) -> {
-                        return s.doOnEach(fd -> System.out.println("EACH FD" + fd.isOnNext()))
-                        .doOnNext(fd -> System.out.println("NEXT FD" + fd.toString()))
-                        .doAfterNext(fd -> System.out.println("AFTERNEXT FD" + fd.toString()))
-                        .doOnSubscribe(fd -> System.out.println("doOnSubscribe FD" + fd.toString()));
                     });
             
             selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionState());

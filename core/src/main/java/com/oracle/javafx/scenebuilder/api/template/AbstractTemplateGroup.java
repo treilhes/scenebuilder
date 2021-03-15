@@ -30,32 +30,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.template.controller;
+package com.oracle.javafx.scenebuilder.api.template;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.oracle.javafx.scenebuilder.api.util.Ordered;
 
-import com.oracle.javafx.scenebuilder.api.Main;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+public abstract class AbstractTemplateGroup extends Ordered implements TemplateGroup {
 
-/**
- *
- */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
-public class TemplateMenuController {
-
-    private final Main main;
-
-    public TemplateMenuController(
-    		@Autowired Main main) {
-    	this.main = main;
+    public AbstractTemplateGroup(String orderKey, String name) {
+        super(orderKey, name);
     }
 
-    public void performOpenTemplateSelectionWindow() {
-        main.performNewFromTemplate();
-    }
 }

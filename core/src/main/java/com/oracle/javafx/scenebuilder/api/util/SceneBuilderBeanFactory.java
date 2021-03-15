@@ -42,9 +42,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
@@ -77,7 +77,11 @@ import javafx.scene.control.ToggleGroup;
  */
 @Component
 public class SceneBuilderBeanFactory {
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(SceneBuilderBeanFactory.class);
+    
+    private static final String SCOPE_CHANGE_MSG = "DocumentScope changed to : %s - %s (unused: %s, dirty: %s, content: %s, name %s)";
+    
     /**
      * Scope identifier for the standard singleton scope: {@value}.
      * <p>
@@ -311,7 +315,7 @@ public class SceneBuilderBeanFactory {
             if (scopedDocument == null) {
                 if (currentScope != null) {
                     currentScope = null;
-                    Logger.getLogger(DocumentScope.class.getName()).log(Level.INFO, "DocumentScope is null");
+                    logger.info("DocumentScope is null");
                 }
                 return;
             }
@@ -324,14 +328,14 @@ public class SceneBuilderBeanFactory {
             }
             if (DocumentScope.currentScope != scopeId) {
                 DocumentScope.currentScope = scopeId;
-                String msg = "DocumentScope changed to : %s (unused: %s, dirty: %s, content: %s, name %s)";
+
                 if (scopedDocument.isInited()) {
-                    Logger.getLogger(DocumentScope.class.getName()).log(Level.INFO,
-                            String.format(msg, scopedDocument, scopedDocument.isUnused(),
+                    logger.info(
+                            String.format(SCOPE_CHANGE_MSG, scopeId, scopedDocument, scopedDocument.isUnused(),
                             scopedDocument.isDocumentDirty(), scopedDocument.hasName(), scopedDocument.getName()));
                 } else {
-                    Logger.getLogger(DocumentScope.class.getName()).log(Level.INFO,
-                            String.format(msg, scopedDocument, "", "", "", ""));
+                    logger.info(
+                            String.format(SCOPE_CHANGE_MSG, scopeId, scopedDocument, "", "", "", ""));
                 }
             }
         }
@@ -342,7 +346,7 @@ public class SceneBuilderBeanFactory {
          * @param document the document
          */
         public static void removeScope(Document document) {
-            System.out.println("REMOVING SCOPE " + document);
+            logger.debug("REMOVING SCOPE " + document);
             UUID scopeId = scopesId.get(document);
             if (currentScope == scopeId) {
                 currentScope = null;
@@ -376,6 +380,7 @@ public class SceneBuilderBeanFactory {
                 UUID scopeId = UUID.randomUUID();
                 scopes.put(scopeId, new ConcurrentHashMap<>());
                 currentScope = scopeId;
+                logger.info(String.format(SCOPE_CHANGE_MSG, scopeId, null, "", "", "", ""));
 
                 Document scopeDocument = (Document) objectFactory.getObject();
 

@@ -37,6 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
@@ -106,6 +108,8 @@ import javafx.scene.shape.Rectangle;
 public class ContentPanelController extends AbstractFxmlPanelController
                                     implements Content, FXOMDocument.SceneGraphHolder {
 
+    private static Logger logger = LoggerFactory.getLogger(ContentPanelController.class);
+    
     @FXML private ScrollPane scrollPane;
     @FXML private Pane workspacePane;
     @FXML private Rectangle extensionRect;
@@ -188,6 +192,11 @@ public class ContentPanelController extends AbstractFxmlPanelController
         api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
         api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(s -> editorSelectionDidChange());
         api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        
+        if (logger.isInfoEnabled()) {
+            tracingEvents = true;
+            setupEventTracingFilter();
+        }
     }
 
     @FXML
@@ -584,12 +593,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
         return tracingEvents;
     }
 
-    public void setTracingEvents(boolean tracingEvents) {
-        if (this.tracingEvents != tracingEvents) {
-            this.tracingEvents = tracingEvents;
-            setupEventTracingFilter();
-        }
-    }
 
     public void layoutContent(boolean applyCSS) {
         workspaceController.layoutContent(applyCSS);
@@ -931,8 +934,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
             sb.append(", keyCode="); //NOI18N
             sb.append(ke.getCode());
         }
-
-        System.out.println(sb.toString());
+        
+        logger.info(sb.toString());
     }
 
     private final EventHandler<Event> eventTracingFilter

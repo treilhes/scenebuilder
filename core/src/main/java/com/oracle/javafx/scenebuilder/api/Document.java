@@ -92,7 +92,7 @@ public interface Document {
 
     }
 
-    void loadFromURL(URL url, boolean b);
+    void loadFromURL(URL url);
     ActionStatus performCloseAction();
     
     public enum DocumentControlAction {

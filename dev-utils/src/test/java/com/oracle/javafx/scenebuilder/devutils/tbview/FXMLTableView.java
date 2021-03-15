@@ -31,48 +31,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.kit.template;
+package com.oracle.javafx.scenebuilder.devutils.tbview;
 
-import static com.oracle.javafx.scenebuilder.api.TemplateType.DESKTOP;
-import static com.oracle.javafx.scenebuilder.api.TemplateType.PHONE;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
-import java.net.URL;
-
-import com.oracle.javafx.scenebuilder.api.Template;
-import com.oracle.javafx.scenebuilder.api.TemplateType;
-
-public enum TemplateImpl implements Template{
-
-    EMPTY_APP(DESKTOP, null),
-    BASIC_DESKTOP_APP (DESKTOP, "BasicDesktopApplication.fxml"),
-    COMPLEX_DESKTOP_APP (DESKTOP, "ComplexDesktopApplication.fxml"),
-    EMPTY_PHONE_APP (PHONE, "EmptyPhoneApplication.fxml"),
-    BASIC_PHONE_APP (PHONE, "BasicPhoneApplication.fxml");
-
-    private TemplateType type;
-    private String fxmlFileName;
-
-    TemplateImpl(TemplateType type, String fxmlFileName) {
-        this.type = type;
-        this.fxmlFileName = fxmlFileName;
-    }
-
+public class FXMLTableView extends Application {
+    
     @Override
-    public TemplateType getType() {
-        return type;
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("FXML TableView Example");
+        Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("fxml_tableview.fxml"));
+        Scene myScene = new Scene(myPane);
+        primaryStage.setScene(myScene);
+        primaryStage.show();
     }
-
-    public String getFXMLFileName() {
-        return fxmlFileName;
+ 
+    public static void main(String[] args) {
+        launch(args);
     }
-
-    @Override
-    public URL getFXMLURL() {
-        final String name = getFXMLFileName();
-        if (name == null) {
-            return null;
-        }
-        return TemplateImpl.class.getResource(name);
-    }
-
 }

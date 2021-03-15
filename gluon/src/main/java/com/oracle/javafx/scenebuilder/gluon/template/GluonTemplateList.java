@@ -30,41 +30,46 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.devutils;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+package com.oracle.javafx.scenebuilder.gluon.template;
 
-public class Test2 extends Application {
-   @Override
-public void start(Stage stage) {
-      //Creating nodes
-      TextField textField = new TextField();
-      PasswordField pwdField = new PasswordField();
-      //creating labels
-      Label label1 = new Label("_Email");
-      label1.setMnemonicParsing(true);
-      label1.setLabelFor(textField);
-      Label label2 = new Label("_Password");
-      label2.setMnemonicParsing(true);
-      label2.setLabelFor(pwdField);
-      //Adding labels for nodes
-      HBox box1 = new HBox(5);
-      box1.setPadding(new Insets(25, 5 , 5, 50));
-      box1.getChildren().addAll(label1, textField, label2, pwdField);
-      //Setting the stage
-      Scene scene = new Scene(box1, 595, 150, Color.BEIGE);
-      stage.setTitle("Check Box Example");
-      stage.setScene(scene);
-      stage.show();
-   }
-   public static void main(String args[]){
-      launch(args);
-   }
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Size;
+import com.oracle.javafx.scenebuilder.api.template.AbstractTemplate;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
+
+public class GluonTemplateList {
+        
+    @Component
+    public static class EmptyPhoneTemplate extends AbstractTemplate{
+
+        public EmptyPhoneTemplate(@Autowired @Qualifier("defaultTemplateList.PhoneGroup") TemplateGroup group) {
+            super(group, "A", "template.title.new.empty.phone.app", 
+                    EmptyPhoneTemplate.class.getResource("EmptyPhoneApplication.fxml"),
+                    Size.SIZE_335x600,
+                    null,
+                    null,
+                    Arrays.asList(GluonThemesList.GluonMobileLight.class));
+        }
+        
+    }
+    
+    @Component
+    public static class BasicPhoneTemplate extends AbstractTemplate{
+
+        public BasicPhoneTemplate(@Autowired @Qualifier("defaultTemplateList.PhoneGroup") TemplateGroup group) {
+            super(group, "B", "template.title.new.basic.phone.app", 
+                    BasicPhoneTemplate.class.getResource("BasicPhoneApplication.fxml"),
+                    Size.SIZE_335x600,
+                    BasicPhoneTemplate.class.getResource("basic_mobile.png"),
+                    BasicPhoneTemplate.class.getResource("basic_mobile@2x.png"),
+                    Arrays.asList(GluonThemesList.GluonMobileLight.class));
+        }
+        
+    }
 }

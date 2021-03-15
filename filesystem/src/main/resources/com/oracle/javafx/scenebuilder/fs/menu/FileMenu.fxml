@@ -40,7 +40,6 @@
 <Menu fx:id="fileMenu" mnemonicParsing="true" text="%menu.title.file" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
 <items>
 <MenuItem fx:id="newMenuItem" mnemonicParsing="true" text="%menu.title.new" />
-<MenuItem fx:id="newTemplateMenuItem" mnemonicParsing="true" text="%menu.title.new.template" />
 <SeparatorMenuItem mnemonicParsing="false" />
 <MenuItem fx:id="openMenuItem" mnemonicParsing="true" text="%menu.title.open" />
 <Menu fx:id="openRecentMenu" mnemonicParsing="true" text="%menu.title.open.recent">

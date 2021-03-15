@@ -43,7 +43,7 @@ public interface Main {
         CHECK_UPDATES,
         REGISTER,
         //NEW_FILE,
-        NEW_TEMPLATE,
+        //NEW_TEMPLATE,
         OPEN_FILE,
         //CLOSE_FRONT_WINDOW,
         //USE_DEFAULT_THEME,
@@ -56,7 +56,7 @@ public interface Main {
 
     void performOpenRecent(Document documentWindowController, File file);
 
-    void performNewFromTemplate();
+    //void performNewFromTemplate();
 
     Document getFrontDocumentWindow();
 
@@ -64,7 +64,7 @@ public interface Main {
 
     void handleOpenFilesAction(List<String> files);
     
-    void performNewTemplate(Template template);
+    //void performNewTemplate(Template template);
 
     void performControlAction(ApplicationControlAction openFile, Document documentWC);
 

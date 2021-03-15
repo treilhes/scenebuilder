@@ -53,13 +53,11 @@ public class XPosPreference extends DoublePreference implements ManagedDocumentP
 
     @Override
 	public boolean isValid() {
-    	System.out.println("WRITE X " + (super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE)));
 		return super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE);
 	}
 
 	@Override
 	public void write() {
-		System.out.println("WRITE X " + getValue());
 		super.write();
 	}
     

@@ -38,16 +38,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.template.controller.TemplateMenuController;
+import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 import com.oracle.javafx.scenebuilder.template.i18n.I18NTemplate;
 import com.oracle.javafx.scenebuilder.template.menu.TemplateMenuProvider;
 
 @Configuration
 @ComponentScan(
         basePackageClasses = {
-                TemplateMenuController.class,
+                TemplateController.class,
                 I18NTemplate.class,
-                TemplateMenuProvider.class
+                TemplateMenuProvider.class,
+                DefaultTemplateList.class
         })
 public class TemplateExtension extends AbstractExtension {
     @Override

@@ -59,6 +59,7 @@ import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashP
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationOptInPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
+import com.oracle.javafx.scenebuilder.gluon.template.GluonTemplateList;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
 @ComponentScan(
@@ -88,7 +89,8 @@ import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
                 RegistrationController.class,
                 TrackingController.class,
                 UpdateController.class,
-                GluonLibraryFilter.class
+                GluonLibraryFilter.class,
+                GluonTemplateList.class
         })
 public class GluonExtension extends AbstractExtension {
 

@@ -32,6 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 
@@ -42,6 +45,8 @@ import javafx.scene.input.KeyEvent;
  * 
  */
 public class DebugMouseGesture extends AbstractMouseGesture {
+    
+    private final static Logger logger = LoggerFactory.getLogger(DebugMouseGesture.class);
 
     private final String title;
     
@@ -56,37 +61,37 @@ public class DebugMouseGesture extends AbstractMouseGesture {
     
     @Override
     protected void mousePressed() {
-        System.out.println("DebugMouseGesture.mousePressed");
+        logger.debug("DebugMouseGesture.mousePressed");
     }
 
     @Override
     protected void mouseDragStarted() {
-        System.out.println("DebugMouseGesture.mouseDragStarted");
+        logger.debug("DebugMouseGesture.mouseDragStarted");
     }
 
     @Override
     protected void mouseDragged() {
-        System.out.println("DebugMouseGesture.mouseDragged");
+        logger.debug("DebugMouseGesture.mouseDragged");
     }
 
     @Override
     protected void mouseDragEnded() {
-        System.out.println("DebugMouseGesture.mouseDragEnded");
+        logger.debug("DebugMouseGesture.mouseDragEnded");
     }
 
     @Override
     protected void mouseReleased() {
-        System.out.println("DebugMouseGesture.mouseReleased");
+        logger.debug("DebugMouseGesture.mouseReleased");
     }
 
     @Override
     protected void keyEvent(KeyEvent e) {
-        System.out.println("DebugMouseGesture.keyEvent");
+        logger.debug("DebugMouseGesture.keyEvent");
     }
 
     @Override
     protected void userDidCancel() {
-        System.out.println("DebugMouseGesture.keyEvent");
+        logger.debug("DebugMouseGesture.keyEvent");
     }
     
     

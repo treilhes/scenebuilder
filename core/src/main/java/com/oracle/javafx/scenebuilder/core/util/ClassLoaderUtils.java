@@ -50,7 +50,6 @@ public class ClassLoaderUtils {
             
             classLoader.getUnnamedModule().addReads(ClassLoaderUtils.class.getClassLoader().getUnnamedModule());
             ClassLoaderUtils.class.getClassLoader().getUnnamedModule().addReads(classLoader.getUnnamedModule());
-            System.out.println();
         }
         return classLoader;
     }

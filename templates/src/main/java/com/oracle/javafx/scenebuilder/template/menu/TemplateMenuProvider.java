@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.template.controller.TemplateMenuController;
+import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 
 import javafx.scene.control.MenuItem;
 
@@ -55,26 +55,26 @@ import javafx.scene.control.MenuItem;
 public class TemplateMenuProvider implements MenuItemProvider {
 
     private final static String FILE_NEW_MENU_ID = "newMenuItem";
-    private final static String NEW_FROM_TEMPLATE_ID = "newFromTemplateMenuItem";
+    private final static String NEW_FROM_TEMPLATE_ID = "newTemplateMenuItem";
     
-    private final TemplateMenuController templateMenuController;
+    private final TemplateController templateMenuController;
 
     public TemplateMenuProvider(
-            @Autowired  @Lazy TemplateMenuController templateMenuController
+            @Autowired  @Lazy TemplateController templateMenuController
             ) {
         this.templateMenuController = templateMenuController;
     }
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        return Arrays.asList(new OpenPreferenceEditorWindowAttachment());
+        return Arrays.asList(new TemplateMenuAttachment());
     }
 
-    public class OpenPreferenceEditorWindowAttachment implements MenuItemAttachment {
+    public class TemplateMenuAttachment implements MenuItemAttachment {
 
         private MenuItem menu = null;
 
-        public OpenPreferenceEditorWindowAttachment() {
+        public TemplateMenuAttachment() {
         }
 
         @Override
@@ -96,7 +96,7 @@ public class TemplateMenuProvider implements MenuItemProvider {
 
             menu = new MenuItem(I18N.getString("menu.title.new.template"));
             menu.setId(NEW_FROM_TEMPLATE_ID);
-            menu.setOnAction((e) -> templateMenuController.performOpenTemplateSelectionWindow());
+            menu.setOnAction((e) -> templateMenuController.openTemplateSelectionWindow(true));
             return menu;
         }
     }

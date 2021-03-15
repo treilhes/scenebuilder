@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.util;
 
-public class OrderedGroup {
+public abstract class OrderedGroup {
 	private final String orderKey;
 	private final String name;
 

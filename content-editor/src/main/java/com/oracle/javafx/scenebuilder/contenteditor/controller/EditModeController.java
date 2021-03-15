@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
@@ -111,6 +113,8 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class EditModeController extends AbstractModeController implements Gesture.Observer {
+    
+    private final static Logger logger = LoggerFactory.getLogger(EditModeController.class);
     
     public final static Object ID = EditModeController.class;
 
@@ -535,7 +539,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             inlineEditController.startEditingSession(inlineEditor,
                     inlineEditingBounds, requestCommit, requestRevert);
         } else {
-            System.out.println("Beep");
+            logger.debug("Beep");
         }
 
         assert editorController.isTextEditingSessionOnGoing()
@@ -582,7 +586,7 @@ public class EditModeController extends AbstractModeController implements Gestur
                 if (RelocateSelectionJob.isSelectionMovable(editorController)) {
                     activateGesture(new MoveWithKeyGesture(context, contentPanelController), e);
                 } else {
-                    System.out.println("Selection is not movable");
+                    logger.debug("Selection is not movable");
                 }
                 e.consume();
                 break;

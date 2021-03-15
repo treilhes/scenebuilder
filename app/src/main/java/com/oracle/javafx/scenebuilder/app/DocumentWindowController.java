@@ -543,7 +543,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final URL fxmlURL = fxmlFile.toURI().toURL();
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
         editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
-        System.out.println("OPEN" + editorController);
+
         updateLoadFileTime();
         updateStageTitle(); // No-op if fxml has not been loaded yet
         documentPreferencesController.readFromJavaPreferences();
@@ -555,7 +555,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
     @Override
-    public void loadFromURL(URL fxmlURL, boolean refreshThemeFromDocumentPreferences) {
+    public void loadFromURL(URL fxmlURL) {
         assert fxmlURL != null;
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);

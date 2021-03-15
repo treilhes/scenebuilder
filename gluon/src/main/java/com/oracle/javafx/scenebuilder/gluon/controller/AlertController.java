@@ -67,6 +67,10 @@ public class AlertController implements InitWithDocument {
     @Override
     public void init() {
         documentManager.fxomDocument().subscribe(fxomDocument -> {
+            if (fxomDocument != null && fxomDocument.getFxomRoot() != null && fxomDocument.getLocation() == null) {
+                // it means it is a template so we don't need to alert for css
+                return;
+            }
             WarnThemeAlert.showAlertIfRequired(themePreference, fxomDocument, document.getStage());
         });
     }

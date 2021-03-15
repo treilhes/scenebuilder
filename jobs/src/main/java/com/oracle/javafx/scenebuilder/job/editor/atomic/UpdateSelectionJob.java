@@ -127,7 +127,6 @@ public class UpdateSelectionJob extends Job {
     @Override
     public void redo() {
         selection.select(newSelectionGroup);
-        System.out.println();
         assert selection.isValid(fxomDocument);
     }
 

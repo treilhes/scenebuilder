@@ -103,7 +103,6 @@ public class FileSystemMenuProvider implements MenuProvider {
 
         @FXML private Menu fileMenu;
         @FXML private MenuItem newMenuItem;
-        @FXML private MenuItem newTemplateMenuItem;
         @FXML private MenuItem openMenuItem;
         @FXML private Menu openRecentMenu;
         @FXML private MenuItem saveMenuItem;

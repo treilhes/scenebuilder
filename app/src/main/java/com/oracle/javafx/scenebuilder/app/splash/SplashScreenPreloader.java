@@ -72,8 +72,6 @@ public class SplashScreenPreloader extends Preloader {
             BorderPane bp = loader.load();
                
             SceneBuilderLoadingProgress.get().setOnProgressChange(p -> {
-                //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + p + Thread.currentThread().getName());
-                
                 if (Platform.isFxApplicationThread()) {
                     
                     new Thread(() -> bar.setProgress(p)).start();

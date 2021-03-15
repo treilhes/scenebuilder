@@ -100,7 +100,7 @@ public class PreferenceEditorMenuProvider implements MenuItemProvider {
                 return menu;
             }
 
-            menu = new MenuItem(I18N.getString("menu.title.show.fxml.source"));
+            menu = new MenuItem(I18N.getString("menu.title.preferences"));
             menu.setId(SHOW_PREF_EDITOR_WINDOW_ID);
             menu.setAccelerator(new KeyCodeCombination(KeyCode.COMMA, modifier));
             menu.setOnAction((e) -> preferenceEditorMenuController.performOpenPreferenceEditorWindow());

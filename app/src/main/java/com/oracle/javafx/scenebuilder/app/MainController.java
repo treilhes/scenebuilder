@@ -61,8 +61,6 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Document.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
-import com.oracle.javafx.scenebuilder.api.Template;
-import com.oracle.javafx.scenebuilder.api.TemplateType;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.Library;
@@ -77,7 +75,6 @@ import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.kit.template.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
 
 import javafx.application.Application.Parameters;
@@ -199,9 +196,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //                newWindow.openWindow();
 //                break;
 
-            case NEW_TEMPLATE:
-                performNewFromTemplate();
-                break;
+//            case NEW_TEMPLATE:
+//                performNewFromTemplate();
+//                break;
 
             case OPEN_FILE:
                 performOpenFile(source);
@@ -231,12 +228,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
     }
 
-    @Override
-    public void performNewFromTemplate() {
-        final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class);
-        templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
-        templatesWindowController.openWindow();
-    }
+//    @Override
+//    public void performNewFromTemplate() {
+//        final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class);
+//        templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
+//        templatesWindowController.openWindow();
+//    }
 
 
     public boolean canPerformControlAction(ApplicationControlAction a, DocumentWindowController source) {
@@ -246,7 +243,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             case REGISTER:
             case CHECK_UPDATES:
             //case NEW_FILE:
-            case NEW_TEMPLATE:
+            //case NEW_TEMPLATE:
             case OPEN_FILE:
             case SHOW_PREFERENCES:
             case EXIT:
@@ -507,7 +504,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     	DocumentScope.setCurrentScope(null);
 
         final DocumentWindowController result = sceneBuilderFactory.get(DocumentWindowController.class);
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
         sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
         
         Platform.runLater(() -> windowIconSetting.setWindowIcon(result.getStage()));
@@ -527,27 +524,26 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return Paths.get(pathString).getFileName().toString();
     }
 
-    @Override
-    public void performNewTemplate(Template template) {
-        Document documentWC = getDocumentWindowControllers().get(0);
-        loadTemplateInWindow(template, documentWC);
-    }
-
-    public void performNewTemplateInNewWindow(Template template) {
-        final DocumentWindowController newTemplateWindow = makeNewWindow();
-        loadTemplateInWindow(template, newTemplateWindow);
-    }
-
-    private void loadTemplateInWindow(Template template, Document documentWindowController) {
-        final URL url = template.getFXMLURL();
-        if (url != null) {
-        	// TODO How to pass this boolean into the new Pref API ?
-        	// template.getType() != Type.PHONE ? reload theme : do not reload
-            documentWindowController.loadFromURL(url, template.getType() != TemplateType.PHONE);
-        }
-        Template.prepareDocument(documentWindowController.getEditorController(), template);
-        documentWindowController.openWindow();
-    }
+//    @Override
+//    public void performNewTemplate(Template template) {
+//        Document documentWC = getDocumentWindowControllers().get(0);
+//        loadTemplateInWindow(template, documentWC);
+//    }
+//
+//    public void performNewTemplateInNewWindow(Template template) {
+//        final DocumentWindowController newTemplateWindow = makeNewWindow();
+//        loadTemplateInWindow(template, newTemplateWindow);
+//    }
+//
+//    private void loadTemplateInWindow(Template template, Document documentWindowController) {
+//        if (template != null && template.getFxmlUrl() != null) {
+//        	// TODO How to pass this boolean into the new Pref API ?
+//        	// template.getType() != Type.PHONE ? reload theme : do not reload
+//            documentWindowController.loadFromURL(template.getFxmlUrl());
+//        }
+//        //Template.prepareDocument(documentWindowController.getEditorController(), template);
+//        documentWindowController.openWindow();
+//    }
 
 //    private void performCloseFrontWindow() {
 //        for (DocumentWindowController dwc : windowList) {
@@ -576,6 +572,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     /*
      * Private (control actions)
      */
+    @Override
     public void performOpenFile(Document fromWindow) {
         final FileChooser fileChooser = new FileChooser();
 

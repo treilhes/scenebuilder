@@ -48,7 +48,6 @@ public class FindEventNamesUtilTest {
 
     @BeforeClass
     public static void initialize() {
-        System.out.println();
         FindEventNamesUtil.initializeEventsMap();
     }
 

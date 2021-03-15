@@ -298,12 +298,15 @@ public abstract class AbstractWindowController {
                 root.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
             }
             if (toolStylesheetConfig.getStylesheets() != null) {
-                Logger.getLogger(AbstractWindowController.class.getName()).log(Level.INFO,
-                        "Applying new tool theme using {0} on {1}",
-                        new Object[] { toolStylesheetConfig.getStylesheets(), this.getClass().getName() });
                 root.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
             }
         }
+        
+        Logger.getLogger(AbstractWindowController.class.getName()).log(Level.INFO,
+                "Applying new tool theme using  {0} on {1}",
+                new Object[] { root.getStylesheets(), this.getClass().getName() });
+        
+        
     }
 
     /*

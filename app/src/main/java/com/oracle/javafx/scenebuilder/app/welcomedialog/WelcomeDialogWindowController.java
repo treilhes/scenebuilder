@@ -47,10 +47,12 @@ import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.template.Template;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
-import com.oracle.javafx.scenebuilder.kit.template.TemplateImpl;
-import com.oracle.javafx.scenebuilder.kit.template.TemplatesBaseWindowController;
+import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
+import com.oracle.javafx.scenebuilder.template.controller.TemplatesBaseWindowController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,20 +81,26 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 
     private final IconSetting windowIconSetting;
 
+    private TemplateController templateController;
+
     private WelcomeDialogWindowController(
             @Autowired Api api,
     		@Autowired Main sceneBuilderApp,
     		@Autowired IconSetting windowIconSetting,
     		@Autowired RecentItemsPreference recentItemsPreference,
-    		@Autowired RecentItemsSizePreference recentItemsSizePreference) {
+    		@Autowired RecentItemsSizePreference recentItemsSizePreference,
+    		@Autowired TemplateController templateController,
+    		@Autowired List<TemplateGroup> templateGroups,
+            @Autowired List<Template> templates) {
         super(api, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
                 I18N.getBundle(),
-                null); // We want it to be a top level window so we're setting the owner to null.
+                null, templateGroups, templates); // We want it to be a top level window so we're setting the owner to null.
 
         this.sceneBuilderApp = sceneBuilderApp;
         this.recentItemsPreference = recentItemsPreference;
         this.recentItemsSizePreference = recentItemsSizePreference;
         this.windowIconSetting = windowIconSetting;
+        this.templateController = templateController;
     }
 
 
@@ -149,9 +157,9 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
             recentDocument.setTooltip(new Tooltip(recentItem));
         }
 
-        emptyApp.setUserData(TemplateImpl.EMPTY_APP);
+        //emptyApp.setUserData(TemplateImpl.EMPTY_APP);
 
-        setOnTemplateChosen(sceneBuilderApp::performNewTemplate);
+        setOnTemplateChosen(templateController::loadTemplateInCurrentWindow);
         setupTemplateButtonHandlers();
     }
 
@@ -179,7 +187,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private void openEmpty() {
         getStage().hide();
-        sceneBuilderApp.performNewTemplate(TemplateImpl.EMPTY_APP);
+        templateController.loadTemplateInCurrentWindow(null);
     }
 }
 

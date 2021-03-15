@@ -76,7 +76,6 @@ public class SubjectItem<T> extends Observable<T> {
     }
     
     public SubjectItem<T> set(T newT) {
-        System.out.println("SET " + newT.getClass().getName() + " with " + newT.toString());
         if (onSet != null) {
             onSet.doOnSet(lastValue, newT);
         }

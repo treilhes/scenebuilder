@@ -27,7 +27,7 @@ dependencies {
 	implementation project(':source-gen')
 	implementation project(':extension-library')
 	implementation project(':preference-editor')
-	implementation project(':templates')
+	implementation project(':templates') //mandatory
 	implementation project(':update-manager')
 	implementation project(':certificate-manager')
 	implementation project(':content-editor')
