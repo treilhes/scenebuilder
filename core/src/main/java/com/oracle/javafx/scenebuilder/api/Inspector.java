@@ -32,6 +32,10 @@
  */
  package com.oracle.javafx.scenebuilder.api;
 
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+
 public interface Inspector {
+
+    void setFocusToEditor(ValuePropertyMetadata propMeta);
 
 }

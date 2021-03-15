@@ -36,6 +36,7 @@ import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
 
+import com.oracle.javafx.scenebuilder.document.actions.DocumentPanelActions;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
@@ -47,7 +48,8 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
                 DocumentPanelController.class,
                 HierarchyPanelController.class,
                 InfoPanelController.class,
-                DisplayOptionPreference.class
+                DisplayOptionPreference.class,
+                DocumentPanelActions.class
         })
 public class DocumentExtension extends AbstractExtension {
 

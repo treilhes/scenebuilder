@@ -30,68 +30,53 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app;
 
+package com.oracle.javafx.scenebuilder.cssanalyser.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
-import javafx.scene.control.MenuItem;
-
+import javafx.application.Platform;
 
 /**
- *
+ * Implements the interface with the css panel.
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class CssPanelMenuController {
-     private boolean showStyledOnly = false;
-    private boolean splitDefaults = false;
-    private final CssPanelController cssPanelController;
+public class CssPanelDelegate extends CssPanelController.Delegate {
 
-    public CssPanelMenuController(CssPanelController cssPanelController) {
-        this.cssPanelController = cssPanelController;
+    private final Inspector inspectorController;
+    private final Document documentWindowController;
+
+    public CssPanelDelegate(
+    		@Autowired Inspector inspectorController, 
+    		@Lazy @Autowired Document documentWindowController) {
+        this.inspectorController = inspectorController;
+        this.documentWindowController = documentWindowController;
     }
 
-    public void viewRules() {
-        cssPanelController.changeView(CssPanelController.View.RULES);
-    }
-
-    public void viewTable() {
-        cssPanelController.changeView(CssPanelController.View.TABLE);
-    }
-
-    public void viewText() {
-        cssPanelController.changeView(CssPanelController.View.TEXT);
-    }
-
-    public void copyStyleablePath() {
-        cssPanelController.copyStyleablePath();
-    }
-
-    public void splitDefaultsAction(MenuItem cssPanelSplitDefaultsMi) {
-        cssPanelController.splitDefaultsAction();
-        splitDefaults = !splitDefaults;
-        if (splitDefaults) {
-            cssPanelSplitDefaultsMi.setText(I18N.getString("csspanel.defaults.join"));
-        } else {
-            cssPanelSplitDefaultsMi.setText(I18N.getString("csspanel.defaults.split"));
+    @Override
+    public void revealInspectorEditor(ValuePropertyMetadata propMeta) {
+        if (inspectorController == null || documentWindowController == null
+                || propMeta == null) {
+            return;
         }
-    }
 
-    public void showStyledOnly(MenuItem cssPanelShowStyledOnlyMi) {
-        cssPanelController.showStyledOnly();
-        showStyledOnly = !showStyledOnly;
-        if (showStyledOnly) {
-            cssPanelShowStyledOnlyMi.setText(I18N.getString("csspanel.show.default.values"));
-        } else {
-            cssPanelShowStyledOnlyMi.setText(I18N.getString("csspanel.hide.default.values"));
+        // Show the inspector if it is hidden
+        if (!documentWindowController.isRightPanelVisible()) {
+            documentWindowController.performControlAction(Document.DocumentControlAction.TOGGLE_RIGHT_PANEL);
         }
+        
+        // Need to delay the focus to the editor, so that the section is actually expanded first.
+        Platform.runLater(() -> Platform.runLater(() -> inspectorController.setFocusToEditor(propMeta)));
     }
 
 }

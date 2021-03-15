@@ -688,6 +688,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return result;
     }
 
+    @Override
     public void performControlAction(DocumentControlAction controlAction) {
         assert canPerformControlAction(controlAction);
 
@@ -960,6 +961,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     }
 
 
+    @Override
     public boolean isRightPanelVisible() {
         return rightSplitController.isTargetVisible();
     }

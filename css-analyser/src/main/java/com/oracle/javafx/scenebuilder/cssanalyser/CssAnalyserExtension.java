@@ -37,7 +37,9 @@ import java.util.UUID;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssPanelActions;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
 import com.oracle.javafx.scenebuilder.cssanalyser.i18n.I18NCssAnalyser;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
@@ -48,7 +50,9 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
                 I18NCssAnalyser.class,
                 CssPanelController.class,
                 CssTableColumnsOrderingReversedPreference.class,
-                CssAnalyserModeProvider.class
+                CssAnalyserModeProvider.class,
+                CssPanelMenuController.class,
+                CssPanelActions.class
         })
 public class CssAnalyserExtension extends AbstractExtension {
     @Override

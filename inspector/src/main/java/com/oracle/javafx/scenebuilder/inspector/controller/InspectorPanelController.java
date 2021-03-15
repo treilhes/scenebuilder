@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.Stack;
@@ -1262,7 +1263,12 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Handle a navigate request from an editor
         propertyEditor.addNavigateListener((ov, oldStr, newStr) -> {
             if (newStr != null) {
-                setFocusToEditor(new PropertyName(newStr));
+                Optional<ValuePropertyMetadata> vpm = getValuePropertyMetadata().stream()
+                    .filter(v -> v.getName().getName().equalsIgnoreCase(newStr))
+                    .findFirst();
+                if (vpm.isPresent()) {
+                    setFocusToEditor(vpm.get());
+                }
             }
         });
     }
@@ -2092,9 +2098,21 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      * and move the scrolllbar so that it is visible.
      * Typically used by CSS analyzer.
      */
-    public void setFocusToEditor(PropertyName propName) {
+    @Override
+    public void setFocusToEditor(ValuePropertyMetadata propMeta) {
+        
+     // Expand the inspector section
+        String inspectorSection = propMeta.getInspectorPath().getSectionTag();
+        if (inspectorSection.equalsIgnoreCase("properties")) { //NOI18N
+            setExpandedSection(SectionId.PROPERTIES);
+        } else if (inspectorSection.equalsIgnoreCase("layout")) {//NOI18N
+            setExpandedSection(SectionId.LAYOUT);
+        } else if (inspectorSection.equalsIgnoreCase("code")) {//NOI18N
+            setExpandedSection(SectionId.CODE);
+        }
+        
         // Retrieve the editor
-        PropertyEditor editor = session.find(propName);
+        PropertyEditor editor = session.find(propMeta.getName());
         
         if (editor == null) {
             // editor not found

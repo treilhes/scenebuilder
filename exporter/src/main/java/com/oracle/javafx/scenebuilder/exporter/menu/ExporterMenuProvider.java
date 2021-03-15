@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.exporter.controller.ExporterMenuController;
 
 import javafx.scene.control.Menu;
@@ -61,11 +62,14 @@ public class ExporterMenuProvider implements MenuItemProvider {
     private final static String SCENE_EXPORT_MENU_ID = "sceneExportMenu";
     
     private final ExporterMenuController exporterMenuController;
+    private final Selection selection;
 
     public ExporterMenuProvider(
-            @Autowired  @Lazy ExporterMenuController exporterMenuController
+            @Autowired  @Lazy ExporterMenuController exporterMenuController,
+            @Autowired  @Lazy Selection selection
             ) {
         this.exporterMenuController = exporterMenuController;
+        this.selection = selection;
     }
 
     @Override
@@ -112,6 +116,7 @@ public class ExporterMenuProvider implements MenuItemProvider {
             
             exportMenu.getItems().add(sceneMenu);
             exportMenu.getItems().add(selectionMenu);
+            exportMenu.setOnShowing((e) -> selectionMenu.setDisable(selection.getGroup() == null));
             
             menu = exportMenu;
             return menu;
