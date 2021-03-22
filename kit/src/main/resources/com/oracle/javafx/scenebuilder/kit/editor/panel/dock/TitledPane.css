@@ -1,0 +1,21 @@
+#view-titled-pane > .title 
+{
+	-fx-padding: 0.25em 0 0.45em 0.0em;
+	-fx-min-height: -sb-header-height;
+    -fx-background-color:
+            derive(-sb-grad-hi, 25%),
+            linear-gradient(to bottom, -sb-grad-hi, -sb-flat);
+    -fx-background-insets: 0, 1 0 0 0;
+}
+
+#view-titled-pane .panel-header #view-titled-label 
+{
+	-fx-padding: 1 2 0 2;
+	-fx-font-size: 11px;
+	-fx-text-fill: -sb-header-text;
+}
+
+#view-titled-pane .arrow-button 
+{
+	-fx-padding: 0 4 0 4;
+}

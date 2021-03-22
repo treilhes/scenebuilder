@@ -72,6 +72,10 @@ public class FileWatcher {
         this.name = getClass().getSimpleName() + "[" + name + "]"; //NOI18N
     }
 
+    public boolean hasTarget(Path target) {
+        return targets.contains(target);
+    }
+    
     public synchronized void addTarget(Path target) {
         assert target != null;
         assert targets.contains(target) == false;

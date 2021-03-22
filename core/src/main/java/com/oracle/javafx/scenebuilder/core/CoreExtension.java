@@ -42,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -63,7 +64,8 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
             ExtendedJob.class,
             ExtendedAction.class,
             Api.class,
-            DocumentationImpl.class
+            DocumentationImpl.class,
+            DockManager.class
             },
         basePackages = {
                 "com.oracle.javafx.scenebuilder.api.preferences"

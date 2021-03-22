@@ -30,24 +30,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.dock;
 
-import javafx.beans.property.StringProperty;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuButton;
 
 public interface ViewContent {
 
-//    void makePanel();
-
-    void setSearchControl(Parent panelRoot);
-
-    void setContent(Parent panelRoot);
-
     Parent getRoot();
-
-    MenuButton getViewMenuButton();
-
-    StringProperty textProperty();
 
 }

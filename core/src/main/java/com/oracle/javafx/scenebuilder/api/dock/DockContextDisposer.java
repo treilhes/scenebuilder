@@ -30,16 +30,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.dock;
 
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
-
-import javafx.scene.Parent;
-
-public interface View {
-	String getName();
-	Parent getRoot();
-	ViewManager getViewManager();
-	ViewSearch getSearchController();
-	ViewContent getViewController();
+public interface DockContextDisposer {
+    void dispose();
 }

@@ -32,6 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.document.panel.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -42,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
@@ -52,10 +56,9 @@ import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionP
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
@@ -70,6 +73,7 @@ import javafx.scene.layout.StackPane;
 @Lazy
 public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
+    private final static String VIEW_NAME = "document";
 
 	private final AbstractHierarchyPanelController hierarchyPanelController;
 	private final InfoPanelController infoPanelController;
@@ -90,6 +94,9 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     private RadioMenuItem showFxIdMenuItem;
     private RadioMenuItem showNodeIdMenuItem;
 
+    private final ViewSearch viewSearch;
+
+    private List<MenuItem> menuItems;
 
     /*
      * Public
@@ -110,9 +117,10 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		@Autowired AccordionAnimationPreference accordionAnimationPreference,
     		@Autowired @Qualifier("documentPanelActions.ShowInfoAction") Action showInfoAction,
     		@Autowired @Qualifier("documentPanelActions.ShowFxIdAction") Action showFxIdAction,
-    		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction
+    		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction,
+    		@Autowired ViewSearch viewSearch
     		) { //, UserLibrary library) {
-        super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(VIEW_NAME, api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
@@ -122,6 +130,8 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         this.showInfoAction = showInfoAction;
         this.showFxIdAction = showFxIdAction;
         this.showNodeIdAction = showNodeIdAction;
+        
+        this.viewSearch = viewSearch;
     }
 
     @FXML
@@ -148,9 +158,6 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         assert documentAccordion != null;
         assert !documentAccordion.getPanes().isEmpty();
 
-        //getViewController().setSearchControl(getSearchController().getPanelRoot());
-		getViewController().setContent(super.getRoot());
-
 		hierarchyPanelHost.getChildren().add(hierarchyPanelController.getRoot());
         infoPanelHost.getChildren().add(infoPanelController.getRoot());
 
@@ -158,17 +165,11 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
     }
 
-    @Override
-	public Parent getRoot() {
-		return getViewController().getRoot();
-	}
-
-    private void createLibraryMenu() {
-    	MenuButton menuButton = getViewController().getViewMenuButton();
-
+    private List<MenuItem> createLibraryMenu() {
+        List<MenuItem> items = new ArrayList<>();
+        
         ToggleGroup hierarchyDisplayOptionTG = new ToggleGroup();
 
-        getViewController().textProperty().set(getResources().getString("document"));
         hierarchyMenu = sceneBuilderFactory.createViewMenu(
         		getResources().getString("hierarchy.displays"));
         showInfoMenuItem = sceneBuilderFactory.createViewRadioMenuItem(
@@ -183,10 +184,13 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         showNodeIdMenuItem.setOnAction((e) -> showNodeIdAction.checkAndPerform());
 
         hierarchyMenu.getItems().addAll(showInfoMenuItem, showFxIdMenuItem, showNodeIdMenuItem);
-        menuButton.getItems().addAll(hierarchyMenu);
+        items.add(hierarchyMenu);
+        
+        return items;
 	}
 
-	public AbstractHierarchyPanelController getHierarchyPanelController() {
+	@Override
+    public AbstractHierarchyPanelController getHierarchyPanelController() {
         return hierarchyPanelController;
     }
 
@@ -216,9 +220,16 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         hierarchyPanelController.setDisplayOption(option);
     }
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return "RRRRRRRRR";
-	}
+    @Override
+    public ViewSearch getSearchController() {
+        return viewSearch;
+    }
+
+    @Override
+    public List<MenuItem> getMenuItems() {
+        if (menuItems == null) {
+            menuItems = createLibraryMenu();
+        }
+        return menuItems;
+    }
 }

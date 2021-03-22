@@ -30,17 +30,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.dock;
+
+import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 
 import javafx.beans.property.StringProperty;
-import javafx.scene.Parent;
 
-public interface ViewSearch {
-
-    Parent getRoot();
-
-    StringProperty textProperty();
-
-    void requestFocus();
-
+public interface View {
+    StringProperty getName();
+	ViewManager getViewManager();
+	ViewSearch getSearchController();
+	ViewContent getViewController();
+	ViewMenuProvider getViewMenus();
 }

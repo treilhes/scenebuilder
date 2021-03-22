@@ -2280,7 +2280,7 @@ public class EditorController implements Editor {
 
         if (fxomDocument != null) {
         	final FXOMAssetIndex assetIndex = new FXOMAssetIndex(fxomDocument);
-        	fileSystem.watch(this, assetIndex.getFileAssets().keySet(), new FileSystem.WatchingCallback() {
+        	fileSystem.watch(null, assetIndex.getFileAssets().keySet(), new FileSystem.WatchingCallback() {
 
 				@Override
 				public void modified(Path path) {
@@ -2299,6 +2299,11 @@ public class EditorController implements Editor {
 					assert Platform.isFxApplicationThread();
 			        updateEditorController("file.watching.file.created", path); //NOI18N
 				}
+
+                @Override
+                public Object getOwnerKey() {
+                    return EditorController.this;
+                }
 			});
         }
     }

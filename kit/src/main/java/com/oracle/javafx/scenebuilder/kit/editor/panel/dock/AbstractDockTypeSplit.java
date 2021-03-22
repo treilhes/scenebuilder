@@ -34,10 +34,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
@@ -45,36 +42,33 @@ import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-@Component
-@Lazy
-public class DockTypeTab implements DockType<Tab> {
+public abstract class AbstractDockTypeSplit implements DockType<Node> {
 
-    private final static String VIEW_SOURCE = "Tab.fxml";
+    private final static String VIEW_SOURCE = "View.fxml";
 
     private final ApplicationContext context;
 
-    public DockTypeTab(@Autowired ApplicationContext context) {
+    private final Orientation orientation;
+
+    public AbstractDockTypeSplit(ApplicationContext context, Orientation orientation) {
         this.context = context;
+        this.orientation = orientation;
     }
 
     @Override
-    public String getNameKey() {
-        return "%viewtype.tabbed";
-    }
+    public DockContext<Node> computeView(View view) {
 
-    @Override
-    public DockContext<Tab> computeView(View view) {
         var ctrl = context.getBean(ViewController.class);
 
-        Tab tab = FXMLUtils.load(ctrl, DockTypeTab.class, VIEW_SOURCE);
+        Node node = FXMLUtils.load(ctrl, AbstractDockTypeSplit.class, VIEW_SOURCE);
 
-        tab.textProperty().bind(view.getName());
+        ctrl.getViewLabel().textProperty().bind(view.getName());
 
         if (view.getSearchController() != null) {
             ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
@@ -89,8 +83,8 @@ public class DockTypeTab implements DockType<Tab> {
             ctrl.getViewMenuButton().getItems().addAll(menuItems);
         }
 
-        var dockContext = new DockContext<>(view, ctrl, tab, () -> {
-            tab.textProperty().unbind();
+        var dockContext = new DockContext<>(view, ctrl, node, () -> {
+            ctrl.getViewLabel().textProperty().unbind();
             ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
             ctrl.getViewMenuButton().getItems().removeAll(menuItems);
@@ -100,17 +94,18 @@ public class DockTypeTab implements DockType<Tab> {
     }
 
     @Override
-    public Node computeRoot(List<DockContext<Tab>> views, DockContext<Tab> focused) {
-        Tab[] panes = views.stream().map(v -> v.getDockContent()).toArray(Tab[]::new);
-        var tabs = new TabPane(panes);
+    public Node computeRoot(List<DockContext<Node>> views, DockContext<Node> focused) {
+        SplitPane sPane = new SplitPane();
+        sPane.setOrientation(orientation);
         
-        if (focused == null && !tabs.getTabs().isEmpty()) {
-            tabs.getSelectionModel().select(tabs.getTabs().get(0));
-        } else {
-            tabs.getSelectionModel().select(focused.getDockContent());
-        }
-        
-        return tabs;
-    }
+        double coef = 1.0 / views.size();
 
+        for (int i = 0; i < views.size(); i++) {
+            var v = views.get(i);
+            sPane.setDividerPosition(i, coef * (i + 1));
+            sPane.getItems().add(v.getDockContent());
+        }
+
+        return sPane;
+    }
 }

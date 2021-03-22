@@ -55,9 +55,11 @@ public interface HierarchyMask {
         ComponentPropertyMetadata getPropertyMetadata();
     }
 
-    public boolean isAcceptingAccessory(Accessory graphic);
+    public boolean isAcceptingAccessory(Accessory accessory);
 
-    public FXOMObject getAccessory(Accessory graphic);
+    public FXOMObject getAccessory(Accessory accessory);
+    
+    public List<FXOMObject> getAccessories(Accessory accessory);
 
     public boolean isAcceptingSubComponent();
 

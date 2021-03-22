@@ -30,13 +30,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.api.dock;
 
 import java.util.List;
 
-import javafx.scene.Parent;
+import javafx.scene.Node;
 
-public interface DockType {
+public interface DockType<T> {
 	String getNameKey();
-	Parent computeRoot(List<View> views);
+	DockContext<T> computeView(View view);
+	Node computeRoot(List<DockContext<T>> views, DockContext<T> focused);
 }

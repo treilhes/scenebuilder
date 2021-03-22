@@ -69,6 +69,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
+import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
@@ -98,18 +99,15 @@ import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPr
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -135,6 +133,8 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
+    
+    private final static String VIEW_NAME = "library";
 
     private String searchPattern;
     ArrayList<LibraryItem> searchData = new ArrayList<>();
@@ -192,6 +192,10 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private DocumentManager documentManager;
     private FXOMDocument fxomDocument;
     private final Editor editorController;
+    
+    private final ViewSearch viewSearch;
+
+    private List<MenuItem> menuItems;
 
     /*
      * Public
@@ -216,9 +220,10 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             @Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
             @Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction,
             @Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
-            @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction
+            @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction,
+            @Autowired ViewSearch viewSearch
             ) { //, UserLibrary library) {
-        super(api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(VIEW_NAME, api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
         this.context = api.getContext();
         this.editorController = editor;
         this.sceneBuilderManager = api.getSceneBuilderManager();
@@ -238,7 +243,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         this.importSelectionAction = importSelectionAction;
         this.revealCustomFolderAction = revealCustomFolderAction;
         this.showJarAnalysisReportAction = showJarAnalysisReportAction;
-
+        this.viewSearch = viewSearch;
+        
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
         startListeningToLibrary();
 
@@ -324,16 +330,13 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         assert noSearchResults != null;
         assert libSearchList != null;
 
-        getViewController().setSearchControl(getSearchController().getRoot());
-		getViewController().setContent(super.getRoot());
-
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
 
         startListeningToDrop();
         populateLibraryPanel();
         setUserLibraryPathString();
         
-        getLibraryLabel().bind(Bindings.createStringBinding(() -> {
+        getName().bind(Bindings.createStringBinding(() -> {
 
             return userLibrary.exploringProperty().get() ? I18N.getString("library.exploring") : I18N.getString("library");
 
@@ -1178,20 +1181,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         return libList;
     }
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return "XXX";
-	}
-
-
-	@Override
-	public Parent getRoot() {
-		return getViewController().getRoot();
-	}
-
-	public void createLibraryMenu() {
-		MenuButton menuButton = getViewController().getViewMenuButton();
+	private List<MenuItem> createLibraryMenu() {
+	    List<MenuItem> items = new ArrayList<>();
 
         ToggleGroup libraryDisplayOptionTG = new ToggleGroup();
 
@@ -1225,7 +1216,11 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         libraryReport.setOnAction((e) -> showJarAnalysisReportAction.checkAndPerform());
 
         customLibraryMenu.getItems().addAll(libraryReveal, libraryReport);
-        menuButton.getItems().addAll(viewAsList, viewAsSections, separator1, manageJarFxml, libraryImportSelection, separator2, customLibraryMenu);
+        
+        items.addAll(Arrays.asList(viewAsList, viewAsSections, separator1, manageJarFxml, 
+                libraryImportSelection, separator2, customLibraryMenu));
+        
+        return items;
 	}
 
 
@@ -1246,32 +1241,31 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
 	public void tuneLibraryMenuButton() {
 
-		MenuButton libraryMenuButton = getViewController().getViewMenuButton();
 		// We need to tune the content of the library menu according if there's
         // or not a selection likely to be dropped onto Library panel.
-        libraryMenuButton.showingProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
-            if (t1) {
-                AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
-                libraryImportSelection.setDisable(true);
+		libraryImportSelection.setOnMenuValidation((e) -> {
 
-                if (asg instanceof ObjectSelectionGroup) {
-                    if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
-                    	libraryImportSelection.setDisable(false);
-                    }
-                }
-
-                // DTL-6439. The custom library menu shall be enabled only
-                // in the case there is a user library directory on disk.
-                Library lib = userLibrary;
-                if (lib instanceof UserLibrary) {
-                    File userLibDir = fileSystem.getUserLibraryFolder();
-                    if (userLibDir.canRead()) {
-                    	customLibraryMenu.setDisable(false);
-                    } else {
-                    	customLibraryMenu.setDisable(true);
-                    }
+            AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
+            libraryImportSelection.setDisable(true);
+            
+            if (asg instanceof ObjectSelectionGroup) {
+                if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
+                    libraryImportSelection.setDisable(false);
                 }
             }
+
+            // DTL-6439. The custom library menu shall be enabled only
+            // in the case there is a user library directory on disk.
+            Library lib = userLibrary;
+            if (lib instanceof UserLibrary) {
+                File userLibDir = fileSystem.getUserLibraryFolder();
+                if (userLibDir.canRead()) {
+                    customLibraryMenu.setDisable(false);
+                } else {
+                    customLibraryMenu.setDisable(true);
+                }
+            }
+        
         });
 
 	}
@@ -1284,14 +1278,21 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 		return customLibraryMenu;
 	}
 
-	@Override
-    public StringProperty getLibraryLabel() {
-		return getViewController().textProperty();
-	}
-
     public Editor getEditorController() {
         return editorController;
     }
+   
+    @Override
+    public ViewSearch getSearchController() {
+        return viewSearch;
+    }
 
+    @Override
+    public List<MenuItem> getMenuItems() {
+        if (menuItems == null) {
+            menuItems = createLibraryMenu();
+        }
+        return menuItems;
+    }
 
 }

@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.sourceview.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -50,8 +52,10 @@ import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
@@ -66,21 +70,35 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
 
     @FXML
     TextArea textArea;
+    
+    @FXML
+    Label updateResultLabel;
 
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = false;
     private final DocumentManager documentManager;
     private final WildcardImportsPreference wildcardImportsPreference;
+
+    private final Editor editor;
+
+    private final Document document;
+
+    private double scrollLeftSave;
+
+    private double scrollTopSave;
     
     public SourceViewWindowController(
             @Autowired Api api,
             @Autowired Document document,
+            @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
         super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N
         
         this.documentManager = api.getApiDoc().getDocumentManager();
+        this.editor = editor;
+        this.document = document;
         this.wildcardImportsPreference = wildcardImportsPreference;
     }
 
@@ -101,6 +119,24 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
         }
 
         Clipboard.getSystemClipboard().setContent(content);
+    }
+    
+    @FXML
+    private void onUpdateAction(ActionEvent event) {
+        try {
+            scrollLeftSave = textArea.getScrollLeft();
+            scrollTopSave = textArea.getScrollTop();
+            
+            updateResultLabel.setText("");
+            
+            String fxmlText = textArea.getText();
+            editor.setFxmlTextAndLocation(fxmlText, fxomDocument.getLocation(), false);
+            
+            updateResultLabel.setText("SUCCESS!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            updateResultLabel.setText(e.getMessage());
+        }
     }
 
     @Override
@@ -146,6 +182,12 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
             updateTitle();
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
+            
+            Platform.runLater(() -> {
+                textArea.setScrollLeft(scrollLeftSave);
+                textArea.setScrollTop(scrollTopSave);
+            });
+            documentManager.dirty().set(true);
             dirty = false;
         } else {
             dirty = true;

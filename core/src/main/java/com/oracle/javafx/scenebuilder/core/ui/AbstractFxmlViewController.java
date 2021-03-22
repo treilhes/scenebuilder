@@ -38,11 +38,14 @@ import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.View;
-import com.oracle.javafx.scenebuilder.api.ViewContent;
-import com.oracle.javafx.scenebuilder.api.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.dock.ViewContent;
+import com.oracle.javafx.scenebuilder.api.dock.ViewMenuProvider;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import lombok.Getter;
 
 /**
@@ -55,17 +58,12 @@ import lombok.Getter;
  *
  * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
-public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View {
+public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View, ViewContent, ViewMenuProvider {
 
 	@Autowired
 	private @Getter ViewManager viewManager;
 
-	@Autowired
-	private @Getter ViewSearch searchController;
-
-	@Autowired
-	private @Getter ViewContent viewController;
-
+	private @Getter StringProperty name;
 	/*
      * Public
      */
@@ -74,19 +72,19 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
      *
      * @param editor  the editor controller (cannot be null)
      */
-    public AbstractFxmlViewController(Api api, URL fxmlURL, ResourceBundle resources) {
+    public AbstractFxmlViewController(String viewName, Api api, URL fxmlURL, ResourceBundle resources) {
         super(api, fxmlURL, resources); //NOI18N
+        name = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
     }
 
-//	@Override
-//	protected void makePanel() {
-//		assert getSearchController() != null;
-//		assert getViewController() != null;
-//		super.makePanel();
-//		getViewController().makePanel();
-//		getViewController().setSearchControl(getSearchController().getRoot());
-//		getViewController().setContent(super.getRoot());
-//	}
+    @Override
+    public ViewContent getViewController() {
+        return this;
+    }
 
+    @Override
+    public ViewMenuProvider getViewMenus() {
+        return this;
+    }
 
 }

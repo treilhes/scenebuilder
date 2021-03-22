@@ -924,8 +924,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                         final String titleKey;
                         if (documentWindowController == null) {
                             titleKey = "menu.title.hide.library.panel";
-                        } else if (documentWindowController.isLibraryPanelVisible()) {
-                            titleKey = "menu.title.hide.library.panel";
+                        //TODO uncomment and handle with the new view framework when ready
+                        //} else if (documentWindowController.isLibraryPanelVisible()) {
+                        //    titleKey = "menu.title.hide.library.panel";
                         } else {
                             titleKey = "menu.title.show.library.panel";
                         }
@@ -939,8 +940,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 final String titleKey;
                 if (documentWindowController == null) {
                     titleKey = "menu.title.hide.document.panel";
-                } else if (documentWindowController.isHierarchyPanelVisible()) {
-                    titleKey = "menu.title.hide.document.panel";
+                  //TODO uncomment and handle with the new view framework when ready
+                    //} else if (documentWindowController.isHierarchyPanelVisible()) {
+                    //titleKey = "menu.title.hide.document.panel";
                 } else {
                     titleKey = "menu.title.show.document.panel";
                 }
@@ -954,8 +956,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 final String titleKey;
                 if (documentWindowController == null) {
                     titleKey = "menu.title.hide.bottom.panel";
-                } else if (documentWindowController.isBottomPanelVisible()) {
-                    titleKey = "menu.title.hide.bottom.panel";
+                  //TODO uncomment and handle with the new view framework when ready
+                    //} else if (documentWindowController.isBottomPanelVisible()) {
+                    //titleKey = "menu.title.hide.bottom.panel";
                 } else {
                     titleKey = "menu.title.show.bottom.panel";
                 }
@@ -969,8 +972,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 final String titleKey;
                 if (documentWindowController == null) {
                     titleKey = "menu.title.hide.left.panel";
-                } else if (documentWindowController.isLeftPanelVisible()) {
-                    titleKey = "menu.title.hide.left.panel";
+                  //TODO uncomment and handle with the new view framework when ready
+                    //} else if (documentWindowController.isLeftPanelVisible()) {
+                    //titleKey = "menu.title.hide.left.panel";
                 } else {
                     titleKey = "menu.title.show.left.panel";
                 }
@@ -984,8 +988,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 final String titleKey;
                 if (documentWindowController == null) {
                     titleKey = "menu.title.hide.right.panel";
-                } else if (documentWindowController.isRightPanelVisible()) {
-                    titleKey = "menu.title.hide.right.panel";
+                  //TODO uncomment and handle with the new view framework when ready
+                    //} else if (documentWindowController.isRightPanelVisible()) {
+                    //titleKey = "menu.title.hide.right.panel";
                 } else {
                     titleKey = "menu.title.show.right.panel";
                 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<TitledPane id="view-titled-pane" fx:id="parentPane" animated="false" contentDisplay="GRAPHIC_ONLY" minHeight="0.0" minWidth="120.0" prefHeight="80.0" prefWidth="120.0" stylesheets="@TitledPane.css" text="untitled" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <content>
+  	<VBox fx:id="viewContentHost" prefHeight="-1.0" prefWidth="-1.0">
+         <padding>
+            <Insets bottom="1.0" left="2" top="1.0" />
+         </padding>
+    </VBox>
+  </content>
+   <graphic>
+      <HBox id="HBox" alignment="CENTER" prefWidth="${parentPane.width - 25}" spacing="0.0" styleClass="panel-header">
+         <children>
+            <Label id="view-titled-label" fx:id="viewLabel" text="" />
+            <StackPane fx:id="viewSearchHost" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" style="" HBox.hgrow="ALWAYS" />
+            <MenuButton fx:id="viewMenuButton" mnemonicParsing="false" text="" HBox.hgrow="NEVER">
+               <graphic>
+                  <Region prefHeight="10.0" prefWidth="10.0" styleClass="cog-shape" />
+               </graphic>
+            </MenuButton>
+         </children>
+         <padding>
+            <Insets bottom="1.0" top="1.0" />
+         </padding>
+      </HBox>
+   </graphic>
+</TitledPane>

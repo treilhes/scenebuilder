@@ -30,54 +30,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package com.oracle.javafx.scenebuilder.cssanalyser.controller;
+package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import javafx.geometry.Orientation;
 
-import javafx.application.Platform;
-
-/**
- * Implements the interface with the css panel.
- */
 @Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class CssPanelDelegate extends CssPanelController.Delegate {
+public class DockTypeSplitH extends AbstractDockTypeSplit {
 
-    private final Inspector inspectorController;
-    private final Document documentWindowController;
-
-    public CssPanelDelegate(
-    		@Autowired Inspector inspectorController, 
-    		@Lazy @Autowired Document documentWindowController) {
-        this.inspectorController = inspectorController;
-        this.documentWindowController = documentWindowController;
+    public DockTypeSplitH(@Autowired ApplicationContext context) {
+        super(context, Orientation.HORIZONTAL);
     }
 
     @Override
-    public void revealInspectorEditor(ValuePropertyMetadata propMeta) {
-        if (inspectorController == null || documentWindowController == null
-                || propMeta == null) {
-            return;
-        }
-
-        // Show the inspector if it is hidden
-        //TODO uncomment and handle with the new view framework when ready
-//        if (!documentWindowController.isRightPanelVisible()) {
-//            documentWindowController.performControlAction(Document.DocumentControlAction.TOGGLE_RIGHT_PANEL);
-//        }
-        
-        // Need to delay the focus to the editor, so that the section is actually expanded first.
-        Platform.runLater(() -> Platform.runLater(() -> inspectorController.setFocusToEditor(propMeta)));
+    public String getNameKey() {
+        return "%viewtype.splith";
     }
-
 }

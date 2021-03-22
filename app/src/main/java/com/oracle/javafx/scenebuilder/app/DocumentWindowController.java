@@ -67,7 +67,10 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.DockRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
@@ -105,6 +108,7 @@ import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.SectionId;
 import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 //import com.oracle.javafx.scenebuilder.library.controller.JarAnalysisReportController;
@@ -112,6 +116,7 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
 
 import javafx.beans.InvalidationListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -179,18 +184,17 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @FXML private StackPane messageBarHost;
     @FXML private SplitPane mainSplitPane;
     @FXML private SplitPane leftRightSplitPane;
-    @FXML private SplitPane libraryDocumentSplitPane;
 
-    @FXML private VBox leftTopHost;
-    @FXML private VBox leftBottomHost;
+    @FXML private VBox leftHost;
     @FXML private VBox rightHost;
+    @FXML private StackPane centerHost;
     @FXML private VBox bottomHost;
 
-    private SplitController bottomSplitController;
-    private SplitController leftSplitController;
-    private SplitController rightSplitController;
-    private SplitController librarySplitController;
-    private SplitController documentSplitController;
+//    private SplitController bottomSplitController;
+//    private SplitController leftSplitController;
+//    private SplitController rightSplitController;
+//    private SplitController librarySplitController;
+//    private SplitController documentSplitController;
 
     private FileTime loadFileTime;
     
@@ -207,6 +211,14 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 	private final List<DisposeWithDocument> finalizations;
 	private final Dialog dialog;
     private final ApplicationContext context;
+    
+    private final ViewManager viewManager;
+    private final DockManager dockManager;
+    private final DockPanelController leftDockController;
+    private final DockPanelController rightDockController;
+    private final DockPanelController bottomDockController;
+    private SplitPositionController topBottonController;
+    private SplitPositionController leftRightController;
 
 
     /*
@@ -264,9 +276,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 			@Lazy @Autowired ThemePreference themePreference,
 			@Lazy @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
 
-			//@Lazy @Autowired PreviewWindowController previewWindowController,
-			//@Lazy @Autowired SkeletonWindowController skeletonWindowController,
-			//@Lazy @Autowired JarAnalysisReportController jarAnalysisReportController,
+			@Autowired ViewManager viewManager,
+	        @Autowired DockManager dockManager,
+			@Autowired DockPanelController leftDockController,
+			@Autowired DockPanelController rightDockController,
+			@Autowired DockPanelController bottomDockController,
+			
 			@Lazy @Autowired(required = false) List<InitWithDocument> initializations,
 			@Lazy @Autowired(required = false) List<DisposeWithDocument> finalizations
 			) {
@@ -301,6 +316,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         //this.resourceController = resourceController;
         //this.watchingController = watchingController;
 
+        this.viewManager = viewManager;
+        this.dockManager = dockManager;
+        this.leftDockController = leftDockController;
+        this.rightDockController = rightDockController;
+        this.bottomDockController = bottomDockController;
+        
         //this.preferences = preferences;
         //this.i18NResourcePreference = i18NResourcePreference;
         this.pathPreference = pathPreference;
@@ -407,64 +428,22 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 		initializations.forEach(a -> a.init());
 
 		editorController.initialize();
-
-		bottomSplitController = new SplitController(mainSplitPane, SplitController.Target.LAST);
-        leftSplitController = new SplitController(leftRightSplitPane, SplitController.Target.FIRST);
-        rightSplitController = new SplitController(leftRightSplitPane, SplitController.Target.LAST);
-        librarySplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.FIRST);
-        documentSplitController = new SplitController(libraryDocumentSplitPane, SplitController.Target.LAST);
-
-		//setToolStylesheet(toolThemePreference.getValue().getStylesheetURL());
-        //toolThemePreference.getObservableValue().addListener((ob, o, n) -> setToolStylesheet(n.getStylesheetURL()));
-
-
-        //split containers
-        // Add dividers position listeners
-        if (leftDividerHPos.isValid()) {leftSplitController.setPosition(leftDividerHPos.getValue());}
-        leftSplitController.position().addListener((ov, t, t1) -> leftDividerHPos.setValue(t1.doubleValue()));
-        leftDividerHPos.getObservableValue().addListener((ob, o, n) -> leftSplitController.setPosition(n));
-
-        if (rightDividerHPos.isValid()) {rightSplitController.setPosition(rightDividerHPos.getValue());}
-        rightSplitController.position().addListener((ov, t, t1) -> rightDividerHPos.setValue(t1.doubleValue()));
-        rightDividerHPos.getObservableValue().addListener((ob, o, n) -> rightSplitController.setPosition(n));
-
-        if (bottomDividerVPos.isValid()) { bottomSplitController.setPosition(bottomDividerVPos.getValue());}
-        bottomSplitController.position().addListener((ov, t, t1) -> bottomDividerVPos.setValue(t1.doubleValue()));
-        bottomDividerVPos.getObservableValue().addListener((ob, o, n) -> bottomSplitController.setPosition(n));
-
-        if (leftDividerVPos.isValid()) { librarySplitController.setPosition(leftDividerVPos.getValue());}
-        librarySplitController.position().addListener((ov, t, t1) -> leftDividerVPos.setValue(t1.doubleValue()));
-        leftDividerVPos.getObservableValue().addListener((ob, o, n) -> librarySplitController.setPosition(n));
-
-        // TODO only restoring values but update from user still missing
-        leftSplitController.setTargetVisible(leftVisiblePreference.getValue());
-        rightSplitController.setTargetVisible(rightVisiblePreference.getValue());
-        librarySplitController.setTargetVisible(libraryVisiblePreference.getValue() && leftVisiblePreference.getValue());
-        documentSplitController.setTargetVisible(documentVisiblePreference.getValue() && leftVisiblePreference.getValue());
-
-        if (bottomVisiblePreference.getValue()) { initializeCssPanel(); }
-        bottomSplitController.setTargetVisible(bottomVisiblePreference.getValue());
+		
+		topBottonController = SplitPositionController.of(mainSplitPane, 2)
+		    .withContent(leftRightSplitPane, true)
+		    .withDivider(bottomDividerVPos)
+		    .withContent(bottomHost, false)
+		    .build(SplitPositionController.MAIN_TOP_BOTTOM);
+		
+		leftRightController = SplitPositionController.of(leftRightSplitPane, 3)
+            .withContent(leftHost, false)
+            .withDivider(leftDividerHPos)
+            .withContent(centerHost, true)
+            .withDivider(rightDividerHPos)
+            .withContent(rightHost, false)
+            .build(SplitPositionController.MAIN_LEFT_RIGHT);
 
 	}
-
-//	@Autowired
-//	public void setLibrarySearchController(SearchController librarySearchController) {
-//		this.librarySearchController = librarySearchController;
-//	}
-
-
-//	@Autowired
-//	public void setInspectorSearchController(SearchController inspectorSearchController) {
-//		this.inspectorSearchController = inspectorSearchController;
-//	}
-
-
-//	@Autowired
-//	public void setCssPanelSearchController(SearchController cssPanelSearchController) {
-//		this.cssPanelSearchController = cssPanelSearchController;
-//	}
-
-
 
 	@Override
     public Editor getEditorController() {
@@ -494,50 +473,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         return cssPanelController;
     }
 
-//    public AbstractHierarchyPanelController getHierarchyPanelController() {
-//        return hierarchyPanelController;
-//    }
-//
-//    public InfoPanelController getInfoPanelController() {
-//        return infoPanelController;
-//    }
-
-//    public PreviewWindowController getPreviewWindowController() {
-//        return previewWindowController;
-//    }
-
-//    public SceneStyleSheetMenuController getSceneStyleSheetMenuController() {
-//        return sceneStyleSheetMenuController;
-//    }
-
-//    public I18nResourceMenuController getResourceController() {
-//        return resourceController;
-//    }
-
-//    public DocumentWatchingController getWatchingController() {
-//        return watchingController;
-//    }
-
-    public SplitController getBottomSplitController() {
-        return bottomSplitController;
-    }
-
-    public SplitController getLeftSplitController() {
-        return leftSplitController;
-    }
-
-    public SplitController getRightSplitController() {
-        return rightSplitController;
-    }
-
-    public SplitController getLibrarySplitController() {
-        return librarySplitController;
-    }
-
-    public SplitController getDocumentSplitController() {
-        return documentSplitController;
-    }
-
     @Override
     public void loadFromFile(File fxmlFile) throws IOException {
         final URL fxmlURL = fxmlFile.toURI().toURL();
@@ -547,6 +482,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         updateLoadFileTime();
         updateStageTitle(); // No-op if fxml has not been loaded yet
         documentPreferencesController.readFromJavaPreferences();
+        leftRightController.update();
+        topBottonController.update();
 
         //TODO remove after checking the new watching system is operational in EditorController or in filesystem
         //watchingController.update();
@@ -563,6 +500,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             updateLoadFileTime();
             updateStageTitle(); // No-op if fxml has not been loaded yet
             documentPreferencesController.readFromJavaPreferences();
+            leftRightController.update();
+            topBottonController.update();
           //TODO remove after checking the new watching system is operational in EditorController or in filesystem
             //watchingController.update();
         } catch(IOException x) {
@@ -738,10 +677,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 performCloseAction();
                 break;
 
-//            case REVEAL_FILE:
-//                performRevealAction();
-//                break;
-
             case GOTO_CONTENT:
                 contentPanelController.getGlassLayer().requestFocus();
                 break;
@@ -758,91 +693,92 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 performGoToSection(SectionId.CODE);
                 break;
 
-            case TOGGLE_LEFT_PANEL:
-                if (leftSplitController.isTargetVisible()) {
-                    assert librarySplitController.isTargetVisible()
-                            || documentSplitController.isTargetVisible();
-                    // Hide Left => hide both Library + Document
-                    librarySplitController.hideTarget();
-                    documentSplitController.hideTarget();
-                    leftSplitController.hideTarget();
-                } else {
-                    assert !librarySplitController.isTargetVisible()
-                            && !documentSplitController.isTargetVisible();
-                    // Show Left => show both Library + Document
-                    librarySplitController.showTarget();
-                    documentSplitController.showTarget();
-                    leftSplitController.showTarget();
-
-                    // This workarounds layout issues when showing Left
-                    libraryDocumentSplitPane.layout();
-                    libraryDocumentSplitPane.setDividerPositions(0.5);
-                }
-                // Update preferences
-                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
-                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
-                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
-                break;
-
-            case TOGGLE_RIGHT_PANEL:
-                rightSplitController.toggleTarget();
-                // Update preferences
-                rightVisiblePreference.setValue(rightSplitController.isTargetVisible());
-                break;
-
-            case TOGGLE_CSS_PANEL:
-                // CSS panel is built lazely : initialize the CSS panel first
-                initializeCssPanel();
-                bottomSplitController.toggleTarget();
-                if (bottomSplitController.isTargetVisible()) {
-                    // CSS panel is built lazely
-                    // Need to update its table column ordering with preference value
-                    //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
-                    // Enable pick mode
-                    editorController.setPickModeEnabled(true);
-                } else {
-                    // Disable pick mode
-                    editorController.setPickModeEnabled(false);
-                }
-                // Update preferences
-                bottomVisiblePreference.setValue(bottomSplitController.isTargetVisible());
-                break;
-
-            case TOGGLE_LIBRARY_PANEL:
-                if (librarySplitController.isTargetVisible()) {
-                    assert leftSplitController.isTargetVisible();
-                    librarySplitController.hideTarget();
-                    if (!documentSplitController.isTargetVisible()) {
-                        leftSplitController.hideTarget();
-                    }
-                } else {
-                    if (!leftSplitController.isTargetVisible()) {
-                        leftSplitController.showTarget();
-                    }
-                    librarySplitController.showTarget();
-                }
-                // Update preferences
-                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
-                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
-                break;
-
-            case TOGGLE_DOCUMENT_PANEL:
-                if (documentSplitController.isTargetVisible()) {
-                    assert leftSplitController.isTargetVisible();
-                    documentSplitController.hideTarget();
-                    if (!librarySplitController.isTargetVisible()) {
-                        leftSplitController.hideTarget();
-                    }
-                } else {
-                    if (!leftSplitController.isTargetVisible()) {
-                        leftSplitController.showTarget();
-                    }
-                    documentSplitController.showTarget();
-                }
-                // Update preferences
-                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
-                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
-                break;
+                
+//            case TOGGLE_LEFT_PANEL:
+//                if (leftSplitController.isTargetVisible()) {
+//                    assert librarySplitController.isTargetVisible()
+//                            || documentSplitController.isTargetVisible();
+//                    // Hide Left => hide both Library + Document
+//                    librarySplitController.hideTarget();
+//                    documentSplitController.hideTarget();
+//                    leftSplitController.hideTarget();
+//                } else {
+//                    assert !librarySplitController.isTargetVisible()
+//                            && !documentSplitController.isTargetVisible();
+//                    // Show Left => show both Library + Document
+//                    librarySplitController.showTarget();
+//                    documentSplitController.showTarget();
+//                    leftSplitController.showTarget();
+//
+//                    // This workarounds layout issues when showing Left
+//                    libraryDocumentSplitPane.layout();
+//                    libraryDocumentSplitPane.setDividerPositions(0.5);
+//                }
+//                // Update preferences
+//                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
+//                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
+//                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
+//                break;
+//
+//            case TOGGLE_RIGHT_PANEL:
+//                rightSplitController.toggleTarget();
+//                // Update preferences
+//                rightVisiblePreference.setValue(rightSplitController.isTargetVisible());
+//                break;
+//
+//            case TOGGLE_CSS_PANEL:
+//                // CSS panel is built lazely : initialize the CSS panel first
+//                initializeCssPanel();
+//                bottomSplitController.toggleTarget();
+//                if (bottomSplitController.isTargetVisible()) {
+//                    // CSS panel is built lazely
+//                    // Need to update its table column ordering with preference value
+//                    //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
+//                    // Enable pick mode
+//                    editorController.setPickModeEnabled(true);
+//                } else {
+//                    // Disable pick mode
+//                    editorController.setPickModeEnabled(false);
+//                }
+//                // Update preferences
+//                bottomVisiblePreference.setValue(bottomSplitController.isTargetVisible());
+//                break;
+//
+//            case TOGGLE_LIBRARY_PANEL:
+//                if (librarySplitController.isTargetVisible()) {
+//                    assert leftSplitController.isTargetVisible();
+//                    librarySplitController.hideTarget();
+//                    if (!documentSplitController.isTargetVisible()) {
+//                        leftSplitController.hideTarget();
+//                    }
+//                } else {
+//                    if (!leftSplitController.isTargetVisible()) {
+//                        leftSplitController.showTarget();
+//                    }
+//                    librarySplitController.showTarget();
+//                }
+//                // Update preferences
+//                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
+//                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
+//                break;
+//
+//            case TOGGLE_DOCUMENT_PANEL:
+//                if (documentSplitController.isTargetVisible()) {
+//                    assert leftSplitController.isTargetVisible();
+//                    documentSplitController.hideTarget();
+//                    if (!librarySplitController.isTargetVisible()) {
+//                        leftSplitController.hideTarget();
+//                    }
+//                } else {
+//                    if (!leftSplitController.isTargetVisible()) {
+//                        leftSplitController.showTarget();
+//                    }
+//                    documentSplitController.showTarget();
+//                }
+//                // Update preferences
+//                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
+//                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
+//                break;
 
             case TOGGLE_OUTLINES_VISIBILITY:
                 contentPanelController.setOutlinesVisible(
@@ -956,30 +892,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         }
     }
 
-    public boolean isLeftPanelVisible() {
-        return leftSplitController.isTargetVisible();
-    }
-
-
-    @Override
-    public boolean isRightPanelVisible() {
-        return rightSplitController.isTargetVisible();
-    }
-
-
-    public boolean isBottomPanelVisible() {
-        return bottomSplitController.isTargetVisible();
-    }
-
-
-    public boolean isHierarchyPanelVisible() {
-        return documentSplitController.isTargetVisible();
-    }
-
-
-    public boolean isLibraryPanelVisible() {
-        return librarySplitController.isTargetVisible();
-    }
 
     @Override
 	public boolean isUnused() {
@@ -1061,8 +973,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void controllerDidLoadFxml() {
 
-        assert leftTopHost != null;
-        assert leftBottomHost != null;
+        assert leftHost != null;
+        //assert leftBottomHost != null;
         assert rightHost != null;
         assert bottomHost != null;
 
@@ -1072,7 +984,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //        assert mainSplitPane.getItems().size() == 2;
         assert leftRightSplitPane != null;
 //        assert leftRightSplitPane.getItems().size() == 2;
-        assert libraryDocumentSplitPane != null;
+        //assert libraryDocumentSplitPane != null;
 
 
         // Add a border to the Windows app, because of the specific window decoration on Windows.
@@ -1087,35 +999,66 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBarController.getMenuBar());
 
-        leftTopHost.getChildren().add(libraryPanelController.getRoot());
-        leftBottomHost.getChildren().add(documentPanelController.getRoot());
-        rightHost.getChildren().add(inspectorPanelController.getRoot());
+        leftHost.getChildren().add(leftDockController.getContent());
+        rightHost.getChildren().add(rightDockController.getContent());
+        bottomHost.getChildren().add(bottomDockController.getContent());
 
-        VBox.setVgrow(libraryPanelController.getRoot(), Priority.ALWAYS);
-        VBox.setVgrow(documentPanelController.getRoot(), Priority.ALWAYS);
-        VBox.setVgrow(inspectorPanelController.getRoot(), Priority.ALWAYS);
-
-        //bottomHost.getChildren().add(cssPanelController.getPanelRoot());
+        VBox.setVgrow(rightDockController.getContent(), Priority.ALWAYS);
+        VBox.setVgrow(leftDockController.getContent(), Priority.ALWAYS);
+        VBox.setVgrow(bottomDockController.getContent(), Priority.ALWAYS);
+        
+        leftRightSplitPane.getItems().remove(leftHost);
+        leftRightSplitPane.getItems().remove(rightHost);
+        mainSplitPane.getItems().remove(bottomHost);
 
         contentPanelHost.getChildren().add(contentPanelController.getRoot());
-        //inspectorPanelHost.getChildren().add(inspectorPanelController.getPanelRoot());
-        //inspectorSearchPanelHost.getChildren().add(inspectorSearchController.getPanelRoot());
         messageBarHost.getChildren().add(messageBarController.getRoot());
 
         messageBarController.getSelectionBarHost().getChildren().add(
                 selectionBarController.getRoot());
-
-        //inspectorSearchController.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> inspectorPanelController.setSearchPattern(newStr));
 
         messageBarHost.heightProperty().addListener((InvalidationListener) o -> {
             final double h = messageBarHost.getHeight();
             contentPanelHost.setPadding(new Insets(h, 0.0, 0.0, 0.0));
         });
 
-        //documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
-
-       
+        rightDockController.getContent().getChildren().addListener((Change<? extends Node> c)-> {
+            int numChild = rightDockController.getContent().getChildren().size();
+            boolean isInserted = leftRightSplitPane.getItems().contains(rightHost);
+            if (numChild == 0 && isInserted) {
+                leftRightSplitPane.getItems().remove(rightHost);
+            }
+            if (numChild > 0 && !isInserted) {
+                leftRightSplitPane.getItems().add(rightHost);
+            }
+        });
         
+        leftDockController.getContent().getChildren().addListener((Change<? extends Node> c)-> {
+            int numChild = leftDockController.getContent().getChildren().size();
+            boolean isInserted = leftRightSplitPane.getItems().contains(leftHost);
+            if (numChild == 0 && isInserted) {
+                leftRightSplitPane.getItems().remove(leftHost);
+            }
+            if (numChild > 0 && !isInserted) {
+                leftRightSplitPane.getItems().add(0, leftHost);
+            }
+        });
+        
+        bottomDockController.getContent().getChildren().addListener((Change<? extends Node> c)-> {
+            int numChild = bottomDockController.getContent().getChildren().size();
+            boolean isInserted = mainSplitPane.getItems().contains(bottomHost);
+            if (numChild == 0 && isInserted) {
+                mainSplitPane.getItems().remove(bottomHost);
+            }
+            if (numChild > 0 && !isInserted) {
+                mainSplitPane.getItems().add(bottomHost);
+            }
+        });
+        
+        viewManager.dock().onNext(new DockRequest(inspectorPanelController, rightDockController));
+        viewManager.dock().onNext(new DockRequest(cssPanelController, bottomDockController));
+        viewManager.dock().onNext(new DockRequest(libraryPanelController, leftDockController));
+        viewManager.dock().onNext(new DockRequest(documentPanelController, leftDockController, false));
     }
 
     @Override
@@ -1612,9 +1555,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     private void performGoToSection(SectionId sectionId) {
         // First make the right panel visible if not already the case
-        if (!isRightPanelVisible()) {
-            performControlAction(DocumentControlAction.TOGGLE_RIGHT_PANEL);
-        }
+      //TODO uncomment and handle with the new view framework when ready
+//        if (!isRightPanelVisible()) {
+//            performControlAction(DocumentControlAction.TOGGLE_RIGHT_PANEL);
+//        }
         inspectorPanelController.setExpandedSection(sectionId);
     }
 

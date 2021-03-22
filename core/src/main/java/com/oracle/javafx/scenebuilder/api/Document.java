@@ -66,7 +66,16 @@ public interface Document {
     Content getContentPanelController();
     DocumentPanel getDocumentPanelController();
     void updateWithDefaultContent();
-    
+
+    void loadFromURL(URL url);
+    ActionStatus performCloseAction();
+
+    void performImportFxml();
+    void performIncludeFxml();
+    void performRevealAction();
+    void performImportMedia();
+    //boolean isRightPanelVisible();
+    void performControlAction(DocumentControlAction toggleRightPanel);    
     
     public static class TitleComparator implements Comparator<Document> {
 
@@ -91,9 +100,6 @@ public interface Document {
         }
 
     }
-
-    void loadFromURL(URL url);
-    ActionStatus performCloseAction();
     
     public enum DocumentControlAction {
         COPY,
@@ -138,11 +144,5 @@ public interface Document {
         DONE
     }
 
-    void performImportFxml();
-    void performIncludeFxml();
-    void performRevealAction();
-    void performImportMedia();
-    boolean isRightPanelVisible();
-    void performControlAction(DocumentControlAction toggleRightPanel);
     
 }

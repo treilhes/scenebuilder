@@ -39,10 +39,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
@@ -58,14 +60,17 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
 	private final I18NResourcePreference i18NResourcePreference;
 	private final FileSystem fileSystem;
     private final I18nResourceMenuController i18nResourceMenuController;
+    private final ApplicationContext context;
 
 	public ApplyI18nContentWatchExtension(
 	        @Autowired FileSystem fileSystem,
+	        @Autowired ApplicationContext context,
             @Autowired I18nResourceMenuController i18nResourceMenuController,
 			@Autowired @Lazy I18NResourcePreference i18NResourcePreference
 			) {
 		super();
 		this.fileSystem = fileSystem;
+		this.context = context;
         this.i18nResourceMenuController = i18nResourceMenuController;
 		this.i18NResourcePreference = i18NResourcePreference;
 	}
@@ -86,7 +91,7 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
             List<File> toWatch = i18NResourcePreference.getValue().stream()
                     .map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
-            fileSystem.watch(this, toWatch, this);
+            fileSystem.watch(context.getBean(Document.class), toWatch, this);
         }
 	}
 
@@ -108,6 +113,11 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
     @Override
     public void dispose() {
         fileSystem.unwatch(this);
+    }
+
+    @Override
+    public Object getOwnerKey() {
+        return this;
     }
 
 }

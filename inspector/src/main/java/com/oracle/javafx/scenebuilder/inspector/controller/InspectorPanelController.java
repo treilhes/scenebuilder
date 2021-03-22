@@ -64,6 +64,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -120,6 +121,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
@@ -141,6 +143,8 @@ import javafx.scene.layout.VBox;
 @Lazy
 public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
+    private final static String VIEW_NAME = "inspector";
+    
     @FXML
     private TitledPane propertiesTitledPane;
     @FXML
@@ -176,17 +180,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     public enum SectionId {
 
-        PROPERTIES,
-        LAYOUT,
-        CODE,
-        NONE
+        PROPERTIES, LAYOUT, CODE, NONE
     }
 
     public enum ViewMode {
 
         SECTION, // View properties by section (default)
         PROPERTY_NAME, // Flat view of all properties, ordered by name
-        PROPERTY_TYPE  // Flat view of all properties, ordered by type
+        PROPERTY_TYPE // Flat view of all properties, ordered by type
     }
 
     public enum ShowMode {
@@ -194,8 +195,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         ALL, // Show all the properties (default)
         EDITED // Show only the properties which have been set in the FXML
     }
+
     //
-    private static final String fxmlFile = "Inspector.fxml"; //NOI18N
+    private static final String fxmlFile = "Inspector.fxml"; // NOI18N
     private static final String FXID_SUBSECTION_NAME = "Identity";
     private String searchPattern;
     private SectionId previousExpandedSection;
@@ -210,7 +212,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     // SubSectionTitles currently in use
     private final List<SubSectionTitle> subSectionTitlesInUse = new ArrayList<>();
     //
-    private final SectionId[] sections = {SectionId.PROPERTIES, SectionId.LAYOUT, SectionId.CODE};
+    private final SectionId[] sections = { SectionId.PROPERTIES, SectionId.LAYOUT, SectionId.CODE };
     //
     // State variables
     private final ObjectProperty<ViewMode> viewModeProperty = new SimpleObjectProperty<>();
@@ -224,8 +226,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     // Charsets for the properties of included elements
 //    private Map<String, Charset> availableCharsets;
 
-
-
     private RadioMenuItem showAll;
     private RadioMenuItem showEdited;
     private SeparatorMenuItem separator;
@@ -234,52 +234,57 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private RadioMenuItem viewByPropType;
 
     private Action showAllAction;
-	private Action showEditedAction;
-	private Action viewBySectionsAction;
-	private Action viewByPropertyNameAction;
-	private Action viewByPropertyTypeAction;
+    private Action showEditedAction;
+    private Action viewBySectionsAction;
+    private Action viewByPropertyNameAction;
+    private Action viewByPropertyTypeAction;
 
-	private final Editor editorController;
+    private final Editor editorController;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
     private final AccordionAnimationPreference accordionAnimationPreference;
-	private final ApplicationContext context;
-	private final DocumentManager documentManager;
-	private final FileSystem fileSystem;
+    private final ApplicationContext context;
+    private final DocumentManager documentManager;
+    private final FileSystem fileSystem;
 
     private PropertyEditorFactorySession session;
+
+    private final ViewSearch viewSearch;
+
+    private List<MenuItem> menuItems;
+    
     /*
      * Public
      */
-    public InspectorPanelController(
-    		@Autowired Api api,
-    		@Autowired Editor editorController,
-    		@Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-    		@Autowired PropertyEditorFactory propertyEditorFactory,
-    		@Autowired AccordionAnimationPreference accordionAnimationPreference,
-    		@Autowired @Qualifier("inspectorPanelActions.ShowAllAction") Action showAllAction,
-    		@Autowired @Qualifier("inspectorPanelActions.ShowEditedAction") Action showEditedAction,
-    		@Autowired @Qualifier("inspectorPanelActions.ViewBySectionsAction") Action viewBySectionsAction,
-    		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
-    		@Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction
-    		) {
-        super(api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
+    public InspectorPanelController(@Autowired Api api, @Autowired Editor editorController,
+            @Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
+            @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
+            @Autowired PropertyEditorFactory propertyEditorFactory,
+            @Autowired AccordionAnimationPreference accordionAnimationPreference,
+            @Autowired @Qualifier("inspectorPanelActions.ShowAllAction") Action showAllAction,
+            @Autowired @Qualifier("inspectorPanelActions.ShowEditedAction") Action showEditedAction,
+            @Autowired @Qualifier("inspectorPanelActions.ViewBySectionsAction") Action viewBySectionsAction,
+            @Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
+            @Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction,
+            @Autowired ViewSearch viewSearch) {
+        super(VIEW_NAME, api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
         this.context = api.getContext();
         this.fileSystem = api.getFileSystem();
         this.editorController = editorController;
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.session = propertyEditorFactory.newSession();
-//        this.availableCharsets = CharsetEditor.getStandardCharsets();
+        
+        this.viewSearch = viewSearch;
+        
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
         this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.showAllAction = showAllAction;
-    	this.showEditedAction = showEditedAction;
-    	this.viewBySectionsAction = viewBySectionsAction;
-    	this.viewByPropertyNameAction = viewByPropertyNameAction;
-    	this.viewByPropertyTypeAction = viewByPropertyTypeAction;
+        this.showEditedAction = showEditedAction;
+        this.viewBySectionsAction = viewBySectionsAction;
+        this.viewByPropertyNameAction = viewByPropertyNameAction;
+        this.viewByPropertyTypeAction = viewByPropertyTypeAction;
 
         viewModeProperty.setValue(ViewMode.SECTION);
         viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
@@ -289,31 +294,30 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         expandedSectionProperty.setValue(SectionId.PROPERTIES);
         expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
-        
+
         api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange()
+                .subscribe(c -> sceneGraphRevisionDidChange());
         api.getApiDoc().getDocumentManager().cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
-        .subscribe(c -> cssRevisionDidChange());
-        
+                .subscribe(c -> cssRevisionDidChange());
+
         api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
     }
 
     @FXML
     protected void initialize() {
-    	createLibraryMenu();
+        createLibraryMenu();
 
-    	// init preferences
-    	animateAccordion(accordionAnimationPreference.getValue());
-    	accordionAnimationPreference.getObservableValue().addListener(
-    			(ob, o, n) -> animateAccordion(n));
+        // init preferences
+        animateAccordion(accordionAnimationPreference.getValue());
+        accordionAnimationPreference.getObservableValue().addListener((ob, o, n) -> animateAccordion(n));
 
-    	// Add inspector accordion expanded pane listener
-    	setExpandedSection(inspectorSectionIdPreference.getValue());
-    	inspectorSectionIdPreference.getObservableValue().addListener(
-    			(ob, o, n) -> setExpandedSection(n));
-    	accordion.expandedPaneProperty().addListener(
-    			(ov, t, t1) -> inspectorSectionIdPreference.setValue(getExpandedSectionId()));
+        // Add inspector accordion expanded pane listener
+        setExpandedSection(inspectorSectionIdPreference.getValue());
+        inspectorSectionIdPreference.getObservableValue().addListener((ob, o, n) -> setExpandedSection(n));
+        accordion.expandedPaneProperty()
+                .addListener((ov, t, t1) -> inspectorSectionIdPreference.setValue(getExpandedSectionId()));
     }
 
     public Accordion getAccordion() {
@@ -362,20 +366,20 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
         accordion.getPanes().clear();
         switch (mode) {
-            case SECTION:
-                accordion.getPanes().addAll(propertiesTitledPane, layoutTitledPane, codeTitledPane);
-                if (previousExpandedSection != null) {
-                    setExpandedSection(previousExpandedSection);
-                }
-                break;
-            case PROPERTY_NAME:
-            case PROPERTY_TYPE:
-                accordion.getPanes().add(allTitledPane);
-                allTitledPane.setExpanded(true);
-                rebuild();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected view mode " + mode); //NOI18N
+        case SECTION:
+            accordion.getPanes().addAll(propertiesTitledPane, layoutTitledPane, codeTitledPane);
+            if (previousExpandedSection != null) {
+                setExpandedSection(previousExpandedSection);
+            }
+            break;
+        case PROPERTY_NAME:
+        case PROPERTY_TYPE:
+            accordion.getPanes().add(allTitledPane);
+            allTitledPane.setExpanded(true);
+            rebuild();
+            break;
+        default:
+            throw new IllegalStateException("Unexpected view mode " + mode); // NOI18N
         }
         updateClassNameInSectionTitles();
     }
@@ -412,21 +416,21 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         final TitledPane tp;
 
         switch (getExpandedSection()) {
-            case NONE:
-                tp = null;
-                break;
-            case PROPERTIES:
-                tp = propertiesTitledPane;
-                break;
-            case LAYOUT:
-                tp = layoutTitledPane;
-                break;
-            case CODE:
-                tp = codeTitledPane;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected section id " + getExpandedSection()); //NOI18N
-            }
+        case NONE:
+            tp = null;
+            break;
+        case PROPERTIES:
+            tp = propertiesTitledPane;
+            break;
+        case LAYOUT:
+            tp = layoutTitledPane;
+            break;
+        case CODE:
+            tp = codeTitledPane;
+            break;
+        default:
+            throw new IllegalStateException("Unexpected section id " + getExpandedSection()); // NOI18N
+        }
 
         accordion.setExpandedPane(tp);
     }
@@ -505,29 +509,31 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         assert accordion != null;
         assert inspectorRoot != null;
 
-        getViewController().setSearchControl(getSearchController().getRoot());
-		getViewController().setContent(super.getRoot());
+        getSearchController().textProperty()
+                .addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
 
-		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
-
-        propertiesTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.PROPERTIES));
-        layoutTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.LAYOUT));
-        codeTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded, expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.CODE));
+        propertiesTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded,
+                expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.PROPERTIES));
+        layoutTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded,
+                expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.LAYOUT));
+        codeTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded,
+                expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.CODE));
 
         // Clean the potential nodes added for design purpose in fxml
         clearSections();
 
         // Listen the drag property changes
-        getApi().getApiDoc().getDrag().dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
-            if (newVal != null) {
+        getApi().getApiDoc().getDrag().dragSourceProperty()
+                .addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
+                    if (newVal != null) {
 //                    System.out.println("Drag started !");
-                dragOnGoing = true;
-            } else {
+                        dragOnGoing = true;
+                    } else {
 //                    System.out.println("Drag finished.");
-                dragOnGoing = false;
-                updateInspector();
-            }
-        });
+                        dragOnGoing = false;
+                        updateInspector();
+                    }
+                });
 
         // Listen the Scene stylesheets changes
         documentManager.stylesheetConfig().subscribe(s -> updateInspector());
@@ -547,23 +553,25 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         searchPatternDidChange();
     }
 
-    private void createLibraryMenu() {
-    	MenuButton menuButton = getViewController().getViewMenuButton();
+    private List<MenuItem> createLibraryMenu() {
+        List<MenuItem> items = new ArrayList<>();
 
         ToggleGroup showTg = new ToggleGroup();
         ToggleGroup viewTg = new ToggleGroup();
 
-        getViewController().textProperty().set(getResources().getString("inspector"));
-
         showAll = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.all"), showTg);
         showAll.setSelected(true);
 
-        showEdited = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.edited"), showTg);
+        showEdited = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.edited"),
+                showTg);
         separator = sceneBuilderFactory.createSeparatorMenuItem();
-        viewAsSections = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.view.sections"), viewTg);
+        viewAsSections = sceneBuilderFactory
+                .createViewRadioMenuItem(getResources().getString("inspector.view.sections"), viewTg);
         viewAsSections.setSelected(true);
-        viewByPropName = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.by.property.name"), viewTg);
-        viewByPropType = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.by.property.type"), viewTg);
+        viewByPropName = sceneBuilderFactory
+                .createViewRadioMenuItem(getResources().getString("inspector.by.property.name"), viewTg);
+        viewByPropType = sceneBuilderFactory
+                .createViewRadioMenuItem(getResources().getString("inspector.by.property.type"), viewTg);
 
         showAll.setOnAction((e) -> showAllAction.checkAndPerform());
         showEdited.setOnAction((e) -> showEditedAction.checkAndPerform());
@@ -571,10 +579,12 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         viewByPropName.setOnAction((e) -> viewByPropertyNameAction.checkAndPerform());
         viewByPropType.setOnAction((e) -> viewByPropertyTypeAction.checkAndPerform());
 
-        menuButton.getItems().addAll(showAll, showEdited, separator, viewAsSections, viewByPropName, viewByPropType);
-	}
+        items.addAll(Arrays.asList(showAll, showEdited, separator, viewAsSections, viewByPropName, viewByPropType));
+        
+        return items;
+    }
 
-	/*
+    /*
      * Private
      */
     private void updateInspector() {
@@ -593,7 +603,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private void updateClassNamesExtraForIncludes() {
-        if(!getSelectedIntrinsics().isEmpty()) {
+        if (!getSelectedIntrinsics().isEmpty()) {
             updateClassNameInSectionTitles();
         }
     }
@@ -630,7 +640,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private void rebuild() {
         selectionState.clearSelectionCssState();
-        
+
 //        System.out.println("Inspector rebuild() called !");
         // The inspector structure has changed :
         // - selection changed
@@ -639,9 +649,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // - SceneGraphObject resolved state changed
         // ==> the current section is to be fully rebuilt
         // TBD: we could optimize this by only refreshing values if
-        //      same element class + same container class + same search pattern.
+        // same element class + same container class + same search pattern.
         clearSections();
-        
+
         if (getViewMode() == ViewMode.SECTION) {
             buildExpandedSection();
         } else {
@@ -667,12 +677,12 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                 e.reset(e.getPropertyMeta(), selectionState);
                 setEditorValueFromSelection(e);
             }, lastPropertyEditorValueChanged);
-            
+
             lastPropertyEditorValueChanged = null;
         }
-        
-        //TODO below code is mandatory so uncomment fast
-        
+
+        // TODO below code is mandatory so uncomment fast
+
 //        for (AbstractEditor editor : editorsInUse) {
 //
 //            if (editor instanceof PropertyEditor) {
@@ -711,7 +721,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Get Metadata
         Set<ValuePropertyMetadata> propMetaAll = getValuePropertyMetadata();
 
-        SortedMap<InspectorPath, ValuePropertyMetadata> propMetaSection = new TreeMap<>(Metadata.getMetadata().INSPECTOR_PATH_COMPARATOR);
+        SortedMap<InspectorPath, ValuePropertyMetadata> propMetaSection = new TreeMap<>(
+                Metadata.getMetadata().INSPECTOR_PATH_COMPARATOR);
         assert propMetaAll != null;
 
         for (ValuePropertyMetadata valuePropMeta : propMetaAll) {
@@ -731,8 +742,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             propMetaSection.put(valuePropMeta.getInspectorPath(), valuePropMeta);
         }
 
-
-        String currentSubSection = ""; //NOI18N
+        String currentSubSection = ""; // NOI18N
         int lineIndex = 0;
         if (sectionId == SectionId.CODE) {
             // add fx:id here, since it is not a property.
@@ -754,8 +764,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
 
         Iterator<Entry<InspectorPath, ValuePropertyMetadata>> iter = propMetaSection.entrySet().iterator();
-        //Set<PropertyName> groupProperties = new HashSet<>();
-        
+        // Set<PropertyName> groupProperties = new HashSet<>();
+
         while (iter.hasNext()) {
             // Loop on properties
             Entry<InspectorPath, ValuePropertyMetadata> entry = iter.next();
@@ -840,10 +850,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        return isAnchorConstraintsEdited(propMetaAll);
 //    }
 
-    private boolean isPropertyEdited(ValuePropertyMetadata valuePropMeta, Collection<ValuePropertyMetadata> propMetadatas) {
+    private boolean isPropertyEdited(ValuePropertyMetadata valuePropMeta,
+            Collection<ValuePropertyMetadata> propMetadatas) {
         PropertyName propName = valuePropMeta.getName();
-        //boolean groupedProperty = isGroupedProperty(propName);
-        //if (!groupedProperty && !isPropertyEdited(valuePropMeta)) {
+        // boolean groupedProperty = isGroupedProperty(propName);
+        // if (!groupedProperty && !isPropertyEdited(valuePropMeta)) {
         if (!isPropertyEdited(valuePropMeta)) {
             return false;
         }
@@ -856,7 +867,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        }
         return true;
     }
-
 
 //    private boolean isAnchorConstraintsEdited(Collection<ValuePropertyMetadata> propMetaAll) {
 //        for (ValuePropertyMetadata valuePropMeta : propMetaAll) {
@@ -932,7 +942,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         return hasFxomDocument() && getSelectedIntrinsics().isEmpty();
     }
 
-
     private Set<FXOMIntrinsic> getSelectedIntrinsics() {
         return selectionState.getSelectedIntrinsics();
     }
@@ -964,7 +973,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             addMessage(gridPane, I18N.getString("inspector.message.no.properties"));
             return;
         }
-        List<ValuePropertyMetadata> propMetadataList = Arrays.asList(propMetadatas.toArray(new ValuePropertyMetadata[propMetadatas.size()]));
+        List<ValuePropertyMetadata> propMetadataList = Arrays
+                .asList(propMetadatas.toArray(new ValuePropertyMetadata[propMetadatas.size()]));
         if (isOrderdByType) {
             Collections.sort(propMetadataList, new ValuePropertyMetadataClassComparator());
         } else {
@@ -1007,8 +1017,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //                }
 //                lineIndex = addInGridPane(gridPane, propertiesEditor, lineIndex);
 //            } else {
-                lineIndex = addInGridPane(gridPane, getInitializedPropertyEditor(propMeta), lineIndex);
-            //}
+            lineIndex = addInGridPane(gridPane, getInitializedPropertyEditor(propMeta), lineIndex);
+            // }
         }
     }
 
@@ -1048,25 +1058,26 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
 
         // Check display name
-        return EditorUtils.toDisplayName(propSimpleName).toLowerCase(Locale.ENGLISH).contains(searchPattern.toLowerCase(Locale.ENGLISH));
+        return EditorUtils.toDisplayName(propSimpleName).toLowerCase(Locale.ENGLISH)
+                .contains(searchPattern.toLowerCase(Locale.ENGLISH));
     }
 
     private boolean isStaticPropertyRelevant(PropertyName propName) {
         boolean isRelevant;
-        if(isIntrinsic()) {
+        if (isIntrinsic()) {
             isRelevant = checkIfStaticPropertyRelevantForIntrinsic(propName);
-        }
-        else {
+        } else {
             // Check if the static property class is the common parent of the selection
-            if (getCommonParent() == null) return false;
-            isRelevant =  getCommonParent() == propName.getResidenceClass();
+            if (getCommonParent() == null)
+                return false;
+            isRelevant = getCommonParent() == propName.getResidenceClass();
         }
         return isRelevant;
     }
 
     private boolean isIntrinsic() {
         boolean result = false;
-        if(selectionState.getSelection().getHitItem() instanceof FXOMIntrinsic) {
+        if (selectionState.getSelection().getHitItem() instanceof FXOMIntrinsic) {
             result = true;
         }
         return result;
@@ -1074,7 +1085,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private boolean checkIfStaticPropertyRelevantForIntrinsic(PropertyName propName) {
         FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) selectionState.getSelection().getHitItem();
-        return fxomIntrinsic.getParentObject() != null && fxomIntrinsic.getParentProperty().getParentInstance().getSceneGraphObject().getClass() == propName.getResidenceClass();
+        return fxomIntrinsic.getParentObject() != null && fxomIntrinsic.getParentProperty().getParentInstance()
+                .getSceneGraphObject().getClass() == propName.getResidenceClass();
     }
 
     private boolean hasSearchPattern() {
@@ -1090,13 +1102,13 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         LayoutFormat editorLayout;
         HBox propNameNode;
         String propNameText;
-        
+
         if (editor instanceof AbstractPropertyEditor) {
             propNameNode = ((AbstractPropertyEditor) editor).getPropNameNode();
             propNameText = ((AbstractPropertyEditor) editor).getPropertyNameText();
             editorLayout = ((AbstractPropertyEditor) editor).getLayoutFormat();
-            
-            //TODO check if the group code commented below is well handled
+
+            // TODO check if the group code commented below is well handled
         } else {
             // PropertiesEditor
             propNameNode = ((AbstractPropertiesEditor) editor).getNameNode();
@@ -1110,10 +1122,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         propNameNode.setFocusTraversable(false);
         MenuButton menu = editor.getMenu();
         // For SQE tests
-        menu.setId(propNameText + " Menu"); //NOI18N
+        menu.setId(propNameText + " Menu"); // NOI18N
         Node valueEditor = editor.getValueEditor();
         // For SQE tests
-        valueEditor.setId(propNameText + " Value"); //NOI18N
+        valueEditor.setId(propNameText + " Value"); // NOI18N
 
         if (editorLayout == LayoutFormat.DOUBLE_LINE) {
             // We have to wrap the property name and the value editor in a VBox
@@ -1159,9 +1171,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         return lineIndex;
     }
 
-
-    //TODO not used but, take a closer look to see what is the goal of this method
-    // used to get the CssId PropertyEditor to update the value while the SceneBuilder is running
+    // TODO not used but, take a closer look to see what is the goal of this method
+    // used to get the CssId PropertyEditor to update the value while the
+    // SceneBuilder is running
 //    private StringEditor getCssIdEditor(){
 //        ValuePropertyMetadata metadataForCssIDEditor = new StringPropertyMetadata(new PropertyName("id"), true,
 //                null, new InspectorPath("Properties", "JavaFX CSS", 3));
@@ -1185,20 +1197,21 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Handle the value change
         propertyEditor.addValueListener((ov, oldValue, newValue) -> {
 //                System.out.println("Value change : " + newValue);
-            
+
             if (!propertyEditor.isUpdateFromModel()) {
                 lastPropertyEditorValueChanged = propertyEditor;
                 updateValueInModel(propertyEditor, oldValue, newValue);
             }
             if (propertyEditor.isRuledByCss()) {
-                editorController.getMessageLog().logWarningMessage(
-                        "inspector.css.overridden", propertyEditor.getPropertyNameText());
+                editorController.getMessageLog().logWarningMessage("inspector.css.overridden",
+                        propertyEditor.getPropertyNameText());
             }
         });
     }
 
     private void handleTransientValueChange(PropertyEditor propertyEditor) {
-        // Handle the transient value change (no job here, only the scene graph is updated)
+        // Handle the transient value change (no job here, only the scene graph is
+        // updated)
         propertyEditor.addTransientValueListener((ov, oldValue, newValue) -> {
 //                System.out.println("Transient value change : " + newValue);
             lastPropertyEditorValueChanged = propertyEditor;
@@ -1264,8 +1277,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         propertyEditor.addNavigateListener((ov, oldStr, newStr) -> {
             if (newStr != null) {
                 Optional<ValuePropertyMetadata> vpm = getValuePropertyMetadata().stream()
-                    .filter(v -> v.getName().getName().equalsIgnoreCase(newStr))
-                    .findFirst();
+                        .filter(v -> v.getName().getName().equalsIgnoreCase(newStr)).findFirst();
                 if (vpm.isPresent()) {
                     setFocusToEditor(vpm.get());
                 }
@@ -1274,7 +1286,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private void setSelectedFXOMInstances(ValuePropertyMetadata propMeta, Object value) {
-        final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOI18N
+        final PropertyName cacheHintPN = new PropertyName("cacheHint"); // NOI18N
         final Job job;
         if (cacheHintPN.equals(propMeta.getName())) {
             job = new ModifyCacheHintJob(context, propMeta, value, getEditorController()).extend();
@@ -1356,7 +1368,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             setFxIdFromSelection(propertyEditor);
             return;
         }
-        
+
         // Determine the property value
         Object val = null;
         boolean isIndeterminate = false;
@@ -1393,10 +1405,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         if (isRuledByCss && cssInfo != null) {
             propertyEditor.setRuledByCss(true);
             propertyEditor.setCssInfo(cssInfo);
-            if(propertyEditor.isDisablePropertyBound()){
+            if (propertyEditor.isDisablePropertyBound()) {
                 propertyEditor.unbindDisableProperty();
             }
-            propertyEditor.setValue(cssInfo.getFxValue()); //adds CSS values to the ValueEditor
+            propertyEditor.setValue(cssInfo.getFxValue()); // adds CSS values to the ValueEditor
             propertyEditor.getValueEditor().setDisable(true); // disables the ValueEditor when CSS is present
         } else {
             propertyEditor.setRuledByCss(false);
@@ -1404,14 +1416,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             if (propertyEditor.getValueEditor() != null && propertyEditor.getValueEditor().isDisabled()) {
                 // if ValueEditor is present and disabled it will enable it
                 // it happens when another component is clicked and a ValueEditor was disabled
-                if(!propertyEditor.isDisablePropertyBound()){
+                if (!propertyEditor.isDisablePropertyBound()) {
                     propertyEditor.getValueEditor().setDisable(false);
                 }
             }
             if (isIndeterminate) {
                 propertyEditor.setIndeterminate(true);
             } else {
-                propertyEditor.setValue(val); //sets the default values or values from FXML tags
+                propertyEditor.setValue(val); // sets the default values or values from FXML tags
             }
         }
         propertyEditor.setUpdateFromModel(false);
@@ -1600,23 +1612,24 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private Set<ValuePropertyMetadata> getValuePropertyMetadata() {
-        Set<ValuePropertyMetadata> values = Metadata.getMetadata().queryValueProperties(getSelectedClasses());;
+        Set<ValuePropertyMetadata> values = Metadata.getMetadata().queryValueProperties(getSelectedClasses());
+        ;
         Set<PropertyName> disabledProperties = getDisabledPropertiesFromMetadata();
         return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
     }
-    
+
     private Set<PropertyName> getDisabledPropertiesFromMetadata() {
         Set<PropertyName> disabled = new HashSet<>();
-        getSelectedInstances().stream()
-            .filter(fxi -> fxi.getParentObject() != null && fxi.getParentProperty() != null)
-            .forEach(fxi -> {
-                FXOMObject parent = fxi.getParentObject();
-                FXOMProperty property = fxi.getParentProperty();
-                ComponentPropertyMetadata cpm = Metadata.getMetadata().queryComponentProperty(parent.getSceneGraphObject().getClass(), property.getName());
-                if (cpm != null) {
-                    disabled.addAll(cpm.getDisabledProperties());
-                }
-            });
+        getSelectedInstances().stream().filter(fxi -> fxi.getParentObject() != null && fxi.getParentProperty() != null)
+                .forEach(fxi -> {
+                    FXOMObject parent = fxi.getParentObject();
+                    FXOMProperty property = fxi.getParentProperty();
+                    ComponentPropertyMetadata cpm = Metadata.getMetadata()
+                            .queryComponentProperty(parent.getSceneGraphObject().getClass(), property.getName());
+                    if (cpm != null) {
+                        disabled.addAll(cpm.getDisabledProperties());
+                    }
+                });
         return disabled;
     }
 
@@ -1655,17 +1668,17 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         assert sectionId != SectionId.NONE;
         GridPane gp;
         switch (sectionId) {
-            case PROPERTIES:
-                gp = propertiesSection;
-                break;
-            case LAYOUT:
-                gp = layoutSection;
-                break;
-            case CODE:
-                gp = codeSection;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected section id " + sectionId); //NOI18N
+        case PROPERTIES:
+            gp = propertiesSection;
+            break;
+        case LAYOUT:
+            gp = layoutSection;
+            break;
+        case CODE:
+            gp = codeSection;
+            break;
+        default:
+            throw new IllegalStateException("Unexpected section id " + sectionId); // NOI18N
         }
         return gp;
     }
@@ -2008,8 +2021,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Separate method to avoid FindBugs warning
         private void initialize(String title) {
 //          System.out.println("Loading new SubSection.fxml...");
-          root = FXMLUtils.load(this, "SubSection.fxml");
-          titleLb.setText(title);
+            root = FXMLUtils.load(this, "SubSection.fxml");
+            titleLb.setText(title);
         }
 
         public void setTitle(String title) {
@@ -2023,13 +2036,13 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private void updateClassNameInSectionTitles() {
         final String intrinsicClassName = "FXOMIntrinsic";
-        String selClass = ""; //NOI18N
+        String selClass = ""; // NOI18N
         if (getSelectedClasses().size() > 1) {
             selClass = I18N.getString("inspector.sectiontitle.multiple");
         } else if (getSelectedClasses().size() == 1) {
             selClass = getSelectedClass().getSimpleName();
-            if(intrinsicClassName.equals(selClass)) {
-                selClass =  retrieveNameForIntrinsic();
+            if (intrinsicClassName.equals(selClass)) {
+                selClass = retrieveNameForIntrinsic();
             }
 
         }
@@ -2040,8 +2053,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             if (titledPane == allTitledPane) {
                 allTitledPane.setText(null);
             } else {
-                if (!selClass.isEmpty() && !selClass.startsWith(" :")) { //NOI18N
-                    selClass = " : " + selClass; //NOI18N
+                if (!selClass.isEmpty() && !selClass.startsWith(" :")) { // NOI18N
+                    selClass = " : " + selClass; // NOI18N
                 }
             }
             ((Label) graphic).setText(selClass);
@@ -2051,7 +2064,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private String retrieveNameForIntrinsic() {
         final String includeTagBinder = "fx:include - ";
         String source = "";
-        if(getSelectedIntrinsics().iterator().hasNext()) {
+        if (getSelectedIntrinsics().iterator().hasNext()) {
             FXOMIntrinsic fxomIntrinsic = getSelectedIntrinsics().iterator().next();
             Path p = Paths.get(fxomIntrinsic.getSource());
             source = includeTagBinder.concat(p.getFileName().toString());
@@ -2067,10 +2080,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private FXOMObject getSelectedObject() {
-        if(getSelectedInstances().size() == 1) {
+        if (getSelectedInstances().size() == 1) {
             return (FXOMInstance) getSelectedInstances().toArray()[0];
-        }
-        else if(getSelectedIntrinsics().size() == 1) {
+        } else if (getSelectedIntrinsics().size() == 1) {
             return (FXOMIntrinsic) getSelectedIntrinsics().toArray()[0];
         }
         return null;
@@ -2094,26 +2106,25 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     /*
-     * Set the focus to a given property value editor,
-     * and move the scrolllbar so that it is visible.
-     * Typically used by CSS analyzer.
+     * Set the focus to a given property value editor, and move the scrolllbar so
+     * that it is visible. Typically used by CSS analyzer.
      */
     @Override
     public void setFocusToEditor(ValuePropertyMetadata propMeta) {
-        
-     // Expand the inspector section
+
+        // Expand the inspector section
         String inspectorSection = propMeta.getInspectorPath().getSectionTag();
-        if (inspectorSection.equalsIgnoreCase("properties")) { //NOI18N
+        if (inspectorSection.equalsIgnoreCase("properties")) { // NOI18N
             setExpandedSection(SectionId.PROPERTIES);
-        } else if (inspectorSection.equalsIgnoreCase("layout")) {//NOI18N
+        } else if (inspectorSection.equalsIgnoreCase("layout")) {// NOI18N
             setExpandedSection(SectionId.LAYOUT);
-        } else if (inspectorSection.equalsIgnoreCase("code")) {//NOI18N
+        } else if (inspectorSection.equalsIgnoreCase("code")) {// NOI18N
             setExpandedSection(SectionId.CODE);
         }
-        
+
         // Retrieve the editor
         PropertyEditor editor = session.find(propMeta.getName());
-        
+
         if (editor == null) {
             // editor not found
             return;
@@ -2136,7 +2147,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             return;
         }
 
-        // Position the scrollBar such as the editor is centered in the TitledPane (when possible)
+        // Position the scrollBar such as the editor is centered in the TitledPane (when
+        // possible)
         final ScrollPane scrollPane = sp;
         double editorHeight = valueEditorNode.getLayoutBounds().getHeight();
         final Point2D pt = Deprecation.localToLocal(valueEditorNode, 0, 0, scrollPane.getContent());
@@ -2154,7 +2166,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         } else {
             selY -= editorHeight;
         }
-        // Compute the move to apply to position the editor on the middle of the scrollPane content
+        // Compute the move to apply to position the editor on the middle of the
+        // scrollPane content
         double moveContent = selY - contentMiddle;
         // Size ratio between scrollPane content and viewport
         double vpRatio = contentHeight / vpHeight;
@@ -2171,20 +2184,20 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         editorToFocus.requestFocus();
     }
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Parent getRoot() {
-		return getViewController().getRoot();
-	}
-
     public Editor getEditorController() {
         return editorController;
     }
 
-	
+    @Override
+    public ViewSearch getSearchController() {
+        return viewSearch;
+    }
+
+    @Override
+    public List<MenuItem> getMenuItems() {
+        if (menuItems == null) {
+            menuItems = createLibraryMenu();
+        }
+        return menuItems;
+    }
 }

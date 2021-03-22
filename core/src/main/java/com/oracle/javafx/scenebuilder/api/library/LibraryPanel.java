@@ -32,14 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.library;
 
-import com.oracle.javafx.scenebuilder.api.View;
-
-import javafx.beans.property.StringProperty;
+import com.oracle.javafx.scenebuilder.api.dock.View;
 
 public interface LibraryPanel extends View {
-
-    StringProperty getLibraryLabel();
-
     
 
 }

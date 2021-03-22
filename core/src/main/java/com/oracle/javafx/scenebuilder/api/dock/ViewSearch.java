@@ -30,23 +30,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.oracle.javafx.scenebuilder.api.dock;
 
-package com.oracle.javafx.scenebuilder.app;
+import javafx.beans.property.StringProperty;
+import javafx.scene.Parent;
 
-import org.springframework.context.ApplicationContext;
+public interface ViewSearch {
 
-/**
- * @treatAsPrivate
- */
-public class ScenicViewStarter implements Runnable {
-        private final ApplicationContext context;
-        
-        public ScenicViewStarter(ApplicationContext context) {
-            this.context = context;
-        }
-        
-        @Override
-        public void run() {
-                //org.scenicview.ScenicView.show(context.getBean(Document.class).getScene());
-        }
+    Parent getRoot();
+
+    StringProperty textProperty();
+
+    void requestFocus();
+
 }

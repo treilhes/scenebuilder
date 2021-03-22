@@ -38,19 +38,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="DocumentWindow" alignment="CENTER" prefHeight="800.0" prefWidth="1240.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="DocumentWindow" alignment="CENTER" prefHeight="800.0" prefWidth="1240.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <SplitPane fx:id="mainSplitPane" dividerPositions="0.75" focusTraversable="false" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
       <items>
-        <SplitPane fx:id="leftRightSplitPane" dividerPositions="0.11812297734627832, 0.889967637540453" focusTraversable="false" prefHeight="-1.0" prefWidth="-1.0">
+        <SplitPane fx:id="leftRightSplitPane" dividerPositions="0.25, 0.75" focusTraversable="false" prefHeight="-1.0" prefWidth="-1.0">
           <items>
-            <SplitPane fx:id="libraryDocumentSplitPane" dividerPositions="0.4990328820116054" focusTraversable="false" maxWidth="450.0" minWidth="280.0" orientation="VERTICAL" SplitPane.resizableWithParent="false">
-                     <items>
-                        <VBox fx:id="leftTopHost" minHeight="50.0" prefHeight="200.0" prefWidth="100.0" SplitPane.resizableWithParent="false" />
-                        <VBox fx:id="leftBottomHost" minHeight="50.0" prefHeight="200.0" prefWidth="100.0" SplitPane.resizableWithParent="false" />
-                     </items>
-            </SplitPane>
-            <StackPane id="StackPane" minWidth="0.0">
+            <VBox fx:id="leftHost" minHeight="50.0" prefHeight="200.0" prefWidth="100.0" SplitPane.resizableWithParent="false" />
+            <StackPane id="StackPane" fx:id="centerHost" minWidth="0.0">
               <children>
                 <StackPane fx:id="contentPanelHost" style="" />
                 <StackPane fx:id="messageBarHost" maxHeight="-Infinity" minHeight="10.0" minWidth="0.0" style="" styleClass="selection-bar-container" StackPane.alignment="TOP_CENTER">
@@ -60,7 +55,7 @@
                 </StackPane>
               </children>
             </StackPane>
-                  <VBox fx:id="rightHost" maxWidth="450.0" minWidth="280.0" SplitPane.resizableWithParent="false" />
+            <VBox fx:id="rightHost" maxWidth="450.0" minWidth="280.0" SplitPane.resizableWithParent="false" />
           </items>
         </SplitPane>
         <VBox fx:id="bottomHost" maxWidth="-1.0" minHeight="200.0" prefHeight="-1.0" prefWidth="-1.0" SplitPane.resizableWithParent="false" />

@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.fs.controller;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extension.DefaultFolders;
@@ -61,8 +63,9 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private final InitialDirectoryPreference initialDirectoryPreference;
 
+    private final Map<Document, List<Object>> documentWatchKeys = new HashMap<>();
     private final Map<Object, List<Path>> watchedFiles = new HashMap<>();
-    private final Map<Path, WatchingCallback> watchCallbacks = new HashMap<>();
+    private final Map<Path, List<WatchingCallback>> watchCallbacks = new HashMap<>();
 
     private final FileWatcher fileWatcher = new FileWatcher(2000 /* ms */, this,
             FileSystemController.class.getSimpleName());
@@ -87,13 +90,26 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     }
 
     @Override
-    public void watch(Object key, Set<Path> files, WatchingCallback callback) {
+    public void watch(Document document, Set<Path> files, WatchingCallback callback) {
         List<File> fileList = files.stream().map(p -> p.toFile()).collect(Collectors.toList());
-        watch(key, fileList, callback);
+        watch(document, fileList, callback);
     }
 
     @Override
-    public void watch(Object key, List<File> files, WatchingCallback callback) {
+    public void watch(Document document, List<File> files, WatchingCallback callback) {
+        Object key = callback.getOwnerKey();
+        
+        List<Object> documentKeys = documentWatchKeys.get(document);
+        
+        if (documentKeys == null) {
+            documentKeys = new ArrayList<>();
+            documentWatchKeys.put(document, documentKeys);
+        }
+        
+        if (!documentKeys.contains(key)) {
+            documentKeys.add(key);
+        }
+        
         if (files != null && !files.isEmpty()) {
             List<Path> paths = files.stream().filter(f -> f != null && f.exists()).map(f -> f.toPath())
                     .collect(Collectors.toList());
@@ -101,8 +117,21 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
             watchedFiles.put(key, paths);
 
             paths.forEach(p -> {
-                fileWatcher.addTarget(p);
-                watchCallbacks.put(p, callback);
+                if (!fileWatcher.hasTarget(p)) {
+                    fileWatcher.addTarget(p);
+                }
+                
+                List<WatchingCallback> callbacks = watchCallbacks.get(p);
+                
+                if (callbacks == null) {
+                    callbacks = new ArrayList<>();
+                    watchCallbacks.put(p, callbacks);
+                }
+                
+                if (!callbacks.contains(callback)) {
+                    callbacks.add(callback);
+                }
+                
                 log.log(Level.INFO, "Watching file : {0}", p.toAbsolutePath());
             });
         }
@@ -112,11 +141,28 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     public void unwatch(Object key) {
         if (watchedFiles.containsKey(key)) {
             watchedFiles.get(key).forEach(p -> {
-                watchCallbacks.remove(p);
-                fileWatcher.removeTarget(p);
+                List<WatchingCallback> callbacks = watchCallbacks.get(p); 
+                List<WatchingCallback> ownedCallbacks = callbacks.stream().filter(c -> c.getOwnerKey() == key).collect(Collectors.toList());
+                
+                callbacks.removeAll(ownedCallbacks);
+                
+                if (callbacks.isEmpty()) {
+                    watchCallbacks.remove(p);
+                    fileWatcher.removeTarget(p);
+                }
             });
             watchedFiles.remove(key);
         }
+    }
+    
+
+    @Override
+    public void unwatchDocument(Document document) {
+        List<Object> keys = documentWatchKeys.get(document);
+        if (keys != null) {
+            keys.forEach(this::unwatch);
+        }
+        documentWatchKeys.remove(document);
     }
 
     @Override
@@ -139,7 +185,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         log.log(Level.INFO, "File Event : file created ({0})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             log.log(Level.INFO, "File Event sent : file created ({0})", target.toFile().getName());
-            watchCallbacks.get(target).created(target);
+            watchCallbacks.get(target).forEach(c -> c.created(target));
         }
     }
 
@@ -148,7 +194,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         log.log(Level.INFO, "File Event : file deleted ({0})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             log.log(Level.INFO, "File Event sent : file deleted ({0})", target.toFile().getName());
-            watchCallbacks.get(target).deleted(target);
+            watchCallbacks.get(target).forEach(c -> c.deleted(target));
         }
     }
 
@@ -157,7 +203,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         log.log(Level.INFO, "File Event : file modified ({0})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             log.log(Level.INFO, "File Event sent : file modified ({0})", target.toFile().getName());
-            watchCallbacks.get(target).modified(target);
+            watchCallbacks.get(target).forEach(c -> c.modified(target));
         }
     }
 
@@ -185,4 +231,5 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     public File getUserExtensionFolder(UUID extensionId) {
         return new File(DefaultFolders.getUserExtensionsFolder(), extensionId.toString());
     }
+
 }

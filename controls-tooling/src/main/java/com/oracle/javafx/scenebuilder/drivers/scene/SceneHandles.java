@@ -53,8 +53,8 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
     private Node sceneGraphObject;
 
     public SceneHandles(
-    		ApplicationContext context,
-    		Content contentPanelController) {
+            ApplicationContext context,
+            Content contentPanelController) {
         super(context, contentPanelController, Scene.class);
     }
     

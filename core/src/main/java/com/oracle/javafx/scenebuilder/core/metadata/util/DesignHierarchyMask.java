@@ -368,20 +368,32 @@ public class DesignHierarchyMask implements HierarchyMask {
 
     
     @Override
-    //TODO what about collection true accessories?
     public FXOMObject getAccessory(Accessory accessory) {
+        assert !accessory.isCollection();
+        final List<FXOMObject> results = getAccessories(accessory);
+        
+        if (results != null) {
+            assert results.size() >= 1 : "accessory=" + accessory;
+            return results.stream().findFirst().orElse(null);
+        } else {
+            return null;
+        }
+    }
+    
+    @Override
+    public List<FXOMObject> getAccessories(Accessory accessory) {
         assert isAcceptingAccessory(accessory);
         assert fxomObject instanceof FXOMInstance;
 
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
         final PropertyName propertyName = getPropertyNameForAccessory(accessory);
         final FXOMProperty fxomProperty = fxomInstance.getProperties().get(propertyName);
-        final FXOMObject result;
+        final List<FXOMObject> result;
 
         if (fxomProperty instanceof FXOMPropertyC) {
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-            assert fxomPropertyC.getValues().size() >= 1 : "accessory=" + accessory;
-            result = fxomPropertyC.getValues().get(0);
+            assert fxomPropertyC.getValues() != null : "accessory=" + accessory;
+            result = fxomPropertyC.getValues();
         } else {
             result = null;
         }

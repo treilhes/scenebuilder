@@ -40,56 +40,122 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dock;
-import com.oracle.javafx.scenebuilder.api.DockType;
-import com.oracle.javafx.scenebuilder.api.View;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.DockContext;
+import com.oracle.javafx.scenebuilder.api.dock.DockType;
+import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
-import javafx.scene.layout.Pane;
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import lombok.Getter;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class DockPanelController implements Dock {
 
-	@Autowired
-	DockManager dockManager;
-	
-	@Autowired
-	ViewManager viewManager;
+    private DockManager dockManager;
 
-	@Autowired
-	List<DockType> dockTypes;
+    @Autowired
+    private ViewManager viewManager;
 
-	private @Getter UUID id;
-	private @Getter String label;
-	private @Getter Pane content;
-	private @Getter DockType dockType;
+    @Autowired
+    private List<DockType<?>> dockTypes;
+    private DockType dockType;
+    
+    private @Getter UUID id;
+    private @Getter String label;
+    private @Getter VBox content;
 
-	private final List<View> views = new ArrayList<>();
+    private final List<DockContext<?>> views = new ArrayList<>();
+    
+    public DockPanelController(@Autowired DockManager dockManager, @Autowired ViewManager viewManager,
+            @Autowired List<DockType<?>> dockTypes) {
+        this.id = UUID.randomUUID();
+        this.label = "xxxx";
+        this.dockManager = dockManager;
+        this.viewManager = viewManager;
+        this.dockTypes = dockTypes;
+        this.content = new VBox();
+        
+        VBox.setVgrow(this.content, Priority.ALWAYS);
 
-	public DockPanelController(String label) {
-		this.id = UUID.randomUUID();
-		this.label = label;
-		this.content = new Pane();
+        assert dockTypes != null && !dockTypes.isEmpty();
+        this.dockType = dockTypes.get(0);
+        
+        dockManager.dockCreated().onNext(this);
+        viewManager.dock().filter(dr -> dr.getTarget() == this).subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
+    }
+    
+    private List<MenuItem> createDockMenu(View view) {
+        List<MenuItem> items = new ArrayList<>();
+        
+        Menu dockViewMenu = new Menu("dock view as");
+        
+        ToggleGroup dockViewAsGroup = new ToggleGroup();
+        dockTypes.forEach(dt -> {
+            RadioMenuItem mi = new RadioMenuItem(I18N.getStringOrDefault(dt.getNameKey(), dt.getNameKey()));
+            mi.setToggleGroup(dockViewAsGroup);
+            mi.setSelected(dt == dockType);
+            mi.setOnAction((e) -> changedDockType(dt, view));
+            dockViewMenu.getItems().add(mi);
+        });
+        
+        items.add(dockViewMenu);
+        
+        return items;
+    }
+    
+    private void changedDockType(DockType<?> dockType, View view) {
+        this.dockType = dockType;
+        
+        Platform.runLater(() -> {
+            updateViews();
+            var dockContext = views.stream().filter(v -> v.getView() == view).findFirst().orElse(null);
+            updateDockView(dockContext);
+        });
+    }
+    private void updateViews() {
+        final List<DockContext<?>> newViews = new ArrayList<>();
+        views.forEach(v -> {
+            v.getDisposer().dispose();
+            var dockContext = dockType.computeView(v.getView());
+            dockContext.getController().getViewMenuButton().getItems().addAll(0, createDockMenu(v.getView()));
+            newViews.add(dockContext);
+        });
+        views.clear();
+        views.addAll(newViews);
+    }
+    
+    private void updateDockView(DockContext<?> focused) {
+        assert dockType != null;
+        
+        @SuppressWarnings("unchecked")
+        Node dockContent = dockType.computeRoot(views, focused);
+        VBox.setVgrow(dockContent, Priority.ALWAYS);
+        getContent().getChildren().clear();
+        getContent().getChildren().add(dockContent);
+    }
 
-		dockManager.dockCreated().onNext(this);
-		viewManager.dock().filter(dr -> dr.getTarget() == this).subscribe(dr -> viewAdded(dr.getSource()));
-	}
+    private void viewAdded(View view, boolean select) {
+        assert view != null;
+        assert dockType != null;
+        assert dockTypes.size() > 0;
 
-	private void viewAdded(View view) {
-		assert view != null;
-		assert dockTypes != null;
-		assert dockTypes.size() > 0;
-		
-		views.add(view);
-		if (dockType == null) {
-			dockType = dockTypes.get(0);
-		}
-		
-		getContent().getChildren().clear();
-		getContent().getChildren().add(dockType.computeRoot(views));
-	}
+        Platform.runLater(() -> {
+            var dockContext = dockType.computeView(view);
+            dockContext.getController().getViewMenuButton().getItems().addAll(0, createDockMenu(view));
+            views.add(dockContext);
+            updateDockView(select ? dockContext : null);
+        });
+    }
 }

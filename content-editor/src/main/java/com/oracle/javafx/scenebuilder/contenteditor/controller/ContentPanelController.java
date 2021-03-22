@@ -193,8 +193,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
         api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(s -> editorSelectionDidChange());
         api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
         
-        if (logger.isInfoEnabled()) {
-            tracingEvents = true;
+        if (logger.isDebugEnabled()) {
+            tracingEvents = false;
             setupEventTracingFilter();
         }
     }

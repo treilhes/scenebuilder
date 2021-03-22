@@ -720,10 +720,12 @@ public class EditModeController extends AbstractModeController implements Gestur
                 }
             }
             for (Accessory a : m.getAccessories()) {
-                final FXOMObject accessoryObject = m.getAccessory(a);
-                if ((accessoryObject != null) && accessoryObject.isNode()) {
+                final List<FXOMObject> accessoryObjects = m.getAccessories(a);
+                accessoryObjects.stream()
+                    .filter(accessoryObject -> accessoryObject != null && accessoryObject.isNode())
+                    .forEach(accessoryObject -> {
                     candidates.add(accessoryObject);
-                }
+                });
             }
         }
 

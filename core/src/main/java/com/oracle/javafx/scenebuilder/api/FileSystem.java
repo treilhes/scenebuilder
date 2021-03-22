@@ -68,16 +68,18 @@ public interface FileSystem {
      */
     void updateNextInitialDirectory(File chosenFile);
 
-    void watch(Object key, List<File> files, WatchingCallback callback);
-    void watch(Object key, Set<Path> files, WatchingCallback callback);
+    void watch(Document document, List<File> files, WatchingCallback callback);
+    void watch(Document document, Set<Path> files, WatchingCallback callback);
 
 	void unwatch(Object key);
+	void unwatchDocument(Document document);
 
 	void stopWatcher();
 
 	void startWatcher();
 
 	public interface WatchingCallback{
+	    Object getOwnerKey();
 		void created(Path path);
 		void deleted(Path path);
 		void modified(Path path);

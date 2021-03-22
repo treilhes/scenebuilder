@@ -34,31 +34,81 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DockType;
-import com.oracle.javafx.scenebuilder.api.View;
+import com.oracle.javafx.scenebuilder.api.dock.DockContext;
+import com.oracle.javafx.scenebuilder.api.dock.DockType;
+import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.dock.ViewController;
+import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 @Component
 @Lazy
-public class DockTypeAccordion implements DockType {
+public class DockTypeAccordion implements DockType<TitledPane> {
 
-	public DockTypeAccordion() {}
+    private final static String VIEW_SOURCE = "TitledPane.fxml";
 
-	@Override
-	public String getNameKey() {
-		return "%viewtype.accordion";
-	}
+    private final ApplicationContext context;
 
-	@Override
-	public Parent computeRoot(List<View> views) {
-		TitledPane[] panes = views.stream().map(v -> new TitledPane(v.getName(), v.getRoot())).toArray(TitledPane[]::new);
-		return new Accordion(panes);
-	}
+    public DockTypeAccordion(@Autowired ApplicationContext context) {
+        this.context = context;
+    }
 
+    @Override
+    public String getNameKey() {
+        return "%viewtype.accordion";
+    }
+
+    @Override
+    public DockContext<TitledPane> computeView(View view) {
+        var ctrl = context.getBean(ViewController.class);
+
+        TitledPane titledPane = FXMLUtils.load(ctrl, DockTypeAccordion.class, VIEW_SOURCE);
+
+        ctrl.getViewLabel().textProperty().bind(view.getName());
+
+        if (view.getSearchController() != null) {
+            ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
+        }
+
+        Node content = view.getViewController().getRoot();
+        ctrl.getViewContentHost().getChildren().add(content);
+        VBox.setVgrow(content, Priority.ALWAYS);
+
+        var menuItems = view.getViewMenus().getMenuItems();
+        if (menuItems != null && menuItems.size() > 0) {
+            ctrl.getViewMenuButton().getItems().addAll(menuItems);
+        }
+
+        var dockContext = new DockContext<>(view, ctrl, titledPane, () -> {
+            ctrl.getViewLabel().textProperty().unbind();
+            ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+            ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
+            ctrl.getViewMenuButton().getItems().removeAll(menuItems);
+        });
+
+        return dockContext;
+    }
+
+    @Override
+    public Node computeRoot(List<DockContext<TitledPane>> views, DockContext<TitledPane> focused) {
+        TitledPane[] panes = views.stream().map(v -> v.getDockContent()).toArray(TitledPane[]::new);
+        var accordion = new Accordion(panes);
+        
+        if (focused == null && !accordion.getPanes().isEmpty()) {
+            accordion.setExpandedPane(accordion.getPanes().get(0));
+        } else {
+            accordion.setExpandedPane(focused.getDockContent());
+        }
+        return accordion;
+    }
 }

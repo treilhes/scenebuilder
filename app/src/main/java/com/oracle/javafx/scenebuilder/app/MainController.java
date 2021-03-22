@@ -423,9 +423,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
       //TODO allow a more easy usage of scenic
         // Show ScenicView Tool when the JVM is started with option -Dscenic.
         // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
-        if (System.getProperty("scenic") != null) { //NOI18N
-            Platform.runLater(new ScenicViewStarter(context.getBean(Document.class).getScene()));
-        }});
+        //if (System.getProperty("scenic") != null) 
+        { //NOI18N
+            Platform.runLater(new ScenicViewStarter(context));
+        }
+        });
         
         Thread th = new Thread(task.getRunnable());
         th.setDaemon(true);

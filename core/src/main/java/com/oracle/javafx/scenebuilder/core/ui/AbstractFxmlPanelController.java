@@ -72,29 +72,6 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
      * AbstractPanelController
      */
 
-//    /**
-//     * This implementation loads the FXML file using the URL passed to
-//     * {@link AbstractFxmlPanelController}.
-//     * Subclass implementation should make sure that this method can be invoked
-//     * outside of the JavaFX thread
-//     */
-//    @Override
-//    protected void makePanel() {
-//        final FXMLLoader loader = new FXMLLoader();
-//
-//        loader.setController(this);
-//        loader.setLocation(fxmlURL);
-//        loader.setResources(resources);
-//        try {
-//            setRoot((Parent)loader.load());
-//            controllerDidLoadFxml();
-//        } catch (RuntimeException | IOException x) {
-//            System.out.println("loader.getController()=" + loader.getController());
-//            System.out.println("loader.getLocation()=" + loader.getLocation());
-//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
-//        }
-//    }
-
     @Override
     public URL getFxmlURL() {
 		return fxmlURL;
@@ -116,10 +93,5 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
      */
     @Override
 	public abstract void controllerDidLoadFxml();
-
-        // Note : remember that here:
-        // 1) getHost() might be null
-        // 2) getPanelRoot().getScene() might be null
-        // 3) getPanelRoot().getScene().getWindow() might be null
 
 }

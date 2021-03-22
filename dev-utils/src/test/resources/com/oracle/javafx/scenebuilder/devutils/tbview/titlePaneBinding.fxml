@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+
+<TitledPane fx:id="parentPane" animated="false" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="untitled" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.2">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+  </content>
+   <graphic>
+      <HBox id="HBox" alignment="CENTER" prefWidth="${parentPane.width}" spacing="0.0" styleClass="panel-header">
+         <children>
+            <Label fx:id="viewLabel" text="" />
+            <StackPane fx:id="viewSearchPanelHost" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" style="" HBox.hgrow="ALWAYS" />
+            <MenuButton fx:id="viewMenuButton" mnemonicParsing="false" text="" HBox.hgrow="NEVER">
+               <graphic>
+                  <Region prefHeight="10.0" prefWidth="10.0" styleClass="cog-shape" />
+               </graphic>
+            </MenuButton>
+         </children>
+      </HBox>
+   </graphic>
+</TitledPane>

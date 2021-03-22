@@ -30,23 +30,55 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.oracle.javafx.scenebuilder.devutils.tbview;
 
-package com.oracle.javafx.scenebuilder.app;
+import java.io.IOException;
 
-import org.springframework.context.ApplicationContext;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-/**
- * @treatAsPrivate
- */
-public class ScenicViewStarter implements Runnable {
-        private final ApplicationContext context;
-        
-        public ScenicViewStarter(ApplicationContext context) {
-            this.context = context;
+public class TitlePaneBinding extends TitledPane {
+
+    @FXML
+    private Label viewLabel;
+
+    @FXML
+    private StackPane viewSearchPanelHost;
+
+    @FXML
+    private MenuButton viewMenuButton;
+
+    public void start(Stage stage) {
+        // Creating nodes
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TitlePaneBinding.class.getResource("titlePaneBinding.fxml"));
+            loader.setController(this);
+            
+            TitledPane gp = loader.load();
+            
+            
+            //viewLabel.prefWidthProperty().bind(gp.widthProperty().subtract(200));
+            
+            // Setting the stage
+            Scene scene = new Scene(gp, 595, 150, Color.BEIGE);
+            stage.setTitle("Check Box Example");
+            stage.setScene(scene);
+            stage.show();
+            
+            
+            System.out.println();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        
-        @Override
-        public void run() {
-                //org.scenicview.ScenicView.show(context.getBean(Document.class).getScene());
-        }
+    }
 }

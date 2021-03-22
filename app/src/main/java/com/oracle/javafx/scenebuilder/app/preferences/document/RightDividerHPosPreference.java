@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 public class RightDividerHPosPreference extends DoublePreference implements ManagedDocumentPreference {
 
 	public static final String PREFERENCE_KEY = "rightDividerHPos"; //NOI18N
-	public static final Double PREFERENCE_DEFAULT_VALUE = -1.0; //NOI18N
+	public static final Double PREFERENCE_DEFAULT_VALUE = 0.8; //NOI18N
     
     public RightDividerHPosPreference(PreferencesContext preferencesContext) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);

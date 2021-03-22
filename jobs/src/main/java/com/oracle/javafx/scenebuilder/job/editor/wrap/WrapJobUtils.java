@@ -78,12 +78,10 @@ public class WrapJobUtils {
         allAccessories.addAll(mask.getAccessories());
         
         for (Accessory accessory:allAccessories) {
-            if (accessory.isCollection()) {
-                assert children != null && children.size() == 1; // wrap job is executable
-            } 
+
             final FXOMObject child = children.iterator().next();
-            final FXOMObject obj = mask.getAccessory(accessory);
-            if (child.equals(obj)) {
+            final List<FXOMObject> obj = mask.getAccessories(accessory);
+            if (obj != null && obj.contains(child)) {
                 return mask.getPropertyNameForAccessory(accessory);
             }
         }

@@ -36,8 +36,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dock;
-import com.oracle.javafx.scenebuilder.api.View;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
 
@@ -46,7 +46,7 @@ import io.reactivex.subjects.Subject;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 public interface ViewManager {
 	
@@ -55,11 +55,12 @@ public interface ViewManager {
 	Subject<View> close();
 
 	@AllArgsConstructor
-	@NoArgsConstructor
+	@RequiredArgsConstructor
 	@EqualsAndHashCode
 	public static class DockRequest {
-		private @Getter View source;
-		private @Getter Dock target;
+		private final @Getter View source;
+		private final @Getter Dock target;
+		private @Getter boolean select = true;;
 		
 	}
 	

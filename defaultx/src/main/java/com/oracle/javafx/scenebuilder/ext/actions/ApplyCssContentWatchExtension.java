@@ -39,33 +39,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
-import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class ApplyCssContentWatchExtension extends AbstractActionExtension<ApplyCssContentAction> implements DisposeWithDocument, WatchingCallback{
+public class ApplyCssContentWatchExtension extends AbstractActionExtension<ApplyCssContentAction> implements WatchingCallback{
 
 	private final UserStylesheetsPreference userStylesheetsPreference;
     private final FileSystem fileSystem;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
+    private final ApplicationContext context;
 
 	public ApplyCssContentWatchExtension(
 	        @Autowired FileSystem fileSystem,
+	        @Autowired ApplicationContext context,
 	        @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
 			@Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference
 			) {
 		super();
 		this.fileSystem = fileSystem;
+		this.context = context;
 		this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
 		this.userStylesheetsPreference = userStylesheetsPreference;
 	}
@@ -86,7 +90,7 @@ public class ApplyCssContentWatchExtension extends AbstractActionExtension<Apply
             List<File> toWatch = userStylesheetsPreference.getValue().stream()
                     .map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
-            fileSystem.watch(this, toWatch, this);
+            fileSystem.watch(context.getBean(Document.class), toWatch, this);
         }
     }
 
@@ -106,8 +110,9 @@ public class ApplyCssContentWatchExtension extends AbstractActionExtension<Apply
     }
 
     @Override
-    public void dispose() {
-        fileSystem.unwatch(this);
+    public Object getOwnerKey() {
+        return this;
     }
+
 
 }

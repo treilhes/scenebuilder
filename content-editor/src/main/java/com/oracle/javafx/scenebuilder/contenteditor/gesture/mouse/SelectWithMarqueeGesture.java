@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,10 +261,10 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 //                        Accessory.XAXIS, Accessory.YAXIS);
                 for (Accessory accessory : m.getAccessories()) {
                     if (m.isAcceptingAccessory(accessory)) {
-                        final FXOMObject fxomObject = m.getAccessory(accessory);
-                        if (fxomObject != null) {
-                            candidates.add(fxomObject);
-                        }
+                        final List<FXOMObject> fxomObjects = m.getAccessories(accessory);
+                        fxomObjects.stream()
+                            .filter(f -> f != null)
+                            .forEach(candidates::add);
                     }
                 }
             }
