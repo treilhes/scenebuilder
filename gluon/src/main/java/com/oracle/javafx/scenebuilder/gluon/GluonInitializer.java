@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
@@ -77,11 +77,11 @@ public class GluonInitializer implements InitWithSceneBuilder {
         
         Platform.runLater(() -> {
             context.getBean(WelcomeDialog.class).getStage().setOnHidden(event -> {
-                updateController.showUpdateDialogIfRequired(context.getBean(Document.class), () -> {
+                updateController.showUpdateDialogIfRequired(context.getBean(DocumentWindow.class), () -> {
                     if (!Platform.isFxApplicationThread()) {
-                        Platform.runLater(() -> registrationController.showRegistrationDialogIfRequired(context.getBean(Document.class)));
+                        Platform.runLater(() -> registrationController.showRegistrationDialogIfRequired(context.getBean(DocumentWindow.class)));
                     } else {
-                        registrationController.showRegistrationDialogIfRequired(context.getBean(Document.class));
+                        registrationController.showRegistrationDialogIfRequired(context.getBean(DocumentWindow.class));
                     }
                 });
             });

@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -49,12 +49,12 @@ import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 @Lazy
 public class AlertController implements InitWithDocument {
 
-    private final Document document;
+    private final DocumentWindow document;
     private final DocumentManager documentManager;
     private final ThemePreference themePreference;
     
     public AlertController(
-            @Autowired @Lazy Document document,
+            @Autowired @Lazy DocumentWindow document,
             @Autowired DocumentManager documentManager,
             @Autowired ThemePreference themePreference
             ) {

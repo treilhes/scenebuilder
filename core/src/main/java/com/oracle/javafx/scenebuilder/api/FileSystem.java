@@ -68,11 +68,11 @@ public interface FileSystem {
      */
     void updateNextInitialDirectory(File chosenFile);
 
-    void watch(Document document, List<File> files, WatchingCallback callback);
-    void watch(Document document, Set<Path> files, WatchingCallback callback);
+    void watch(DocumentWindow document, List<File> files, WatchingCallback callback);
+    void watch(DocumentWindow document, Set<Path> files, WatchingCallback callback);
 
 	void unwatch(Object key);
-	void unwatchDocument(Document document);
+	void unwatchDocument(DocumentWindow document);
 
 	void stopWatcher();
 

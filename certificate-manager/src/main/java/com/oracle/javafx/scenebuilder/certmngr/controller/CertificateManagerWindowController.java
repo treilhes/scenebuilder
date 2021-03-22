@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -86,7 +86,7 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
         networkManager.trustRequest().observeOn(JavaFxScheduler.platform()).subscribe(certificates -> {
             pendingCertificates.add(certificates);
             if (!this.getStage().isShowing()) {
-                this.getStage(true).initOwner(getApi().getContext().getBean(Document.class).getStage());
+                this.getStage(true).initOwner(getApi().getContext().getBean(DocumentWindow.class).getStage());
                 this.openWindow();
             }
         });

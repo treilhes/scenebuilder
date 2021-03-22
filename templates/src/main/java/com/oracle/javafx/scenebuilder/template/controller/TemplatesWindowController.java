@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
@@ -55,7 +55,7 @@ import javafx.stage.Modality;
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     public TemplatesWindowController(
             @Autowired Api api,
-            @Autowired Document document,
+            @Autowired DocumentWindow document,
             @Autowired List<TemplateGroup> templateGroups,
             @Autowired List<Template> templates) {
         super(api, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N

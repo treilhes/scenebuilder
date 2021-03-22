@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -73,7 +73,7 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     
     public DebugMenuWindowController(
             @Autowired Api api,
-            @Autowired Document document
+            @Autowired DocumentWindow document
             ) {
         super(api, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N

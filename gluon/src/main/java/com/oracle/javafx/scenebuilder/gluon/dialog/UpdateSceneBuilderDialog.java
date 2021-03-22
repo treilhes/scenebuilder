@@ -39,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -71,7 +71,7 @@ public class UpdateSceneBuilderDialog extends Dialog<ButtonType> {
     		@Autowired IgnoreVersionPreference ignoreVersion,
     		@Autowired VersionSetting versionSetting,
     		@Autowired IconSetting windowIconSetting,
-    		@Autowired Document owner
+    		@Autowired DocumentWindow owner
     		) {
     	
     	versionSetting.getLatestVersion((v) -> latestVersion = v);

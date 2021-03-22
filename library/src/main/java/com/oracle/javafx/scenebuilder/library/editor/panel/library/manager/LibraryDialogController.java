@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -125,7 +125,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             @Autowired MavenSetting mavenSetting, 
             @Autowired MavenArtifactsPreferences mavenPreferences,
             @Autowired MavenRepositoriesPreferences repositoryPreferences, 
-            @Autowired Document document) {
+            @Autowired DocumentWindow document) {
         super(api, LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N
         this.owner = document.getStage();

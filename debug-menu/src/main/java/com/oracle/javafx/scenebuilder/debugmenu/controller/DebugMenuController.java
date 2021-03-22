@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.DebugMenu;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
@@ -72,13 +72,13 @@ import javafx.scene.control.SeparatorMenuItem;
 public class DebugMenuController implements DebugMenu {
 
     private final Menu menu = new Menu("Debug"); //NOI18N
-    private final Document documentWindowController;
+    private final DocumentWindow documentWindowController;
 	private final FileSystem fileSystem;
 	private final Dialog dialog;
     private final DebugMenuWindowController debugMenuWindow;
 
     public DebugMenuController(
-    		@Autowired @Lazy Document documentWindowController,
+    		@Autowired @Lazy DocumentWindow documentWindowController,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,
     		@Autowired SceneBuilderManager sceneBuilderManager,

@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
@@ -73,12 +73,12 @@ public class LibraryPanelActions {
 			accelerator = "CTRL+J")
 	public static class ShowJarAnalysisReportAction extends AbstractAction {
 
-		private final Document documentWindowController;
+		private final DocumentWindow documentWindowController;
 		private final JarAnalysisReportController jarAnalysisReportController;
 
 		public ShowJarAnalysisReportAction(
 		        @Autowired Api api,
-				@Autowired @Lazy Document documentWindowController,
+				@Autowired @Lazy DocumentWindow documentWindowController,
 				@Autowired @Lazy JarAnalysisReportController jarAnalysisReportController) {
 			super(api);
 			this.documentWindowController = documentWindowController;
@@ -106,14 +106,14 @@ public class LibraryPanelActions {
 			descriptionKey = "action.description.reveal.custom.folder")
 	public static class RevealCustomFolderAction extends AbstractAction {
 
-		private final Document documentWindowController;
+		private final DocumentWindow documentWindowController;
 		private final Library userLibrary;
 		private final FileSystem fileSystem;
 		private final Dialog dialog;
 
 		public RevealCustomFolderAction(
 		        @Autowired Api api,
-				@Autowired @Lazy Document documentWindowController
+				@Autowired @Lazy DocumentWindow documentWindowController
 		        ) {
 			super(api);
 			this.documentWindowController = documentWindowController;
@@ -262,13 +262,13 @@ public class LibraryPanelActions {
 	public static class ManageJarFxmlAction extends AbstractAction {
 
 		private final Main mainController;
-		private final Document documentWindowController;
+		private final DocumentWindow documentWindowController;
 		private final LibraryDialogController libraryDialogController;
 		private final LibraryPanelController libraryPanelController;
 
 		public ManageJarFxmlAction(
 		        @Autowired Api api,
-				@Autowired @Lazy Document documentWindowController,
+				@Autowired @Lazy DocumentWindow documentWindowController,
 				@Autowired @Lazy LibraryDialogController libraryDialogController,
 				@Autowired @Lazy LibraryPanelController libraryPanelController) {
 			super(api);

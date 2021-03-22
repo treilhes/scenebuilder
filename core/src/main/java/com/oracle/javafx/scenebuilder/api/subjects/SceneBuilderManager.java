@@ -36,7 +36,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
@@ -52,9 +52,9 @@ public interface SceneBuilderManager {
 
     Subject<Boolean> closed();
 
-    Subject<Document> documentOpened();
+    Subject<DocumentWindow> documentOpened();
 
-    Subject<Document> documentClosed();
+    Subject<DocumentWindow> documentClosed();
 
     Subject<StylesheetProvider> stylesheetConfig();
 
@@ -85,12 +85,12 @@ public interface SceneBuilderManager {
         }
 
         @Override
-        public Subject<Document> documentOpened() {
+        public Subject<DocumentWindow> documentOpened() {
             return subjects.getDocumentOpened();
         }
 
         @Override
-        public Subject<Document> documentClosed() {
+        public Subject<DocumentWindow> documentClosed() {
             return subjects.getDocumentClosed();
         }
 
@@ -104,8 +104,8 @@ public interface SceneBuilderManager {
 
         private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
         private @Getter PublishSubject<Boolean> closed;
-        private @Getter PublishSubject<Document> documentOpened;
-        private @Getter PublishSubject<Document> documentClosed;
+        private @Getter PublishSubject<DocumentWindow> documentOpened;
+        private @Getter PublishSubject<DocumentWindow> documentClosed;
         private @Getter ReplaySubject<Boolean> debugMode;
 
         public SceneBuilderSubjects() {

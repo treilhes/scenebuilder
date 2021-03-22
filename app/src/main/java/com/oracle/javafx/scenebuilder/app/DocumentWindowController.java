@@ -59,7 +59,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -141,7 +141,7 @@ import javafx.stage.Stage;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class DocumentWindowController extends AbstractFxmlWindowController implements Document, InitializingBean {
+public class DocumentWindowController extends AbstractFxmlWindowController implements DocumentWindow, InitializingBean {
 
     private Editor editorController;
     private final FileSystem fileSystem;
@@ -1701,7 +1701,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
                 }
 
                 // Checks if fxmlFile is the name of an already opened document
-                final Document dwc
+                final DocumentWindow dwc
                         = MainController.getSingleton().lookupDocumentWindowControllers(newLocation);
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());

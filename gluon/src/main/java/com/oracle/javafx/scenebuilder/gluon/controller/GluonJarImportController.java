@@ -40,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.library.JarReport;
@@ -98,7 +98,7 @@ public class GluonJarImportController {
 
             if (shouldShowImportGluonJarAlert) {
                 Platform.runLater(() -> {
-                    Document dwc = main.getFrontDocumentWindow();
+                    DocumentWindow dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         dwc = main.getDocumentWindowControllers().get(0);
                     }
@@ -127,7 +127,7 @@ public class GluonJarImportController {
 
             if (shouldShowImportGluonJarAlert) {
                 Platform.runLater(() -> {
-                    Document dwc = main.getFrontDocumentWindow();
+                    DocumentWindow dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         dwc = main.getDocumentWindowControllers().get(0);
                     }

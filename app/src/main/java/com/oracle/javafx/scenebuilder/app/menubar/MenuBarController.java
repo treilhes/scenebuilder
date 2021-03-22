@@ -51,9 +51,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ControlAction;
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Document.DocumentControlAction;
-import com.oracle.javafx.scenebuilder.api.Document.DocumentEditAction;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow.DocumentControlAction;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow.DocumentEditAction;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.Main.ApplicationControlAction;
 import com.oracle.javafx.scenebuilder.api.Size;
@@ -1341,23 +1341,23 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private void handleOnWindowMenuValidation() {
         windowMenu.getItems().clear();
 
-        final List<Document> documentWindowControllers
+        final List<DocumentWindow> documentWindowControllers
                 = MainController.getSingleton().getDocumentWindowControllers();
         if (documentWindowControllers.isEmpty()) {
             // Adds the "No window" menu item
             windowMenu.getItems().add(makeWindowMenuItem(null));
         } else {
-            final List<Document> sortedControllers
+            final List<DocumentWindow> sortedControllers
                     = new ArrayList<>(documentWindowControllers);
-            Collections.sort(sortedControllers, new Document.TitleComparator());
+            Collections.sort(sortedControllers, new DocumentWindow.TitleComparator());
 
-            for (Document dwc : sortedControllers) {
+            for (DocumentWindow dwc : sortedControllers) {
                 windowMenu.getItems().add(makeWindowMenuItem(dwc));
             }
         }
     }
 
-    private MenuItem makeWindowMenuItem(final Document dwc) {
+    private MenuItem makeWindowMenuItem(final DocumentWindow dwc) {
         final RadioMenuItem result = new RadioMenuItem();
         if (dwc != null) {
             result.setText(dwc.getStage().getTitle());
@@ -1375,9 +1375,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     private static class WindowMenuEventHandler implements EventHandler<ActionEvent> {
 
-        private final Document dwc;
+        private final DocumentWindow dwc;
 
-        public WindowMenuEventHandler(Document dwc) {
+        public WindowMenuEventHandler(DocumentWindow dwc) {
             this.dwc = dwc;
         }
 

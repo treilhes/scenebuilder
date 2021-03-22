@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.JarReport;
 import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
@@ -84,7 +84,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
 
     public JarAnalysisReportController(
             @Autowired Api api,
-            @Autowired Document document) {
+            @Autowired DocumentWindow document) {
         super(api, JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
                 I18N.getBundle(), document.getStage()); // NOI18N
         this.library = api.getApiDoc().getLibrary();

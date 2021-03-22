@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -62,14 +62,14 @@ import javafx.stage.FileChooser;
 public class SceneStyleSheetMenuController {
 
 	private final ApplicationContext context;
-    private final Document document;
+    private final DocumentWindow document;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final UserStylesheetsPreference userStylesheetsPreference;
 
     public SceneStyleSheetMenuController(
     		@Autowired ApplicationContext context,
-    		@Autowired @Lazy Document document,
+    		@Autowired @Lazy DocumentWindow document,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,
     		@Autowired UserStylesheetsPreference userStylesheetsPreference) {

@@ -46,7 +46,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
@@ -89,7 +89,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
 
     public RegistrationWindowController(
             @Autowired Api api,
-            @Autowired Document window,
+            @Autowired DocumentWindow window,
             @Autowired TrackingController tracking,
             @Autowired RegistrationHashPreference registrationHashPreference,
             @Autowired RegistrationEmailPreference registrationEmailPreference,

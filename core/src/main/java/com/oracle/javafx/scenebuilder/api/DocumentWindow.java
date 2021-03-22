@@ -40,7 +40,7 @@ import java.util.Comparator;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public interface Document {
+public interface DocumentWindow {
     //API validated
     boolean isInited();
     boolean isUnused();
@@ -77,10 +77,10 @@ public interface Document {
     //boolean isRightPanelVisible();
     void performControlAction(DocumentControlAction toggleRightPanel);    
     
-    public static class TitleComparator implements Comparator<Document> {
+    public static class TitleComparator implements Comparator<DocumentWindow> {
 
         @Override
-        public int compare(Document d1, Document d2) {
+        public int compare(DocumentWindow d1, DocumentWindow d2) {
             final int result;
 
             assert d1 != null;

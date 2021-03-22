@@ -39,7 +39,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -101,12 +101,12 @@ public class UpdateController {
                     alert.showAndWait();
                 }
             } catch (NumberFormatException ex) {
-                Platform.runLater(() -> showVersionNumberFormatError(context.getBean(Document.class)));
+                Platform.runLater(() -> showVersionNumberFormatError(context.getBean(DocumentWindow.class)));
             }
         });
     }
 
-    public void showUpdateDialogIfRequired(Document dwc, Runnable runAfterUpdateDialog) {
+    public void showUpdateDialogIfRequired(DocumentWindow dwc, Runnable runAfterUpdateDialog) {
         versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 // This can be because the url was not reachable so we don't show the update dialog.
@@ -157,7 +157,7 @@ public class UpdateController {
         }
     }
     
-    private void showVersionNumberFormatError(Document dwc) {
+    private void showVersionNumberFormatError(DocumentWindow dwc) {
         SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, dwc.getStage());
         // The version number format is not supported and this is most probably only happening
         // in development so we don't localize the strings

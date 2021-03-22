@@ -41,7 +41,7 @@ import java.util.Set;
 import com.oracle.javafx.scenebuilder.api.About;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel;
@@ -159,7 +159,7 @@ public class SceneBuilderTest {
         assert documentScene != null;
 
         final Set<FXOMObject> result;
-        final Document dwc = lookupWindowController(documentScene);
+        final DocumentWindow dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
@@ -188,7 +188,7 @@ public class SceneBuilderTest {
         assert node.getScene() != null;
 
         final FXOMObject result;
-        final Document dwc = lookupWindowController(node.getScene());
+        final DocumentWindow dwc = lookupWindowController(node.getScene());
         if (dwc == null) {
             result = null;
         } else {
@@ -242,7 +242,7 @@ public class SceneBuilderTest {
         assert node.getScene() != null;
 
         final FXOMObject result;
-        final Document dwc = lookupWindowController(node.getScene());
+        final DocumentWindow dwc = lookupWindowController(node.getScene());
         if (dwc == null) {
             result = null;
         } else {
@@ -289,7 +289,7 @@ public class SceneBuilderTest {
         assert fxomObject != null;
 
         final Node result;
-        final Document dwc = lookupWindowController(documentScene);
+        final DocumentWindow dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
@@ -325,7 +325,7 @@ public class SceneBuilderTest {
             Scene documentScene, FXOMObject fxomObject) {
         assert documentScene != null;
         assert fxomObject != null;
-        final Document dwc = lookupWindowController(documentScene);
+        final DocumentWindow dwc = lookupWindowController(documentScene);
         if (dwc != null) {
             final Editor ec = dwc.getEditorController();
             assert fxomObject.getFxomDocument() == ec.getFxomDocument();
@@ -361,7 +361,7 @@ public class SceneBuilderTest {
         assert fxomObject != null;
 
         final Node result;
-        final Document dwc = lookupWindowController(documentScene);
+        final DocumentWindow dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
@@ -435,7 +435,7 @@ public class SceneBuilderTest {
     private static FXOMDocument lookupFxomDocument(Scene documentScene) {
         final FXOMDocument result;
 
-        final Document dwc = lookupWindowController(documentScene);
+        final DocumentWindow dwc = lookupWindowController(documentScene);
         if (dwc == null) {
             result = null;
         } else {
@@ -445,11 +445,11 @@ public class SceneBuilderTest {
         return result;
     }
 
-    private static Document lookupWindowController(Scene documentScene) {
-        Document result = null;
+    private static DocumentWindow lookupWindowController(Scene documentScene) {
+        DocumentWindow result = null;
 
         final MainController app = MainController.getSingleton();
-        for (Document c : app.getDocumentWindowControllers()) {
+        for (DocumentWindow c : app.getDocumentWindowControllers()) {
             if (c.getScene() == documentScene) {
                 result = c;
                 break;

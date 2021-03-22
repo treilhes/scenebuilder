@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -82,7 +82,7 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
 
     private final Editor editor;
 
-    private final Document document;
+    private final DocumentWindow document;
 
     private double scrollLeftSave;
 
@@ -90,7 +90,7 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
     
     public SourceViewWindowController(
             @Autowired Api api,
-            @Autowired Document document,
+            @Autowired DocumentWindow document,
             @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
         super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),

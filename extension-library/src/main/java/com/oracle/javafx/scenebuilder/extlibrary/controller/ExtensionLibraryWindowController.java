@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
@@ -68,7 +68,7 @@ public class ExtensionLibraryWindowController extends AbstractFxmlWindowControll
     
     public ExtensionLibraryWindowController(
             @Autowired Api api,
-            @Autowired Document document
+            @Autowired DocumentWindow document
             ) {
         super(api, ExtensionLibraryWindowController.class.getResource("ExtensionLibraryWindow.fxml"), I18N.getBundle(),
                 document.getStage()); // NOI18N

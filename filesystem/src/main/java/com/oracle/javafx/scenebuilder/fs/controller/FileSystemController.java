@@ -48,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extension.DefaultFolders;
@@ -63,7 +63,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private final InitialDirectoryPreference initialDirectoryPreference;
 
-    private final Map<Document, List<Object>> documentWatchKeys = new HashMap<>();
+    private final Map<DocumentWindow, List<Object>> documentWatchKeys = new HashMap<>();
     private final Map<Object, List<Path>> watchedFiles = new HashMap<>();
     private final Map<Path, List<WatchingCallback>> watchCallbacks = new HashMap<>();
 
@@ -90,13 +90,13 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     }
 
     @Override
-    public void watch(Document document, Set<Path> files, WatchingCallback callback) {
+    public void watch(DocumentWindow document, Set<Path> files, WatchingCallback callback) {
         List<File> fileList = files.stream().map(p -> p.toFile()).collect(Collectors.toList());
         watch(document, fileList, callback);
     }
 
     @Override
-    public void watch(Document document, List<File> files, WatchingCallback callback) {
+    public void watch(DocumentWindow document, List<File> files, WatchingCallback callback) {
         Object key = callback.getOwnerKey();
         
         List<Object> documentKeys = documentWatchKeys.get(document);
@@ -157,7 +157,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     
 
     @Override
-    public void unwatchDocument(Document document) {
+    public void unwatchDocument(DocumentWindow document) {
         List<Object> keys = documentWatchKeys.get(document);
         if (keys != null) {
             keys.forEach(this::unwatch);

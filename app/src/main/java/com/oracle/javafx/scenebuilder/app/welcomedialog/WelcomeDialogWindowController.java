@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -179,7 +179,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private void openDocument() {
         // Right now there is only one window open by default
-        Document documentWC = sceneBuilderApp.getDocumentWindowControllers().get(0);
+        DocumentWindow documentWC = sceneBuilderApp.getDocumentWindowControllers().get(0);
         sceneBuilderApp.performControlAction(Main.ApplicationControlAction.OPEN_FILE, documentWC);
         getStage().hide();
     }

@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
@@ -91,7 +91,7 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
             List<File> toWatch = i18NResourcePreference.getValue().stream()
                     .map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
-            fileSystem.watch(context.getBean(Document.class), toWatch, this);
+            fileSystem.watch(context.getBean(DocumentWindow.class), toWatch, this);
         }
 	}
 

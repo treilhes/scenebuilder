@@ -62,7 +62,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -293,8 +293,8 @@ public class SceneBuilderBeanFactory {
         /** The current scope id. */
         private static UUID currentScope;
 
-        /** Map {@link Document} to scopes id. */
-        private static Map<Document, UUID> scopesId = new ConcurrentHashMap<>();
+        /** Map {@link DocumentWindow} to scopes id. */
+        private static Map<DocumentWindow, UUID> scopesId = new ConcurrentHashMap<>();
 
         /** Map scopes id to bean instances. */
         private static Map<UUID, Map<String, Object>> scopes = new ConcurrentHashMap<>();
@@ -303,15 +303,15 @@ public class SceneBuilderBeanFactory {
          * Gets the current scope.
          *
          */
-        public static Document getCurrentScope() {
-            return (Document)scopes.get(currentScope).get(SCOPE_OBJECT_NAME);
+        public static DocumentWindow getCurrentScope() {
+            return (DocumentWindow)scopes.get(currentScope).get(SCOPE_OBJECT_NAME);
         }
         /**
          * Sets the current scope.
          *
          * @param scopedDocument the new current scope
          */
-        public static void setCurrentScope(Document scopedDocument) {
+        public static void setCurrentScope(DocumentWindow scopedDocument) {
             if (scopedDocument == null) {
                 if (currentScope != null) {
                     currentScope = null;
@@ -345,7 +345,7 @@ public class SceneBuilderBeanFactory {
          *
          * @param document the document
          */
-        public static void removeScope(Document document) {
+        public static void removeScope(DocumentWindow document) {
             logger.debug("REMOVING SCOPE " + document);
             UUID scopeId = scopesId.get(document);
             if (currentScope == scopeId) {
@@ -382,7 +382,7 @@ public class SceneBuilderBeanFactory {
                 currentScope = scopeId;
                 logger.info(String.format(SCOPE_CHANGE_MSG, scopeId, null, "", "", "", ""));
 
-                Document scopeDocument = (Document) objectFactory.getObject();
+                DocumentWindow scopeDocument = (DocumentWindow) objectFactory.getObject();
 
                 scopesId.put(scopeDocument, scopeId);
                 setCurrentScope(scopeDocument);

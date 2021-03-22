@@ -38,7 +38,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -54,11 +54,11 @@ import javafx.application.Platform;
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
     private final Inspector inspectorController;
-    private final Document documentWindowController;
+    private final DocumentWindow documentWindowController;
 
     public CssPanelDelegate(
     		@Autowired Inspector inspectorController, 
-    		@Lazy @Autowired Document documentWindowController) {
+    		@Lazy @Autowired DocumentWindow documentWindowController) {
         this.inspectorController = inspectorController;
         this.documentWindowController = documentWindowController;
     }

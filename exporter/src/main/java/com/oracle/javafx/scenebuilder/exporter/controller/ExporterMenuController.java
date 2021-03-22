@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -62,12 +62,12 @@ import javafx.stage.FileChooser.ExtensionFilter;
 @Lazy
 public class ExporterMenuController {
 
-    private final Document document;
+    private final DocumentWindow document;
     private final List<ExportFormat> formats;
     private final DocumentManager documentManager;
 
     public ExporterMenuController(
-            @Autowired @Lazy Document document, 
+            @Autowired @Lazy DocumentWindow document, 
             @Autowired @Lazy DocumentManager documentManager,
             @Autowired List<ExportFormat> formats) {
         this.document = document;
