@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -60,8 +61,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -113,7 +112,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     @FXML
     private Label resultLabel;
 //
-    private final Window owner;
+    private final SceneBuilderWindow owner;
     private final Editor editorController;
     private MavenRepositorySystem maven;
     private Repository oldRepository;
@@ -128,7 +127,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
-            Stage owner) {
+    		SceneBuilderWindow owner) {
         super(api, LibraryPanelController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.owner = owner;
         this.editorController = editorController;
@@ -175,7 +174,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
             getStage().initModality(Modality.APPLICATION_MODAL);
         } else {
             // Dialog will be window modal
-            getStage().initOwner(this.owner);
+            getStage().initOwner(this.owner.getStage());
             getStage().initModality(Modality.WINDOW_MODAL);
         }
     }

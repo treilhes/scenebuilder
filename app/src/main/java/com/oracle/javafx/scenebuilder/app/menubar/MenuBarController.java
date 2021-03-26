@@ -50,10 +50,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow.DocumentControlAction;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow.DocumentEditAction;
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Document.DocumentControlAction;
+import com.oracle.javafx.scenebuilder.api.Document.DocumentEditAction;
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.Main.ApplicationControlAction;
 import com.oracle.javafx.scenebuilder.api.Size;
@@ -68,7 +70,6 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.app.MainController;
-import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -326,6 +327,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     private final ApplicationContext context;
     private final DocumentWindowController documentWindowController;
+    private final Content content;
+    private final Editor editor;
+    private final Document document;
     private final List<MenuProvider> menuProviders;
     private final List<MenuItemProvider> menuItemProviders;
 
@@ -336,12 +340,18 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     public MenuBarController(
             @Autowired ApplicationContext context,
             @Autowired DocumentManager documentManager,
+            @Autowired Content content,
+            @Autowired Editor editor,
             @Autowired(required = false) List<MenuProvider> menuProviders,
             @Autowired(required = false) List<MenuItemProvider> menuItemProviders,
+            @Autowired @Lazy Document document,
             @Autowired @Lazy DocumentWindowController documentWindowController,
             @Autowired @Lazy PreviewWindowController previewWindowController
             ) {
         this.context = context;
+        this.document = document;
+        this.content = content;
+        this.editor = editor;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
         this.documentWindowController = documentWindowController;
@@ -838,7 +848,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //            public String getTitle() {
 //                String title = I18N.getString("menu.title.edit.included.default");
 //                if (documentWindowController != null) {
-//                    final File file = documentWindowController.getEditorController().getIncludedFile();
+//                    final File file = editor.getIncludedFile();
 //                    if (file != null) {
 //                        title = I18N.getString("menu.title.edit.included", file.getName());
 //                    }
@@ -852,7 +862,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //            public String getTitle() {
 //                String title = I18N.getString("menu.title.reveal.included.default");
 //                if (documentWindowController != null) {
-//                    final File file = documentWindowController.getEditorController().getIncludedFile();
+//                    final File file = editor.getIncludedFile();
 //                    if (file != null) {
 //                        if (EditorPlatform.IS_MAC) {
 //                            title = I18N.getString("menu.title.reveal.included.finder", file.getName());
@@ -1004,7 +1014,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 final String titleKey;
                 if (documentWindowController == null) {
                     titleKey = "menu.title.hide.outlines";
-                } else if (documentWindowController.getContentPanelController().isOutlinesVisible()) {
+                } else if (content.isOutlinesVisible()) {
                     titleKey = "menu.title.hide.outlines";
                 } else {
                     titleKey = "menu.title.show.outlines";
@@ -1019,7 +1029,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 final String titleKey;
                 if (documentWindowController == null) {
                     titleKey = "menu.title.hide.sample.data";
-                } else if (documentWindowController.getEditorController().isSampleDataEnabled()) {
+                } else if (editor.isSampleDataEnabled()) {
                     titleKey = "menu.title.hide.sample.data";
                 } else {
                     titleKey = "menu.title.show.sample.data";
@@ -1034,9 +1044,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 if (documentWindowController == null) {
                     titleKey = "menu.title.disable.guides";
                 } else {
-                    final ContentPanelController contentPanelController
-                            = documentWindowController.getContentPanelController();
-                    if (contentPanelController.isGuidesVisible()) {
+                    if (content.isGuidesVisible()) {
                         titleKey = "menu.title.disable.guides";
                     } else {
                         titleKey = "menu.title.enable.guides";
@@ -1341,28 +1349,28 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private void handleOnWindowMenuValidation() {
         windowMenu.getItems().clear();
 
-        final List<DocumentWindow> documentWindowControllers
+        final List<Document> documentWindowControllers
                 = MainController.getSingleton().getDocumentWindowControllers();
         if (documentWindowControllers.isEmpty()) {
             // Adds the "No window" menu item
             windowMenu.getItems().add(makeWindowMenuItem(null));
         } else {
-            final List<DocumentWindow> sortedControllers
+            final List<Document> sortedControllers
                     = new ArrayList<>(documentWindowControllers);
-            Collections.sort(sortedControllers, new DocumentWindow.TitleComparator());
+            Collections.sort(sortedControllers, new Document.TitleComparator());
 
-            for (DocumentWindow dwc : sortedControllers) {
+            for (Document dwc : sortedControllers) {
                 windowMenu.getItems().add(makeWindowMenuItem(dwc));
             }
         }
     }
 
-    private MenuItem makeWindowMenuItem(final DocumentWindow dwc) {
+    private MenuItem makeWindowMenuItem(final Document dwc) {
         final RadioMenuItem result = new RadioMenuItem();
         if (dwc != null) {
-            result.setText(dwc.getStage().getTitle());
+            result.setText(dwc.getDocumentWindow().getStage().getTitle());
             result.setDisable(false);
-            result.setSelected(dwc.getStage().isFocused());
+            result.setSelected(dwc.getDocumentWindow().getStage().isFocused());
             result.setOnAction(new WindowMenuEventHandler(dwc));
         } else {
             result.setText(I18N.getString("menu.title.no.window"));
@@ -1375,16 +1383,16 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     private static class WindowMenuEventHandler implements EventHandler<ActionEvent> {
 
-        private final DocumentWindow dwc;
+        private final Document dwc;
 
-        public WindowMenuEventHandler(DocumentWindow dwc) {
+        public WindowMenuEventHandler(Document dwc) {
             this.dwc = dwc;
         }
 
         @Override
         public void handle(ActionEvent t) {
             DocumentScope.setCurrentScope(dwc);
-            dwc.getStage().toFront();
+            dwc.getDocumentWindow().getStage().toFront();
         }
     }
 
@@ -1398,7 +1406,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                     || documentWindowController.getStage().isFocused() == false) {
                 result = false;
             } else {
-                result = documentWindowController.getEditorController().canUndo();
+                result = editor.canUndo();
             }
             return result;
         }
@@ -1406,7 +1414,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         @Override
         public void perform() {
             assert canPerform();
-            documentWindowController.getEditorController().undo();
+            editor.undo();
         }
 
         @Override
@@ -1415,7 +1423,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             result.append(I18N.getString("menu.title.undo"));
             if (canPerform()) {
                 result.append(" "); //NOI18N
-                result.append(documentWindowController.getEditorController().getUndoDescription());
+                result.append(editor.getUndoDescription());
             }
             return result.toString();
         }
@@ -1430,7 +1438,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                     || documentWindowController.getStage().isFocused() == false) {
                 result = false;
             } else {
-                result = documentWindowController.getEditorController().canRedo();
+                result = editor.canRedo();
             }
             return result;
         }
@@ -1438,7 +1446,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         @Override
         public void perform() {
             assert canPerform();
-            documentWindowController.getEditorController().redo();
+            editor.redo();
         }
 
         @Override
@@ -1447,7 +1455,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             result.append(I18N.getString("menu.title.redo"));
             if (canPerform()) {
                 result.append(" "); //NOI18N
-                result.append(documentWindowController.getEditorController().getRedoDescription());
+                result.append(editor.getRedoDescription());
             }
             return result.toString();
         }
@@ -1468,7 +1476,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                     || documentWindowController.getStage().isFocused() == false) {
                 result = false;
             } else {
-                result = documentWindowController.getEditorController().canPerformEditAction(editAction);
+                result = editor.canPerformEditAction(editAction);
             }
             return result;
         }
@@ -1476,7 +1484,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         @Override
         public void perform() {
             assert canPerform() : "editAction=" + editAction;
-            documentWindowController.getEditorController().performEditAction(editAction);
+            editor.performEditAction(editAction);
         }
 
     }
@@ -1495,7 +1503,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             if (documentWindowController == null) {
                 result = false;
             } else {
-                result = documentWindowController.getEditorController().canPerformControlAction(controlAction);
+                result = editor.canPerformControlAction(controlAction);
             }
             return result;
         }
@@ -1503,7 +1511,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         @Override
         public void perform() {
             assert canPerform() : "controlAction=" + controlAction;
-            documentWindowController.getEditorController().performControlAction(controlAction);
+            editor.performControlAction(controlAction);
         }
 
     }
@@ -1523,7 +1531,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                     || documentWindowController.getStage().isFocused() == false) {
                 result = false;
             } else {
-                result = documentWindowController.canPerformEditAction(editAction);
+                result = document.canPerformEditAction(editAction);
             }
             return result;
         }
@@ -1531,7 +1539,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         @Override
         public void perform() {
             assert canPerform() : "editAction=" + editAction;
-            documentWindowController.performEditAction(editAction);
+            document.performEditAction(editAction);
         }
 
     }
@@ -1550,7 +1558,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             if (documentWindowController == null) {
                 result = false;
             } else {
-                result = documentWindowController.canPerformControlAction(controlAction);
+                result = document.canPerformControlAction(controlAction);
             }
             return result;
         }
@@ -1558,7 +1566,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         @Override
         public void perform() {
             assert canPerform() : "controlAction=" + controlAction;
-            documentWindowController.performControlAction(controlAction);
+            document.performControlAction(controlAction);
         }
 
     }
@@ -1573,14 +1581,12 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
         @Override
         public boolean canPerform() {
-            return MainController.getSingleton().canPerformControlAction(controlAction,
-                    documentWindowController);
+            return MainController.getSingleton().canPerformControlAction(controlAction, document);
         }
 
         @Override
         public void perform() {
-            MainController.getSingleton().performControlAction(controlAction,
-                    documentWindowController);
+            MainController.getSingleton().performControlAction(controlAction, document);
         }
 
     }
@@ -1600,14 +1606,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                     || documentWindowController.getStage().isFocused() == false) {
                 result = false;
             } else {
-                result = documentWindowController.getEditorController().canPerformSetEffect();
+                result = editor.canPerformSetEffect();
             }
             return result;
         }
 
         @Override
         public void perform() {
-            documentWindowController.getEditorController().performSetEffect(effectClass);
+            editor.performSetEffect(effectClass);
         }
     }
 
@@ -1626,12 +1632,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
         @Override
         public void perform() {
-            final ContentPanelController contentPanelController
-                    = documentWindowController.getContentPanelController();
-            final double currentScaling
-                    = contentPanelController.getScaling();
+            final double currentScaling = content.getScaling();
             if (MathUtils.equals(currentScaling, scaling) == false) {
-                contentPanelController.setScaling(scaling);
+                content.setScaling(scaling);
             }
         }
 
@@ -1642,8 +1645,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             if (documentWindowController == null) {
                 result = false;
             } else {
-                final double currentScaling
-                        = documentWindowController.getContentPanelController().getScaling();
+                final double currentScaling = content.getScaling();
                 result = MathUtils.equals(currentScaling, scaling);
             }
 
@@ -1660,10 +1662,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             if (documentWindowController == null) {
                 result = false;
             } else {
-                final ContentPanelController contentPanelController
-                        = documentWindowController.getContentPanelController();
-                final int currentScalingIndex
-                        = findZoomScaleIndex(contentPanelController.getScaling());
+                final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
                 result = currentScalingIndex+1 < scalingTable.length;
             }
             return result;
@@ -1671,13 +1670,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
         @Override
         public void perform() {
-            final ContentPanelController contentPanelController
-                    = documentWindowController.getContentPanelController();
-            final int currentScalingIndex
-                    = findZoomScaleIndex(contentPanelController.getScaling());
-            final double newScaling
-                    = scalingTable[currentScalingIndex+1];
-            contentPanelController.setScaling(newScaling);
+            final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
+            final double newScaling = scalingTable[currentScalingIndex+1];
+            content.setScaling(newScaling);
         }
 
     }
@@ -1691,10 +1686,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             if (documentWindowController == null) {
                 result = false;
             } else {
-                final ContentPanelController contentPanelController
-                        = documentWindowController.getContentPanelController();
-                final int currentScalingIndex
-                        = findZoomScaleIndex(contentPanelController.getScaling());
+                final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
                 result = 0 <= currentScalingIndex-1;
             }
             return result;
@@ -1702,13 +1694,9 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
         @Override
         public void perform() {
-            final ContentPanelController contentPanelController
-                    = documentWindowController.getContentPanelController();
-            final int currentScalingIndex
-                    = findZoomScaleIndex(contentPanelController.getScaling());
-            final double newScaling
-                    = scalingTable[currentScalingIndex-1];
-            contentPanelController.setScaling(newScaling);
+            final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
+            final double newScaling = scalingTable[currentScalingIndex-1];
+            content.setScaling(newScaling);
         }
 
     }

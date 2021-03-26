@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -55,13 +55,13 @@ public class FileSystemMenuController {
 
     private final Editor editor;
     private final Main main;
-    private final DocumentWindow document;
+    private final Document document;
     private final RecentItemsPreference recentItemsPreference;
 
 
     public FileSystemMenuController(
             @Autowired Main main,
-            @Autowired DocumentWindow document, 
+            @Autowired Document document, 
             @Autowired Editor editor,
             @Autowired RecentItemsPreference recentItemsPreference) {
         this.main = main;
@@ -83,7 +83,7 @@ public class FileSystemMenuController {
 
 
     public void performNew() {
-        final DocumentWindow newWindow = main.makeNewWindow();
+        final Document newWindow = main.makeNewWindow();
         newWindow.updateWithDefaultContent();
         newWindow.openWindow();
     }

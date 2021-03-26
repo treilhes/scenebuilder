@@ -66,7 +66,7 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
             @Autowired Api api,
             @Autowired DocumentWindow document) {
         super(api, JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), I18N.getBundle(),
-                document.getStage()); // NOI18N
+                document); // NOI18N
     }
 
     

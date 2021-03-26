@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -125,7 +126,7 @@ public class PreviewWindowController extends AbstractWindowController implements
             @Autowired Api api,
             @Autowired Editor editorController,
             @Autowired DocumentWindow document) {
-        super(api, document.getStage());
+        super(api, document);
         this.editorController = editorController;
         this.documentManager = api.getApiDoc().getDocumentManager();
         
@@ -151,12 +152,12 @@ public class PreviewWindowController extends AbstractWindowController implements
             requestUpdate(IMMEDIATE);
         });
 
-        documentManager.stylesheetConfig().subscribe(s -> {
+        documentManager.stylesheetConfig().observeOn(JavaFxScheduler.platform()).subscribe(s -> {
             stylesheetConfig = s;
             requestUpdate(DELAYED);
         });
 
-        documentManager.i18nResourceConfig().subscribe(s -> {
+        documentManager.i18nResourceConfig().observeOn(JavaFxScheduler.platform()).subscribe(s -> {
             resourceConfig = s;
             requestUpdate(DELAYED);
         });

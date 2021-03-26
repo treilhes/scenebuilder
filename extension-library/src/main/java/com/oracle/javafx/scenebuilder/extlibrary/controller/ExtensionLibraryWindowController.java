@@ -71,7 +71,7 @@ public class ExtensionLibraryWindowController extends AbstractFxmlWindowControll
             @Autowired DocumentWindow document
             ) {
         super(api, ExtensionLibraryWindowController.class.getResource("ExtensionLibraryWindow.fxml"), I18N.getBundle(),
-                document.getStage()); // NOI18N
+                document); // NOI18N
     }
 
     @FXML

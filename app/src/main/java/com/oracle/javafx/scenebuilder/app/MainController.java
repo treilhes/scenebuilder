@@ -57,8 +57,8 @@ import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow.ActionStatus;
+import com.oracle.javafx.scenebuilder.api.Document;
+import com.oracle.javafx.scenebuilder.api.Document.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.UILogger;
@@ -116,7 +116,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     @Autowired
     private RecentItemsPreference recentItemsPreference;
 
-    private final ObservableList<DocumentWindow> windowList = FXCollections.observableArrayList();
+    private final ObservableList<Document> windowList = FXCollections.observableArrayList();
 
     //private UserLibrary userLibrary;
 
@@ -172,7 +172,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     @Override
-    public void performControlAction(ApplicationControlAction a, DocumentWindow source) {
+    public void performControlAction(ApplicationControlAction a, Document source) {
         switch (a) {
             case ABOUT:
                 AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
@@ -236,7 +236,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //    }
 
 
-    public boolean canPerformControlAction(ApplicationControlAction a, DocumentWindowController source) {
+    public boolean canPerformControlAction(ApplicationControlAction a, Document source) {
         final boolean result;
         switch (a) {
             case ABOUT:
@@ -271,7 +271,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     @Override
-    public void performOpenRecent(DocumentWindow source, final File fxmlFile) {
+    public void performOpenRecent(Document source, final File fxmlFile) {
         assert fxmlFile != null && fxmlFile.exists();
 
         final List<File> fxmlFiles = new ArrayList<>();
@@ -279,7 +279,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         performOpenFiles(fxmlFiles, source);
     }
 
-    public void documentWindowRequestClose(DocumentWindow fromWindow) {
+    public void documentWindowRequestClose(Document fromWindow) {
         closeWindow(fromWindow);
     }
 
@@ -289,18 +289,18 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     @Override
-    public List<DocumentWindow> getDocumentWindowControllers() {
+    public List<Document> getDocumentWindowControllers() {
         return Collections.unmodifiableList(windowList);
     }
 
-    public DocumentWindow lookupDocumentWindowControllers(URL fxmlLocation) {
+    public Document lookupDocumentWindowControllers(URL fxmlLocation) {
         assert fxmlLocation != null;
 
-        DocumentWindow result = null;
+        Document result = null;
         try {
             final URI fxmlURI = fxmlLocation.toURI();
-            for (DocumentWindow dwc : windowList) {
-                final URL docLocation = dwc.getEditorController().getFxmlLocation();
+            for (Document dwc : windowList) {
+                final URL docLocation = dwc.getFxmlLocation();
                 if ((docLocation != null) && fxmlURI.equals(docLocation.toURI())) {
                     result = dwc;
                     break;
@@ -315,10 +315,10 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     @Override
-    public DocumentWindow lookupUnusedDocumentWindowController() {
-        DocumentWindow result = null;
+    public Document lookupUnusedDocumentWindowController() {
+        Document result = null;
 
-        for (DocumentWindow dwc : windowList) {
+        for (Document dwc : windowList) {
             if (dwc.isUnused()) {
                 result = dwc;
                 break;
@@ -398,7 +398,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         if (showWelcomeDialog) {
             // Creates an empty document
-            final DocumentWindowController newWindow = makeNewWindow();
+            final Document newWindow = makeNewWindow();
             
 
             WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
@@ -502,21 +502,21 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
      * Private
      */
     @Override
-    public DocumentWindowController makeNewWindow() {
+    public Document makeNewWindow() {
     	DocumentScope.setCurrentScope(null);
 
-        final DocumentWindowController result = sceneBuilderFactory.get(DocumentWindowController.class);
+        final Document result = sceneBuilderFactory.get(Document.class);
 
         sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
         
-        Platform.runLater(() -> windowIconSetting.setWindowIcon(result.getStage()));
+        Platform.runLater(() -> windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
         
 
         windowList.add(result);
         return result;
     }
 
-    private void closeWindow(DocumentWindow w) {
+    private void closeWindow(Document w) {
         assert windowList.contains(w);
         windowList.remove(w);
         w.closeWindow();
@@ -557,7 +557,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //    }
 
     @Override
-    public DocumentWindow getFrontDocumentWindow() {
+    public Document getFrontDocumentWindow() {
 //        for (DocumentWindowController dwc : windowList) {
 //            if (dwc.isFrontDocumentWindow()) {
 //                return dwc;
@@ -575,7 +575,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
      * Private (control actions)
      */
     @Override
-    public void performOpenFile(DocumentWindow fromWindow) {
+    public void performOpenFile(Document fromWindow) {
         final FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
@@ -590,26 +590,25 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
     
     private void performOpenFiles(List<File> fxmlFiles,
-                                  DocumentWindow fromWindow) {
+                                  Document fromWindow) {
         assert fxmlFiles != null;
         assert fxmlFiles.isEmpty() == false;
 
-        final Map<File, DocumentWindow> documents = new HashMap<>();
+        final Map<File, Document> documents = new HashMap<>();
         
         final Map<File, IOException> exceptions = new HashMap<>();
         
         //build dependency injections first
         for (File fxmlFile : fxmlFiles) {
                 try {
-                    final DocumentWindow dwc = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
+                    final Document dwc = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
                     if (dwc != null) {
                         // fxmlFile is already opened
-                        dwc.getStage().toFront();
+                        dwc.getDocumentWindow().getStage().toFront();
                     } else {
                         // Open fxmlFile
-                        final DocumentWindow hostWindow;
-                        final DocumentWindow unusedWindow
-                                = lookupUnusedDocumentWindowController();
+                        final Document hostWindow;
+                        final Document unusedWindow = lookupUnusedDocumentWindowController();
                         if (unusedWindow != null) {
                             hostWindow = unusedWindow;
                         } else {
@@ -628,9 +627,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         Platform.runLater(() -> {
             
             
-            for (Entry<File, DocumentWindow> entry:documents.entrySet()) {
+            for (Entry<File, Document> entry:documents.entrySet()) {
                 File file = entry.getKey();
-                DocumentWindow hostWindow = entry.getValue();
+                Document hostWindow = entry.getValue();
                 
                 try {
                     hostWindow.loadFromFile(file);
@@ -683,7 +682,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
    private void performExit() {
 
         // Check if an editing session is on going
-        for (DocumentWindow dwc : windowList) {
+        for (Document dwc : windowList) {
             if (dwc.getEditorController().isTextEditingSessionOnGoing()) {
                 // Check if we can commit the editing session
                 if (dwc.getEditorController().canGetFxmlText() == false) {
@@ -694,8 +693,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         }
 
         // Collects the documents with pending changes
-        final List<DocumentWindow> pendingDocs = new ArrayList<>();
-        for (DocumentWindow dwc : windowList) {
+        final List<Document> pendingDocs = new ArrayList<>();
+        for (Document dwc : windowList) {
             if (dwc.isDocumentDirty()) {
                 pendingDocs.add(dwc);
             }
@@ -710,7 +709,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             }
 
             case 1: {
-                final DocumentWindow dwc0 = pendingDocs.get(0);
+                final Document dwc0 = pendingDocs.get(0);
                 exitConfirmed = dwc0.performCloseAction() == ActionStatus.DONE;
                 break;
             }
@@ -751,7 +750,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         // Exit if confirmed
         if (exitConfirmed) {
-            for (DocumentWindow dwc : new ArrayList<>(windowList)) {
+            for (Document dwc : new ArrayList<>(windowList)) {
                 // Write to java preferences before closing
                 dwc.updatePreferences();
                 documentWindowRequestClose(dwc);
@@ -795,21 +794,21 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     @Override
 	public void logInfoMessage(String key) {
-        for (DocumentWindow dwc : windowList) {
+        for (Document dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle());
         }
     }
 
     @Override
 	public void logInfoMessage(String key, Object... args) {
-        for (DocumentWindow dwc : windowList) {
+        for (Document dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
         }
     }
 
-    public static void applyToAllDocumentWindows(Consumer<DocumentWindow> consumer) {
+    public static void applyToAllDocumentWindows(Consumer<Document> consumer) {
     	//TODO check if this is realy working, cause i've some doubts
-        for (DocumentWindow dwc : getSingleton().getDocumentWindowControllers()) {
+        for (Document dwc : getSingleton().getDocumentWindowControllers()) {
             consumer.accept(dwc);
         }
     }

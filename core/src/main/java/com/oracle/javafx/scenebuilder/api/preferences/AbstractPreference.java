@@ -34,99 +34,121 @@ package com.oracle.javafx.scenebuilder.api.preferences;
 
 import java.util.prefs.Preferences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 
 public abstract class AbstractPreference<T> implements Preference<T> {
 
-	private String name;
-	private final T defaultValue;
-	private final Property<T> value;
-	private PreferencesContext preferencesContext;
+    private static final Logger logger = LoggerFactory.getLogger(AbstractPreference.class);
+    
+    private String name;
+    private final T defaultValue;
+    private final Property<T> value;
+    private PreferencesContext preferencesContext;
 
-	public AbstractPreference(PreferencesContext preferencesContext, String name, T defaultValue, Property<T> propertyHolder, boolean isNode) {
-		this.name = name == null ? "" : name;
-		this.value = propertyHolder;
-		this.defaultValue = defaultValue;
-		this.preferencesContext = preferencesContext;
+    public AbstractPreference(PreferencesContext preferencesContext, String name, T defaultValue,
+            Property<T> propertyHolder, boolean isNode) {
+        this.name = name == null ? "" : name;
+        this.value = propertyHolder;
+        this.defaultValue = defaultValue;
+        this.preferencesContext = preferencesContext;
 
-		// handle document scoped value
-		if (preferencesContext.isDocumentScope(getClass()) && !preferencesContext.isDocumentAlreadyInPathScope()) {
-			this.preferencesContext = this.preferencesContext.nodeContext(this, preferencesContext.computeDocumentNodeName());
-		}
-		if (isNode) {
-			this.preferencesContext = this.preferencesContext.nodeContext(this, this.name);
-		}
+        // handle document scoped value
+        if (preferencesContext.isDocumentScope(getClass()) && !preferencesContext.isDocumentAlreadyInPathScope()) {
+            this.preferencesContext = this.preferencesContext.nodeContext(this,
+                    preferencesContext.computeDocumentNodeName());
+        }
+        if (isNode) {
+            this.preferencesContext = this.preferencesContext.nodeContext(this, this.name);
+        }
 
-		this.value.setValue(defaultValue);
-	}
+        this.value.setValue(defaultValue);
+    }
 
-	protected abstract void write();
-	protected abstract void read();
+    protected abstract void write();
 
-	@Override
-	public Preferences getNode() {
-		if (preferencesContext.isDocumentScope(getClass())) {
-			return preferencesContext.getDocumentsNode().getNode();
-		} else {
-			return preferencesContext.getRootNode().getNode();
-		}
-	}
+    protected abstract void read();
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public Preferences getNode() {
+        if (preferencesContext.isDocumentScope(getClass())) {
+            return preferencesContext.getDocumentsNode().getNode();
+        } else {
+            return preferencesContext.getRootNode().getNode();
+        }
+    }
 
-	protected void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	protected PreferencesContext getPreferencesContext() {
-		return preferencesContext;
-	}
+    protected void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public T getValue() {
-		return value.getValue();
-	}
+    protected PreferencesContext getPreferencesContext() {
+        return preferencesContext;
+    }
 
-	@Override
-	public Preference<T> setValue(T value) {
-		this.value.setValue(value);
-		return this;
-	}
+    @Override
+    public T getValue() {
+        return value.getValue();
+    }
 
-	@Override
-	public ObservableValue<T> getObservableValue() {
-		return this.value;
-	}
+    @Override
+    public Preference<T> setValue(T value) {
+        this.value.setValue(value);
+        return this;
+    }
 
-	@Override
-	public T getDefault() {
-		return defaultValue;
-	}
+    @Override
+    public ObservableValue<T> getObservableValue() {
+        return this.value;
+    }
 
-	@Override
-	public Preference<T> reset() {
-		setValue(getDefault());
-		return this;
-	}
+    @Override
+    public T getDefault() {
+        return defaultValue;
+    }
 
-	@Override
-	public void writeToJavaPreferences() {
-		if (isValid()
-				&& (!preferencesContext.isDocumentScope(this.getClass()) || preferencesContext.isDocumentNameDefined())) {
-			write();
-		} else {
-			getNode().remove(getName());
-		}
-	}
+    @Override
+    public Preference<T> reset() {
+        setValue(getDefault());
+        return this;
+    }
 
-	@Override
-	public void readFromJavaPreferences() {
-		assert getName() != null;
-		read();
-	}
+    @Override
+    public void writeToJavaPreferences() {
+        if (logger.isDebugEnabled()) {
+            boolean docScoped = preferencesContext.isDocumentScope(this.getClass());
+            logger.debug("writing preference valid: {}, documentScope: {}, docName: {}, node: {}, name: {}, value: {}",
+                    isValid(), docScoped, docScoped ? preferencesContext.getCurrentFilePath() : "GLOBAL",
+                    getNode().absolutePath(), getName(), getValue() == null ? "<null>" : getValue().toString());
+        }
+        
+        if (isValid() && (!preferencesContext.isDocumentScope(this.getClass())
+                || preferencesContext.isDocumentNameDefined())) {
+            write();
+        } else {
+            getNode().remove(getName());
+        }
+    }
+
+    @Override
+    public void readFromJavaPreferences() {
+        assert getName() != null;
+        read();
+        
+        if (logger.isDebugEnabled()) {
+            boolean docScoped = preferencesContext.isDocumentScope(this.getClass());
+            logger.debug("read preference documentScope: {}, docName: {}, node: {}, name: {}, value: {}",
+                    docScoped, docScoped ? preferencesContext.getCurrentFilePath() : "GLOBAL",
+                    getNode().absolutePath(), getName(), getValue() == null ? "<null>" : getValue().toString());
+        }
+    }
 
 }

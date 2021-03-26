@@ -127,7 +127,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             @Autowired MavenRepositoriesPreferences repositoryPreferences, 
             @Autowired DocumentWindow document) {
         super(api, LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
-                document.getStage()); // NOI18N
+                document); // NOI18N
         this.owner = document.getStage();
         this.context = api.getContext();
         this.editorController = editorController;
@@ -219,7 +219,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     @FXML
     private void manage() {
         RepositoryManagerController repositoryDialogController = context.getBean(RepositoryManagerController.class,
-                getApi(), editorController, mavenSetting, repositoryPreferences, getStage());
+                getApi(), editorController, mavenSetting, repositoryPreferences, this);
         repositoryDialogController.openWindow();
     }
 
@@ -244,7 +244,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     private void addRelease() {
         SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class, getApi(),
                 editorController, libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences,
-                getStage());
+                this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override
@@ -260,7 +260,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     @FXML
     private void addManually() {
         MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class, getApi(), editorController,
-                libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences, getStage());
+                libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences, this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override

@@ -43,6 +43,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -262,13 +263,13 @@ public class LibraryPanelActions {
 	public static class ManageJarFxmlAction extends AbstractAction {
 
 		private final Main mainController;
-		private final DocumentWindow documentWindowController;
+		private final Document documentWindowController;
 		private final LibraryDialogController libraryDialogController;
 		private final LibraryPanelController libraryPanelController;
 
 		public ManageJarFxmlAction(
 		        @Autowired Api api,
-				@Autowired @Lazy DocumentWindow documentWindowController,
+				@Autowired @Lazy Document documentWindowController,
 				@Autowired @Lazy LibraryDialogController libraryDialogController,
 				@Autowired @Lazy LibraryPanelController libraryPanelController) {
 			super(api);

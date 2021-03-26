@@ -97,6 +97,8 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
     ModeManager getModeManager();
 
+    boolean isOutlinesVisible();
+
     // TODO this is a test method, check if usage is needed
     /**
      * Returns the handles associated an fxom object.

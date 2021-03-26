@@ -59,7 +59,7 @@ public class TemplatesWindowController extends TemplatesBaseWindowController {
             @Autowired List<TemplateGroup> templateGroups,
             @Autowired List<Template> templates) {
         super(api, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), // NOI18N
-                I18N.getBundle(), document.getStage(), templateGroups, templates);
+                I18N.getBundle(), document, templateGroups, templates);
     }
 
     @Override

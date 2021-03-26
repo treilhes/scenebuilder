@@ -36,9 +36,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
-
-import javafx.stage.Stage;
 
 /**
  *
@@ -57,14 +56,14 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
         this(api, fxmlURL, resources, null, sizeToScene);
     }
 
-    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, Stage owner) {
+    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, SceneBuilderWindow owner) {
         super(api, owner);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.resources = resources;
     }
 
-    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, Stage owner, boolean sizeToScene) {
+    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, SceneBuilderWindow owner, boolean sizeToScene) {
         super(api, owner, sizeToScene);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;

@@ -94,7 +94,7 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
             @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
         super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
-                document.getStage()); // NOI18N
+                document); // NOI18N
         
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.editor = editor;

@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -57,7 +58,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 /**
  * Controller for the JAR/FXML Library dialog.
@@ -71,7 +71,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     private ListView<RepositoryListItem> repositoryListView;
 
     private final Editor editorController;
-    private final Stage owner;
+    private final SceneBuilderWindow owner;
 
     private ObservableList<RepositoryListItem> listItems;
 
@@ -87,7 +87,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
-            Stage owner) {
+    		SceneBuilderWindow owner) {
         super(api, LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
         this.context = api.getContext();
         this.owner = owner;
@@ -104,7 +104,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
             getStage().initModality(Modality.APPLICATION_MODAL);
         } else {
             // Dialog will be window modal
-            getStage().initOwner(this.owner);
+            getStage().initOwner(this.owner.getStage());
             getStage().initModality(Modality.WINDOW_MODAL);
         }
     }
@@ -158,7 +158,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     private void repositoryDialog(Repository repository) {
         RepositoryDialogController repositoryDialogController = context.getBean(RepositoryDialogController.class,
-                getApi(), editorController, mavenSetting, repositoryPreferences, getStage());
+                getApi(), editorController, mavenSetting, repositoryPreferences, this);
         repositoryDialogController.openWindow();
         repositoryDialogController.setRepository(repository);
         repositoryDialogController.getStage().showingProperty().addListener(new InvalidationListener() {

@@ -51,6 +51,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -117,7 +118,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     private final SearchService searchService;
     private final Service<MavenArtifact> installService;
     private DefaultArtifact artifact;
-    private final Stage owner;
+    private final SceneBuilderWindow owner;
 
     private final ApplicationContext context;
 
@@ -129,7 +130,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
-            Stage owner) {
+    		SceneBuilderWindow owner) {
         super(api, LibraryPanelController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.context = api.getContext();
         this.userLibrary = (UserLibrary) editorController.libraryProperty().getValue();
@@ -212,7 +213,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
             getStage().initModality(Modality.APPLICATION_MODAL);
         } else {
             // Dialog will be window modal
-            getStage().initOwner(this.owner);
+            getStage().initOwner(this.owner.getStage());
             getStage().initModality(Modality.WINDOW_MODAL);
         }
     }

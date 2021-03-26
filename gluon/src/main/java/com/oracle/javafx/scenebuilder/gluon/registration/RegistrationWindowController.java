@@ -95,7 +95,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
             @Autowired RegistrationEmailPreference registrationEmailPreference,
             @Autowired RegistrationOptInPreference registrationOptInPreference) {
         super(api, RegistrationWindowController.class.getResource("Registration.fxml"), // NOI18N
-                I18N.getBundle(), window.getStage());
+                I18N.getBundle(), window);
         this.owner = window.getStage();
         this.tracking = tracking;
         this.registrationHashPreference = registrationHashPreference;

@@ -30,65 +30,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api;
+package com.oracle.javafx.scenebuilder.app.preferences.document;
 
-import java.util.Comparator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import javafx.event.EventHandler;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.input.KeyEvent;
+import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
-public interface DocumentWindow extends SceneBuilderWindow {
-    
-    void closeWindow();
-    void openWindow();
-    Scene getScene();
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+public class MaximizedPreference extends BooleanPreference implements ManagedDocumentPreference {
+	    
+    /***************************************************************************
+     *                                                                         *
+     * Static fields                                                           *
+     *                                                                         *
+     **************************************************************************/
+    public static final String PREFERENCE_KEY = "maximizedWindow"; //NOI18N
+    public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
-    void setMainKeyPressedEvent(EventHandler<KeyEvent> mainKeyEventFilter);
-    void setMenuBar(MenuBar menuBar);
-    void setContentPane(Parent root);
-    void setMessageBar(Parent root);
-    void setCloseHandler(CloseHandler closeHandler);
-    void setFocusHandler(FocusHandler closeHandler);
-    void updateStageTitle();
-    
-
-    @FunctionalInterface
-    public interface CloseHandler{
-        void onClose();
-    }
-    @FunctionalInterface
-    public interface FocusHandler{
-        void onFocus();
-    }
-
-    public static class TitleComparator implements Comparator<DocumentWindow> {
-
-        @Override
-        public int compare(DocumentWindow d1, DocumentWindow d2) {
-            final int result;
-
-            assert d1 != null;
-            assert d2 != null;
-
-            if (d1 == d2) {
-                result = 0;
-            } else {
-                final String t1 = d1.getStage().getTitle();
-                final String t2 = d2.getStage().getTitle();
-                assert t1 != null;
-                assert t2 != null;
-                result = t1.compareTo(t2);
-            }
-
-            return result;
-        }
-
-    }
-    void apply();
-    void track();
-    void untrack();
+	public MaximizedPreference(@Autowired PreferencesContext preferencesContext) {
+		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+	}
 
 }

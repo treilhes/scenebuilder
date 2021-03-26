@@ -58,6 +58,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
+import lombok.Setter;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -72,7 +73,7 @@ public class DockPanelController implements Dock {
     private List<DockType<?>> dockTypes;
     private DockType dockType;
     
-    private @Getter UUID id;
+    private @Getter @Setter UUID id;
     private @Getter String label;
     private @Getter VBox content;
 
@@ -93,8 +94,10 @@ public class DockPanelController implements Dock {
         this.dockType = dockTypes.get(0);
         
         dockManager.dockCreated().onNext(this);
-        viewManager.dock().filter(dr -> dr.getTarget() == this).subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
+        viewManager.dock().filter(dr -> dr.getTarget().equals(this.getId())).subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
     }
+    
+    
     
     private List<MenuItem> createDockMenu(View view) {
         List<MenuItem> items = new ArrayList<>();

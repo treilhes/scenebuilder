@@ -76,7 +76,7 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
             @Autowired DocumentWindow document
             ) {
         super(api, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
-                document.getStage()); // NOI18N
+                document); // NOI18N
         
         this.documentManager = api.getApiDoc().getDocumentManager();
     }

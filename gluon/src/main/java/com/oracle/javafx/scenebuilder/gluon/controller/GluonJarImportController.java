@@ -40,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.library.JarReport;
@@ -98,11 +98,11 @@ public class GluonJarImportController {
 
             if (shouldShowImportGluonJarAlert) {
                 Platform.runLater(() -> {
-                    DocumentWindow dwc = main.getFrontDocumentWindow();
+                    Document dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         dwc = main.getDocumentWindowControllers().get(0);
                     }
-                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getStage());
+                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
                     iconSetting.setWindowIcon(alert);
                     
                     WelcomeDialog welcome = context.getBean(WelcomeDialog.class);
@@ -127,11 +127,11 @@ public class GluonJarImportController {
 
             if (shouldShowImportGluonJarAlert) {
                 Platform.runLater(() -> {
-                    DocumentWindow dwc = main.getFrontDocumentWindow();
+                    Document dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         dwc = main.getDocumentWindowControllers().get(0);
                     }
-                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getStage());
+                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
                     iconSetting.setWindowIcon(alert);
                     alert.showAndWait();
                 });

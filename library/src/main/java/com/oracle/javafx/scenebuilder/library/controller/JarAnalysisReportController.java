@@ -86,7 +86,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
             @Autowired Api api,
             @Autowired DocumentWindow document) {
         super(api, JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
-                I18N.getBundle(), document.getStage()); // NOI18N
+                I18N.getBundle(), document); // NOI18N
         this.library = api.getApiDoc().getLibrary();
     }
 

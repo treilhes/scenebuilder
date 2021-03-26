@@ -52,24 +52,24 @@ public interface Main {
         EXIT
     }
 
-    DocumentWindow lookupUnusedDocumentWindowController();
+    Document lookupUnusedDocumentWindowController();
 
-    void performOpenRecent(DocumentWindow documentWindowController, File file);
+    void performOpenRecent(Document documentWindowController, File file);
 
     //void performNewFromTemplate();
 
-    DocumentWindow getFrontDocumentWindow();
+    Document getFrontDocumentWindow();
 
-    List<DocumentWindow> getDocumentWindowControllers();
+    List<Document> getDocumentWindowControllers();
 
     void handleOpenFilesAction(List<String> files);
     
     //void performNewTemplate(Template template);
 
-    void performControlAction(ApplicationControlAction openFile, DocumentWindow documentWC);
+    void performControlAction(ApplicationControlAction openFile, Document documentWC);
 
-    DocumentWindow makeNewWindow();
+    Document makeNewWindow();
 
-    void performOpenFile(DocumentWindow document);
+    void performOpenFile(Document document);
 
 }

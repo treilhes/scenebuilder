@@ -32,8 +32,10 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -51,6 +53,8 @@ import lombok.RequiredArgsConstructor;
 
 public class SplitPositionController {
     
+    private static final int MIN_DIVIDER_DIFFERENCE = 20;
+    
     public static final AllocationStrategy MAIN_LEFT_RIGHT = new AllocationStrategy() {
         
         @Override
@@ -60,7 +64,7 @@ public class SplitPositionController {
             var items = controller.getSplitPane().getItems();
             
             boolean leftInserted = items.contains(controller.getSplitContents()[0].getContent());
-            boolean rightInserted = items.contains(controller.getSplitContents()[0].getContent());
+            boolean rightInserted = items.contains(controller.getSplitContents()[2].getContent());
             
             if (leftInserted && rightInserted) {
                 result.put(dividers.get(0), controller.getSplitDividers()[0].getDividerPosition());
@@ -105,13 +109,15 @@ public class SplitPositionController {
     private final @Getter SplitPane splitPane;
     
     private AllocationStrategy strategy;
-    private Map<Divider, ChangeListener<? super Number>> currentAllocation = new HashMap<>();
+    private List<Listeners> currentListenerAllocations = new ArrayList<>();
+
+    private Map<Divider, DoublePreference> allocations;
     
     public static SplitDivider of(SplitPane splitPane, int splitPartCount) {
         SplitPositionController spc = new SplitPositionController(splitPane, splitPartCount);
         return spc.new SplitDivider();
     }
-            
+
     private SplitPositionController(SplitPane splitPane, int splitPartCount) {
         this.splitPane = splitPane;
         this.splitContents = new SplitContent[splitPartCount];
@@ -126,26 +132,67 @@ public class SplitPositionController {
         splitPane.getItems().addListener((Change<? extends Node> c)-> update());
     }
     
-    public void update() {
-
-        currentAllocation.entrySet().forEach(e -> e.getKey().positionProperty().removeListener(e.getValue()));
-        currentAllocation.clear();
-        
+    public void updateAllocations() {
         try {
-            Map<Divider, DoublePreference> allocations = strategy.allocate(this);
-            
+            currentListenerAllocations.clear();
+            allocations = strategy.allocate(this);
             allocations.entrySet().forEach(e -> {
-                e.getKey().setPosition(e.getValue().getValue());
+                Divider divider = e.getKey();
+                DoublePreference preference = e.getValue();
                 
-                ChangeListener<? super Number> listener = (ob, o, n) -> e.getValue().setValue(n.doubleValue());
-                e.getKey().positionProperty().addListener(listener);
+                ChangeListener<? super Number> dividerListener = (ob, o, n) -> {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("SET this: " + this + " ob: " + ob + " c: " + preference.getClass().getSimpleName() + " o:" + o + " n:" + n);
+                    }
+                    preference.setValue(n.doubleValue());
+                };
                 
-                currentAllocation.put(e.getKey(), listener);
+                ChangeListener<? super Double> preferenceListener = (ob, o, n) -> {
+                    if (logger.isDebugEnabled()) {
+                        System.out.println("SET this: " + this + " ob: " + ob + " c: " + preference.getClass().getSimpleName() + " o:" + o + " n:" + n);
+                    }
+                    divider.setPosition(n);
+                };
+                currentListenerAllocations.add(new Listeners(divider, preference, dividerListener, preferenceListener));
             });
-        } catch (AllocationStrategyException e1) {
-            logger.error("Unable to allocate preference record to divider", e1);
+        } catch (AllocationStrategyException e) {
+            logger.error("Unable to allocation divider position preferences", e);
         }
+    }
+
+    public void apply() {
+        allocations.entrySet().forEach(e -> {
+            Divider divider = e.getKey();
+            DoublePreference preference = e.getValue();
+            
+            logger.debug("Setting divider : {} to position : {}", divider, preference.getValue());
+            divider.setPosition(preference.getValue());
+        });
+    }
     
+    public void track() {
+        assert currentListenerAllocations != null;
+        
+        logger.debug("Updating splitPosition controller listeners");
+        currentListenerAllocations.forEach(a -> {
+            a.getDivider().positionProperty().addListener(a.getDividerListener());
+            a.getPreference().getObservableValue().addListener(a.getPreferenceListener());
+        });
+        logger.debug("Current divider positions : {}", splitPane.getDividerPositions());
+    }
+    
+    public void untrack() {
+        currentListenerAllocations.forEach(l -> {
+            l.getDivider().positionProperty().removeListener(l.getDividerListener());
+            l.getPreference().getObservableValue().removeListener(l.getPreferenceListener());
+        });
+    }
+    
+    public void update() {
+        untrack();
+        updateAllocations();
+        apply();
+        track();
     }
     
     @RequiredArgsConstructor
@@ -164,6 +211,7 @@ public class SplitPositionController {
         public SplitPositionController build(AllocationStrategy strategy) {
             SplitPositionController.this.strategy = strategy;
             SplitPositionController.this.createListeners();
+            SplitPositionController.this.update();
             return SplitPositionController.this;
         }
     }
@@ -204,5 +252,13 @@ public class SplitPositionController {
         public AllocationStrategyException(String message) {
             super(message);
         }
+    }
+    
+    @RequiredArgsConstructor
+    private static class Listeners {
+        private final @Getter Divider divider;
+        private final @Getter DoublePreference preference;
+        private final @Getter ChangeListener<? super Number> dividerListener;
+        private final @Getter ChangeListener<? super Double> preferenceListener;
     }
 }

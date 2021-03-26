@@ -49,6 +49,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -75,7 +76,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 
 /**
@@ -107,7 +107,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     private RemoteRepository remoteRepository;
     private Service<ObservableList<Version>> versionsService;
     private final Service<MavenArtifact> installService;
-    private final Window owner;
+    private final SceneBuilderWindow owner;
     private final Editor editorController;
 
     private final ChangeListener<Version> comboBoxListener = (obs, ov, nv) -> {
@@ -131,7 +131,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
-    		Stage owner) {
+    		SceneBuilderWindow owner) {
         super(api, LibraryPanelController.class.getResource("MavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.context = api.getContext();
         this.userLibrary = (UserLibrary) api.getApiDoc().getLibrary();
@@ -231,7 +231,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
             getStage().initModality(Modality.APPLICATION_MODAL);
         } else {
             // Dialog will be window modal
-            getStage().initOwner(this.owner);
+            getStage().initOwner(this.owner.getStage());
             getStage().initModality(Modality.WINDOW_MODAL);
         }
     }

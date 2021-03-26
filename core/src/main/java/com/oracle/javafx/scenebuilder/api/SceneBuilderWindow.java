@@ -32,63 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-import java.util.Comparator;
+import javafx.stage.Stage;
 
-import javafx.event.EventHandler;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.input.KeyEvent;
-
-public interface DocumentWindow extends SceneBuilderWindow {
-    
-    void closeWindow();
-    void openWindow();
-    Scene getScene();
-
-    void setMainKeyPressedEvent(EventHandler<KeyEvent> mainKeyEventFilter);
-    void setMenuBar(MenuBar menuBar);
-    void setContentPane(Parent root);
-    void setMessageBar(Parent root);
-    void setCloseHandler(CloseHandler closeHandler);
-    void setFocusHandler(FocusHandler closeHandler);
-    void updateStageTitle();
-    
-
-    @FunctionalInterface
-    public interface CloseHandler{
-        void onClose();
-    }
-    @FunctionalInterface
-    public interface FocusHandler{
-        void onFocus();
-    }
-
-    public static class TitleComparator implements Comparator<DocumentWindow> {
-
-        @Override
-        public int compare(DocumentWindow d1, DocumentWindow d2) {
-            final int result;
-
-            assert d1 != null;
-            assert d2 != null;
-
-            if (d1 == d2) {
-                result = 0;
-            } else {
-                final String t1 = d1.getStage().getTitle();
-                final String t2 = d2.getStage().getTitle();
-                assert t1 != null;
-                assert t2 != null;
-                result = t1.compareTo(t2);
-            }
-
-            return result;
-        }
-
-    }
-    void apply();
-    void track();
-    void untrack();
-
+public interface SceneBuilderWindow {
+    Stage getStage();
 }

@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
@@ -56,10 +57,10 @@ import javafx.stage.WindowEvent;
 /**
  * The Class AbstractWindowController.
  */
-public abstract class AbstractWindowController {
+public abstract class AbstractWindowController implements SceneBuilderWindow {
 
     /** The owner window stage. */
-    final private Stage owner;
+    final private SceneBuilderWindow owner;
 
     /** The root. */
     private Parent root;
@@ -87,7 +88,7 @@ public abstract class AbstractWindowController {
      * @param api the scene builder api
      * @param owner the owner
      */
-    public AbstractWindowController(Api api, Stage owner) {
+    public AbstractWindowController(Api api, SceneBuilderWindow owner) {
         this(api, owner, true);
     }
 
@@ -98,20 +99,11 @@ public abstract class AbstractWindowController {
      * @param owner the owner
      * @param sizeToScene the size to scene
      */
-    public AbstractWindowController(Api api, Stage owner, boolean sizeToScene) {
+    public AbstractWindowController(Api api, SceneBuilderWindow owner, boolean sizeToScene) {
         this.api = api;
         this.owner = owner;
         this.sizeToScene = sizeToScene;
         
-        api.getApiDoc().getDocumentManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
-            onCloseRequest();
-            closeWindow();
-        });
-        
-        api.getSceneBuilderManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
-            onCloseRequest();
-            closeWindow();
-        });
     }
     
 
@@ -138,7 +130,7 @@ public abstract class AbstractWindowController {
     };
 
     /** The focus handler. */
-    private final ChangeListener<Boolean> focusHandler = (ob, o, n) -> {
+    private final ChangeListener<Boolean> focusEventHandler = (ob, o, n) -> {
         if (n) {
             onFocus();
         }
@@ -181,12 +173,12 @@ public abstract class AbstractWindowController {
      */
     public Stage getStage(boolean renew) {
         assert Platform.isFxApplicationThread();
-
+        
         if (stage == null || renew) {
             stage = new Stage();
-            stage.initOwner(this.owner);
+            stage.initOwner(this.owner == null ? null : this.owner.getStage());
             stage.setOnCloseRequest(closeRequestHandler);
-            stage.focusedProperty().addListener(focusHandler);
+            stage.focusedProperty().addListener(focusEventHandler);
             stage.setScene(getScene());
             clampWindow();
             if (sizeToScene) {
@@ -194,7 +186,7 @@ public abstract class AbstractWindowController {
             }
             // By default we set the same icons as the owner
             if (this.owner != null) {
-                stage.getIcons().addAll(this.owner.getIcons());
+                stage.getIcons().addAll(this.owner.getStage().getIcons());
             } else if (api.getIconSetting() != null) {
                 api.getIconSetting().setWindowIcon(stage);
             }
@@ -205,10 +197,14 @@ public abstract class AbstractWindowController {
         return stage;
     }
     
+    @Override
     public Stage getStage() {
         return getStage(false);
     }
 
+    public boolean isOpen() {
+        return stage != null && stage.isShowing();
+    }
     /**
      * Opens this window and place it in front.
      */
@@ -226,17 +222,6 @@ public abstract class AbstractWindowController {
         getStage().close();
     }
 
-//    /*
-//     * To be implemented by subclasses
-//     */
-//
-//    /**
-//     * Creates the FX object composing the window content. This routine is called by
-//     * {@link AbstractWindowController#getRoot}. It *must* invoke
-//     * {@link AbstractWindowController#setRoot}.
-//     */
-//    protected abstract void makeRoot();
-
     /**
      * On close request.
      *
@@ -248,7 +233,7 @@ public abstract class AbstractWindowController {
      * On focus.
      */
     public abstract void onFocus();
-
+    
     /**
      * Controller did create scene.
      */

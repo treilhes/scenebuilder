@@ -44,6 +44,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
@@ -62,7 +63,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 /**
  * Preferences window controller.
@@ -85,7 +85,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     @FXML
     private Button documentResetButton;
 
-    private final Stage ownerWindow;
+    private final SceneBuilderWindow ownerWindow;
 
     private List<UserPreference<?>> globalPreferences;
     private List<UserPreference<?>> documentPreferences;
@@ -96,8 +96,8 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
             @Autowired List<ManagedGlobalPreference> globalPreferences,
             @Autowired List<ManagedDocumentPreference> documentPreferences) {
         super(api, PreferencesWindowController.class.getResource("Preferences.fxml"), // NOI18N
-                I18N.getBundle(), documentWindowController.getStage());
-        this.ownerWindow = documentWindowController.getStage();
+                I18N.getBundle(), documentWindowController);
+        this.ownerWindow = documentWindowController;
 
         this.globalPreferences = globalPreferences.stream()
                 .filter(p -> UserPreference.class.isAssignableFrom(p.getClass())).map(p -> (UserPreference<?>) p)
@@ -158,7 +158,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
 
         getStage().setTitle(I18N.getString("prefs.title"));
         getStage().initModality(Modality.APPLICATION_MODAL);
-        getStage().initOwner(ownerWindow);
+        getStage().initOwner(ownerWindow.getStage());
         getStage().setResizable(false);
     }
 

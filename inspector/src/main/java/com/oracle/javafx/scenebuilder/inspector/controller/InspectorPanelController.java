@@ -613,7 +613,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // - selected classes change
         // - common parent change
         // - resolve state change
-        return (!newSelectionState.getSelectedClasses().equals(selectionState.getSelectedClasses())
+        return (selectionState == null 
+                || !newSelectionState.getSelectedClasses().equals(selectionState.getSelectedClasses())
                 || (newSelectionState.getCommonParentClass() != selectionState.getCommonParentClass())
                 || (!newSelectionState.getUnresolvedInstances().equals(selectionState.getUnresolvedInstances())));
     }

@@ -79,7 +79,8 @@ public class UpdateController {
         versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 Platform.runLater(() -> {
-                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, main.getFrontDocumentWindow().getStage());
+                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, 
+                            main.getFrontDocumentWindow().getDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.error.title"));
                     alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
                     alert.setContentText(I18N.getString("check_for_updates.alert.error.message"));
@@ -94,7 +95,8 @@ public class UpdateController {
                         dialog.showAndWait();
                     });
                 } else {
-                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION, main.getFrontDocumentWindow().getStage());
+                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION, 
+                            main.getFrontDocumentWindow().getDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.up_to_date.title"));
                     alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
                     alert.setContentText(I18N.getString("check_for_updates.alert.up_to_date.message"));

@@ -44,7 +44,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.DebugMenu;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
@@ -72,19 +71,22 @@ import javafx.scene.control.SeparatorMenuItem;
 public class DebugMenuController implements DebugMenu {
 
     private final Menu menu = new Menu("Debug"); //NOI18N
-    private final DocumentWindow documentWindowController;
+    private final Content content;
+    private final JobManager jobManager;
 	private final FileSystem fileSystem;
 	private final Dialog dialog;
     private final DebugMenuWindowController debugMenuWindow;
 
     public DebugMenuController(
-    		@Autowired @Lazy DocumentWindow documentWindowController,
+    		@Autowired JobManager jobManager,
+    		@Autowired Content content,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,
     		@Autowired SceneBuilderManager sceneBuilderManager,
     		@Autowired @Lazy DebugMenuWindowController  debugMenuWindow) {
 
-        this.documentWindowController = documentWindowController;
+        this.content = content;
+        this.jobManager = jobManager;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
         this.debugMenuWindow = debugMenuWindow;
@@ -110,9 +112,7 @@ public class DebugMenuController implements DebugMenu {
         layoutMenuItem.setText("Check \"localToSceneTransform Properties\" in Content Panel"); //NOI18N
         layoutMenuItem.setOnAction(t -> {
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM BEGINS"); //NOI18N
-            final Content cpc
-                    = DebugMenuController.this.documentWindowController.getContentPanelController();
-            checkLocalToSceneTransform(cpc.getRoot());
+            checkLocalToSceneTransform(content.getRoot());
             System.out.println("CHECK LOCAL TO SCENE TRANSFORM ENDS"); //NOI18N
         });
 
@@ -199,9 +199,7 @@ public class DebugMenuController implements DebugMenu {
      */
 
     private void undoRedoStackMenuShowing(Menu menu) {
-        final JobManager jobManager
-                = documentWindowController.getEditorController().getJobManager();
-
+        
         final List<Job> redoStack = jobManager.getRedoStack();
         final List<Job> undoStack = jobManager.getUndoStack();
 

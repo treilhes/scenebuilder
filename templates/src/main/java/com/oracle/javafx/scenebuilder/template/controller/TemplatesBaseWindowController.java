@@ -41,6 +41,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
@@ -57,7 +58,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import lombok.Getter;
 
 public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowController {
@@ -78,7 +78,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
             Api api,
             URL fxmlURL,
             ResourceBundle resources,
-            Stage owner,
+            SceneBuilderWindow owner,
             List<TemplateGroup> templateGroups,
             List<Template> templates) {
         super(api, fxmlURL, resources, owner);

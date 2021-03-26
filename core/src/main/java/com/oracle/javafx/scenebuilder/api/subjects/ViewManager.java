@@ -32,11 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.api.subjects;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
@@ -59,7 +60,7 @@ public interface ViewManager {
 	@EqualsAndHashCode
 	public static class DockRequest {
 		private final @Getter View source;
-		private final @Getter Dock target;
+		private final @Getter UUID target;
 		private @Getter boolean select = true;;
 		
 	}

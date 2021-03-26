@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Main;
@@ -74,15 +74,15 @@ public class TemplateController {
     }
 
     public void loadTemplateInNewWindow(Template template) {
-        final DocumentWindow newTemplateWindow = main.makeNewWindow();
+        final Document newTemplateWindow = main.makeNewWindow();
         loadTemplateInWindow(template, newTemplateWindow);
     }
     
     public void loadTemplateInCurrentWindow(Template template) {
-        loadTemplateInWindow(template, context.getBean(DocumentWindow.class));
+        loadTemplateInWindow(template, context.getBean(Document.class));
     }
 
-    private void loadTemplateInWindow(Template template, DocumentWindow document) {
+    private void loadTemplateInWindow(Template template, Document document) {
 
         if (template != null && template.getFxmlUrl() != null) {
             document.loadFromURL(template.getFxmlUrl());
