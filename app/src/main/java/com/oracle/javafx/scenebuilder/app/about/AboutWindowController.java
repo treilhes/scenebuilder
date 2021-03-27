@@ -64,15 +64,15 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
     @FXML
     private TextArea textArea;
 
+    private String sbBuildInfo;
     private String sbBuildVersion;
     private String sbBuildDate;
     private String sbBuildJavaVersion;
-    private String sbBuildInfo;
-    
+    private String sbBuildJavaFXVersion;
     // The resource bundle contains two keys: about.copyright and about.copyright.open
     private String sbAboutCopyrightKeyName;
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
-    private final String LOG_FILE_NAME;
+    private final String LOG_FILE_NAME = "scenebuilder-" + AppSettings.getSceneBuilderVersion() + ".log"; //NOI18N
 
     public AboutWindowController(
             @Autowired @Lazy Api api
@@ -88,12 +88,12 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
                 sbBuildVersion = sbProps.getProperty("build.version", "UNSET"); //NOI18N
                 sbBuildDate = sbProps.getProperty("build.date", "UNSET"); //NOI18N
                 sbBuildJavaVersion = sbProps.getProperty("build.java.version", "UNSET"); //NOI18N
+                sbBuildJavaFXVersion = sbProps.getProperty("build.javafx.version", "UNSET"); //NOI18N
                 sbAboutCopyrightKeyName = sbProps.getProperty("copyright.key.name", "UNSET"); //NOI18N
             }
         } catch (IOException ex) {
             // We go with default values
         }
-        this.LOG_FILE_NAME = "scenebuilder-" + sbBuildVersion + ".log"; //NOI18N
     }
 
     @FXML
@@ -138,6 +138,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
         StringBuilder text = getVersionParagraph()
                 .append(getBuildInfoParagraph())
                 .append(getLoggingParagraph())
+                .append(getJavaFXParagraph())
                 .append(getJavaParagraph())
                 .append(getOsParagraph())
                 .append(I18N.getString(sbAboutCopyrightKeyName));
@@ -185,6 +186,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
         StringBuilder sb = new StringBuilder(I18N.getString("about.build.information"));
         sb.append("\n").append(sbBuildInfo).append("\n") //NOI18N
                 .append(I18N.getString("about.build.date", sbBuildDate)).append("\n")
+                .append(I18N.getString("about.build.javafx.version", sbBuildJavaFXVersion)).append("\n")
                 .append(I18N.getString("about.build.java.version", sbBuildJavaVersion))
                 .append("\n\n"); //NOI18N
         return sb;
@@ -200,6 +202,12 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
         return sb;
     }
 
+    private StringBuilder getJavaFXParagraph() {
+        StringBuilder sb = new StringBuilder("JavaFX\n"); //NOI18N
+        sb.append(System.getProperty("javafx.version")).append("\n\n"); //NOI18N
+        return sb;
+    }
+    
     private StringBuilder getJavaParagraph() {
         StringBuilder sb = new StringBuilder("Java\n"); //NOI18N
         sb.append(System.getProperty("java.runtime.version")).append(", ") //NOI18N
