@@ -30,43 +30,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core;
+package com.oracle.javafx.scenebuilder.app.i18n;
 
-import java.util.UUID;
+import java.util.ResourceBundle;
 
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
-import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
+import com.oracle.javafx.scenebuilder.api.i18n.I18NControl;
 
-@ComponentScan(
-        basePackageClasses = {
-            PropertyEditorFactory.class,
-            CoreEditors.class,
-            Selection.class,
-            Metadata.class,
-            DocumentationImpl.class,
-            DockPanelController.class,
-            DockTypeAccordion.class,
-            DockTypeSplitH.class,
-            DockTypeSplitV.class,
-            DockTypeTab.class
-            },
-        basePackages = {})
-public class CoreExtension extends AbstractExtension {
+@Component
+public class I18NApp implements BundleProvider {
+
+    private static ResourceBundle bundle;
+
+    private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
 
     @Override
-    public UUID getId() {
-        return UUID.fromString("e000402f-89dc-499d-afae-36149efc2537");
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NApp.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderApp",utf8EncodingControl); //NOI18N
+        }
+        return bundle;
     }
-
 }
+

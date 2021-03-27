@@ -94,8 +94,6 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     private RadioMenuItem showFxIdMenuItem;
     private RadioMenuItem showNodeIdMenuItem;
 
-    private final ViewSearch viewSearch;
-
     private List<MenuItem> menuItems;
 
     /*
@@ -117,8 +115,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		@Autowired AccordionAnimationPreference accordionAnimationPreference,
     		@Autowired @Qualifier("documentPanelActions.ShowInfoAction") Action showInfoAction,
     		@Autowired @Qualifier("documentPanelActions.ShowFxIdAction") Action showFxIdAction,
-    		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction,
-    		@Autowired ViewSearch viewSearch
+    		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction
     		) { //, UserLibrary library) {
         super(VIEW_NAME, api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
@@ -131,7 +128,6 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         this.showFxIdAction = showFxIdAction;
         this.showNodeIdAction = showNodeIdAction;
         
-        this.viewSearch = viewSearch;
     }
 
     @FXML
@@ -222,7 +218,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
     @Override
     public ViewSearch getSearchController() {
-        return viewSearch;
+        return null;
     }
 
     @Override

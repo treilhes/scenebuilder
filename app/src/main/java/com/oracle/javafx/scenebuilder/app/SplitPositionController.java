@@ -53,7 +53,7 @@ import lombok.RequiredArgsConstructor;
 
 public class SplitPositionController {
     
-    private static final int MIN_DIVIDER_DIFFERENCE = 20;
+    //private static final int MIN_DIVIDER_DIFFERENCE = 20;
     
     public static final AllocationStrategy MAIN_LEFT_RIGHT = new AllocationStrategy() {
         

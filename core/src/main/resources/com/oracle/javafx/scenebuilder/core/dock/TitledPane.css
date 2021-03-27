@@ -1,6 +1,6 @@
 #view-titled-pane > .title 
 {
-	-fx-padding: 0.25em 0 0.45em 0.0em;
+	-fx-padding: 0.0em 0 0.0em 0.0em;
 	-fx-min-height: -sb-header-height;
     -fx-background-color:
             derive(-sb-grad-hi, 25%),
@@ -18,4 +18,5 @@
 #view-titled-pane .arrow-button 
 {
 	-fx-padding: 0 4 0 4;
+	-fx-min-height: -sb-header-height;
 }

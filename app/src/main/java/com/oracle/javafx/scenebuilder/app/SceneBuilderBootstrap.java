@@ -41,8 +41,31 @@ import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
+import com.oracle.javafx.scenebuilder.app.i18n.I18NApp;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
+import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
+import com.oracle.javafx.scenebuilder.app.message.MessagePanelController;
+import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
+import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
+import com.oracle.javafx.scenebuilder.app.preferences.RootPreferencesNodeImpl;
+import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LeftVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.LibraryVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.MaximizedPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.RightDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.RightVisiblePreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
+import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
+import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 
@@ -50,19 +73,41 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 @ComponentScan(basePackageClasses = { 
-        com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
-        com.oracle.javafx.scenebuilder.app.i18n.I18N.class, 
-        WelcomeDialogWindowController.class, 
-        PreferencesController.class,
+        AboutWindowController.class,
+        I18NApp.class,
         MenuBarController.class, 
+        MessageBarController.class,
+        MessagePanelController.class,
+        
+        DocumentPreferencesController.class,
+        DocumentPreferencesNodeImpl.class,
+        PreferencesController.class,
+        RootPreferencesNodeImpl.class,
+        
+        BottomDividerVPosPreference.class,
+        BottomVisiblePreference.class,
+        DocumentVisiblePreference.class,
+        LeftDividerHPosPreference.class,
+        LeftDividerVPosPreference.class,
+        LeftVisiblePreference.class,
+        LibraryVisiblePreference.class,
+        MaximizedPreference.class,
+        PathPreference.class,
+        RightDividerHPosPreference.class,
+        RightVisiblePreference.class,
+        StageHeightPreference.class,
+        StageWidthPreference.class,
+        XPosPreference.class,
+        YPosPreference.class,
+        WindowIconSetting.class,
+        WelcomeDialogWindowController.class, 
+        DocumentController.class,
+        DocumentWindowController.class,
+        MainController.class
+        
         }, 
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.api.subjects", 
-                "com.oracle.javafx.scenebuilder.app",
-                "com.oracle.javafx.scenebuilder.app.actions",
-                "com.oracle.javafx.scenebuilder.app.settings", 
-                "com.oracle.javafx.scenebuilder.app.preferences",
-        })
+        basePackages = {})
+
 public class SceneBuilderBootstrap extends JavafxApplication {
 
     private static final CountDownLatch launchLatch = new CountDownLatch(1);

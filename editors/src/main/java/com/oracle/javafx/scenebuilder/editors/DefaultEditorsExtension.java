@@ -36,13 +36,87 @@ import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
 
+import com.oracle.javafx.scenebuilder.editors.control.AnchorPaneConstraintsEditor;
+import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
+import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ButtonTypeEditor;
+import com.oracle.javafx.scenebuilder.editors.control.CharsetEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ColorPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ColumnResizePolicyEditor;
+import com.oracle.javafx.scenebuilder.editors.control.CursorEditor;
+import com.oracle.javafx.scenebuilder.editors.control.DefaultEditors;
+import com.oracle.javafx.scenebuilder.editors.control.DividerPositionsEditor;
+import com.oracle.javafx.scenebuilder.editors.control.DoubleEditor;
+import com.oracle.javafx.scenebuilder.editors.control.DurationEditor;
+import com.oracle.javafx.scenebuilder.editors.control.EnumEditor;
+import com.oracle.javafx.scenebuilder.editors.control.EventHandlerEditor;
+import com.oracle.javafx.scenebuilder.editors.control.FunctionalInterfaceEditor;
+import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
+import com.oracle.javafx.scenebuilder.editors.control.I18nStringEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ImageEditor;
+import com.oracle.javafx.scenebuilder.editors.control.IncludeFxmlEditor;
+import com.oracle.javafx.scenebuilder.editors.control.InsetsEditor;
+import com.oracle.javafx.scenebuilder.editors.control.IntegerEditor;
+import com.oracle.javafx.scenebuilder.editors.control.Point3DEditor;
+import com.oracle.javafx.scenebuilder.editors.control.RotateEditor;
+import com.oracle.javafx.scenebuilder.editors.control.StringEditor;
+import com.oracle.javafx.scenebuilder.editors.control.StringListEditor;
+import com.oracle.javafx.scenebuilder.editors.control.StyleClassEditor;
+import com.oracle.javafx.scenebuilder.editors.control.StyleEditor;
+import com.oracle.javafx.scenebuilder.editors.control.StylesheetEditor;
+import com.oracle.javafx.scenebuilder.editors.control.TextAlignmentEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.BoundsPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.EffectPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.FontPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.GenericPaintPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.KeyCombinationPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.Rectangle2DPopupEditor;
+import com.oracle.javafx.scenebuilder.editors.popupeditors.StringPopupEditor;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 @ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.editors.control",
-                "com.oracle.javafx.scenebuilder.editors.popupeditors"
-        })
+        basePackageClasses = {
+                AnchorPaneConstraintsEditor.class,
+                BooleanEditor.class,
+                BoundedDoubleEditor.class,
+                ButtonTypeEditor.class,
+                CharsetEditor.class,
+                ColorPopupEditor.class,
+                ColumnResizePolicyEditor.class,
+                CursorEditor.class,
+                DefaultEditors.class,
+                DividerPositionsEditor.class,
+                DoubleEditor.class,
+                DurationEditor.class,
+                EnumEditor.class,
+                EventHandlerEditor.class,
+                FunctionalInterfaceEditor.class,
+                GenericEditor.class,
+                I18nStringEditor.class,
+                ImageEditor.class,
+                IncludeFxmlEditor.class,
+                InsetsEditor.class,
+                IntegerEditor.class,
+                Point3DEditor.class,
+                RotateEditor.class,
+                StringEditor.class,
+                StringListEditor.class,
+                StyleClassEditor.class,
+                StyleEditor.class,
+                StylesheetEditor.class,
+                TextAlignmentEditor.class,
+                ToggleGroupEditor.class,
+                
+                BoundsPopupEditor.class,
+                EffectPopupEditor.class,
+                FontPopupEditor.class,
+                GenericPaintPopupEditor.class,
+                KeyCombinationPopupEditor.class,
+                Rectangle2DPopupEditor.class,
+                StringPopupEditor.class,
+        },
+        basePackages = {})
 public class DefaultEditorsExtension extends AbstractExtension {
 
     @Override

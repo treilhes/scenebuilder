@@ -37,12 +37,47 @@ import java.util.UUID;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentThemeExtension;
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentUserStylesheetsExtension;
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentWatchExtension;
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyI18nContentAction;
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyI18nContentResourceExtension;
+import com.oracle.javafx.scenebuilder.ext.actions.ApplyI18nContentWatchExtension;
+import com.oracle.javafx.scenebuilder.ext.controller.I18nResourceMenuController;
+import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
+import com.oracle.javafx.scenebuilder.ext.controller.ThemeMenuController;
+import com.oracle.javafx.scenebuilder.ext.menu.I18nMenuProvider;
+import com.oracle.javafx.scenebuilder.ext.menu.ThemeMenuProvider;
+import com.oracle.javafx.scenebuilder.ext.menu.UserStylesheetsMenuProvider;
+import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
+import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
+import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 @Configuration
 @ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.ext"
-        })
+        basePackageClasses = {
+                ApplyCssContentAction.class,
+                ApplyCssContentThemeExtension.class,
+                ApplyCssContentUserStylesheetsExtension.class,
+                ApplyCssContentWatchExtension.class,
+                ApplyI18nContentAction.class,
+                ApplyI18nContentResourceExtension.class,
+                ApplyI18nContentWatchExtension.class,
+                I18nResourceMenuController.class,
+                SceneStyleSheetMenuController.class,
+                ThemeMenuController.class,
+                I18nMenuProvider.class,
+                ThemeMenuProvider.class,
+                UserStylesheetsMenuProvider.class,
+                I18NResourcePreference.class,
+                com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference.class,
+                UserStylesheetsPreference.class,
+                ThemePreference.class,
+                DefaultThemesList.class
+        },
+        basePackages = {})
 public class BasicThemeAndResourceExtension extends AbstractExtension {
 
     @Override

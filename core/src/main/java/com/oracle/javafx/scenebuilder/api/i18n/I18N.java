@@ -39,11 +39,9 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-@Component("i18n")
-@Lazy
+@Component
 public class I18N {
 	
     public static void initForTest() {

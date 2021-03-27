@@ -30,25 +30,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
+package com.oracle.javafx.scenebuilder.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
+import java.util.UUID;
 
-import javafx.geometry.Orientation;
+import org.springframework.context.annotation.ComponentScan;
 
-@Component
-@Lazy
-public class DockTypeSplitV extends AbstractDockTypeSplit {
+import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
+import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-    public DockTypeSplitV(@Autowired ApplicationContext context) {
-        super(context, Orientation.VERTICAL);
-    }
+@ComponentScan(
+        basePackageClasses = {
+            I18N.class,
+            PreferencesContext.class,
+            MavenSetting.class,
+            SceneBuilderBeanFactory.class,
+            ExtendedJob.class,
+            ExtendedAction.class,
+            Api.class,
+            PreferencesContext.class,
+            DockManager.class,
+            DocumentManager.class,
+            NetworkManager.class,
+            SceneBuilderManager.class,
+            ViewManager.class
+            },
+        basePackages = {})
+public class ApiExtension extends AbstractExtension {
 
     @Override
-    public String getNameKey() {
-        return "%viewtype.splitv";
+    public UUID getId() {
+        return UUID.fromString("5c288676-df8c-4755-ba74-8001ce5d1c6b");
     }
+
 }

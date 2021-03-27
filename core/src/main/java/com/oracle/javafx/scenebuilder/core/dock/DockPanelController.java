@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
+package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +94,9 @@ public class DockPanelController implements Dock {
         this.dockType = dockTypes.get(0);
         
         dockManager.dockCreated().onNext(this);
+        
         viewManager.dock().filter(dr -> dr.getTarget().equals(this.getId())).subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
+        viewManager.undock().subscribe(v -> viewDeleted(v));
     }
     
     
@@ -115,9 +117,21 @@ public class DockPanelController implements Dock {
         
         items.add(dockViewMenu);
         
+        Menu undockMenu = new Menu("Undock to");
+        
+        MenuItem mi = new MenuItem("New window");
+        mi.setOnAction((e) -> undockToNewWindow(view));
+        undockMenu.getItems().add(mi);
+        
+        items.add(undockMenu);
+        
         return items;
     }
-    
+    private void undockToNewWindow(View view) {
+        
+        viewManager.undock().onNext(view);
+        
+    }
     private void changedDockType(DockType<?> dockType, View view) {
         this.dockType = dockType;
         
@@ -141,12 +155,33 @@ public class DockPanelController implements Dock {
     
     private void updateDockView(DockContext<?> focused) {
         assert dockType != null;
+        getContent().getChildren().clear();
+        
+        if (views.isEmpty()) {
+            return;
+        }
         
         @SuppressWarnings("unchecked")
         Node dockContent = dockType.computeRoot(views, focused);
         VBox.setVgrow(dockContent, Priority.ALWAYS);
-        getContent().getChildren().clear();
         getContent().getChildren().add(dockContent);
+    }
+    
+    private void viewDeleted(View view) {
+        assert view != null;
+        assert dockType != null;
+        assert dockTypes.size() > 0;
+
+        DockContext<?> dockContext = views.stream().filter(dc -> dc.getView() == view).findFirst().orElse(null);
+        if (dockContext != null) {
+            dockContext.getDisposer().dispose();
+            views.remove(dockContext);
+            viewDeleted(dockContext.getView());
+            
+            Platform.runLater(() -> {
+                updateDockView(null);
+            });
+        }
     }
 
     private void viewAdded(View view, boolean select) {

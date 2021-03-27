@@ -39,25 +39,24 @@ import org.springframework.context.annotation.ComponentScan;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
+import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
+import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 
 @ComponentScan(basePackageClasses = { 
-        com.oracle.javafx.scenebuilder.kit.i18n.I18N.class,
+        I18N.class,
         BuiltinGlossary.class,
         ErrorReportImpl.class,
         EditorController.class, 
         SelectionBarController.class, 
         JobManagerImpl.class,
-        DialogController.class
-        
+        DialogController.class,
+        MessageLog.class
         }, 
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.kit.preferences",
-                "com.oracle.javafx.scenebuilder.kit.editor.messagelog"
-        })
+        basePackages = {})
 public class KitExtension extends AbstractExtension {
 
     @Override

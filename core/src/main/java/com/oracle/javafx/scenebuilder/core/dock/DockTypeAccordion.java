@@ -30,11 +30,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
+package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
@@ -42,31 +45,34 @@ import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
-import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-public abstract class AbstractDockTypeSplit implements DockType<Node> {
+@Component
+@Lazy
+public class DockTypeAccordion implements DockType<TitledPane> {
 
-    private final static String VIEW_SOURCE = "View.fxml";
+    private final static String VIEW_SOURCE = "TitledPane.fxml";
 
     private final ApplicationContext context;
 
-    private final Orientation orientation;
-
-    public AbstractDockTypeSplit(ApplicationContext context, Orientation orientation) {
+    public DockTypeAccordion(@Autowired ApplicationContext context) {
         this.context = context;
-        this.orientation = orientation;
     }
 
     @Override
-    public DockContext<Node> computeView(View view) {
+    public String getNameKey() {
+        return "%viewtype.accordion";
+    }
 
+    @Override
+    public DockContext<TitledPane> computeView(View view) {
         var ctrl = context.getBean(ViewController.class);
 
-        Node node = FXMLUtils.load(ctrl, AbstractDockTypeSplit.class, VIEW_SOURCE);
+        TitledPane titledPane = FXMLUtils.load(ctrl, DockTypeAccordion.class, VIEW_SOURCE);
 
         ctrl.getViewLabel().textProperty().bind(view.getName());
 
@@ -83,9 +89,11 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
             ctrl.getViewMenuButton().getItems().addAll(menuItems);
         }
 
-        var dockContext = new DockContext<>(view, ctrl, node, () -> {
+        var dockContext = new DockContext<>(view, ctrl, titledPane, () -> {
             ctrl.getViewLabel().textProperty().unbind();
-            ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+            if (view.getSearchController() != null) {
+                ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+            }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
             ctrl.getViewMenuButton().getItems().removeAll(menuItems);
         });
@@ -94,18 +102,15 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
     }
 
     @Override
-    public Node computeRoot(List<DockContext<Node>> views, DockContext<Node> focused) {
-        SplitPane sPane = new SplitPane();
-        sPane.setOrientation(orientation);
+    public Node computeRoot(List<DockContext<TitledPane>> views, DockContext<TitledPane> focused) {
+        TitledPane[] panes = views.stream().map(v -> v.getDockContent()).toArray(TitledPane[]::new);
+        var accordion = new Accordion(panes);
         
-        double coef = 1.0 / views.size();
-
-        for (int i = 0; i < views.size(); i++) {
-            var v = views.get(i);
-            sPane.setDividerPosition(i, coef * (i + 1));
-            sPane.getItems().add(v.getDockContent());
+        if (focused == null && !accordion.getPanes().isEmpty()) {
+            accordion.setExpandedPane(accordion.getPanes().get(0));
+        } else if (focused != null) {
+            accordion.setExpandedPane(focused.getDockContent());
         }
-
-        return sPane;
+        return accordion;
     }
 }

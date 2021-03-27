@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.dock;
+package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.List;
 
@@ -91,7 +91,9 @@ public class DockTypeTab implements DockType<Tab> {
 
         var dockContext = new DockContext<>(view, ctrl, tab, () -> {
             tab.textProperty().unbind();
-            ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+            if (view.getSearchController() != null) {
+                ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+            }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
             ctrl.getViewMenuButton().getItems().removeAll(menuItems);
         });
@@ -106,7 +108,7 @@ public class DockTypeTab implements DockType<Tab> {
         
         if (focused == null && !tabs.getTabs().isEmpty()) {
             tabs.getSelectionModel().select(tabs.getTabs().get(0));
-        } else {
+        } else if (focused != null) {
             tabs.getSelectionModel().select(focused.getDockContent());
         }
         

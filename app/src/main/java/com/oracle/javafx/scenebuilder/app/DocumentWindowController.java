@@ -67,13 +67,13 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 
 import javafx.beans.InvalidationListener;

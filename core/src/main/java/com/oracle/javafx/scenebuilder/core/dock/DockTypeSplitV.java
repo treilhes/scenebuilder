@@ -30,29 +30,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.i18n;
+package com.oracle.javafx.scenebuilder.core.dock;
 
-import java.util.ResourceBundle;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
-import com.oracle.javafx.scenebuilder.api.i18n.I18NControl;
+import javafx.geometry.Orientation;
 
-@Component("I18NApp")
-public class I18N implements BundleProvider {
+@Component
+@Lazy
+public class DockTypeSplitV extends AbstractDockTypeSplit {
 
-    private static ResourceBundle bundle;
-
-    private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
+    public DockTypeSplitV(@Autowired ApplicationContext context) {
+        super(context, Orientation.VERTICAL);
+    }
 
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18N.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderApp",utf8EncodingControl); //NOI18N
-        }
-        return bundle;
+    public String getNameKey() {
+        return "%viewtype.splitv";
     }
 }
-
