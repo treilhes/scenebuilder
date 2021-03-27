@@ -1,6 +1,0 @@
-dependencies {
-	implementation project(':core')
-	implementation project(':sb')
-	implementation project(':jobs')
-	implementation project(':editors')
-}

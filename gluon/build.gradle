@@ -1,9 +1,0 @@
-dependencies {
-	implementation project(':core')
-	implementation project(':defaultx')
-	implementation project(':controls')
-	implementation project(':jobs')
-
-	//temp
-	implementation project(':kit')
-}

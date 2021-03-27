@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.app.preferences;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
@@ -44,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
  * Defines preferences for Scene Builder App.
  */
 @Component
+@DependsOn("i18n")
 public class PreferencesController  {
 
     private final List<ManagedGlobalPreference> preferences;

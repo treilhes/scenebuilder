@@ -72,7 +72,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
     // The resource bundle contains two keys: about.copyright and about.copyright.open
     private String sbAboutCopyrightKeyName;
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
-    private final String LOG_FILE_NAME = "scenebuilder-" + AppSettings.getSceneBuilderVersion() + ".log"; //NOI18N
+    private final String LOG_FILE_NAME;
 
     public AboutWindowController(
             @Autowired @Lazy Api api
@@ -94,6 +94,7 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
         } catch (IOException ex) {
             // We go with default values
         }
+        this.LOG_FILE_NAME = "scenebuilder-" + sbBuildVersion + ".log"; //NOI18N
     }
 
     @FXML

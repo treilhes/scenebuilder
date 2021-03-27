@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("i18n")
 public class I18N {
 	
     public static void initForTest() {
