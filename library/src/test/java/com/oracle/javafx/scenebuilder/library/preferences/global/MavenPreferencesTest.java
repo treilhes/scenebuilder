@@ -107,7 +107,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferencesTest#provideValidObjects")
+	@MethodSource("provideValidObjects")
 	void shouldCreateRecord(MavenArtifact artifact, TestInfo testInfo) throws Exception {
 		MavenArtifactsPreferences mp = new MavenArtifactsPreferences(globalPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();
@@ -117,7 +117,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferencesTest#provideValidObjects")
+	@MethodSource("provideValidObjects")
 	void shouldCreateDocumentRecord(MavenArtifact artifact, TestInfo testInfo) throws Exception {
 		MavenArtifactsPreferences mp = new MavenArtifactsPreferences(documentPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();
@@ -129,7 +129,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferencesTest#provideInvalidObjects")
+	@MethodSource("provideInvalidObjects")
 	public void shouldNotCreateRecord(MavenArtifact artifact, TestInfo testInfo) throws Exception {
 		MavenArtifactsPreferences mp = new MavenArtifactsPreferences(globalPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();
@@ -139,7 +139,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.MavenPreferencesTest#provideInvalidObjects")
+	@MethodSource("provideInvalidObjects")
 	public void shouldNotCreateDocumentRecord(MavenArtifact artifact, TestInfo testInfo) throws Exception {
 		MavenArtifactsPreferences mp = new MavenArtifactsPreferences(documentPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();

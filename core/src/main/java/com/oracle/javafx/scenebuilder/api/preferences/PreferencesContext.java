@@ -206,7 +206,11 @@ public class PreferencesContext {
 				public String computeDocumentNodeName() {
 					return PreferencesContext.this.computeDocumentNodeName();
 				}
-			
+
+				@Override
+                public String getCurrentFilePath() {
+                    return PreferencesContext.this.getCurrentFilePath();
+                }
 		};
 	}
 	

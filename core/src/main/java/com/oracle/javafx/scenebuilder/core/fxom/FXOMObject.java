@@ -48,6 +48,7 @@ import com.oracle.javafx.scenebuilder.core.util.URLUtils;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 
 /**
  *
@@ -561,11 +562,20 @@ public abstract class FXOMObject extends FXOMNode {
         result = this;
         current = this;
         while (current.getParentObject() != null) {
-            if (result == null && current.isNode() && ((Node)current.getSceneGraphObject()).getParent() != null) {
-                result = current;
-            } else if (result != null && current.isNode() && ((Node)current.getSceneGraphObject()).getParent() == null) {
-                result = null;
+            boolean isNode = current.isNode();
+            
+            if (isNode) {
+                Node node = (Node)current.getSceneGraphObject();
+                boolean hasParent = node.getParent() != null;
+                boolean hasParentSubScene = current.getParentObject() != null 
+                        && current.getParentObject().getSceneGraphObject() instanceof SubScene; 
+                if (result == null && hasParent) {
+                    result = current;
+                } else if (result != null && !hasParent && !hasParentSubScene) {
+                    result = null;
+                }
             }
+            
             current = current.getParentObject();
         }
         

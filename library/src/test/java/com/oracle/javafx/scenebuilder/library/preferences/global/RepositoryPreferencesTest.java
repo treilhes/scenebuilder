@@ -86,14 +86,20 @@ class RepositoryPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	private static Repository invalidFieldsObject = new Repository();
-	private static Repository invalidCoordinatesObject = new Repository();
-
+	
+	private static Repository invalidUrlObject = new Repository();
+	static {
+	    invalidUrlObject.setId("id3");
+	    invalidUrlObject.setType("default");
+	    invalidUrlObject.setURL(null);
+    }
+	
 	protected static Stream<Repository> provideValidObjects() {
 		return Stream.of(validObject, validObject2, validObject3);
 	}
 
 	protected static Stream<Repository> provideInvalidObjects() {
-		return Stream.of(invalidFieldsObject, invalidCoordinatesObject);
+		return Stream.of(invalidFieldsObject, invalidUrlObject);
 	}
 
 	@Test
@@ -114,7 +120,7 @@ class RepositoryPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferencesTest#provideValidObjects")
+	@MethodSource("provideValidObjects")
 	void shouldCreateRecord(Repository artifact, TestInfo testInfo) throws Exception {
 		MavenRepositoriesPreferences mp = new MavenRepositoriesPreferences(globalPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();
@@ -124,7 +130,7 @@ class RepositoryPreferencesTest extends AbstractPreferencesTest {
 	}
 	
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferencesTest#provideValidObjects")
+	@MethodSource("provideValidObjects")
 	void shouldCreateDocumentRecord(Repository artifact, TestInfo testInfo) throws Exception {
 		MavenRepositoriesPreferences mp = new MavenRepositoriesPreferences(documentPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();
@@ -136,7 +142,7 @@ class RepositoryPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferencesTest#provideInvalidObjects")
+	@MethodSource("provideInvalidObjects")
 	public void shouldNotCreateRecord(Repository artifact, TestInfo testInfo) throws Exception {
 		MavenRepositoriesPreferences mp = new MavenRepositoriesPreferences(globalPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();
@@ -146,7 +152,7 @@ class RepositoryPreferencesTest extends AbstractPreferencesTest {
 	}
 	
 	@ParameterizedTest
-	@MethodSource("com.oracle.javafx.scenebuilder.kit.preferences.RepositoryPreferencesTest#provideInvalidObjects")
+	@MethodSource("provideInvalidObjects")
 	public void shouldNotCreateDocumentRecord(Repository artifact, TestInfo testInfo) throws Exception {
 		MavenRepositoriesPreferences mp = new MavenRepositoriesPreferences(documentPreferenceContext);
 		mp.getRecord(artifact).writeToJavaPreferences();

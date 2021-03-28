@@ -106,6 +106,11 @@ class AbstractPreferencesTest {
 			public String computeDocumentNodeName() {
 				return DOCUMENT_ITEM_NODE_NAME;
 			}
+
+            @Override
+            public String getCurrentFilePath() {
+                return "C:\\Test\\TEst\\file.txt";
+            }
 			
 		};
 	}

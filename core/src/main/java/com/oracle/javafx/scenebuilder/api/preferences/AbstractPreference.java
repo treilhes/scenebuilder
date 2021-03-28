@@ -134,7 +134,7 @@ public abstract class AbstractPreference<T> implements Preference<T> {
                 || preferencesContext.isDocumentNameDefined())) {
             write();
         } else {
-            getNode().remove(getName());
+            remove();
         }
     }
 
@@ -151,4 +151,7 @@ public abstract class AbstractPreference<T> implements Preference<T> {
         }
     }
 
+    public void remove() {
+        getNode().remove(getName());
+    }
 }

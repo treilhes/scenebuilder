@@ -118,5 +118,15 @@ public abstract class ListItemObjectPreference<T> extends AbstractPreference<T> 
 		return getValue() != null;
 	}
 
+    @Override
+    public void remove() {
+        try {
+            getNode().removeNode();
+        } catch (BackingStoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 
 }
