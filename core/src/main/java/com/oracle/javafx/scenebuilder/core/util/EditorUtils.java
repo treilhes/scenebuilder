@@ -252,23 +252,6 @@ public class EditorUtils {
         return builder.toString();
     }
 
-//    // Check if this could be moved in the Metadata classes.
-//    // Get the component class metadata where a property is defined.
-//    private static ComponentClassMetadata getDefiningClass(Class<?> clazz, PropertyName propName) {
-//        Metadata metadata = Metadata.getMetadata();
-//        ComponentClassMetadata<?> classMeta = metadata.queryComponentMetadata(clazz);
-//        while (clazz != null) {
-//            for (PropertyMetadata propMeta : classMeta.getProperties()) {
-//                if (propMeta.getName().compareTo(propName) == 0) {
-//                    return classMeta;
-//                }
-//            }
-//            // Check the inherited classes
-//            classMeta = classMeta.getParentMetadata();
-//        }
-//        return null;
-//    }
-
     private static class NextFrameTimer extends AnimationTimer {
 
         final AtomicInteger count = new AtomicInteger(0);
@@ -400,49 +383,6 @@ public class EditorUtils {
         fadeTransition.play();
     }
 
-//    protected static void openUrl(FileSystem fileSystem, Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) throws IOException {
-//        Class<?> clazz = null;
-//        // In case of static property, we don't care of the selectedClasses
-//        if (selectedClasses != null) {
-//            for (Class<?> cl : selectedClasses) {
-//                clazz = cl;
-//            }
-//        }
-//        PropertyName propertyName = propMeta.getName();
-//        if (propMeta.isStaticProperty()) {
-//            clazz = propertyName.getResidenceClass();
-//        } else {
-//            clazz = getDefiningClass(clazz, propertyName).getKlass();
-//        }
-//        String propNameStr = propertyName.getName();
-//        // First char in uppercase
-//        propNameStr = propNameStr.substring(0, 1).toUpperCase(Locale.ENGLISH) + propNameStr.substring(1);
-//        String methodName;
-//        String posfix;
-//        if (clazz.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
-//            posfix = "--";
-//        } else {
-//            posfix = "()";
-//        }
-//        if (propMeta.getValueClass() == Boolean.class) {
-//            methodName = "is" + propNameStr + posfix; //NOI18N
-//        } else if (propMeta.isStaticProperty()) {
-//            methodName = "get" + propNameStr + "(" + Node.class.getName() + ")"; //NOI18N
-//        } else {
-//            methodName = "get" + propNameStr + posfix; //NOI18N
-//        }
-//
-//        String url;
-//        if (clazz.getName().startsWith(EditorPlatform.GLUON_PACKAGE)) {
-//            url = EditorPlatform.GLUON_JAVADOC_HOME;
-//        } else {
-//            url = EditorPlatform.JAVADOC_HOME + clazz.getModule().getName() + "/";
-//        }
-//        url += clazz.getName().replaceAll("\\.", "/") + ".html"; //NOI18N
-//        url += "#" + methodName; //NOI18N
-//        fileSystem.open(url);
-//    }
-
     // Specific swap() function for an ObservableList:
     // Collections.swap() directly on the ObservableList generates a "duplicate children added" error
     public static void swap(ObservableList<Node> list, int i, int j) {
@@ -453,35 +393,6 @@ public class EditorUtils {
         list.clear();
         list.addAll(children);
     }
-
-//    public static Parent loadFxml(String fxmlFileName, Object controller) {
-//        URL fxmlURL = EditorUtils.class.getResource(fxmlFileName);
-//        return loadFxml(fxmlURL, controller);
-//    }
-//
-//    public static Parent loadPopupFxml(String fxmlFileName, Object controller) {
-//        URL fxmlURL = PopupEditor.class.getResource(fxmlFileName);
-//        return loadFxml(fxmlURL, controller);
-//    }
-//
-//    // To be used only for inspector editors (which are in the same classpath than this class)
-//    public static Parent loadFxml(URL fxmlURL, Object controller) {
-//        final FXMLLoader loader = new FXMLLoader();
-//        loader.setController(controller);
-//        loader.setLocation(fxmlURL);
-//        loader.setResources(I18N.getBundle());
-//
-//        // setting ClassLoader for OSGi environments
-//        loader.setClassLoader(controller.getClass().getClassLoader());
-//
-//        Parent root;
-//        try {
-//            root = (Parent) loader.load();
-//        } catch (IOException ex) {
-//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), ex); //NOI18N
-//        }
-//        return root;
-//    }
 
     public static String getFileName(String urlStr) {
         URL url;

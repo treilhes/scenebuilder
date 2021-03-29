@@ -232,7 +232,7 @@ public interface DocumentManager {
         private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
         private @Getter ReplaySubject<I18nResourceProvider> i18nResourceConfig;
         private @Getter ReplaySubject<FXOMDocument> fxomDocument;
-        private @Getter ReplaySubject<SelectionState> selectionState;
+        private @Getter PublishSubject<SelectionState> selectionState;
 
         private @Getter PublishSubject<Integer> sceneGraphRevisionDidChange;
         private @Getter PublishSubject<Integer> cssRevisionDidChange;
@@ -246,7 +246,7 @@ public interface DocumentManager {
             stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
             i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
             fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));
-            selectionState = wrap(DocumentSubjects.class, "selectionState", ReplaySubject.create(1));
+            selectionState = wrap(DocumentSubjects.class, "selectionState", PublishSubject.create());
             classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1));
 
             sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange",

@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
 
+import io.reactivex.disposables.Disposable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -150,6 +151,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      */
     protected final ListChangeListener<TreeItem<HierarchyItem>> treeItemSelectionListener = change -> treeItemSelectionDidChange();
     private final Editor editor;
+    private Disposable selectionSubscription;
 
     /*
      * Public
@@ -168,8 +170,8 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
         api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
         api.getApiDoc().getDocumentManager().cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
-        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
         api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        startListeningToEditorSelection();
     }
 
     private Label getPromptLabel() {
@@ -604,9 +606,9 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             // Update selection
             
             //TODO ensure there won't be an infinite loop here by commenting the start/stop listen
-            //stopListeningToEditorSelection();
+            stopListeningToEditorSelection();
             getApi().getApiDoc().getSelection().select(selectedFxomObjects);
-            //startListeningToEditorSelection();
+            startListeningToEditorSelection();
 
             // Update parent ring when selection did change
             updateParentRing();
@@ -618,6 +620,16 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
     }
     
+    private void startListeningToEditorSelection() {
+        selectionSubscription = getApi().getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
+    }
+
+    private void stopListeningToEditorSelection() {
+        if (!selectionSubscription.isDisposed()) {
+            selectionSubscription.dispose();
+        }
+    }
+
     protected TreeItem<HierarchyItem> makeTreeItemAccessory(
             final HierarchyMask owner,
             final FXOMObject fxomObject,

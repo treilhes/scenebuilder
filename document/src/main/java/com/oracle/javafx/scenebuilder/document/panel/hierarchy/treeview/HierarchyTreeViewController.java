@@ -314,4 +314,5 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
             cell.updatePlaceHolder();
         }
     }
+
 }
