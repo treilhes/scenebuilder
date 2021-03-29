@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.MenuItemMetadata;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.MenuMetadata;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.NodeMetadata;
+import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.ParentMetadata;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.PathElementMetadata;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.RowConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas.SceneMetadata;
@@ -106,6 +107,7 @@ public class ComponentPropertyMetadataCatalog {
     
     public ComponentPropertyMetadataCatalog(
             @Lazy @Autowired NodeMetadata nodeMetadata,
+            @Lazy @Autowired ParentMetadata parentMetadata,
             @Lazy @Autowired ButtonBaseMetadata buttonBaseMetadata,
             @Lazy @Autowired ColumnConstraintsMetadata columnConstraintsMetadata,
             @Lazy @Autowired TableColumnMetadata tableColumnMetadata,
@@ -298,7 +300,7 @@ public class ComponentPropertyMetadataCatalog {
                 .setResizeNeededWhenTopElement(true);
         root_scene_PropertyMetadata = new ComponentPropertyMetadata(
                     PropertyNames.rootName,
-                    nodeMetadata,
+                    parentMetadata,
                     false, /* unique */
                     null,
                     null,

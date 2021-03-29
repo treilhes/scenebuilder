@@ -745,13 +745,15 @@ public class ComponentClassMetadatas {
     @Component
     public static class SubSceneMetadata extends ComponentClassMetadata<javafx.scene.SubScene> {
         protected SubSceneMetadata(@Autowired NodeMetadata parent,
-                @Autowired ValuePropertyMetadataCatalog valueCatalog) {
+                @Autowired ValuePropertyMetadataCatalog valueCatalog,
+                @Autowired ComponentPropertyMetadataCatalog componentCatalog) {
             super(javafx.scene.SubScene.class, parent);
             getProperties().add(valueCatalog.accessibleRole_NODE_PropertyMetadata);
             getProperties().add(valueCatalog.fill_NULL_PropertyMetadata);
             getProperties().add(valueCatalog.height_Double_0_PropertyMetadata);
             getProperties().add(valueCatalog.pickOnBounds_false_PropertyMetadata);
             getProperties().add(valueCatalog.width_Double_0_PropertyMetadata);
+            getProperties().add(componentCatalog.root_scene_PropertyMetadata);
 
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/SubScene.fxml"), null, FX8,
