@@ -1036,6 +1036,9 @@ public class ComponentClassMetadatas {
             getProperties().add(valueCatalog.focusTraversable_true_PropertyMetadata);
             getProperties().add(valueCatalog.styleClass_c43_PropertyMetadata);
             getProperties().add(valueCatalog.value_Object_PropertyMetadata);
+            
+            getProperties().add(valueCatalog.onActionPropertyMetadata);
+            
 
             getQualifiers().put(Qualifier.DEFAULT,
                     new Qualifier(getClass().getResource("fxml/ChoiceBox.fxml"), null, null,
