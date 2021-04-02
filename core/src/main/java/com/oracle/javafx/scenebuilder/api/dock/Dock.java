@@ -32,16 +32,21 @@
  */
 package com.oracle.javafx.scenebuilder.api.dock;
 
+import java.util.Collection;
 import java.util.UUID;
+
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 
 public interface Dock {
     
-    public static final UUID LEFT_DOCK_ID = UUID.fromString("42094e12-3aa8-44e4-bc4c-7633d6bc5b05");
-    public static final UUID RIGHT_DOCK_ID = UUID.fromString("18cce02f-3a67-4b96-b5b4-53d7e0145a64");
-    public static final UUID BOTTOM_DOCK_ID = UUID.fromString("e8a0168d-f074-47e7-b107-aa7302a27cf8");
+    public static final String LEFT_DOCK_ID = "42094e12-3aa8-44e4-bc4c-7633d6bc5b05";
+    public static final String RIGHT_DOCK_ID = "18cce02f-3a67-4b96-b5b4-53d7e0145a64";
+    public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
     
 	UUID getId();
 
-	String getLabel();
-	
+	boolean isWindow();
+	SceneBuilderWindow getParentWindow();
+
+    Collection<View> getViews();
 }

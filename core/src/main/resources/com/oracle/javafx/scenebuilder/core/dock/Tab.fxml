@@ -41,7 +41,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<Tab id="leftPanelHost" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Tab id="leftPanelHost" closable="false" styleClass="theme-presets" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
 <content>
 <VBox id="leftPanelHost" minHeight="50.0" prefHeight="200.0" prefWidth="100.0">
 <children>
@@ -56,7 +56,7 @@
 </MenuButton>
 </children>
 </HBox>
-<VBox fx:id="viewContentHost" prefHeight="-1.0" prefWidth="-1.0"  VBox.vgrow="ALWAYS"/>
+<VBox fx:id="viewContentHost" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
 </children>
 </VBox>
 </content>

@@ -30,31 +30,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.preferences.document;
+package com.oracle.javafx.scenebuilder.api.dock;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class LeftVisiblePreference extends BooleanPreference implements ManagedDocumentPreference {
-	    
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "leftVisible"; //NOI18N
-    public static final boolean PREFERENCE_DEFAULT_VALUE = true;
-
-	public LeftVisiblePreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
-
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ViewDescriptor {
+	public String name() ;
+	public String id();
+	public String prefDockId() default "";
+	public boolean openOnStart() default false;
+	public boolean selectOnStart() default false;
 }

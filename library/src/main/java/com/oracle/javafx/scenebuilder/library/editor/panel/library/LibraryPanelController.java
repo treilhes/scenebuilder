@@ -53,6 +53,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -69,6 +70,8 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.Library;
@@ -132,9 +135,11 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
+@ViewDescriptor(name = LibraryPanelController.VIEW_NAME, id = LibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true)
 public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
     
-    private final static String VIEW_NAME = "library";
+    public final static String VIEW_ID = "f1870ebc-18db-46f7-a874-ef2401a3e464";
+    public final static String VIEW_NAME = "library";
 
     private String searchPattern;
     ArrayList<LibraryItem> searchData = new ArrayList<>();
@@ -223,7 +228,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction,
             @Autowired ViewSearch viewSearch
             ) { //, UserLibrary library) {
-        super(VIEW_NAME, api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(
+                api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
         this.context = api.getContext();
         this.editorController = editor;
         this.sceneBuilderManager = api.getSceneBuilderManager();
@@ -250,6 +256,11 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
     }
 
+    @Override
+    public UUID getId() {
+        return UUID.fromString("30acd1e6-a848-4ac6-95b2-0effa0b76932");
+    }
+    
     @FXML
     public void initialize() {
     	createLibraryMenu();

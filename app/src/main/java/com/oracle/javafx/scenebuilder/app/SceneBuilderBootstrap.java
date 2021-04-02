@@ -51,16 +51,10 @@ import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesNodeImp
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.RootPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LeftVisiblePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LibraryVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.MaximizedPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.RightDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.RightVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
@@ -85,16 +79,10 @@ import javafx.stage.Stage;
         RootPreferencesNodeImpl.class,
         
         BottomDividerVPosPreference.class,
-        BottomVisiblePreference.class,
-        DocumentVisiblePreference.class,
         LeftDividerHPosPreference.class,
-        LeftDividerVPosPreference.class,
-        LeftVisiblePreference.class,
-        LibraryVisiblePreference.class,
         MaximizedPreference.class,
         PathPreference.class,
         RightDividerHPosPreference.class,
-        RightVisiblePreference.class,
         StageHeightPreference.class,
         StageWidthPreference.class,
         XPosPreference.class,

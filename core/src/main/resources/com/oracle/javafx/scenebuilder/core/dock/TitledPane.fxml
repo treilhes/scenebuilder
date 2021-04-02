@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<TitledPane id="view-titled-pane" fx:id="parentPane" animated="false" contentDisplay="GRAPHIC_ONLY" minHeight="0.0" minWidth="120.0" prefHeight="80.0" prefWidth="120.0" stylesheets="@TitledPane.css" text="untitled" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<TitledPane id="view-titled-pane" fx:id="parentPane" animated="false" contentDisplay="GRAPHIC_ONLY" minHeight="0.0" minWidth="120.0" prefHeight="80.0" prefWidth="120.0" stylesheets="@TitledPane.css" text="untitled" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
   <content>
   	<VBox fx:id="viewContentHost" prefHeight="-1.0" prefWidth="-1.0">
          <padding>
-            <Insets bottom="1.0" left="2" top="1.0" />
+            <Insets bottom="0" left="0" top="0" right="0" />
          </padding>
     </VBox>
   </content>

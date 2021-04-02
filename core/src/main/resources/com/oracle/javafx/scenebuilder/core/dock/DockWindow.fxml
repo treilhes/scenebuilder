@@ -33,11 +33,6 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import java.net.URL?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="DocumentWindow" fx:id="mainHost" alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
-  <stylesheets>
-    <URL value="@css/DocumentWindow.css" />
-  </stylesheets>
-</VBox>
+<VBox id="DocumentWindow" fx:id="mainHost" alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="0.0" styleClass="theme-presets" stylesheets="@DockWindow.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" />

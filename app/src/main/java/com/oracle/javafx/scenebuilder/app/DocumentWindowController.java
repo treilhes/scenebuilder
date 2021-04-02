@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
@@ -52,15 +54,9 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.BottomVisiblePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.DocumentVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LeftVisiblePreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LibraryVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.MaximizedPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.RightDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.RightVisiblePreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
@@ -100,33 +96,42 @@ import javafx.stage.Stage;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DocumentWindowController extends AbstractFxmlWindowController implements DocumentWindow {
 
-    private enum InsertPosition{
-        First,Last
+    private enum InsertPosition {
+        First, Last
     }
-    //PREFERENCES
+
+    // PREFERENCES
     private final XPosPreference xPosPreference;
-	private final YPosPreference yPosPreference;
-	private final StageHeightPreference stageHeightPreference;
-	private final StageWidthPreference stageWidthPreference;
-	private final MaximizedPreference maximizedWindowPreference;
-	private final LeftDividerHPosPreference leftDividerHPos;
-	private final RightDividerHPosPreference rightDividerHPos;
-	private final BottomDividerVPosPreference bottomDividerVPos;
+    private final YPosPreference yPosPreference;
+    private final StageHeightPreference stageHeightPreference;
+    private final StageWidthPreference stageWidthPreference;
+    private final MaximizedPreference maximizedWindowPreference;
+    private final LeftDividerHPosPreference leftDividerHPos;
+    private final RightDividerHPosPreference rightDividerHPos;
+    private final BottomDividerVPosPreference bottomDividerVPos;
 
-    @FXML private StackPane contentPanelHost;
-    @FXML private StackPane messageBarHost;
-    @FXML private SplitPane mainSplitPane;
-    @FXML private SplitPane leftRightSplitPane;
+    @FXML
+    private StackPane contentPanelHost;
+    @FXML
+    private StackPane messageBarHost;
+    @FXML
+    private SplitPane mainSplitPane;
+    @FXML
+    private SplitPane leftRightSplitPane;
 
-    @FXML private VBox leftHost;
-    @FXML private VBox rightHost;
-    @FXML private StackPane centerHost;
-    @FXML private VBox bottomHost;
+    @FXML
+    private VBox leftHost;
+    @FXML
+    private VBox rightHost;
+    @FXML
+    private StackPane centerHost;
+    @FXML
+    private VBox bottomHost;
 
-	private final DocumentManager documentManager;
-	private final Dialog dialog;
+    private final DocumentManager documentManager;
+    private final Dialog dialog;
     private final ApplicationContext context;
-    
+
     private final ViewManager viewManager;
     private final DockManager dockManager;
     private final DockPanelController leftDockController;
@@ -137,49 +142,41 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private CloseHandler closeHandler;
     private FocusHandler focusHandler;
 
-
     private PreferenceManager preferenceManager;
     /*
      * DocumentWindowController
      */
 
-	public DocumentWindowController(
-	        @Autowired Api api,
-			@Lazy @Autowired Editor editorController,
-			@Lazy @Autowired MenuBarController menuBarController,
-			@Lazy @Autowired ContentPanelController contentPanelController,
-			@Lazy @Autowired DocumentPanelController documentPanelController,
-			@Lazy @Autowired InspectorPanelController inspectorPanelController,
-			@Lazy @Autowired CssPanelController cssPanelController,
-			@Lazy @Autowired LibraryPanel libraryPanelController,
-			@Lazy @Autowired SelectionBarController selectionBarController,
-			@Lazy @Autowired MessageBarController messageBarController,
+    // @formatter:off
+    public DocumentWindowController(
+            @Autowired Api api, 
+            @Lazy @Autowired Editor editorController,
+            @Lazy @Autowired MenuBarController menuBarController,
+            @Lazy @Autowired ContentPanelController contentPanelController,
+            @Lazy @Autowired DocumentPanelController documentPanelController,
+            @Lazy @Autowired InspectorPanelController inspectorPanelController,
+            @Lazy @Autowired CssPanelController cssPanelController,
+            @Lazy @Autowired LibraryPanel libraryPanelController,
+            @Lazy @Autowired SelectionBarController selectionBarController,
+            @Lazy @Autowired MessageBarController messageBarController,
 
-			@Lazy @Autowired XPosPreference xPos,
-			@Lazy @Autowired YPosPreference yPos,
-			@Lazy @Autowired StageHeightPreference stageHeight,
-			@Lazy @Autowired StageWidthPreference stageWidth,
-			@Lazy @Autowired MaximizedPreference maximizedWindow,
+            @Lazy @Autowired XPosPreference xPos, 
+            @Lazy @Autowired YPosPreference yPos,
+            @Lazy @Autowired StageHeightPreference stageHeight, 
+            @Lazy @Autowired StageWidthPreference stageWidth,
+            @Lazy @Autowired MaximizedPreference maximizedWindow,
 
-			@Lazy @Autowired LeftDividerHPosPreference leftDividerHPos,
-			@Lazy @Autowired RightDividerHPosPreference rightDividerHPos,
-			@Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
-			@Lazy @Autowired LeftDividerVPosPreference leftDividerVPos,
+            @Lazy @Autowired LeftDividerHPosPreference leftDividerHPos,
+            @Lazy @Autowired RightDividerHPosPreference rightDividerHPos,
+            @Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
 
-			@Lazy @Autowired LeftVisiblePreference leftVisiblePreference,
-			@Lazy @Autowired RightVisiblePreference rightVisiblePreference,
-			@Lazy @Autowired BottomVisiblePreference bottomVisiblePreference,
-
-			@Lazy @Autowired DocumentVisiblePreference documentVisiblePreference,
-			@Lazy @Autowired LibraryVisiblePreference libraryVisiblePreference,
-
-			@Autowired ViewManager viewManager,
-	        @Autowired DockManager dockManager,
-			@Autowired DockPanelController leftDockController,
-			@Autowired DockPanelController rightDockController,
-			@Autowired DockPanelController bottomDockController
-			) {
-        super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); // sizeToScene = false because sizing is defined in preferences
+            @Autowired ViewManager viewManager, 
+            @Autowired DockManager dockManager,
+            @Autowired DockPanelController leftDockController, 
+            @Autowired DockPanelController rightDockController,
+            @Autowired DockPanelController bottomDockController) {
+        super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); 
+        // @formatter:on
 
         this.context = api.getContext();
         this.dialog = api.getApiDoc().getDialog();
@@ -190,10 +187,14 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDockController = rightDockController;
         this.bottomDockController = bottomDockController;
 
-        this.leftDockController.setId(Dock.LEFT_DOCK_ID);
-        this.rightDockController.setId(Dock.RIGHT_DOCK_ID);
-        this.bottomDockController.setId(Dock.BOTTOM_DOCK_ID);
+        this.leftDockController.setId(UUID.fromString(Dock.LEFT_DOCK_ID));
+        this.rightDockController.setId(UUID.fromString(Dock.RIGHT_DOCK_ID));
+        this.bottomDockController.setId(UUID.fromString(Dock.BOTTOM_DOCK_ID));
         
+        this.leftDockController.notifyDockCreated();
+        this.rightDockController.notifyDockCreated();
+        this.bottomDockController.notifyDockCreated();
+
         // preferences
         this.xPosPreference = xPos;
         this.yPosPreference = yPos;
@@ -203,28 +204,22 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.leftDividerHPos = leftDividerHPos;
         this.rightDividerHPos = rightDividerHPos;
         this.bottomDividerVPos = bottomDividerVPos;
-        
+
         this.preferenceManager = new PreferenceManager();
     }
-	
-	@FXML
-	public void initialize() {
-		
-		topBottonController = SplitPositionController.of(mainSplitPane, 2)
-		    .withContent(leftRightSplitPane, true)
-		    .withDivider(bottomDividerVPos)
-		    .withContent(bottomHost, false)
-		    .build(SplitPositionController.MAIN_TOP_BOTTOM);
-		
-		leftRightController = SplitPositionController.of(leftRightSplitPane, 3)
-            .withContent(leftHost, false)
-            .withDivider(leftDividerHPos)
-            .withContent(centerHost, true)
-            .withDivider(rightDividerHPos)
-            .withContent(rightHost, false)
-            .build(SplitPositionController.MAIN_LEFT_RIGHT);
-System.out.println("INITIALIZE");
-	}
+
+    @FXML
+    public void initialize() {
+
+        topBottonController = SplitPositionController.of(mainSplitPane, 2).withContent(leftRightSplitPane, true)
+                .withDivider(bottomDividerVPos).withContent(bottomHost, false)
+                .build(SplitPositionController.MAIN_TOP_BOTTOM);
+
+        leftRightController = SplitPositionController.of(leftRightSplitPane, 3).withContent(leftHost, false)
+                .withDivider(leftDividerHPos).withContent(centerHost, true).withDivider(rightDividerHPos)
+                .withContent(rightHost, false).build(SplitPositionController.MAIN_LEFT_RIGHT);
+        System.out.println("INITIALIZE");
+    }
 
     /*
      * AbstractFxmlWindowController
@@ -243,9 +238,10 @@ System.out.println("INITIALIZE");
         assert mainSplitPane != null;
         assert leftRightSplitPane != null;
 
-        // Add a border to the Windows app, because of the specific window decoration on Windows.
+        // Add a border to the Windows app, because of the specific window decoration on
+        // Windows.
         if (EditorPlatform.IS_WINDOWS) {
-            getRoot().getStyleClass().add("windows-document-decoration");//NOI18N
+            getRoot().getStyleClass().add("windows-document-decoration");// NOI18N
         }
 
         System.out.println("REMOVE START");
@@ -253,25 +249,26 @@ System.out.println("INITIALIZE");
         setupDockContainer(rightDockController, leftRightSplitPane, rightHost, InsertPosition.Last);
         setupDockContainer(bottomDockController, mainSplitPane, bottomHost, InsertPosition.Last);
         System.out.println("REMOVE END");
-        
+
         messageBarHost.heightProperty().addListener((InvalidationListener) o -> {
             final double h = messageBarHost.getHeight();
             contentPanelHost.setPadding(new Insets(h, 0.0, 0.0, 0.0));
         });
     }
-    
-    private void setupDockContainer(DockPanelController dock, SplitPane placeHolder, Pane host, InsertPosition position) {
+
+    private void setupDockContainer(DockPanelController dock, SplitPane placeHolder, Pane host,
+            InsertPosition position) {
         // attach the dock container to the host
         host.getChildren().add(dock.getContent());
         // and set it for auto grow
         VBox.setVgrow(dock.getContent(), Priority.ALWAYS);
         // set initial state to removed
         placeHolder.getItems().remove(host);
-        
-        // if dock container has content 
+
+        // if dock container has content
         // then attach the host to splitpane
         // else detach it
-        dock.getContent().getChildren().addListener((Change<? extends Node> c)-> {
+        dock.getContent().getChildren().addListener((Change<? extends Node> c) -> {
             int numChild = dock.getContent().getChildren().size();
             boolean isInserted = placeHolder.getItems().contains(host);
             if (numChild == 0 && isInserted) {
@@ -293,11 +290,11 @@ System.out.println("INITIALIZE");
     @Override
     protected void controllerDidCreateStage() {
         updateStageTitle();
-        
-     // initialize preference binding
+
+        // initialize preference binding
         final Stage stage = getStage();
         assert stage != null;
- 
+
         preferenceManager.apply();
         preferenceManager.track();
 
@@ -306,28 +303,28 @@ System.out.println("INITIALIZE");
     @Override
     public void openWindow() {
 
-        //if (!getStage().isShowing()) {
-            // Starts watching document:
-            //      - editorController watches files referenced from the FXML text
-            //      - watchingController watches the document file, i18n resources,
-            //        preview stylesheets...
+        // if (!getStage().isShowing()) {
+        // Starts watching document:
+        // - editorController watches files referenced from the FXML text
+        // - watchingController watches the document file, i18n resources,
+        // preview stylesheets...
 
-
-        	//TODO remove after checking the new watching system is operational in EditorController or in filesystem
-            //assert !editorController.isFileWatchingStarted();
-            //editorController.startFileWatching();
-        	//watchingController.start();
-        //}
+        // TODO remove after checking the new watching system is operational in
+        // EditorController or in filesystem
+        // assert !editorController.isFileWatchingStarted();
+        // editorController.startFileWatching();
+        // watchingController.start();
+        // }
 
         if (!super.isOpen()) {
             super.openWindow();
         }
-        
+
         if (!EditorPlatform.IS_MAC) {
-        	//TODO uncomment or better add a Maximized preference to the document
-            //getStage().setMaximized(true);
+            // TODO uncomment or better add a Maximized preference to the document
+            // getStage().setMaximized(true);
         }
-        
+
         preferenceManager.apply();
     }
 
@@ -341,7 +338,7 @@ System.out.println("INITIALIZE");
         // go back to width and height before maximization to keep the right preferences
         this.preferenceManager.untrackMaximizedOnly();
         getStage().setMaximized(false);
-        
+
         if (closeHandler != null) {
             closeHandler.onClose();
         }
@@ -361,7 +358,6 @@ System.out.println("INITIALIZE");
 //                || (jarAnalysisReportController != null && jarAnalysisReportController.getStage().isFocused());
 //    }
 
-    
 //    public void performCloseFrontDocumentWindow() {
 //        if (getStage().isFocused()) {
 //            performCloseAction();
@@ -429,47 +425,47 @@ System.out.println("INITIALIZE");
     public void apply() {
         this.preferenceManager.apply();
     }
-    
+
     @Override
     public void track() {
         this.preferenceManager.track();
     }
-    
+
     @Override
     public void untrack() {
         this.preferenceManager.untrack();
     }
-    
+
     private class PreferenceManager {
-        
+
         private ChangeListener<? super Number> xPropertyListener = (ob, o, n) -> {
             if (!getStage().isMaximized()) {
                 xPosPreference.setValue(n.doubleValue());
             }
         };
         private ChangeListener<? super Double> xPosPreferenceListener = (ob, o, n) -> getStage().setX(n);
-        
+
         private ChangeListener<? super Number> yPropertyListener = (ob, o, n) -> {
             if (!getStage().isMaximized()) {
                 yPosPreference.setValue(n.doubleValue());
             }
         };
         private ChangeListener<? super Double> yPosPreferenceListener = (ob, o, n) -> getStage().setY(n);
-        
+
         private ChangeListener<? super Number> heightPropertyListener = (ob, o, n) -> {
             if (!getStage().isMaximized()) {
                 stageHeightPreference.setValue(n.doubleValue());
             }
         };
         private ChangeListener<? super Double> stageHeightPreferenceListener = (ob, o, n) -> getStage().setHeight(n);
-        
+
         private ChangeListener<? super Number> widthPropertyListener = (ob, o, n) -> {
             if (!getStage().isMaximized()) {
                 stageWidthPreference.setValue(n.doubleValue());
             }
         };
         private ChangeListener<? super Double> stageWidthPreferenceListener = (ob, o, n) -> getStage().setWidth(n);
-        
+
         private ChangeListener<? super Boolean> maximizedPropertyListener = (ob, o, n) -> {
             maximizedWindowPreference.setValue(n);
             if (!n) {
@@ -481,20 +477,30 @@ System.out.println("INITIALIZE");
             System.out.println("MAXIMIZING " + n);
             getStage().setMaximized(n);
         };
-        
+
         public void apply() {
-            getStage().maximizedProperty().addListener((ob,o,n) -> System.out.println("MAX"+n));
-            getStage().maximizedProperty().addListener((n) -> System.out.println("MAXINV"+n));
-            
-            if (stageHeightPreference.isValid() && !maximizedWindowPreference.getValue()) {getStage().setHeight(stageHeightPreference.getValue());}
-            if (stageWidthPreference.isValid() && !maximizedWindowPreference.getValue()) {getStage().setWidth(stageWidthPreference.getValue());}
-            if (xPosPreference.isValid() && !maximizedWindowPreference.getValue()) { getStage().setX(xPosPreference.getValue()); }
-            if (yPosPreference.isValid() && !maximizedWindowPreference.getValue()) { getStage().setY(yPosPreference.getValue()); }
-            if (maximizedWindowPreference.isValid()) {getStage().setMaximized(maximizedWindowPreference.getValue());}
+            getStage().maximizedProperty().addListener((ob, o, n) -> System.out.println("MAX" + n));
+            getStage().maximizedProperty().addListener((n) -> System.out.println("MAXINV" + n));
+
+            if (stageHeightPreference.isValid() && !maximizedWindowPreference.getValue()) {
+                getStage().setHeight(stageHeightPreference.getValue());
+            }
+            if (stageWidthPreference.isValid() && !maximizedWindowPreference.getValue()) {
+                getStage().setWidth(stageWidthPreference.getValue());
+            }
+            if (xPosPreference.isValid() && !maximizedWindowPreference.getValue()) {
+                getStage().setX(xPosPreference.getValue());
+            }
+            if (yPosPreference.isValid() && !maximizedWindowPreference.getValue()) {
+                getStage().setY(yPosPreference.getValue());
+            }
+            if (maximizedWindowPreference.isValid()) {
+                getStage().setMaximized(maximizedWindowPreference.getValue());
+            }
             leftRightController.apply();
             topBottonController.apply();
         }
-        
+
         public void track() {
             // Add stage x and y listeners
             getStage().xProperty().addListener(xPropertyListener);
@@ -509,14 +515,14 @@ System.out.println("INITIALIZE");
 
             getStage().widthProperty().addListener(widthPropertyListener);
             stageWidthPreference.getObservableValue().addListener(stageWidthPreferenceListener);
-            
+
             getStage().maximizedProperty().addListener(maximizedPropertyListener);
             maximizedWindowPreference.getObservableValue().addListener(maximizedPreferenceListener);
-            
+
             leftRightController.track();
             topBottonController.track();
         }
-        
+
         public void untrack() {
             // Remove stage x and y listeners
             getStage().xProperty().removeListener(xPropertyListener);
@@ -531,14 +537,14 @@ System.out.println("INITIALIZE");
 
             getStage().widthProperty().removeListener(widthPropertyListener);
             stageWidthPreference.getObservableValue().removeListener(stageWidthPreferenceListener);
-            
+
             getStage().maximizedProperty().removeListener(maximizedPropertyListener);
             maximizedWindowPreference.getObservableValue().removeListener(maximizedPreferenceListener);
-            
+
             leftRightController.untrack();
             topBottonController.untrack();
         }
-        
+
         private void untrackMaximizedOnly() {
             getStage().maximizedProperty().removeListener(maximizedPropertyListener);
             maximizedWindowPreference.getObservableValue().removeListener(maximizedPreferenceListener);

@@ -30,31 +30,65 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.preferences.document;
+package com.oracle.javafx.scenebuilder.core.dock.preferences.document;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class RightVisiblePreference extends BooleanPreference implements ManagedDocumentPreference {
-	    
+public class LastDockUuidPreference extends MapPreferences<UUID, UUID> implements ManagedDocumentPreference {
+        
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "rightVisible"; //NOI18N
-    public static final boolean PREFERENCE_DEFAULT_VALUE = true;
+    public static final String PREFERENCE_KEY = "LastDockUuid"; //NOI18N
+    
 
-	public RightVisiblePreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
+    public LastDockUuidPreference(@Autowired PreferencesContext preferencesContext) {
+        super(preferencesContext, PREFERENCE_KEY);
+    }
 
+    @Override
+    public String keyString(UUID key) {
+        return key.toString();
+    }
+
+    @Override
+    public String valueString(UUID value) {
+        return value.toString();
+    }
+
+    @Override
+    public UUID fromKeyString(String key) {
+        return UUID.fromString(key);
+    }
+
+    @Override
+    public UUID fromValueString(String value) {
+        return UUID.fromString(value);
+    }
+    
+    @Override
+    public void read() {
+        var backup = new HashMap<>(getValue());
+        
+        super.read();
+        
+        if (getValue().isEmpty()) {
+            getValue().putAll(backup);
+        }
+    }
 }

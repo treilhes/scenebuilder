@@ -45,6 +45,8 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -71,9 +73,11 @@ import javafx.scene.layout.StackPane;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
+@ViewDescriptor(name = DocumentPanelController.VIEW_NAME, id=DocumentPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = false)
 public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
-    private final static String VIEW_NAME = "document";
+    public final static String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";
+    public final static String VIEW_NAME = "document";
 
 	private final AbstractHierarchyPanelController hierarchyPanelController;
 	private final InfoPanelController infoPanelController;
@@ -117,7 +121,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		@Autowired @Qualifier("documentPanelActions.ShowFxIdAction") Action showFxIdAction,
     		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction
     		) { //, UserLibrary library) {
-        super(VIEW_NAME, api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;

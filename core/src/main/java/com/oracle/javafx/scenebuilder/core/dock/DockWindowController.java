@@ -64,36 +64,43 @@ import javafx.stage.Stage;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class DockWindowController extends AbstractFxmlWindowController {
 
-    @FXML private VBox mainHost;
+    @FXML
+    private VBox mainHost;
 
-	private final DocumentManager documentManager;
-	private final Dialog dialog;
+    private final DocumentManager documentManager;
+    private final Dialog dialog;
     private final ApplicationContext context;
-    
+
     private final ViewManager viewManager;
     private final DockManager dockManager;
     private final DockPanelController dockPanelController;
-
-	public DockWindowController(
-	        @Autowired Api api,
-	        @Autowired DocumentWindow documentWindow,
-	        @Autowired DockPanelController dockPanelController,
-			@Autowired ViewManager viewManager,
-	        @Autowired DockManager dockManager
-			) {
+    private final DockNameHelper dockNameHelper;
+    // @formatter:off
+    public DockWindowController(
+            @Autowired Api api, 
+            @Autowired DocumentWindow documentWindow,
+            @Autowired DockPanelController dockPanelController, 
+            @Autowired ViewManager viewManager,
+            @Autowired DockManager dockManager,
+            @Autowired DockNameHelper dockNameHelper) {
         super(api, DockWindowController.class.getResource("DockWindow.fxml"), I18N.getBundle(), documentWindow);
-
+     // @formatter:on
+        
         this.context = api.getContext();
         this.dialog = api.getApiDoc().getDialog();
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.viewManager = viewManager;
         this.dockManager = dockManager;
         this.dockPanelController = dockPanelController;
+        this.dockNameHelper = dockNameHelper;
+
+        dockPanelController.setParentWindow(this);
+        dockPanelController.notifyDockCreated();
     }
-	
-	@FXML
-	public void initialize() {
-	}
+
+    @FXML
+    public void initialize() {
+    }
 
     /*
      * AbstractFxmlWindowController
@@ -107,27 +114,26 @@ public class DockWindowController extends AbstractFxmlWindowController {
     public void controllerDidLoadFxml() {
         assert mainHost != null;
 
-        // Add a border to the Windows app, because of the specific window decoration on Windows.
+        // Add a border to the Windows app, because of the specific window decoration on
+        // Windows.
         if (EditorPlatform.IS_WINDOWS) {
-            getRoot().getStyleClass().add("windows-document-decoration");//NOI18N
+            getRoot().getStyleClass().add("windows-document-decoration");// NOI18N
         }
 
         setupDockContainer(dockPanelController, mainHost);
 
     }
-    
+
     private void setupDockContainer(DockPanelController dock, Pane host) {
         // attach the dock container to the host
         host.getChildren().add(dock.getContent());
         // and set it for auto grow
         VBox.setVgrow(dock.getContent(), Priority.ALWAYS);
-        
-        // if dock container does not have content remove window 
-        dock.getContent().getChildren().addListener((Change<? extends Node> c)-> {
-            int numChild = dock.getContent().getChildren().size();
-            if (numChild == 0) {
-                System.out.println("CLOSE");
-                //closeWindow();
+
+        // if dock container does not have content remove window
+        dock.getContent().getChildren().addListener((Change<? extends Node> c) -> {
+            if (dock.getViews().size() == 0) {
+                closeWindow();
             }
         });
     }
@@ -136,6 +142,10 @@ public class DockWindowController extends AbstractFxmlWindowController {
     protected void controllerDidCreateStage() {
         final Stage stage = getStage();
         assert stage != null;
+        stage.setTitle(dockNameHelper.getName(this.getDock().getId()));
+        getStage().setOnCloseRequest(we -> {
+            closeWindow();
+        });
     }
 
     @Override
@@ -147,19 +157,20 @@ public class DockWindowController extends AbstractFxmlWindowController {
 
     @Override
     public void closeWindow() {
+        dockManager.dockHide().onNext(this.getDock());
         super.closeWindow();
     }
 
     @Override
     public void onCloseRequest() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onFocus() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

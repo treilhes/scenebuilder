@@ -72,8 +72,9 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
      *
      * @param editor  the editor controller (cannot be null)
      */
-    public AbstractFxmlViewController(String viewName, Api api, URL fxmlURL, ResourceBundle resources) {
+    public AbstractFxmlViewController(Api api, URL fxmlURL, ResourceBundle resources) {
         super(api, fxmlURL, resources); //NOI18N
+        String viewName = getViewName();
         name = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
     }
 

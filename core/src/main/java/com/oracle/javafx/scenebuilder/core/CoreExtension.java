@@ -42,6 +42,9 @@ import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
+import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
+import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
@@ -59,7 +62,10 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
             DockTypeAccordion.class,
             DockTypeSplitH.class,
             DockTypeSplitV.class,
-            DockTypeTab.class
+            DockTypeTab.class,
+            DockWindowController.class,
+            DockWindowFactory.class,
+            LastDockUuidPreference.class
             },
         basePackages = {})
 public class CoreExtension extends AbstractExtension {

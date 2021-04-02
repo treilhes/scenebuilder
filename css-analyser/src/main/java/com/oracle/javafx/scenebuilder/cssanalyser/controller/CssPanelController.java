@@ -60,6 +60,8 @@ import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -149,10 +151,12 @@ import javafx.util.Duration;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
+@ViewDescriptor(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Dock.BOTTOM_DOCK_ID, openOnStart = false)
 public class CssPanelController extends AbstractFxmlViewController {
 
-    private final static String VIEW_NAME = "csspanel";
-    
+    public final static String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438";
+    public final static String VIEW_NAME = "csspanel";
+
     @FXML
     private StackPane cssPanelHost;
 
@@ -276,7 +280,7 @@ public class CssPanelController extends AbstractFxmlViewController {
             @Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction,
             @Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction,
             @Autowired ViewSearch viewSearch) {
-        super(VIEW_NAME, api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
+        super(api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
         this.editorController = editor;
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.applicationDelegate = delegate;
@@ -458,7 +462,7 @@ public class CssPanelController extends AbstractFxmlViewController {
 
         viewAs.getItems().addAll(viewAsTable, viewAsRules, viewAsText);
         items.addAll(Arrays.asList(viewAs, separator, copyPath, hideDefaultValues, defaultsSplit));
-        
+
         return items;
     }
 
@@ -2328,7 +2332,7 @@ public class CssPanelController extends AbstractFxmlViewController {
     public Editor getEditorController() {
         return editorController;
     }
-    
+
     @Override
     public ViewSearch getSearchController() {
         return viewSearch;

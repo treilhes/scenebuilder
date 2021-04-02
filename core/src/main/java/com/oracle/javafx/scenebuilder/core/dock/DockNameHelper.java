@@ -30,29 +30,43 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.preferences.document;
+package com.oracle.javafx.scenebuilder.core.dock;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.DoublePreference;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class LeftDividerVPosPreference extends DoublePreference implements ManagedDocumentPreference {
-
-	public static final String PREFERENCE_KEY = "leftDividerVPos"; //NOI18N
-	public static final Double PREFERENCE_DEFAULT_VALUE = -1.0; //NOI18N
+public class DockNameHelper {
     
-    public LeftDividerVPosPreference(PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
+    private int windowNumber = 1;
+    private final Map<UUID, String> dockNames = new HashMap<>();
 
-    @Override
-	public boolean isValid() {
-		return super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE);
-	}
+    public DockNameHelper() {
+        super();
+        // TODO add i18N value here
+        dockNames.put(UUID.fromString(Dock.LEFT_DOCK_ID), "Left");
+        dockNames.put(UUID.fromString(Dock.RIGHT_DOCK_ID), "Right");
+        dockNames.put(UUID.fromString(Dock.BOTTOM_DOCK_ID), "Bottom");
+    }
+    
+    public String getName(UUID uuid) {
+        String name = dockNames.get(uuid);
+        
+        if (name != null) {
+            return name;
+        }
+        
+        name = "Window " + windowNumber++;
+        dockNames.put(uuid, name);
+        
+        return name;
+    }
 }

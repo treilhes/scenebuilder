@@ -42,8 +42,6 @@ import javafx.scene.input.KeyEvent;
 
 public interface DocumentWindow extends SceneBuilderWindow {
     
-    void closeWindow();
-    void openWindow();
     Scene getScene();
 
     void setMainKeyPressedEvent(EventHandler<KeyEvent> mainKeyEventFilter);

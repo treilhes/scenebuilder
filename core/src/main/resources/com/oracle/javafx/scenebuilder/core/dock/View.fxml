@@ -40,7 +40,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="leftPanelHost" minHeight="50.0" prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="leftPanelHost" minHeight="50.0" prefHeight="200.0" prefWidth="100.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 <children>
 <HBox id="HBox" alignment="CENTER" spacing="0.0" styleClass="panel-header">
 <children>

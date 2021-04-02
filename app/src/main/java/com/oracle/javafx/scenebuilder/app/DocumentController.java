@@ -63,7 +63,7 @@ import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
@@ -71,7 +71,6 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.DockRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
@@ -80,13 +79,13 @@ import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesControl
 import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -125,16 +124,16 @@ public class DocumentController implements Document, InitializingBean {
     private final FileSystem fileSystem;
     private final MenuBarController menuBarController;
     private final ContentPanelController contentPanelController;
-    private final DocumentPanelController documentPanelController;
+    //private final DocumentPanelController documentPanelController;
     private final InspectorPanelController inspectorPanelController;
-    private final CssPanelController cssPanelController;
+    //private final CssPanelController cssPanelController;
     private final LibraryPanel libraryPanelController;
     private final SelectionBarController selectionBarController;
     private final MessageBarController messageBarController;
     private final WildcardImportsPreference wildcardImportsPreference;
     private final RecentItemsPreference recentItemsPreference;
     private final DocumentPreferencesController documentPreferencesController;
-
+    //private final LastDockUuidPreference lastDockUuidPreference;
     // PREFERENCES
     private FileTime loadFileTime;
 
@@ -170,11 +169,13 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired MessageBarController messageBarController,
             @Autowired ViewManager viewManager,
             @Autowired DockManager dockManager,
-            @Lazy @Autowired CssPanelController cssPanelController,
+            //@Lazy @Autowired CssPanelController cssPanelController,
             @Lazy @Autowired ThemePreference themePreference,
             @Lazy @Autowired PathPreference pathPreference,
+            @Lazy @Autowired LastDockUuidPreference lastDockUuidPreference,
             @Lazy @Autowired(required = false) List<InitWithDocument> initializations,
-            @Lazy @Autowired(required = false) List<DisposeWithDocument> finalizations
+            @Lazy @Autowired(required = false) List<DisposeWithDocument> finalizations,
+            @Autowired List<Class<? extends View>> classViews
 
     ) {
      // @formatter:on
@@ -184,15 +185,16 @@ public class DocumentController implements Document, InitializingBean {
         this.documentWindow = documentWindow;
         this.recentItemsPreference = recentItemsPreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
+        //this.lastDockUuidPreference = lastDockUuidPreference;
         this.menuBarController = menuBarController;
         this.fileSystem = api.getFileSystem();
         this.dialog = api.getApiDoc().getDialog();
         this.contentPanelController = contentPanelController;
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.documentPreferencesController = documentPreferencesController;
-        this.documentPanelController = documentPanelController;
+        //this.documentPanelController = documentPanelController;
         this.inspectorPanelController = inspectorPanelController;
-        this.cssPanelController = cssPanelController;
+        //this.cssPanelController = cssPanelController;
         this.libraryPanelController = libraryPanelController;
         this.selectionBarController = selectionBarController;
         this.messageBarController = messageBarController;
@@ -821,12 +823,7 @@ public class DocumentController implements Document, InitializingBean {
         documentWindow.setMessageBar(messageBarController.getRoot());
 
         messageBarController.getSelectionBarHost().getChildren().add(selectionBarController.getRoot());
-
-        viewManager.dock().onNext(new DockRequest(inspectorPanelController, Dock.RIGHT_DOCK_ID));
-        viewManager.dock().onNext(new DockRequest(cssPanelController, Dock.BOTTOM_DOCK_ID));
-        viewManager.dock().onNext(new DockRequest(libraryPanelController, Dock.LEFT_DOCK_ID));
-        viewManager.dock().onNext(new DockRequest(documentPanelController, Dock.LEFT_DOCK_ID, false));
-
+        
         assert libraryPanelController != null;
         libraryPanelController.getSearchController().requestFocus();
 
@@ -947,7 +944,7 @@ public class DocumentController implements Document, InitializingBean {
             final TextInputControl tic = getTextInputControl(focusOwner);
             tic.copy();
         } else if (isCssRulesEditing(focusOwner)) {
-            cssPanelController.copyRules();
+            //cssPanelController.copyRules();
         } else if (isCssTextEditing(focusOwner)) {
             // CSS text pane is a WebView
             // Let the WebView handle the copy action natively
@@ -1171,7 +1168,7 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     private boolean isCssRulesEditing(Node node) {
-        final Node cssRules = cssPanelController.getRulesPane();
+        final Node cssRules = null;//cssPanelController.getRulesPane();
         if (cssRules != null) {
             return isDescendantOf(cssRules, node);
         }
@@ -1179,7 +1176,7 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     private boolean isCssTextEditing(Node node) {
-        final Node cssText = cssPanelController.getTextPane();
+        final Node cssText = null;//cssPanelController.getTextPane();
         if (cssText != null) {
             return isDescendantOf(cssText, node);
         }

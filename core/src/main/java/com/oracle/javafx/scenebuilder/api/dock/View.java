@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.dock;
 
+import java.util.UUID;
+
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 
 import javafx.beans.property.StringProperty;
@@ -42,4 +44,39 @@ public interface View {
 	ViewSearch getSearchController();
 	ViewContent getViewController();
 	ViewMenuProvider getViewMenus();
+	
+	public static ViewDescriptor viewDescriptorAnnotation(Class<? extends View> cls) {
+        ViewDescriptor viewDescriptor = cls.getAnnotation(ViewDescriptor.class);
+        if (viewDescriptor == null) {
+            throw new RuntimeException("Class implementing View interface must be annotated with @ViewDescriptor");
+        }
+        return viewDescriptor;
+    }
+	
+	public default String getViewName() {
+	    return viewDescriptorAnnotation(this.getClass()).name();
+    }
+	
+	public default UUID getId() {
+	    return UUID.fromString(viewDescriptorAnnotation(this.getClass()).id());
+    }
+	
+	public static String getViewName(Class<? extends View> cls) {
+        return viewDescriptorAnnotation(cls).name();
+    }
+    
+    public static UUID getId(Class<? extends View> cls) {
+        return UUID.fromString(viewDescriptorAnnotation(cls).id());
+    }
+    
+    public static UUID getPrefDockId(Class<? extends View> cls) {
+        String pref = viewDescriptorAnnotation(cls).prefDockId();
+        return (pref != null && !pref.isEmpty()) ? UUID.fromString(pref) : null;
+    }
+    public static boolean isOpenOnStart(Class<? extends View> cls) {
+        return viewDescriptorAnnotation(cls).openOnStart();
+    }
+    public static boolean isSelectOnStart(Class<? extends View> cls) {
+        return viewDescriptorAnnotation(cls).selectOnStart();
+    }
 }

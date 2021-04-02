@@ -64,6 +64,8 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -141,10 +143,12 @@ import javafx.scene.layout.VBox;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
+@ViewDescriptor(name = InspectorPanelController.VIEW_NAME, id = InspectorPanelController.VIEW_ID, prefDockId = Dock.RIGHT_DOCK_ID, openOnStart = true, selectOnStart = true)
 public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
-    private final static String VIEW_NAME = "inspector";
-    
+    public final static String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
+    public final static String VIEW_NAME = "inspector";
+
     @FXML
     private TitledPane propertiesTitledPane;
     @FXML
@@ -252,7 +256,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final ViewSearch viewSearch;
 
     private List<MenuItem> menuItems;
-    
+
     /*
      * Public
      */
@@ -267,15 +271,15 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             @Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
             @Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction,
             @Autowired ViewSearch viewSearch) {
-        super(VIEW_NAME, api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
+        super(api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
         this.context = api.getContext();
         this.fileSystem = api.getFileSystem();
         this.editorController = editorController;
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.session = propertyEditorFactory.newSession();
-        
+
         this.viewSearch = viewSearch;
-        
+
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
         this.accordionAnimationPreference = accordionAnimationPreference;
@@ -580,7 +584,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         viewByPropType.setOnAction((e) -> viewByPropertyTypeAction.checkAndPerform());
 
         items.addAll(Arrays.asList(showAll, showEdited, separator, viewAsSections, viewByPropName, viewByPropType));
-        
+
         return items;
     }
 
@@ -613,7 +617,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // - selected classes change
         // - common parent change
         // - resolve state change
-        return (selectionState == null 
+        return (selectionState == null
                 || !newSelectionState.getSelectedClasses().equals(selectionState.getSelectedClasses())
                 || (newSelectionState.getCommonParentClass() != selectionState.getCommonParentClass())
                 || (!newSelectionState.getUnresolvedInstances().equals(selectionState.getUnresolvedInstances())));

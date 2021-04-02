@@ -30,31 +30,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.preferences.document;
+package com.oracle.javafx.scenebuilder.api.preferences.type;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.AbstractPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class DocumentVisiblePreference extends BooleanPreference implements ManagedDocumentPreference {
-	    
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "documentVisible"; //NOI18N
-    public static final boolean PREFERENCE_DEFAULT_VALUE = true;
+import javafx.beans.property.SimpleObjectProperty;
 
-	public DocumentVisiblePreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+public class UUIDPreference extends AbstractPreference<UUID> {
+	
+	public UUIDPreference(PreferencesContext preferencesContext, String name, UUID defaultValue) {
+		super(preferencesContext, name, defaultValue, new SimpleObjectProperty<>(), false);
 	}
+
+	@Override
+	public void write() {
+		getNode().put(getName(), getValue().toString());
+	}
+
+	@Override
+    public void read() {
+        assert getName() != null;
+        String uuidDefault = (getDefault() == null) ? null : getDefault().toString();
+        String uuidString = getNode().get(getName(), uuidDefault);
+        try {
+            setValue(UUID.fromString(uuidString));
+        } catch (Exception e) {
+            setValue(null);
+        }
+    }
+
+    @Override
+    public boolean isValid() {
+        return getValue() != null;
+    }
 
 }

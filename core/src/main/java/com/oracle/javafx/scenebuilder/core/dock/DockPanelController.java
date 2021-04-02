@@ -33,13 +33,16 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
@@ -48,12 +51,16 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -64,112 +71,136 @@ import lombok.Setter;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class DockPanelController implements Dock {
 
-    private DockManager dockManager;
+    private final DockManager dockManager;
+    private final List<DockType<?>> dockTypes;
+    private final LastDockUuidPreference lastDockUuidPreference;
+    private final LastDockDockTypePreference lastDockDockTypePreference;
+    private final ViewMenuController viewMenuController;
 
-    @Autowired
-    private ViewManager viewManager;
-
-    @Autowired
-    private List<DockType<?>> dockTypes;
-    private DockType dockType;
-    
+    @SuppressWarnings("rawtypes")
+    private @Getter DockType activeDockType;
     private @Getter @Setter UUID id;
-    private @Getter String label;
     private @Getter VBox content;
 
     private final List<DockContext<?>> views = new ArrayList<>();
+    private SceneBuilderWindow parentWindow;
     
-    public DockPanelController(@Autowired DockManager dockManager, @Autowired ViewManager viewManager,
+
+    // @formatter:off
+    public DockPanelController(
+            @Autowired DockManager dockManager, 
+            @Autowired ViewManager viewManager,
+            @Autowired ViewMenuController viewMenuController,
+            @Autowired LastDockUuidPreference lastDockUuidPreference,
+            @Autowired LastDockDockTypePreference lastDockDockTypePreference,
             @Autowired List<DockType<?>> dockTypes) {
+     // @formatter:on
+
         this.id = UUID.randomUUID();
-        this.label = "xxxx";
         this.dockManager = dockManager;
-        this.viewManager = viewManager;
+        this.viewMenuController = viewMenuController;
+        this.lastDockUuidPreference = lastDockUuidPreference;
+        this.lastDockDockTypePreference = lastDockDockTypePreference;
         this.dockTypes = dockTypes;
         this.content = new VBox();
-        
+
         VBox.setVgrow(this.content, Priority.ALWAYS);
 
         assert dockTypes != null && !dockTypes.isEmpty();
-        this.dockType = dockTypes.get(0);
         
-        dockManager.dockCreated().onNext(this);
+        updateActiveDockType(dockTypes.get(0));
         
-        viewManager.dock().filter(dr -> dr.getTarget().equals(this.getId())).subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
-        viewManager.undock().subscribe(v -> viewDeleted(v));
+
+        viewManager.dock().filter(dr -> dr.getTarget().equals(this.getId())).observeOn(JavaFxScheduler.platform())
+                .subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
+
+        viewManager.undock().observeOn(JavaFxScheduler.platform()).subscribe(v -> viewDeleted(v));
     }
     
+    @SuppressWarnings("rawtypes")
+    private void updateActiveDockType(DockType newDockType) {
+        lastDockDockTypePreference.getValue().put(this.getId(), newDockType.getNameKey());
+        this.activeDockType = newDockType;
+    }
     
-    
+    public void notifyDockCreated() {
+        dockManager.dockCreated().onNext(this);
+    }
+
     private List<MenuItem> createDockMenu(View view) {
         List<MenuItem> items = new ArrayList<>();
-        
+
         Menu dockViewMenu = new Menu("dock view as");
-        
+
         ToggleGroup dockViewAsGroup = new ToggleGroup();
         dockTypes.forEach(dt -> {
             RadioMenuItem mi = new RadioMenuItem(I18N.getStringOrDefault(dt.getNameKey(), dt.getNameKey()));
             mi.setToggleGroup(dockViewAsGroup);
-            mi.setSelected(dt == dockType);
+            mi.setSelected(dt == activeDockType);
             mi.setOnAction((e) -> changedDockType(dt, view));
             dockViewMenu.getItems().add(mi);
         });
-        
+
         items.add(dockViewMenu);
-        
-        Menu undockMenu = new Menu("Undock to");
-        
-        MenuItem mi = new MenuItem("New window");
-        mi.setOnAction((e) -> undockToNewWindow(view));
-        undockMenu.getItems().add(mi);
-        
+
+        Menu moveMenu = new Menu("Move to");
+
+        dockManager.availableDocks().subscribe(docks -> viewMenuController.performUpdateDockMenu(view, moveMenu, docks));
+
+        items.add(moveMenu);
+
+        MenuItem undockMenu = new MenuItem("Undock");
+        undockMenu.setOnAction((e) -> viewMenuController.performUndock(view));
         items.add(undockMenu);
-        
+
+        MenuItem closeMenu = new MenuItem("Close");
+        closeMenu.setOnAction((e) -> viewMenuController.performCloseView(view));
+        items.add(closeMenu);
+
+        items.add(new SeparatorMenuItem());
+
         return items;
     }
-    private void undockToNewWindow(View view) {
-        
-        viewManager.undock().onNext(view);
-        
-    }
+
     private void changedDockType(DockType<?> dockType, View view) {
-        this.dockType = dockType;
-        
+        updateActiveDockType(dockType);
+
         Platform.runLater(() -> {
             updateViews();
             var dockContext = views.stream().filter(v -> v.getView() == view).findFirst().orElse(null);
             updateDockView(dockContext);
         });
     }
+
     private void updateViews() {
         final List<DockContext<?>> newViews = new ArrayList<>();
         views.forEach(v -> {
             v.getDisposer().dispose();
-            var dockContext = dockType.computeView(v.getView());
+            var dockContext = activeDockType.computeView(v.getView());
             dockContext.getController().getViewMenuButton().getItems().addAll(0, createDockMenu(v.getView()));
             newViews.add(dockContext);
         });
         views.clear();
         views.addAll(newViews);
     }
-    
+
     private void updateDockView(DockContext<?> focused) {
-        assert dockType != null;
+        assert activeDockType != null;
         getContent().getChildren().clear();
-        
+
         if (views.isEmpty()) {
             return;
         }
-        
+
         @SuppressWarnings("unchecked")
-        Node dockContent = dockType.computeRoot(views, focused);
+        Node dockContent = activeDockType.computeRoot(views, focused);
         VBox.setVgrow(dockContent, Priority.ALWAYS);
         getContent().getChildren().add(dockContent);
     }
-    
+
     private void viewDeleted(View view) {
         assert view != null;
-        assert dockType != null;
+        assert activeDockType != null;
         assert dockTypes.size() > 0;
 
         DockContext<?> dockContext = views.stream().filter(dc -> dc.getView() == view).findFirst().orElse(null);
@@ -177,7 +208,7 @@ public class DockPanelController implements Dock {
             dockContext.getDisposer().dispose();
             views.remove(dockContext);
             viewDeleted(dockContext.getView());
-            
+
             Platform.runLater(() -> {
                 updateDockView(null);
             });
@@ -186,14 +217,36 @@ public class DockPanelController implements Dock {
 
     private void viewAdded(View view, boolean select) {
         assert view != null;
-        assert dockType != null;
+        assert activeDockType != null;
         assert dockTypes.size() > 0;
 
+        lastDockUuidPreference.put(view.getId(), this.getId());
+        lastDockUuidPreference.writeToJavaPreferences();
+
         Platform.runLater(() -> {
-            var dockContext = dockType.computeView(view);
+            var dockContext = activeDockType.computeView(view);
             dockContext.getController().getViewMenuButton().getItems().addAll(0, createDockMenu(view));
             views.add(dockContext);
             updateDockView(select ? dockContext : null);
         });
+    }
+
+    @Override
+    public boolean isWindow() {
+        return parentWindow != null;
+    }
+
+    @Override
+    public SceneBuilderWindow getParentWindow() {
+        return parentWindow;
+    }
+
+    protected void setParentWindow(SceneBuilderWindow parentWindow) {
+        this.parentWindow = parentWindow;
+    }
+
+    @Override
+    public Collection<View> getViews() {
+        return views.stream().map(dc -> dc.getView()).collect(Collectors.toUnmodifiableList());
     }
 }
