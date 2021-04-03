@@ -85,7 +85,7 @@ public class TemplateController {
     private void loadTemplateInWindow(Template template, Document document) {
 
         if (template != null && template.getFxmlUrl() != null) {
-            document.loadFromURL(template.getFxmlUrl());
+            document.loadFromURL(template.getFxmlUrl(), false);
         }
         document.openWindow();
 

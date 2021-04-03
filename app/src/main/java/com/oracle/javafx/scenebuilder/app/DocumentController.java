@@ -295,26 +295,7 @@ public class DocumentController implements Document, InitializingBean {
     @Override
     public void loadFromFile(File fxmlFile) throws IOException {
         final URL fxmlURL = fxmlFile.toURI().toURL();
-        final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-        editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, false);
-
-        updateLoadFileTime();
-        documentWindow.updateStageTitle(); // No-op if fxml has not been loaded yet
-        
-        documentWindow.untrack();
-        System.out.println("UNTRACKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-        
-        documentPreferencesController.readFromJavaPreferences();
-        
-        Platform.runLater(() -> {
-            System.out.println("SETTINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
-            documentWindow.track();
-            documentWindow.apply();
-            
-            System.out.println("TRACK kkkkkkkkkkkkkkkkkkkkkkk");
-        });
-        
-        
+        loadFromURL(fxmlURL, true);
 
         // TODO remove after checking the new watching system is operational in
         // EditorController or in filesystem
@@ -325,11 +306,11 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     @Override
-    public void loadFromURL(URL fxmlURL) {
+    public void loadFromURL(URL fxmlURL, boolean keepTrackOfLocation) {
         assert fxmlURL != null;
         try {
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-            editorController.setFxmlTextAndLocation(fxmlText, null, false);
+            editorController.setFxmlTextAndLocation(fxmlText, keepTrackOfLocation ? fxmlURL : null, false);
             updateLoadFileTime();
             documentWindow.updateStageTitle(); // No-op if fxml has not been loaded yet
             

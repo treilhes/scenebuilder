@@ -2278,7 +2278,7 @@ public class EditorController implements Editor {
 
     	fileSystem.unwatch(this);
 
-        if (fxomDocument != null) {
+        if (fxomDocument != null && fxomDocument.getLocation() != null) {
         	final FXOMAssetIndex assetIndex = new FXOMAssetIndex(fxomDocument);
         	fileSystem.watch(null, assetIndex.getFileAssets().keySet(), new FileSystem.WatchingCallback() {
 

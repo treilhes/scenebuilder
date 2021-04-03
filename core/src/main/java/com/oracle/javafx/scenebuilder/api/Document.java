@@ -52,13 +52,31 @@ public interface Document {
     
     //API to be validated
     
+    /**
+     * Load an fxml document from a local file and track his location.
+     *
+     * @param fxmlFile the fxml file
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     void loadFromFile(File fxmlFile) throws IOException;
+    
+    /**
+     * Load an fxml document from an URL with or without tracking his location.
+     * Tracking the document's location allow to define a default location for saving
+     * and enable watching the location for external modifications.
+     * Not tracking the location of an fxml file is mainly done for templates which prevent
+     * overwriting them
+     * @param url the url
+     * @param keepTrackOfLocation keep track of the document location
+     */
+    void loadFromURL(URL url, boolean keepTrackOfLocation);
+    
     void openWindow();
     void updatePreferences();
     
     void updateWithDefaultContent();
 
-    void loadFromURL(URL url);
+    
     ActionStatus performCloseAction();
 
     void performImportFxml();
