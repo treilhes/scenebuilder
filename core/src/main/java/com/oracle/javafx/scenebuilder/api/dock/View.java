@@ -79,4 +79,8 @@ public interface View {
     public static boolean isSelectOnStart(Class<? extends View> cls) {
         return viewDescriptorAnnotation(cls).selectOnStart();
     }
+    
+    public static int getOrder(Class<? extends View> cls) {
+        return viewDescriptorAnnotation(cls).order();
+    }
 }

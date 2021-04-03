@@ -38,6 +38,7 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
+import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
 import com.oracle.javafx.scenebuilder.fs.menu.FileSystemMenuProvider;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -55,6 +56,7 @@ public class FileSystemExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 FileSystemController.class,
+                FileSystemMenuController.class,
                 FileSystemMenuProvider.class,
                 InitialDirectoryPreference.class,
                 RecentItemsPreference.class,

@@ -73,7 +73,7 @@ import javafx.scene.layout.StackPane;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = DocumentPanelController.VIEW_NAME, id=DocumentPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = false)
+@ViewDescriptor(name = DocumentPanelController.VIEW_NAME, id=DocumentPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = false, order = 200)
 public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
     public final static String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";

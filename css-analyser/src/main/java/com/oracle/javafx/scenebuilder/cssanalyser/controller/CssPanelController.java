@@ -270,16 +270,22 @@ public class CssPanelController extends AbstractFxmlViewController {
      * Public
      *
      */
-    public CssPanelController(@Autowired Api api, @Autowired Editor editor, @Autowired Delegate delegate,
+    // @formatter:off
+    public CssPanelController(
+            @Autowired Api api, 
+            @Autowired Editor editor, 
+            @Autowired Delegate delegate,
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
-            @Autowired Drag drag, @Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
+            @Autowired Drag drag, 
+            @Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
             @Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction,
             @Autowired @Qualifier("cssPanelActions.ViewTextAction") Action viewTextAction,
             @Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction,
             @Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction,
             @Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction,
             @Autowired ViewSearch viewSearch) {
+     // @formatter:off
         super(api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
         this.editorController = editor;
         this.documentManager = api.getApiDoc().getDocumentManager();

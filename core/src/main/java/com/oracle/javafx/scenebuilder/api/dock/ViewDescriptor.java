@@ -45,4 +45,5 @@ public @interface ViewDescriptor {
 	public String prefDockId() default "";
 	public boolean openOnStart() default false;
 	public boolean selectOnStart() default false;
+	public int order() default 0;
 }

@@ -138,7 +138,7 @@ import javafx.util.Callback;
 @ViewDescriptor(name = LibraryPanelController.VIEW_NAME, id = LibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true)
 public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
     
-    public final static String VIEW_ID = "f1870ebc-18db-46f7-a874-ef2401a3e464";
+    public final static String VIEW_ID = "30acd1e6-a848-4ac6-95b2-0effa0b76932";
     public final static String VIEW_NAME = "library";
 
     private String searchPattern;
@@ -254,11 +254,6 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
         startListeningToLibrary();
 
-    }
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("30acd1e6-a848-4ac6-95b2-0effa0b76932");
     }
     
     @FXML

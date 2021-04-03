@@ -59,6 +59,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
+import com.oracle.javafx.scenebuilder.core.dock.ViewMenuController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
@@ -126,6 +127,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final DockPanelController leftDockController;
     private final DockPanelController rightDockController;
     private final DockPanelController bottomDockController;
+    private final ViewMenuController viewMenuController;
     private SplitPositionController topBottonController;
     private SplitPositionController leftRightController;
     private CloseHandler closeHandler;
@@ -161,7 +163,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
             @Autowired DockPanelController leftDockController, 
             @Autowired DockPanelController rightDockController,
-            @Autowired DockPanelController bottomDockController) {
+            @Autowired DockPanelController bottomDockController,
+            @Autowired ViewMenuController viewMenuController) {
         super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); 
         // @formatter:on
 
@@ -187,6 +190,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDividerHPos = rightDividerHPos;
         this.bottomDividerVPos = bottomDividerVPos;
 
+        this.viewMenuController = viewMenuController;
         this.preferenceManager = new PreferenceManager();
     }
 
@@ -405,6 +409,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     @Override
     public void apply() {
+        viewMenuController.performLoadDockAndViewsPreferences();
         this.preferenceManager.apply();
     }
 

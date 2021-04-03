@@ -36,14 +36,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.ComponentScan;
+
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssPanelActions;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelDelegate;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
 import com.oracle.javafx.scenebuilder.cssanalyser.i18n.I18NCssAnalyser;
 import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
+
+@ComponentScan(
+        basePackages = {
+                "com.oracle.javafx.scenebuilder.cssanalyser.actions"
+        })
 public class CssAnalyserExtension extends AbstractExtension {
     @Override
     public UUID getId() {
@@ -59,6 +67,7 @@ public class CssAnalyserExtension extends AbstractExtension {
             CssTableColumnsOrderingReversedPreference.class,
             CssAnalyserModeProvider.class,
             CssPanelMenuController.class,
+            CssPanelDelegate.class,
             CssPanelActions.class,
             PickModeController.class
             );

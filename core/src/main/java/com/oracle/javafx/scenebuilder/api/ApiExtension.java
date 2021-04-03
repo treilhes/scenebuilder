@@ -40,6 +40,8 @@ import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
 import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
+import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
+import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.api.dock.SearchController;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
@@ -82,7 +84,9 @@ public class ApiExtension extends AbstractExtension {
             GenericDriver.class,
             SearchController.class,
             ModeManagerController.class,
-            ViewController.class
+            ViewController.class,
+            SimilarInlineEditorBounds.class,
+            NoPickRefiner.class
         );
     }
 

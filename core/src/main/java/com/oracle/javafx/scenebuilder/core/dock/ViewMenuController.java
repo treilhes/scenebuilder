@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.dock;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -132,16 +133,31 @@ public class ViewMenuController implements InitWithDocument {
     
     @Override
     public void init() {
-        if (!lastViewVisibilityPreference.getValue().isEmpty()) {
+        performResetDockAndViews();
+    }
+    
+    public void performResetDockAndViews() {
+        activeDocks.values().forEach(d -> d.getViews().forEach(v -> performCloseView(v)));
+        viewItems.values().stream().sorted(Comparator.comparing(ViewItem::getOrder)).forEach( vi -> {
+            if (vi.openOnStart) {
+                performOpenView(vi, vi.isSelectOnStart());
+            }
+        });
+    }
+    
+    public void performLoadDockAndViewsPreferences() {
+        var pref = new HashMap<>(lastViewVisibilityPreference.getValue());
+        activeDocks.values().forEach(d -> d.getViews().forEach(v -> performCloseView(v)));
+        if (!pref.isEmpty()) {
             viewItems.values().stream()
-            .filter( vi -> Boolean.TRUE.equals(lastViewVisibilityPreference.get(vi.getViewId())))
+            .filter( vi -> Boolean.TRUE.equals(pref.get(vi.getViewId())))
             .forEach( vi -> {
                 performOpenView(vi);
             });
         } else {
-            viewItems.values().forEach( vi -> {
+            viewItems.values().stream().sorted(Comparator.comparing(ViewItem::getOrder)).forEach( vi -> {
                 if (vi.openOnStart) {
-                    performOpenView(vi);
+                    performOpenView(vi, vi.isSelectOnStart());
                 }
             });
         }
@@ -152,6 +168,9 @@ public class ViewMenuController implements InitWithDocument {
     }
 
     public void performOpenView(ViewItem vi) {
+        performOpenView(vi, true);
+    }
+    private void performOpenView(ViewItem vi, boolean selectView) {
         
         View view = context.getBean(vi.getViewClass());
         
@@ -178,11 +197,11 @@ public class ViewMenuController implements InitWithDocument {
             DockWindowController dwc = dockWindowFactory.newDockWindow();
             lastDockUuidPreference.getValue().replaceAll((k,v) -> v.equals(checkTargetDock) ? dwc.getDock().getId() : v);
             
-            viewManager.dock().onNext(new DockRequest(view, dwc.getDock().getId(), true));
+            viewManager.dock().onNext(new DockRequest(view, dwc.getDock().getId(), selectView));
             
             dwc.openWindow();
         } else {
-            viewManager.dock().onNext(new DockRequest(view, targetDock, true));
+            viewManager.dock().onNext(new DockRequest(view, targetDock, selectView));
             
             if (dock.isWindow() && !activeWindows.get(dock.getParentWindow())) {
                 // if the target is a inactive window, activate it if needed
@@ -229,6 +248,7 @@ public class ViewMenuController implements InitWithDocument {
         private final @Getter UUID prefDockId;
         private final @Getter boolean openOnStart;
         private final @Getter boolean selectOnStart;
+        private final @Getter int order;
         
         public ViewItem(Class<? extends View> viewClass) {
             super();
@@ -238,9 +258,11 @@ public class ViewMenuController implements InitWithDocument {
             this.prefDockId = View.getPrefDockId(viewClass);
             this.selectOnStart = View.isSelectOnStart(viewClass);
             this.openOnStart = View.isOpenOnStart(viewClass);
+            this.order = View.getOrder(viewClass);
         }
         
         
     }
 
 }
+
