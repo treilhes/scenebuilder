@@ -53,7 +53,6 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -1299,6 +1298,18 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             menuItems = createLibraryMenu();
         }
         return menuItems;
+    }
+
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

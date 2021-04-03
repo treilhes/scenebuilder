@@ -44,6 +44,8 @@ public interface View {
 	ViewSearch getSearchController();
 	ViewContent getViewController();
 	ViewMenuProvider getViewMenus();
+	void shown();
+	void hidden();
 	
 	public static ViewDescriptor viewDescriptorAnnotation(Class<? extends View> cls) {
         ViewDescriptor viewDescriptor = cls.getAnnotation(ViewDescriptor.class);

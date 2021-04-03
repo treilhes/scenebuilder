@@ -232,4 +232,16 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         }
         return menuItems;
     }
+
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+        
+    }
 }

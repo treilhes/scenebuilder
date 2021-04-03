@@ -210,11 +210,13 @@ public class DockViewController implements InitWithDocument {
             }
         }
         lastViewVisibilityPreference.put(view.getId(), Boolean.TRUE);
+        view.shown();
     }
     
     public void performCloseView(View view) {
         viewManager.undock().onNext(view);
         lastViewVisibilityPreference.put(view.getId(), Boolean.FALSE);
+        view.hidden();
     }
     
     public void performUndock(View view) {

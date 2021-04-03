@@ -43,7 +43,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
@@ -87,29 +86,23 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     private FXOMDocument fxomDocument;
     private String documentName;
-    private boolean dirty = false;
     private final DocumentManager documentManager;
     private final WildcardImportsPreference wildcardImportsPreference;
 
     private final Editor editor;
 
-    private final DocumentWindow document;
-
     private double scrollLeftSave;
-
     private double scrollTopSave;
     private FadeTransition labelFadeTransition;
     
     public SourceViewWindowController(
             @Autowired Api api,
-            @Autowired DocumentWindow document,
             @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
         super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle()); // NOI18N
         
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.editor = editor;
-        this.document = document;
         this.wildcardImportsPreference = wildcardImportsPreference;
     }
 
@@ -187,7 +180,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
         assert fxomDocument != null;
             
         // No need to eat CPU if the skeleton window isn't opened
-        //if (getStage().isShowing()) {
+        if (!isHidden()) {
             updateTitle();
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
@@ -197,21 +190,27 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
                 textArea.setScrollTop(scrollTopSave);
             });
             documentManager.dirty().set(true);
-            dirty = false;
-            //} else {
-            //dirty = true;
-            //}
+        }
     }
 
     @Override
     public ViewSearch getSearchController() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public List<MenuItem> getMenuItems() {
-        // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public void onShow() {
+        update();
+    }
+
+    @Override
+    public void onHidden() {
+    }
+    
+    
 }

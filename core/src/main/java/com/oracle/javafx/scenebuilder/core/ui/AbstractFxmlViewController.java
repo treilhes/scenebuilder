@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.core.ui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.MenuItem;
 import lombok.Getter;
 
 /**
@@ -64,6 +66,8 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
 	private @Getter ViewManager viewManager;
 
 	private @Getter StringProperty name;
+	
+	private boolean hidden = true;
 	/*
      * Public
      */
@@ -88,4 +92,28 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
         return this;
     }
 
+    @Override
+    public List<MenuItem> getMenuItems() {
+        return null;
+    }
+
+    @Override
+    public void shown() {
+        this.hidden = false;
+        onShow();
+    }
+
+    @Override
+    public void hidden() {
+        this.hidden = true;
+        onHidden();
+    }
+
+    public abstract void onShow();
+
+    public abstract void onHidden();
+
+    protected boolean isHidden() {
+        return hidden;
+    }
 }

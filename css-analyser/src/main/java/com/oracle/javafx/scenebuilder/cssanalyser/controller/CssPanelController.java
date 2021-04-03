@@ -2352,4 +2352,16 @@ public class CssPanelController extends AbstractFxmlViewController {
         return menuItems;
     }
 
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

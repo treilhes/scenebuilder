@@ -2205,4 +2205,16 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
         return menuItems;
     }
+
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+        
+    }
 }
