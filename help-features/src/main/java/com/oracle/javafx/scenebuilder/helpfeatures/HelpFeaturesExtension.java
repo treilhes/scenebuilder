@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.helpfeatures;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.helpfeatures.controller.JavaFxFeaturesMenuController;
@@ -43,14 +42,6 @@ import com.oracle.javafx.scenebuilder.helpfeatures.controller.JavaFxFeaturesWind
 import com.oracle.javafx.scenebuilder.helpfeatures.i18n.I18NJavaFxFeatures;
 import com.oracle.javafx.scenebuilder.helpfeatures.menu.JavaFxFeaturesMenuProvider;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                JavaFxFeaturesMenuController.class,
-                JavaFxFeaturesWindowController.class,
-                I18NJavaFxFeatures.class,
-                JavaFxFeaturesMenuProvider.class
-        })
 public class HelpFeaturesExtension extends AbstractExtension {
 
     @Override
@@ -58,4 +49,15 @@ public class HelpFeaturesExtension extends AbstractExtension {
         return UUID.fromString("cd7536a6-260a-4b30-b369-313a896d1076");
     }
     
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                JavaFxFeaturesMenuController.class,
+                JavaFxFeaturesWindowController.class,
+                I18NJavaFxFeatures.class,
+                JavaFxFeaturesMenuProvider.class
+            );
+     // @formatter:on
+    }
 }

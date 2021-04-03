@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.extension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,4 +53,11 @@ public abstract class AbstractExtension implements Extension {
     public List<String> getRuntimePackages() {
         return runtimePackages;
     }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+        return Arrays.asList();
+    }
+    
+    
 }

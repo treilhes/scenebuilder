@@ -32,10 +32,10 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,12 +62,14 @@ import javafx.stage.Stage;
  * @author ptreilhes
  *
  */
-public class JavafxApplication extends Application {
+public abstract class JavafxApplication extends Application {
     
     private static Logger logger = LoggerFactory.getLogger(JavafxApplication.class);
 
     private ConfigurableApplicationContext context;
 
+    public abstract List<Class<?>> explicitClassToRegister();
+    
     @Override
     public void init() throws Exception {
         
@@ -89,7 +91,13 @@ public class JavafxApplication extends Application {
         
         extensions.entrySet().forEach(e -> logger.info("Loading extension {} id: {}", e.getValue().getClass().getSimpleName(), e.getKey().toString()));
 
-        List<Class<?>> sources = loader.loadExtensions().values().stream().map(c -> c.getClass()).collect(Collectors.toList());
+        List<Class<?>> sources = new ArrayList<>();
+                
+        loader.loadExtensions().values().forEach(e -> {
+            sources.add(e.getClass());
+            sources.addAll(e.explicitClassToRegister());
+        });
+        sources.addAll(explicitClassToRegister());
         sources.add(0, this.getClass());
 //        for (Extension ext:exts) {
 //            if (!ext.components().isEmpty()) {

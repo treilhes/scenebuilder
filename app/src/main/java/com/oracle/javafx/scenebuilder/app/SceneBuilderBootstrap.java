@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +41,6 @@ import java.util.logging.Logger;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NApp;
@@ -66,39 +67,40 @@ import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-@ComponentScan(basePackageClasses = { 
-        AboutWindowController.class,
-        I18NApp.class,
-        MenuBarController.class, 
-        MessageBarController.class,
-        MessagePanelController.class,
-        
-        DocumentPreferencesController.class,
-        DocumentPreferencesNodeImpl.class,
-        PreferencesController.class,
-        RootPreferencesNodeImpl.class,
-        
-        BottomDividerVPosPreference.class,
-        LeftDividerHPosPreference.class,
-        MaximizedPreference.class,
-        PathPreference.class,
-        RightDividerHPosPreference.class,
-        StageHeightPreference.class,
-        StageWidthPreference.class,
-        XPosPreference.class,
-        YPosPreference.class,
-        WindowIconSetting.class,
-        WelcomeDialogWindowController.class, 
-        DocumentController.class,
-        DocumentWindowController.class,
-        MainController.class
-        
-        }, 
-        basePackages = {})
-
 public class SceneBuilderBootstrap extends JavafxApplication {
 
     private static final CountDownLatch launchLatch = new CountDownLatch(1);
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+        return Arrays.asList(
+                AboutWindowController.class,
+                I18NApp.class,
+                MenuBarController.class, 
+                MessageBarController.class,
+                MessagePanelController.class,
+                
+                DocumentPreferencesController.class,
+                DocumentPreferencesNodeImpl.class,
+                PreferencesController.class,
+                RootPreferencesNodeImpl.class,
+                
+                BottomDividerVPosPreference.class,
+                LeftDividerHPosPreference.class,
+                MaximizedPreference.class,
+                PathPreference.class,
+                RightDividerHPosPreference.class,
+                StageHeightPreference.class,
+                StageWidthPreference.class,
+                XPosPreference.class,
+                YPosPreference.class,
+                WindowIconSetting.class,
+                WelcomeDialogWindowController.class, 
+                DocumentController.class,
+                DocumentWindowController.class,
+                MainController.class
+                );
+    }
 
     public SceneBuilderBootstrap() {
         // set design time flag

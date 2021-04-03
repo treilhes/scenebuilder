@@ -32,30 +32,25 @@
  */
 package com.oracle.javafx.scenebuilder.controls;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-import com.oracle.javafx.scenebuilder.controls.metadata.ComponentClassMetadatas;
-import com.oracle.javafx.scenebuilder.controls.metadata.ComponentPropertyMetadataCatalog;
-import com.oracle.javafx.scenebuilder.controls.metadata.ValuePropertyMetadataCatalog;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                //ContextMenuMenuProvider.class,
-                ComponentClassMetadatas.class,
-                ComponentPropertyMetadataCatalog.class,
-                ValuePropertyMetadataCatalog.class,
-                BaseDocumentationUrlBuilder.class
-        })
+@ComponentScan(basePackages = { "com.oracle.javafx.scenebuilder.controls.metadata" })
 public class BaseControlsExtension extends AbstractExtension {
 
     @Override
     public UUID getId() {
         return UUID.fromString("aca5161a-89c1-47a8-bb54-bb376d1f1b38");
+    }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+        return Arrays.asList(BaseDocumentationUrlBuilder.class);
     }
 
 }

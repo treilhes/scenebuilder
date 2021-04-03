@@ -32,31 +32,36 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssPanelActions;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
 import com.oracle.javafx.scenebuilder.cssanalyser.i18n.I18NCssAnalyser;
+import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                I18NCssAnalyser.class,
-                CssPanelController.class,
-                CssTableColumnsOrderingReversedPreference.class,
-                CssAnalyserModeProvider.class,
-                CssPanelMenuController.class,
-                CssPanelActions.class
-        })
 public class CssAnalyserExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("3155d7db-8df0-466c-b19a-8a8b9204fcb4");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            I18NCssAnalyser.class,
+            CssPanelController.class,
+            CssTableColumnsOrderingReversedPreference.class,
+            CssAnalyserModeProvider.class,
+            CssPanelMenuController.class,
+            CssPanelActions.class,
+            PickModeController.class
+            );
+     // @formatter:on
     }
 }

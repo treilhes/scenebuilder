@@ -32,22 +32,25 @@
  */
 package com.oracle.javafx.scenebuilder.draganddrop;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.draganddrop.controller.DragController;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                DragController.class
-        })
 public class DragAndDropExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("285f16bb-9af8-4c60-9ca9-5098a9d6e920");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                DragController.class
+            );
+     // @formatter:on
     }
 }

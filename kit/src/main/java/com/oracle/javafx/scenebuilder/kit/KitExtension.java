@@ -32,9 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -42,21 +42,12 @@ import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
+import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
+import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
 import com.oracle.javafx.scenebuilder.kit.glossary.BuiltinGlossary;
 import com.oracle.javafx.scenebuilder.kit.i18n.I18N;
 import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 
-@ComponentScan(basePackageClasses = { 
-        I18N.class,
-        BuiltinGlossary.class,
-        ErrorReportImpl.class,
-        EditorController.class, 
-        SelectionBarController.class, 
-        JobManagerImpl.class,
-        DialogController.class,
-        MessageLog.class
-        }, 
-        basePackages = {})
 public class KitExtension extends AbstractExtension {
 
     @Override
@@ -64,4 +55,21 @@ public class KitExtension extends AbstractExtension {
         return UUID.fromString("ce384389-0d74-4237-9d1d-492d6553fe19");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                I18N.class,
+                BuiltinGlossary.class,
+                ErrorReportImpl.class,
+                EditorController.class, 
+                SelectionBarController.class, 
+                JobManagerImpl.class,
+                DialogController.class,
+                MessageLog.class,
+                ContextMenuController.class,
+                InlineEditController.class
+            );
+     // @formatter:on
+    }
 }

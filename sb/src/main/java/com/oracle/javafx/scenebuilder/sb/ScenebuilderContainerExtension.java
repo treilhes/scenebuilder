@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.sb;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssAction;
@@ -48,9 +47,17 @@ import com.oracle.javafx.scenebuilder.sb.preferences.global.ToolThemePreference;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.sb.tooltheme.DefaultToolThemesList;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
+public class ScenebuilderContainerExtension extends AbstractExtension {
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString("89018f3c-30e5-41f9-8e21-9d62c476f6a7");
+    }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
                 ApplyToolCssAction.class,
                 ApplyToolCssThemeExtension.class,
                 SceneBuilderMenuController.class,
@@ -60,12 +67,7 @@ import com.oracle.javafx.scenebuilder.sb.tooltheme.DefaultToolThemesList;
                 ToolThemePreference.class,
                 WildcardImportsPreference.class,
                 DefaultToolThemesList.class
-        })
-public class ScenebuilderContainerExtension extends AbstractExtension {
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("89018f3c-30e5-41f9-8e21-9d62c476f6a7");
+            );
+     // @formatter:on
     }
-
 }

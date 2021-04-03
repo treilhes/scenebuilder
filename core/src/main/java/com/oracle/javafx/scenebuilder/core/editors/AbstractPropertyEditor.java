@@ -38,7 +38,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
@@ -127,7 +126,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     private final MenuItem resetvalueMenuItem = new MenuItem(I18N.getString("inspector.editors.resetvalue"));
     private FadeTransition fadeTransition = null;
     private boolean genericModesHandled = false;
-    private final Dialog dialog;
+    //private final Dialog dialog;
     private final Api api;
     private Set<Class<?>> selectedClasses;
 
@@ -136,7 +135,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
             Api api
             ) {
         this.api = api;
-        this.dialog = api.getApiDoc().getDialog();
+        //this.dialog = api.getApiDoc().getDialog();
         initialize();
     }
 
@@ -629,7 +628,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
             source = propName;
         }
         
-        Alert alertDialog = dialog.customAlert(source.getScene().getWindow());
+        Alert alertDialog = api.getApiDoc().getDialog().customAlert(source.getScene().getWindow());
         alertDialog.setTitle(I18N.getString("inspector.error.title"));
         alertDialog.setMessage(I18N.getString("inspector.error.message"));
         alertDialog.setDetails(I18N.getString("inspector.error.details", value, getPropertyNameText()));

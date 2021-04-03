@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.content.ModeProvider;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.mode.PickModeController;
+import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 
 @Component
 public class CssAnalyserModeProvider implements ModeProvider {

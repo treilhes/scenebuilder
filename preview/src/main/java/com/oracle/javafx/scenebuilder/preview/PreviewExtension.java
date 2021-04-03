@@ -32,23 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.preview;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewMenuController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.preview.menu.PreviewMenuProvider;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                PreviewMenuController.class,
-                PreviewWindowController.class,
-                PreviewMenuProvider.class
-        })
 public class PreviewExtension extends AbstractExtension {
 
     @Override
@@ -56,4 +48,14 @@ public class PreviewExtension extends AbstractExtension {
         return UUID.fromString("bfef2604-9c6a-4ce4-9e14-7e4f27ad6715");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                PreviewMenuController.class,
+                PreviewWindowController.class,
+                PreviewMenuProvider.class
+            );
+     // @formatter:on
+    }
 }

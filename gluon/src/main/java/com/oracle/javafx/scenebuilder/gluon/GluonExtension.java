@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.gluon;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -62,8 +64,21 @@ import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 import com.oracle.javafx.scenebuilder.gluon.template.GluonTemplateList;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
-@ComponentScan(
-        basePackageClasses = {
+@ComponentScan(basePackages = { 
+        "com.oracle.javafx.scenebuilder.gluon.template",
+        "com.oracle.javafx.scenebuilder.gluon.theme"
+        })
+public class GluonExtension extends AbstractExtension {
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString("1528d4d1-1518-4d34-9fc9-ec4d5b73292e");
+    }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
                 GluonDocumentationUrlBuilder.class,
                 AddPropertyValueJobExtension.class,
                 SetFxomRootJobExtension.class,
@@ -91,12 +106,7 @@ import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
                 UpdateController.class,
                 GluonLibraryFilter.class,
                 GluonTemplateList.class
-        })
-public class GluonExtension extends AbstractExtension {
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("1528d4d1-1518-4d34-9fc9-ec4d5b73292e");
+            );
+     // @formatter:on
     }
-
 }

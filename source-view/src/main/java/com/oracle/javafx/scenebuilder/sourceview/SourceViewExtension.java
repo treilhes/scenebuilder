@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.sourceview;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sourceview.actions.GeneratFxmlContentAction;
@@ -44,18 +43,22 @@ import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowCont
 import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;
 import com.oracle.javafx.scenebuilder.sourceview.menu.SourceViewMenuProvider;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
+public class SourceViewExtension extends AbstractExtension {
+    @Override
+    public UUID getId() {
+        return UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
                 GeneratFxmlContentAction.class,
                 SourceViewMenuController.class,
                 SourceViewWindowController.class,
                 I18NSourceView.class,
                 SourceViewMenuProvider.class
-        })
-public class SourceViewExtension extends AbstractExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
+            );
+     // @formatter:on
     }
 }

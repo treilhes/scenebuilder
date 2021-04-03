@@ -32,11 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.library;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.library.action.LibraryPanelActions;
 import com.oracle.javafx.scenebuilder.library.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
@@ -46,12 +49,28 @@ import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.reposit
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.search.SearchMavenDialogController;
 import com.oracle.javafx.scenebuilder.library.menu.LibraryMenuProvider;
 import com.oracle.javafx.scenebuilder.library.preferences.global.DisplayModePreference;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoryPreferences;
 import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 @ComponentScan(
-        basePackageClasses = {
+        basePackages = {
+                "com.oracle.javafx.scenebuilder.library.action"
+        })
+public class LibraryExtension extends AbstractExtension {
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString("3fddfa3c-0963-40da-8a59-895284c4b851");
+    }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                LibraryPanelActions.class,
                 LibraryDialogController.class,
                 LibraryController.class,
                 LibraryMenuProvider.class,
@@ -61,17 +80,14 @@ import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
                 LibraryPanelController.class,
                 DisplayModePreference.class,
                 MavenArtifactsPreferences.class,
+                MavenArtifactPreferences.class,
                 MavenRepositoriesPreferences.class,
+                MavenRepositoryPreferences.class,
                 UserLibrary.class,
                 RepositoryManagerController.class,
                 BuiltinLibrary.class,
                 DefaultLibraryFilter.class
-        })
-public class LibraryExtension extends AbstractExtension {
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("3fddfa3c-0963-40da-8a59-895284c4b851");
+            );
+     // @formatter:on
     }
-
 }

@@ -32,12 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
+import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.HudWindowController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
@@ -45,24 +45,34 @@ import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
+import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.AlignmentGuidesColorPreference;
+import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                I18NContentEditor.class,
-                ContentPanelController.class,
-                ContentModeProvider.class,
-                HudWindowController.class,
-                WorkspaceController.class,
-                SelectWithMarqueeGesture.class,
-                SelectAndMoveGesture.class,
-                DragGesture.class,
-                ZoomGesture.class
-        })
 public class ContentEditorExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("6f7b35c8-8883-4e10-bb7f-c6e85d1b54be");
     }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            I18NContentEditor.class,
+            ContentPanelController.class,
+            ContentModeProvider.class,
+            HudWindowController.class,
+            WorkspaceController.class,
+            SelectWithMarqueeGesture.class,
+            SelectAndMoveGesture.class,
+            DragGesture.class,
+            ZoomGesture.class,
+            AlignmentGuidesColorPreference.class,
+            BackgroundImagePreference.class,
+            EditModeController.class
+            );
+     // @formatter:on
+    }
+
 }

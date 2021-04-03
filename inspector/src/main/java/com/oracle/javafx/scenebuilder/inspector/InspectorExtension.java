@@ -32,10 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.inspector;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.inspector.actions.InspectorPanelActions;
@@ -43,17 +44,26 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 import com.oracle.javafx.scenebuilder.inspector.i18n.I18NInspector;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 
-@Configuration
+
 @ComponentScan(
-        basePackageClasses = {
-                I18NInspector.class,
-                InspectorPanelController.class,
-                InspectorSectionIdPreference.class,
-                InspectorPanelActions.class
+        basePackages = {
+                "com.oracle.javafx.scenebuilder.inspector.actions"
         })
 public class InspectorExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("5f4b6abb-21a0-4be4-8aa4-406ebeb487a6");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                I18NInspector.class,
+                InspectorPanelController.class,
+                InspectorSectionIdPreference.class,
+                InspectorPanelActions.class
+            );
+     // @formatter:on
     }
 }

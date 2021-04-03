@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.prefedit;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferenceEditorMenuController;
@@ -44,18 +43,22 @@ import com.oracle.javafx.scenebuilder.prefedit.editor.PreferenceEditorFactoryImp
 import com.oracle.javafx.scenebuilder.prefedit.i18n.I18NPreferenceEditor;
 import com.oracle.javafx.scenebuilder.prefedit.menu.PreferenceEditorMenuProvider;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
+public class PreferenceEditorExtension extends AbstractExtension {
+    @Override
+    public UUID getId() {
+        return UUID.fromString("75f8ee7c-f2b6-45ed-934a-8e190d4931f2");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
                 PreferencesWindowController.class,
                 PreferenceEditorMenuController.class,
                 I18NPreferenceEditor.class,
                 PreferenceEditorMenuProvider.class,
                 PreferenceEditorFactoryImpl.class
-        })
-public class PreferenceEditorExtension extends AbstractExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("75f8ee7c-f2b6-45ed-934a-8e190d4931f2");
+            );
+     // @formatter:on
     }
 }

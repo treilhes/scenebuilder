@@ -32,19 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.job;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
 
-@ComponentScan(
-        basePackageClasses = {
-                RootContainerHeightPreference.class,
-                RootContainerWidthPreference.class
-        })
 public class JobsExtension extends AbstractExtension {
 
     @Override
@@ -52,4 +47,13 @@ public class JobsExtension extends AbstractExtension {
         return UUID.fromString("07a8af43-755e-4a51-a598-66ac13e3f7a5");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                RootContainerHeightPreference.class,
+                RootContainerWidthPreference.class
+            );
+     // @formatter:on
+    }
 }

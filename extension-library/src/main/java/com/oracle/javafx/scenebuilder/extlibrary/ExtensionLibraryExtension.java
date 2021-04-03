@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.extlibrary;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenuController;
@@ -43,17 +42,21 @@ import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryWind
 import com.oracle.javafx.scenebuilder.extlibrary.i18n.I18NExtensionLibrary;
 import com.oracle.javafx.scenebuilder.extlibrary.menu.ExtensionLibraryMenuProvider;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                ExtensionLibraryMenuController.class,
-                ExtensionLibraryWindowController.class,
-                I18NExtensionLibrary.class,
-                ExtensionLibraryMenuProvider.class
-        })
 public class ExtensionLibraryExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("ab05d97a-6d85-4875-8dee-75ac3d752c40");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                ExtensionLibraryMenuController.class,
+                ExtensionLibraryWindowController.class,
+                I18NExtensionLibrary.class,
+                ExtensionLibraryMenuProvider.class
+            );
+     // @formatter:on
     }
 }

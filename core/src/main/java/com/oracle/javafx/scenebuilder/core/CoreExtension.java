@@ -32,11 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.core;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
+import com.oracle.javafx.scenebuilder.core.dock.DockNameHelper;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
@@ -44,17 +45,32 @@ import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
+import com.oracle.javafx.scenebuilder.core.dock.ViewMenuController;
+import com.oracle.javafx.scenebuilder.core.dock.ViewMenuProvider;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@ComponentScan(
-        basePackageClasses = {
+public class CoreExtension extends AbstractExtension {
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString("e000402f-89dc-499d-afae-36149efc2537");
+    }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
             PropertyEditorFactory.class,
             CoreEditors.class,
+            ControllerClassEditor.class,
             Selection.class,
             Metadata.class,
             DocumentationImpl.class,
@@ -65,14 +81,13 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
             DockTypeTab.class,
             DockWindowController.class,
             DockWindowFactory.class,
-            LastDockUuidPreference.class
-            },
-        basePackages = {})
-public class CoreExtension extends AbstractExtension {
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("e000402f-89dc-499d-afae-36149efc2537");
+            LastDockUuidPreference.class,
+            LastViewVisibilityPreference.class,
+            LastDockDockTypePreference.class,
+            ViewMenuController.class,
+            ViewMenuProvider.class,
+            DockNameHelper.class
+            );
+     // @formatter:on
     }
-
 }

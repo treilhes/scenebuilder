@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.debugmenu;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuWindowController;
@@ -43,17 +42,21 @@ import com.oracle.javafx.scenebuilder.debugmenu.i18n.I18NDebugMenu;
 import com.oracle.javafx.scenebuilder.debugmenu.menu.DebugMenuMenuProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                DebugMenuController.class,
-                DebugMenuWindowController.class,
-                I18NDebugMenu.class,
-                DebugMenuMenuProvider.class
-        })
 public class DebugMenuExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("b97afbec-1861-4b39-9cee-4bd4f541afe3");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            DebugMenuController.class,
+            DebugMenuWindowController.class,
+            I18NDebugMenu.class,
+            DebugMenuMenuProvider.class
+            );
+     // @formatter:on
     }
 }

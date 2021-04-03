@@ -32,27 +32,37 @@
  */
 package com.oracle.javafx.scenebuilder.template;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
+import com.oracle.javafx.scenebuilder.template.controller.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.template.i18n.I18NTemplate;
 import com.oracle.javafx.scenebuilder.template.menu.TemplateMenuProvider;
+import com.oracle.javafx.scenebuilder.template.templates.DefaultTemplateList;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                TemplateController.class,
-                I18NTemplate.class,
-                TemplateMenuProvider.class,
-                DefaultTemplateList.class
-        })
+@ComponentScan(basePackages = { "com.oracle.javafx.scenebuilder.template.templates" })
 public class TemplateExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("7fc1994b-a8d6-4bfd-976b-f8eb6bfb7498");
+    }
+    
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                TemplateController.class,
+                I18NTemplate.class,
+                TemplateMenuProvider.class,
+                DefaultTemplateList.class,
+                TemplatesWindowController.class
+            );
+     // @formatter:on
     }
 }

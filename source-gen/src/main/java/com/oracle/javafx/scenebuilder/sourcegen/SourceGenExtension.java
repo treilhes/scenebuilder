@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.sourcegen;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sourcegen.actions.GenerateSkeletonContentAction;
@@ -43,16 +42,7 @@ import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonMenuControlle
 import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonWindowController;
 import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
 import com.oracle.javafx.scenebuilder.sourcegen.menu.SkeletonMenuProvider;
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                GenerateSkeletonContentAction.class,
-                SkeletonMenuController.class,
-                SkeletonWindowController.class,
-                I18NSourceGen.class,
-                SkeletonMenuProvider.class,
-        })
-        
+
 public class SourceGenExtension extends AbstractExtension {
 
     @Override
@@ -60,4 +50,16 @@ public class SourceGenExtension extends AbstractExtension {
         return UUID.fromString("ead87e42-0619-4d9c-8671-87d7a27e3277");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                GenerateSkeletonContentAction.class,
+                SkeletonMenuController.class,
+                SkeletonWindowController.class,
+                I18NSourceGen.class,
+                SkeletonMenuProvider.class
+            );
+     // @formatter:on
+    }
 }

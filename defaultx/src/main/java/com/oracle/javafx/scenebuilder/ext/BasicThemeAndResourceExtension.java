@@ -32,10 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.ext;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentThemeExtension;
@@ -55,29 +56,10 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                ApplyCssContentAction.class,
-                ApplyCssContentThemeExtension.class,
-                ApplyCssContentUserStylesheetsExtension.class,
-                ApplyCssContentWatchExtension.class,
-                ApplyI18nContentAction.class,
-                ApplyI18nContentResourceExtension.class,
-                ApplyI18nContentWatchExtension.class,
-                I18nResourceMenuController.class,
-                SceneStyleSheetMenuController.class,
-                ThemeMenuController.class,
-                I18nMenuProvider.class,
-                ThemeMenuProvider.class,
-                UserStylesheetsMenuProvider.class,
-                I18NResourcePreference.class,
-                com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference.class,
-                UserStylesheetsPreference.class,
-                ThemePreference.class,
-                DefaultThemesList.class
-        },
-        basePackages = {})
+
+@ComponentScan(basePackages = { 
+        "com.oracle.javafx.scenebuilder.ext.theme"
+        })
 public class BasicThemeAndResourceExtension extends AbstractExtension {
 
     @Override
@@ -85,4 +67,29 @@ public class BasicThemeAndResourceExtension extends AbstractExtension {
         return UUID.fromString("98163b4e-12c5-4f59-bee6-bbbbf619bcd5");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            ApplyCssContentAction.class,
+            ApplyCssContentThemeExtension.class,
+            ApplyCssContentUserStylesheetsExtension.class,
+            ApplyCssContentWatchExtension.class,
+            ApplyI18nContentAction.class,
+            ApplyI18nContentResourceExtension.class,
+            ApplyI18nContentWatchExtension.class,
+            I18nResourceMenuController.class,
+            SceneStyleSheetMenuController.class,
+            ThemeMenuController.class,
+            I18nMenuProvider.class,
+            ThemeMenuProvider.class,
+            UserStylesheetsMenuProvider.class,
+            I18NResourcePreference.class,
+            com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference.class,
+            UserStylesheetsPreference.class,
+            ThemePreference.class,
+            DefaultThemesList.class
+            );
+     // @formatter:on
+    }
 }

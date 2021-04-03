@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.exporter;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.exporter.controller.ExporterMenuController;
 import com.oracle.javafx.scenebuilder.exporter.format.PngFormat;
@@ -43,17 +42,21 @@ import com.oracle.javafx.scenebuilder.exporter.i18n.I18NExporter;
 import com.oracle.javafx.scenebuilder.exporter.menu.ExporterMenuProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                ExporterMenuController.class,
-                I18NExporter.class,
-                ExporterMenuProvider.class,
-                PngFormat.class
-        })
 public class ExporterExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("f38264b5-aaea-444d-8ca8-f6d8ab910b2b");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                ExporterMenuController.class,
+                I18NExporter.class,
+                ExporterMenuProvider.class,
+                PngFormat.class
+            );
+     // @formatter:on
     }
 }

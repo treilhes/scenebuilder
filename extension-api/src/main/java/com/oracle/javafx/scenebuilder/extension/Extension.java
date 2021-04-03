@@ -42,4 +42,6 @@ public interface Extension {
     boolean hasRuntime();
     
     List<String> getRuntimePackages();
+    
+    List<Class<?>> explicitClassToRegister();
 }

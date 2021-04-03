@@ -32,25 +32,38 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
+import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
+import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
+import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
+import com.oracle.javafx.scenebuilder.api.dock.SearchController;
+import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.subjects.DockManager.DockManagerImpl;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager.DocumentManagerImpl;
+import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager.NetworkManagerImpl;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager.SceneBuilderManagerImpl;
+import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.ViewManagerImpl;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@ComponentScan(
-        basePackageClasses = {
+public class ApiExtension extends AbstractExtension {
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString("5c288676-df8c-4755-ba74-8001ce5d1c6b");
+    }
+
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+        return Arrays.asList(
             I18N.class,
             PreferencesContext.class,
             MavenSetting.class,
@@ -59,18 +72,19 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
             ExtendedAction.class,
             Api.class,
             PreferencesContext.class,
-            DockManager.class,
-            DocumentManager.class,
-            NetworkManager.class,
-            SceneBuilderManager.class,
-            ViewManager.class
-            },
-        basePackages = {})
-public class ApiExtension extends AbstractExtension {
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("5c288676-df8c-4755-ba74-8001ce5d1c6b");
+            DockManagerImpl.class,
+            DocumentManagerImpl.class,
+            NetworkManagerImpl.class,
+            SceneBuilderManagerImpl.class,
+            ViewManagerImpl.class,
+            DriverExtensionRegistry.class,
+            ApiDoc.class,
+            GenericDriver.class,
+            SearchController.class,
+            ModeManagerController.class,
+            ViewController.class
+        );
     }
 
+    
 }

@@ -32,9 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.editors;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.editors.control.AnchorPaneConstraintsEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
@@ -75,48 +75,6 @@ import com.oracle.javafx.scenebuilder.editors.popupeditors.Rectangle2DPopupEdito
 import com.oracle.javafx.scenebuilder.editors.popupeditors.StringPopupEditor;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@ComponentScan(
-        basePackageClasses = {
-                AnchorPaneConstraintsEditor.class,
-                BooleanEditor.class,
-                BoundedDoubleEditor.class,
-                ButtonTypeEditor.class,
-                CharsetEditor.class,
-                ColorPopupEditor.class,
-                ColumnResizePolicyEditor.class,
-                CursorEditor.class,
-                DefaultEditors.class,
-                DividerPositionsEditor.class,
-                DoubleEditor.class,
-                DurationEditor.class,
-                EnumEditor.class,
-                EventHandlerEditor.class,
-                FunctionalInterfaceEditor.class,
-                GenericEditor.class,
-                I18nStringEditor.class,
-                ImageEditor.class,
-                IncludeFxmlEditor.class,
-                InsetsEditor.class,
-                IntegerEditor.class,
-                Point3DEditor.class,
-                RotateEditor.class,
-                StringEditor.class,
-                StringListEditor.class,
-                StyleClassEditor.class,
-                StyleEditor.class,
-                StylesheetEditor.class,
-                TextAlignmentEditor.class,
-                ToggleGroupEditor.class,
-                
-                BoundsPopupEditor.class,
-                EffectPopupEditor.class,
-                FontPopupEditor.class,
-                GenericPaintPopupEditor.class,
-                KeyCombinationPopupEditor.class,
-                Rectangle2DPopupEditor.class,
-                StringPopupEditor.class,
-        },
-        basePackages = {})
 public class DefaultEditorsExtension extends AbstractExtension {
 
     @Override
@@ -124,4 +82,49 @@ public class DefaultEditorsExtension extends AbstractExtension {
         return UUID.fromString("c53b7a09-ad00-4774-b0a1-0d67773ab2b4");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            AnchorPaneConstraintsEditor.class,
+            BooleanEditor.class,
+            BoundedDoubleEditor.class,
+            ButtonTypeEditor.class,
+            CharsetEditor.class,
+            ColorPopupEditor.class,
+            ColumnResizePolicyEditor.class,
+            CursorEditor.class,
+            DefaultEditors.class,
+            DividerPositionsEditor.class,
+            DoubleEditor.class,
+            DurationEditor.class,
+            EnumEditor.class,
+            EventHandlerEditor.class,
+            FunctionalInterfaceEditor.class,
+            GenericEditor.class,
+            I18nStringEditor.class,
+            ImageEditor.class,
+            IncludeFxmlEditor.class,
+            InsetsEditor.class,
+            IntegerEditor.class,
+            Point3DEditor.class,
+            RotateEditor.class,
+            StringEditor.class,
+            StringListEditor.class,
+            StyleClassEditor.class,
+            StyleEditor.class,
+            StylesheetEditor.class,
+            TextAlignmentEditor.class,
+            ToggleGroupEditor.class,
+            
+            BoundsPopupEditor.class,
+            EffectPopupEditor.class,
+            FontPopupEditor.class,
+            GenericPaintPopupEditor.class,
+            KeyCombinationPopupEditor.class,
+            Rectangle2DPopupEditor.class,
+            StringPopupEditor.class
+            );
+     // @formatter:on
+    }
 }

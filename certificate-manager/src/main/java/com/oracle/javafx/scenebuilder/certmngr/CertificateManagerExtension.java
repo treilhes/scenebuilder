@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.certmngr;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerController;
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerMenuController;
@@ -43,15 +42,6 @@ import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerWind
 import com.oracle.javafx.scenebuilder.certmngr.i18n.I18NCertificateManager;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                CertificateManagerInitializer.class,
-                CertificateManagerController.class,
-                CertificateManagerMenuController.class,
-                CertificateManagerWindowController.class,
-                I18NCertificateManager.class
-        })
 public class CertificateManagerExtension extends AbstractExtension {
 
     @Override
@@ -59,4 +49,16 @@ public class CertificateManagerExtension extends AbstractExtension {
         return UUID.fromString("81595bd2-372c-43ca-91af-f5cf7a80d808");
     }
     
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            CertificateManagerInitializer.class,
+            CertificateManagerController.class,
+            CertificateManagerMenuController.class,
+            CertificateManagerWindowController.class,
+            I18NCertificateManager.class
+            );
+     // @formatter:on
+    }
 }

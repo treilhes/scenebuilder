@@ -32,18 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.drivers;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                DriverExtensionInitializer.class
-        })
 public class BaseToolingExtension extends AbstractExtension {
 
     @Override
@@ -51,4 +45,12 @@ public class BaseToolingExtension extends AbstractExtension {
         return UUID.fromString("d4784eb4-144c-41d8-9107-9112b883bfc3");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            DriverExtensionInitializer.class
+            );
+     // @formatter:on
+    }
 }

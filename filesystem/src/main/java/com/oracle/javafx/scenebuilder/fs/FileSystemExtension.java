@@ -32,21 +32,17 @@
  */
 package com.oracle.javafx.scenebuilder.fs;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
 import com.oracle.javafx.scenebuilder.fs.menu.FileSystemMenuProvider;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
 
-@ComponentScan(
-        basePackageClasses = {
-                FileSystemController.class,
-                InitialDirectoryPreference.class,
-                FileSystemMenuProvider.class
-        })
 public class FileSystemExtension extends AbstractExtension {
 
     @Override
@@ -54,4 +50,16 @@ public class FileSystemExtension extends AbstractExtension {
         return UUID.fromString("0f456500-a6d0-4438-8186-4d3de840b81b");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                FileSystemController.class,
+                FileSystemMenuProvider.class,
+                InitialDirectoryPreference.class,
+                RecentItemsPreference.class,
+                RecentItemsSizePreference.class
+            );
+     // @formatter:on
+    }
 }

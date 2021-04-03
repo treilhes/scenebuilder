@@ -32,22 +32,25 @@
  */
 package com.oracle.javafx.scenebuilder.updatemgr;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.updatemgr.i18n.I18NUpdateManager;
 
-@Configuration
-@ComponentScan(
-        basePackageClasses = {
-                I18NUpdateManager.class
-        })
 public class UpdateManagerExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("a0d58cef-68cb-47d4-9e05-9d4f93b8089d");
+    }
+    
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+                I18NUpdateManager.class
+            );
+     // @formatter:on
     }
 }

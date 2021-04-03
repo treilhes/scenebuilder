@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.document;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -44,12 +46,8 @@ import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionP
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 @ComponentScan(
-        basePackageClasses = {
-                DocumentPanelController.class,
-                HierarchyPanelController.class,
-                InfoPanelController.class,
-                DisplayOptionPreference.class,
-                DocumentPanelActions.class
+        basePackages = {
+                "com.oracle.javafx.scenebuilder.document.actions"
         })
 public class DocumentExtension extends AbstractExtension {
 
@@ -58,4 +56,16 @@ public class DocumentExtension extends AbstractExtension {
         return UUID.fromString("1eed13de-9e30-407a-822b-f6c350bea4c9");
     }
 
+    @Override
+    public List<Class<?>> explicitClassToRegister() {
+     // @formatter:off
+        return Arrays.asList(
+            DocumentPanelController.class,
+            HierarchyPanelController.class,
+            InfoPanelController.class,
+            DisplayOptionPreference.class,
+            DocumentPanelActions.class
+            );
+     // @formatter:on
+    }
 }
