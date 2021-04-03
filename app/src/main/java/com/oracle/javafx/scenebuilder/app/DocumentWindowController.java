@@ -35,21 +35,16 @@ package com.oracle.javafx.scenebuilder.app;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
@@ -128,12 +123,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @FXML
     private VBox bottomHost;
 
-    private final DocumentManager documentManager;
-    private final Dialog dialog;
-    private final ApplicationContext context;
-
-    private final ViewManager viewManager;
-    private final DockManager dockManager;
     private final DockPanelController leftDockController;
     private final DockPanelController rightDockController;
     private final DockPanelController bottomDockController;
@@ -170,19 +159,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             @Lazy @Autowired RightDividerHPosPreference rightDividerHPos,
             @Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
 
-            @Autowired ViewManager viewManager, 
-            @Autowired DockManager dockManager,
             @Autowired DockPanelController leftDockController, 
             @Autowired DockPanelController rightDockController,
             @Autowired DockPanelController bottomDockController) {
         super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); 
         // @formatter:on
 
-        this.context = api.getContext();
-        this.dialog = api.getApiDoc().getDialog();
-        this.documentManager = api.getApiDoc().getDocumentManager();
-        this.viewManager = viewManager;
-        this.dockManager = dockManager;
         this.leftDockController = leftDockController;
         this.rightDockController = rightDockController;
         this.bottomDockController = bottomDockController;

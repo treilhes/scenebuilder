@@ -70,7 +70,6 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
@@ -86,6 +85,7 @@ import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -126,7 +126,7 @@ public class DocumentController implements Document, InitializingBean {
     private final ContentPanelController contentPanelController;
     //private final DocumentPanelController documentPanelController;
     private final InspectorPanelController inspectorPanelController;
-    //private final CssPanelController cssPanelController;
+    private final CssPanelController cssPanelController;
     private final LibraryPanel libraryPanelController;
     private final SelectionBarController selectionBarController;
     private final MessageBarController messageBarController;
@@ -145,8 +145,8 @@ public class DocumentController implements Document, InitializingBean {
     private final List<DisposeWithDocument> finalizations;
     private final Dialog dialog;
 
-    private final ViewManager viewManager;
     private final Api api;
+    
 
     /*
      * DocumentWindowController
@@ -165,11 +165,10 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired DocumentPanelController documentPanelController,
             @Autowired InspectorPanelController inspectorPanelController,
             @Autowired LibraryPanel libraryPanelController,
+            @Autowired @Lazy CssPanelController cssPanelController,
             @Autowired SelectionBarController selectionBarController,
             @Autowired MessageBarController messageBarController,
-            @Autowired ViewManager viewManager,
             @Autowired DockManager dockManager,
-            //@Lazy @Autowired CssPanelController cssPanelController,
             @Lazy @Autowired ThemePreference themePreference,
             @Lazy @Autowired PathPreference pathPreference,
             @Lazy @Autowired LastDockUuidPreference lastDockUuidPreference,
@@ -185,20 +184,17 @@ public class DocumentController implements Document, InitializingBean {
         this.documentWindow = documentWindow;
         this.recentItemsPreference = recentItemsPreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
-        //this.lastDockUuidPreference = lastDockUuidPreference;
         this.menuBarController = menuBarController;
         this.fileSystem = api.getFileSystem();
         this.dialog = api.getApiDoc().getDialog();
         this.contentPanelController = contentPanelController;
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.documentPreferencesController = documentPreferencesController;
-        //this.documentPanelController = documentPanelController;
         this.inspectorPanelController = inspectorPanelController;
-        //this.cssPanelController = cssPanelController;
         this.libraryPanelController = libraryPanelController;
+        this.cssPanelController = cssPanelController;
         this.selectionBarController = selectionBarController;
         this.messageBarController = messageBarController;
-        this.viewManager = viewManager;
         this.pathPreference = pathPreference;
         this.initializations = initializations;
         this.finalizations = finalizations;
@@ -1168,7 +1164,7 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     private boolean isCssRulesEditing(Node node) {
-        final Node cssRules = null;//cssPanelController.getRulesPane();
+        final Node cssRules = cssPanelController.getRulesPane();
         if (cssRules != null) {
             return isDescendantOf(cssRules, node);
         }
@@ -1176,7 +1172,7 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     private boolean isCssTextEditing(Node node) {
-        final Node cssText = null;//cssPanelController.getTextPane();
+        final Node cssText = cssPanelController.getTextPane();
         if (cssText != null) {
             return isDescendantOf(cssText, node);
         }
