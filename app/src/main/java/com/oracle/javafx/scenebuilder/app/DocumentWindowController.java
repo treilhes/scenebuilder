@@ -527,6 +527,12 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             topBottonController.untrack();
         }
 
+        /**
+         * Used before closing the window to keep the real size and position of the window
+         * as preferences. If the window is in the maximized state then x,y,width,height match the screen size
+         * So opening the same document in another instance will size the window with the screen values and
+         * with the maximized state. When unmaximizing the size of the window will stay the same
+         */
         private void untrackMaximizedOnly() {
             getStage().maximizedProperty().removeListener(maximizedPropertyListener);
             maximizedWindowPreference.getObservableValue().removeListener(maximizedPreferenceListener);
