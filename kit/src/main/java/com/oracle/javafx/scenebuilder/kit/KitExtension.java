@@ -40,7 +40,10 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
 import com.oracle.javafx.scenebuilder.kit.editor.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.messagelog.MessageLog;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.DialogController;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.ErrorDialog;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.TextViewDialog;
 import com.oracle.javafx.scenebuilder.kit.editor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.kit.editor.util.ContextMenuController;
 import com.oracle.javafx.scenebuilder.kit.editor.util.InlineEditController;
@@ -68,7 +71,11 @@ public class KitExtension extends AbstractExtension {
                 DialogController.class,
                 MessageLog.class,
                 ContextMenuController.class,
-                InlineEditController.class
+                InlineEditController.class,
+                AlertDialog.class,
+                DialogController.class,
+                ErrorDialog.class,
+                TextViewDialog.class
             );
      // @formatter:on
     }

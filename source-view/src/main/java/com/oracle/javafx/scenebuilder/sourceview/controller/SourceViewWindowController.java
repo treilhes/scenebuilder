@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.sourceview.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +45,27 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
+import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
 
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
+import javafx.util.Duration;
 
 /**
  *
@@ -66,7 +73,11 @@ import javafx.scene.input.DataFormat;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class SourceViewWindowController extends AbstractFxmlWindowController {
+@ViewDescriptor(name = SourceViewWindowController.VIEW_NAME, id = SourceViewWindowController.VIEW_ID)
+public class SourceViewWindowController extends AbstractFxmlViewController {
+
+    public final static String VIEW_ID = "d7e4ec15-eabc-4e0c-a9b9-49ed9bb05eed";
+    public final static String VIEW_NAME = "menu.title.show.fxml.source";
 
     @FXML
     TextArea textArea;
@@ -87,14 +98,14 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
     private double scrollLeftSave;
 
     private double scrollTopSave;
+    private FadeTransition labelFadeTransition;
     
     public SourceViewWindowController(
             @Autowired Api api,
             @Autowired DocumentWindow document,
             @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
-        super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
-                document); // NOI18N
+        super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle()); // NOI18N
         
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.editor = editor;
@@ -102,6 +113,14 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
         this.wildcardImportsPreference = wildcardImportsPreference;
     }
 
+    private void setupFadeTransition() {
+        labelFadeTransition = new FadeTransition(Duration.millis(3000), updateResultLabel);
+        labelFadeTransition.setFromValue(1.0);
+        labelFadeTransition.setToValue(0.0);
+        labelFadeTransition.setCycleCount(1);
+        labelFadeTransition.setAutoReverse(false);
+    }
+    
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
@@ -132,53 +151,43 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
             String fxmlText = textArea.getText();
             editor.setFxmlTextAndLocation(fxmlText, fxomDocument.getLocation(), false);
             
+            updateResultLabel.setOpacity(1.0);
             updateResultLabel.setText("SUCCESS!");
+            labelFadeTransition.play();
+            
         } catch (IOException e) {
             e.printStackTrace();
+            updateResultLabel.setOpacity(1.0);
             updateResultLabel.setText(e.getMessage());
         }
     }
 
-    @Override
-    public void onCloseRequest() {
-        getStage().close();
-    }
-
-    @Override
-    public void onFocus() {
-    }
-
-    @Override
-    public void openWindow() {
-        super.openWindow();
-
-        if (dirty) {
-            update();
-        }
-    }
 
     /*
      * AbstractFxmlWindowController
      */
     @Override
     public void controllerDidLoadFxml() {
-        super.controllerDidLoadFxml();
         assert textArea != null;
-
+        setupFadeTransition();
         documentManager.fxomDocument().subscribe(fx -> setFxomDocument(fx));
-        documentManager.sceneGraphRevisionDidChange().subscribe(fx -> update());
+        documentManager.sceneGraphRevisionDidChange().observeOn(JavaFxScheduler.platform()).subscribe(fx -> {
+            scrollLeftSave = textArea.getScrollLeft();
+            scrollTopSave = textArea.getScrollTop();
+            update();
+        });
     }
 
     private void updateTitle() {
         final String title = I18N.getString("sourceview.window.title", documentName);
-        getStage().setTitle(title);
+        getName().set(title);
     }
 
     private void update() {
         assert fxomDocument != null;
-
+            
         // No need to eat CPU if the skeleton window isn't opened
-        if (getStage().isShowing()) {
+        //if (getStage().isShowing()) {
             updateTitle();
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
@@ -189,8 +198,20 @@ public class SourceViewWindowController extends AbstractFxmlWindowController {
             });
             documentManager.dirty().set(true);
             dirty = false;
-        } else {
-            dirty = true;
-        }
+            //} else {
+            //dirty = true;
+            //}
+    }
+
+    @Override
+    public ViewSearch getSearchController() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MenuItem> getMenuItems() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

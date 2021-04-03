@@ -75,7 +75,7 @@ public class DockPanelController implements Dock {
     private final List<DockType<?>> dockTypes;
     private final LastDockUuidPreference lastDockUuidPreference;
     private final LastDockDockTypePreference lastDockDockTypePreference;
-    private final ViewMenuController viewMenuController;
+    private final DockViewController viewMenuController;
 
     @SuppressWarnings("rawtypes")
     private @Getter DockType activeDockType;
@@ -90,7 +90,7 @@ public class DockPanelController implements Dock {
     public DockPanelController(
             @Autowired DockManager dockManager, 
             @Autowired ViewManager viewManager,
-            @Autowired ViewMenuController viewMenuController,
+            @Autowired DockViewController viewMenuController,
             @Autowired LastDockUuidPreference lastDockUuidPreference,
             @Autowired LastDockDockTypePreference lastDockDockTypePreference,
             @Autowired List<DockType<?>> dockTypes) {

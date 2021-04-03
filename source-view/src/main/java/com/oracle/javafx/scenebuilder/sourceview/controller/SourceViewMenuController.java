@@ -55,7 +55,7 @@ public class SourceViewMenuController {
     }
 
     public void performOpenSourceViewWindow() {
-        sourceViewWindowController.getStage().centerOnScreen();
-        sourceViewWindowController.openWindow();
+        //sourceViewWindowController.getStage().centerOnScreen();
+        //sourceViewWindowController.openWindow();
     }
 }

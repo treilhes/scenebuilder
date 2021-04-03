@@ -36,8 +36,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.ComponentScan;
+
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
+@ComponentScan(
+        basePackages = {
+                "com.oracle.javafx.scenebuilder.drivers"
+        })
 public class BaseToolingExtension extends AbstractExtension {
 
     @Override

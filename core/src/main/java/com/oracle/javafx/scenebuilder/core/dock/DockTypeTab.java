@@ -95,7 +95,9 @@ public class DockTypeTab implements DockType<Tab> {
                 ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
             }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            ctrl.getViewMenuButton().getItems().removeAll(menuItems);
+            if (menuItems != null && menuItems.size() > 0) {
+                ctrl.getViewMenuButton().getItems().removeAll(menuItems);
+            }
         });
 
         return dockContext;

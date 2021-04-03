@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,9 @@ public class DockTypeAccordion implements DockType<TitledPane> {
                 ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
             }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            ctrl.getViewMenuButton().getItems().removeAll(menuItems);
+            if (menuItems != null && menuItems.size() > 0) {
+                ctrl.getViewMenuButton().getItems().removeAll(menuItems);
+            }
         });
 
         return dockContext;
@@ -104,6 +107,12 @@ public class DockTypeAccordion implements DockType<TitledPane> {
     @Override
     public Node computeRoot(List<DockContext<TitledPane>> views, DockContext<TitledPane> focused) {
         TitledPane[] panes = views.stream().map(v -> v.getDockContent()).toArray(TitledPane[]::new);
+        
+        if (panes != null && panes.length == 1) {
+            panes[0].setCollapsible(false);
+        } else {
+            Arrays.stream(panes).forEach(tp -> tp.setCollapsible(true));
+        }
         var accordion = new Accordion(panes);
         
         if (focused == null && !accordion.getPanes().isEmpty()) {
@@ -111,6 +120,7 @@ public class DockTypeAccordion implements DockType<TitledPane> {
         } else if (focused != null) {
             accordion.setExpandedPane(focused.getDockContent());
         }
+        
         return accordion;
     }
 }

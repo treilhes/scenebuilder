@@ -65,7 +65,7 @@ import lombok.Getter;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class ViewMenuController implements InitWithDocument {
+public class DockViewController implements InitWithDocument {
 
     private final ApplicationContext context;
     private final DockManager dockManager;
@@ -81,7 +81,7 @@ public class ViewMenuController implements InitWithDocument {
     private final Map<SceneBuilderWindow, Boolean> activeWindows = new HashMap<>();
     private final LastViewVisibilityPreference lastViewVisibilityPreference;
     
-    public ViewMenuController(
+    public DockViewController(
             @Autowired ApplicationContext context,
             @Autowired DockManager dockManager,
             @Autowired ViewManager viewManager,

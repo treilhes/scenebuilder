@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
-import com.oracle.javafx.scenebuilder.core.dock.ViewMenuController;
+import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.dock.ViewMenuProvider;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
@@ -84,7 +84,7 @@ public class CoreExtension extends AbstractExtension {
             LastDockUuidPreference.class,
             LastViewVisibilityPreference.class,
             LastDockDockTypePreference.class,
-            ViewMenuController.class,
+            DockViewController.class,
             ViewMenuProvider.class,
             DockNameHelper.class
             );

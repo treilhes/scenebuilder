@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +59,12 @@ public class ViewMenuProvider implements MenuItemProvider {
     private final static String VIEW_MENU_ID = "viewMenu";
     private final static String SHOW_VIEW_MENU_ID = "showSampleControllerMenuItem";
     
-    private final ViewMenuController viewMenuController;
+    private final DockViewController viewMenuController;
     
     
     public ViewMenuProvider(
             @Autowired ApplicationContext context,
-            @Autowired @Lazy ViewMenuController viewMenuController
+            @Autowired @Lazy DockViewController viewMenuController
             ) {
         this.viewMenuController = viewMenuController;
     }
@@ -100,7 +101,9 @@ public class ViewMenuProvider implements MenuItemProvider {
             menu = new Menu(I18N.getString("menu.title.show.view"));
             menu.setId(SHOW_VIEW_MENU_ID);
             
-            viewMenuController.getViewItems().forEach(vi -> {
+            viewMenuController.getViewItems().stream()
+            .sorted(Comparator.comparing(view -> I18N.getString(view.getViewName())))
+            .forEach(vi -> {
                 MenuItem mi = new MenuItem(I18N.getString(vi.getViewName()));
                 mi.setOnAction(e -> viewMenuController.performOpenView(vi));
                 menu.getItems().add(mi);
