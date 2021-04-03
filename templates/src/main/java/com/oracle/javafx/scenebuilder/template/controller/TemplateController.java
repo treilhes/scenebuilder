@@ -47,7 +47,10 @@ import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
 
+
 /**
+ * Allow control of {@link Template} selection and loading into a document window 
+ * @author ptreilhes
  *
  */
 @Component
@@ -56,6 +59,12 @@ public class TemplateController {
     private final Main main;
     private final ApplicationContext context;
     
+    /**
+     * Instantiates a new template controller.
+     *
+     * @param context the context
+     * @param main the main controller instance
+     */
     public TemplateController(
             @Autowired ApplicationContext context,
     		@Autowired Main main) {
@@ -63,6 +72,11 @@ public class TemplateController {
     	this.main = main;
     }
 
+    /**
+     * Open template selection window.
+     *
+     * @param openInNewWindow if true the template will be opened in new document window or an empty one
+     */
     public void openTemplateSelectionWindow(boolean openInNewWindow) {
         TemplatesWindowController templateWindow = context.getBean(TemplatesWindowController.class);
         if (openInNewWindow) {
@@ -73,15 +87,31 @@ public class TemplateController {
         templateWindow.openWindow();
     }
 
+    /**
+     * Load the template in a new document window.
+     *
+     * @param template the template
+     */
     public void loadTemplateInNewWindow(Template template) {
         final Document newTemplateWindow = main.makeNewWindow();
         loadTemplateInWindow(template, newTemplateWindow);
     }
     
+    /**
+     * Load template in current document window.
+     *
+     * @param template the template
+     */
     public void loadTemplateInCurrentWindow(Template template) {
         loadTemplateInWindow(template, context.getBean(Document.class));
     }
 
+    /**
+     * Load template in the provided document window.
+     *
+     * @param template the template
+     * @param document the document
+     */
     private void loadTemplateInWindow(Template template, Document document) {
 
         if (template != null && template.getFxmlUrl() != null) {
