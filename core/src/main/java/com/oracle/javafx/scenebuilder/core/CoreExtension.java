@@ -43,9 +43,9 @@ import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
+import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
-import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.dock.ViewMenuProvider;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
@@ -53,6 +53,7 @@ import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVis
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
+import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
@@ -71,6 +72,8 @@ public class CoreExtension extends AbstractExtension {
             PropertyEditorFactory.class,
             CoreEditors.class,
             ControllerClassEditor.class,
+            FxIdEditor.class,
+            
             Selection.class,
             Metadata.class,
             DocumentationImpl.class,

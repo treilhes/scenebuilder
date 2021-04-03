@@ -94,6 +94,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     private double scrollLeftSave;
     private double scrollTopSave;
     private FadeTransition labelFadeTransition;
+    private boolean dirty = true;
     
     public SourceViewWindowController(
             @Autowired Api api,
@@ -190,6 +191,9 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
                 textArea.setScrollTop(scrollTopSave);
             });
             documentManager.dirty().set(true);
+            dirty  = false;
+        } else {
+            dirty = true;
         }
     }
 
@@ -205,7 +209,9 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     @Override
     public void onShow() {
-        update();
+        if (dirty) {
+            update();
+        }
     }
 
     @Override

@@ -175,6 +175,8 @@ public class DockViewController implements InitWithDocument {
         View view = context.getBean(vi.getViewClass());
         
         performCloseView(view);
+
+        view.shown();
         
         // get last saved dock target
         UUID targetDock = lastDockUuidPreference.get(view.getId());
@@ -210,7 +212,6 @@ public class DockViewController implements InitWithDocument {
             }
         }
         lastViewVisibilityPreference.put(view.getId(), Boolean.TRUE);
-        view.shown();
     }
     
     public void performCloseView(View view) {

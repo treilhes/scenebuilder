@@ -42,11 +42,13 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
+import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 
 import javafx.beans.value.ChangeListener;
@@ -63,7 +65,11 @@ import javafx.scene.input.DataFormat;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class SkeletonWindowController extends AbstractFxmlWindowController {
+@ViewDescriptor(name = SkeletonWindowController.VIEW_NAME, id = SkeletonWindowController.VIEW_ID)
+public class SkeletonWindowController extends AbstractFxmlViewController {
+
+    public final static String VIEW_ID = "7def27f9-4b85-4cf6-a0e4-32b5714b2295";
+    public final static String VIEW_NAME = "menu.title.show.sample.controller.skeleton";
 
     @FXML
     CheckBox commentCheckBox;
@@ -74,14 +80,13 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
 
     private FXOMDocument fxomDocument;
     private String documentName;
-    private boolean dirty = false;
+    private boolean dirty = true;
     private final DocumentManager documentManager;
     
     public SkeletonWindowController(
             @Autowired Api api,
             @Autowired DocumentWindow document) {
-        super(api, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle(),
-                document); // NOI18N
+        super(api, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle()); // NOI18N
         
         this.documentManager = api.getApiDoc().getDocumentManager();
     }
@@ -105,30 +110,12 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
         Clipboard.getSystemClipboard().setContent(content);
     }
 
-    @Override
-    public void onCloseRequest() {
-        getStage().close();
-    }
-
-    @Override
-    public void onFocus() {
-    }
-
-    @Override
-    public void openWindow() {
-        super.openWindow();
-
-        if (dirty) {
-            update();
-        }
-    }
-
     /*
      * AbstractFxmlWindowController
      */
     @Override
     public void controllerDidLoadFxml() {
-        super.controllerDidLoadFxml();
+
         assert commentCheckBox != null;
         assert formatCheckBox != null;
         assert textArea != null;
@@ -143,14 +130,14 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
 
     private void updateTitle() {
         final String title = I18N.getString("skeleton.window.title", documentName);
-        getStage().setTitle(title);
+        getName().set(title);
     }
 
     private void update() {
         assert fxomDocument != null;
 
         // No need to eat CPU if the skeleton window isn't opened
-        if (getStage().isShowing()) {
+        if (!isHidden()) {
             updateTitle();
             final SkeletonBuffer buf = new SkeletonBuffer(fxomDocument, documentName);
 
@@ -171,5 +158,22 @@ public class SkeletonWindowController extends AbstractFxmlWindowController {
         } else {
             dirty = true;
         }
+    }
+
+    @Override
+    public ViewSearch getSearchController() {
+        return null;
+    }
+
+    @Override
+    public void onShow() {
+        if (dirty) {
+            update();
+        }
+    }
+
+    @Override
+    public void onHidden() {
+        
     }
 }

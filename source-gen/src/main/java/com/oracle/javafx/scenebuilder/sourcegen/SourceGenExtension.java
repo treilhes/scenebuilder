@@ -38,10 +38,8 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sourcegen.actions.GenerateSkeletonContentAction;
-import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonMenuController;
 import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonWindowController;
 import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
-import com.oracle.javafx.scenebuilder.sourcegen.menu.SkeletonMenuProvider;
 
 public class SourceGenExtension extends AbstractExtension {
 
@@ -55,10 +53,8 @@ public class SourceGenExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 GenerateSkeletonContentAction.class,
-                SkeletonMenuController.class,
                 SkeletonWindowController.class,
-                I18NSourceGen.class,
-                SkeletonMenuProvider.class
+                I18NSourceGen.class
             );
      // @formatter:on
     }

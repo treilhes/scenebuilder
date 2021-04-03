@@ -38,10 +38,8 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sourceview.actions.GeneratFxmlContentAction;
-import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewMenuController;
 import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowController;
 import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;
-import com.oracle.javafx.scenebuilder.sourceview.menu.SourceViewMenuProvider;
 
 public class SourceViewExtension extends AbstractExtension {
     @Override
@@ -54,10 +52,8 @@ public class SourceViewExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 GeneratFxmlContentAction.class,
-                SourceViewMenuController.class,
                 SourceViewWindowController.class,
-                I18NSourceView.class,
-                SourceViewMenuProvider.class
+                I18NSourceView.class
             );
      // @formatter:on
     }
