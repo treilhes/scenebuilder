@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ChoiceBox fx:id="projectChoice" layoutX="119.0" layoutY="25.0" onAction="#changeCurrentProject" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <GridPane hgap="20.0" layoutX="10.0" layoutY="50.0" vgap="20.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="33.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="33.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="33.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <ListView fx:id="stringOccurences" prefWidth="400.0" />
+            <ListView fx:id="i18nKeys" layoutX="432.0" prefWidth="400.0" GridPane.columnIndex="1" />
+            <TableView fx:id="translations" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+              <columns>
+                <TableColumn fx:id="colTanslation" prefWidth="220.0" text="Translation" />
+                <TableColumn fx:id="colLocale" maxWidth="122.0" minWidth="41.0" prefWidth="52.0" resizable="false" text="Locale" />
+              </columns>
+            </TableView>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
