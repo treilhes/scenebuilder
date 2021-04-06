@@ -42,7 +42,7 @@
         <module>source-view</module>
         <module>templates</module>
         <module>update-manager</module>
-		<module>log-viewer</module>
+        <module>log-viewer</module>
     </modules>
 
     <properties>
@@ -365,7 +365,7 @@
                 <artifactId>update-manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>log-viewer</artifactId>
                 <version>${project.version}</version>
@@ -404,6 +404,14 @@
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
+
+                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+
 
                 <!-- Deploy to Maven Central -->
                 <plugin>
