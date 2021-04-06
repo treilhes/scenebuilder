@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.devutils;
 
-import com.oracle.javafx.scenebuilder.devutils.tbview.TitlePaneBinding;
+import com.oracle.javafx.scenebuilder.devutils.tbview.TableViewBinding;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.stage.Stage;
@@ -47,7 +47,8 @@ public class Test extends AppTester {
         //new TestContent().start(primaryStage);
         //new TestContent2().start(primaryStage);
         //new TestContent3().start(stage);
-        new TitlePaneBinding().start(stage);
+        //new TitlePaneBinding().start(stage);
+        new TableViewBinding().start(stage);
     }
 
     public static void main(String args[]) {

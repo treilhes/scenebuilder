@@ -30,31 +30,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.sourceview;
+package com.oracle.javafx.scenebuilder.devutils.tbview;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.sourceview.actions.GenerateFxmlContentAction;
-import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowController;
-import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TitledPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-public class SourceViewExtension extends AbstractExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
-    }
-    
-    @Override
-    public List<Class<?>> explicitClassToRegister() {
-     // @formatter:off
-        return Arrays.asList(
-                GenerateFxmlContentAction.class,
-                SourceViewWindowController.class,
-                I18NSourceView.class
-            );
-     // @formatter:on
+public class TableViewBinding extends TitledPane {
+    public void start(Stage stage) {
+        // Creating nodes
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TableViewBinding.class.getResource("tableViewBind.fxml"));
+            loader.setController(this);
+            
+            Parent gp = loader.load();
+            
+            
+            //viewLabel.prefWidthProperty().bind(gp.widthProperty().subtract(200));
+            
+            // Setting the stage
+            Scene scene = new Scene(gp, 1280.0, 900.0, Color.BEIGE);
+            stage.setTitle("Check Box Example");
+            stage.setScene(scene);
+            stage.show();
+            
+            
+            System.out.println();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

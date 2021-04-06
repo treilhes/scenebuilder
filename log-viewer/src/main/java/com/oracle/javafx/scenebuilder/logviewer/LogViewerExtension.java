@@ -30,30 +30,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.sourceview;
+package com.oracle.javafx.scenebuilder.logviewer;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.sourceview.actions.GenerateFxmlContentAction;
-import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowController;
-import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;
+import com.oracle.javafx.scenebuilder.logviewer.controller.LogViewerController;
+import com.oracle.javafx.scenebuilder.logviewer.i18n.I18NLogViewer;
 
-public class SourceViewExtension extends AbstractExtension {
+public class LogViewerExtension extends AbstractExtension {
     @Override
     public UUID getId() {
-        return UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
+        return UUID.fromString("357faeba-8094-4f88-9f5e-6d7a836fb795");
     }
     
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                GenerateFxmlContentAction.class,
-                SourceViewWindowController.class,
-                I18NSourceView.class
+                LogViewerController.class,
+                I18NLogViewer.class
             );
      // @formatter:on
     }

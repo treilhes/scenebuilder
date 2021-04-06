@@ -132,6 +132,10 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>update-manager</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>log-viewer</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

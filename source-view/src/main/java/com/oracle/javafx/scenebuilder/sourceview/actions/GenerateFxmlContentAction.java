@@ -56,13 +56,13 @@ import lombok.Setter;
 		nameKey = "action.name.show.jar.analysis.report",
 		descriptionKey = "action.description.show.jar.analysis.report",
 		accelerator = "CTRL+J")
-public class GeneratFxmlContentAction extends AbstractAction implements InitWithDocument {
+public class GenerateFxmlContentAction extends AbstractAction implements InitWithDocument {
 
 	private ApplyCssContentConfig config;
 
 	private final DocumentManager documentManager;
 
-	public GeneratFxmlContentAction(
+	public GenerateFxmlContentAction(
 	        @Autowired Api api) {
 		super(api);
 		this.documentManager = api.getApiDoc().getDocumentManager();

@@ -30,31 +30,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.sourceview;
+package com.oracle.javafx.scenebuilder.logviewer.i18n;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.sourceview.actions.GenerateFxmlContentAction;
-import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowController;
-import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;
+import org.springframework.stereotype.Component;
 
-public class SourceViewExtension extends AbstractExtension {
+import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
+import com.oracle.javafx.scenebuilder.api.i18n.I18NControl;
+
+@Component
+public class I18NLogViewer implements BundleProvider {
+
+    private static ResourceBundle bundle;
+
+    private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
+
     @Override
-    public UUID getId() {
-        return UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
-    }
-    
-    @Override
-    public List<Class<?>> explicitClassToRegister() {
-     // @formatter:off
-        return Arrays.asList(
-                GenerateFxmlContentAction.class,
-                SourceViewWindowController.class,
-                I18NSourceView.class
-            );
-     // @formatter:on
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NLogViewer.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderLogViewer",utf8EncodingControl); //NOI18N
+        }
+        return bundle;
     }
 }
+

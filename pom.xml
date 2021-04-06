@@ -42,6 +42,7 @@
         <module>source-view</module>
         <module>templates</module>
         <module>update-manager</module>
+		<module>log-viewer</module>
     </modules>
 
     <properties>
@@ -362,6 +363,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>update-manager</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+			<dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>log-viewer</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
