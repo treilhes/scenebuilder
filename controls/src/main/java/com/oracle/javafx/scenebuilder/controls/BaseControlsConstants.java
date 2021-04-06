@@ -33,14 +33,14 @@
 package com.oracle.javafx.scenebuilder.controls;
 
 /**
- * This class contains static constants that depends on gluon.
+ * This class contains static constants.
  *
  * @treatAsPrivate
  */
 public interface BaseControlsConstants {
 
     /**
-     * Javafx package
+     * Javafx base package
      */
     public static final String JAVAFX_PACKAGE = "javafx.";
 

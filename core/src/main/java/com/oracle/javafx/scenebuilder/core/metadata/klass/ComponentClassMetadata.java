@@ -326,133 +326,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         return super.equals(obj); // Only to please FindBugs
     }
     
-    
-    /*
-     * Private
-     */
-    
-    /**
-     * Gets the sub component property for the specified component class.
-     *
-     * @param componentClass the component class
-     * @return the sub component property or null if none or more than one
-     */
-    //TODO this method is not dynamic and not extensible, need to do something about it
-    @Deprecated
-    private static PropertyName getSubComponentProperty(Class<?> componentClass) {
-        final PropertyName result;
-        
-        assert componentClass != javafx.scene.layout.BorderPane.class
-                && componentClass != javafx.scene.control.DialogPane.class;
-        
-        /*
-         * Component Class -> Sub Component Property
-         * =========================================
-         * 
-         * Accordion                    panes
-         * ButtonBar                    buttons
-         * ContextMenu                  items
-         * Menu                         items
-         * MenuBar                      menus
-         * MenuButton                   items
-         * Path                         elements
-         * SplitPane                    items
-         * SplitMenuButton              items
-         * TableColumn                  columns
-         * TableView                    columns
-         * TabPane                      tabs
-         * ToolBar                      items
-         * TreeTableColumn              columns
-         * TreeTableView                columns
-         * 
-         * Group                        children
-         * Panes                        children
-         *
-         * ------------ Gluon ------------------
-         *
-         * BottomNavigation             actionItems
-         * CardPane                     items
-         * DropdownButton               items
-         * ExpansionPanelContainer      items
-         * ToggleButtonGroup            toggles
-         * CollapsedPanel               titleNodes
-         * SettingsPane                 options
-         *
-         * ------------------------------------
-         *
-         * Other            null
-         */
-      
-        if (componentClass == javafx.scene.control.Accordion.class) {
-            result = panesName;
-        } else if (componentClass == javafx.scene.control.ButtonBar.class) {
-            result = buttonsName;
-        } else if (componentClass == javafx.scene.control.ContextMenu.class) {
-            result = itemsName;
-        } else if (componentClass == javafx.scene.control.Menu.class) {
-            result = itemsName;
-        } else if (componentClass == javafx.scene.control.MenuBar.class) {
-            result = menusName;
-        } else if (componentClass == javafx.scene.control.MenuButton.class) {
-            result = itemsName;
-        } else if (componentClass == javafx.scene.shape.Path.class) {
-            result = elementsName;
-        } else if (componentClass == javafx.scene.control.SplitMenuButton.class) {
-            result = itemsName;
-        } else if (componentClass == javafx.scene.control.SplitPane.class) {
-            result = itemsName;
-        } else if (componentClass == javafx.scene.control.TableColumn.class) {
-            result = columnsName;
-        } else if (componentClass == javafx.scene.control.TableView.class) {
-            result = columnsName;
-        } else if (componentClass == javafx.scene.control.TabPane.class) {
-            result = tabsName;
-        } else if (componentClass == javafx.scene.control.ToolBar.class) {
-            result = itemsName;
-        } else if (componentClass == javafx.scene.control.TreeTableColumn.class) {
-            result = columnsName;
-        } else if (componentClass == javafx.scene.control.TreeTableView.class) {
-            result = columnsName;
-        } else if (componentClass == javafx.scene.Group.class) {
-            result = childrenName;
-        } else if (componentClass == javafx.scene.layout.Pane.class) {
-            result = childrenName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.BottomNavigation.class) {
-            result = actionItemsName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.CardPane.class) {
-            result = itemsName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.DropdownButton.class) {
-            result = itemsName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.ExpansionPanelContainer.class) {
-            result = itemsName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.ToggleButtonGroup.class) {
-            result = togglesName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.ExpansionPanel.CollapsedPanel.class) {
-            result = titleNodesName;
-        } else if (componentClass == com.gluonhq.charm.glisten.control.SettingsPane.class) {
-            result = optionsName;
-        } else {
-            result = null;
-        }
-        
-        return result;
-    }
-        
-    private static final PropertyName buttonsName = new PropertyName("buttons");
-    private static final PropertyName columnsName = new PropertyName("columns");
-    private static final PropertyName elementsName = new PropertyName("elements");
-    private static final PropertyName itemsName = new PropertyName("items");
-    private static final PropertyName menusName = new PropertyName("menus");
-    private static final PropertyName panesName = new PropertyName("panes");
-    private static final PropertyName tabsName = new PropertyName("tabs");
-    private static final PropertyName childrenName = new PropertyName("children");
-    // Gluon
-    private static final PropertyName actionItemsName = new PropertyName("actionItems");
-    private static final PropertyName togglesName = new PropertyName("toggles");
-    private static final PropertyName titleNodesName = new PropertyName("titleNodes");
-    private static final PropertyName optionsName = new PropertyName("options");
- 
-    
+       
     /**
      * Find the applicable qualifiers in the available qualifiers.
      * A {@link ComponentClassMetadata.Qualifier} is applicable if the {@link ApplicabilityCheck} provided trough
@@ -483,6 +357,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         @Getter private final URL iconUrl;
         @Getter private final URL iconX2Url;
         @Getter private final String category;
+        @SuppressWarnings("rawtypes")
         @Getter private final ApplicabilityCheck applicabilityCheck;
         
         public Qualifier(URL fxmlUrl, String label, String description, URL iconUrl, URL iconX2Url, String category) {
@@ -500,6 +375,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
             this.applicabilityCheck = applicabilityCheck;
         }
         
+        @SuppressWarnings("unchecked")
         public boolean isApplicable(Object object) {
             return applicabilityCheck.isApplicable(object);
         }
