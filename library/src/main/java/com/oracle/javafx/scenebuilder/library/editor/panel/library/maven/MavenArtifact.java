@@ -33,7 +33,14 @@
 
 package com.oracle.javafx.scenebuilder.library.editor.panel.library.maven;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MavenArtifact {
     
@@ -41,16 +48,25 @@ public class MavenArtifact {
     private String path;
     private String dependencies;
     private String filter;
+    private String groupId;
+    private String artifactId;
+    private String version;
 
     public MavenArtifact() {
     }
     
     public MavenArtifact(String coordinates) {
         this.coordinates = coordinates;
+        
+        String[] parts = coordinates.split(":");
+        
+        this.groupId = parts.length > 0 ? parts[0] : "";
+        this.artifactId = parts.length > 1 ? parts[1] : "";
+        this.version = parts.length > 2 ? parts[2] : "";
     }
 
     public MavenArtifact(String coordinates, String path, String dependencies, String filter) {
-        this.coordinates = coordinates;
+        this(coordinates);
         this.path = path;
         this.dependencies = dependencies;
         this.filter = filter;
@@ -62,6 +78,23 @@ public class MavenArtifact {
 
     public void setCoordinates(String coordinates) {
         this.coordinates = coordinates;
+        
+        String[] parts = coordinates.split(":");
+        this.groupId = parts.length > 0 ? parts[0] : "";
+        this.artifactId = parts.length > 1 ? parts[1] : "";
+        this.version = parts.length > 2 ? parts[2] : "";
+    }
+    
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public String getPath() {
@@ -86,6 +119,20 @@ public class MavenArtifact {
 
     public void setFilter(String filter) {
         this.filter = filter;
+    }
+    
+    public List<Path> toJarList() {
+        List<Path> files = new ArrayList<>();
+        files.add(Paths.get(getPath()));
+        if (!getDependencies().isEmpty()) {
+            files.addAll(Stream
+                    .of(getDependencies().split(File.pathSeparator))
+                    .map(File::new)
+                    .filter(File::exists)
+                    .map(File::toPath)
+                    .collect(Collectors.toList()));
+        }
+        return files;
     }
 
     @Override

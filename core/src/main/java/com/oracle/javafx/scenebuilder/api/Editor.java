@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -120,7 +119,7 @@ public interface Editor {
 //
 //	public void performInsert(LibraryItem item);
 
-	public ObservableValue<Library> libraryProperty();
+	//public ObservableValue<Library> libraryProperty();
 
     public ObservableValue<Boolean> sampleDataEnabledProperty();
 

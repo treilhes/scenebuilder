@@ -34,17 +34,10 @@
 package com.oracle.javafx.scenebuilder.library.editor.panel.library.manager;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -60,27 +53,27 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
+import com.oracle.javafx.scenebuilder.controllibrary.aaa.AbstractLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryStoreConfiguration;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.RepositoryManagerController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.search.SearchMavenDialogController;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -88,56 +81,108 @@ import javafx.stage.Stage;
  * Controller for the JAR/FXML Library dialog.
  */
 @Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-public class LibraryDialogController extends AbstractFxmlWindowController {
+public class LibraryDialogController extends AbstractFxmlWindowController{
 
     @FXML
     private ListView<DialogListItem> libraryListView;
+    
+    @FXML
+    private Label listLabel;
+
+    @FXML
+    private Hyperlink searchRepositoryLink;
+
+    @FXML
+    private Hyperlink selectArtifactLink;
+
+    @FXML
+    private Hyperlink selectFileLink;
+
+    @FXML
+    private Hyperlink manageRepositoriesLink;
+    
     @FXML
     private Hyperlink classesLink;
 
     private final Editor editorController;
-    private final UserLibrary userLibrary;
+    //private LibraryStoreConfiguration libraryConfiguration;
+    //private LibraryStore libraryStore;
     private final Stage owner;
 
-    private ObservableList<DialogListItem> listItems;
+    //private ObservableList<DialogListItem> listItems;
 
-    private Runnable onAddJar;
-    private Runnable onAddFolder;
-    private Consumer<Path> onEditFXML;
+//    private Runnable onAddJar;
+//    private Runnable onAddFolder;
+//    private Consumer<Path> onEditFXML;
 
     private final MavenArtifactsPreferences mavenPreferences;
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final MavenSetting mavenSetting;
     // TODO may be replaced by editorcontroller after moving
     // libraryPanelController.copyFilesToUserLibraryDir(files)
-    private final LibraryPanelController libraryPanelController;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final ApplicationContext context;
+    
+    private final ListChangeListener<? super MavenArtifact> artifactListener = c -> loadLibraryList();
+    private final ListChangeListener<? super Path> fileOrFolderListener = c -> loadLibraryList();
+
+    private AbstractLibrary<?, ?> library;
+    
 
     public LibraryDialogController(
             @Autowired Api api,
             @Autowired Editor editorController,
-            @Autowired UserLibrary userLibrary, 
-            @Autowired LibraryPanelController libraryPanelController,
             @Autowired MavenSetting mavenSetting, 
             @Autowired MavenArtifactsPreferences mavenPreferences,
             @Autowired MavenRepositoriesPreferences repositoryPreferences, 
             @Autowired DocumentWindow document) {
-        super(api, LibraryPanelController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
+        super(api, LibraryDialogController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
                 document); // NOI18N
         this.owner = document.getStage();
         this.context = api.getContext();
         this.editorController = editorController;
-        this.libraryPanelController = libraryPanelController;
-        this.userLibrary = userLibrary;
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
         this.mavenSetting = mavenSetting;
         this.fileSystem = api.getFileSystem();
         this.dialog = api.getApiDoc().getDialog();
+    }
+    
+    public void initForLibrary(AbstractLibrary<?, ?> library) {
+        this.library = library;
+        
+        final LibraryStoreConfiguration libraryConfiguration = library.getDialogConfiguration();
+        
+        String mainLabel = libraryConfiguration.getListLabel();
+        String fileLabel = libraryConfiguration.getSelectFileLabel();
+        String folderLabel = libraryConfiguration.getSelectFolderLabel();
+        String artifactLabel = libraryConfiguration.getSelectArtifactLabel();
+        
+        if (mainLabel != null && !mainLabel.isEmpty()) {
+            this.listLabel.setText(mainLabel);
+        }
+        if (fileLabel != null && !fileLabel.isEmpty()) {
+            this.selectFileLink.setText(fileLabel);
+        }
+        if (folderLabel != null && !folderLabel.isEmpty()) {
+            this.classesLink.setText(folderLabel);
+        }
+        if (artifactLabel != null && !artifactLabel.isEmpty()) {
+            this.selectArtifactLink.setText(artifactLabel);
+        }
+        
+        boolean handleFile = library.newFileExplorer() != null;
+        boolean handleFolder = library.newFolderExplorer() != null;
+        boolean handleArtifact = library.newArtifactExplorer() != null;
+        
+        this.selectFileLink.setManaged(handleFile);
+        this.classesLink.setManaged(handleFolder);
+        this.selectArtifactLink.setManaged(handleArtifact);
+        this.searchRepositoryLink.setManaged(handleArtifact);
+        this.manageRepositoriesLink.setManaged(handleArtifact);
     }
 
     @Override
@@ -170,48 +215,42 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
     @Override
     public void openWindow() {
+        assert library != null;
         super.openWindow();
         super.getStage().setTitle(I18N.getString("library.dialog.title"));
+        
+        String title = library.getDialogConfiguration().getTitleLabel();
+        if (title != null && !title.isEmpty()) {
+            super.getStage().setTitle(title);
+        }
+        
         loadLibraryList();
 
+        library.getStore().getArtifacts().addListener(artifactListener);
+        library.getStore().getFilesOrFolders().addListener(fileOrFolderListener);
     }
 
     void loadLibraryList() {
-        if (listItems == null) {
-            listItems = FXCollections.observableArrayList();
-        }
-        listItems.clear();
-        libraryListView.setItems(listItems);
-        libraryListView.setCellFactory(param -> new LibraryDialogListCell());
-
-        final Path folder = fileSystem.getUserLibraryFolder().toPath();
-        if (folder != null && folder.toFile().exists()) {
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(folder)) {
-                for (Path entry : stream) {
-                    if (LibraryUtil.isJarPath(entry) || LibraryUtil.isFxmlPath(entry)) {
-                        listItems.add(new LibraryDialogListItem(this, entry));
-                    } else if (LibraryUtil.isFolderMarkerPath(entry)) {
-                        // open folders marker file: every line should be a single folder entry
-                        // we scan the file and add the path to currentJarsOrFolders
-                        List<Path> folderPaths = LibraryUtil.getFolderPaths(entry);
-                        for (Path f : folderPaths) {
-                            listItems.add(new LibraryDialogListItem(this, f));
-                        }
-                    }
-                }
-            } catch (IOException x) {
-                Logger.getLogger(LibraryDialogController.class.getName()).log(Level.SEVERE,
-                        "Error while getting a new directory stream.", x);
-            }
-        }
-
-        // main artifacts
-        listItems.addAll(mavenPreferences.getArtifactsCoordinates().stream()
-                .map(c -> new ArtifactDialogListItem(this, c)).collect(Collectors.toList()));
+        
+        Stream<DialogListItem> artifactStream = library.getStore().getArtifacts().stream()
+            .map(ma -> new ArtifactDialogListItem(this, ma));
+        
+        Stream<DialogListItem> filesStream = library.getStore().getFilesOrFolders().stream()
+            .map(f -> new LibraryDialogListItem(this, f));
+        
+        Platform.runLater(() -> {
+            libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream).collect(Collectors.toList()));
+            libraryListView.setCellFactory(param -> new LibraryDialogListCell());
+        });
     }
 
     @FXML
     private void close() {
+        if (library.getStore() != null) {
+            library.getStore().getArtifacts().removeListener(artifactListener);
+            library.getStore().getFilesOrFolders().removeListener(fileOrFolderListener);
+        }
+        library = null;
         libraryListView.getItems().clear();
         closeWindow();
     }
@@ -225,25 +264,20 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
 
     @FXML
     private void addJar() {
-//        documentWindowController.onImportJarFxml(getStage());
-        if (onAddJar != null) {
-            onAddJar.run();
-        }
-        loadLibraryList();
+        List<File> files = performSelectFiles();
+        library.performAddFilesOrFolders(files.stream().map(f -> f.toPath()).collect(Collectors.toList()));
     }
 
     @FXML
     private void addFolder() {
-        if (onAddFolder != null) {
-            onAddFolder.run();
-        }
-        loadLibraryList();
+        File folder = performSelectFolder();
+        library.performAddFilesOrFolders(List.of(folder.toPath()));
     }
 
     @FXML
     private void addRelease() {
         SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class, getApi(),
-                editorController, libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences,
+                editorController, library, mavenSetting, mavenPreferences, repositoryPreferences,
                 this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -260,7 +294,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
     @FXML
     private void addManually() {
         MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class, getApi(), editorController,
-                libraryPanelController, mavenSetting, mavenPreferences, repositoryPreferences, this);
+                library, mavenSetting, mavenPreferences, repositoryPreferences, this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
             @Override
@@ -281,103 +315,33 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
      * jar or fxml is removed, the library watcher is started again.
      */
     public void processJarFXMLFolderDelete(DialogListItem dialogListItem) {
-        if (dialogListItem instanceof LibraryDialogListItem
-                && LibraryUtil.isFxmlPath(((LibraryDialogListItem) dialogListItem).getFilePath())) {
-            deleteFile(dialogListItem);
-        } else {
-            // 1)
-            userLibrary.stopWatching();
-
-            // 2)
-            deleteFile(dialogListItem);
-
-            // 3)
-            userLibrary.startWatching();
+        if (dialogListItem instanceof LibraryDialogListItem) {
+            library.performRemoveFilesOrFolders(List.of(((LibraryDialogListItem)dialogListItem).getFilePath()));
+        } else if (dialogListItem instanceof ArtifactDialogListItem) {
+            library.performRemoveArtifact(((ArtifactDialogListItem)dialogListItem).getMavenArtifact());
         }
-    }
-
-    private void deleteFile(DialogListItem dialogListItem) {
-        try {
-            if (dialogListItem instanceof LibraryDialogListItem) {
-                LibraryDialogListItem item = (LibraryDialogListItem) dialogListItem;
-                Path path = item.getFilePath();
-
-                if (Files.exists(path)) {
-                    if (Files.isDirectory(path)) {
-                        // we need to remove the entry from the folder list in the placeholder marker
-                        Path foldersPath = fileSystem.getUserLibraryFolder().toPath()
-                                .resolve(LibraryUtil.FOLDERS_LIBRARY_FILENAME);
-                        if (Files.exists(foldersPath)) {
-
-                            List<String> lines = Files.readAllLines(foldersPath);
-
-                            for (Iterator<String> it = lines.iterator(); it.hasNext();) {
-                                String line = it.next();
-                                if (line.equals(path.toString()))
-                                    it.remove();
-                            }
-
-                            Files.write(foldersPath, lines);
-                        }
-                    } else {
-                        Files.delete(path);
-                        listItems.remove(item);
-                    }
-                }
-            } else if (dialogListItem instanceof ArtifactDialogListItem) {
-                mavenPreferences.removeArtifact(((ArtifactDialogListItem) dialogListItem).getCoordinates());
-                listItems.remove(dialogListItem);
-            }
-        } catch (IOException x) {
-            Logger.getLogger(LibraryDialogController.class.getName()).log(Level.SEVERE,
-                    "Error while deleting the file.", x);
-        }
-        loadLibraryList();
     }
 
     public void processJarFXMLFolderEdit(DialogListItem dialogListItem) {
         if (dialogListItem instanceof LibraryDialogListItem) {
-            LibraryDialogListItem item = (LibraryDialogListItem) dialogListItem;
-            if (Files.exists(item.getFilePath())) {
-                if (LibraryUtil.isJarPath(item.getFilePath()) || Files.isDirectory(item.getFilePath())) {
-                    final ImportWindowController iwc = context.getBean(ImportWindowController.class, getApi(), libraryPanelController,
-                            Arrays.asList(item.getFilePath().toFile()), mavenPreferences, getStage());
-                    //iwc.setToolStylesheet(editorController.getToolStylesheet());
-                    // See comment in OnDragDropped handle set in method startListeningToDrop.
-                    AbstractModalDialog.ButtonID userChoice = iwc.showAndWait();
-                    if (userChoice == AbstractModalDialog.ButtonID.OK) {
-                        logInfoMessage("log.user.maven.updated", item);
-                    }
-                } else {
-//                    if (SceneBuilderApp.getSingleton().lookupUnusedDocumentWindowController() != null) {
-//                        closeWindow();
-//                    }
-//                    SceneBuilderApp.getSingleton().performOpenRecent(documentWindowController,
-//                            item.getFilePath().toFile());
-                    if (onEditFXML != null) {
-                        onEditFXML.accept(item.getFilePath());
-                    }
-                }
-            }
+            library.performEditFilesOrFolders(List.of(((LibraryDialogListItem)dialogListItem).getFilePath()));
         } else if (dialogListItem instanceof ArtifactDialogListItem) {
-            MavenArtifact mavenArtifact = mavenPreferences
-                    .getRecordArtifact(((ArtifactDialogListItem) dialogListItem).getCoordinates()).getValue();
-            List<File> files = mavenPreferences.getArtifactFileWithDependencies(mavenArtifact);
-            List<String> filter = mavenPreferences.getArtifactFilter(mavenArtifact);
-
-            // TODO remove this constructor call and use bean
-            final ImportWindowController iwc = context.getBean(ImportWindowController.class, getApi(), libraryPanelController, files,
-                    mavenPreferences, getStage(), false, filter);
-            //iwc.setToolStylesheet(editorController.getToolStylesheet());
-            AbstractModalDialog.ButtonID userChoice = iwc.showAndWait();
-            if (userChoice == AbstractModalDialog.ButtonID.OK) {
-                mavenArtifact.setFilter(iwc.getNewExcludedItems());
-                updatePreferences(mavenArtifact);
-                logInfoMessage("log.user.maven.updated", mavenArtifact.getCoordinates());
-            }
+            library.performEditArtifact(((ArtifactDialogListItem)dialogListItem).getMavenArtifact());
         }
+        
+        //TODO need to manage fxml edition
+////    if (SceneBuilderApp.getSingleton().lookupUnusedDocumentWindowController() != null) {
+////    closeWindow();
+////}
+////SceneBuilderApp.getSingleton().performOpenRecent(documentWindowController,
+////        item.getFilePath().toFile());
+//libraryConfiguration.processEditFile(item.getFilePath());
+////if (onEditFXML != null) {
+////    onEditFXML.accept(item.getFilePath());
+////}
     }
 
+    // TODO find usage in previous version reimplement then delete
     private void logInfoMessage(String key, Object... args) {
         editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
     }
@@ -387,24 +351,47 @@ public class LibraryDialogController extends AbstractFxmlWindowController {
             return;
         }
 
-        userLibrary.stopWatching();
+        //library.stopWatching();
+        //libraryConfiguration.releaseLocks();
 
         // Update record artifact
         mavenPreferences.getRecordArtifact(mavenArtifact).writeToJavaPreferences();
 
-        userLibrary.startWatching();
+        //library.startWatching();
+        //libraryConfiguration.enableLocks();
 
     }
 
-    public void setOnAddJar(Runnable onAddJar) {
-        this.onAddJar = onAddJar;
-    }
+    /**
+     * Open a file chooser that allows to select one folder
+     * @return the selected folder or null
+     */
+    private File performSelectFolder() {
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        dirChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
-    public void setOnEditFXML(Consumer<Path> onEditFXML) {
-        this.onEditFXML = onEditFXML;
-    }
+        File folder = dirChooser.showDialog(this.getStage());
+        if (folder != null) {
+            // Keep track of the user choice for next time
+            fileSystem.updateNextInitialDirectory(folder);
+        }
 
-    public void setOnAddFolder(Runnable onAddFolder) {
-        this.onAddFolder = onAddFolder;
+        return folder;
+    }
+    
+    /**
+     * Open a file chooser that allows to select one or more FXML and JAR file.
+     * @return the list of selected files
+     */
+    private List<File> performSelectFiles() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(library.getDialogConfiguration().getFileExtensionFilter()); //NOI18N
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(this.getStage());
+        if(selectedFiles != null && !selectedFiles.isEmpty()){
+            // Keep track of the user choice for next time
+            fileSystem.updateNextInitialDirectory(selectedFiles.get(0));
+        }
+        return selectedFiles;
     }
 }

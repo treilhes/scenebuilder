@@ -33,17 +33,19 @@
 
 package com.oracle.javafx.scenebuilder.library.editor.panel.library.manager;
 
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
+
 /**
  * List cell item in the JAR/FXML Library dialog.
  */
 public class ArtifactDialogListItem implements DialogListItem {
 
     private final LibraryDialogController libraryDialogController;
-    private final String coordinates;
+    private final MavenArtifact mavenArtifact;
 
-    public ArtifactDialogListItem(LibraryDialogController libraryDialogController, String coordinates) {
+    public ArtifactDialogListItem(LibraryDialogController libraryDialogController, MavenArtifact mavenArtifact) {
         this.libraryDialogController = libraryDialogController;
-        this.coordinates = coordinates;
+        this.mavenArtifact = mavenArtifact;
     }
 
     @Override
@@ -52,6 +54,10 @@ public class ArtifactDialogListItem implements DialogListItem {
     }
 
     public String getCoordinates() {
-        return coordinates;
+        return mavenArtifact.getCoordinates();
+    }
+    
+    public MavenArtifact getMavenArtifact() {
+        return mavenArtifact;
     }
 }

@@ -4,7 +4,7 @@
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>16.0.0-SNAPSHOT</version>
+    <version>17.0.0-SNAPSHOT</version>
     <name>Scene Builder</name>
     <description>Scene Builder is a visual, drag n drop, layout tool for designing JavaFX application user interfaces</description>
     <inceptionYear>2012</inceptionYear>
@@ -16,6 +16,7 @@
 
         <module>certificate-manager</module>
         <module>content-editor</module>
+        <module>control-library</module>
         <module>controls</module>
         <module>controls-tooling</module>
         <module>core</module>
@@ -28,12 +29,15 @@
         <module>editors</module>
         <module>exporter</module>
         <module>extension-api</module>
+		<module>extension-store</module>
         <module>extension-library</module>
+        
         <module>filesystem</module>
         <module>gluon</module>
         <module>help-features</module>
         <module>inspector</module>
-        <module>jobs</module>
+		<module>image-library</module>
+		<module>jobs</module>
         <module>library</module>
         <module>preference-editor</module>
         <module>preview</module>
@@ -295,6 +299,11 @@
                 <artifactId>extension-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+			<dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>extension-store</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>extension-library</artifactId>
@@ -320,6 +329,11 @@
                 <artifactId>inspector</artifactId>
                 <version>${project.version}</version>
             </dependency>
+			<dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>image-library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>jobs</artifactId>
@@ -328,6 +342,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>control-library</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

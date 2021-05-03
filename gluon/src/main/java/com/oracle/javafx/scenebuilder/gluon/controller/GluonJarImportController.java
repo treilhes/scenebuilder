@@ -43,8 +43,8 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
-import com.oracle.javafx.scenebuilder.api.library.JarReport;
-import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.ControlReport;
+import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
@@ -84,12 +84,12 @@ public class GluonJarImportController {
             boolean shouldShowImportGluonJarAlert = false;
             List<String> gluonJarsCollection = new ArrayList<>();
             
-            for (JarReport jarReport : jarReports) {
+            for (ControlReport jarReport : jarReports) {
                 if (hasGluonControls(jarReport)) {
-                    gluonJarsCollection.add(jarReport.getJar().getFileName().toString());
+                    gluonJarsCollection.add(jarReport.getSource().getFileName().toString());
                     // We check if the jar has already been imported to avoid showing the import gluon jar
                     // alert every time Scene Builder starts for jars that have already been imported
-                    if (!hasGluonJarBeenImported(importedJarPreference, jarReport.getJar().getFileName().toString())) {
+                    if (!hasGluonJarBeenImported(importedJarPreference, jarReport.getSource().getFileName().toString())) {
                         shouldShowImportGluonJarAlert = true;
                     }
 
@@ -100,6 +100,7 @@ public class GluonJarImportController {
                 Platform.runLater(() -> {
                     Document dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
+                        //TODO when started to fast will throw IndexOutOfBoundsException
                         dwc = main.getDocumentWindowControllers().get(0);
                     }
                     ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
@@ -115,28 +116,28 @@ public class GluonJarImportController {
             updateImportedGluonJars(importedJarPreference, gluonJarsCollection);
         });
         
-        //TODO test me
-        library.setOnUpdatedExploringJarReports(jarReports -> {
-            boolean shouldShowImportGluonJarAlert = false;
-            
-            for (JarReport jarReport : jarReports) {
-                if (hasGluonControls(jarReport)) {
-                    shouldShowImportGluonJarAlert = true;
-                }
-            }
-
-            if (shouldShowImportGluonJarAlert) {
-                Platform.runLater(() -> {
-                    Document dwc = main.getFrontDocumentWindow();
-                    if (dwc == null) {
-                        dwc = main.getDocumentWindowControllers().get(0);
-                    }
-                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
-                    iconSetting.setWindowIcon(alert);
-                    alert.showAndWait();
-                });
-            }
-        });
+        //TODO test me, this case may be handled by the previous code. 
+//        library.setOnUpdatedExploringJarReports(jarReports -> {
+//            boolean shouldShowImportGluonJarAlert = false;
+//            
+//            for (ControlReport jarReport : jarReports) {
+//                if (hasGluonControls(jarReport)) {
+//                    shouldShowImportGluonJarAlert = true;
+//                }
+//            }
+//
+//            if (shouldShowImportGluonJarAlert) {
+//                Platform.runLater(() -> {
+//                    Document dwc = main.getFrontDocumentWindow();
+//                    if (dwc == null) {
+//                        dwc = main.getDocumentWindowControllers().get(0);
+//                    }
+//                    ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
+//                    iconSetting.setWindowIcon(alert);
+//                    alert.showAndWait();
+//                });
+//            }
+//        });
 
     }
     
@@ -149,11 +150,11 @@ public class GluonJarImportController {
         preference.write();
     }
     
-    private static boolean hasGluonControls(JarReport jarReport) {
+    private static boolean hasGluonControls(ControlReport jarReport) {
         return jarReport.getEntries().stream().anyMatch(e -> isGluon(e));
     }
 
-    private static boolean isGluon(JarReportEntry entry) { 
+    private static boolean isGluon(ControlReportEntry entry) { 
         return entry.getClassName() != null && entry.getClassName().startsWith(GluonConstants.GLUON_PACKAGE); 
     }
 

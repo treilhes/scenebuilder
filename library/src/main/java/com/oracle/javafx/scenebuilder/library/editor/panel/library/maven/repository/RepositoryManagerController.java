@@ -46,9 +46,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.preset.MavenPresets;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.dialog.RepositoryDialogController;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 
 import javafx.beans.InvalidationListener;
@@ -88,7 +86,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, LibraryPanelController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, RepositoryManagerController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
         this.context = api.getContext();
         this.owner = owner;
         this.editorController = editorController;

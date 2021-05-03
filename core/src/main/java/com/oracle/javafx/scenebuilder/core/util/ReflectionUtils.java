@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.core.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javafx.fxml.FXMLLoader;
 
@@ -45,7 +45,7 @@ import javafx.fxml.FXMLLoader;
  */
 public class ReflectionUtils {
 
-    private static final Map<String, Method> methodMap = new HashMap<>();
+    private static final Map<String, Method> methodMap = new ConcurrentHashMap<>();
 
     private ReflectionUtils() {}
 

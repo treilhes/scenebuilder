@@ -39,9 +39,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
 
 public interface LibraryItem {
 
-	AbstractLibrary getLibrary();
-
-	FXOMDocument instantiate();
+    FXOMDocument instantiate(ClassLoader classloader);
 	
 	Qualifier getQualifier();
 

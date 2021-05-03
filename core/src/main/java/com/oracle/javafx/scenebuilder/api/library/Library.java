@@ -33,42 +33,38 @@
 package com.oracle.javafx.scenebuilder.api.library;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 
 public interface Library {
 
 	ClassLoader getClassLoader();
 
-	ObservableValue<ClassLoader> classLoaderProperty();
-
 	ObservableList<LibraryItem> getItems();
 
-	Comparator<String> getSectionComparator();
+	//Comparator<String> getSectionComparator();
 
 	SimpleBooleanProperty exploringProperty();
 
-    void setOnUpdatedJarReports(Consumer<List<? extends JarReport>> onFinishedUpdatingJarReports);
+    void setOnUpdatedJarReports(Consumer<List<? extends ControlReport>> onFinishedUpdatingJarReports);
     
-    void setOnUpdatedExploringJarReports(Consumer<List<? extends JarReport>> onFinishedExploringJarReports);
+    //void setOnUpdatedExploringJarReports(Consumer<List<? extends ControlReport>> onFinishedExploringJarReports);
 
     ReadOnlyBooleanProperty firstExplorationCompletedProperty();
 
-    ObservableList<JarReport> getJarReports();
+    //ObservableList<JarReport> getJarReports();
 
-    Date getExplorationDate();
+    LocalDate getExplorationDate();
 
     File getPath();
 
     List<LibraryFilter> getFilters();
 
-    ObservableList<JarReport> getExplorationJarReports();
+    ObservableList<ControlReport> getReports();
 
 }

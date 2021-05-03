@@ -70,10 +70,6 @@ public class TextViewDialog extends AbstractModalDialog {
     protected TextViewDialog(
             @Autowired Api api) {
         super(api, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null); //NOI18N
-        setOKButtonVisible(false);
-        setActionButtonVisible(true);
-        setCancelButtonTitle(I18N.getString("label.close"));
-        setActionButtonTitle(I18N.getString("label.copy"));
     }
 
     public void setText(String text) {
@@ -91,6 +87,10 @@ public class TextViewDialog extends AbstractModalDialog {
     @Override
     protected void controllerDidLoadContentFxml() {
         assert textArea != null;
+        setOKButtonVisible(false);
+        setActionButtonVisible(true);
+        setCancelButtonTitle(I18N.getString("label.close"));
+        setActionButtonTitle(I18N.getString("label.copy"));
     }
 
     @Override

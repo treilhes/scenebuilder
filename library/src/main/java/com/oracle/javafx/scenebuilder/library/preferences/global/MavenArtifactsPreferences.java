@@ -53,8 +53,13 @@ public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPref
 	// NODE
 	protected static final String NODE_NAME = "ARTIFACTS"; //NOI18N
 	
+	@Autowired
     public MavenArtifactsPreferences(@Autowired PreferencesContext preferencesContext) {
     	super(preferencesContext, NODE_NAME, MavenArtifactPreferences.keyProvider(), MavenArtifactPreferences.defaultProvider());
+    }
+    
+    public MavenArtifactsPreferences(@Autowired PreferencesContext preferencesContext, String name) {
+        super(preferencesContext, name, MavenArtifactPreferences.keyProvider(), MavenArtifactPreferences.defaultProvider());
     }
 
     /*

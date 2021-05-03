@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.gluonhq.scenebuilder</groupId>
         <artifactId>parent</artifactId>
-        <version>16.0.0-SNAPSHOT</version>
+        <version>17.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -21,6 +21,14 @@
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>jobs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>extension-store</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>filesystem</artifactId>
         </dependency>
     </dependencies>
 </project>

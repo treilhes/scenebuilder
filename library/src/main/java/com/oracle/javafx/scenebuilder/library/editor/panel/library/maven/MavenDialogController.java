@@ -53,13 +53,10 @@ import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
+import com.oracle.javafx.scenebuilder.controllibrary.aaa.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -75,7 +72,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 
 /**
@@ -101,7 +97,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     @FXML
     private Button installButton;
 
-    private final UserLibrary userLibrary;
+    private final AbstractLibrary<?, ?> userLibrary;
 
     private MavenRepositorySystem maven;
     private RemoteRepository remoteRepository;
@@ -127,14 +123,14 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     public MavenDialogController(
             Api api,
     		Editor editorController,
-    		LibraryPanelController libraryPanelController,
+    		AbstractLibrary<?, ?> library,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, LibraryPanelController.class.getResource("MavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, MavenDialogController.class.getResource("MavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.context = api.getContext();
-        this.userLibrary = (UserLibrary) api.getApiDoc().getLibrary();
+        this.userLibrary = library;
         this.owner = owner;
         this.editorController = editorController;
         this.mavenPreferences = mavenPreferences;
@@ -205,16 +201,12 @@ public class MavenDialogController extends AbstractFxmlWindowController {
                                 .collect(Collectors.toList()));
                     }
 
-                    final ImportWindowController iwc
-                            = context.getBean(ImportWindowController.class, api, libraryPanelController,files, mavenPreferences,
-                            (Stage)installButton.getScene().getWindow(), false,mavenPreferences.getArtifactsFilter());
-                    //iwc.setToolStylesheet(editorController.getToolStylesheet());
-                    ButtonID userChoice = iwc.showAndWait();
-                    if (userChoice == ButtonID.OK) {
-                        mavenArtifact.setFilter(iwc.getNewExcludedItems());
+                    if (userLibrary.getStore().add(mavenArtifact)) {//, files)) {
+                        
                         updatePreferences(mavenArtifact);
                         logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
                     }
+                    
                     this.onCloseRequest();
                 }
             } else if (nv.equals(Worker.State.CANCELLED) || nv.equals(Worker.State.FAILED)) {
@@ -338,12 +330,14 @@ public class MavenDialogController extends AbstractFxmlWindowController {
             return;
         }
 
-        userLibrary.stopWatching();
+        //userLibrary.stopWatching();
+        userLibrary.getStore().stopWatching();
 
         // Update record artifact
         mavenPreferences.getRecordArtifact(mavenArtifact).writeToJavaPreferences();
 
-        userLibrary.startWatching();
+        //userLibrary.startWatching();
+        userLibrary.getStore().startWatching();
     }
 
 }

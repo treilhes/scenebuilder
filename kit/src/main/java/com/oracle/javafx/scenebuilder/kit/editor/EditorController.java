@@ -154,7 +154,7 @@ public class EditorController implements Editor {
     private final ContextMenuController contextMenuController;// = new ContextMenuController(this);
     //private final WatchingController watchingController;// = new WatchingController(this);
 
-    private final ObjectProperty<Library> libraryProperty;
+    //private final ObjectProperty<Library> libraryProperty;
     private final ObjectProperty<URL> fxmlLocationProperty;
     private final BooleanProperty pickModeEnabledProperty
             = new SimpleBooleanProperty(false);
@@ -205,7 +205,7 @@ public class EditorController implements Editor {
     	fxmlLocationProperty = new SimpleObjectProperty<>();
 
     	//TODO remove below
-    	libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
+    	//libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
     	
     	api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
@@ -2360,10 +2360,10 @@ public class EditorController implements Editor {
         return fxomDocument;
     }
 
-    //TODO to remove
-    @Override
-    public ObservableValue<Library> libraryProperty() {
-        return libraryProperty;
-    }
+//    //TODO to remove
+//    @Override
+//    public ObservableValue<Library> libraryProperty() {
+//        return libraryProperty;
+//    }
 
 }

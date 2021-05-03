@@ -55,15 +55,12 @@ import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
+import com.oracle.javafx.scenebuilder.controllibrary.aaa.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -80,7 +77,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 
 /**
@@ -111,7 +107,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
 
     private final Editor editorController;
     private final MavenArtifactsPreferences mavenPreferences;
-    private final UserLibrary userLibrary;
+    private final AbstractLibrary<?, ?> userLibrary;
 
     private MavenRepositorySystem maven;
     private RemoteRepository remoteRepository;
@@ -126,14 +122,14 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     protected SearchMavenDialogController(
             Api api,
     		Editor editorController,
-    		LibraryPanelController libraryPanelController,
+    		AbstractLibrary<?, ?> library,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, LibraryPanelController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, SearchMavenDialogController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
         this.context = api.getContext();
-        this.userLibrary = (UserLibrary) editorController.libraryProperty().getValue();
+        this.userLibrary = library;
         this.owner = owner;
         this.editorController = editorController;
         this.mavenPreferences = mavenPreferences;
@@ -179,18 +175,12 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
                                     .map(File::new)
                                     .collect(Collectors.toList()));
                         }
-
-                        final ImportWindowController iwc
-                                = context.getBean(ImportWindowController.class, api, libraryPanelController,files, mavenPreferences,
-                                    (Stage) installButton.getScene().getWindow(), false,
-                                    mavenPreferences.getArtifactsFilter());
-                        //iwc.setToolStylesheet(editorController.getToolStylesheet());
-                        ButtonID userChoice = iwc.showAndWait();
-                        if (userChoice == ButtonID.OK) {
-                            mavenArtifact.setFilter(iwc.getNewExcludedItems());
-                            updatePreferences(mavenArtifact);
-                            logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
-                        }
+//TODO implement here
+//                        if (userLibrary.getArtifactHandler().add(mavenArtifact)) {//.processImportArtifact(mavenArtifact, files)) {
+//                            updatePreferences(mavenArtifact);
+//                            logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
+//                        }
+                        
                         this.onCloseRequest();
                     }
                 } else if (nv.equals(Worker.State.CANCELLED) || nv.equals(Worker.State.FAILED)) {
@@ -352,13 +342,15 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
         if (mavenArtifact == null) {
             return;
         }
-
-        userLibrary.stopWatching();
+//TODO something
+        //userLibrary.stopWatching();
+        //userLibrary.releaseLocks();
 
         // Update record artifact
         mavenPreferences.getRecordArtifact(mavenArtifact).writeToJavaPreferences();
 
-        userLibrary.startWatching();
+        //userLibrary.startWatching();
+        //userLibrary.enableLocks();
     }
 
     private void addVersion() {

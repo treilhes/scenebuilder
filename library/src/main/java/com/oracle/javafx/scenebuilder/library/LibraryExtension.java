@@ -36,29 +36,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
+import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryDialogFactory;
+import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryStoreFactory;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.library.action.LibraryPanelActions;
-import com.oracle.javafx.scenebuilder.library.controller.LibraryController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.ImportWindowController;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryPanelController;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.manager.LibraryDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.RepositoryManagerController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.search.SearchMavenDialogController;
-import com.oracle.javafx.scenebuilder.library.menu.LibraryMenuProvider;
-import com.oracle.javafx.scenebuilder.library.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
+import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferencesFactory;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoryPreferences;
-import com.oracle.javafx.scenebuilder.library.user.UserLibrary;
 
-@ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.library.action"
-        })
+
 public class LibraryExtension extends AbstractExtension {
 
     @Override
@@ -70,23 +62,18 @@ public class LibraryExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                LibraryPanelActions.class,
                 LibraryDialogController.class,
-                LibraryController.class,
-                LibraryMenuProvider.class,
                 SearchMavenDialogController.class,
                 MavenDialogController.class,
-                ImportWindowController.class,
-                LibraryPanelController.class,
-                DisplayModePreference.class,
                 MavenArtifactsPreferences.class,
                 MavenArtifactPreferences.class,
                 MavenRepositoriesPreferences.class,
                 MavenRepositoryPreferences.class,
-                UserLibrary.class,
                 RepositoryManagerController.class,
-                BuiltinLibrary.class,
-                DefaultLibraryFilter.class
+                MavenArtifactsPreferencesFactory.class,
+                LibraryDialogFactory.class,
+                LibraryStoreFactory.class,
+                ImportProgressDialogController.class
             );
      // @formatter:on
     }

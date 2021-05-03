@@ -57,6 +57,8 @@ public interface SceneBuilderManager {
     Subject<DocumentWindow> documentClosed();
 
     Subject<StylesheetProvider> stylesheetConfig();
+    
+    SubjectItem<ClassLoader> classloader();
 
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
@@ -64,10 +66,12 @@ public interface SceneBuilderManager {
 
         private final SceneBuilderSubjects subjects;
         private final SubjectItem<Boolean> debugMode;
+        private final SubjectItem<ClassLoader> classloader;
 
         public SceneBuilderManagerImpl() {
             subjects = new SceneBuilderSubjects();
             debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
+            classloader = new SubjectItem<ClassLoader>(subjects.getClassloader()).set(this.getClass().getClassLoader());
         }
 
         @Override
@@ -98,6 +102,11 @@ public interface SceneBuilderManager {
         public SubjectItem<Boolean> debugMode() {
             return debugMode;
         }
+        
+        @Override
+        public SubjectItem<ClassLoader> classloader() {
+            return classloader;
+        }
     }
 
     public class SceneBuilderSubjects extends SubjectManager {
@@ -107,6 +116,7 @@ public interface SceneBuilderManager {
         private @Getter PublishSubject<DocumentWindow> documentOpened;
         private @Getter PublishSubject<DocumentWindow> documentClosed;
         private @Getter ReplaySubject<Boolean> debugMode;
+        private @Getter ReplaySubject<ClassLoader> classloader;
 
         public SceneBuilderSubjects() {
             closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create());
@@ -114,6 +124,7 @@ public interface SceneBuilderManager {
             stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
             documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create());
             documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create());
+            classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1));
         }
 
     }

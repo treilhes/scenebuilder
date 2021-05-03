@@ -57,7 +57,7 @@ public class ApiDoc {
     private @Getter @Autowired @Lazy MessageLogger messageLogger;
     private @Getter @Autowired @Lazy Selection selection;
     private @Getter @Autowired @Lazy ErrorReport errorReport;
-    private @Getter @Autowired @Lazy Library library;
+    private @Getter @Autowired Library library;
     private @Getter @Autowired @Lazy Drag drag;
     private @Getter @Autowired @Lazy ContextMenu contextMenu;
     //private @Getter @Autowired @Lazy Editor editor;

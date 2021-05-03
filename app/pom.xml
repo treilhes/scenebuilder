@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.gluonhq.scenebuilder</groupId>
         <artifactId>parent</artifactId>
-        <version>16.0.0-SNAPSHOT</version>
+        <version>17.0.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -76,6 +76,10 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>extension-api</artifactId>
         </dependency>
+		<dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>extension-store</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>extension-library</artifactId>
@@ -96,9 +100,17 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>inspector</artifactId>
         </dependency>
+		<!-- <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>image-library</artifactId>
+        </dependency> -->
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>jobs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>control-library</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>

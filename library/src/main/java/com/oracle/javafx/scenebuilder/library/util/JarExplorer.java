@@ -32,53 +32,54 @@
  */
 package com.oracle.javafx.scenebuilder.library.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
-import com.oracle.javafx.scenebuilder.api.library.JarReportEntry.Status;
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * 
  */
-public class JarExplorer extends ExplorerBase {
+public class JarExplorer {
     
-    private final Path jar;
+    private final static Logger logger = LoggerFactory.getLogger(JarExplorer.class);
     
-    public JarExplorer(Path jar, List<LibraryFilter> filters) {
-        super(filters);
+    private JarExplorer() {}
+    
+    public static <R> List<R> explore(Path jar, ExplorerInspector<JarEntry, R> entryInspector) throws IOException {
         assert jar != null;
         assert jar.isAbsolute();
         
-        this.jar = jar;
-    }
-    
-    public JarReportImpl explore(ClassLoader classLoader) throws IOException {
-        final JarReportImpl result = new JarReportImpl(jar);
+        final List<R> result = new ArrayList<>();
         
         try (JarFile jarFile = new JarFile(jar.toFile())) {
+            
+            long count = jarFile.size();
+            AtomicLong index = new AtomicLong();
+            
             final Enumeration<JarEntry> e = jarFile.entries();
             while (e.hasMoreElements()) {
+                long current = index.incrementAndGet();
+                double progress = (double)current / (double)count;
+                
                 final JarEntry entry = e.nextElement();
-                JarReportEntry explored = exploreEntry(entry, classLoader);
-                if (explored.getStatus() != Status.IGNORED)
-                    result.getEntries().add(explored);
+
+                R explored = exploreEntry(entry, progress, entryInspector);
+                if (explored != null) {
+                    result.add(explored);
+                }
             }
+        } catch (ExplorationCancelledException e) {
+            logger.info("Exploration cancelled");
         }
-        
         return result;
     }
     
@@ -86,13 +87,8 @@ public class JarExplorer extends ExplorerBase {
      * Private
      */
     
-    private JarReportEntry exploreEntry(JarEntry entry, ClassLoader classLoader) {
-        if (entry.isDirectory()) {
-            return new JarReportEntryImpl(entry.getName(), JarReportEntry.Status.IGNORED, null, null, null);
-        } else {
-            String className = makeClassName(entry.getName(), "/");
-            return super.exploreEntry(entry.getName(), classLoader, className);
-        }
+    private static <R> R exploreEntry(JarEntry entry, double progress, ExplorerInspector<JarEntry, R> entryInspector) throws ExplorationCancelledException {
+        return entryInspector.explore(entry, progress);
     }
 
 }

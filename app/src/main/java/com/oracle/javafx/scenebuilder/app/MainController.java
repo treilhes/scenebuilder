@@ -284,9 +284,9 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     }
 
     //TODO comment this
-    public Library getUserLibrary() {
-        return userLibrary;
-    }
+//    public Library getUserLibrary() {
+//        return userLibrary;
+//    }
 
     @Override
     public List<Document> getDocumentWindowControllers() {
@@ -449,6 +449,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         fileSystem.updateNextInitialDirectory(fileObjs.get(0));
 
+        //TODO if there is more than one library this code must handle  all libraries loading instead of only one
         // Fix for #45
         if (userLibrary.firstExplorationCompletedProperty().get()) {
             performOpenFiles(fileObjs, null);

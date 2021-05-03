@@ -32,39 +32,56 @@
  */
 package com.oracle.javafx.scenebuilder.library.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.oracle.javafx.scenebuilder.api.library.JarReportEntry;
-import com.oracle.javafx.scenebuilder.api.library.JarReportEntry.Status;
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class FolderExplorer extends ExplorerBase {
-
-    private final Path rootFolderPath;
+public class FolderExplorer {
     
-    public FolderExplorer(Path folderPath, List<LibraryFilter> filters) {
-        super(filters);
+    private final static Logger logger = LoggerFactory.getLogger(FolderExplorer.class);
+
+    private FolderExplorer(Path folderPath) {}
+
+    public static <T> List<T> explore(Path folderPath, ExplorerInspector<Path, T> entryInspector) throws IOException {
         assert folderPath != null;
         assert folderPath.isAbsolute();
-
-        this.rootFolderPath = folderPath;
-    }
-
-    public JarReportImpl explore(ClassLoader classLoader) throws IOException {
-        final JarReportImpl result = new JarReportImpl(rootFolderPath);
-
-        try (Stream<Path> stream = Files.walk(rootFolderPath).filter(p -> !p.toFile().isDirectory())) {
+        
+        final List<T> result = new ArrayList<>();
+        final Predicate<? super Path> folderFilter = p -> !p.toFile().isDirectory();
+        
+        try (Stream<Path> streamCount = Files.walk(folderPath).filter(folderFilter);
+                Stream<Path> stream = Files.walk(folderPath).filter(folderFilter)) {
+            
+            long count = streamCount.count();
+            AtomicLong index = new AtomicLong();
+            
             stream.forEach(p -> {
-                JarReportEntry explored = exploreEntry(rootFolderPath, p, classLoader);
-                if (explored.getStatus() != Status.IGNORED)
-                    result.getEntries().add(explored);
+                long current = index.incrementAndGet();
+                double progress = (double)current / (double)count;
+                try {
+                    T explored = exploreEntry(p, progress, entryInspector);
+                    if (explored != null) {
+                        result.add(explored);
+                    }
+                } catch (ExplorationCancelledException e) {
+                    throw new RuntimeException(e);
+                }
             });
-        };
+        } catch(RuntimeException e) {
+            if (!(e.getCause() instanceof ExplorationCancelledException)) {
+                throw e;
+            } else {
+                logger.info("Exploration cancelled");
+            }
+        }
 
         return result;
     }
@@ -73,16 +90,7 @@ public class FolderExplorer extends ExplorerBase {
      * Private
      */
 
-    private JarReportEntry exploreEntry(Path rootpath, Path path, ClassLoader classLoader) {
-        File file = path.toFile();
-
-        if (file.isDirectory()) {
-            return new JarReportEntryImpl(file.getName(), Status.IGNORED, null, null, null);
-        } else {
-            Path relativepath = rootpath.relativize(path);
-
-            String className = makeClassName(relativepath.toString(), File.separator);
-            return super.exploreEntry(file.getName(), classLoader, className);
-        }
+    private static <T> T exploreEntry(Path path, double progress, ExplorerInspector<Path, T> entryInspector) throws ExplorationCancelledException {
+        return entryInspector.explore(path, progress);
     }
 }
