@@ -35,8 +35,7 @@ package com.oracle.javafx.scenebuilder.controllibrary.tmp;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.Report;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,10 +44,10 @@ import javafx.collections.ObservableList;
  *
  * 
  */
-public class ControlReportImpl implements ControlReport {
+public class ControlReportImpl implements Report {
     
     private final Path jar;
-    private final ObservableList<ControlReportEntry> entries = FXCollections.observableArrayList();
+    private final ObservableList<ControlReportEntryImpl> entries = FXCollections.observableArrayList();
 
     public ControlReportImpl(Path jar) {
         this.jar = jar;
@@ -60,7 +59,7 @@ public class ControlReportImpl implements ControlReport {
     }
     
     @Override
-    public List<ControlReportEntry> getEntries() {
+    public List<ControlReportEntryImpl> getEntries() {
         return entries;
     }
     

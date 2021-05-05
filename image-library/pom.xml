@@ -11,6 +11,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>fontbox</artifactId>
+            <version>2.0.23</version>
+        </dependency>
+        <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>core</artifactId>
         </dependency>

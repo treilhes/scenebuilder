@@ -32,9 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.editor.panel.library;
 
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.controllibrary.editor.panel.library.ImportWindowController.PrefSize;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportImpl;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -45,12 +45,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 class ImportRow {
 
     private final BooleanProperty importRequired;
-    private final ControlReportEntry jre;
+    private final ControlReportEntryImpl jre;
     private PrefSize prefSize;
     private final String canonicalClassName;
-    private final ControlReport cr;
+    private final ControlReportImpl cr;
 
-    public ImportRow(boolean importRequired, ControlReport cr, ControlReportEntry jre, PrefSize prefSize) {
+    public ImportRow(boolean importRequired, ControlReportImpl cr, ControlReportEntryImpl jre, PrefSize prefSize) {
         this.importRequired = new SimpleBooleanProperty(importRequired);
         this.jre = jre;
         this.cr = cr;
@@ -75,11 +75,11 @@ class ImportRow {
         importRequired().set(v);
     }
 
-    public ControlReportEntry getReportEntry() {
+    public ControlReportEntryImpl getReportEntry() {
         return this.jre;
     }
 
-    public ControlReport getReport() {
+    public ControlReportImpl getReport() {
         return this.cr;
     }
     

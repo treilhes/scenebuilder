@@ -56,10 +56,10 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlFilterTransform;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
@@ -93,10 +93,10 @@ import javafx.util.Callback;
  *
  */
 @Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class ImportWindowController extends AbstractModalDialog {
-
+    
     private static final Logger logger = LoggerFactory.getLogger(ImportWindowController.class);
 
     public enum PrefSize {
@@ -221,7 +221,7 @@ public class ImportWindowController extends AbstractModalDialog {
         this.dialog = api.getApiDoc().getDialog();
     }
 
-    public ControlFilterTransform editTransform(List<ControlReport> reports, ControlFilterTransform controlFilter, ClassLoader classLoader) {
+    public ControlFilterTransform editTransform(List<ControlReportImpl> reports, ControlFilterTransform controlFilter, ClassLoader classLoader) {
         assert Platform.isFxApplicationThread();
         // This toFront() might not be necessary because import window is modal
         // and is chained to the document window. Anyway experience showed
@@ -236,22 +236,23 @@ public class ImportWindowController extends AbstractModalDialog {
         // We get the set of items which are already excluded prior to the current
         // import.
 //        UserLibrary userLib = ((UserLibrary) libPanelController.getEditorController().libraryProperty().getValue());
+        importList.getItems().clear();
         alreadyExcludedItems.clear();
         alreadyExcludedItems.addAll(controlFilter.getFilteredClasses());
         this.importClassLoader = classLoader;
-        List<ControlReport> jarReportList = reports; // blocking call
+        List<ControlReportImpl> jarReportList = reports; // blocking call
         final Callback<ImportRow, ObservableValue<Boolean>> importRequired = row -> row.importRequired();
         importList.setCellFactory(CheckBoxListCell.forListView(importRequired));
 
-        for (ControlReport jarReport : jarReportList) {
+        for (ControlReportImpl jarReport : jarReportList) {
             Path file = jarReport.getSource();
             String jarName = file.getName(file.getNameCount() - 1).toString();
             StringBuilder sb = new StringBuilder(I18N.getString(
                     "log.info.explore." + (Files.isDirectory(file) ? "folder" : "jar") + ".results", jarName))
                             .append("\n");
-            for (ControlReportEntry e : jarReport.getEntries()) {
+            for (ControlReportEntryImpl e : jarReport.getEntries()) {
                 sb.append("> ").append(e.toString()).append("\n");
-                if ((e.getStatus() == ControlReportEntry.Status.OK) && e.isNode()) {
+                if ((e.getStatus() == ControlReportEntryImpl.Status.OK) && e.isNode()) {
                     boolean checked = true;
                     final String canonicalName = e.getKlass().getCanonicalName();
                     // If the class we import is already listed as an excluded one

@@ -42,6 +42,7 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.manager.LibraryDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenDialogController;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.RepositoryDialogController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.RepositoryManagerController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.search.SearchMavenDialogController;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactPreferences;
@@ -73,7 +74,8 @@ public class LibraryExtension extends AbstractExtension {
                 MavenArtifactsPreferencesFactory.class,
                 LibraryDialogFactory.class,
                 LibraryStoreFactory.class,
-                ImportProgressDialogController.class
+                ImportProgressDialogController.class,
+                RepositoryDialogController.class
             );
      // @formatter:on
     }

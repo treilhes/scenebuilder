@@ -201,8 +201,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
                                 .collect(Collectors.toList()));
                     }
 
-                    if (userLibrary.getStore().add(mavenArtifact)) {//, files)) {
-                        
+                    if (userLibrary.performAddArtifact(mavenArtifact)) {//, files)) {
                         updatePreferences(mavenArtifact);
                         logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
                     }

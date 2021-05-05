@@ -129,6 +129,8 @@ public class LogViewerController extends AbstractFxmlViewController {
             if (numNewLines > 0) {
                 logs.getItems().addAll(newLines);
             }
+            int index = logs.getItems().size() - 1;
+            logs.scrollTo(index);
         });
 
     }

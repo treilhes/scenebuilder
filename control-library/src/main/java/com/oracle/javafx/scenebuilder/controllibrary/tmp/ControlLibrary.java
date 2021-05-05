@@ -49,13 +49,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
@@ -77,6 +75,7 @@ import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
+import com.oracle.javafx.scenebuilder.library.util.Transform;
 
 /**
  *
@@ -84,7 +83,8 @@ import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenAr
  */
 @Component//("userLibrary")
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class ControlLibrary extends AbstractLibrary<ControlReport, LibraryItem> implements Library, InitializingBean, DisposeWithSceneBuilder{
+@DependsOn("metadata")
+public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryItem> implements InitializingBean, DisposeWithSceneBuilder{
     
     private final static Logger logger = LoggerFactory.getLogger(ControlLibrary.class);
 
@@ -171,20 +171,20 @@ public class ControlLibrary extends AbstractLibrary<ControlReport, LibraryItem> 
 	}
     
     @Override
-    public Explorer<MavenArtifact, ControlReport> newArtifactExplorer(){
+    public Explorer<MavenArtifact, ControlReportImpl> newArtifactExplorer(){
         return controlMavenArtifactExplorer;
     }
     @Override
-    public Explorer<Path, ControlReport> newFolderExplorer(){
+    public Explorer<Path, ControlReportImpl> newFolderExplorer(){
         return controlFolderExplorer;
     }
     @Override
-    public Explorer<Path, ControlReport> newFileExplorer(){
+    public Explorer<Path, ControlReportImpl> newFileExplorer(){
         return controlFileExplorer;
     }
     
     @Override
-    public List<ControlReport> createApplyAndSaveFilter(List<ControlReport> reports){
+    public List<ControlReportImpl> createApplyAndSaveFilter(List<ControlReportImpl> reports){
         
         ImportWindowController importWindow = context.getBean(ImportWindowController.class);
         
@@ -226,7 +226,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReport, LibraryItem> 
     }
     
     @Override
-    public List<ControlReport> applySavedFilter(List<ControlReport> reports){
+    public List<ControlReportImpl> applySavedFilter(List<ControlReportImpl> reports){
         
         try {
             if (controlFilter == null) {
@@ -253,15 +253,15 @@ public class ControlLibrary extends AbstractLibrary<ControlReport, LibraryItem> 
     }
 
     @Override
-    protected Collection<LibraryItem> makeLibraryItems(ControlReport reports) throws IOException {
+    protected Collection<LibraryItem> makeLibraryItems(ControlReportImpl reports) throws IOException {
         final List<LibraryItem> result = new ArrayList<>();
         //final URL iconURL = ImageUtils.getNodeIconURL(null);
         //final List<String> excludedItems = getFilter();
         //final List<String> artifactsFilter = getAdditionalFilter() != null ? getAdditionalFilter().get() : Collections.emptyList();
 
         boolean isFxml = LibraryUtil.isFxmlPath(reports.getSource());
-        for (ControlReportEntry e : reports.getEntries()) {
-            if ((e.getStatus() == ControlReportEntry.Status.OK) && e.isNode()) {
+        for (ControlReportEntryImpl e : reports.getEntries()) {
+            if ((e.getStatus() == ControlReportEntryImpl.Status.OK) && e.isNode()) {
                 if (isFxml) {
                     String fileName = reports.getSource().getFileName().toString();
                     String itemName = fileName.substring(0, fileName.indexOf(".fxml")); //NOI18N
@@ -295,11 +295,11 @@ public class ControlLibrary extends AbstractLibrary<ControlReport, LibraryItem> 
 
 
     @Override
-    protected void userLibraryExplorationDidChange(Exploration<ControlReport> previous, Exploration<ControlReport> current) {
+    protected void userLibraryExplorationDidChange(Exploration<ControlReportImpl> previous, Exploration<ControlReportImpl> current) {
         
-        Map<Boolean, List<ControlReport>> partitioned = current.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
-        List<ControlReport> currentFxmlReports = partitioned.get(true);
-        List<ControlReport> currentJarReports = partitioned.get(false);
+        Map<Boolean, List<ControlReportImpl>> partitioned = current.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
+        List<ControlReportImpl> currentFxmlReports = partitioned.get(true);
+        List<ControlReportImpl> currentJarReports = partitioned.get(false);
         
         
         // We can have 0, 1 or N FXML file, same for JAR one.
@@ -309,9 +309,9 @@ public class ControlLibrary extends AbstractLibrary<ControlReport, LibraryItem> 
         switch (numOfFxmlFiles + numOfJarFiles) {
             case 0: // Case 0-0
                 
-                Map<Boolean, List<ControlReport>> previousPartitioned = previous.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
-                List<ControlReport> previousFxmlReports = previousPartitioned.get(true);
-                List<ControlReport> previousJarReports = previousPartitioned.get(false);
+                Map<Boolean, List<ControlReportImpl>> previousPartitioned = previous.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
+                List<ControlReportImpl> previousFxmlReports = previousPartitioned.get(true);
+                List<ControlReportImpl> previousJarReports = previousPartitioned.get(false);
                 
                 final int previousNumOfJarFiles = previousJarReports.size();
                 final int previousNumOfFxmlFiles = previousFxmlReports.size();

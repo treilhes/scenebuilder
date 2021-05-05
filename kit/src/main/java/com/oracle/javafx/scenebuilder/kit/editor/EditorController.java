@@ -63,8 +63,8 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
@@ -172,21 +172,22 @@ public class EditorController implements Editor {
     private final DocumentManager documentManager;
 
     private FXOMDocument fxomDocument;
-    private Library builtinLibrary;
+//    private Library builtinLibrary;
     //private final Api api;
+    private final SceneBuilderManager sceneBuilderManager;
     
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
     public EditorController(
             @Autowired Api api,
-//    	    @Lazy @Autowired DragController dragController,
     	    @Lazy @Autowired InlineEditController inlineEditController,
     		@Lazy @Autowired ContextMenuController contextMenuController
 
     		) {
         //this.api = api;
     	this.context = api.getContext();
+    	this.sceneBuilderManager = api.getSceneBuilderManager();
     	this.jobManager = api.getApiDoc().getJobManager();
     	this.fileSystem = api.getFileSystem();
     	this.dialog = api.getApiDoc().getDialog();
@@ -199,7 +200,6 @@ public class EditorController implements Editor {
     	this.contextMenuController = contextMenuController;
     	//this.watchingController = watchingController;
 
-    	this.builtinLibrary = api.getApiDoc().getLibrary();
 
     	//libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
     	fxmlLocationProperty = new SimpleObjectProperty<>();
@@ -2253,7 +2253,7 @@ public class EditorController implements Editor {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, builtinLibrary.getClassLoader(), resources);
+            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(), resources);
         } else {
             newFxomDocument = null;
         }

@@ -31,5 +31,9 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>kit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>control-library</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.tmp;
 
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
+import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
 
 import javafx.scene.Node;
 
@@ -40,21 +40,29 @@ import javafx.scene.Node;
  *
  * 
  */
-public class ControlReportEntryImpl implements ControlReportEntry {
+public class ControlReportEntryImpl implements ReportEntry {
+    
+    public enum SubStatus {
+        NONE,
+        CANNOT_LOAD,
+        CANNOT_INSTANTIATE,
+    }
     
     private final String name;
     private final Status status;
+    private final SubStatus subStatus;
     private final Class<?> klass;
     private final Throwable exception;
     private final String className;
 
-    public ControlReportEntryImpl(String name, Status status, Throwable exception, Class<?> klass, String className) {
+    public ControlReportEntryImpl(String name, Status status, SubStatus substatus, Throwable exception, Class<?> klass, String className) {
         assert name != null;
         assert (klass != null) || (status != Status.OK);
         assert (exception == null) || (status != Status.OK);
         
         this.name = name;
         this.status = status;
+        this.subStatus = substatus;
         this.klass = klass;
         this.exception = exception;
         this.className = className;
@@ -71,21 +79,22 @@ public class ControlReportEntryImpl implements ControlReportEntry {
     }
 
     @Override
-    public Class<?> getKlass() {
-        return klass;
-    }
-
-    @Override
     public Throwable getException() {
         return exception;
     }
     
-    @Override
+    public SubStatus getSubStatus() {
+        return subStatus;
+    }
+    
+    public Class<?> getKlass() {
+        return klass;
+    }
+    
     public String getClassName() {
         return className;
     }
 
-    @Override
     public boolean isNode() {
         return (klass == null) ? false : Node.class.isAssignableFrom(klass);
     }
@@ -104,18 +113,24 @@ public class ControlReportEntryImpl implements ControlReportEntry {
                 sb.append(klass.getCanonicalName());
                 sb.append(" - OK"); //NOI18N
                 break;
-            case CANNOT_LOAD:
-                assert klass == null;
-                assert exception != null;
-                sb.append(name);
-                sb.append(" - CANNOT_LOAD - "); //NOI18N
-                sb.append(exception.getMessage());
-                break;
-            case CANNOT_INSTANTIATE:
-                assert klass != null;
-                sb.append(klass.getCanonicalName());
-                sb.append(" - CANNOT_INSTANTIATE - "); //NOI18N
-                sb.append(exception.getMessage());
+            case KO:
+                switch(subStatus) {
+                    case CANNOT_LOAD:
+                        assert klass == null;
+                        assert exception != null;
+                        sb.append(name);
+                        sb.append(" - CANNOT_LOAD - "); //NOI18N
+                        sb.append(exception.getMessage());
+                        break;
+                    case CANNOT_INSTANTIATE:
+                        assert klass != null;
+                        sb.append(klass.getCanonicalName());
+                        sb.append(" - CANNOT_INSTANTIATE - "); //NOI18N
+                        sb.append(exception.getMessage());
+                        break;
+                    case NONE:
+                        break;
+                }
                 break;
             case IGNORED:
                 assert klass == null;

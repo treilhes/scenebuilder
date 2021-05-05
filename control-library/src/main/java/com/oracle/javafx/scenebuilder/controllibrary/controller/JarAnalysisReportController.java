@@ -47,10 +47,12 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
-import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.library.Report;
+import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.collections.ListChangeListener;
@@ -76,7 +78,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
     @FXML
     Label timestampLabel;
 
-    private final Library library;
+    private final ControlLibrary library;
     private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; // NOI18N
     private final SimpleDateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(TIMESTAMP_PATTERN);
     private int prefixCounter = 0;
@@ -84,10 +86,11 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
 
     public JarAnalysisReportController(
             @Autowired Api api,
+            @Autowired ControlLibrary controlLibrary,
             @Autowired DocumentWindow document) {
         super(api, JarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
                 I18N.getBundle(), document); // NOI18N
-        this.library = api.getApiDoc().getLibrary();
+        this.library = controlLibrary;
     }
 
     @FXML
@@ -134,7 +137,7 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
         assert textFlow != null;
         assert timestampLabel != null;
 
-        library.getReports().addListener((ListChangeListener<ControlReport>) change -> update());
+        library.getReports().addListener((ListChangeListener<Report>) change -> update());
 
         update();
     }
@@ -146,10 +149,10 @@ public class JarAnalysisReportController extends AbstractFxmlWindowController {
 
             updateTimeStampLabel();
 
-            for (ControlReport report : library.getReports()) {
-                for (ControlReportEntry entry : report.getEntries()) {
-                    if (entry.getStatus() != ControlReportEntry.Status.OK) {
-                        if (entry.getKlass() != null && entry.getException() != null) {
+            for (ControlReportImpl report : library.getReports()) {
+                for (ControlReportEntryImpl entry : report.getEntries()) {
+                    if (entry.getStatus() != ReportEntry.Status.OK) {
+                        if (entry.getException() != null) {// && entry.getKlass() != null) {
                             // We use a Text instance for header and another one
                             // for full stack in order to style them separately
                             StringBuilder sb = new StringBuilder();

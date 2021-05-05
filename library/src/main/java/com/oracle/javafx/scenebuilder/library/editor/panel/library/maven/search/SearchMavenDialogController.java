@@ -175,11 +175,11 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
                                     .map(File::new)
                                     .collect(Collectors.toList()));
                         }
-//TODO implement here
-//                        if (userLibrary.getArtifactHandler().add(mavenArtifact)) {//.processImportArtifact(mavenArtifact, files)) {
-//                            updatePreferences(mavenArtifact);
-//                            logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
-//                        }
+                        
+                        if (userLibrary.performAddArtifact(mavenArtifact)) {//, files)) {
+                            updatePreferences(mavenArtifact);
+                            logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
+                        }
                         
                         this.onCloseRequest();
                     }

@@ -46,7 +46,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.kit.editor.EditorController;
@@ -69,8 +68,8 @@ public class StaticLoadTest {
 
     private boolean thrown;
 
-    @Mock
-    private Library library;
+//    @Mock
+//    private Library library;
     @Mock
     private FileSystem fileSystem;
     private DocumentManager docManager = new DocumentManager.DocumentManagerImpl();

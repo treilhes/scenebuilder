@@ -100,10 +100,10 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>inspector</artifactId>
         </dependency>
-		<!-- <dependency>
+		<dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>image-library</artifactId>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>jobs</artifactId>

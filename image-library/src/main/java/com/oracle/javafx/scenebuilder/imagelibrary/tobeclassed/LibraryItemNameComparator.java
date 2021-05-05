@@ -30,17 +30,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.library;
+package com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed;
 
-import java.nio.file.Path;
-import java.util.List;
+import java.util.Comparator;
+import java.util.Locale;
 
-public interface ControlReport extends Report {
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 
-    Path getSource();
+/**
+ *
+ *
+ */
+public class LibraryItemNameComparator implements Comparator<LibraryItem> {
 
-    List<ControlReportEntry> getEntries();
+    /**
+     * The comparison done here is performed on the name property of the
+     * LibraryItem, and it is done ignoring the case.
+     * @param li1 The first item we get name from.
+     * @param li2 The second item we get name from.
+     */
+    @Override
+    public int compare(LibraryItem li1, LibraryItem li2) {
+        int result;
 
-    //boolean hasGluonControls();
+        if (li1 == li2) {
+            result = 0;
+        } else {
+            result = li1.getName().toUpperCase(Locale.ENGLISH).compareTo(li2.getName().toUpperCase(Locale.ENGLISH));
+        }
 
+        return result;
+    }
 }

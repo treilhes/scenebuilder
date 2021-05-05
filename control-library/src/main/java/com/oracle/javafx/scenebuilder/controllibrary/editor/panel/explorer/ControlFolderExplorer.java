@@ -46,8 +46,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.Explorer;
@@ -63,7 +61,7 @@ import javafx.concurrent.Task;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class ControlFolderExplorer implements Explorer<Path, ControlReport> {
+public class ControlFolderExplorer implements Explorer<Path, ControlReportImpl> {
 
     private final static Logger logger = LoggerFactory.getLogger(ControlFolderExplorer.class);
 
@@ -78,20 +76,20 @@ public class ControlFolderExplorer implements Explorer<Path, ControlReport> {
     }
 
     @Override
-    public Task<List<ControlReport>> explore(Path source) {
+    public Task<List<ControlReportImpl>> explore(Path source) {
 
         assert Files.isDirectory(source);
 
-        return new Task<List<ControlReport>>() {
+        return new Task<List<ControlReportImpl>>() {
 
             @Override
-            protected List<ControlReport> call() throws Exception {
-                final List<ControlReport> res = new ArrayList<>();
+            protected List<ControlReportImpl> call() throws Exception {
+                final List<ControlReportImpl> res = new ArrayList<>();
 
                 try (URLClassLoader classLoader = classLoaderController.copyClassLoader(List.of(source))) {
 
                     logger.info(I18N.getString("log.info.explore.folder", source));
-                    List<ControlReportEntry> entries = FolderExplorer.explore(source, (path, progress) -> {
+                    List<ControlReportEntryImpl> entries = FolderExplorer.explore(source, (path, progress) -> {
 
                         if (isCancelled()) {
                             updateMessage(I18N.getString("import.work.cancelled"));
@@ -103,7 +101,8 @@ public class ControlFolderExplorer implements Explorer<Path, ControlReport> {
 
                         if (Files.isDirectory(path)) {
                             return new ControlReportEntryImpl(path.getFileName().toString(),
-                                    ControlReportEntry.Status.IGNORED, null, null, null);
+                                    ControlReportEntryImpl.Status.IGNORED, ControlReportEntryImpl.SubStatus.NONE,
+                                    null, null, null);
                         } else {
                             Path relativepath = source.relativize(path);
                             String className = ControlExplorerUtil.makeClassName(relativepath.toString(),

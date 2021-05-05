@@ -78,7 +78,6 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibraryDialogConfiguration;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
@@ -176,7 +175,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private final Action revealCustomFolderAction;
     private final Action showJarAnalysisReportAction;
 
-    private final Library userLibrary;
+    private final ControlLibrary userLibrary;
 	private final MavenArtifactsPreferences mavenPreferences;
     private final DisplayModePreference displayModePreference;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
@@ -194,9 +193,6 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
     private List<MenuItem> menuItems;
     
-    
-    private final ControlLibraryDialogConfiguration controlLibrary;
-
     /*
      * Public
      */
@@ -222,7 +218,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             @Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
             @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction,
             @Autowired ViewSearch viewSearch,
-            @Autowired ControlLibraryDialogConfiguration controlLibrary
+            @Autowired ControlLibrary controlLibrary
             ) { //, UserLibrary library) {
         super(
                 api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
@@ -231,7 +227,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         this.sceneBuilderManager = api.getSceneBuilderManager();
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.dialog = api.getApiDoc().getDialog();
-        this.userLibrary = api.getApiDoc().getLibrary();
+        this.userLibrary = controlLibrary;
         this.libraryController = libraryController;
         this.documentManager = api.getApiDoc().getDocumentManager();
         this.fileSystem = api.getFileSystem();
@@ -246,9 +242,6 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         this.revealCustomFolderAction = revealCustomFolderAction;
         this.showJarAnalysisReportAction = showJarAnalysisReportAction;
         this.viewSearch = viewSearch;
-        
-        
-        this.controlLibrary = controlLibrary;
         
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
 
@@ -778,7 +771,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         if (hasDependencies) {
             userLibraryUpdateRejected();
         } else {
-            ((ControlLibrary) userLibrary).stopWatching();
+            userLibrary.stopWatching();
 
             try {
                 // The selection can be multiple, in which case each asset is
@@ -805,7 +798,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
                     sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
                 }
 
-                ((ControlLibrary) userLibrary).startWatching();
+                userLibrary.startWatching();
             }
         }
     }
@@ -965,7 +958,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
         // Here we deactivate the UserLib so that it unlocks the files contained
         // in the lib dir in the file system meaning (especially on Windows).
-        ((ControlLibrary) userLibrary).stopWatching();
+        userLibrary.stopWatching();
 
         try {
             for (File file : files) {
@@ -990,7 +983,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             }
         }
 
-        ((ControlLibrary) userLibrary).startWatching();
+        userLibrary.startWatching();
 
         if (errorCount > 0) {
             dialog.showErrorAndWait(

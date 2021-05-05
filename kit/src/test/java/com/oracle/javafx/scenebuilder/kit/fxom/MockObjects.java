@@ -42,8 +42,8 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -58,20 +58,22 @@ public class MockObjects {
             GenericApplicationContext ctx = Mockito.mock(GenericApplicationContext.class);
             Editor editor = Mockito.mock(Editor.class);
             Dialog dialog = Mockito.mock(Dialog.class);
-            Library library = Mockito.mock(Library.class);
+            //Library library = Mockito.mock(Library.class);
             JobManager jobManager = Mockito.mock(JobManager.class);
             MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
             DocumentManager dm = new DocumentManager.DocumentManagerImpl();
+            SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
             
             Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
             Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
             Mockito.when(apiDoc.getMessageLogger()).thenReturn(messageLogger);
             Mockito.when(apiDoc.getJobManager()).thenReturn(jobManager);
-            Mockito.when(apiDoc.getLibrary()).thenReturn(library);
+            //Mockito.when(apiDoc.getLibrary()).thenReturn(library);
 
             Mockito.when(api.getApiDoc()).thenReturn(apiDoc);
             Mockito.when(api.getFileSystem()).thenReturn(fs);
             Mockito.when(api.getContext()).thenReturn(ctx);
+            Mockito.when(api.getSceneBuilderManager()).thenReturn(sbm);
             
 //            Mockito.when(ctx.getBean(Editor.class)).thenReturn(editor);
             Mockito.when(jobManager.revisionProperty()).thenReturn(new SimpleIntegerProperty());

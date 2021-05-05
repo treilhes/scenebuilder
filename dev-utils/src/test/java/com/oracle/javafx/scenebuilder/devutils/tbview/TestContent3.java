@@ -36,7 +36,7 @@ import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -46,7 +46,7 @@ public class TestContent3 {
         // Creating nodes
 
         try {
-            GridPane gp = (GridPane) FXMLLoader.load(TestContent3.class.getResource("test.fxml"));
+            Pane gp = (Pane) FXMLLoader.load(TestContent3.class.getResource("test.fxml"));
 
             // Setting the stage
             Scene scene = new Scene(gp, 595, 150, Color.BEIGE);

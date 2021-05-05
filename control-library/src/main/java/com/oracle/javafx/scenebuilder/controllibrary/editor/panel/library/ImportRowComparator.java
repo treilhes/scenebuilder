@@ -40,6 +40,7 @@ import java.util.Comparator;
 class ImportRowComparator implements Comparator<ImportRow> {
 
     public ImportRowComparator() {
+        
     }
     
     /**

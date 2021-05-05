@@ -33,7 +33,9 @@
 package com.oracle.javafx.scenebuilder.api.library;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public interface Report {
     Path getSource();
+    List<? extends ReportEntry> getEntries();
 }

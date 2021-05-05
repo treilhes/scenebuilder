@@ -265,13 +265,17 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     @FXML
     private void addJar() {
         List<File> files = performSelectFiles();
-        library.performAddFilesOrFolders(files.stream().map(f -> f.toPath()).collect(Collectors.toList()));
+        if (files != null && files.size() > 0) {
+            library.performAddFilesOrFolders(files.stream().map(f -> f.toPath()).collect(Collectors.toList()));
+        }
     }
 
     @FXML
     private void addFolder() {
         File folder = performSelectFolder();
-        library.performAddFilesOrFolders(List.of(folder.toPath()));
+        if (folder != null && folder.exists()) {
+            library.performAddFilesOrFolders(List.of(folder.toPath()));
+        }
     }
 
     @FXML

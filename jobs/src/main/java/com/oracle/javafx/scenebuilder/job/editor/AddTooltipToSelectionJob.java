@@ -48,8 +48,8 @@ import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -68,10 +68,12 @@ public class AddTooltipToSelectionJob extends BatchSelectionJob {
         
     private Map<FXOMObject, FXOMObject> tooltipMap; // Initialized lazily
     private final ApplicationContext context;
+    private final SceneBuilderManager sceneBuilderManager;
 
     public AddTooltipToSelectionJob(ApplicationContext context, Editor editor) {
         super(context, editor);
         this.context = context;
+        this.sceneBuilderManager = context.getBean(SceneBuilderManager.class);
     }
 
     public Collection<FXOMObject> getTooltips() {
@@ -151,11 +153,11 @@ public class AddTooltipToSelectionJob extends BatchSelectionJob {
                         = FXOMDocument.readContentFromURL(tooltipFxmlURL);
 
                 final FXOMDocument fxomDocument = context.getBean(DocumentManager.class).fxomDocument().get();
-                final Library library = context.getBean(Library.class);
+
                 for (FXOMObject fxomObject : osg.getItems()) {
                     final FXOMDocument contextMenuDocument = new FXOMDocument(
                             contextMenuFxmlText,
-                            tooltipFxmlURL, library.getClassLoader(), null);
+                            tooltipFxmlURL, sceneBuilderManager.classloader().get(), null);
 
                     assert contextMenuDocument != null;
                     final FXOMObject contextMenuObject = contextMenuDocument.getFxomRoot();

@@ -63,7 +63,6 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
@@ -73,6 +72,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentS
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
@@ -108,7 +108,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     SceneBuilderBeanFactory sceneBuilderFactory;
 
     @Autowired
-    private Library userLibrary;
+    private ControlLibrary userLibrary;
 
     @Autowired
     private IconSetting windowIconSetting;

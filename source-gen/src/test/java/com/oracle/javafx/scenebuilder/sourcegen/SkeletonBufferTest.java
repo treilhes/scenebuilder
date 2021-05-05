@@ -39,11 +39,9 @@ import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonBuffer;
 
@@ -57,15 +55,11 @@ public class SkeletonBufferTest {
         I18N.initForTest();
     }
 
-	@Mock
-    private Library library;
-
     @Test
     public void testControllerWithoutPackageName() throws IOException {
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithoutPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-        FXOMDocument newFxomDocument = new FXOMDocument(fxmlText, fxmlURL, library.getClassLoader(), I18N.getBundle());
-
+        FXOMDocument newFxomDocument = new FXOMDocument(fxmlText, fxmlURL, this.getClass().getClassLoader(), I18N.getBundle());
 
         SkeletonBuffer skeletonBuffer = new SkeletonBuffer(newFxomDocument, "test");
         String skeleton = skeletonBuffer.toString();
@@ -78,7 +72,7 @@ public class SkeletonBufferTest {
     public void testControllerWithSimplePackageName() throws IOException {
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithSimplePackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-        FXOMDocument newFxomDocument = new FXOMDocument(fxmlText, fxmlURL, library.getClassLoader(), I18N.getBundle());
+        FXOMDocument newFxomDocument = new FXOMDocument(fxmlText, fxmlURL, this.getClass().getClassLoader(), I18N.getBundle());
 
         SkeletonBuffer skeletonBuffer = new SkeletonBuffer(newFxomDocument, "test");
         String skeleton = skeletonBuffer.toString();
@@ -92,7 +86,7 @@ public class SkeletonBufferTest {
         
         final URL fxmlURL = SkeletonBufferTest.class.getResource("ControllerWithAdvancedPackage.fxml");
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-        FXOMDocument newFxomDocument = new FXOMDocument(fxmlText, fxmlURL, library.getClassLoader(), I18N.getBundle());
+        FXOMDocument newFxomDocument = new FXOMDocument(fxmlText, fxmlURL, this.getClass().getClassLoader(), I18N.getBundle());
 
         SkeletonBuffer skeletonBuffer = new SkeletonBuffer(newFxomDocument, "test");
         String skeleton = skeletonBuffer.toString();

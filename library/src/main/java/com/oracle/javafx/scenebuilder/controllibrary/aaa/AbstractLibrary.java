@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
+import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
@@ -83,7 +84,7 @@ import javafx.concurrent.Worker.State;
  *
  *
  */
-public abstract class AbstractLibrary<R extends Report, I>{
+public abstract class AbstractLibrary<R extends Report, I> implements Library<R, I>{
     
     private final static Logger logger = LoggerFactory.getLogger(AbstractLibrary.class);
 
@@ -245,15 +246,18 @@ public abstract class AbstractLibrary<R extends Report, I>{
         }
     }
     
+    @Override
     public ObservableList<I> getItems() {
         return itemsProperty;
     }
 
-    //TODO move elsewhere
-    public ClassLoader getClassLoader() {
-        return sceneBuilderManager.classloader().get();
-    }
+//    //TODO move elsewhere
+//    @Override
+//    public ClassLoader getClassLoader() {
+//        return sceneBuilderManager.classloader().get();
+//    }
 
+    @Override
     public File getPath() {
         return store.getRoot().toFile();
     }
@@ -266,6 +270,7 @@ public abstract class AbstractLibrary<R extends Report, I>{
         return explorationCountProperty;
     }
 
+    @Override
     public LocalDate getExplorationDate() {
         return explorationDateProperty.get();
     }
@@ -279,23 +284,20 @@ public abstract class AbstractLibrary<R extends Report, I>{
         reports.setAll(newReports);
     }
     
-    public void setOnUpdatedJarReports(Consumer<List<? extends R>> onFinishedUpdatingJarReports) {
+    @Override
+    public void setOnUpdatedJarReports(Consumer<List<R>> onFinishedUpdatingJarReports) {
         if (this.explorations.size() > 0) {
             onFinishedUpdatingJarReports.accept(this.reports);
         } else {
-            this.reports.addListener(new ListChangeListener<R>() {
-
-                @Override
-                public void onChanged(Change<? extends R> c) {
-                    while (c.next()) {
-                        onFinishedUpdatingJarReports.accept(c.getAddedSubList());
-                    }
+            this.reports.addListener((ListChangeListener<R>)(c -> {
+                while (c.next()) {
+                    onFinishedUpdatingJarReports.accept((List<R>) c.getAddedSubList());
                 }
-
-            });
+            }));
         }
     }
     
+    @Override
     public final ReadOnlyBooleanProperty firstExplorationCompletedProperty() {
         return firstExplorationCompleted.getReadOnlyProperty();
     }
@@ -304,6 +306,7 @@ public abstract class AbstractLibrary<R extends Report, I>{
         return firstExplorationCompleted.get();
     }
 
+    @Override
     public SimpleBooleanProperty exploringProperty() {
         return exploring;
     }
@@ -374,6 +377,7 @@ public abstract class AbstractLibrary<R extends Report, I>{
         return store;
     }
     
+    @Override
     public ObservableList<R> getReports() {
         return reports;
     }
@@ -478,7 +482,7 @@ public abstract class AbstractLibrary<R extends Report, I>{
         }
     }
     
-    public void performAddArtifact(MavenArtifact artifact) {
+    public boolean performAddArtifact(MavenArtifact artifact) {
 
         List<Task<List<R>>> taskList = List.of(artifact).stream()
                 .filter(ma -> JAVAFX_MODULES.stream().noneMatch(ma.getArtifactId()::startsWith))
@@ -490,8 +494,9 @@ public abstract class AbstractLibrary<R extends Report, I>{
         
         if (sources != null && sources.size() > 0) {
             doThenReLoad(() -> getStore().add(artifact));
+            return true;
         }
-
+        return false;
     }
     
     public void performRemoveFilesOrFolders(List<Path> listFilesOrFolders) {

@@ -45,8 +45,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.Explorer;
@@ -63,7 +61,7 @@ import javafx.concurrent.Task;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class ControlFileExplorer implements Explorer<Path, ControlReport> {
+public class ControlFileExplorer implements Explorer<Path, ControlReportImpl> {
     
     private final static Logger logger = LoggerFactory.getLogger(ControlFileExplorer.class);
     
@@ -115,15 +113,15 @@ public class ControlFileExplorer implements Explorer<Path, ControlReport> {
     at java.lang.Thread.run(Thread.java:724)
     */
     @Override
-    public Task<List<ControlReport>> explore(Path source) {
+    public Task<List<ControlReportImpl>> explore(Path source) {
         
         assert Files.isRegularFile(source);
         
-        return new Task<List<ControlReport>>() {
+        return new Task<List<ControlReportImpl>>() {
 
             @Override
-            protected List<ControlReport> call() throws Exception {
-                final List<ControlReport> res = new ArrayList<>();
+            protected List<ControlReportImpl> call() throws Exception {
+                final List<ControlReportImpl> res = new ArrayList<>();
                 
                 // The classloader takes in addition all already existing
                 // jar files stored in the user lib dir.
@@ -132,7 +130,7 @@ public class ControlFileExplorer implements Explorer<Path, ControlReport> {
                     if (LibraryUtil.isJarPath(source)) {
                         logger.info(I18N.getString("log.info.explore.jar", source));
                         
-                        List<ControlReportEntry> entries = JarExplorer.explore(source, (entry, progress) -> {
+                        List<ControlReportEntryImpl> entries = JarExplorer.explore(source, (entry, progress) -> {
                             
                             if (isCancelled()) {
                                 updateMessage(I18N.getString("import.work.cancelled"));
@@ -146,7 +144,8 @@ public class ControlFileExplorer implements Explorer<Path, ControlReport> {
                             updateProgress(progress, ExplorerInspector.DONE_PROGRESS);
                             
                             if (entry.isDirectory()) {
-                                return new ControlReportEntryImpl(entry.getName(), ControlReportEntry.Status.IGNORED, null, null, null);
+                                return new ControlReportEntryImpl(entry.getName(), ControlReportEntryImpl.Status.IGNORED, 
+                                        ControlReportEntryImpl.SubStatus.NONE, null, null, null);
                             } else {
                                 String className = ControlExplorerUtil.makeClassName(entry.getName(), "/");
                                 return ControlExplorerUtil.exploreEntry(entry.getName(), classLoader, className, filters);
@@ -170,7 +169,7 @@ public class ControlFileExplorer implements Explorer<Path, ControlReport> {
                     } else if (LibraryUtil.isFxmlPath(source)) {
                         // TODO do i need to use I18N string for logging?
                         logger.info("Start exploring FXML {}", source);
-                        ControlReportEntry entry = ControlExplorerUtil.exploreFxml(source, classLoader);
+                        ControlReportEntryImpl entry = ControlExplorerUtil.exploreFxml(source, classLoader);
                         ControlReportImpl report = new ControlReportImpl(source);
                         report.getEntries().add(entry);
 

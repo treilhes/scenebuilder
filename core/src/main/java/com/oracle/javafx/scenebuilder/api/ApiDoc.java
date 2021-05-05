@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -57,7 +56,7 @@ public class ApiDoc {
     private @Getter @Autowired @Lazy MessageLogger messageLogger;
     private @Getter @Autowired @Lazy Selection selection;
     private @Getter @Autowired @Lazy ErrorReport errorReport;
-    private @Getter @Autowired Library library;
+//    private @Getter @Autowired ControlLibrary library;
     private @Getter @Autowired @Lazy Drag drag;
     private @Getter @Autowired @Lazy ContextMenu contextMenu;
     //private @Getter @Autowired @Lazy Editor editor;

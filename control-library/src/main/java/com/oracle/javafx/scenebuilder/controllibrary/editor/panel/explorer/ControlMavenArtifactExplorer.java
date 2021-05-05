@@ -45,8 +45,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.Explorer;
@@ -63,7 +61,7 @@ import javafx.concurrent.Task;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, ControlReport> {
+public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, ControlReportImpl> {
 
     private final static Logger logger = LoggerFactory.getLogger(ControlMavenArtifactExplorer.class);
 
@@ -78,13 +76,13 @@ public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, Con
     }
 
     @Override
-    public Task<List<ControlReport>> explore(MavenArtifact source) {
+    public Task<List<ControlReportImpl>> explore(MavenArtifact source) {
 
-        return new Task<List<ControlReport>>() {
+        return new Task<List<ControlReportImpl>>() {
 
             @Override
-            protected List<ControlReport> call() throws Exception {
-                final List<ControlReport> res = new ArrayList<>();
+            protected List<ControlReportImpl> call() throws Exception {
+                final List<ControlReportImpl> res = new ArrayList<>();
 
                 List<Path> files = source.toJarList();
 
@@ -96,7 +94,7 @@ public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, Con
                     for (Path f : files) {
                         logger.info(I18N.getString("log.info.explore.jar", f));
 
-                        List<ControlReportEntry> entries = JarExplorer.explore(f, (entry, progress) -> {
+                        List<ControlReportEntryImpl> entries = JarExplorer.explore(f, (entry, progress) -> {
 
                             if (isCancelled()) {
                                 updateMessage(I18N.getString("import.work.cancelled"));
@@ -108,7 +106,8 @@ public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, Con
                                     files.size() * ExplorerInspector.DONE_PROGRESS);
 
                             if (entry.isDirectory()) {
-                                return new ControlReportEntryImpl(entry.getName(), ControlReportEntry.Status.IGNORED,
+                                return new ControlReportEntryImpl(entry.getName(), 
+                                        ControlReportEntryImpl.Status.IGNORED, ControlReportEntryImpl.SubStatus.NONE,
                                         null, null, null);
                             } else {
                                 String className = ControlExplorerUtil.makeClassName(entry.getName(), "/");

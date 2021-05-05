@@ -41,17 +41,17 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 
-public interface Library {
+public interface Library<R extends Report, I> {
 
-	ClassLoader getClassLoader();
+	//ClassLoader getClassLoader();
 
-	ObservableList<LibraryItem> getItems();
+	ObservableList<I> getItems();
 
 	//Comparator<String> getSectionComparator();
 
 	SimpleBooleanProperty exploringProperty();
 
-    void setOnUpdatedJarReports(Consumer<List<? extends ControlReport>> onFinishedUpdatingJarReports);
+    void setOnUpdatedJarReports(Consumer<List<R>> onFinishedUpdatingJarReports);
     
     //void setOnUpdatedExploringJarReports(Consumer<List<? extends ControlReport>> onFinishedExploringJarReports);
 
@@ -65,6 +65,6 @@ public interface Library {
 
     List<LibraryFilter> getFilters();
 
-    ObservableList<ControlReport> getReports();
+    ObservableList<R> getReports();
 
 }

@@ -51,7 +51,6 @@ import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryDialogFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
@@ -66,252 +65,224 @@ import javafx.stage.Window;
 
 public class LibraryPanelActions {
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	@Lazy
-	@ActionMeta(
-			nameKey = "action.name.show.jar.analysis.report",
-			descriptionKey = "action.description.show.jar.analysis.report",
-			accelerator = "CTRL+J")
-	public static class ShowJarAnalysisReportAction extends AbstractAction {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report", accelerator = "CTRL+J")
+    public static class ShowJarAnalysisReportAction extends AbstractAction {
 
-		private final DocumentWindow documentWindowController;
-		private final JarAnalysisReportController jarAnalysisReportController;
+        private final DocumentWindow documentWindowController;
+        private final JarAnalysisReportController jarAnalysisReportController;
 
-		public ShowJarAnalysisReportAction(
-		        @Autowired Api api,
-				@Autowired @Lazy DocumentWindow documentWindowController,
-				@Autowired @Lazy JarAnalysisReportController jarAnalysisReportController) {
-			super(api);
-			this.documentWindowController = documentWindowController;
-			this.jarAnalysisReportController = jarAnalysisReportController;
-		}
+        public ShowJarAnalysisReportAction(@Autowired Api api, @Autowired @Lazy DocumentWindow documentWindowController,
+                @Autowired @Lazy JarAnalysisReportController jarAnalysisReportController) {
+            super(api);
+            this.documentWindowController = documentWindowController;
+            this.jarAnalysisReportController = jarAnalysisReportController;
+        }
 
-		@Override
-		public boolean canPerform() {
-			return true;
-		}
+        @Override
+        public boolean canPerform() {
+            return true;
+        }
 
-		@Override
-		public void perform() {
-			//jarAnalysisReportController.setToolStylesheet(documentWindowController.getToolStylesheet());
-	        jarAnalysisReportController.openWindow();
-		}
+        @Override
+        public void perform() {
+            // jarAnalysisReportController.setToolStylesheet(documentWindowController.getToolStylesheet());
+            jarAnalysisReportController.openWindow();
+        }
 
-	}
+    }
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	@Lazy
-	@ActionMeta(
-			nameKey = "action.name.reveal.custom.folder",
-			descriptionKey = "action.description.reveal.custom.folder")
-	public static class RevealCustomFolderAction extends AbstractAction {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    @ActionMeta(nameKey = "action.name.reveal.custom.folder", descriptionKey = "action.description.reveal.custom.folder")
+    public static class RevealCustomFolderAction extends AbstractAction {
 
-		private final DocumentWindow documentWindowController;
-		private final Library userLibrary;
-		private final FileSystem fileSystem;
-		private final Dialog dialog;
+        private final DocumentWindow documentWindowController;
+        private final ControlLibrary userLibrary;
+        private final FileSystem fileSystem;
+        private final Dialog dialog;
 
-		public RevealCustomFolderAction(
-		        @Autowired Api api,
-				@Autowired @Lazy DocumentWindow documentWindowController
-		        ) {
-			super(api);
-			this.documentWindowController = documentWindowController;
-			this.userLibrary = api.getApiDoc().getLibrary();
-			this.fileSystem = api.getFileSystem();
-			this.dialog = api.getApiDoc().getDialog();
-		}
+        public RevealCustomFolderAction(@Autowired Api api, @Autowired ControlLibrary userLibrary,
+                @Autowired @Lazy DocumentWindow documentWindowController) {
+            super(api);
+            this.documentWindowController = documentWindowController;
+            this.userLibrary = userLibrary;
+            this.fileSystem = api.getFileSystem();
+            this.dialog = api.getApiDoc().getDialog();
+        }
 
-		@Override
-		public boolean canPerform() {
-			return true;
-		}
+        @Override
+        public boolean canPerform() {
+            return true;
+        }
 
-		@Override
-		public void perform() {
-			try {
-				fileSystem.revealInFileBrowser(userLibrary.getPath());
-			} catch (IOException x) {
-				dialog.showErrorAndWait("",
-						I18N.getString("alert.reveal.failure.message", documentWindowController.getStage().getTitle()),
-						I18N.getString("alert.reveal.failure.details"),
-						x);
-			}
-		}
-	}
+        @Override
+        public void perform() {
+            try {
+                fileSystem.revealInFileBrowser(userLibrary.getPath());
+            } catch (IOException x) {
+                dialog.showErrorAndWait("",
+                        I18N.getString("alert.reveal.failure.message", documentWindowController.getStage().getTitle()),
+                        I18N.getString("alert.reveal.failure.details"), x);
+            }
+        }
+    }
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	@Lazy
-	@ActionMeta(
-			nameKey = "action.name.import.selection",
-			descriptionKey = "action.description.import.selection")
-	public static class ImportSelectionAction extends AbstractAction {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    @ActionMeta(nameKey = "action.name.import.selection", descriptionKey = "action.description.import.selection")
+    public static class ImportSelectionAction extends AbstractAction {
 
-		private final Editor editorController;
-		private final LibraryPanelController libraryPanelController;
+        private final Editor editorController;
+        private final LibraryPanelController libraryPanelController;
 
-		public ImportSelectionAction(
-		        @Autowired Api api,
-				@Autowired @Lazy Editor editorController,
-				@Autowired @Lazy LibraryPanelController libraryPanelController) {
-			super(api);
-			this.editorController = editorController;
-			this.libraryPanelController = libraryPanelController;
-		}
+        public ImportSelectionAction(@Autowired Api api, @Autowired @Lazy Editor editorController,
+                @Autowired @Lazy LibraryPanelController libraryPanelController) {
+            super(api);
+            this.editorController = editorController;
+            this.libraryPanelController = libraryPanelController;
+        }
 
-		@Override
-		public boolean canPerform() {
-			// This method cannot be called if there is not a valid selection, a selection
-		    // eligible for being dropped onto Library panel.
-		    return editorController.getSelection().getGroup() instanceof ObjectSelectionGroup;
-		}
+        @Override
+        public boolean canPerform() {
+            // This method cannot be called if there is not a valid selection, a selection
+            // eligible for being dropped onto Library panel.
+            return editorController.getSelection().getGroup() instanceof ObjectSelectionGroup;
+        }
 
-		@Override
-		public void perform() {
-			AbstractSelectionGroup asg = editorController.getSelection().getGroup();
-            ObjectSelectionGroup osg = (ObjectSelectionGroup)asg;
+        @Override
+        public void perform() {
+            AbstractSelectionGroup asg = editorController.getSelection().getGroup();
+            ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
             assert !osg.getItems().isEmpty();
             List<FXOMObject> selection = new ArrayList<>(osg.getItems());
             libraryPanelController.performImportSelection(selection);
-		}
-	}
+        }
+    }
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	@Lazy
-	@ActionMeta(
-			nameKey = "action.name.view.as.sections",
-			descriptionKey = "action.description.view.as.sections")
-	public static class ViewAsSectionsAction extends AbstractAction {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    @ActionMeta(nameKey = "action.name.view.as.sections", descriptionKey = "action.description.view.as.sections")
+    public static class ViewAsSectionsAction extends AbstractAction {
 
-		private final LibraryPanelController libraryPanelController;
-		private final DisplayModePreference displayModePreference;
+        private final LibraryPanelController libraryPanelController;
+        private final DisplayModePreference displayModePreference;
 
-		public ViewAsSectionsAction(
-		        @Autowired Api api,
-				@Autowired @Lazy LibraryPanelController libraryPanelController,
-				@Autowired @Lazy DisplayModePreference displayModePreference) {
-			super(api);
-			this.libraryPanelController = libraryPanelController;
-			this.displayModePreference = displayModePreference;
-		}
+        public ViewAsSectionsAction(@Autowired Api api, @Autowired @Lazy LibraryPanelController libraryPanelController,
+                @Autowired @Lazy DisplayModePreference displayModePreference) {
+            super(api);
+            this.libraryPanelController = libraryPanelController;
+            this.displayModePreference = displayModePreference;
+        }
 
-		@Override
-		public boolean canPerform() {
-			return libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SECTIONS;
-		}
+        @Override
+        public boolean canPerform() {
+            return libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SECTIONS;
+        }
 
-		@Override
-		public void perform() {
-			if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
-	            libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
-	        } else {
-	            libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
-	        }
+        @Override
+        public void perform() {
+            if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
+                libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
+            } else {
+                libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
+            }
 
-			displayModePreference.setValue(libraryPanelController.getDisplayMode())
-				.writeToJavaPreferences();
-		}
-	}
+            displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+        }
+    }
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	@Lazy
-	@ActionMeta(
-			nameKey = "action.name.view.as.list",
-			descriptionKey = "action.description.view.as.list")
-	public static class ViewAsListAction extends AbstractAction {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    @ActionMeta(nameKey = "action.name.view.as.list", descriptionKey = "action.description.view.as.list")
+    public static class ViewAsListAction extends AbstractAction {
 
-		private final LibraryPanelController libraryPanelController;
-		private final DisplayModePreference displayModePreference;
+        private final LibraryPanelController libraryPanelController;
+        private final DisplayModePreference displayModePreference;
 
-		public ViewAsListAction(
-		        @Autowired Api api,
-				@Autowired @Lazy LibraryPanelController libraryPanelController,
-				@Autowired @Lazy DisplayModePreference displayModePreference) {
-			super(api);
-			this.libraryPanelController = libraryPanelController;
-			this.displayModePreference = displayModePreference;
-		}
+        public ViewAsListAction(@Autowired Api api, @Autowired @Lazy LibraryPanelController libraryPanelController,
+                @Autowired @Lazy DisplayModePreference displayModePreference) {
+            super(api);
+            this.libraryPanelController = libraryPanelController;
+            this.displayModePreference = displayModePreference;
+        }
 
-		@Override
-		public boolean canPerform() {
-			return libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.LIST;
-		}
+        @Override
+        public boolean canPerform() {
+            return libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.LIST;
+        }
 
-		@Override
-		public void perform() {
-			if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
-	            libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
-	        } else {
-	            libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
-	        }
+        @Override
+        public void perform() {
+            if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
+                libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
+            } else {
+                libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
+            }
 
-			displayModePreference.setValue(libraryPanelController.getDisplayMode())
-				.writeToJavaPreferences();
-		}
-	}
+            displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+        }
+    }
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	@Lazy
-	@ActionMeta(
-			nameKey = "action.name.manage.jar.fxml",
-			descriptionKey = "action.description.manage.jar.fxml")
-	public static class ManageJarFxmlAction extends AbstractAction {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    @ActionMeta(nameKey = "action.name.manage.jar.fxml", descriptionKey = "action.description.manage.jar.fxml")
+    public static class ManageJarFxmlAction extends AbstractAction {
 
-		private final Main mainController;
-		private final Document documentWindowController;
-		private final LibraryDialogFactory libraryDialogFactory;
-		private final LibraryPanelController libraryPanelController;
+        private final Main mainController;
+        private final Document documentWindowController;
+        private final LibraryDialogFactory libraryDialogFactory;
+        private final LibraryPanelController libraryPanelController;
         private final ControlLibrary controlLibrary;
 
-		public ManageJarFxmlAction(
-		        @Autowired Api api,
-		        @Autowired @Lazy ControlLibrary controlLibrary,
-				@Autowired @Lazy Document documentWindowController,
-				@Autowired @Lazy LibraryDialogFactory libraryDialogFactory,
-				@Autowired @Lazy LibraryPanelController libraryPanelController) {
-			super(api);
-			this.mainController = api.getMain();
-			this.documentWindowController = documentWindowController;
-			this.libraryDialogFactory = libraryDialogFactory;
-			this.libraryPanelController = libraryPanelController;
-			this.controlLibrary = controlLibrary;
-		}
+        public ManageJarFxmlAction(@Autowired Api api, @Autowired @Lazy ControlLibrary controlLibrary,
+                @Autowired @Lazy Document documentWindowController,
+                @Autowired @Lazy LibraryDialogFactory libraryDialogFactory,
+                @Autowired @Lazy LibraryPanelController libraryPanelController) {
+            super(api);
+            this.mainController = api.getMain();
+            this.documentWindowController = documentWindowController;
+            this.libraryDialogFactory = libraryDialogFactory;
+            this.libraryPanelController = libraryPanelController;
+            this.controlLibrary = controlLibrary;
+        }
 
-		@Override
-		public boolean canPerform() {
-			return true;
-		}
+        @Override
+        public boolean canPerform() {
+            return true;
+        }
 
-		@Override
-		public void perform() {
+        @Override
+        public void perform() {
 //			libraryDialogController = new LibraryDialogController(editorController, libraryPanelController,
 //            		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
 
-		    /*
-			libraryDialogController.setOnAddJar(() -> onImportJarFxml(libraryDialogController.getStage()));
-            libraryDialogController.setOnEditFXML(fxmlPath -> {
-                    if (mainController.lookupUnusedDocumentWindowController() != null) {
-                        libraryDialogController.closeWindow();
-                    }
-                    mainController.performOpenRecent(documentWindowController, fxmlPath.toFile());
-            });
-            libraryDialogController.setOnAddFolder(() -> onImportFromFolder(libraryDialogController.getStage()));
-*/
-		    controlLibrary.openDialog();
-		}
+            /*
+             * libraryDialogController.setOnAddJar(() ->
+             * onImportJarFxml(libraryDialogController.getStage()));
+             * libraryDialogController.setOnEditFXML(fxmlPath -> { if
+             * (mainController.lookupUnusedDocumentWindowController() != null) {
+             * libraryDialogController.closeWindow(); }
+             * mainController.performOpenRecent(documentWindowController,
+             * fxmlPath.toFile()); }); libraryDialogController.setOnAddFolder(() ->
+             * onImportFromFolder(libraryDialogController.getStage()));
+             */
+            controlLibrary.openDialog();
+        }
 
-		private void onImportJarFxml(Window owner) {
-	        libraryPanelController.performImportJarFxml(owner);
-	    }
+        private void onImportJarFxml(Window owner) {
+            libraryPanelController.performImportJarFxml(owner);
+        }
 
-		private void onImportFromFolder(Window owner) {
-	        libraryPanelController.performImportFromFolder(owner);
-	    }
-	}
+        private void onImportFromFolder(Window owner) {
+            libraryPanelController.performImportFromFolder(owner);
+        }
+    }
 }

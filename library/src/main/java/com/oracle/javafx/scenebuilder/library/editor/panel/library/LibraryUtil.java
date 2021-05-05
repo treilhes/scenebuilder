@@ -52,6 +52,12 @@ public class LibraryUtil {
         return pathString.endsWith(".jar"); //NOI18N
     }
 
+    public static boolean hasExtension(Path path, List<String> extensions) {
+        final String pathString = path.toString().toLowerCase(Locale.ROOT);
+        String upperPath = pathString.toUpperCase();
+        return extensions.stream().anyMatch(e -> upperPath.endsWith("." + e.toUpperCase())); //NOI18N
+    }
+    
     public static boolean isFxmlPath(Path path) {
         final String pathString = path.toString().toLowerCase(Locale.ROOT);
         return pathString.endsWith(".fxml"); //NOI18N

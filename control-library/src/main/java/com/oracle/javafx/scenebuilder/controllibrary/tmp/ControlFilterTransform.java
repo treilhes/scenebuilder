@@ -37,11 +37,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.api.library.ControlReport;
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry.Status;
+import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
+import com.oracle.javafx.scenebuilder.library.util.Transform;
 
 
-public class ControlFilterTransform implements Transform<ControlReport, ControlReport> {
+public class ControlFilterTransform implements Transform<ControlReportImpl, ControlReportImpl> {
     List<String> filteredClasses = new ArrayList<>();
 
     public ControlFilterTransform() {
@@ -54,13 +54,13 @@ public class ControlFilterTransform implements Transform<ControlReport, ControlR
     }
     
     @Override
-    public List<ControlReport> filter(List<ControlReport> inputs) {
+    public List<ControlReportImpl> filter(List<ControlReportImpl> inputs) {
         return inputs.stream().map(r -> {
             try {
                 
                 ControlReportImpl filteredReport = new ControlReportImpl(r.getSource());
                 r.getEntries().forEach(e -> {
-                    if (e.getStatus() == Status.OK) {
+                    if (e.getStatus() == ReportEntry.Status.OK) {
                         final String canonicalName = e.getKlass().getCanonicalName();
                         if (!filteredClasses.contains(canonicalName)) {
                             filteredReport.getEntries().add(e);

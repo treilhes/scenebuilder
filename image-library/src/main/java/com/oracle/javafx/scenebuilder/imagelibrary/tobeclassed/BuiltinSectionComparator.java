@@ -30,29 +30,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.library;
+package com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed;
 
-public interface ControlReportEntry {
-    
-    public enum Status {
-        IGNORED,
-        CANNOT_LOAD,
-        CANNOT_INSTANTIATE,
-        OK
+import java.util.Comparator;
+
+/**
+ * Section are now ordered by alphabetical order
+ * @treatAsPrivate
+ */
+public class BuiltinSectionComparator implements Comparator<String> {
+        
+    /*
+     * Comparator
+     */
+
+    @Override
+    public int compare(String section1, String section2) {
+        assert section1 != null;
+        assert section2 != null;
+        return section1.compareTo(section2);
     }
-
-    String getName();
-
-    Status getStatus();
-
-    Class<?> getKlass();
-
-    Throwable getException();
-
-    boolean isNode();
-
-    String getClassName();
-
-    //boolean isGluon();
-
+    
 }

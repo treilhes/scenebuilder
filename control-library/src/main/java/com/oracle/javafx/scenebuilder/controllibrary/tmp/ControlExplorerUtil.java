@@ -45,8 +45,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.api.library.ControlReportEntry;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl.SubStatus;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import javafx.fxml.FXMLLoader;
@@ -97,19 +97,20 @@ public class ControlExplorerUtil {
         return result;
     }
 
-    public static ControlReportEntry exploreEntry(String entryName, ClassLoader classLoader, String className, List<LibraryFilter> filters) {
+    public static ControlReportEntryImpl exploreEntry(String entryName, ClassLoader classLoader, String className, List<LibraryFilter> filters) {
         if (entryName == null || className == null) {
             return null;
         }
         filters = filters == null ? new ArrayList<>() : filters;
         
-        ControlReportEntry.Status status;
+        ControlReportEntryImpl.Status status;
+        ControlReportEntryImpl.SubStatus subStatus = SubStatus.NONE;
         Throwable entryException;
         Class<?> entryClass = null;
 
         // Filtering out what starts with com.javafx. is bound to DTL-6378.
         if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
-            status = ControlReportEntry.Status.IGNORED;
+            status = ControlReportEntryImpl.Status.IGNORED;
             entryClass = null;
             entryException = null;
         } else {
@@ -122,19 +123,21 @@ public class ControlExplorerUtil {
 
                 if (Modifier.isAbstract(entryClass.getModifiers())
                         || !Node.class.isAssignableFrom(entryClass)) {
-                    status = ControlReportEntry.Status.IGNORED;
+                    status = ControlReportEntryImpl.Status.IGNORED;
                     entryClass = null;
                     entryException = null;
                 } else {
                     instantiateWithFXMLLoader(entryClass, classLoader);
-                    status = ControlReportEntry.Status.OK;
+                    status = ControlReportEntryImpl.Status.OK;
                     entryException = null;
                 }
             } catch (RuntimeException | IOException x) {
-                status = ControlReportEntry.Status.CANNOT_INSTANTIATE;
+                status = ControlReportEntryImpl.Status.KO;
+                subStatus = ControlReportEntryImpl.SubStatus.CANNOT_INSTANTIATE;
                 entryException = x;
             } catch (Error | ClassNotFoundException x) {
-                status = ControlReportEntry.Status.CANNOT_LOAD;
+                status = ControlReportEntryImpl.Status.KO;
+                subStatus = ControlReportEntryImpl.SubStatus.CANNOT_LOAD;
                 entryClass = null;
                 entryException = x;
             }
@@ -144,7 +147,7 @@ public class ControlExplorerUtil {
             logger.warn("Exception while exploring entry {}", entryName, entryException);
         }
         
-        return new ControlReportEntryImpl(entryName, status, entryException, entryClass, className);
+        return new ControlReportEntryImpl(entryName, status, subStatus, entryException, entryClass, className);
     }
     
     // TODO duplicate method until refactoring
@@ -171,8 +174,9 @@ public class ControlExplorerUtil {
         return sb.toString();
     }
     
-    public static ControlReportEntry exploreFxml(Path fxmlFile, ClassLoader classLoader) {
-        ControlReportEntry.Status status;
+    public static ControlReportEntryImpl exploreFxml(Path fxmlFile, ClassLoader classLoader) {
+        ControlReportEntryImpl.Status status;
+        ControlReportEntryImpl.SubStatus subStatus = SubStatus.NONE;
         Throwable entryException;
         Class<?> entryClass = null;
 
@@ -180,13 +184,15 @@ public class ControlExplorerUtil {
             String content = Files.readString(fxmlFile, StandardCharsets.UTF_8);
             FXOMDocument result= new FXOMDocument(content, null, classLoader, null);
             entryClass = result.getFxomRoot().getSceneGraphObject().getClass();
-            status = ControlReportEntry.Status.OK;
+            status = ControlReportEntryImpl.Status.OK;
             entryException = null;
         } catch (RuntimeException | IOException x) {
-            status = ControlReportEntry.Status.CANNOT_INSTANTIATE;
+            status = ControlReportEntryImpl.Status.KO;
+            subStatus = ControlReportEntryImpl.SubStatus.CANNOT_INSTANTIATE;
             entryException = x;
         } catch (Error x) {
-            status = ControlReportEntry.Status.CANNOT_LOAD;
+            status = ControlReportEntryImpl.Status.KO;
+            subStatus = ControlReportEntryImpl.SubStatus.CANNOT_LOAD;
             entryClass = null;
             entryException = x;
         }
@@ -198,7 +204,7 @@ public class ControlExplorerUtil {
         try {
 //            return new ControlReportEntryImpl(fxmlFile.getFileName().toString(), status, 
 //                    entryException, entryClass, entryClass == null ? null : entryClass.getName());
-            return new ControlReportEntryImpl(fxmlFile.getFileName().toString(), status, 
+            return new ControlReportEntryImpl(fxmlFile.getFileName().toString(), status, subStatus,
                     entryException, entryClass, entryClass.getName());
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -46,13 +46,13 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
+import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemNameComparator;
@@ -72,11 +72,11 @@ public class LibraryMenuProvider implements MenuProvider {
     private final static String INSERT_MENU_ID = "insertMenu";
     
     private final LibraryController libraryMenuController;
-    private final Library library;
+    private final ControlLibrary library;
 
     public LibraryMenuProvider(
             @Autowired  @Lazy LibraryController libraryMenuController,
-            @Autowired  @Lazy Library library
+            @Autowired  @Lazy ControlLibrary library
             ) {
         this.library = library;
         this.libraryMenuController = libraryMenuController;
