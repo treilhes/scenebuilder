@@ -32,25 +32,77 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry.Status;
 import com.oracle.javafx.scenebuilder.library.util.Transform;
 
+import javafx.geometry.BoundingBox;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 
 public class ImageFilterTransform implements Transform<ImageReport, ImageReport> {
-    List<String> filteredClasses = new ArrayList<>();
+    Map<String, StandardImage> imageSourceData = new HashMap<>();
+    Map<String, FontImage> fontSourceData = new HashMap<>();
 
     public ImageFilterTransform() {
         super();
     }
 
-    public void setFilteredClasses(List<String> newFilteredClasses) {
-        filteredClasses.clear();
-        filteredClasses.addAll(newFilteredClasses);
+    public FontImage getOrCreateFontImage(String fontName) {
+        FontImage fontImage = fontSourceData.get(fontName);
+        
+        if (fontImage == null) {
+            fontImage = new FontImage(fontName);
+            fontSourceData.put(fontName, fontImage);
+        }
+        
+        return fontImage;
+    }
+    
+    public FontImageItem getOrCreateFontImageItem(FontImage fontImage, Integer unicodePoint) {
+        assert fontSourceData.containsValue(fontImage);
+        
+        FontImageItem fontImageItem = fontImage.getItems().get(unicodePoint);
+        
+        if (fontImageItem == null) {
+            fontImageItem = new FontImageItem(unicodePoint);
+            fontImage.getItems().put(unicodePoint, fontImageItem);
+        }
+        
+        return fontImageItem;
+    }
+    
+    public StandardImage getOrCreateStandardImage(String imageName) {
+        StandardImage standardImage = imageSourceData.get(imageName);
+        
+        if (standardImage == null) {
+            standardImage = new StandardImage(imageName);
+            imageSourceData.put(imageName, standardImage);
+        }
+        
+        return standardImage;
+    }
+    
+    public StandardImageItem getOrCreateStandardImageItem(StandardImage standardImage, BoundingBox boundingBox) {
+        assert imageSourceData.containsValue(standardImage);
+        
+        StandardImageItem standardImageItem = standardImage.getItems().get(boundingBox.toString());
+        
+        if (standardImageItem == null) {
+            standardImageItem = new StandardImageItem(boundingBox);
+            standardImage.getItems().put(boundingBox.toString(), standardImageItem);
+        }
+        
+        return standardImageItem;
     }
     
     @Override
@@ -59,12 +111,52 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
             try {
                 
                 ImageReport filteredReport = new ImageReport(r.getSource());
+                
                 r.getEntries().forEach(e -> {
                     if (e.getStatus() == Status.OK) {
-                        final String canonicalName = e.getKlass().getCanonicalName();
-                        if (!filteredClasses.contains(canonicalName)) {
-                            filteredReport.getEntries().add(e);
+                        
+                        switch (e.getType()) {
+                            case FONT_ICONS:
+                                FontImage fontSource = fontSourceData.get(e.getFontName());
+                                
+                                if (fontSource != null && fontSource.isImported()) {
+                                    e.getUnicodePoints().forEach(up -> {
+                                        FontImageItem item = fontSource.getItems().get(up);
+                                        if (item != null && item.isImported()) {
+                                            ImageReportEntry clone = e.clone();
+                                            clone.getUnicodePoints().add(up);
+                                            
+//                                            if (item.getName() != null && !item.getName().isEmpty()) {
+//                                                clone.setName(item.getName());
+//                                            }
+                                            
+                                            filteredReport.getEntries().add(clone);
+                                        }
+                                    });
+                                }
+                                break;
+                            case IMAGE:
+                                StandardImage imageSource = imageSourceData.get(e.getName());
+                                
+                                if (imageSource != null && imageSource.isImported()) {
+                                    imageSource.getItems().values().forEach(item -> {
+                                        if (item != null && item.isImported()) {
+                                            ImageReportEntry clone = e.clone();
+                                            clone.setBoundingBox(item.getBoundingBox());
+                                            
+//                                            if (item.getName() != null && !item.getName().isEmpty()) {
+//                                                clone.setName(item.getName());
+//                                            }
+                                            
+                                            filteredReport.getEntries().add(clone);
+                                        }
+                                    });
+                                }
+                                break;
+                            default:
+                                break;
                         }
+                        
                     }
                 });
                 return filteredReport;
@@ -75,8 +167,63 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
 
     }
 
-    public Collection<? extends String> getFilteredClasses() {
-        return filteredClasses;
+    
+
+    public Map<String, StandardImage> getImageSourceData() {
+        return imageSourceData;
     }
 
+    public void setImageSourceData(Map<String, StandardImage> imageSourceData) {
+        this.imageSourceData = imageSourceData;
+    }
+
+    public Map<String, FontImage> getFontSourceData() {
+        return fontSourceData;
+    }
+
+    public void setFontSourceData(Map<String, FontImage> fontSourceData) {
+        this.fontSourceData = fontSourceData;
+    }
+
+
+
+    @RequiredArgsConstructor
+    @NoArgsConstructor
+    public static class FontImage {
+        @NonNull
+        private @Getter @Setter(AccessLevel.PRIVATE) String fontName;
+        private @Getter @Setter boolean imported = true;
+        private @Getter @Setter(AccessLevel.PRIVATE) Map<Integer, FontImageItem> items = new HashMap<>();
+        
+    }
+    
+    @RequiredArgsConstructor
+    @NoArgsConstructor
+    public static class FontImageItem {
+        @NonNull
+        private @Getter @Setter(AccessLevel.PRIVATE) Integer unicodePoint;
+        private @Getter @Setter boolean imported = false;
+        private @Getter @Setter String name;
+        
+    }
+    
+    @RequiredArgsConstructor
+    @NoArgsConstructor
+    public static class StandardImage {
+        @NonNull
+        private @Getter @Setter(AccessLevel.PRIVATE) String imageName;
+        private @Getter @Setter boolean imported = true;
+        private @Getter @Setter(AccessLevel.PRIVATE) Map<String, StandardImageItem> items = new HashMap<>();
+        
+    }
+    
+    @RequiredArgsConstructor
+    @NoArgsConstructor
+    public static class StandardImageItem {
+        @NonNull
+        private @Getter @Setter(AccessLevel.PRIVATE) BoundingBox boundingBox;
+        private @Getter @Setter boolean imported = true;
+        private @Getter @Setter String name;
+        
+    }
 }

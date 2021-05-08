@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl.SubStatus;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -59,7 +60,7 @@ public class ControlExplorerUtil {
     private ControlExplorerUtil() {}
     
     public static Object instantiateWithFXMLLoader(Class<?> klass, ClassLoader classLoader) throws IOException {
-        final String fxmlText = makeFxmlText(klass);
+        final String fxmlText = LibraryUtil.makeFxmlText(klass);
         return instantiateWithFXMLLoader(fxmlText, classLoader);
     }
     
@@ -148,30 +149,6 @@ public class ControlExplorerUtil {
         }
         
         return new ControlReportEntryImpl(entryName, status, subStatus, entryException, entryClass, className);
-    }
-    
-    // TODO duplicate method until refactoring
-    public static String makeFxmlText(Class<?> componentClass) {
-        final StringBuilder sb = new StringBuilder();
-
-        /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
-         *
-         * <?import a.b.C?>
-         *
-         * <C/>
-         */
-
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
-
-        sb.append("<?import "); // NOI18N
-        sb.append(componentClass.getCanonicalName());
-        sb.append("?>"); // NOI18N
-        sb.append("<"); // NOI18N
-        sb.append(componentClass.getSimpleName());
-        sb.append("/>\n"); // NOI18N
-
-        return sb.toString();
     }
     
     public static ControlReportEntryImpl exploreFxml(Path fxmlFile, ClassLoader classLoader) {

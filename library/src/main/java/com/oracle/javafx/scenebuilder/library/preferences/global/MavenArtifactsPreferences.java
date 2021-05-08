@@ -106,15 +106,7 @@ public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPref
         }
         return null;
     }
-    
-    public List<String> getArtifactFilter(MavenArtifact artifact) {
-        String filter = getRecord(artifact).getFilter();
-        if (filter != null && !filter.isEmpty()) {
-                return Stream.of(filter.split(File.pathSeparator)).collect(Collectors.toList());
-        } 
-        return new ArrayList<>();
-    }
-    
+
     /*
      * All Artifacts 
      */
@@ -165,16 +157,6 @@ public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPref
         return getArtifactsFilesWithDependencies()
                 .stream()
                 .map(File::toPath)
-                .collect(Collectors.toList());
-    }
-    
-    public List<String> getArtifactsFilter() {
-        return getRecords().values()
-                .stream()
-                .map(p -> p.getFilter())
-                .filter(f -> f != null && !f.isEmpty())
-                .flatMap(f -> Stream.of(f.split(File.pathSeparator)))
-                .distinct()
                 .collect(Collectors.toList());
     }
     

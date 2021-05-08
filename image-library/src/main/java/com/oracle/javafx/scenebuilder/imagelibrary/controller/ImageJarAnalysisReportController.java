@@ -150,32 +150,22 @@ public class ImageJarAnalysisReportController extends AbstractFxmlWindowControll
             for (ImageReport report : library.getReports()) {
                 for (ImageReportEntry entry : report.getEntries()) {
                     if (entry.getStatus() != ImageReportEntry.Status.OK) {
-                        if (entry.getKlass() != null && entry.getException() != null) {
-                            // We use a Text instance for header and another one
-                            // for full stack in order to style them separately
-                            StringBuilder sb = new StringBuilder();
-                            sb.append(getSectionPrefix()).append(I18N.getString("jar.analysis.exception"));
-                            sb.append(" ").append(entry.getName()); // NOI18N
-                            Text text = new Text();
-                            text.setText(sb.toString());
-                            text.getStyleClass().add("header"); // NOI18N
-                            textFlow.getChildren().add(text);
-
-                            StringBuilder sb2 = new StringBuilder();
-                            sb2.append(getFullStack(entry.getException()));
-                            Text text2 = new Text();
-                            text2.setText(sb2.toString());
-                            text2.getStyleClass().add("body"); // NOI18N
-                            textFlow.getChildren().add(text2);
-                        }
-                    } else if (!entry.isNode()) {
+                     // We use a Text instance for header and another one
+                        // for full stack in order to style them separately
                         StringBuilder sb = new StringBuilder();
-                        sb.append(getSectionPrefix()).append(I18N.getString("jar.analysis.not.node"));
+                        sb.append(getSectionPrefix()).append(I18N.getString("jar.analysis.exception"));
                         sb.append(" ").append(entry.getName()); // NOI18N
                         Text text = new Text();
                         text.setText(sb.toString());
                         text.getStyleClass().add("header"); // NOI18N
                         textFlow.getChildren().add(text);
+
+                        StringBuilder sb2 = new StringBuilder();
+                        sb2.append(getFullStack(entry.getException()));
+                        Text text2 = new Text();
+                        text2.setText(sb2.toString());
+                        text2.getStyleClass().add("body"); // NOI18N
+                        textFlow.getChildren().add(text2);
                     }
                 }
             }

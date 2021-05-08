@@ -61,21 +61,18 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 	private static MavenArtifact validObject = new MavenArtifact("xxx:xxx:xxx");
 	static {
 		validObject.setDependencies("a");
-		validObject.setFilter("b");
 		validObject.setPath("c");
 	}
 
 	private static MavenArtifact validObject2 = new MavenArtifact("xxx:yyy:xxx");
 	static {
 		validObject2.setDependencies("");
-		validObject2.setFilter("");
 		validObject2.setPath("c2");
 	}
 
 	private static MavenArtifact validObject3 = new MavenArtifact("xxx:zzz:xxx");
 	static {
 		validObject3.setDependencies("");
-		validObject3.setFilter("b3");
 		validObject3.setPath("c3");
 	}
 

@@ -273,7 +273,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
 //                    if (!excludedItems.contains(canonicalName) &&
 //                        !artifactsFilter.contains(canonicalName)) {
                         final String name = e.getKlass().getSimpleName();
-                        final String fxmlText = BuiltinLibrary.makeFxmlText(e.getKlass());
+                        final String fxmlText = LibraryUtil.makeFxmlText(e.getKlass());
                         result.add(new LibraryItemImpl(name, Qualifier.UNKNOWN, fxmlText));
 //                    }
                 }

@@ -103,7 +103,7 @@ public class ImageLibraryDialogConfiguration implements LibraryStoreConfiguratio
     @Override
     public ExtensionFilter getFileExtensionFilter() {
         //return new ExtensionFilter(I18N.getString("lib.filechooser.filter.msg"), "*.ttf", "*.jpg");
-        return new ExtensionFilter("TTF FILES", "*.ttf", "*.jpg");
+        return new ExtensionFilter("TTF FILES", "*.ttf", "*.jpg", "*.jar");
     }
 
 

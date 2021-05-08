@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.library.util;
 
 import java.io.IOException;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -79,6 +80,12 @@ public class JarExplorer {
             }
         } catch (ExplorationCancelledException e) {
             logger.info("Exploration cancelled");
+        } catch (Exception e) {
+            if (e.getCause() != null && e.getCause() instanceof MalformedInputException) {
+                logger.error("Unable to read jar entry, check invalid UTF8 characters in entry names", e);
+            } else {
+                logger.error("Unable to read jar entry", e);
+            }
         }
         return result;
     }

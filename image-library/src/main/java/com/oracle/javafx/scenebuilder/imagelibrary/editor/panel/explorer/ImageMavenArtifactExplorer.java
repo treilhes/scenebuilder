@@ -107,10 +107,10 @@ public class ImageMavenArtifactExplorer implements Explorer<MavenArtifact, Image
 
                             if (entry.isDirectory()) {
                                 return new ImageReportEntry(entry.getName(), ImageReportEntry.Status.IGNORED,
-                                        null, null, null);
+                                        null, ImageReportEntry.Type.NONE, null);
                             } else {
-                                String className = ImageExplorerUtil.makeClassName(entry.getName(), "/");
-                                return ImageExplorerUtil.exploreEntry(entry.getName(), classLoader, className,
+                                String resourceName = ImageExplorerUtil.makeResourceName(entry.getName());
+                                return ImageExplorerUtil.exploreEntry(entry.getName(), classLoader, resourceName,
                                         filters);
                             }
                         });

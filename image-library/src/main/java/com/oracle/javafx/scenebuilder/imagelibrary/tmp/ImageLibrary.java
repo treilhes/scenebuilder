@@ -35,8 +35,6 @@ package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,11 +69,17 @@ import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageFi
 import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageFolderExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageMavenArtifactExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.ImageImportWindowController;
+import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReportEntry.Type;
 import com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed.ImageBuiltinLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.util.Transform;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -259,23 +263,18 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> impl
         //final List<String> excludedItems = getFilter();
         //final List<String> artifactsFilter = getAdditionalFilter() != null ? getAdditionalFilter().get() : Collections.emptyList();
 
-        boolean isFxml = LibraryUtil.isFxmlPath(reports.getSource());
         for (ImageReportEntry e : reports.getEntries()) {
-            if ((e.getStatus() == ImageReportEntry.Status.OK) && e.isNode()) {
-                if (isFxml) {
-                    String fileName = reports.getSource().getFileName().toString();
-                    String itemName = fileName.substring(0, fileName.indexOf(".fxml")); //NOI18N
-                    String fxmlText = Files.readString(reports.getSource(), StandardCharsets.UTF_8);
-                    result.add(new LibraryItemImpl(itemName, Qualifier.UNKNOWN, fxmlText));
+            
+            if ((e.getStatus() == ImageReportEntry.Status.OK)) {
+                if (e.getType() == Type.FONT_ICONS && e.getUnicodePoints().size() == 1) {
+                    String xmlEntity = ImageExplorerUtil.unicodePointToXmlEntity(e.getUnicodePoints().get(0));
+                    //&#x0644;
+                    //String fxmlText = makeTextText(e.getFontName(), Character.toString(e.getUnicodePoints().get(0)));
+                    String fxmlText = makeTextText(e.getFontName(), xmlEntity);
+                    result.add(new LibraryItemImpl(xmlEntity, Qualifier.UNKNOWN, fxmlText));
                 } else {
-                    // We filter out items listed in the excluded list, based on canonical name of the class.
-//                    final String canonicalName = e.getKlass().getCanonicalName();
-//                    if (!excludedItems.contains(canonicalName) &&
-//                        !artifactsFilter.contains(canonicalName)) {
-                        final String name = e.getKlass().getSimpleName();
-                        final String fxmlText = ImageBuiltinLibrary.makeFxmlText(e.getKlass());
-                        result.add(new LibraryItemImpl(name, Qualifier.UNKNOWN, fxmlText));
-//                    }
+                    final String fxmlText = makeImageViewText(e.getResourceName());
+                    result.add(new LibraryItemImpl(e.getName(), Qualifier.UNKNOWN, fxmlText));
                 }
             }
             
@@ -391,4 +390,71 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> impl
     public void dispose() {
         stopWatching();
     }
+    
+    public static String makeImageViewText(String resourceName) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
+        sb.append("<?import "); // NOI18N
+        sb.append(ImageView.class.getCanonicalName());
+        sb.append("?>"); // NOI18N
+        sb.append("<?import "); // NOI18N
+        sb.append(Image.class.getCanonicalName());
+        sb.append("?>"); // NOI18N
+        sb.append("<"); // NOI18N
+        sb.append(ImageView.class.getSimpleName());
+        sb.append(" pickOnBounds=\"true\" preserveRatio=\"true\">");
+        sb.append("<"); // NOI18N
+        sb.append(Image.class.getSimpleName().toLowerCase());
+        sb.append(">"); // NOI18N
+        
+        sb.append("<"); // NOI18N
+        sb.append(Image.class.getSimpleName());
+        sb.append(" url=\"@/");
+        sb.append(resourceName);
+        sb.append("\" />");
+        
+        sb.append("</"); // NOI18N
+        sb.append(Image.class.getSimpleName().toLowerCase());
+        sb.append(">"); // NOI18N
+        sb.append("</"); // NOI18N
+        sb.append(ImageView.class.getSimpleName());
+        sb.append(">\n");
+
+        return sb.toString();
+    }
+    
+    public static String makeTextText(String fontName, String content) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
+        sb.append("<?import "); // NOI18N
+        sb.append(Text.class.getCanonicalName());
+        sb.append("?>"); // NOI18N
+        sb.append("<?import "); // NOI18N
+        sb.append(Font.class.getCanonicalName());
+        sb.append("?>"); // NOI18N
+        sb.append("<"); // NOI18N
+        sb.append(Text.class.getSimpleName());
+        sb.append(" text=\"");
+        sb.append(content);
+        sb.append("\">");
+        sb.append("<"); // NOI18N
+        sb.append(Font.class.getSimpleName().toLowerCase());
+        sb.append(">"); // NOI18N
+        
+        sb.append("<"); // NOI18N
+        sb.append(Font.class.getSimpleName());
+        sb.append(" name=\"");
+        sb.append(fontName);
+        sb.append("\" size=\"36.0\" />");
+        
+        sb.append("</"); // NOI18N
+        sb.append(Font.class.getSimpleName().toLowerCase());
+        sb.append(">"); // NOI18N
+        sb.append("</"); // NOI18N
+        sb.append(Text.class.getSimpleName());
+        sb.append(">\n");
+
+        return sb.toString();
+    }
+    
 }

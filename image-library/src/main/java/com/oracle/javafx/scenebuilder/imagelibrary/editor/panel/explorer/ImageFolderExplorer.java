@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer;
 
-import java.io.File;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -101,13 +100,11 @@ public class ImageFolderExplorer implements Explorer<Path, ImageReport> {
 
                         if (Files.isDirectory(path)) {
                             return new ImageReportEntry(path.getFileName().toString(),
-                                    ImageReportEntry.Status.IGNORED, null, null, null);
+                                    ImageReportEntry.Status.IGNORED, null, ImageReportEntry.Type.NONE, null);
                         } else {
                             Path relativepath = source.relativize(path);
-                            String className = ImageExplorerUtil.makeClassName(relativepath.toString(),
-                                    File.separator);
-                            return ImageExplorerUtil.exploreEntry(path.getFileName().toString(), classLoader,
-                                    className, filters);
+                            String resourceName = ImageExplorerUtil.makeResourceName(relativepath.toString());
+                            return ImageExplorerUtil.exploreFile(path, resourceName, classLoader);
                         }
                     });
 

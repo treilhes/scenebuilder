@@ -60,7 +60,6 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlFilterTransform;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportImpl;
-import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -518,7 +517,7 @@ public class ImportWindowController extends AbstractModalDialog {
                     logger.error("Unable to load the fxml file content", e);
                 }
             } else {
-                fxmlText = BuiltinLibrary.makeFxmlText(t1.getReportEntry().getKlass());
+                fxmlText = LibraryUtil.makeFxmlText(t1.getReportEntry().getKlass());
             }
             
             

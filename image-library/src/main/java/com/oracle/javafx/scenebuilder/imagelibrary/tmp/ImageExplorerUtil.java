@@ -32,21 +32,26 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
-import java.io.ByteArrayInputStream;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
+import org.apache.fontbox.ttf.CmapLookup;
+import org.apache.fontbox.ttf.TTFParser;
+import org.apache.fontbox.ttf.TrueTypeFont;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReportEntry.Type;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.geometry.BoundingBox;
 
 public class ImageExplorerUtil {
 
@@ -54,145 +59,138 @@ public class ImageExplorerUtil {
     
     private ImageExplorerUtil() {}
     
-    public static Object instantiateWithFXMLLoader(Class<?> klass, ClassLoader classLoader) throws IOException {
-        final String fxmlText = makeFxmlText(klass);
-        return instantiateWithFXMLLoader(fxmlText, classLoader);
-    }
-    
-    public static Object instantiateWithFXMLLoader(String fxmlText, ClassLoader classLoader) throws IOException {
-        Object result;
-
-        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); //NOI18N
-
-        final FXMLLoader fxmlLoader = new FXMLLoader();
-        try {
-            fxmlLoader.setClassLoader(classLoader);
-            result = fxmlLoader.load(new ByteArrayInputStream(fxmlBytes));
-        } catch(IOException x) {
-            throw x;
-        } catch(RuntimeException|Error x) {
-            throw new IOException(x);
-        }
-
-        return result;
+    public static String makeResourceName(String entryName) {
+        return entryName.replace("\\", "/"); //NOI18N
     }
 
-    public static String makeClassName(String entryName, String separator) {
-        final String result;
-
-        if (! entryName.endsWith(".class")) { //NOI18N
-            result = null;
-        } else if (entryName.contains("$")) { //NOI18N
-            // We skip inner classes for now
-            result = null;
-        } else {
-            final int endIndex = entryName.length()-6; // ".class" -> 6 //NOI18N
-            result = entryName.substring(0, endIndex).replace(separator, "."); //NOI18N
-        }
-
-        return result;
-    }
-
-    public static ImageReportEntry exploreEntry(String entryName, ClassLoader classLoader, String className, List<LibraryFilter> filters) {
-        if (entryName == null || className == null) {
+    public static ImageReportEntry exploreEntry(String entryName, ClassLoader classLoader, String resourceName, List<LibraryFilter> filters) {
+        if (entryName == null || resourceName == null) {
             return null;
         }
         filters = filters == null ? new ArrayList<>() : filters;
         
         ImageReportEntry.Status status;
         Throwable entryException;
-        Class<?> entryClass = null;
-
+        List<Integer> unicodePoints = null;
+        String fontName = null;
+        BoundingBox boundingBox = null;
+        Type type = null; 
         // Filtering out what starts with com.javafx. is bound to DTL-6378.
-        if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
+        if (filters.stream().anyMatch(f -> f.isFiltered(resourceName))) { //NOI18N
             status = ImageReportEntry.Status.IGNORED;
-            entryClass = null;
             entryException = null;
         } else {
-            try {
-                // Some reading explaining why using Class.forName is not appropriate:
-                // http://blog.osgi.org/2011/05/what-you-should-know-about-class.html
-                // http://blog.bjhargrave.com/2007/09/classforname-caches-defined-class-in.html
-                // http://stackoverflow.com/questions/8100376/class-forname-vs-classloader-loadclass-which-to-use-for-dynamic-loading
-                entryClass = classLoader.loadClass(className); // Note: static intializers of entryClass are not run, this doesn't seem to be an issue
-
-                if (Modifier.isAbstract(entryClass.getModifiers())
-                        || !Node.class.isAssignableFrom(entryClass)) {
-                    status = ImageReportEntry.Status.IGNORED;
-                    entryClass = null;
-                    entryException = null;
-                } else {
-                    instantiateWithFXMLLoader(entryClass, classLoader);
+            if (LibraryUtil.hasExtension(entryName, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
+                try {
+                    String upperEntry = entryName.toUpperCase();
+                    if (upperEntry.endsWith(".TTF")) {
+                        TTFParser p = new TTFParser();
+                        TrueTypeFont result = p.parse(classLoader.getResourceAsStream(makeResourceName(entryName)));
+                        type = Type.FONT_ICONS;
+                        fontName = result.getName();
+                        unicodePoints = new ArrayList<>();
+                        
+                        int numGlyph = result.getGlyph().getGlyphs().length;
+                        CmapLookup cmap = result.getUnicodeCmapLookup();
+                        
+                        for (int i=0;i<numGlyph;i++) {
+                            List<Integer> list = cmap.getCharCodes(i);
+                            unicodePoints.addAll(list);
+                        }
+                        
+                    } else {
+                        BufferedImage img = ImageIO.read(classLoader.getResourceAsStream(makeResourceName(entryName)));
+                        boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
+                        type = Type.IMAGE;
+                    }
                     status = ImageReportEntry.Status.OK;
                     entryException = null;
+                } catch (RuntimeException | IOException | Error x) {
+                    status = ImageReportEntry.Status.KO;
+                    entryException = x;
                 }
-            } catch (RuntimeException | IOException x) {
-                status = ImageReportEntry.Status.KO;
-                entryException = x;
-            } catch (Error | ClassNotFoundException x) {
-                status = ImageReportEntry.Status.KO;
-                entryClass = null;
-                entryException = x;
+            } else {
+                status = ImageReportEntry.Status.IGNORED;
+                entryException = null;
             }
         }
-
-        if (entryException != null) {
-            logger.warn("Exception while exploring entry {}", entryName, entryException);
-        }
         
-        return new ImageReportEntry(entryName, status, entryException, entryClass, className);
+        ImageReportEntry result = new ImageReportEntry(entryName, status, entryException, type, resourceName);
+        
+        if (fontName != null && type == Type.FONT_ICONS) {
+            result.setFontName(fontName);
+        }
+        if (unicodePoints != null && type == Type.FONT_ICONS) {
+            result.getUnicodePoints().addAll(unicodePoints);
+        }
+        if (boundingBox != null && type == Type.IMAGE) {
+            result.setBoundingBox(boundingBox);
+        }
+        return result;
     }
-    
-    // TODO duplicate method until refactoring
-    public static String makeFxmlText(Class<?> componentClass) {
-        final StringBuilder sb = new StringBuilder();
-
-        /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
-         *
-         * <?import a.b.C?>
-         *
-         * <C/>
-         */
-
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
-
-        sb.append("<?import "); // NOI18N
-        sb.append(componentClass.getCanonicalName());
-        sb.append("?>"); // NOI18N
-        sb.append("<"); // NOI18N
-        sb.append(componentClass.getSimpleName());
-        sb.append("/>\n"); // NOI18N
-
-        return sb.toString();
-    }
-    
-    public static ImageReportEntry exploreTtf(Path fxmlFile, ClassLoader classLoader) {
+        
+    public static ImageReportEntry exploreFile(Path ttfFile, String resourceName, ClassLoader classLoader) {
         ImageReportEntry.Status status;
         Throwable entryException;
-        Class<?> entryClass = null;
-
-        //try {
-            //String content = Files.readString(fxmlFile, StandardCharsets.UTF_8);
-            //FXOMDocument result= new FXOMDocument(content, null, classLoader, null);
-            //entryClass = result.getFxomRoot().getSceneGraphObject().getClass();
-            status = ImageReportEntry.Status.OK;
+        List<Integer> unicodePoints = null;
+        String fontName = null;
+        BoundingBox boundingBox = null;
+        Type type = null; 
+        
+        if (LibraryUtil.hasExtension(ttfFile, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
+            try (FileInputStream fis = new FileInputStream(ttfFile.toFile())){
+                String upperEntry = ttfFile.toString().toUpperCase();
+                if (upperEntry.endsWith(".TTF")) {
+                    TTFParser p = new TTFParser();
+                    TrueTypeFont result = p.parse(fis);
+                    type = Type.FONT_ICONS;
+                    fontName = result.getName();
+                    
+                    unicodePoints = new ArrayList<>();
+                    
+                    int numGlyph = result.getGlyph().getGlyphs().length;
+                    CmapLookup cmap = result.getUnicodeCmapLookup();
+                    
+                    for (int i=0;i<numGlyph;i++) {
+                        List<Integer> list = cmap.getCharCodes(i);
+                        unicodePoints.addAll(list);
+                    }
+                    
+                } else {
+                    BufferedImage img = ImageIO.read(fis);
+                    boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
+                    type = Type.IMAGE;
+                }
+                status = ImageReportEntry.Status.OK;
+                entryException = null;
+            } catch (RuntimeException | IOException | Error x) {
+                status = ImageReportEntry.Status.KO;
+                entryException = x;
+            }
+        } else {
+            status = ImageReportEntry.Status.IGNORED;
             entryException = null;
-//        } catch (RuntimeException | IOException x) {
-//            status = ControlReportEntry.Status.CANNOT_INSTANTIATE;
-//            entryException = x;
-//        } catch (Error x) {
-//            status = ControlReportEntry.Status.CANNOT_LOAD;
-//            entryClass = null;
-//            entryException = x;
-//        }
+        }
 
         if (entryException != null) {
-            logger.warn("Exception while exploring entry {}", fxmlFile, entryException);
+            logger.warn("Exception while exploring entry {}", ttfFile, entryException);
         }
         
-        return new ImageReportEntry(fxmlFile.getFileName().toString(), status, 
-              entryException, entryClass, entryClass == null ? null : entryClass.getName());
-                
+        ImageReportEntry result = new ImageReportEntry(ttfFile.getFileName().toString(), status, entryException, type, resourceName);
+        
+        if (fontName != null && type == Type.FONT_ICONS) {
+            result.setFontName(fontName);
+        }
+        if (unicodePoints != null && type == Type.FONT_ICONS) {
+            result.getUnicodePoints().addAll(unicodePoints);
+        }
+        if (boundingBox != null && type == Type.IMAGE) {
+            result.setBoundingBox(boundingBox);
+        }
+        return result;
+    }
+    
+    public static String unicodePointToXmlEntity(Integer unicodePoint) {
+        return "&#x" + Integer.toHexString(unicodePoint) + ";"; 
     }
 }

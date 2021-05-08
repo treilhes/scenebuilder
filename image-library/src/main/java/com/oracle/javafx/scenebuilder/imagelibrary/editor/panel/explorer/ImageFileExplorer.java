@@ -145,10 +145,11 @@ public class ImageFileExplorer implements Explorer<Path, ImageReport> {
                             updateProgress(progress, ExplorerInspector.DONE_PROGRESS);
                             
                             if (entry.isDirectory()) {
-                                return new ImageReportEntry(entry.getName(), ImageReportEntry.Status.IGNORED, null, null, null);
+                                return new ImageReportEntry(entry.getName(), ImageReportEntry.Status.IGNORED,
+                                        null, ImageReportEntry.Type.NONE, null);
                             } else {
-                                String className = ImageExplorerUtil.makeClassName(entry.getName(), "/");
-                                return ImageExplorerUtil.exploreEntry(entry.getName(), classLoader, className, filters);
+                                String resourceName = ImageExplorerUtil.makeResourceName(entry.getName());
+                                return ImageExplorerUtil.exploreEntry(entry.getName(), classLoader, resourceName, filters);
                             }
                         });
                         
@@ -169,11 +170,11 @@ public class ImageFileExplorer implements Explorer<Path, ImageReport> {
                     } else if (LibraryUtil.hasExtension(source, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
                         // TODO do i need to use I18N string for logging?
                         logger.info("Start exploring FXML {}", source);
-                        ImageReportEntry entry = ImageExplorerUtil.exploreTtf(source, classLoader);
+                        ImageReportEntry entry = ImageExplorerUtil.exploreFile(source, null, classLoader);
                         ImageReport report = new ImageReport(source);
                         report.getEntries().add(entry);
 
-                        logger.info("FXML {} > {} {}", source, entry.getClassName(), entry.getStatus());
+                        logger.info("IMGFILE {} > {} {}", source, entry.getName(), entry.getStatus());
                         
                         res.add(report);
                     }

@@ -50,7 +50,7 @@ import javafx.collections.ObservableList;
  *
  * @treatAsPrivate
  */
-@Component//("builtinLibrary")
+@Component
 public class ImageBuiltinLibrary {
 
     protected final ObservableList<LibraryItemImpl> itemsProperty = FXCollections.observableArrayList();
@@ -95,31 +95,7 @@ public class ImageBuiltinLibrary {
         }
     }
     
-    // TODO duplicate method until refactoring
-    public static String makeFxmlText(Class<?> componentClass) {
-        final StringBuilder sb = new StringBuilder();
-
-        /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
-         *
-         * <?import a.b.C?>
-         *
-         * <C/>
-         */
-
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
-
-        sb.append("<?import "); // NOI18N
-        sb.append(componentClass.getCanonicalName());
-        sb.append("?>"); // NOI18N
-        sb.append("<"); // NOI18N
-        sb.append(componentClass.getSimpleName());
-        sb.append("/>\n"); // NOI18N
-
-        return sb.toString();
-    }
-
-    public ObservableList<LibraryItemImpl> getItems() {
+        public ObservableList<LibraryItemImpl> getItems() {
         return itemsProperty;
     }
     

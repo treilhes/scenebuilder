@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
+import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,7 +70,7 @@ public class BuiltinLibrary {
             for (Map.Entry<String, Qualifier> entry : ccm.getQualifiers().entrySet()) {
                 if (entry.getKey() != Qualifier.HIDDEN) {
                     Qualifier qualifier = entry.getValue();
-                    String fxmlText = qualifier.getFxmlUrl() == null ? makeFxmlText(ccm.getKlass())
+                    String fxmlText = qualifier.getFxmlUrl() == null ? LibraryUtil.makeFxmlText(ccm.getKlass())
                             : readQualifierFxmlText(qualifier, ccm);
                     addItem(ccm, qualifier, fxmlText);
                 }
@@ -97,30 +98,6 @@ public class BuiltinLibrary {
         }
     }
     
-    // TODO duplicate method until refactoring
-    public static String makeFxmlText(Class<?> componentClass) {
-        final StringBuilder sb = new StringBuilder();
-
-        /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
-         *
-         * <?import a.b.C?>
-         *
-         * <C/>
-         */
-
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
-
-        sb.append("<?import "); // NOI18N
-        sb.append(componentClass.getCanonicalName());
-        sb.append("?>"); // NOI18N
-        sb.append("<"); // NOI18N
-        sb.append(componentClass.getSimpleName());
-        sb.append("/>\n"); // NOI18N
-
-        return sb.toString();
-    }
-
     public ObservableList<LibraryItemImpl> getItems() {
         return itemsProperty;
     }

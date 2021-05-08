@@ -52,6 +52,6 @@ class ImportRowComparator implements Comparator<ImportRow> {
      */
     @Override
     public int compare(ImportRow ir1, ImportRow ir2) {
-        return ir1.getReportEntry().getKlass().getSimpleName().compareToIgnoreCase(ir2.getReportEntry().getKlass().getSimpleName());
+        return ir1.getReportEntry().getName().compareToIgnoreCase(ir2.getReportEntry().getName());
     }
 }

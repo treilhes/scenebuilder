@@ -33,5 +33,5 @@
 package com.oracle.javafx.scenebuilder.api.library;
 
 public interface LibraryFilter {
-    boolean isFiltered(String className);
+    boolean isFiltered(String name);
 }

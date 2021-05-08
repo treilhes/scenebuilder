@@ -32,32 +32,43 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
 
-import javafx.scene.Node;
+import javafx.geometry.BoundingBox;
 
 /**
  *
  * 
  */
-public class ImageReportEntry implements ReportEntry {
+public class ImageReportEntry implements ReportEntry, Cloneable {
     
+    public enum Type {
+        NONE,
+        IMAGE,
+        FONT_ICONS
+    }
     private final String name;
     private final Status status;
-    private final Class<?> klass;
     private final Throwable exception;
-    private final String className;
+    private final String resourceName;
+    private final Type type;
 
-    public ImageReportEntry(String name, Status status, Throwable exception, Class<?> klass, String className) {
+    private String fontName;
+    private final List<Integer> unicodePoints = new ArrayList<>();
+    private BoundingBox boundingBox;
+    
+    public ImageReportEntry(String name, Status status, Throwable exception, Type type, String resourceName) {
         assert name != null;
-        //assert (klass != null) || (status != Status.OK);
         assert (exception == null) || (status != Status.OK);
         
         this.name = name;
         this.status = status;
-        this.klass = klass;
         this.exception = exception;
-        this.className = className;
+        this.resourceName = resourceName;
+        this.type = type;
     }
 
     @Override
@@ -74,23 +85,39 @@ public class ImageReportEntry implements ReportEntry {
     public Throwable getException() {
         return exception;
     }
-    
-    public Class<?> getKlass() {
-        return klass;
+
+    public String getResourceName() {
+        return resourceName;
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public boolean isNode() {
-        return (klass == null) ? false : Node.class.isAssignableFrom(klass);
-    }
-    
     /*
      * Object
      */
     
+    public Type getType() {
+        return type;
+    }
+    
+    public String getFontName() {
+        return fontName;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+    }
+
+    public List<Integer> getUnicodePoints() {
+        return unicodePoints;
+    }
+
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
+
+    public void setBoundingBox(BoundingBox boundingBox) {
+        this.boundingBox = boundingBox;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -102,14 +129,12 @@ public class ImageReportEntry implements ReportEntry {
                 sb.append(" - OK"); //NOI18N
                 break;
             case KO:
-                assert klass == null;
                 assert exception != null;
                 sb.append(name);
                 sb.append(" - KO - "); //NOI18N
                 sb.append(exception.getMessage());
                 break;
             case IGNORED:
-                assert klass == null;
                 sb.append(name);
                 sb.append(" - IGNORED"); //NOI18N
                 break;
@@ -119,4 +144,14 @@ public class ImageReportEntry implements ReportEntry {
         
         return sb.toString();
     }
+
+    @Override
+    protected ImageReportEntry clone() {
+        ImageReportEntry cloned = new ImageReportEntry(name, status, exception, type, resourceName);
+        cloned.setFontName(this.getFontName());
+        cloned.setBoundingBox(this.getBoundingBox());
+        return cloned;
+    }
+    
+    
 }

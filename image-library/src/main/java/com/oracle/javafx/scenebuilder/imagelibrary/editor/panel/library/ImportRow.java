@@ -54,7 +54,7 @@ class ImportRow {
         this.importRequired = new SimpleBooleanProperty(importRequired);
         this.jre = jre;
         this.cr = cr;
-        this.canonicalClassName = "dkdkd";//jre.getKlass().getCanonicalName();
+        this.canonicalClassName = jre.getResourceName() == null ? jre.getName() : jre.getResourceName();
 
         if (prefSize == null) {
             this.prefSize = PrefSize.DEFAULT;

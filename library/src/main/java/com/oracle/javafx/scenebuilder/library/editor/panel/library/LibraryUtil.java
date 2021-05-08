@@ -53,7 +53,11 @@ public class LibraryUtil {
     }
 
     public static boolean hasExtension(Path path, List<String> extensions) {
-        final String pathString = path.toString().toLowerCase(Locale.ROOT);
+        return hasExtension(path.toString(), extensions);
+    }
+    
+    public static boolean hasExtension(String path, List<String> extensions) {
+        final String pathString = path.toLowerCase(Locale.ROOT);
         String upperPath = pathString.toUpperCase();
         return extensions.stream().anyMatch(e -> upperPath.endsWith("." + e.toUpperCase())); //NOI18N
     }
@@ -82,5 +86,28 @@ public class LibraryUtil {
                 })
                 .filter(p -> p != null)
                 .collect(Collectors.toList());
+    }
+    
+    public static String makeFxmlText(Class<?> componentClass) {
+        final StringBuilder sb = new StringBuilder();
+
+        /*
+         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
+         *
+         * <?import a.b.C?>
+         *
+         * <C/>
+         */
+
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
+
+        sb.append("<?import "); // NOI18N
+        sb.append(componentClass.getCanonicalName());
+        sb.append("?>"); // NOI18N
+        sb.append("<"); // NOI18N
+        sb.append(componentClass.getSimpleName());
+        sb.append("/>\n"); // NOI18N
+
+        return sb.toString();
     }
 }

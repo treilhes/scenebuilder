@@ -89,7 +89,7 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
 			}
 		}
 		
-		if (object.getDependencies() == null || object.getFilter() == null || object.getPath() == null) {
+		if (object.getDependencies() == null || object.getPath() == null) {
 			Logger.getLogger(MavenArtifactPreferences.class.getName()).log(Level.SEVERE, "MavenArtifact fields can't be null");
 			valid &= false;
 		}
@@ -119,7 +119,6 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
 		node.put(ARTIFACTID, items[1]);
 		node.put(VERSION, items[2]);
 		node.put(DEPENDENCIES, mavenArtifact.getDependencies());
-		node.put(FILTER, mavenArtifact.getFilter());
 		node.put(PATH, mavenArtifact.getPath());
 	}
 	
@@ -132,7 +131,6 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
 		
 		mavenArtifact.setCoordinates(key);
         mavenArtifact.setDependencies(node.get(DEPENDENCIES, null));
-        mavenArtifact.setFilter(node.get(FILTER, null));
         mavenArtifact.setPath(node.get(PATH, null));
 	}
 
@@ -146,10 +144,6 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
 
 	public String getDependencies() {
 		return getValue().getDependencies();
-	}
-
-	public String getFilter() {
-		return getValue().getFilter();
 	}
 
 }

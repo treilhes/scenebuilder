@@ -47,7 +47,6 @@ public class MavenArtifact {
     private String coordinates;
     private String path;
     private String dependencies;
-    private String filter;
     private String groupId;
     private String artifactId;
     private String version;
@@ -65,11 +64,10 @@ public class MavenArtifact {
         this.version = parts.length > 2 ? parts[2] : "";
     }
 
-    public MavenArtifact(String coordinates, String path, String dependencies, String filter) {
+    public MavenArtifact(String coordinates, String path, String dependencies) {
         this(coordinates);
         this.path = path;
         this.dependencies = dependencies;
-        this.filter = filter;
     }
 
     public String getCoordinates() {
@@ -113,14 +111,6 @@ public class MavenArtifact {
         this.dependencies = dependencies;
     }
 
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
-    }
-    
     public List<Path> toJarList() {
         List<Path> files = new ArrayList<>();
         files.add(Paths.get(getPath()));
@@ -141,7 +131,6 @@ public class MavenArtifact {
         hash = 97 * hash + Objects.hashCode(this.coordinates);
         hash = 97 * hash + Objects.hashCode(this.path);
         hash = 97 * hash + Objects.hashCode(this.dependencies);
-        hash = 97 * hash + Objects.hashCode(this.filter);
         return hash;
     }
 
@@ -163,16 +152,13 @@ public class MavenArtifact {
         if (!Objects.equals(this.path, other.path)) {
             return false;
         }
-        if (!Objects.equals(this.dependencies, other.dependencies)) {
-            return false;
-        }
-        return Objects.equals(this.filter, other.filter);
+        return Objects.equals(this.dependencies, other.dependencies);
     }
 
     
     @Override
     public String toString() {
-        return "MavenArtifact{" + "coordinates=" + coordinates + ", path=" + path + ", dependencies=" + dependencies + ", filter=" + filter + '}';
+        return "MavenArtifact{" + "coordinates=" + coordinates + ", path=" + path + ", dependencies=" + dependencies + '}';
     }
 
 }
