@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -50,28 +51,24 @@ import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 @Component
-public class ImageLibraryDialogConfiguration implements LibraryStoreConfiguration { //extends AbstractLibrary 
+public class ImageLibraryDialogConfiguration implements LibraryStoreConfiguration { // extends AbstractLibrary
+
     
-    public final static List<String> FILE_EXTENSIONS = List.of("jpg","jpeg","gif","png","ttf");
-    
-            private final ClassLoaderController classLoaderController;
+
+    private final ClassLoaderController classLoaderController;
     private LibraryStore store;
     private ApplicationContext context;
 
     private final Api api;
 
-    public ImageLibraryDialogConfiguration(
-            @Autowired ApplicationContext context,
-            @Autowired Api api,
-            @Autowired LibraryStoreFactory libraryStoreFactory,
-            @Autowired ClassLoaderController classLoaderController,
-            @Autowired FileSystem fileSystem, 
-            @Autowired ExtensionFileSystemFactory extFactory,
+    public ImageLibraryDialogConfiguration(@Autowired ApplicationContext context, @Autowired Api api,
+            @Autowired LibraryStoreFactory libraryStoreFactory, @Autowired ClassLoaderController classLoaderController,
+            @Autowired FileSystem fileSystem, @Autowired ExtensionFileSystemFactory extFactory,
             @Autowired Dialog dialog) {
         this.context = context;
         this.api = api;
         this.classLoaderController = classLoaderController;
-        
+
     }
 
     @Override
@@ -99,13 +96,12 @@ public class ImageLibraryDialogConfiguration implements LibraryStoreConfiguratio
         return "artifact";
     }
 
-
     @Override
     public ExtensionFilter getFileExtensionFilter() {
-        //return new ExtensionFilter(I18N.getString("lib.filechooser.filter.msg"), "*.ttf", "*.jpg");
-        return new ExtensionFilter("TTF FILES", "*.ttf", "*.jpg", "*.jar");
+        List<String> extensions = ImageLibrary.HANDLED_FILE_EXTENSIONS.stream()
+                .map(e -> "*." + e).collect(Collectors.toList());
+        return new ExtensionFilter("Image files", extensions);
     }
-
 
 //    @Override
 //    public LibraryResourceHandler<Path> getFolderHandler() {

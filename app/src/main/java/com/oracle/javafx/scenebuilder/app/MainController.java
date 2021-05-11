@@ -521,6 +521,10 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         assert windowList.contains(w);
         windowList.remove(w);
         w.closeWindow();
+        
+        if (windowList.size() == 0) {
+            performExit();
+        }
     }
 
     private static String displayName(String pathString) {

@@ -32,16 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
 import org.apache.fontbox.ttf.CmapLookup;
+import org.apache.fontbox.ttf.OTFParser;
+import org.apache.fontbox.ttf.OpenTypeFont;
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
 import org.slf4j.Logger;
@@ -78,24 +77,21 @@ public class ImageExplorerUtil {
             status = ImageReportEntry.Status.IGNORED;
             entryException = null;
         } else {
-            if (LibraryUtil.hasExtension(entryName, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
+            if (LibraryUtil.hasExtension(entryName, ImageLibrary.HANDLED_IMAGE_EXTENSIONS)) {
                 try {
                     String upperEntry = entryName.toUpperCase();
-                    if (upperEntry.endsWith(".TTF")) {
+                    if (upperEntry.toLowerCase().endsWith("." + ImageLibrary.TTF_EXTENSION)) {
                         TTFParser p = new TTFParser();
                         TrueTypeFont result = p.parse(classLoader.getResourceAsStream(makeResourceName(entryName)));
                         type = Type.FONT_ICONS;
                         fontName = result.getName();
-                        unicodePoints = new ArrayList<>();
-                        
-                        int numGlyph = result.getGlyph().getGlyphs().length;
-                        CmapLookup cmap = result.getUnicodeCmapLookup();
-                        
-                        for (int i=0;i<numGlyph;i++) {
-                            List<Integer> list = cmap.getCharCodes(i);
-                            unicodePoints.addAll(list);
-                        }
-                        
+                        unicodePoints = extractUnicodePoints(result);
+                    } else if (upperEntry.toLowerCase().endsWith("." + ImageLibrary.OTF_EXTENSION)) {
+                        OTFParser p = new OTFParser();
+                        OpenTypeFont result = p.parse(classLoader.getResourceAsStream(makeResourceName(entryName)));
+                        type = Type.FONT_ICONS;
+                        fontName = result.getName();
+                        unicodePoints = extractUnicodePoints(result);
                     } else {
                         // Checking each image for jars is too cpu costly
                         //BufferedImage img = ImageIO.read(classLoader.getResourceAsStream(makeResourceName(entryName)));
@@ -128,7 +124,7 @@ public class ImageExplorerUtil {
         return result;
     }
         
-    public static ImageReportEntry exploreFile(Path ttfFile, String resourceName, ClassLoader classLoader) {
+    public static ImageReportEntry exploreFile(Path file, String resourceName, ClassLoader classLoader) {
         ImageReportEntry.Status status;
         Throwable entryException;
         List<Integer> unicodePoints = null;
@@ -136,28 +132,24 @@ public class ImageExplorerUtil {
         BoundingBox boundingBox = null;
         Type type = null; 
         
-        if (LibraryUtil.hasExtension(ttfFile, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
-            try (FileInputStream fis = new FileInputStream(ttfFile.toFile())){
-                String upperEntry = ttfFile.toString().toUpperCase();
-                if (upperEntry.endsWith(".TTF")) {
+        if (LibraryUtil.hasExtension(file, ImageLibrary.HANDLED_IMAGE_EXTENSIONS)) {
+            try (FileInputStream fis = new FileInputStream(file.toFile())){
+                String upperEntry = file.toString().toLowerCase();
+                if (upperEntry.endsWith("." + ImageLibrary.TTF_EXTENSION)) {
                     TTFParser p = new TTFParser();
                     TrueTypeFont result = p.parse(fis);
                     type = Type.FONT_ICONS;
                     fontName = result.getName();
-                    
-                    unicodePoints = new ArrayList<>();
-                    
-                    int numGlyph = result.getGlyph().getGlyphs().length;
-                    CmapLookup cmap = result.getUnicodeCmapLookup();
-                    
-                    for (int i=0;i<numGlyph;i++) {
-                        List<Integer> list = cmap.getCharCodes(i);
-                        unicodePoints.addAll(list);
-                    }
-                    
+                    unicodePoints = extractUnicodePoints(result);
+                } else if (upperEntry.endsWith("." + ImageLibrary.OTF_EXTENSION)) {
+                    OTFParser p = new OTFParser();
+                    OpenTypeFont result = p.parse(fis);
+                    type = Type.FONT_ICONS;
+                    fontName = result.getName();
+                    unicodePoints = extractUnicodePoints(result);
                 } else {
-                    BufferedImage img = ImageIO.read(fis);
-                    boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
+                    //BufferedImage img = ImageIO.read(fis);
+                    //boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
                     type = Type.IMAGE;
                 }
                 status = ImageReportEntry.Status.OK;
@@ -172,10 +164,10 @@ public class ImageExplorerUtil {
         }
 
         if (entryException != null) {
-            logger.warn("Exception while exploring entry {}", ttfFile, entryException);
+            logger.warn("Exception while exploring entry {}", file, entryException);
         }
         
-        ImageReportEntry result = new ImageReportEntry(ttfFile.getFileName().toString(), status, entryException, type, resourceName);
+        ImageReportEntry result = new ImageReportEntry(file.getFileName().toString(), status, entryException, type, resourceName);
         
         if (fontName != null && type == Type.FONT_ICONS) {
             result.setFontName(fontName);
@@ -187,6 +179,20 @@ public class ImageExplorerUtil {
             result.setBoundingBox(boundingBox);
         }
         return result;
+    }
+    
+    private static List<Integer> extractUnicodePoints(TrueTypeFont font) throws IOException {
+        List<Integer> unicodePoints = new ArrayList<>();
+        
+        int numGlyph = font.getGlyph().getGlyphs().length;
+        CmapLookup cmap = font.getUnicodeCmapLookup();
+        
+        for (int i=0;i<numGlyph;i++) {
+            List<Integer> list = cmap.getCharCodes(i);
+            unicodePoints.addAll(list);
+        }
+        
+        return unicodePoints;
     }
     
     public static String unicodePointToXmlEntity(Integer unicodePoint) {

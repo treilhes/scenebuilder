@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -64,7 +65,7 @@ import javafx.scene.image.WritableImage;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @Lazy
-public class ThumbnailServiceController {
+public class ThumbnailServiceController implements DisposeWithSceneBuilder {
 
     private final static Logger logger = LoggerFactory.getLogger(ThumbnailServiceController.class);
     
@@ -147,5 +148,10 @@ public class ThumbnailServiceController {
             
             return null;
         });
+    }
+
+    @Override
+    public void dispose() {
+        thumbnailExecutor.shutdownNow();
     }
 }

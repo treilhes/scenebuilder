@@ -93,6 +93,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     private Thread watcherThread;
     private Exception exception;
     private Consumer<LibraryStore> updateConsumer;
+    private WatchService watchService;
 
     public LibraryStoreController(
             String storeId,
@@ -139,6 +140,13 @@ public class LibraryStoreController implements LibraryStore, Runnable {
             runWatching();
         } catch (InterruptedException x) {
             // Let's stop
+            try {
+                watchService.close();
+            } catch (IOException e) {
+                logger.warn("A WatchService is leaking, performance will be more and more degraded", e);
+            } finally {
+                watchService = null;
+            }
         }
     }
 
@@ -259,7 +267,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     private void runWatching() throws InterruptedException {
         while (true) {
 
-            WatchService watchService = null;
+            watchService = null;
             while (watchService == null) {
                 try {
                     watchService = libraryFilesRoot.getFileSystem().newWatchService();
@@ -269,7 +277,6 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
                     Thread.sleep(1000 /* ms */);
                 }
             }
-
             WatchKey watchKey = null;
             while ((watchKey == null) || (watchKey.isValid() == false)) {
                 try {

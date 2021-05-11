@@ -50,7 +50,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.Explorer;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageExplorerUtil;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibraryDialogConfiguration;
+import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
@@ -167,9 +167,9 @@ public class ImageFileExplorer implements Explorer<Path, ImageReport> {
                         ImageReport report = new ImageReport(source);
                         report.getEntries().addAll(entries);
                         res.add(report);
-                    } else if (LibraryUtil.hasExtension(source, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
+                    } else if (LibraryUtil.hasExtension(source, ImageLibrary.HANDLED_IMAGE_EXTENSIONS)) {
                         // TODO do i need to use I18N string for logging?
-                        logger.info("Start exploring FXML {}", source);
+                        logger.info("Start exploring image {}", source);
                         ImageReportEntry entry = ImageExplorerUtil.exploreFile(source, source.getFileName().toString(), classLoader);
                         ImageReport report = new ImageReport(source);
                         report.getEntries().add(entry);

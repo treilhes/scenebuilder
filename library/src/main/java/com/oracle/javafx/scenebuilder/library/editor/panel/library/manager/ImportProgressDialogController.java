@@ -200,6 +200,8 @@ public class ImportProgressDialogController extends AbstractModalDialog {
                 t.setOnSucceeded((e) -> handleEnd(taskList.size(), count.incrementAndGet(), box));
             })
             .forEach(t -> executor.execute(t));
+        
+        executor.shutdown();
     }
 
 
