@@ -224,7 +224,7 @@ public class EditorController implements Editor {
         });
         
         documentManager.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
-        documentManager.classLoaderDidChange().subscribe(cl -> libraryClassLoaderDidChange(cl));
+        sceneBuilderManager.classloader().subscribe(cl -> libraryClassLoaderDidChange(cl));
     }
 
     /**

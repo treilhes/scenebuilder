@@ -85,6 +85,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
+import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed.BuiltinSectionComparator;
@@ -192,6 +193,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     private final ViewSearch viewSearch;
 
     private List<MenuItem> menuItems;
+    private final ThumbnailServiceController thumbnailServiceController;
 
     /*
      * Public
@@ -218,7 +220,8 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             @Autowired @Qualifier("imageLibraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
             @Autowired @Qualifier("imageLibraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction,
             @Autowired ViewSearch viewSearch,
-            @Autowired ImageLibrary imageLibrary
+            @Autowired ImageLibrary imageLibrary,
+            @Autowired ThumbnailServiceController thumbnailServiceController 
             ) { //, UserLibrary library) {
         super(
                 api, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
@@ -242,6 +245,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         this.revealCustomFolderAction = revealCustomFolderAction;
         this.showJarAnalysisReportAction = showJarAnalysisReportAction;
         this.viewSearch = viewSearch;
+        this.thumbnailServiceController = thumbnailServiceController;
         
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
 
@@ -512,7 +516,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     // First TitledPane is expanded.
     private void populateLibraryPanel() {
         final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb
-            = param -> new LibraryListCell(this.libraryController);
+            = param -> new LibraryListCell(this.libraryController, thumbnailServiceController);
         
         // libData is backend structure for all that we put in the Accordion.
         LinkedHashMap<String, ArrayList<LibraryItem>> libData = new LinkedHashMap<>();

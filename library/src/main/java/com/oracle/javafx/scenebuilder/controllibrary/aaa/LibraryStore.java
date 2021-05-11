@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.controllibrary.aaa;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,6 +41,7 @@ import java.util.function.Consumer;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.MavenArtifact;
 
 import javafx.collections.ObservableList;
+import javafx.scene.image.WritableImage;
 
 public interface LibraryStore {
     
@@ -65,4 +67,10 @@ public interface LibraryStore {
 
     void onStoreUpdated(Consumer<LibraryStore> updateConsumer);
 
+    URL getThumbnail(String name, int width, int height);
+    boolean saveThumbnail(String name, int width, int height, WritableImage snapshot);
+
+    Path getFilesFolder();
+
+    
 }

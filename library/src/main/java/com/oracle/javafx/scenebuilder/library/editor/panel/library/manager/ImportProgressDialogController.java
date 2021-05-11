@@ -52,8 +52,11 @@ import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModa
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 /**
  *
@@ -75,7 +78,12 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     @FXML
     ProgressIndicator processingProgressIndicator;
     
+    @FXML
+    private VBox tasksHolder;
+    
     private final Dialog dialog;
+
+    private List<Task<?>> currentTasks;
 
     protected ImportProgressDialogController(
             Api api
@@ -170,21 +178,26 @@ public class ImportProgressDialogController extends AbstractModalDialog {
         cancelButton.setDefaultButton(true);
     }
 
-    private void handleEnd(int max, int current) {
+    private void handleEnd(int max, int current, ProgressBox box) {
+        box.unbind();
         processingProgressIndicator.setProgress((double)current/(double)max);
+        tasksHolder.getChildren().remove(box);
         if (current == max) {
             closeWindow();
         }
     }
     public <R> void execute(List<Task<List<R>>> taskList) {
+        this.currentTasks = (List<Task<?>>) (Object) taskList;
         ExecutorService executor = Executors.newFixedThreadPool(4);
         
         final AtomicInteger count = new AtomicInteger();
         taskList.stream()
             .peek(t -> {
-                t.setOnCancelled((e) -> handleEnd(taskList.size(), count.incrementAndGet()));
-                t.setOnFailed((e) -> handleEnd(taskList.size(), count.incrementAndGet()));
-                t.setOnSucceeded((e) -> handleEnd(taskList.size(), count.incrementAndGet()));
+                ProgressBox box = new ProgressBox(t);
+                tasksHolder.getChildren().add(box);
+                t.setOnCancelled((e) -> handleEnd(taskList.size(), count.incrementAndGet(), box));
+                t.setOnFailed((e) -> handleEnd(taskList.size(), count.incrementAndGet(), box));
+                t.setOnSucceeded((e) -> handleEnd(taskList.size(), count.incrementAndGet(), box));
             })
             .forEach(t -> executor.execute(t));
     }
@@ -199,8 +212,32 @@ public class ImportProgressDialogController extends AbstractModalDialog {
 
     @Override
     protected void cancelButtonPressed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        
+        for (Task<?> task : this.currentTasks) {
+            task.cancel();
+        }
     }
 
+    private class ProgressBox extends VBox {
+        private Label taskLabel;
+        private ProgressBar pBar;
+
+        private ProgressBox(Task<?> task) {
+            super();
+            this.setAlignment(Pos.TOP_CENTER);
+            taskLabel = new Label();
+            pBar = new ProgressBar();
+            pBar.setMaxWidth(Double.MAX_VALUE);
+            
+            pBar.progressProperty().bind(task.progressProperty());
+            taskLabel.textProperty().bind(task.messageProperty());
+            
+            this.getChildren().add(pBar);
+            this.getChildren().add(taskLabel);
+        }
+        
+        private void unbind() {
+            pBar.progressProperty().unbind();
+            taskLabel.textProperty().unbind();
+        }
+    }
 }

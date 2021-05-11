@@ -55,7 +55,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
-import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -84,7 +83,7 @@ import com.oracle.javafx.scenebuilder.library.util.Transform;
 @Component//("userLibrary")
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @DependsOn("metadata")
-public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryItem> implements InitializingBean, DisposeWithSceneBuilder{
+public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
     
     private final static Logger logger = LoggerFactory.getLogger(ControlLibrary.class);
 
@@ -244,17 +243,17 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
     }
     
     @Override
-    protected void updateItems(Collection<LibraryItem> items) {
+    protected void updateItems(Collection<LibraryItemImpl> items) {
         
-        Collection<LibraryItem> newItems = new ArrayList<>(items);
+        Collection<LibraryItemImpl> newItems = new ArrayList<>(items);
         newItems.addAll(builtinLibrary.getItems());
         setItems(newItems);
         
     }
 
     @Override
-    protected Collection<LibraryItem> makeLibraryItems(ControlReportImpl reports) throws IOException {
-        final List<LibraryItem> result = new ArrayList<>();
+    protected Collection<LibraryItemImpl> makeLibraryItems(ControlReportImpl reports) throws IOException {
+        final List<LibraryItemImpl> result = new ArrayList<>();
         //final URL iconURL = ImageUtils.getNodeIconURL(null);
         //final List<String> excludedItems = getFilter();
         //final List<String> artifactsFilter = getAdditionalFilter() != null ? getAdditionalFilter().get() : Collections.emptyList();

@@ -30,24 +30,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.extstore.fs;
+package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public interface ExtensionFileSystem {
-    boolean isCreated();
-    boolean create() throws IOException;
-    List<Path> list();
-    List<Path> list(String path);
-    Path get(String path);
-    Path get(Path target);
-    boolean copy(List<Path> files, String destination) throws IOException;
-    boolean copy(List<Path> files, Path libraryFilesRoot) throws IOException;
-    boolean delete(String destination);
-    void createDirectoryIfNotExists(Path path);
-    boolean existsDirectory(Path path);
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+public class BoundingBox implements Cloneable{
+    
+    public static BoundingBox FULL = new BoundingBox();
+    
+    private @Getter @Setter(AccessLevel.PRIVATE) int x;
+    private @Getter @Setter(AccessLevel.PRIVATE) int y;
+    private @Getter @Setter(AccessLevel.PRIVATE) int width;
+    private @Getter @Setter(AccessLevel.PRIVATE) int height;
+    
+    @Override
+    public BoundingBox clone() {
+        return new BoundingBox(this.x, this.y, this.width, this.height);
+    }
     
     
 }

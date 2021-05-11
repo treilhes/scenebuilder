@@ -81,7 +81,7 @@ public class LibraryItemImpl implements LibraryItem {
         return qualifier.getIconUrl();
     }
     
-    @Override
+
     public Qualifier getQualifier() {
         return qualifier;
     }

@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.editor.panel.library;
 
-import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemImpl;
 
 /**
  * This class hosts either a LibraryItem or a library section name. The cell
@@ -44,9 +44,9 @@ import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
  */
 public class LibraryListItem {
     private String sectionName = null;
-    private LibraryItem libItem = null;
+    private LibraryItemImpl libItem = null;
 
-    public LibraryListItem(LibraryItem libItem) {
+    public LibraryListItem(LibraryItemImpl libItem) {
         this.libItem = libItem;
         this.sectionName = null;
     }
@@ -60,7 +60,7 @@ public class LibraryListItem {
         return this.sectionName;
     }
 
-    public LibraryItem getLibItem() {
+    public LibraryItemImpl getLibItem() {
         return this.libItem;
     }
 }

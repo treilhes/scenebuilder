@@ -33,7 +33,9 @@
 package com.oracle.javafx.scenebuilder.imagelibrary.tmp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -53,7 +55,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
-import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -61,7 +62,6 @@ import com.oracle.javafx.scenebuilder.controllibrary.aaa.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.Explorer;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryDialogFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryStoreFactory;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.imagelibrary.ImageLibraryExtension;
@@ -88,7 +88,7 @@ import javafx.scene.text.Text;
 @Component//("userLibrary")
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @DependsOn("metadata")
-public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> implements InitializingBean, DisposeWithSceneBuilder{
+public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
     
     private final static Logger logger = LoggerFactory.getLogger(ImageLibrary.class);
 
@@ -127,7 +127,9 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> impl
     //private Transform<ImageReport, ImageReport> controlFilter;
     private ImageFilterTransform controlFilter;
 
-    //private ClassLoaderController classLoaderController;
+    private final List<String> loadedFonts = new ArrayList<>();
+
+    private final SceneBuilderManager sceneBuilderManager;
 
     /*
      * Public
@@ -156,6 +158,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> impl
         this.uiLogger = logger;
         this.builtinLibrary = builtinLibrary;
         this.filters = filters;
+        this.sceneBuilderManager = sceneBuilderManager;
         
         this.controlFileExplorer = controlFileExplorer;
         this.controlFolderExplorer = controlFolderExplorer;
@@ -248,17 +251,13 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> impl
     }
     
     @Override
-    protected void updateItems(Collection<LibraryItem> items) {
-        
-        Collection<LibraryItem> newItems = new ArrayList<>(items);
-        newItems.addAll(builtinLibrary.getItems());
-        setItems(newItems);
-        
+    protected void resetBeforeUpdate() {
+        loadedFonts.clear();
     }
-
+    
     @Override
-    protected Collection<LibraryItem> makeLibraryItems(ImageReport reports) throws IOException {
-        final List<LibraryItem> result = new ArrayList<>();
+    protected Collection<LibraryItemImpl> makeLibraryItems(ImageReport reports) throws IOException {
+        final List<LibraryItemImpl> result = new ArrayList<>();
         //final URL iconURL = ImageUtils.getNodeIconURL(null);
         //final List<String> excludedItems = getFilter();
         //final List<String> artifactsFilter = getAdditionalFilter() != null ? getAdditionalFilter().get() : Collections.emptyList();
@@ -267,20 +266,48 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItem> impl
             
             if ((e.getStatus() == ImageReportEntry.Status.OK)) {
                 if (e.getType() == Type.FONT_ICONS && e.getUnicodePoints().size() == 1) {
+                    
+                    // we need to load the font
+                    if (e.getResourceName() != null) {// the font is in the classpath
+                        if (!loadedFonts.contains(e.getResourceName())) {
+                            try(InputStream is = sceneBuilderManager.classloader().get().getResourceAsStream(e.getResourceName());){
+                                Font.loadFont(is, 0);
+                                loadedFonts.add(e.getResourceName());
+                            }
+                        }
+                        
+                    } else {
+                        if (!loadedFonts.contains(reports.getSource().toString())) {
+                            try(InputStream is = new FileInputStream(reports.getSource().toFile());){
+                                Font.loadFont(is, 0);
+                                loadedFonts.add(reports.getSource().toString());
+                            }
+                        }
+                    }
+                    
                     String xmlEntity = ImageExplorerUtil.unicodePointToXmlEntity(e.getUnicodePoints().get(0));
                     //&#x0644;
                     //String fxmlText = makeTextText(e.getFontName(), Character.toString(e.getUnicodePoints().get(0)));
                     String fxmlText = makeTextText(e.getFontName(), xmlEntity);
-                    result.add(new LibraryItemImpl(xmlEntity, Qualifier.UNKNOWN, fxmlText));
+                    result.add(new LibraryItemImpl(xmlEntity, e.getFontName(), fxmlText));
                 } else {
                     final String fxmlText = makeImageViewText(e.getResourceName());
-                    result.add(new LibraryItemImpl(e.getName(), Qualifier.UNKNOWN, fxmlText));
+                    result.add(new LibraryItemImpl(e.getName(), reports.getSource().getFileName().toString(), fxmlText));
                 }
             }
             
         }
 
         return result;
+    }
+
+    @Override
+    protected void updateItems(Collection<LibraryItemImpl> items) {
+        
+        Collection<LibraryItemImpl> newItems = new ArrayList<>(items);
+        newItems.addAll(builtinLibrary.getItems());
+        setItems(newItems);
+        
     }
 
 

@@ -40,12 +40,15 @@ import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
+import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -67,22 +70,30 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
     private final Label qualifierLabel = new Label();
     private final Label sectionLabel = new Label();
 
+    private final ThumbnailServiceController thumbnailServiceController;
 
-    public LibraryListCell(final ImageLibraryController libraryController) {
+
+    public LibraryListCell(final ImageLibraryController libraryController, ThumbnailServiceController thumbnailServiceController) {
         super();
         this.libraryController = libraryController;
+        this.thumbnailServiceController = thumbnailServiceController;
 
         graphic.getStyleClass().add("list-cell-graphic"); //NOI18N
         classNameLabel.getStyleClass().add("library-classname-label"); //NOI18N
         qualifierLabel.getStyleClass().add("library-qualifier-label"); //NOI18N
         sectionLabel.getStyleClass().add("library-section-label"); //NOI18N
 
+        
+        classNameLabel.setMaxWidth(250);
+        classNameLabel.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
+        
+        
         graphic.getChildren().add(iconImageView);
         graphic.getChildren().add(classNameLabel);
         graphic.getChildren().add(qualifierLabel);
         graphic.getChildren().add(sectionLabel);
 
-        HBox.setHgrow(sectionLabel, Priority.ALWAYS);
+        HBox.setHgrow(classNameLabel, Priority.ALWAYS);
         sectionLabel.setMaxWidth(Double.MAX_VALUE);
 
         final EventHandler<MouseEvent> mouseEventHandler = e -> handleMouseEvent(e);
@@ -107,9 +118,9 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
 
                 // If QE were about to test a localized version the ID should
                 // remain unchanged.
-                if (item.getLibItem().getQualifier().getLabel() != null) {
-                    id += String.format(" (%s)", item.getLibItem().getQualifier().getLabel());
-                }
+//                if (item.getLibItem().getQualifier().getLabel() != null) {
+//                    id += String.format(" (%s)", item.getLibItem().getQualifier().getLabel());
+//                }
                 graphic.setId(id); // for QE
             }
 
@@ -238,10 +249,19 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
             qualifierLabel.setVisible(true);
             sectionLabel.setVisible(false);
             classNameLabel.setText(classname);
-            qualifierLabel.setText(makeQualifierLabel(item.getQualifier()));
+            classNameLabel.setTooltip(new Tooltip(classname));
+            qualifierLabel.setText("");//makeQualifierLabel(item.getQualifier()));
             // getIconURL can return null, this is deliberate.
             URL iconURL = item.getIconURL();
-            iconImageView.setImage(new Image(iconURL.toExternalForm()));
+            
+            if (iconURL != null) {
+                iconImageView.setImage(new Image(iconURL.toExternalForm()));
+            }
+            
+            if (iconURL == null || iconURL.toExternalForm().endsWith("MissingIcon.png")) {
+                thumbnailServiceController.newThumbnailRequest(item, iconImageView, 20, 20);
+            }
+            
         } else if (listItem.getSectionName() != null) {
             iconImageView.setManaged(false);
             classNameLabel.setManaged(false);

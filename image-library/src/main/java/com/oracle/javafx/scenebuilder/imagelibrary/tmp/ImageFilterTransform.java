@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry.Status;
 import com.oracle.javafx.scenebuilder.library.util.Transform;
 
-import javafx.geometry.BoundingBox;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -94,12 +93,12 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
     
     public StandardImageItem getOrCreateStandardImageItem(StandardImage standardImage, BoundingBox boundingBox) {
         assert imageSourceData.containsValue(standardImage);
-        
-        StandardImageItem standardImageItem = standardImage.getItems().get(boundingBox.toString());
+        String key = boundingBox.toString();
+        StandardImageItem standardImageItem = standardImage.getItems().get(key);
         
         if (standardImageItem == null) {
             standardImageItem = new StandardImageItem(boundingBox);
-            standardImage.getItems().put(boundingBox.toString(), standardImageItem);
+            standardImage.getItems().put(key, standardImageItem);
         }
         
         return standardImageItem;
@@ -142,7 +141,7 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
                                     imageSource.getItems().values().forEach(item -> {
                                         if (item != null && item.isImported()) {
                                             ImageReportEntry clone = e.clone();
-                                            clone.setBoundingBox(item.getBoundingBox());
+                                            clone.setBoundingBox(item.getBoundingBox().clone());
                                             
 //                                            if (item.getName() != null && !item.getName().isEmpty()) {
 //                                                clone.setName(item.getName());
@@ -185,8 +184,6 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
         this.fontSourceData = fontSourceData;
     }
 
-
-
     @RequiredArgsConstructor
     @NoArgsConstructor
     public static class FontImage {
@@ -226,4 +223,6 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
         private @Getter @Setter String name;
         
     }
+    
+    
 }

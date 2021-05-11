@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.imagelibrary.action.ImageLibraryPanelActions;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
+import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
 import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageFileExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageFolderExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageMavenArtifactExplorer;
@@ -84,7 +85,8 @@ public class ImageLibraryExtension extends AbstractExtension {
                 ImageJarAnalysisReportController.class,
                 ImageFileExplorer.class,
                 ImageFolderExplorer.class,
-                ImageMavenArtifactExplorer.class
+                ImageMavenArtifactExplorer.class,
+                ThumbnailServiceController.class
             );
      // @formatter:on
     }

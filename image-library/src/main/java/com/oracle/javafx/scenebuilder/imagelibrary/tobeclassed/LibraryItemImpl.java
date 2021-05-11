@@ -38,7 +38,6 @@ import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 
 /**
  *
@@ -49,15 +48,15 @@ public class LibraryItemImpl implements LibraryItem {
 
     private final String fxmlText;
     private final String name;
-    private final Qualifier qualifier;
+    private final String section;
 
-    public LibraryItemImpl(String name, Qualifier qualifier, String fxmlText) {
+    public LibraryItemImpl(String name, String section, String fxmlText) {
         assert name != null;
-        assert qualifier != null;
+        assert section != null;
         assert fxmlText != null;
 
         this.name = name;
-        this.qualifier = qualifier;
+        this.section = section;
         this.fxmlText = fxmlText;
     }
 
@@ -68,7 +67,7 @@ public class LibraryItemImpl implements LibraryItem {
 
     @Override
     public String getSection() {
-        return qualifier.getCategory();
+        return section;
     }
 
     @Override
@@ -78,14 +77,9 @@ public class LibraryItemImpl implements LibraryItem {
 
     @Override
     public URL getIconURL() {
-        return qualifier.getIconUrl();
+        return null;
     }
     
-    @Override
-    public Qualifier getQualifier() {
-        return qualifier;
-    }
-
     @Override
     public FXOMDocument instantiate(ClassLoader classloader) {
         FXOMDocument result;
@@ -105,7 +99,7 @@ public class LibraryItemImpl implements LibraryItem {
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.name);
-        hash = 67 * hash + Objects.hashCode(this.qualifier);
+        hash = 67 * hash + Objects.hashCode(this.section);
         hash = 67 * hash + Objects.hashCode(this.fxmlText);
         return hash;
     }
@@ -125,7 +119,7 @@ public class LibraryItemImpl implements LibraryItem {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.qualifier, other.qualifier)) {
+        if (!Objects.equals(this.section, other.section)) {
             return false;
         }
         return Objects.equals(this.fxmlText, other.fxmlText);

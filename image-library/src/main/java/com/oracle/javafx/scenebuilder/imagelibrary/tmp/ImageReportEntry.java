@@ -37,8 +37,6 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
 
-import javafx.geometry.BoundingBox;
-
 /**
  *
  * 

@@ -102,10 +102,10 @@ public interface DocumentManager {
      * reload its stylesheets.
      */
     SubjectItem<Integer> cssRevisionDidChange();
-    /**
-     * The current classloader has changed.
-     */
-    SubjectItem<ClassLoader> classLoaderDidChange();
+//    /**
+//     * The current classloader has changed.
+//     */
+//    SubjectItem<ClassLoader> classLoaderDidChange();
     /**
      * The main cycle of dependency injection loading is done
      * The document's dependencies have been loaded if true
@@ -212,10 +212,10 @@ public interface DocumentManager {
             return cssRevisionDidChange;
         }
         
-        @Override
-        public SubjectItem<ClassLoader> classLoaderDidChange() {
-            return classLoaderDidChange;
-        }
+//        @Override
+//        public SubjectItem<ClassLoader> classLoaderDidChange() {
+//            return classLoaderDidChange;
+//        }
         
         @Override
         public SubjectItem<Boolean> dependenciesLoaded() {

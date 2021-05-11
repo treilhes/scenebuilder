@@ -51,8 +51,6 @@ import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReportEntry.Type;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.LibraryUtil;
 
-import javafx.geometry.BoundingBox;
-
 public class ImageExplorerUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageExplorerUtil.class);
@@ -99,8 +97,9 @@ public class ImageExplorerUtil {
                         }
                         
                     } else {
-                        BufferedImage img = ImageIO.read(classLoader.getResourceAsStream(makeResourceName(entryName)));
-                        boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
+                        // Checking each image for jars is too cpu costly
+                        //BufferedImage img = ImageIO.read(classLoader.getResourceAsStream(makeResourceName(entryName)));
+                        //boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
                         type = Type.IMAGE;
                     }
                     status = ImageReportEntry.Status.OK;

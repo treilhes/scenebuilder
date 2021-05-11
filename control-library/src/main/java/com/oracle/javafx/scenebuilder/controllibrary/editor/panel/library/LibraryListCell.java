@@ -37,6 +37,7 @@ import java.net.URL;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
+import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
@@ -222,7 +223,7 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
         assert listItem != null;
         
         if (listItem.getLibItem() != null) {
-            final LibraryItem item = listItem.getLibItem();
+            final LibraryItemImpl item = listItem.getLibItem();
             // The classname shall be space character free (it is an API name).
             // If there is a space character then it means a qualifier comes
             // right after. In the case there is several qualifiers in a row

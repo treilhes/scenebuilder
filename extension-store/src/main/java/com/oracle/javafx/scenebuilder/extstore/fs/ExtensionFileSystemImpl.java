@@ -87,7 +87,11 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     @Override
     public Path get(String path) {
         Path target = root.resolve(path);
-        
+        return get(target);
+    }
+    
+    @Override
+    public Path get(Path target) {
         if (isSecurePath(target)) {
             return target;
         } else {

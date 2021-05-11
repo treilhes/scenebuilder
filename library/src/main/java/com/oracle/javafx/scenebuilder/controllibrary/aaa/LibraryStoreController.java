@@ -32,7 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.aaa;
 
+import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -51,6 +55,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +67,8 @@ import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsP
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.WritableImage;
 
 public class LibraryStoreController implements LibraryStore, Runnable {
 
@@ -79,6 +87,8 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     private final Path libraryRoot;
     private final Path libraryFilesRoot;
     private final Path libraryFoldersFile;
+    private final Path libraryThumbnailsRoot;
+    
     private State state = State.READY;
     private Thread watcherThread;
     private Exception exception;
@@ -94,7 +104,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
         this.libraryRoot = extensionFileSystem.get(storeId);
         this.libraryFilesRoot = libraryRoot.resolve(Paths.get(LibraryUtil.FOLDERS_FOR_FILES));
         this.libraryFoldersFile = libraryFilesRoot.resolve(Paths.get(LibraryUtil.FOLDERS_LIBRARY_FILENAME));
-
+        this.libraryThumbnailsRoot = libraryRoot.resolve(Paths.get(LibraryUtil.FOLDERS_FOR_THUMBNAILS));
         mavenArtifactsPreferences.readFromJavaPreferences();
     }
 
@@ -107,7 +117,8 @@ public class LibraryStoreController implements LibraryStore, Runnable {
 
             extensionFileSystem.createDirectoryIfNotExists(libraryRoot);
             extensionFileSystem.createDirectoryIfNotExists(libraryFilesRoot);
-
+            extensionFileSystem.createDirectoryIfNotExists(libraryThumbnailsRoot);
+            
             return mavenArtifactsPreferences != null && extensionFileSystem != null 
                     && extensionFileSystem.isCreated()
                     && extensionFileSystem.existsDirectory(libraryRoot) 
@@ -350,7 +361,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
                     .filter(p -> Files.exists(p))
                     .map(p -> p.toAbsolutePath().toString())
                     .collect(Collectors.joining("\n"));
-                Files.write(libraryFoldersFile, content.getBytes(), StandardOpenOption.WRITE);
+                Files.write(libraryFoldersFile, content.getBytes(), StandardOpenOption.CREATE);
                 return true;
             } else {
                 return false;
@@ -383,10 +394,9 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
                 String content = filesOrFolders.stream()
                     .filter(p -> Files.isDirectory(p))
                     .filter(p -> Files.exists(p))
-                    .filter(p -> p.toAbsolutePath().toString().equals(path.toAbsolutePath().toString()))
+                    .filter(p -> !p.toAbsolutePath().toString().equals(path.toAbsolutePath().toString()))
                     .map(p -> p.toAbsolutePath().toString())
                     .collect(Collectors.joining("\n"));
-                content += "\n" + path.toAbsolutePath().toString();
                 Files.write(libraryFoldersFile, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
                 return true;
             } else {
@@ -396,6 +406,46 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             logger.error("Unable to remove path {}", path, e);
             return false;
         }
+    }
+
+    @Override
+    public URL getThumbnail(String name, int width, int height) {
+        String thumbnailName = name.replace("/", "_") + "_" + width + "x" + height + ".png";
+        Path thumbnail = libraryThumbnailsRoot.resolve(thumbnailName);
+        Path result = extensionFileSystem.get(thumbnail);
+        
+        if (result == null || !Files.exists(result)) {
+            return null;
+        } else {
+            try {
+                return result.toUri().toURL();
+            } catch (MalformedURLException e) {
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public boolean saveThumbnail(String name, int width, int height, WritableImage snapshot) {
+        String thumbnailName = name.replace("/", "_") + "_" + width + "x" + height + ".png";
+        Path thumbnail = libraryThumbnailsRoot.resolve(thumbnailName);
+        Path target = extensionFileSystem.get(thumbnail);
+        
+        if (target != null && !Files.exists(target)) {
+            BufferedImage tempImg = SwingFXUtils.fromFXImage(snapshot, null);
+            try (FileOutputStream fos = new FileOutputStream(target.toFile())){
+                ImageIO.write(tempImg, "png", fos);
+                return true;
+            } catch(Exception e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Path getFilesFolder() {
+        return libraryFilesRoot;
     }
 
 }

@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 public class LibraryUtil {
 
     public static final String FOLDERS_FOR_FILES = "Files"; //NOI18N
-    
+    public static final String FOLDERS_FOR_THUMBNAILS = "Thumbnails"; //NOI18N
     public static final String FOLDERS_LIBRARY_FILENAME = "library.folders"; //NOI18N
 
     public static boolean isJarPath(Path path) {

@@ -76,7 +76,7 @@ public class ImageBuiltinLibrary {
     }
 
     private void addItem(ComponentClassMetadata<?> ccm, Qualifier qualifier, String fxmlText) {
-        final LibraryItemImpl item = new LibraryItemImpl(ccm.getKlass().getSimpleName(), qualifier, fxmlText);
+        final LibraryItemImpl item = new LibraryItemImpl(ccm.getKlass().getSimpleName(), "", fxmlText);
         itemsProperty.add(item);
     }
 

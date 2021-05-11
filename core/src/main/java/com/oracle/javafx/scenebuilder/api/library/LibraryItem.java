@@ -35,13 +35,12 @@ package com.oracle.javafx.scenebuilder.api.library;
 import java.net.URL;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 
 public interface LibraryItem {
 
     FXOMDocument instantiate(ClassLoader classloader);
 	
-	Qualifier getQualifier();
+	//Qualifier getQualifier();
 
 	String getName();
 

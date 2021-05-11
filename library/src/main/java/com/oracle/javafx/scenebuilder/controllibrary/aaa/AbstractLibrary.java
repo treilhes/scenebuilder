@@ -59,6 +59,7 @@ import org.springframework.context.ApplicationContext;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.Report;
+import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.editor.panel.library.manager.ImportProgressDialogController;
@@ -84,7 +85,7 @@ import javafx.concurrent.Worker.State;
  *
  *
  */
-public abstract class AbstractLibrary<R extends Report, I> implements Library<R, I>{
+public abstract class AbstractLibrary<R extends Report, I> implements Library<R, I>, InitWithDocument{
     
     private final static Logger logger = LoggerFactory.getLogger(AbstractLibrary.class);
 
@@ -128,24 +129,26 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         this.store = store;
         this.classLoaderController = classLoaderController;
         this.dialogConfiguration = dialogConfiguration;
-        init();
     }
 
-    private void init() {
+    @Override
+    public void init() {
         try {
-            store.onStoreUpdated((store) -> exploreStore());
-            
-            if (store.isReady()) {
-                store.load();
-                store.startWatching();
-            }
-            explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
-                Exploration<R> current = explorations.get(getExplorationDate());
+            if (!isFirstExplorationCompleted()) {
+                store.onStoreUpdated((store) -> exploreStore());
                 
-                Entry<LocalDate, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDate());
-                Exploration<R> previous = entry == null ? new Exploration<R>(LocalDate.now(), Collections.emptyList(), null) : entry.getValue();
-                userLibraryExplorationDidChange(previous, current);
-            });
+                if (store.isReady()) {
+                    store.load();
+                    store.startWatching();
+                }
+                explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
+                    Exploration<R> current = explorations.get(getExplorationDate());
+                    
+                    Entry<LocalDate, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDate());
+                    Exploration<R> previous = entry == null ? new Exploration<R>(LocalDate.now(), Collections.emptyList(), null) : entry.getValue();
+                    userLibraryExplorationDidChange(previous, current);
+                });
+            }
         } catch (IOException e) {
             logger.error("Unable to start library {}", this.getClass().getName(), e);
         }
@@ -216,16 +219,19 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         
         List<Path> sources = explorationResult.getReports().stream()
                 .map(r -> r.getSource()).collect(Collectors.toList());
+        sources.add(store.getFilesFolder());
         
         List<R> reports = applySavedFilter(explorationResult.getReports());
         
         try {
+            classLoaderController.getJarsOrFolders().addAll(sources);
+            classLoaderController.updateClassLoader();
+            
+            resetBeforeUpdate();
+            
             for (R report : reports) {
                 newItems.addAll(makeLibraryItems(report));
             }
-
-            classLoaderController.getJarsOrFolders().addAll(sources);
-            classLoaderController.updateClassLoader();
             
             // Remove duplicated items
             updateItems(newItems
@@ -550,6 +556,11 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                 logger.error("Unable to reload store", e);
             }
         }
+    }
+
+    protected void resetBeforeUpdate() {
+        // TODO Auto-generated method stub
+        
     }
 
 

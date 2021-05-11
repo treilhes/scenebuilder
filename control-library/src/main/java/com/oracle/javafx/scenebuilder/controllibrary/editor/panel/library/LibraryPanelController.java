@@ -79,6 +79,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryControlle
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinSectionComparator;
+import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog.ButtonID;
@@ -133,7 +134,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private static final String TEMP_FILE_EXTENSION = null;
 
     private String searchPattern;
-    ArrayList<LibraryItem> searchData = new ArrayList<>();
+    ArrayList<LibraryItemImpl> searchData = new ArrayList<>();
     
     // The name of the library section to keep opened. This is used when e.g.
     // a user jar file is imported to the library directory.
@@ -515,7 +516,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             = param -> new LibraryListCell(this.libraryController);
         
         // libData is backend structure for all that we put in the Accordion.
-        LinkedHashMap<String, ArrayList<LibraryItem>> libData = new LinkedHashMap<>();
+        LinkedHashMap<String, ArrayList<LibraryItemImpl>> libData = new LinkedHashMap<>();
         TreeSet<String> sectionNames = new TreeSet<>(new BuiltinSectionComparator());
         List<TitledPane> panes = libAccordion.getPanes();
 
@@ -536,7 +537,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             }
 
             // Add each LibraryItem to the appropriate set.
-            for (LibraryItem item : userLibrary.getItems()) {
+            for (LibraryItemImpl item : userLibrary.getItems()) {
                 libData.get(item.getSection()).add(item);
             }
 
@@ -547,7 +548,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
                 itemsList.setCellFactory(cb);
                 itemsList.addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
                 Collections.sort(libData.get(sectionName), new LibraryItemNameComparator());
-                for (LibraryItem item : libData.get(sectionName)) {
+                for (LibraryItemImpl item : libData.get(sectionName)) {
                     itemsList.getItems().add(new LibraryListItem(item));
                 }
                 TitledPane sectionPane = new TitledPane(sectionName, itemsList);
@@ -558,7 +559,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
                 searchData.addAll(libData.get(sectionName));
 
                 getLibList().getItems().add(new LibraryListItem(sectionName));
-                for (LibraryItem item : libData.get(sectionName)) {
+                for (LibraryItemImpl item : libData.get(sectionName)) {
                     getLibList().getItems().add(new LibraryListItem(item));
                 }
             }
@@ -620,14 +621,14 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         //
         if (currentDisplayMode.equals(DISPLAY_MODE.SEARCH)) {
             libSearchList.getItems().clear();
-            final ArrayList<LibraryItem> rawFilteredItem = new ArrayList<>();
-            for (LibraryItem item : searchData) {
+            final ArrayList<LibraryItemImpl> rawFilteredItem = new ArrayList<>();
+            for (LibraryItemImpl item : searchData) {
                 if (item.getName().toUpperCase(Locale.ROOT).contains(searchPattern)) {
                     rawFilteredItem.add(item);
                 }
             }
             Collections.sort(rawFilteredItem, new LibraryItemNameComparator());
-            for (LibraryItem item : rawFilteredItem) {
+            for (LibraryItemImpl item : rawFilteredItem) {
                 libSearchList.getItems().add(new LibraryListItem(item));
             }
             rawFilteredItem.clear();

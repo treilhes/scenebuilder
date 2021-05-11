@@ -170,7 +170,7 @@ public class ImageFileExplorer implements Explorer<Path, ImageReport> {
                     } else if (LibraryUtil.hasExtension(source, ImageLibraryDialogConfiguration.FILE_EXTENSIONS)) {
                         // TODO do i need to use I18N string for logging?
                         logger.info("Start exploring FXML {}", source);
-                        ImageReportEntry entry = ImageExplorerUtil.exploreFile(source, null, classLoader);
+                        ImageReportEntry entry = ImageExplorerUtil.exploreFile(source, source.getFileName().toString(), classLoader);
                         ImageReport report = new ImageReport(source);
                         report.getEntries().add(entry);
 
