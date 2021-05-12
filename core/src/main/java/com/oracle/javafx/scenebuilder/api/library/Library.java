@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.api.library;
 
 import java.io.File;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -59,7 +59,7 @@ public interface Library<R extends Report, I> {
 
     //ObservableList<JarReport> getJarReports();
 
-    LocalDate getExplorationDate();
+    LocalDateTime getExplorationDate();
 
     File getPath();
 

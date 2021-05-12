@@ -339,7 +339,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         assert libSearchList != null;
 
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
-
+		userLibrary.getItems().addListener(libraryItemListener);
+		
         startListeningToDrop();
         populateLibraryPanel();
         setUserLibraryPathString();
@@ -519,8 +520,6 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         LinkedHashMap<String, ArrayList<LibraryItemImpl>> libData = new LinkedHashMap<>();
         TreeSet<String> sectionNames = new TreeSet<>(new BuiltinSectionComparator());
         List<TitledPane> panes = libAccordion.getPanes();
-
-        userLibrary.getItems().addListener(libraryItemListener);
 
         searchData.clear();
         getLibList().getItems().clear();

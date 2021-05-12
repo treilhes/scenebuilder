@@ -60,7 +60,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.BoundingBox;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageExplorerUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageFilterTransform;
 import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageFilterTransform.FontImage;
@@ -566,11 +565,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
                 {
                     //temp until viewbox management
                     StandardImage img = filter.getOrCreateStandardImage(t1.getReportEntry().getName());
-                    
-                    if (img.getItems().size() == 0) {
-                        filter.getOrCreateStandardImageItem(img, BoundingBox.FULL).setImported(true);
-                    }
-                    
+                                        
                     ImageView imv = new ImageView(new Image(is));
                     zeNode = imv;
                     

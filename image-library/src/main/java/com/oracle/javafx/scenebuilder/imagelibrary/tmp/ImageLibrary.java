@@ -298,7 +298,13 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                     result.add(new LibraryItemImpl(xmlEntity, e.getFontName(), fxmlText));
                 } else {
                     final String fxmlText = makeImageViewText(e.getResourceName());
-                    result.add(new LibraryItemImpl(e.getName(), reports.getSource().getFileName().toString(), fxmlText));
+                    
+                    String section = "Miscellaneous";
+                    
+                    if (LibraryUtil.isJarPath(reports.getSource()) || !reports.getSource().startsWith(getStore().getFilesFolder())) {
+                        section = reports.getSource().getFileName().toString();
+                    }
+                    result.add(new LibraryItemImpl(e.getName(), section, fxmlText));
                 }
             }
             

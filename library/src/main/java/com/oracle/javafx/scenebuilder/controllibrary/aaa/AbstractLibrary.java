@@ -36,7 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -95,7 +95,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
     
     protected final ObservableList<I> itemsProperty = FXCollections.observableArrayList();
     private final SimpleIntegerProperty explorationCountProperty = new SimpleIntegerProperty();
-    private final SimpleObjectProperty<LocalDate> explorationDateProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<LocalDateTime> explorationDateProperty = new SimpleObjectProperty<>();
     private final ReadOnlyBooleanWrapper firstExplorationCompleted = new ReadOnlyBooleanWrapper(false);
     private SimpleBooleanProperty exploring = new SimpleBooleanProperty();
 
@@ -103,7 +103,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
     
     private final LibraryStore store;
     
-    private final NavigableMap<LocalDate, Exploration<R>> explorations = new TreeMap<>();
+    private final NavigableMap<LocalDateTime, Exploration<R>> explorations = new TreeMap<>();
     
     private final SceneBuilderManager sceneBuilderManager;
     
@@ -144,8 +144,8 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                 explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
                     Exploration<R> current = explorations.get(getExplorationDate());
                     
-                    Entry<LocalDate, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDate());
-                    Exploration<R> previous = entry == null ? new Exploration<R>(LocalDate.now(), Collections.emptyList(), null) : entry.getValue();
+                    Entry<LocalDateTime, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDateTime());
+                    Exploration<R> previous = entry == null ? new Exploration<R>(LocalDateTime.now(), Collections.emptyList(), null) : entry.getValue();
                     userLibraryExplorationDidChange(previous, current);
                 });
             }
@@ -196,8 +196,8 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                     .collect(Collectors.toList());
             executor.shutdown();
             
-            Exploration<R> exploration = new Exploration<>(LocalDate.now(), tasks, this::updateLibrary);
-            explorations.put(exploration.getLocalDate(), exploration);
+            Exploration<R> exploration = new Exploration<>(LocalDateTime.now(), tasks, this::updateLibrary);
+            explorations.put(exploration.getLocalDateTime(), exploration);
             
         });
     }
@@ -245,7 +245,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
             updateReports(new ArrayList<>(explorationResult.getReports()));
             //getOnFinishedUpdatingJarReports().accept(jarOrFolderReports);
             updateExplorationCount();
-            updateExplorationDate(explorationResult.getLocalDate());
+            updateExplorationDate(explorationResult.getLocalDateTime());
             // Fix for #45: mark end of first exploration
             updateFirstExplorationCompleted();
             setExploring(false);
@@ -277,11 +277,11 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
     }
 
     @Override
-    public LocalDate getExplorationDate() {
+    public LocalDateTime getExplorationDate() {
         return explorationDateProperty.get();
     }
 
-    public ReadOnlyObjectProperty<LocalDate> explorationDateProperty() {
+    public ReadOnlyObjectProperty<LocalDateTime> explorationDateProperty() {
         return explorationDateProperty;
     }
 
@@ -354,7 +354,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         }
     }
 
-    void updateExplorationDate(LocalDate date) {
+    void updateExplorationDate(LocalDateTime date) {
         if (Platform.isFxApplicationThread()) {
             explorationDateProperty.set(date);
         } else {
@@ -408,10 +408,10 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         private final AtomicInteger completed = new AtomicInteger();
         
         private final ObservableList<RE> reports = FXCollections.observableArrayList();
-        private final LocalDate localDate;
+        private final LocalDateTime localDate;
         private final Consumer<Exploration<RE>> updateLibraryCallback;
         
-        public Exploration(LocalDate localDate, List<Task<List<RE>>> tasks, Consumer<Exploration<RE>> updateLibraryCallback) {
+        public Exploration(LocalDateTime localDate, List<Task<List<RE>>> tasks, Consumer<Exploration<RE>> updateLibraryCallback) {
             super();
             this.localDate =localDate;
             this.tasks = tasks;
@@ -453,7 +453,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
             return reports;
         }
 
-        protected LocalDate getLocalDate() {
+        protected LocalDateTime getLocalDateTime() {
             return localDate;
         }
         

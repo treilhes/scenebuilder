@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.imagelibrary.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,8 +77,8 @@ public class ImageJarAnalysisReportController extends AbstractFxmlWindowControll
     Label timestampLabel;
 
     private final ImageLibrary library;
-    private final String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; // NOI18N
-    private final SimpleDateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(TIMESTAMP_PATTERN);
+    private final String TIMESTAMP_PATTERN = "h:mm a EEE d MMM. yyyy"; // NOI18N
+    private final DateTimeFormatter TIMESTAMP_DATE_FORMAT = DateTimeFormatter.ofPattern(TIMESTAMP_PATTERN);
     private int prefixCounter = 0;
     private boolean dirty = false;
 
@@ -196,8 +196,8 @@ public class ImageJarAnalysisReportController extends AbstractFxmlWindowControll
     }
 
     private void updateTimeStampLabel() {
-        LocalDate date = library.getExplorationDate();
-        String timestampValue = TIMESTAMP_DATE_FORMAT.format(date);
+        LocalDateTime date = library.getExplorationDate();
+        String timestampValue = date.format(TIMESTAMP_DATE_FORMAT);
         timestampLabel.setText(I18N.getString("jar.analysis.report.timestamp", timestampValue));
     }
 }

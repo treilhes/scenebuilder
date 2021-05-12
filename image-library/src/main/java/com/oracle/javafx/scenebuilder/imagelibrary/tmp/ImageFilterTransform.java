@@ -86,6 +86,7 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
         if (standardImage == null) {
             standardImage = new StandardImage(imageName);
             imageSourceData.put(imageName, standardImage);
+            getOrCreateStandardImageItem(standardImage, BoundingBox.FULL).setImported(true);
         }
         
         return standardImage;
