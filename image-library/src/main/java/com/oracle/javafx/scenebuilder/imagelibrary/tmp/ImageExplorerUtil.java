@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.fontbox.ttf.CmapLookup;
-import org.apache.fontbox.ttf.OTFParser;
-import org.apache.fontbox.ttf.OpenTypeFont;
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
 import org.slf4j.Logger;
@@ -86,12 +84,12 @@ public class ImageExplorerUtil {
                         type = Type.FONT_ICONS;
                         fontName = result.getName();
                         unicodePoints = extractUnicodePoints(result);
-                    } else if (upperEntry.toLowerCase().endsWith("." + ImageLibrary.OTF_EXTENSION)) {
-                        OTFParser p = new OTFParser();
-                        OpenTypeFont result = p.parse(classLoader.getResourceAsStream(makeResourceName(entryName)));
-                        type = Type.FONT_ICONS;
-                        fontName = result.getName();
-                        unicodePoints = extractUnicodePoints(result);
+//                    } else if (upperEntry.toLowerCase().endsWith("." + ImageLibrary.OTF_EXTENSION)) {
+//                        OTFParser p = new OTFParser();
+//                        OpenTypeFont result = p.parse(classLoader.getResourceAsStream(makeResourceName(entryName)));
+//                        type = Type.FONT_ICONS;
+//                        fontName = result.getName();
+//                        unicodePoints = extractUnicodePoints(result);
                     } else {
                         // Checking each image for jars is too cpu costly
                         //BufferedImage img = ImageIO.read(classLoader.getResourceAsStream(makeResourceName(entryName)));
@@ -141,12 +139,12 @@ public class ImageExplorerUtil {
                     type = Type.FONT_ICONS;
                     fontName = result.getName();
                     unicodePoints = extractUnicodePoints(result);
-                } else if (upperEntry.endsWith("." + ImageLibrary.OTF_EXTENSION)) {
-                    OTFParser p = new OTFParser();
-                    OpenTypeFont result = p.parse(fis);
-                    type = Type.FONT_ICONS;
-                    fontName = result.getName();
-                    unicodePoints = extractUnicodePoints(result);
+//                } else if (upperEntry.endsWith("." + ImageLibrary.OTF_EXTENSION)) {
+//                    OTFParser p = new OTFParser();
+//                    OpenTypeFont result = p.parse(fis);
+//                    type = Type.FONT_ICONS;
+//                    fontName = result.getName();
+//                    unicodePoints = extractUnicodePoints(result);
                 } else {
                     //BufferedImage img = ImageIO.read(fis);
                     //boundingBox = new BoundingBox(0, 0, img.getWidth(), img.getHeight());
@@ -184,12 +182,14 @@ public class ImageExplorerUtil {
     private static List<Integer> extractUnicodePoints(TrueTypeFont font) throws IOException {
         List<Integer> unicodePoints = new ArrayList<>();
         
-        int numGlyph = font.getGlyph().getGlyphs().length;
+        int numGlyph = font.getNumberOfGlyphs();
         CmapLookup cmap = font.getUnicodeCmapLookup();
         
-        for (int i=0;i<numGlyph;i++) {
+        for (int i=0;i<=numGlyph;i++) {
             List<Integer> list = cmap.getCharCodes(i);
-            unicodePoints.addAll(list);
+            if (list != null) {
+                unicodePoints.addAll(list);
+            }
         }
         
         return unicodePoints;

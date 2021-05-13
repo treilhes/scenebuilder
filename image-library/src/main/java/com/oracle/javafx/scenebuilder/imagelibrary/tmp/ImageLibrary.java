@@ -91,10 +91,10 @@ import javafx.scene.text.Text;
 public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
     
     public final static String TTF_EXTENSION = "ttf";
-    public final static String OTF_EXTENSION = "otf";
+    //public final static String OTF_EXTENSION = "otf";
     public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
-    public final static List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");
-    public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");
+    public final static List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");//, "otf");
+    public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");//, "otf");
     
     private final static Logger logger = LoggerFactory.getLogger(ImageLibrary.class);
 
