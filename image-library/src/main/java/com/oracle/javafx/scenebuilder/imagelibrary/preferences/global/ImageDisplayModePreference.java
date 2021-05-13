@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.ImageLibraryPanelController.DISPLAY_MODE;
+import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController.DISPLAY_MODE;
 
 import javafx.scene.Parent;
 

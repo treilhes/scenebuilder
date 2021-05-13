@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extension.Extension;
@@ -55,10 +56,14 @@ public class ExtensionFileSystemFactory {
 
     private final FileSystem fileSystem;
 
+    private final Dialog dialog;
+
     public ExtensionFileSystemFactory(
-            @Autowired FileSystem fileSystem) {
+            @Autowired FileSystem fileSystem,
+            @Autowired Dialog dialog) {
         super();
         this.fileSystem = fileSystem;
+        this.dialog = dialog;
     }
     
     public ExtensionFileSystem get(Class<? extends Extension> extensionClass) {
@@ -79,7 +84,7 @@ public class ExtensionFileSystemFactory {
         
         File target = new File(fileSystem.getApplicationDataFolder(), folderName);
         
-        return new ExtensionFileSystemImpl(target.toPath());
+        return new ExtensionFileSystemImpl(target.toPath(), dialog);
     }
     
     

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.extension.ExtensionLibrary;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenuController;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryWindowController;
 import com.oracle.javafx.scenebuilder.extlibrary.i18n.I18NExtensionLibrary;
@@ -45,7 +46,7 @@ import com.oracle.javafx.scenebuilder.extlibrary.menu.ExtensionLibraryMenuProvid
 public class ExtensionLibraryExtension extends AbstractExtension {
     @Override
     public UUID getId() {
-        return UUID.fromString("ab05d97a-6d85-4875-8dee-75ac3d752c40");
+        return ExtensionLibrary.ID;
     }
     
     @Override

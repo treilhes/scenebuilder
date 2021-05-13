@@ -53,11 +53,13 @@ public class Agent {
     }
 
     private static void populateClasspath() throws Exception {
-        System.out.println("EXTFOLDER=" + DefaultFolders.getUserExtensionsFolder().getAbsolutePath());
-        ExtensionStates extensionStates = ExtensionStates.load(DefaultFolders.getUserExtensionsFolder());
+        File extensionFolder = DefaultFolders.getUserExtensionsFolder(ExtensionLibrary.ID);
+        System.out.println("EXTFOLDER=" + extensionFolder.getAbsolutePath());
+        
+        ExtensionStates extensionStates = ExtensionStates.load(extensionFolder);
         extensionStates.cleanDeletedExtensions();
         List<UUID> loadable = extensionStates.getLoadableExtensions();
-        List<File> jars = listAllRequiredJars(DefaultFolders.getUserExtensionsFolder(), loadable);
+        List<File> jars = listAllRequiredJars(extensionFolder, loadable);
         
         for (File jar:jars) {
             addToClassPath(jar);

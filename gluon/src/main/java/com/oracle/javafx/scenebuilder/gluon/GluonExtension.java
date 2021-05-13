@@ -104,7 +104,7 @@ public class GluonExtension extends AbstractExtension {
                 RegistrationController.class,
                 TrackingController.class,
                 UpdateController.class,
-                GluonLibraryFilter.class,
+                GluonControlLibraryFilter.class,
                 GluonTemplateList.class
             );
      // @formatter:on

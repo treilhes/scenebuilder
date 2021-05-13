@@ -44,6 +44,8 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.library.api.ExplorerInspector;
+
 public class FolderExplorer {
     
     private final static Logger logger = LoggerFactory.getLogger(FolderExplorer.class);

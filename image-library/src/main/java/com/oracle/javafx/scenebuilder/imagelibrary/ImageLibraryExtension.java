@@ -38,23 +38,23 @@ import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
 
-import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryStoreFactory;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.imagelibrary.action.ImageLibraryPanelActions;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageFileExplorer;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageFolderExplorer;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.explorer.ImageMavenArtifactExplorer;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.ImageImportWindowController;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.ImageLibraryPanelController;
+import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowController;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryDialogConfiguration;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.ImageBuiltinLibrary;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.ImageDefaultLibraryFilter;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFileExplorer;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFolderExplorer;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageMavenArtifactExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.menu.ImageLibraryMenuProvider;
+import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibrary;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibraryDialogConfiguration;
-import com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed.ImageBuiltinLibrary;
-import com.oracle.javafx.scenebuilder.imagelibrary.tobeclassed.ImageDefaultLibraryFilter;
+import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;
 
 @ComponentScan(
         basePackages = {

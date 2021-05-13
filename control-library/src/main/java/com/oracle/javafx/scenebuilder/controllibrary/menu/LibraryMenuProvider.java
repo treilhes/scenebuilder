@@ -52,10 +52,10 @@ import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
-import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinSectionComparator;
-import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemImpl;
-import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.LibraryItemNameComparator;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSectionComparator;
+import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
+import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemNameComparator;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;

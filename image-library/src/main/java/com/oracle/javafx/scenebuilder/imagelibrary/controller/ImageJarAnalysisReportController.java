@@ -49,9 +49,9 @@ import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibrary;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReport;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageReportEntry;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;

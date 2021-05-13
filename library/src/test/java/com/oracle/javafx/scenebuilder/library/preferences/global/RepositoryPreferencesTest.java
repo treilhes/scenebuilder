@@ -44,7 +44,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.Repository;
+import com.oracle.javafx.scenebuilder.library.maven.repository.Repository;
 
 class RepositoryPreferencesTest extends AbstractPreferencesTest {
 

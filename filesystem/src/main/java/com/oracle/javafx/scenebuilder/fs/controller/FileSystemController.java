@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -213,23 +212,8 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     }
 
     @Override
-    public File getUserLibraryFolder() {
-        return DefaultFolders.getUserLibraryFolder();
-    }
-
-    @Override
     public File getApplicationDataFolder() {
         return DefaultFolders.getApplicationDataFolder();
-    }
-
-    @Override
-    public File getUserExtensionsFolder() {
-        return DefaultFolders.getUserExtensionsFolder();
-    }
-
-    @Override
-    public File getUserExtensionFolder(UUID extensionId) {
-        return new File(DefaultFolders.getUserExtensionsFolder(), extensionId.toString());
     }
 
 }

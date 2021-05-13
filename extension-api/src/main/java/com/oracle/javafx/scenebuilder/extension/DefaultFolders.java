@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.extension;
 
 import java.io.File;
+import java.util.UUID;
 
 public class DefaultFolders {
     
@@ -41,8 +42,8 @@ public class DefaultFolders {
     public static File USER_HOME = new File(System.getProperty("user.home")); //NOI18N
 
     private static File messageBoxFolder;
-    private static File userLibraryFolder;
-    private static File userExtensionsFolder;
+    //private static File userLibraryFolder;
+    //private static File userExtensionsFolder;
     private static File applicationDataFolder;
 
 
@@ -73,22 +74,17 @@ public class DefaultFolders {
     }
 
 
-    public static synchronized File getUserLibraryFolder() {
-
-        if (userLibraryFolder == null) {
-            userLibraryFolder = new File(getApplicationDataFolder(), "/Library"); //NOI18N
-        }
-
-        return userLibraryFolder;
-    }
-    
-    public static synchronized File getUserExtensionsFolder() {
-
-        if (userExtensionsFolder == null) {
-            userExtensionsFolder = new File(getApplicationDataFolder(), "/Extension"); //NOI18N
-        }
-
-        return userExtensionsFolder;
+//    public static synchronized File getUserLibraryFolder() {
+//
+//        if (userLibraryFolder == null) {
+//            userLibraryFolder = new File(getApplicationDataFolder(), "/Library"); //NOI18N
+//        }
+//
+//        return userLibraryFolder;
+//    }
+//    
+    public static synchronized File getUserExtensionsFolder(UUID extensionId) {
+        return new File(getApplicationDataFolder(), extensionId.toString()); //NOI18N
     }
 
     public static synchronized File getMessageBoxFolder() {

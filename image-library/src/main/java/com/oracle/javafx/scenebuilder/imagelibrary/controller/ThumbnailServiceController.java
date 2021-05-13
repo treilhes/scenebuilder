@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibrary;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;

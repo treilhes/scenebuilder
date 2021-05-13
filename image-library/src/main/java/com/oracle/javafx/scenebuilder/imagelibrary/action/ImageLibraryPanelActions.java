@@ -53,16 +53,14 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 //import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryDialogFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.ImageLibraryPanelController;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
+import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
-import com.oracle.javafx.scenebuilder.imagelibrary.tmp.ImageLibrary;
-
-import javafx.stage.Window;
+import com.oracle.javafx.scenebuilder.library.api.LibraryDialogFactory;
 
 public class ImageLibraryPanelActions {
 
@@ -307,12 +305,5 @@ public class ImageLibraryPanelActions {
 		    controlLibrary.openDialog();
 		}
 
-		private void onImportJarFxml(Window owner) {
-	        libraryPanelController.performImportJarFxml(owner);
-	    }
-
-		private void onImportFromFolder(Window owner) {
-	        libraryPanelController.performImportFromFolder(owner);
-	    }
 	}
 }

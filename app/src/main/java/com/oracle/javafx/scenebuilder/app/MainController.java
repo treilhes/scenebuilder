@@ -72,7 +72,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentS
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;

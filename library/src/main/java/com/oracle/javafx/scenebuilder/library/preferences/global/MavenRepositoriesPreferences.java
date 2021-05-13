@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.library.editor.panel.library.maven.repository.Repository;
+import com.oracle.javafx.scenebuilder.library.maven.repository.Repository;
 
 @Component
 public class MavenRepositoriesPreferences extends ListPreferences<MavenRepositoryPreferences, Repository> {

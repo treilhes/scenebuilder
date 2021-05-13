@@ -47,6 +47,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+
 public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     
     private final static Logger logger = LoggerFactory.getLogger(ExtensionFileSystemImpl.class);
@@ -54,9 +58,12 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     private final String TEMP_FILE_EXTENSION = ".tmp"; //NOI18N
     private final Path root;
 
-    protected ExtensionFileSystemImpl(Path root) {
+    private final Dialog dialog;
+
+    protected ExtensionFileSystemImpl(Path root, Dialog dialog) {
         super();
         this.root = root.toAbsolutePath();
+        this.dialog = dialog;
     }
 
     @Override
@@ -116,8 +123,11 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
             return false;
         }
         
-        Map<Path, Exception> result = copyFilesToDir(files, destination);
-        return result.isEmpty();
+        if (!enoughFreeSpaceOnDisk(files)) {
+            return false;
+        }
+        
+        return copyFilesToDir(files, destination);
     }
 
     @Override
@@ -142,20 +152,29 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     }
     
     @Override
-    public boolean create() throws IOException {
-     // Files.createDirectories do nothing if provided Path already exists.
-        Files.createDirectories(root, new FileAttribute<?>[]{});
-        return true;
+    public boolean create() {
+        try {
+            Files.createDirectories(root, new FileAttribute<?>[]{});
+            return true;
+        } catch (IOException ioe) {
+            dialog.showErrorAndWait(
+                    I18N.getString("error.dir.create.title"),
+                    I18N.getString("error.dir.create.message", root.normalize().toString()),
+                    I18N.getString("error.write.details"),
+                    ioe);
+            return false;
+        }
     }
     
     // Each copy is done via an intermediate temporary file that is renamed if
     // the copy goes well (for atomicity). If a copy fails we try to erase the
     // temporary file to stick to an as clean as possible disk content.
     // TODO fix DTL-5879 [When copying FXML files in lib dir we have to copy files which are external references as well]
-    private Map<Path, Exception> copyFilesToDir(List<Path> files, Path destination) throws IOException {
+    private boolean copyFilesToDir(List<Path> files, Path destination) throws IOException {
         Map<Path, Exception> results = new HashMap<>();
         Path tempTargetPath = null;
-        
+        Exception ex = null;
+        Path exFile = null;
         for (Path file : files) {
             try {
                 tempTargetPath = Paths.get(root.toString(), file.getFileName() + TEMP_FILE_EXTENSION);
@@ -164,7 +183,10 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
                 Files.copy(file, tempTargetPath, StandardCopyOption.REPLACE_EXISTING);
                 Files.move(tempTargetPath, ultimateTargetPath, StandardCopyOption.ATOMIC_MOVE);
             } catch (Exception e) {
+                logger.error("Unable to copy file {}", file, e);
                 results.put(file, e);
+                ex = e;
+                exFile = file;
             } finally {
                 if (tempTargetPath != null) {
                     Files.deleteIfExists(tempTargetPath);
@@ -172,7 +194,17 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
             }
         } 
 
-        return results;
+        int errorCount = results.size();
+        if (errorCount > 0) {
+            dialog.showErrorAndWait(
+                    I18N.getString("error.copy.title"),
+                    errorCount == 1 ?
+                            I18N.getString("error.copy.message.single", exFile, destination):
+                            I18N.getString("error.copy.message.multiple", errorCount, destination),
+                    I18N.getString("error.write.details"),
+                    errorCount == 1 ? ex : null);
+        }
+        return results.isEmpty();
     }
 
     @Override
@@ -181,8 +213,13 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
             if (!Files.exists(path)) {
                 try {
                     Files.createDirectory(path);
-                } catch (IOException e) {
+                } catch (IOException ioe) {
                     logger.error("Unable to create directory {}", path);
+                    dialog.showErrorAndWait(
+                            I18N.getString("error.dir.create.title"),
+                            I18N.getString("error.dir.create.message", path.normalize().toString()),
+                            I18N.getString("error.write.details"),
+                            ioe);
                 }
             }
         }
@@ -205,5 +242,18 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
         } else {
             return true;
         }
+    }
+    
+    protected boolean enoughFreeSpaceOnDisk(List<Path> files) {
+        try {
+            return FileSystem.enoughFreeSpaceOnDisk(files, root);
+        } catch (IOException ioe) {
+            dialog.showErrorAndWait(
+                    I18N.getString("error.disk.space.title"),
+                    I18N.getString("error.disk.space.message"),
+                    I18N.getString("error.write.details"),
+                    ioe);
+        }
+        return false;
     }
 }

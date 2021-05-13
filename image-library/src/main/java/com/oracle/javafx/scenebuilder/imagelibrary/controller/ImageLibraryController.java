@@ -50,9 +50,9 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.drag.source.LibraryDragSource;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.LibraryListCell;
-import com.oracle.javafx.scenebuilder.imagelibrary.editor.panel.library.LibraryListItem;
+import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.LibraryDragSource;
+import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListCell;
+import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListItem;
 import com.oracle.javafx.scenebuilder.job.editor.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.job.editor.SetDocumentRootJob;
 

@@ -38,22 +38,22 @@ import java.util.UUID;
 
 import org.springframework.context.annotation.ComponentScan;
 
-import com.oracle.javafx.scenebuilder.controllibrary.aaa.LibraryStoreFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
-import com.oracle.javafx.scenebuilder.controllibrary.editor.panel.explorer.ControlFileExplorer;
-import com.oracle.javafx.scenebuilder.controllibrary.editor.panel.explorer.ControlFolderExplorer;
-import com.oracle.javafx.scenebuilder.controllibrary.editor.panel.explorer.ControlMavenArtifactExplorer;
-import com.oracle.javafx.scenebuilder.controllibrary.editor.panel.library.ImportWindowController;
-import com.oracle.javafx.scenebuilder.controllibrary.editor.panel.library.LibraryPanelController;
+import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDialogConfiguration;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDefaultFilter;
+import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFileExplorer;
+import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFolderExplorer;
+import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMavenArtifactExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.menu.LibraryMenuProvider;
+import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibraryDialogConfiguration;
-import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.BuiltinLibrary;
-import com.oracle.javafx.scenebuilder.controllibrary.tobeclassed.DefaultLibraryFilter;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;
 
 @ComponentScan(
         basePackages = {
@@ -78,7 +78,7 @@ public class ControlLibraryExtension extends AbstractExtension {
                 DisplayModePreference.class,
                 ControlLibrary.class,
                 BuiltinLibrary.class,
-                DefaultLibraryFilter.class,
+                ControlLibraryDefaultFilter.class,
                 ControlLibraryDialogConfiguration.class,
                 LibraryStoreFactory.class,
                 JarAnalysisReportController.class,

@@ -38,7 +38,7 @@ import java.util.List;
 
 public interface ExtensionFileSystem {
     boolean isCreated();
-    boolean create() throws IOException;
+    boolean create();
     List<Path> list();
     List<Path> list(String path);
     Path get(String path);

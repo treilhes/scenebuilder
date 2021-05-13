@@ -40,7 +40,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 
@@ -48,7 +47,7 @@ public interface FileSystem {
 
     File getMessageBoxFolder();
 
-    File getUserLibraryFolder();
+    //File getUserLibraryFolder();
 
     File getApplicationDataFolder();
 
@@ -179,7 +178,16 @@ public interface FileSystem {
         }
     }
 
-    default boolean enoughFreeSpaceOnDisk(List<File> files) throws IOException {
+    public static boolean enoughFreeSpaceOnDisk(List<Path> files, Path target) throws IOException {
+        long totalSize = Long.MAX_VALUE; // bytes
+
+        for (Path file : files) {
+            totalSize += Files.size(file);
+        }
+
+        return totalSize < target.toFile().getFreeSpace();
+    }
+    public static boolean enoughFreeSpaceOnDisk(List<File> files, File target) throws IOException {
         long totalSize = Long.MAX_VALUE; // bytes
 
         for (File file : files) {
@@ -187,12 +195,11 @@ public interface FileSystem {
             totalSize += Files.size(targetPath);
         }
 
-        final File libFile = getUserLibraryFolder();
-        return totalSize < libFile.getFreeSpace();
+        return totalSize < target.getFreeSpace();
     }
 
-    File getUserExtensionsFolder();
+    //File getUserExtensionsFolder();
 
-    File getUserExtensionFolder(UUID extensionId);
+    //File getUserExtensionFolder(UUID extensionId);
 
 }

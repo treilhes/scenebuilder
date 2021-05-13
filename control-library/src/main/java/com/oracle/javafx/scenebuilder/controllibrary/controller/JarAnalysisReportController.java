@@ -50,9 +50,9 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlLibrary;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportEntryImpl;
-import com.oracle.javafx.scenebuilder.controllibrary.tmp.ControlReportImpl;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.collections.ListChangeListener;
