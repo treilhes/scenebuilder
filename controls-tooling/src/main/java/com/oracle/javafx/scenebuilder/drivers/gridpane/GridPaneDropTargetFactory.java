@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget.RowArea;
 import com.oracle.javafx.scenebuilder.editors.drag.target.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

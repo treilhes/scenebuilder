@@ -41,6 +41,12 @@ import com.oracle.javafx.scenebuilder.extension.ExtensionLibrary;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenuController;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryWindowController;
 import com.oracle.javafx.scenebuilder.extlibrary.i18n.I18NExtensionLibrary;
+import com.oracle.javafx.scenebuilder.extlibrary.importer.ExtensionImportWindowController;
+import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryDialogConfiguration;
+import com.oracle.javafx.scenebuilder.extlibrary.library.builtin.ExtensionBuiltinLibrary;
+import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionFileExplorer;
+import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionFolderExplorer;
+import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionMavenArtifactExplorer;
 import com.oracle.javafx.scenebuilder.extlibrary.menu.ExtensionLibraryMenuProvider;
 
 public class ExtensionLibraryExtension extends AbstractExtension {
@@ -56,7 +62,14 @@ public class ExtensionLibraryExtension extends AbstractExtension {
                 ExtensionLibraryMenuController.class,
                 ExtensionLibraryWindowController.class,
                 I18NExtensionLibrary.class,
-                ExtensionLibraryMenuProvider.class
+                ExtensionLibraryMenuProvider.class,
+                com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibrary.class,
+                ExtensionBuiltinLibrary.class,
+                ExtensionLibraryDialogConfiguration.class,
+                ExtensionFileExplorer.class,
+                ExtensionFolderExplorer.class,
+                ExtensionMavenArtifactExplorer.class,
+                ExtensionImportWindowController.class
             );
      // @formatter:on
     }

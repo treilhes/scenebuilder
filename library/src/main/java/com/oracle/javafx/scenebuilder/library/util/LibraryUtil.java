@@ -110,4 +110,24 @@ public class LibraryUtil {
 
         return sb.toString();
     }
+    
+    public static String makeClassName(String jarEntryName, String separator) {
+        final String result;
+
+        if (! jarEntryName.endsWith(".class")) { //NOI18N
+            result = null;
+        } else if (jarEntryName.contains("$")) { //NOI18N
+            // We skip inner classes for now
+            result = null;
+        } else {
+            final int endIndex = jarEntryName.length()-6; // ".class" -> 6 //NOI18N
+            result = jarEntryName.substring(0, endIndex).replace(separator, "."); //NOI18N
+        }
+
+        return result;
+    }
+    
+    public static String makeResourceName(String jarEntryName) {
+        return jarEntryName.replace("\\", "/"); //NOI18N
+    }
 }

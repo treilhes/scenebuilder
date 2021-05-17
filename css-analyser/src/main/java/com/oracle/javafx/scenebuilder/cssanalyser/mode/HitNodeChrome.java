@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
+import com.oracle.javafx.scenebuilder.core.content.util.RegionRectangle;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.RegionRectangle;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

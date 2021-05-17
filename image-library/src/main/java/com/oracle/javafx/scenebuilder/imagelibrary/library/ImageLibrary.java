@@ -65,6 +65,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowCon
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry.Type;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.ImageBuiltinLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.LibraryItemImpl;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageExplorerUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFileExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFolderExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageMavenArtifactExplorer;

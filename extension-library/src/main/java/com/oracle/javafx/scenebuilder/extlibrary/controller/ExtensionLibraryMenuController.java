@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibrary;
 
 /**
  *
@@ -47,15 +48,15 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 @Lazy
 public class ExtensionLibraryMenuController {
 
-    private final ExtensionLibraryWindowController extensionLibraryWindowController;
+    private final ExtensionLibrary extensionLibrary;
 
     public ExtensionLibraryMenuController(
-    		@Autowired @Lazy ExtensionLibraryWindowController extensionLibraryWindowController) {
-    	this.extensionLibraryWindowController = extensionLibraryWindowController;
+    		@Autowired ExtensionLibrary extensionLibrary) {
+    	this.extensionLibrary = extensionLibrary;
     }
 
     public void performOpenExtensionLibraryWindow() {
-        extensionLibraryWindowController.getStage().centerOnScreen();
-        extensionLibraryWindowController.openWindow();
+        extensionLibrary.openDialog();
+        // then do other thing
     }
 }

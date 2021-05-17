@@ -34,10 +34,10 @@ package com.oracle.javafx.scenebuilder.imagelibrary.library.builtin;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryFilter;
 
 @Component
-public class ImageDefaultLibraryFilter implements LibraryFilter {
+public class ImageDefaultLibraryFilter implements ImageLibraryFilter {
 
     @Override
     public boolean isFiltered(String className) {

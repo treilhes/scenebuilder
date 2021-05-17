@@ -46,7 +46,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.controllibrary.library.ControlExplorerUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -56,6 +55,7 @@ import com.oracle.javafx.scenebuilder.library.api.ExplorerInspector;
 import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.util.ExplorationCancelledException;
 import com.oracle.javafx.scenebuilder.library.util.JarExplorer;
+import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 
@@ -68,8 +68,9 @@ public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, Con
     private final ClassLoaderController classLoaderController;
     private final List<ControlLibraryFilter> filters;
 
-    public ControlMavenArtifactExplorer(@Autowired ClassLoaderController classLoaderController,
-            @Autowired List<ControlLibraryFilter> filters) {
+    public ControlMavenArtifactExplorer(
+            @Autowired ClassLoaderController classLoaderController,
+            @Autowired(required = false) List<ControlLibraryFilter> filters) {
         super();
         this.classLoaderController = classLoaderController;
         this.filters = filters;
@@ -110,7 +111,7 @@ public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, Con
                                         ControlReportEntryImpl.Status.IGNORED, ControlReportEntryImpl.SubStatus.NONE,
                                         null, null, null);
                             } else {
-                                String className = ControlExplorerUtil.makeClassName(entry.getName(), "/");
+                                String className = LibraryUtil.makeClassName(entry.getName(), "/");
                                 return ControlExplorerUtil.exploreEntry(entry.getName(), classLoader, className,
                                         filters);
                             }

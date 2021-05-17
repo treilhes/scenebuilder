@@ -14,5 +14,9 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>library</artifactId>
+        </dependency>
     </dependencies>
 </project>

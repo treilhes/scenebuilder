@@ -172,6 +172,7 @@
                             <artifactSet>
                                 <excludes>
                                     <exclude>org.openjfx:*</exclude>
+                                    <exclude>module-info.java</exclude>
                                 </excludes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

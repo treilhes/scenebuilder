@@ -93,6 +93,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
@@ -103,7 +104,6 @@ import com.oracle.javafx.scenebuilder.job.editor.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.job.editor.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.job.editor.togglegroup.ModifySelectionToggleGroupJob;
-import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;

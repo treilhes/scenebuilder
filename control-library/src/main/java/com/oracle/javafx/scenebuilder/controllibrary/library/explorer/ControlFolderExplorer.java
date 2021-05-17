@@ -47,7 +47,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.controllibrary.library.ControlExplorerUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -56,6 +55,7 @@ import com.oracle.javafx.scenebuilder.library.api.Explorer;
 import com.oracle.javafx.scenebuilder.library.api.ExplorerInspector;
 import com.oracle.javafx.scenebuilder.library.util.ExplorationCancelledException;
 import com.oracle.javafx.scenebuilder.library.util.FolderExplorer;
+import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 
@@ -68,8 +68,9 @@ public class ControlFolderExplorer implements Explorer<Path, ControlReportImpl> 
     private final ClassLoaderController classLoaderController;
     private final List<ControlLibraryFilter> filters;
 
-    public ControlFolderExplorer(@Autowired ClassLoaderController classLoaderController,
-            @Autowired List<ControlLibraryFilter> filters) {
+    public ControlFolderExplorer(
+            @Autowired ClassLoaderController classLoaderController,
+            @Autowired(required = false) List<ControlLibraryFilter> filters) {
         super();
         this.classLoaderController = classLoaderController;
         this.filters = filters;
@@ -105,7 +106,7 @@ public class ControlFolderExplorer implements Explorer<Path, ControlReportImpl> 
                                     null, null, null);
                         } else {
                             Path relativepath = source.relativize(path);
-                            String className = ControlExplorerUtil.makeClassName(relativepath.toString(),
+                            String className = LibraryUtil.makeClassName(relativepath.toString(),
                                     File.separator);
                             return ControlExplorerUtil.exploreEntry(path.getFileName().toString(), classLoader,
                                     className, filters);

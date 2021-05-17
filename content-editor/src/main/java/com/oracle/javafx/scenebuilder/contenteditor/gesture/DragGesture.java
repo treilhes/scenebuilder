@@ -52,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.contenteditor.guides.MovingGuideController;
+import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -59,7 +60,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.draganddrop.target.ContainerXYDropTarget;
 import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.BoundsUtils;
 
 import javafx.event.EventType;
 import javafx.geometry.Bounds;

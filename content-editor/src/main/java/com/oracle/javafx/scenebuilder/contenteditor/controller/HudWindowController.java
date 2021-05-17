@@ -41,8 +41,8 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPopupController;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
 
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;

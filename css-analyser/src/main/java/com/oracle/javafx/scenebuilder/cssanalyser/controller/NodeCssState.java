@@ -45,8 +45,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
-import com.oracle.javafx.scenebuilder.kit.util.CssInternal;
 import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ObjectProperty;

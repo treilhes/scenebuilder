@@ -46,7 +46,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.controllibrary.library.ControlExplorerUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -70,7 +69,7 @@ public class ControlFileExplorer implements Explorer<Path, ControlReportImpl> {
 
     public ControlFileExplorer(
             @Autowired ClassLoaderController classLoaderController,
-            @Autowired List<ControlLibraryFilter> filters
+            @Autowired(required = false) List<ControlLibraryFilter> filters
             ) {
         super();
         this.classLoaderController = classLoaderController;
@@ -147,7 +146,7 @@ public class ControlFileExplorer implements Explorer<Path, ControlReportImpl> {
                                 return new ControlReportEntryImpl(entry.getName(), ControlReportEntryImpl.Status.IGNORED, 
                                         ControlReportEntryImpl.SubStatus.NONE, null, null, null);
                             } else {
-                                String className = ControlExplorerUtil.makeClassName(entry.getName(), "/");
+                                String className = LibraryUtil.makeClassName(entry.getName(), "/");
                                 return ControlExplorerUtil.exploreEntry(entry.getName(), classLoader, className, filters);
                             }
                         });

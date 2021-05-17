@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.util.LineEquation;
+import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

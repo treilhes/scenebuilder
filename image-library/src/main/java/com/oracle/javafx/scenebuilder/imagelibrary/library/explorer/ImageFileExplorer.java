@@ -45,11 +45,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
-import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageExplorerUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryFilter;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.library.api.Explorer;
@@ -67,11 +66,11 @@ public class ImageFileExplorer implements Explorer<Path, ImageReport> {
     private final static Logger logger = LoggerFactory.getLogger(ImageFileExplorer.class);
     
     private final ClassLoaderController classLoaderController;
-    private final List<LibraryFilter> filters;
+    private final List<ImageLibraryFilter> filters;
 
     public ImageFileExplorer(
             @Autowired ClassLoaderController classLoaderController,
-            @Autowired List<LibraryFilter> filters
+            @Autowired List<ImageLibraryFilter> filters
             ) {
         super();
         this.classLoaderController = classLoaderController;
@@ -148,7 +147,7 @@ public class ImageFileExplorer implements Explorer<Path, ImageReport> {
                                 return new ImageReportEntry(entry.getName(), ImageReportEntry.Status.IGNORED,
                                         null, ImageReportEntry.Type.NONE, null);
                             } else {
-                                String resourceName = ImageExplorerUtil.makeResourceName(entry.getName());
+                                String resourceName = LibraryUtil.makeResourceName(entry.getName());
                                 return ImageExplorerUtil.exploreEntry(entry.getName(), classLoader, resourceName, filters);
                             }
                         });
