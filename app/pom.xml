@@ -76,7 +76,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>extension-api</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>extension-store</artifactId>
         </dependency>
@@ -100,7 +100,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>inspector</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>image-library</artifactId>
         </dependency>
@@ -158,6 +158,25 @@
             </resource>
         </resources>
         <plugins>
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>list-deps</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>list</goal>
+                        </goals>
+                        <configuration>
+                            configure the plugin here
+                            <outputFile>${project.build.directory}/generated-resources/core.libs</outputFile>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -172,7 +191,6 @@
                             <artifactSet>
                                 <excludes>
                                     <exclude>org.openjfx:*</exclude>
-                                    <exclude>module-info.java</exclude>
                                 </excludes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

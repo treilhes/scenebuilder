@@ -35,5 +35,12 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>control-library</artifactId>
         </dependency>
+        
+        <!-- Gluon Charm Glisten -->
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>charm-glisten</artifactId>
+            <version>${charm.glisten.version}</version>
+        </dependency>
     </dependencies>
 </project>

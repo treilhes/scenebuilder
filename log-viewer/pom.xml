@@ -14,13 +14,6 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>core</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.athaydes.logfx/logfx -->
-        <dependency>
-            <groupId>com.athaydes.logfx</groupId>
-            <artifactId>logfx</artifactId>
-            <version>1.0-RC10</version>
-        </dependency>
-
     </dependencies>
 
 </project>
