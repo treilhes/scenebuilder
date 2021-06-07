@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
+package com.oracle.javafx.scenebuilder.editors.control;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -41,26 +41,25 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.MultilineI18nStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.StringEditor;
+import com.oracle.javafx.scenebuilder.editors.control.CharsetEditor;
 
 @ExtendWith(ApplicationExtension.class)
-public class StringEditorTest {
+public class CharsetEditorTest {
 
     static {
         I18N.initForTest();
     }
     
-    static StringPropertyMetadata someMultilineStringProp() {
-        return new MultilineI18nStringPropertyMetadata(new PropertyName("multistring"), true, "", null);
+    static CharsetStringPropertyMetadata someCharsetStringProp() {
+        return new CharsetStringPropertyMetadata(new PropertyName("charsetstring"), true, "", null);
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         
-        StringEditor o = new StringEditor(MockObjects.buildApiMock());
+        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
@@ -68,7 +67,7 @@ public class StringEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
         
-        StringEditor o = new StringEditor(MockObjects.buildApiMock());
+        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
@@ -76,9 +75,9 @@ public class StringEditorTest {
     @Test
     public void shouldResetTheInstance() {
         
-        StringEditor o = new StringEditor(MockObjects.buildApiMock());
+        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
         
-        o.reset(someMultilineStringProp(), null);
+        o.reset(someCharsetStringProp(), null);
     }
 
 }

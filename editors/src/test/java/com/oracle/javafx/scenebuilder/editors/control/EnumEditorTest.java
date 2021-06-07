@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
+package com.oracle.javafx.scenebuilder.editors.control;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -39,30 +39,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.ColorPopupEditor;
-
-import javafx.scene.paint.Color;
+import com.oracle.javafx.scenebuilder.editors.control.EnumEditor;
 
 @ExtendWith(ApplicationExtension.class)
-public class ColorPopupEditorTest {
+public class EnumEditorTest {
 
     static {
         I18N.initForTest();
     }
     
-    static ColorPropertyMetadata someColorProp() {
-        return new ColorPropertyMetadata(new PropertyName("color"), true, Color.AQUA, null);
+    static EnumerationPropertyMetadata someEnumProp() {
+        return new EnumerationPropertyMetadata(new PropertyName("enum"), javafx.scene.AccessibleRole.class, true,
+                javafx.scene.AccessibleRole.CHECK_BOX, null);
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
+        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
@@ -70,19 +68,17 @@ public class ColorPopupEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
         
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
+        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
-    public void shouldResetTheInstance() {
+    public void shouldResetTheInstanceForTableView() {
         
-        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
+        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
         
-        o.reset(someColorProp(), null);
+        o.reset(someEnumProp(), null);
     }
-
+    
 }

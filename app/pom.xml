@@ -22,6 +22,10 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>kit</artifactId>
         </dependency>
         <dependency>
@@ -39,10 +43,6 @@
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>controls-tooling</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>

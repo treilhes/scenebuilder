@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
+package com.oracle.javafx.scenebuilder.editors.control;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -41,25 +41,35 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.TreeTableViewResizePolicyPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.CharsetEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ColumnResizePolicyEditor;
+
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeTableView;
 
 @ExtendWith(ApplicationExtension.class)
-public class CharsetEditorTest {
+public class ColumnResizePolicyEditorTest {
 
     static {
         I18N.initForTest();
     }
     
-    static CharsetStringPropertyMetadata someCharsetStringProp() {
-        return new CharsetStringPropertyMetadata(new PropertyName("charsetstring"), true, "", null);
+    static TableViewResizePolicyPropertyMetadata someTableViewResizePolicyProp() {
+        return new TableViewResizePolicyPropertyMetadata(new PropertyName("tv"), true,
+                TableView.UNCONSTRAINED_RESIZE_POLICY, null);
+    }
+
+    static TreeTableViewResizePolicyPropertyMetadata someTreeTableViewResizePolicyProp() {
+        return new TreeTableViewResizePolicyPropertyMetadata(new PropertyName("ttv"), true,
+                TreeTableView.UNCONSTRAINED_RESIZE_POLICY, null);
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         
-        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
@@ -67,17 +77,25 @@ public class CharsetEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
         
-        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
-    public void shouldResetTheInstance() {
+    public void shouldResetTheInstanceForTableView() {
         
-        CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
         
-        o.reset(someCharsetStringProp(), null);
+        o.reset(someTableViewResizePolicyProp(), null);
+    }
+    
+    @Test
+    public void shouldResetTheInstanceForTreeTableView() {
+        
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        
+        o.reset(someTreeTableViewResizePolicyProp(), null);
     }
 
 }

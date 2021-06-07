@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
+package com.oracle.javafx.scenebuilder.editors.control;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -39,37 +39,30 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.TreeTableViewResizePolicyPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.ColumnResizePolicyEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ColorPopupEditor;
 
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.paint.Color;
 
 @ExtendWith(ApplicationExtension.class)
-public class ColumnResizePolicyEditorTest {
+public class ColorPopupEditorTest {
 
     static {
         I18N.initForTest();
     }
     
-    static TableViewResizePolicyPropertyMetadata someTableViewResizePolicyProp() {
-        return new TableViewResizePolicyPropertyMetadata(new PropertyName("tv"), true,
-                TableView.UNCONSTRAINED_RESIZE_POLICY, null);
-    }
-
-    static TreeTableViewResizePolicyPropertyMetadata someTreeTableViewResizePolicyProp() {
-        return new TreeTableViewResizePolicyPropertyMetadata(new PropertyName("ttv"), true,
-                TreeTableView.UNCONSTRAINED_RESIZE_POLICY, null);
+    static ColorPropertyMetadata someColorProp() {
+        return new ColorPropertyMetadata(new PropertyName("color"), true, Color.AQUA, null);
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
+        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
@@ -77,25 +70,19 @@ public class ColumnResizePolicyEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
         
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
+        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
-    public void shouldResetTheInstanceForTableView() {
+    public void shouldResetTheInstance() {
         
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
+        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
         
-        o.reset(someTableViewResizePolicyProp(), null);
-    }
-    
-    @Test
-    public void shouldResetTheInstanceForTreeTableView() {
-        
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
-        
-        o.reset(someTreeTableViewResizePolicyProp(), null);
+        o.reset(someColorProp(), null);
     }
 
 }

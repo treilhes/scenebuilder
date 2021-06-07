@@ -30,57 +30,51 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
+package com.oracle.javafx.scenebuilder.editors.control;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.HashSet;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ButtonTypeListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ButtonTypeEditor;
 
 @ExtendWith(ApplicationExtension.class)
-public class BoundedDoubleEditorTest {
+public class ButtonTypeEditorTest {
 
     static {
         I18N.initForTest();
     }
     
-    static DoublePropertyMetadata someDoubleProp() {
-        return new CoordinateDoublePropertyMetadata(new PropertyName("somdouble"), true, 0.0, null);
+    static ButtonTypeListPropertyMetadata someButtonTypeListProp() {
+        return new ButtonTypeListPropertyMetadata(new PropertyName("buttontypelist"), true, Collections.emptyList(), null);
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
+        ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
+        ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        SelectionState selectionState = Mockito.mock(SelectionState.class);
-        Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
+        ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
         
-        BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
-        
-        o.reset(someDoubleProp(), selectionState);
+        o.reset(someButtonTypeListProp(), null);
     }
 
 }

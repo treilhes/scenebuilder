@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors;
+package com.oracle.javafx.scenebuilder.editors.control;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -41,26 +41,26 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.MultilineI18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.EnumEditor;
+import com.oracle.javafx.scenebuilder.editors.control.StringEditor;
 
 @ExtendWith(ApplicationExtension.class)
-public class EnumEditorTest {
+public class StringEditorTest {
 
     static {
         I18N.initForTest();
     }
     
-    static EnumerationPropertyMetadata someEnumProp() {
-        return new EnumerationPropertyMetadata(new PropertyName("enum"), javafx.scene.AccessibleRole.class, true,
-                javafx.scene.AccessibleRole.CHECK_BOX, null);
+    static StringPropertyMetadata someMultilineStringProp() {
+        return new MultilineI18nStringPropertyMetadata(new PropertyName("multistring"), true, "", null);
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         
-        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
+        StringEditor o = new StringEditor(MockObjects.buildApiMock());
         
         assertNotNull(o);
     }
@@ -68,17 +68,17 @@ public class EnumEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
         
-        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
+        StringEditor o = new StringEditor(MockObjects.buildApiMock());
         
         assertNotNull(o.getMenu());
     }
 
     @Test
-    public void shouldResetTheInstanceForTableView() {
+    public void shouldResetTheInstance() {
         
-        EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
+        StringEditor o = new StringEditor(MockObjects.buildApiMock());
         
-        o.reset(someEnumProp(), null);
+        o.reset(someMultilineStringProp(), null);
     }
-    
+
 }

@@ -58,13 +58,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.mockserver.configuration.ConfigurationProperties;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.jupiter.MockServerExtension;
 import org.mockserver.junit.jupiter.MockServerSettings;
 import org.mockserver.socket.PortFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableTrustManagerProvider;
@@ -130,14 +130,14 @@ public class CertificateManagerControllerTest {
         try {
             KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
             if (store.exists()) {
-                logger.info("Counting certificates in store : {}", store.getAbsolutePath());
+                logger.info(() -> String.format("Counting certificates in store : %s", store.getAbsolutePath()));
                 try (FileInputStream fis = new FileInputStream(store)){
                     ks.load(fis, storePassword.toCharArray());
                 }
                 return ks.size();
             }
         } catch (Exception e) {
-            logger.error("Error while loading the store", e);
+            logger.error(e, () -> "Error while loading the store");
         }
         return 0;
     }
