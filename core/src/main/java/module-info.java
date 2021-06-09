@@ -88,5 +88,5 @@ module scenebuilder.core {
     requires spring.context;
     requires spring.core;
     requires scenebuilder.extension.api;
-	requires jdk.jartool;
+
 }

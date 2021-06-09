@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.sourcegen.controller;
+package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +55,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
@@ -71,6 +72,8 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
     public final static String VIEW_ID = "7def27f9-4b85-4cf6-a0e4-32b5714b2295";
     public final static String VIEW_NAME = "menu.title.show.sample.controller.skeleton";
 
+    @FXML
+    ChoiceBox<SkeletonSettings.LANGUAGE> languageChoiceBox;
     @FXML
     CheckBox commentCheckBox;
     @FXML
@@ -115,11 +118,15 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
      */
     @Override
     public void controllerDidLoadFxml() {
-
+        assert languageChoiceBox != null;
         assert commentCheckBox != null;
         assert formatCheckBox != null;
         assert textArea != null;
 
+        languageChoiceBox.getItems().addAll(SkeletonSettings.LANGUAGE.values());
+        languageChoiceBox.getSelectionModel().select(SkeletonSettings.LANGUAGE.JAVA);
+        languageChoiceBox.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> update());
+        
         commentCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> update());
 
         formatCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> update());
@@ -141,16 +148,18 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
             updateTitle();
             final SkeletonBuffer buf = new SkeletonBuffer(fxomDocument, documentName);
 
+            buf.setLanguage(languageChoiceBox.getSelectionModel().getSelectedItem());
+            
             if (commentCheckBox.isSelected()) {
-                buf.setTextType(SkeletonBuffer.TEXT_TYPE.WITH_COMMENTS);
+                buf.setTextType(SkeletonSettings.TEXT_TYPE.WITH_COMMENTS);
             } else {
-                buf.setTextType(SkeletonBuffer.TEXT_TYPE.WITHOUT_COMMENTS);
+                buf.setTextType(SkeletonSettings.TEXT_TYPE.WITHOUT_COMMENTS);
             }
 
             if (formatCheckBox.isSelected()) {
-                buf.setFormat(SkeletonBuffer.FORMAT_TYPE.FULL);
+                buf.setFormat(SkeletonSettings.FORMAT_TYPE.FULL);
             } else {
-                buf.setFormat(SkeletonBuffer.FORMAT_TYPE.COMPACT);
+                buf.setFormat(SkeletonSettings.FORMAT_TYPE.COMPACT);
             }
 
             textArea.setText(buf.toString());

@@ -37,20 +37,17 @@ import java.util.ResourceBundle;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
-import com.oracle.javafx.scenebuilder.api.i18n.I18NControl;
 
 @Component
 public class I18NDummy implements BundleProvider {
 
     private static ResourceBundle bundle;
 
-    private static ResourceBundle.Control utf8EncodingControl = new I18NControl();
-
     @Override
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NDummy.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDummy",utf8EncodingControl); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDummy"); //NOI18N
         }
         return bundle;
     }

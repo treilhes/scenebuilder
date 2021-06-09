@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.api.i18n;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -45,8 +46,18 @@ import org.springframework.stereotype.Component;
 public class I18N {
 	
     public static void initForTest() {
+        if (instance != null) {
+            return;
+        }
         new I18N();
     }
+    public static void initForTest(BundleProvider... provider) {
+        if (instance != null) {
+            return;
+        }
+        new I18N(Arrays.asList(provider));
+    }
+    
 	private static I18N instance;
 	
 	private CombinedResourceBundle combinedBundle;
@@ -71,7 +82,7 @@ public class I18N {
 	}
 	
 	public String get(String key) {
-	    if (testing) {
+	    if (testing && (combinedBundle == null || !combinedBundle.containsKey(key))) {
 	        return key;
 	    }
 		return combinedBundle.getString(key);

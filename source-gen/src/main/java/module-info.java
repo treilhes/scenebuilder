@@ -1,7 +1,6 @@
 module scenebuilder.source.gen {
     exports com.oracle.javafx.scenebuilder.sourcegen.util.eventnames;
     exports com.oracle.javafx.scenebuilder.sourcegen.actions;
-    exports com.oracle.javafx.scenebuilder.sourcegen.controller;
     exports com.oracle.javafx.scenebuilder.sourcegen.i18n;
     exports com.oracle.javafx.scenebuilder.sourcegen;
 
@@ -15,4 +14,5 @@ module scenebuilder.source.gen {
     requires scenebuilder.extension.api;
     requires spring.beans;
     requires spring.context;
+    
 }

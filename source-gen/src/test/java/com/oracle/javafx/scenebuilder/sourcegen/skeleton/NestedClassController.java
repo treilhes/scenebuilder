@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
- * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * Copyright (c) 2021, Gluon and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -30,28 +29,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.i18n;
+package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Locale;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+public class NestedClassController {
 
-public class I18NControl extends ResourceBundle.Control {
-    @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) {
-        String bundleName = toBundleName(baseName, locale);
-        String resourceName = toResourceName(bundleName, "properties");
-        try (InputStream is = loader.getResourceAsStream(resourceName);
-             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-             BufferedReader reader = new BufferedReader(isr)) {
-            return new PropertyResourceBundle(reader);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
+    public static class InnerController {
+
     }
 }
