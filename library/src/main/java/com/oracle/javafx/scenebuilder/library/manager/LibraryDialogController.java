@@ -239,7 +239,9 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             .map(f -> new LibraryDialogListItem(this, f));
         
         Platform.runLater(() -> {
-            libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream).collect(Collectors.toList()));
+            libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream)
+                    .sorted(new DialogListItemComparator())
+                    .collect(Collectors.toList()));
             libraryListView.setCellFactory(param -> new LibraryDialogListCell());
         });
     }

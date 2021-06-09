@@ -70,7 +70,7 @@ public class Agent {
         ExtensionRegistry registry = new ExtensionRegistry(userExtensionsFolder, loadableExtensions);
         
         Dependency tmpMain = new Dependency("tmp", "tmp", "0.0.0");
-        tmpMain.setLocalFile(new File("C:/SSDDrive/git/scenebuilder/help-features/target/help-features-16.0.0-SNAPSHOT.jar"));
+        tmpMain.setLocalFile(new File("C:/SSDDrive/git/scenebuilder/help-features/target/help-features-17.0.0-SNAPSHOT.jar"));
         
         ExtensionMetadata tmp = new ExtensionMetadata();
         tmp.setMain(tmpMain);

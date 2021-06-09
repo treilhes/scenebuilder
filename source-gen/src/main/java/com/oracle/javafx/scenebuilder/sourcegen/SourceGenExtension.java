@@ -38,8 +38,8 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sourcegen.actions.GenerateSkeletonContentAction;
-import com.oracle.javafx.scenebuilder.sourcegen.controller.SkeletonWindowController;
 import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
+import com.oracle.javafx.scenebuilder.sourcegen.skeleton.SkeletonWindowController;
 
 public class SourceGenExtension extends AbstractExtension {
 

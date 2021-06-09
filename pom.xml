@@ -29,15 +29,15 @@
         <module>editors</module>
         <module>exporter</module>
         <module>extension-api</module>
-		<module>extension-store</module>
+        <module>extension-store</module>
         <module>extension-library</module>
-        
+
         <module>filesystem</module>
         <module>gluon</module>
         <module>help-features</module>
         <module>inspector</module>
-		<module>image-library</module>
-		<module>jobs</module>
+        <module>image-library</module>
+        <module>jobs</module>
         <module>library</module>
         <module>preference-editor</module>
         <module>preview</module>
@@ -54,11 +54,13 @@
         <javafx.version>16</javafx.version>
         <aether.version>1.1.0</aether.version>
         <charm.glisten.version>5.0.0-jdk9</charm.glisten.version>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.7.0</junit.version>
         <junit-platform.version>1.7.1</junit-platform.version>
         <jackson.version>2.11.3</jackson.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <repositories>
@@ -77,16 +79,22 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.3.4.RELEASE</version>
+            <version>2.5.0</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>
@@ -117,9 +125,15 @@
             <artifactId>mockserver-junit-jupiter</artifactId>
             <version>5.11.2</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -197,7 +211,7 @@
                 <artifactId>extension-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>extension-store</artifactId>
                 <version>${project.version}</version>
@@ -227,7 +241,7 @@
                 <artifactId>inspector</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>image-library</artifactId>
                 <version>${project.version}</version>
@@ -287,6 +301,11 @@
                 <artifactId>log-viewer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.30</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -309,14 +328,14 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>${maven.compiler.plugin.version}</version>
                     <configuration>
                         <useIncrementalCompilation>false</useIncrementalCompilation>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
-                                <version>1.18.16</version>
+                                <version>${lombok.version}</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
@@ -351,6 +370,8 @@
                         <argLine>
                             --illegal-access=permit
                         </argLine>
+                        <!-- <reuseForks>false</reuseForks>
+                        <forkCount>1</forkCount> -->
                     </configuration>
                 </plugin>
                 <plugin>
