@@ -1,6 +1,6 @@
-{% include toc/toc.md %}
+{% include toc.md %}
 
-| {% include_relative toc/toc.md %} | right |
+| {% include_relative _includes/toc.md %} | right |
 |------|-------|
 
 ## Welcome to GitHub Pages
@@ -32,6 +32,8 @@ Syntax highlighted code block
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+
+{% include_relative _includes/toc.md %}
 
 ### Jekyll Themes
 
