@@ -1,3 +1,8 @@
+{% include toc/toc.md %}
+
+| {% include_relative toc/toc.md %} | right |
+|------|-------|
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/treilhes/scenebuilder/edit/feature/scenebuilderx/docs/index.md) to maintain and preview the content for your website in Markdown files.
