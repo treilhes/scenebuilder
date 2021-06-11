@@ -1,5 +1,0 @@
-ssssssssssss
-
-eeeeeeeeee
-
-rrrrrrrrrrrr
