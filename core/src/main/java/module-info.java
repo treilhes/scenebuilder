@@ -1,3 +1,7 @@
+import com.oracle.javafx.scenebuilder.api.ApiExtension;
+import com.oracle.javafx.scenebuilder.core.CoreExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
 module scenebuilder.core {
     exports com.oracle.javafx.scenebuilder.api.action;
     exports com.oracle.javafx.scenebuilder.api.alert;
@@ -65,6 +69,8 @@ module scenebuilder.core {
     exports com.oracle.javafx.scenebuilder.editors.drag.target;
     exports com.oracle.javafx.scenebuilder.core.ui;
 
+    opens com.oracle.javafx.scenebuilder.api.util to spring.core;
+    
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
@@ -88,5 +94,7 @@ module scenebuilder.core {
     requires spring.context;
     requires spring.core;
     requires scenebuilder.extension.api;
+
+    provides Extension with CoreExtension, ApiExtension;
 
 }

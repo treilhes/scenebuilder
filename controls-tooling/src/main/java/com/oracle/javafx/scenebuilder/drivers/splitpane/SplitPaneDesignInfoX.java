@@ -112,7 +112,7 @@ public class SplitPaneDesignInfoX  {
      * Computes what would be the divider positions of splitpane if
      * divider at dividerIndex was moved to (sceneX, sceneY).
      *
-     * @param splitPane the splitpane to which simulated move applies
+     * @param fxomSplitPane the splitpane model object to which simulated move applies
      * @param dividerIndex the index of the divider that should be moved
      * @param sceneX x of the target position in scene coordinates
      * @param sceneY y of the target position in scene coordinates

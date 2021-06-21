@@ -88,8 +88,7 @@ public abstract class AbstractPanelController  {
      * Subclass implementations should make sure that this constructor can be
      * invoked outside of the JavaFX thread.
      *
-     * @param sceneBuilderManager the scene builder manager
-     * @param editor the editor controller (should not be null).
+     * @param api the api object
      */
     protected AbstractPanelController(Api api) {
         this.api = api;

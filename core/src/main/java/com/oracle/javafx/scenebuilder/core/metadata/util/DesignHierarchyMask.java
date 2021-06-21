@@ -115,18 +115,18 @@ public class DesignHierarchyMask implements HierarchyMask {
     }
 
     /**
-     * Checks if is the object is an instance of {@See Node}.
+     * Checks if is the object is an instance of {@link Node}.
      *
-     * @return true, if is a {@See Node}
+     * @return true, if is a {@link Node}
      */
     public boolean isFxNode() {
         return fxomObject.getSceneGraphObject() instanceof Node;
     }
 
     /**
-     * Gets the closest instance of {@See Node} in the object inheritance chain.
+     * Gets the closest instance of {@link Node} in the object inheritance chain.
      *
-     * @return the closest instance of {@See Node} in the object inheritance chain.
+     * @return the closest instance of {@link Node} in the object inheritance chain.
      */
     public FXOMObject getClosestFxNode() {
         FXOMObject result = fxomObject;

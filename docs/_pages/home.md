@@ -4,13 +4,14 @@ permalink: /
 hidden: true
 header:
   overlay_color: "#5e616c"
-  overlay_image: /assets/images/mm-home-page-feature.jpg
+  overlay_image: /assets/images/mm-home-page-sb.jpg
   actions:
     - label: "<i class='fas fa-download'></i> Install now"
-      url: "/docs/quick-start-guide/"
+      url: "/userguide/install/"
 excerpt: >
-  A flexible two-column Jekyll theme. Perfect for building personal sites, blogs, and portfolios.<br />
-  <small><a href="https://github.com/mmistakes/minimal-mistakes/releases/tag/4.23.0">Latest release v4.23.0</a></small>
+  Scene Builder is an interactive GUI design tool for JavaFX. <br />
+  It allows you to quickly build user interfaces without needing to (know how) to code.<br />
+  <small><a href="https://github.com/treilhes/scenebuilder/tree/feature/scenebuilderx">Latest release vX.X.X</a></small>
 feature_row:
   - image_path: /assets/images/mm-customizable-feature.png
     alt: "customizable"
@@ -29,7 +30,7 @@ feature_row:
   - image_path: /assets/images/mm-free-feature.png
     alt: "100% free"
     title: "100% free"
-    excerpt: "Free to use however you want under the MIT License. Clone it, fork it, customize it... whatever!"
+    excerpt: "Free to use however you want under the BSD-3 License. Clone it, fork it, customize it... whatever!"
     url: "/docs/license/"
     btn_class: "btn--primary"
     btn_label: "Learn more"      

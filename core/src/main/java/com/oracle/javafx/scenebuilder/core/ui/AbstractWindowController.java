@@ -208,6 +208,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
     /**
      * Opens this window and place it in front.
      */
+    @Override
     public void openWindow() {
         assert Platform.isFxApplicationThread();
         getStage().show();
@@ -217,6 +218,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
     /**
      * Closes this window.
      */
+    @Override
     public void closeWindow() {
         assert Platform.isFxApplicationThread();
         getStage().close();
@@ -224,8 +226,6 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
 
     /**
      * On close request.
-     *
-     * @param event the event
      */
     public abstract void onCloseRequest();
 

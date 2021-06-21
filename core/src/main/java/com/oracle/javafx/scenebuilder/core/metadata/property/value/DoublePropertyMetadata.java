@@ -138,7 +138,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
     }
     
     /**
-     * Accept any double x with 0 <= x <= 255.0 (Equivalent to old DoubleKind.EFFECT_SIZE)
+     * Accept any double x with 0 &lt;= x &lt;= 255.0 (Equivalent to old DoubleKind.EFFECT_SIZE)
      */
     public static class EffectSizeDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
         public EffectSizeDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
@@ -167,7 +167,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
     }
     
     /**
-     * Accept any double x with 0 <= x <= 360.0 (Equivalent to old DoubleKind.ANGLE)
+     * Accept any double x with 0 &lt;= x &lt;= 360.0 (Equivalent to old DoubleKind.ANGLE)
      */
     public static class AngleDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
         public AngleDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
@@ -194,7 +194,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
     }
     
     /**
-     * Accept any double x with 0 <= x <= 1.0 (Equivalent to old DoubleKind.OPACITY)
+     * Accept any double x with 0 &lt;= x &lt;= 1.0 (Equivalent to old DoubleKind.OPACITY)
      */
     public static class OpacityDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
         public OpacityDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
@@ -223,7 +223,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
     }
     
     /**
-     * Accept any double x with 0 <= x <= 1.0 (Equivalent to old DoubleKind.PROGRESS)
+     * Accept any double x with 0 &lt;= x &lt;= 1.0 (Equivalent to old DoubleKind.PROGRESS)
      */
     public static class ProgressDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
         public ProgressDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
@@ -253,7 +253,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
     }
     
     /**
-     * Accept any double x with x == -1 or 0 <= x <= 100.0 (Equivalent to old DoubleKind.PERCENTAGE)
+     * Accept any double x with x == -1 or 0 &lt;= x &lt;= 100.0 (Equivalent to old DoubleKind.PERCENTAGE)
      */
     public static class PercentageDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
         public PercentageDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {

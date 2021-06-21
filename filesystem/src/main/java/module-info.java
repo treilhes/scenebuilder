@@ -1,3 +1,6 @@
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.fs.FileSystemExtension;
+
 module scenebuilder.filesystem {
     exports com.oracle.javafx.scenebuilder.fs.util;
     exports com.oracle.javafx.scenebuilder.fs.preference.global;
@@ -17,4 +20,6 @@ module scenebuilder.filesystem {
     requires scenebuilder.extension.api;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with FileSystemExtension;
 }

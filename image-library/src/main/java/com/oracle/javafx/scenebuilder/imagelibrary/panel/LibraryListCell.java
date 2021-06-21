@@ -59,7 +59,6 @@ import javafx.scene.layout.Priority;
 /**
  * ListCell for the Library panel.
  * Used to dynamically construct items and their graphic, as well as set the cursor.
- * @param <T>
  */
 public class LibraryListCell extends ListCell<LibraryListItem> {
     private final ImageLibraryController libraryController;

@@ -67,7 +67,7 @@ public interface DocumentManager {
     SubjectItem<Boolean> closed();
     /**
      * The current stylesheet configuration has changed.
-     * Because:</br>
+     * Because:<br/>
      * - A userAgentStylesheet file has been set
      * - A stylesheet file has been added
      * - A stylesheet file has been removed
@@ -75,14 +75,14 @@ public interface DocumentManager {
     SubjectItem<StylesheetProvider> stylesheetConfig();
     /**
      * The current i18n configuration has changed.
-     * Because:</br>
+     * Because:<br/>
      * - A property file has been added
      * - A property file has been removed
      */
     SubjectItem<I18nResourceProvider> i18nResourceConfig();
     /**
      * The current fxomDocument has changed.
-     * Because:</br>
+     * Because:<br/>
      * - An empty document is loaded
      * - An FXML file is loaded 
      */

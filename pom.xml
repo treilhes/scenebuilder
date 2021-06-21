@@ -13,7 +13,6 @@
     <modules>
         <module>kit</module>
         <module>app</module>
-
         <module>certificate-manager</module>
         <module>content-editor</module>
         <module>control-library</module>
@@ -31,7 +30,6 @@
         <module>extension-api</module>
         <module>extension-store</module>
         <module>extension-library</module>
-
         <module>filesystem</module>
         <module>gluon</module>
         <module>help-features</module>
@@ -309,6 +307,78 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <profile>
+            <id>javadoc</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/docs/apidocs</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <show>private</show>
+                            <additionalOptions>
+                                <option>--add-exports</option>
+                                <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.core</option>
+                                <option>--add-exports</option>
+                                <option>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core</option>
+                                <option>--add-exports</option>
+                                <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.css.analyser</option>
+                            </additionalOptions>
+                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated javadoc, see workaround below -->
+                            <docfilessubdirs>true</docfilessubdirs>
+                            <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
+                            <outputDirectory>${basedir}/docs/apidocs</outputDirectory>
+                            <reportOutputDirectory>${basedir}/docs/apidocs</reportOutputDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>aggregation</id>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                                <configuration>
+                                    <aggregate>true</aggregate>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory in github_pages -->
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>groovy-maven-plugin</artifactId>
+                        <version>2.1.1</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <source>aggregated_javadoc_fix.groovy</source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <pluginManagement>
             <plugins>
@@ -370,8 +440,7 @@
                         <argLine>
                             --illegal-access=permit
                         </argLine>
-                        <!-- <reuseForks>false</reuseForks>
-                        <forkCount>1</forkCount> -->
+                        <!-- <reuseForks>false</reuseForks> <forkCount>1</forkCount> -->
                     </configuration>
                 </plugin>
                 <plugin>
@@ -385,7 +454,12 @@
                         </argLine>
                     </configuration>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <!-- <version>3.3.0</version> -->
+                    <version>3.3.1-SNAPSHOT</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

@@ -220,7 +220,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
     /**
      * Computes the transform that projects from local coordinates of a
      * scene graph object to the rudder layer local coordinates.
-     * @param sceneGraphObject a scene graph object
+     * @param fxomObject a fxml object model object
      * @return transform from sceneGraphObject local coordinates to rudder local coordinates
      */
     @Override

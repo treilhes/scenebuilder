@@ -1,133 +1,122 @@
-# example navigation
-foo:
-  - title: "Parent Link 1"
-    url: /parent-1-page-url/
-    children:
-      - title: "Child Link 1"
-        url: /child-1-page-url/
-      - title: "Child Link 2"
-        url: /child-2-page-url/
-  - title: "Parent Link 2"
-    url: /parent-2-page-url/
-    children:
-      - title: "Child Link 1"
-        url: /child-1-page-url/
-      - title: "Child Link 2"
-        url: /child-2-page-url/
-      - title: "Child Link 3"
-        url: /child-3-page-url/
-
-
 # main links
 main:
-  - title: "Quick-Start Guide"
-    url: /docs/quick-start-guide/
+  - title: "User Guide"
+    url: /userguide/disclaimer/
+  - title: "Dev Guide"
+    url: /devguide/quick-start-guide/
+  - title: "Javadoc"
+    url: /apidocs/index.html
+    target: _blank
   - title: "About"
     url: /about/
-  - title: "Sample Posts"
-    url: /year-archive/
-  - title: "Sample Collections"
-    url: /collection-archive/
   - title: "Terms &amp; Privacy Policy"
     url: /terms/
 
+# userguide links
+userguide:
+  - title: Disclaimer
+    url: /userguide/disclaimer/
+  - title: Installation
+    url: /userguide/install/
+  - title: Start SceneBuilder
+    url: /userguide/starting-up-scenebuilder/
+    children:
+      - title: "Main window"
+        url: /userguide/main-window/
+      - title: "Menu bar"
+        url: /userguide/menu-bar/
+      - title: "Selection bar"
+        url: /userguide/path-selection-message-bar/
+      - title: "Content panel"
+        url: /userguide/content-panel/
+      - title: "Document Panel"
+        url: /userguide/document-panel/
+        children:
+        - title: "Hierarchy section"
+          url: /userguide/document-panel-hierarchy/
+        - title: "Controller section"
+          url: /userguide/document-panel-controller/
+      - title: "Control library"
+        url: /userguide/control-library/
+        children:
+        - title: "Library manager"
+          url: /userguide/control-library-manager/
+        - title: "Default controls"
+          url: /userguide/control-default-controls/
+      - title: "Inspector"
+        url: /userguide/inspector/
+        children:
+        - title: "Properties Section"
+          url: /userguide/inspector-properties/
+        - title: "Layout Section"
+          url: /userguide/inspector-layout/
+        - title: "Code Section"
+          url: /userguide/inspector-code/
+      - title: "Css styling"
+        url: /userguide/css-styling/
+      - title: "Css analyzer"
+        url: /userguide/css-analyzer/
+      - title: "Internationalization"
+        url: /userguide/internationalization/
+  - title: "Extensions"
+    children:
+    - title: "Developing Applications Using Gluon"
+      url: /userguide/dev-app-with-gluon/
 
-# documentation links
-docs:
+# devguide links
+devguide:
   - title: Getting Started
     children:
       - title: "Quick-Start Guide"
-        url: /docs/quick-start-guide/
+        url: /devguide/quick-start-guide/
       - title: "Structure"
-        url: /docs/structure/
+        url: /devguide/structure/
       - title: "Installation"
-        url: /docs/installation/
+        url: /devguide/installation/
       - title: "Upgrading"
-        url: /docs/upgrading/
+        url: /devguide/upgrading/
   - title: Customization
     children:
       - title: "Configuration"
-        url: /docs/configuration/
+        url: /devguide/configuration/
       - title: "Overriding Theme Defaults"
-        url: /docs/overriding-theme-defaults/
+        url: /devguide/overriding-theme-defaults/
       - title: "Navigation"
-        url: /docs/navigation/
+        url: /devguide/navigation/
       - title: "UI Text"
-        url: /docs/ui-text/
+        url: /devguide/ui-text/
       - title: "Authors"
-        url: /docs/authors/
+        url: /devguide/authors/
       - title: "Layouts"
-        url: /docs/layouts/
+        url: /devguide/layouts/
   - title: Content
     children:
       - title: "Working with Posts"
-        url: /docs/posts/
+        url: /devguide/posts/
       - title: "Working with Pages"
-        url: /docs/pages/
+        url: /devguide/pages/
       - title: "Working with Collections"
-        url: /docs/collections/
+        url: /devguide/collections/
       - title: "Helpers"
-        url: /docs/helpers/
+        url: /devguide/helpers/
       - title: "Utility Classes"
-        url: /docs/utility-classes/
+        url: /devguide/utility-classes/
   - title: Extras
     children:
       - title: "Stylesheets"
-        url: /docs/stylesheets/
+        url: /devguide/stylesheets/
       - title: "JavaScript"
-        url: /docs/javascript/
+        url: /devguide/javascript/
   - title: Meta
     children:
       - title: "History"
-        url: /docs/history/
+        url: /devguide/history/
       - title: "Contributing"
-        url: /docs/contributing/
+        url: /devguide/contributing/
       - title: "Old 2.2 Docs"
-        url: /docs/docs-2-2/
+        url: /devguide/docs-2-2/
       - title: "License"
-        url: /docs/license/
+        url: /devguide/license/
       - title: "Terms &amp; Privacy Policy"
         url: /terms/
 
-# sidebar navigation list sample
-sidebar-sample:
-  - title: "Parent Page A"
-    children:
-      - title: "Child Page A1"
-        url: /
-      - title: "Child Page A2"
-        url: /
-      - title: "Child Page A3"
-        url: /
-      - title: "Child Page A4"
-        url: /
-  - title: "Parent Page B"
-    children:
-      - title: "Child Page B1"
-        url: /
-      - title: "Child Page B2"
-        url: /
-      - title: "Child Page B3"
-        url: /
-      - title: "Child Page B4"
-        url: /
-      - title: "Child Page B5"
-        url: /
-  - title: "Parent Page C"
-    children:
-      - title: "Child Page C1"
-        url: /
-      - title: "Child Page C2"
-        url: /
-      - title: "Child Page C3"
-        url: /
-      - title: "Child Page C4"
-        url: /
-      - title: "Child Page C5"
-        url: /
-  - title: "Parent Page D"
-    children:
-      - title: "Child Page D1"
-        url: /
-      - title: "Child Page D2"
-        url: /
