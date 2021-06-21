@@ -11,7 +11,7 @@ layout: none
     "display": "fullscreen",
     "Scope": "/",
     "orientation": "portrait",
-	"start_url": "{{ site.baseurl }}",
+	"start_url": "{{ site.baseurl }}/",
 	"icons": [
 		{
 			"src": "./android-chrome-36x36.png?v=M44lzPylqQ",
