@@ -291,8 +291,3 @@ compress_html:
   clippings: all
   ignore:
     envs: development
-
-
-webrick:
-  headers:
-    Service-Worker-Allowed: /

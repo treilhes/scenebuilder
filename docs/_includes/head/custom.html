@@ -18,7 +18,7 @@ if ("serviceWorker" in navigator) {
 		console.log("An active service worker found, no need to register");
 	} else {
 	    // Register the service worker
-	    navigator.serviceWorker.register("{{ site.baseurl }}/assets/js/serviceworker.js", {
+	    navigator.serviceWorker.register("{{ site.baseurl }}/serviceworker.js", {
 	        scope: "{{ site.baseurl }}"
 		})
 		.then(function (reg) {
