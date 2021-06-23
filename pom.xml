@@ -11,41 +11,41 @@
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
-        <module>kit</module>
-        <module>app</module>
-        <module>certificate-manager</module>
-        <module>content-editor</module>
-        <module>control-library</module>
-        <module>controls</module>
-        <module>controls-tooling</module>
-        <module>core</module>
-        <module>css-analyser</module>
-        <module>debug-menu</module>
-        <module>defaultx</module>
-        <module>dev-utils</module>
-        <module>document</module>
-        <module>drag-and-drop</module>
-        <module>editors</module>
-        <module>exporter</module>
-        <module>extension-api</module>
-        <module>extension-store</module>
-        <module>extension-library</module>
-        <module>filesystem</module>
-        <module>gluon</module>
-        <module>help-features</module>
-        <module>inspector</module>
-        <module>image-library</module>
-        <module>jobs</module>
-        <module>library</module>
-        <module>preference-editor</module>
-        <module>preview</module>
-        <module>sb</module>
-        <module>source-gen</module>
-        <module>source-view</module>
-        <module>templates</module>
-        <module>update-manager</module>
-        <module>log-viewer</module>
-        <module>dummy-ext</module>
+		<module>dev.utils</module>
+        <module>scenebuilder.application</module>
+        <module>scenebuilder.core.api</module>
+        <module>scenebuilder.core.drag.and.drop</module>
+        <module>scenebuilder.core.extension.api</module>
+        <module>scenebuilder.core.extension.store</module>
+        <module>scenebuilder.core.filesystem</module>
+        <module>scenebuilder.core.jobs</module>
+        <module>scenebuilder.core.kit</module>
+        <module>scenebuilder.core.library</module>
+        <module>scenebuilder.ext.certificate.manager</module>
+        <module>scenebuilder.ext.content.editor</module>
+        <module>scenebuilder.ext.control.library</module>
+        <module>scenebuilder.ext.controls.tooling</module>
+        <module>scenebuilder.ext.controls</module>
+        <module>scenebuilder.ext.css.analyser</module>
+        <module>scenebuilder.ext.debug.menu</module>
+        <module>scenebuilder.ext.defaultx</module>
+        <module>scenebuilder.ext.document</module>
+        <module>scenebuilder.ext.dummy</module>
+        <module>scenebuilder.ext.editors</module>
+        <module>scenebuilder.ext.exporter</module>
+        <module>scenebuilder.ext.extension.library</module>
+        <module>scenebuilder.ext.gluon</module>
+        <module>scenebuilder.ext.help.features</module>
+        <module>scenebuilder.ext.image.library</module>
+        <module>scenebuilder.ext.inspector</module>
+        <module>scenebuilder.ext.log.viewer</module>
+        <module>scenebuilder.ext.preference.editor</module>
+        <module>scenebuilder.ext.preview</module>
+        <module>scenebuilder.ext.sb</module>
+        <module>scenebuilder.ext.source.gen</module>
+        <module>scenebuilder.ext.source.view</module>
+        <module>scenebuilder.ext.templates</module>
+        <module>scenebuilder.ext.update.manager</module>
     </modules>
 
     <properties>
@@ -136,167 +136,167 @@
         <dependencies>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>app</artifactId>
+                <artifactId>scenebuilder.application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+			<dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>kit</artifactId>
+                <artifactId>scenebuilder.core.drag.and.drop</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>certificate-manager</artifactId>
+                <artifactId>scenebuilder.core.extension.api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>content-editor</artifactId>
+                <artifactId>scenebuilder.core.extension.store</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>controls</artifactId>
+                <artifactId>scenebuilder.core.filesystem</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>controls-tooling</artifactId>
+                <artifactId>scenebuilder.core.jobs</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>core</artifactId>
+                <artifactId>scenebuilder.core.kit</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>css-analyser</artifactId>
+                <artifactId>scenebuilder.core.library</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>debug-menu</artifactId>
+                <artifactId>scenebuilder.ext.certificate.manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>defaultx</artifactId>
+                <artifactId>scenebuilder.ext.content.editor</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>document</artifactId>
+                <artifactId>scenebuilder.ext.control.library</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>drag-and-drop</artifactId>
+                <artifactId>scenebuilder.ext.controls</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>editors</artifactId>
+                <artifactId>scenebuilder.ext.controls.tooling</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>exporter</artifactId>
+                <artifactId>scenebuilder.ext.css.analyser</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>extension-api</artifactId>
+                <artifactId>scenebuilder.ext.debug.menu</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>extension-store</artifactId>
+                <artifactId>scenebuilder.ext.defaultx</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>extension-library</artifactId>
+                <artifactId>scenebuilder.ext.document</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>filesystem</artifactId>
+                <artifactId>scenebuilder.ext.editors</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>gluon</artifactId>
+                <artifactId>scenebuilder.ext.exporter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>help-features</artifactId>
+                <artifactId>scenebuilder.ext.extension.library</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>inspector</artifactId>
+                <artifactId>scenebuilder.ext.gluon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>image-library</artifactId>
+                <artifactId>scenebuilder.ext.help.features</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>jobs</artifactId>
+                <artifactId>scenebuilder.ext.image.library</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>library</artifactId>
+                <artifactId>scenebuilder.ext.inspector</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>control-library</artifactId>
+                <artifactId>scenebuilder.ext.log.viewer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>preference-editor</artifactId>
+                <artifactId>scenebuilder.ext.preference.editor</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>preview</artifactId>
+                <artifactId>scenebuilder.ext.preview</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>sb</artifactId>
+                <artifactId>scenebuilder.ext.sb</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>source-gen</artifactId>
+                <artifactId>scenebuilder.ext.source.gen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>source-view</artifactId>
+                <artifactId>scenebuilder.ext.source.view</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>templates</artifactId>
+                <artifactId>scenebuilder.ext.templates</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>update-manager</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>log-viewer</artifactId>
+                <artifactId>scenebuilder.ext.update.manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
