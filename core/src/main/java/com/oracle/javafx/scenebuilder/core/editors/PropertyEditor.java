@@ -84,7 +84,7 @@ public interface PropertyEditor {
      * Sets the update from model flag.
      * When set to true, update events are not propagated
      *
-     * @param the update from model flag value
+     * @param b the update from model flag value
      */
     public void setUpdateFromModel(boolean b);
 

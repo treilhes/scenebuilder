@@ -56,9 +56,8 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
 
     /**
      * Base constructor for invocation by the subclasses.
-     *
+     * @param api api agregator
      * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
-     * @param editorController  the editor controller (cannot be null)
      */
     protected AbstractFxmlController(Api api, URL fxmlURL) {
         super(api);

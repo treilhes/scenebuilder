@@ -89,8 +89,7 @@ public class ViewController {
 	/**
      * Base constructor for invocation by the subclasses.
      *
-     * @param sceneBuilderManager the scene builder manager
-     * @param editor the editor
+     * @param dockManager the docking manager
      */
     public ViewController(
             @Autowired DockManager dockManager) {

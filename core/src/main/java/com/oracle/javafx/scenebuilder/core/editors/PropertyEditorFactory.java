@@ -99,7 +99,7 @@ public class PropertyEditorFactory {
      * Find editor class from the provided mapping.
      *
      * @param valueClass the value class
-     * @return the class<? extends abstract editor>
+     * @return the class$lt;? extends abstract editor>
      */
     private Class<? extends PropertyEditor> findEditorClass(Class<? extends PropertyMetadata> valueClass) {
         Class<?> uncheckedValueClass = valueClass;

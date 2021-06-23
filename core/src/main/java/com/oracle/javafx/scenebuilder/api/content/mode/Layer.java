@@ -77,7 +77,7 @@ public interface Layer<T> {
     /**
      * Computes the transform that projects from local coordinates of a
      * scene graph object to the layer local coordinates.
-     * @param sceneGraphObject a scene graph object
+     * @param fxomObject a fxml object model object
      * @return transform from sceneGraphObject local coordinates to local coordinates
      */
     Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject);

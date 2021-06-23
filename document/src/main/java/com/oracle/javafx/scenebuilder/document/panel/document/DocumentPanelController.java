@@ -104,12 +104,19 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
      * Public
      */
 
+    //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     /**
      * Creates a library panel controller for the specified editor controller.
-     *
-     * @param editor the editor controller (never null).
+     * @param api
+     * @param sceneBuilderFactory
+     * @param hierarchyPanelController
+     * @param infoPanelController
+     * @param displayOptionPreference
+     * @param accordionAnimationPreference
+     * @param showInfoAction
+     * @param showFxIdAction
+     * @param showNodeIdAction
      */
-    //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
     public DocumentPanelController(
             @Autowired Api api,
     		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,

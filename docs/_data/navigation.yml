@@ -1,0 +1,122 @@
+# main links
+main:
+  - title: "User Guide"
+    url: /userguide/disclaimer/
+  - title: "Dev Guide"
+    url: /devguide/quick-start-guide/
+  - title: "Javadoc"
+    url: /apidocs/index.html
+    target: _blank
+  - title: "About"
+    url: /about/
+  - title: "Terms &amp; Privacy Policy"
+    url: /terms/
+
+# userguide links
+userguide:
+  - title: Disclaimer
+    url: /userguide/disclaimer/
+  - title: Installation
+    url: /userguide/install/
+  - title: Start SceneBuilder
+    url: /userguide/starting-up-scenebuilder/
+    children:
+      - title: "Main window"
+        url: /userguide/main-window/
+      - title: "Menu bar"
+        url: /userguide/menu-bar/
+      - title: "Selection bar"
+        url: /userguide/path-selection-message-bar/
+      - title: "Content panel"
+        url: /userguide/content-panel/
+      - title: "Document Panel"
+        url: /userguide/document-panel/
+        children:
+        - title: "Hierarchy section"
+          url: /userguide/document-panel-hierarchy/
+        - title: "Controller section"
+          url: /userguide/document-panel-controller/
+      - title: "Control library"
+        url: /userguide/control-library/
+        children:
+        - title: "Library manager"
+          url: /userguide/control-library-manager/
+        - title: "Default controls"
+          url: /userguide/control-default-controls/
+      - title: "Inspector"
+        url: /userguide/inspector/
+        children:
+        - title: "Properties Section"
+          url: /userguide/inspector-properties/
+        - title: "Layout Section"
+          url: /userguide/inspector-layout/
+        - title: "Code Section"
+          url: /userguide/inspector-code/
+      - title: "Css styling"
+        url: /userguide/css-styling/
+      - title: "Css analyzer"
+        url: /userguide/css-analyzer/
+      - title: "Internationalization"
+        url: /userguide/internationalization/
+  - title: "Extensions"
+    children:
+    - title: "Developing Applications Using Gluon"
+      url: /userguide/dev-app-with-gluon/
+
+# devguide links
+devguide:
+  - title: Getting Started
+    children:
+      - title: "Quick-Start Guide"
+        url: /devguide/quick-start-guide/
+      - title: "Structure"
+        url: /devguide/structure/
+      - title: "Installation"
+        url: /devguide/installation/
+      - title: "Upgrading"
+        url: /devguide/upgrading/
+  - title: Customization
+    children:
+      - title: "Configuration"
+        url: /devguide/configuration/
+      - title: "Overriding Theme Defaults"
+        url: /devguide/overriding-theme-defaults/
+      - title: "Navigation"
+        url: /devguide/navigation/
+      - title: "UI Text"
+        url: /devguide/ui-text/
+      - title: "Authors"
+        url: /devguide/authors/
+      - title: "Layouts"
+        url: /devguide/layouts/
+  - title: Content
+    children:
+      - title: "Working with Posts"
+        url: /devguide/posts/
+      - title: "Working with Pages"
+        url: /devguide/pages/
+      - title: "Working with Collections"
+        url: /devguide/collections/
+      - title: "Helpers"
+        url: /devguide/helpers/
+      - title: "Utility Classes"
+        url: /devguide/utility-classes/
+  - title: Extras
+    children:
+      - title: "Stylesheets"
+        url: /devguide/stylesheets/
+      - title: "JavaScript"
+        url: /devguide/javascript/
+  - title: Meta
+    children:
+      - title: "History"
+        url: /devguide/history/
+      - title: "Contributing"
+        url: /devguide/contributing/
+      - title: "Old 2.2 Docs"
+        url: /devguide/docs-2-2/
+      - title: "License"
+        url: /devguide/license/
+      - title: "Terms &amp; Privacy Policy"
+        url: /terms/
+

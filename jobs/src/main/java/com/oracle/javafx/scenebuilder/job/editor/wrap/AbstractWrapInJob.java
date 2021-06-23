@@ -469,9 +469,10 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     
     private static List<Class<?>> classesSupportingWrapping;
 
+    //TODO reactivate {link EditorController#performWrap(java.lang.Class)} after refactoring wrapping feature
     /**
      * Return the list of classes that can be passed to
-     * {@link EditorController#performWrap(java.lang.Class)}.
+     * {link EditorController#performWrap(java.lang.Class)}.
      *
      * @return the list of classes.
      */

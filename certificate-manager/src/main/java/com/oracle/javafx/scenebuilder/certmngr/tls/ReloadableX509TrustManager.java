@@ -149,7 +149,7 @@ public class ReloadableX509TrustManager extends X509ExtendedTrustManager impleme
      * Adds a list of certificates to the manager. Automatically reloads the TrustManager
      *
      * @param certs is not null
-     * @throws Exception if cannot be reloaded
+     * @throws CertificateException if cannot be reloaded
      */
     public void addCertificates(List<Certificate> certs) throws CertificateException {
         try {
@@ -164,7 +164,7 @@ public class ReloadableX509TrustManager extends X509ExtendedTrustManager impleme
      * Adds a list of certificates to the physical certificate store for backup.
      *
      * @param certs is not null
-     * @throws Exception if cannot be saved
+     * @throws CertificateException if cannot be saved
      */
     public void addCertificatesToPhysicalKeystore(List<Certificate> certs) throws CertificateException {
         try {

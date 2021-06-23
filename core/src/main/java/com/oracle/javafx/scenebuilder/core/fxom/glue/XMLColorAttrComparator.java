@@ -38,7 +38,7 @@ import java.util.Map;
  * Compares attributes of {@link javafx.scene.paint.Color} element.
  *
  * The comparator follows the following order:
- * red < green < blue < opacity < other attributes
+ * red &lt; green &lt; blue &lt; opacity &lt; other attributes
  */
 class XMLColorAttrComparator extends XMLAttrComparator {
 

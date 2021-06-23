@@ -1,3 +1,5 @@
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
 module scenebuilder.extension.api {
     exports com.oracle.javafx.scenebuilder.extension;
 
@@ -5,4 +7,6 @@ module scenebuilder.extension.api {
     requires com.fasterxml.jackson.databind;
     requires java.instrument;
     requires lombok;
+    
+    uses Extension;
 }

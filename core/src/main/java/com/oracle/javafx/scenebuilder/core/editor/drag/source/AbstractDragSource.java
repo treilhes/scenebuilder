@@ -48,6 +48,8 @@ import javafx.stage.Window;
  */
 public abstract class AbstractDragSource implements DragSource{
     
+    private static URL stylesheet = null;
+    
     /**
      * Returns the URL of the CSS style associated to DragSource class.
      * This stylesheet contains rules shareable by all other components of
@@ -55,7 +57,6 @@ public abstract class AbstractDragSource implements DragSource{
      *
      * @return URL of DragSource class style sheet (never null).
      */
-    private static URL stylesheet = null;
     public synchronized static URL getStylesheet() {
         if (stylesheet == null) {
             stylesheet = AbstractDragSource.class.getResource("DragSource.css"); //NOI18N
