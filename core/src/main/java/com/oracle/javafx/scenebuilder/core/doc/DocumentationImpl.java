@@ -105,8 +105,8 @@ public class DocumentationImpl implements Documentation {
         }
     }
 
- // Check if this could be moved in the Metadata classes.
-    // Get the component class metadata where a property is defined.
+    // TODO Check if this could be moved in the Metadata classes.
+    // TODO Get the component class metadata where a property is defined.
     private static ComponentClassMetadata getDefiningClass(Class<?> clazz, PropertyName propName) {
         Metadata metadata = Metadata.getMetadata();
         ComponentClassMetadata<?> classMeta = metadata.queryComponentMetadata(clazz);

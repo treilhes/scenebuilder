@@ -24,3 +24,7 @@ You can find below their respective policies and terms:
 - Algolia (search results) : [Privacy and disclosure policy](https://www.algolia.com/policies/privacy/){:target="_blank"}
 
 - JSDELIVR (fonts) : [Privacy and disclosure policy](https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net){:target="_blank"}
+
+- fonts.googleapis.com/fonts.gstatic.com (fonts) : [Privacy and disclosure policy](https://policies.google.com/privacy){:target="_blank"}
+
+- storage.ko-fi.com (icons) : [Privacy and disclosure policy](https://more.ko-fi.com/privacy)
