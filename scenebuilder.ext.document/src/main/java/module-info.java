@@ -1,4 +1,7 @@
-module scenebuilder.ext.document {
+import com.oracle.javafx.scenebuilder.document.DocumentExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.document {
     exports com.oracle.javafx.scenebuilder.document.preferences.global;
     exports com.oracle.javafx.scenebuilder.document.panel.document;
     exports com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview;
@@ -22,4 +25,6 @@ module scenebuilder.ext.document {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with DocumentExtension;
 }

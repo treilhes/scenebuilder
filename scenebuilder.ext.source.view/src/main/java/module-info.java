@@ -1,4 +1,7 @@
-module scenebuilder.ext.source.view {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.sourceview.SourceViewExtension;
+
+open module scenebuilder.ext.source.view {
     exports com.oracle.javafx.scenebuilder.sourceview.actions;
     exports com.oracle.javafx.scenebuilder.sourceview.controller;
     exports com.oracle.javafx.scenebuilder.sourceview;
@@ -16,4 +19,6 @@ module scenebuilder.ext.source.view {
     requires scenebuilder.ext.sb;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with SourceViewExtension;
 }

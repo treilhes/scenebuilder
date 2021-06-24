@@ -1,4 +1,7 @@
-module scenebuilder.ext.certificate.manager {
+import com.oracle.javafx.scenebuilder.certmngr.CertificateManagerExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.certificate.manager {
     exports com.oracle.javafx.scenebuilder.certmngr;
     exports com.oracle.javafx.scenebuilder.certmngr.controller;
     exports com.oracle.javafx.scenebuilder.certmngr.i18n;
@@ -18,4 +21,6 @@ module scenebuilder.ext.certificate.manager {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with CertificateManagerExtension;
 }

@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
@@ -72,19 +71,15 @@ public class ErrorReportImpl implements ErrorReport {
 
     private final Map<FXOMNode, List<ErrorReportEntry>> entries = new HashMap<>();
     private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
-    private FXOMDocument fxomDocument;
+    private DocumentManager documentManager;
     private boolean dirty = true;
     
     public ErrorReportImpl(
             @Autowired DocumentManager documentManager
             ) {
         super();
-        documentManager.fxomDocument().subscribe(fd -> setFxomDocument(fd));
-    }
-
-    private void setFxomDocument(FXOMDocument fxomDocument) {
-        this.fxomDocument = fxomDocument;
-        forget();
+        this.documentManager = documentManager;
+        this.documentManager.fxomDocument().subscribe(fd -> forget());
     }
 
     @Override
@@ -149,7 +144,7 @@ public class ErrorReportImpl implements ErrorReport {
     private void updateReport() {
         if (dirty) {
             assert entries.isEmpty();
-            if (fxomDocument != null) {
+            if (documentManager.fxomDocument().get() != null) {
                 verifyAssets();
                 verifyUnresolvedObjects();
                 verifyBindingExpressions();
@@ -160,7 +155,7 @@ public class ErrorReportImpl implements ErrorReport {
 
 
     private void verifyAssets() {
-        final FXOMAssetIndex assetIndex = new FXOMAssetIndex(fxomDocument);
+        final FXOMAssetIndex assetIndex = new FXOMAssetIndex(documentManager.fxomDocument().get());
         for (Map.Entry<Path, FXOMNode> e : assetIndex.getFileAssets().entrySet()) {
             final Path assetPath = e.getKey();
             if (assetPath.toFile().canRead() == false) {
@@ -184,7 +179,7 @@ public class ErrorReportImpl implements ErrorReport {
     }
 
     private void verifyUnresolvedObjects() {
-        for (FXOMObject fxomObject : FXOMNodes.serializeObjects(fxomDocument.getFxomRoot())) {
+        for (FXOMObject fxomObject : FXOMNodes.serializeObjects(documentManager.fxomDocument().get().getFxomRoot())) {
             final Object sceneGraphObject;
             if (fxomObject instanceof FXOMIntrinsic) {
                 final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomObject;
@@ -201,7 +196,7 @@ public class ErrorReportImpl implements ErrorReport {
     }
 
     private void verifyBindingExpressions() {
-        for (FXOMPropertyT p : fxomDocument.getFxomRoot().collectPropertiesT()) {
+        for (FXOMPropertyT p : documentManager.fxomDocument().get().getFxomRoot().collectPropertiesT()) {
             final PrefixedValue pv = new PrefixedValue(p.getValue());
             if (pv.isBindingExpression()) {
                 final ErrorReportEntry newEntry

@@ -1,4 +1,7 @@
-module scenebuilder.ext.controls.tooling {
+import com.oracle.javafx.scenebuilder.drivers.BaseToolingExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.controls.tooling {
     exports com.oracle.javafx.scenebuilder.drivers.imageview;
     exports com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
     exports com.oracle.javafx.scenebuilder.drivers.ellipse;
@@ -52,4 +55,6 @@ module scenebuilder.ext.controls.tooling {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with BaseToolingExtension;
 }

@@ -1,4 +1,7 @@
-module scenebuilder.core.kit {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.kit.KitExtension;
+
+open module scenebuilder.core.kit {
     exports com.oracle.javafx.scenebuilder.kit.editor.messagelog;
     exports com.oracle.javafx.scenebuilder.kit.glossary;
     exports com.oracle.javafx.scenebuilder.kit.i18n;
@@ -20,4 +23,6 @@ module scenebuilder.core.kit {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with KitExtension;
 }

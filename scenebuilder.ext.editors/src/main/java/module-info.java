@@ -1,4 +1,7 @@
-module scenebuilder.ext.editors {
+import com.oracle.javafx.scenebuilder.editors.DefaultEditorsExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.editors {
     exports com.oracle.javafx.scenebuilder.editors.control.paintpicker.slider;
     exports com.oracle.javafx.scenebuilder.editors.control;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors;
@@ -21,4 +24,6 @@ module scenebuilder.ext.editors {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with DefaultEditorsExtension;
 }

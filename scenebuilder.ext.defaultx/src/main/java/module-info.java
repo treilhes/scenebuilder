@@ -1,4 +1,7 @@
-module scenebuilder.ext.defaultx {
+import com.oracle.javafx.scenebuilder.ext.BasicThemeAndResourceExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.defaultx {
     exports com.oracle.javafx.scenebuilder.ext.theme.group;
     exports com.oracle.javafx.scenebuilder.ext.controller;
     exports com.oracle.javafx.scenebuilder.ext.menu;
@@ -21,4 +24,6 @@ module scenebuilder.ext.defaultx {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with BasicThemeAndResourceExtension;
 }

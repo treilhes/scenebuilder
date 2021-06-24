@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
     <stringAttribute key="org.eclipse.buildship.core.originalclasspathprovider" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/app/src/main/java/com/oracle/javafx/scenebuilder/app/SceneBuilderApp.java"/>
+        <listEntry value="/scenebuilder.application/src/main/java/com/oracle/javafx/scenebuilder/app/SceneBuilderApp.java"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
@@ -16,7 +16,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.oracle.javafx.scenebuilder.app.SceneBuilderApp"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="app"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="${selected_resource_loc}"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="scenebuilder.application"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:${project_loc:/extension-api}/target/extension-api-16.0.0-SNAPSHOT.jar&#13;&#10;-ea&#13;&#10;--module-path ${env_var:JAVAFX_11_LIB} &#13;&#10;@${project_loc:/dev-utils}/module.config&#13;&#10;@${project_loc:/dev-utils}/log.config&#13;&#10;-Xverify:none"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:${project_loc:/scenebuilder.core.extension.api}/target/scenebuilder.core.extension.api-17.0.0-SNAPSHOT.jar&#13;&#10;-ea&#13;&#10;--module-path ${env_var:JAVAFX_11_LIB} &#13;&#10;@${project_loc:/dev.utils}/module.config&#13;&#10;@${project_loc:/dev.utils}/log.config&#13;&#10;-Xverify:none"/>
 </launchConfiguration>

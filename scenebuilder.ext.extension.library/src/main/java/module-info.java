@@ -1,4 +1,7 @@
-module scenebuilder.ext.extension.library {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.extlibrary.ExtensionLibraryExtension;
+
+open module scenebuilder.ext.extension.library {
     exports com.oracle.javafx.scenebuilder.extlibrary.i18n;
     exports com.oracle.javafx.scenebuilder.extlibrary.menu;
     exports com.oracle.javafx.scenebuilder.extlibrary.library;
@@ -23,4 +26,6 @@ module scenebuilder.ext.extension.library {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with ExtensionLibraryExtension;
 }

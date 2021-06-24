@@ -1,4 +1,7 @@
-module scenebuilder.core.jobs {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.job.JobsExtension;
+
+open module scenebuilder.core.jobs {
     exports com.oracle.javafx.scenebuilder.job.editor.gridpane.v2;
     exports com.oracle.javafx.scenebuilder.job.editor.gridpane;
     exports com.oracle.javafx.scenebuilder.job.editor;
@@ -21,4 +24,6 @@ module scenebuilder.core.jobs {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with JobsExtension;
 }

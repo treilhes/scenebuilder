@@ -1,4 +1,7 @@
-module scenebuilder.ext.debug.menu {
+import com.oracle.javafx.scenebuilder.debugmenu.DebugMenuExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.debug.menu {
     exports com.oracle.javafx.scenebuilder.debugmenu.i18n;
     exports com.oracle.javafx.scenebuilder.debugmenu.controller;
     exports com.oracle.javafx.scenebuilder.debugmenu.menu;
@@ -14,4 +17,6 @@ module scenebuilder.ext.debug.menu {
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with DebugMenuExtension;
 }

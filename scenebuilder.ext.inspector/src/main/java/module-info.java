@@ -1,4 +1,7 @@
-module scenebuilder.ext.inspector {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.inspector.InspectorExtension;
+
+open module scenebuilder.ext.inspector {
     exports com.oracle.javafx.scenebuilder.inspector.controller;
     exports com.oracle.javafx.scenebuilder.inspector;
     exports com.oracle.javafx.scenebuilder.inspector.actions;
@@ -21,4 +24,6 @@ module scenebuilder.ext.inspector {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with InspectorExtension;
 }

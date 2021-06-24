@@ -1,4 +1,7 @@
-module scenebuilder.core.library {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.library.LibraryExtension;
+
+open module scenebuilder.core.library {
     exports com.oracle.javafx.scenebuilder.library.manager;
     exports com.oracle.javafx.scenebuilder.library.maven;
     exports com.oracle.javafx.scenebuilder.library.api;
@@ -10,6 +13,8 @@ module scenebuilder.core.library {
     exports com.oracle.javafx.scenebuilder.library.preferences.global;
     exports com.oracle.javafx.scenebuilder.library.maven.repository;
 
+    //opens com.oracle.javafx.scenebuilder.library.preferences.global to spring.core;
+    
     requires aether.api;
     requires aether.connector.basic;
     requires aether.impl;
@@ -43,4 +48,6 @@ module scenebuilder.core.library {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with LibraryExtension;
 }

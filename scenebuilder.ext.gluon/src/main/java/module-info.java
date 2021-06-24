@@ -1,4 +1,7 @@
-module scenebuilder.ext.gluon {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.gluon.GluonExtension;
+
+open module scenebuilder.ext.gluon {
     exports com.oracle.javafx.scenebuilder.gluon.setting;
     exports com.oracle.javafx.scenebuilder.gluon.dialog;
     exports com.oracle.javafx.scenebuilder.gluon.editor.job;
@@ -13,6 +16,9 @@ module scenebuilder.ext.gluon {
     exports com.oracle.javafx.scenebuilder.gluon.metadata;
     exports com.oracle.javafx.scenebuilder.gluon.preferences.global;
     exports com.oracle.javafx.scenebuilder.gluon.controller;
+    
+    //opens com.oracle.javafx.scenebuilder.gluon.metadata to spring.core;
+    //opens com.oracle.javafx.scenebuilder.gluon.theme to spring.core;
 
     requires charm.glisten;
     requires io.reactivex.rxjava2;
@@ -33,4 +39,6 @@ module scenebuilder.ext.gluon {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with GluonExtension;
 }

@@ -1,4 +1,7 @@
-module scenebuilder.ext.preview {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.preview.PreviewExtension;
+
+open module scenebuilder.ext.preview {
     exports com.oracle.javafx.scenebuilder.preview.controller;
     exports com.oracle.javafx.scenebuilder.preview.menu;
     exports com.oracle.javafx.scenebuilder.preview;
@@ -12,4 +15,6 @@ module scenebuilder.ext.preview {
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with PreviewExtension;
 }

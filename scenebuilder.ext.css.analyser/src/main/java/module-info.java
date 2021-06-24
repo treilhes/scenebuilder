@@ -1,4 +1,7 @@
-module scenebuilder.ext.css.analyser {
+import com.oracle.javafx.scenebuilder.cssanalyser.CssAnalyserExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.css.analyser {
     exports com.oracle.javafx.scenebuilder.cssanalyser.i18n;
     exports com.oracle.javafx.scenebuilder.cssanalyser.control;
     exports com.oracle.javafx.scenebuilder.cssanalyser.mode;
@@ -19,4 +22,6 @@ module scenebuilder.ext.css.analyser {
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with CssAnalyserExtension;
 }

@@ -1,6 +1,6 @@
 import com.oracle.javafx.scenebuilder.extension.Extension;
 
-module scenebuilder.core.extension.api {
+open module scenebuilder.core.extension.api {
     exports com.oracle.javafx.scenebuilder.extension;
 
     requires com.fasterxml.jackson.core;

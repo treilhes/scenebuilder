@@ -1,4 +1,7 @@
-module scenebuilder.ext.exporter {
+import com.oracle.javafx.scenebuilder.exporter.ExporterExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.exporter {
     exports com.oracle.javafx.scenebuilder.exporter.i18n;
     exports com.oracle.javafx.scenebuilder.exporter.controller;
     exports com.oracle.javafx.scenebuilder.exporter.menu;
@@ -15,4 +18,6 @@ module scenebuilder.ext.exporter {
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with ExporterExtension;
 }

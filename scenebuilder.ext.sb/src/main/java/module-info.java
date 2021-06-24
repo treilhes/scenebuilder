@@ -1,4 +1,7 @@
-module scenebuilder.ext.sb {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.sb.ScenebuilderContainerExtension;
+
+open module scenebuilder.ext.sb {
     exports com.oracle.javafx.scenebuilder.sb.menu;
     exports com.oracle.javafx.scenebuilder.sb.actions;
     exports com.oracle.javafx.scenebuilder.sb.menu.controller;
@@ -18,4 +21,6 @@ module scenebuilder.ext.sb {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with ScenebuilderContainerExtension;
 }

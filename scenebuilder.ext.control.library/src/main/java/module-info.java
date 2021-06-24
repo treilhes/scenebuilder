@@ -1,4 +1,7 @@
-module scenebuilder.ext.control.library {
+import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.control.library {
     exports com.oracle.javafx.scenebuilder.controllibrary.action;
     exports com.oracle.javafx.scenebuilder.controllibrary.menu;
     exports com.oracle.javafx.scenebuilder.controllibrary.controller;
@@ -10,7 +13,10 @@ module scenebuilder.ext.control.library {
     exports com.oracle.javafx.scenebuilder.controllibrary.library;
     exports com.oracle.javafx.scenebuilder.controllibrary.preferences.global;
     exports com.oracle.javafx.scenebuilder.controllibrary;
-
+    
+    //opens com.oracle.javafx.scenebuilder.controllibrary.library.builtin to spring.core;
+    //opens com.oracle.javafx.scenebuilder.controllibrary.library to spring.core;
+    
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires scenebuilder.core.extension.store;
@@ -30,4 +36,6 @@ module scenebuilder.ext.control.library {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with ControlLibraryExtension;
 }

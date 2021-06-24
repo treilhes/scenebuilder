@@ -1,13 +1,15 @@
 import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.fs.FileSystemExtension;
 
-module scenebuilder.core.filesystem {
+open module scenebuilder.core.filesystem {
     exports com.oracle.javafx.scenebuilder.fs.util;
     exports com.oracle.javafx.scenebuilder.fs.preference.global;
     exports com.oracle.javafx.scenebuilder.fs.controller;
     exports com.oracle.javafx.scenebuilder.fs;
     exports com.oracle.javafx.scenebuilder.fs.menu;
 
+    //opens com.oracle.javafx.scenebuilder.fs.preference.global to spring.core;
+    
     requires io.reactivex.rxjava2;
     requires java.logging;
     requires java.prefs;

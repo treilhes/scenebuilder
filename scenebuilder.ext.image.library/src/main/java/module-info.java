@@ -1,4 +1,7 @@
-module scenebuilder.ext.image.library {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.imagelibrary.ImageLibraryExtension;
+
+open module scenebuilder.ext.image.library {
     exports com.oracle.javafx.scenebuilder.imagelibrary.menu;
     exports com.oracle.javafx.scenebuilder.imagelibrary.action;
     exports com.oracle.javafx.scenebuilder.imagelibrary.library;
@@ -32,4 +35,6 @@ module scenebuilder.ext.image.library {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with ImageLibraryExtension;
 }

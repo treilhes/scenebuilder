@@ -1,4 +1,7 @@
-module scenebuilder.ext.dummy {
+import com.oracle.javafx.scenebuilder.dummy.DummyExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.dummy {
     exports com.oracle.javafx.scenebuilder.dummy;
     exports com.oracle.javafx.scenebuilder.dummy.i18n;
     exports com.oracle.javafx.scenebuilder.dummy.controller;
@@ -10,4 +13,6 @@ module scenebuilder.ext.dummy {
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;
+    
+    provides Extension with DummyExtension;
 }

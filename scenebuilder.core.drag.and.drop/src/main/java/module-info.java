@@ -1,4 +1,7 @@
-module scenebuilder.core.drag.and.drop{
+import com.oracle.javafx.scenebuilder.draganddrop.DragAndDropExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.core.drag.and.drop{
     exports com.oracle.javafx.scenebuilder.draganddrop.target; 
     exports com.oracle.javafx.scenebuilder.draganddrop;
     exports com.oracle.javafx.scenebuilder.draganddrop.controller;
@@ -12,4 +15,6 @@ module scenebuilder.core.drag.and.drop{
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with DragAndDropExtension;
 }

@@ -1,4 +1,4 @@
-module scenebuilder.application {
+open module scenebuilder.application {
     exports com.oracle.javafx.scenebuilder.app.settings;
     exports com.oracle.javafx.scenebuilder.app.splash;
     exports com.oracle.javafx.scenebuilder.app.about;
@@ -11,8 +11,8 @@ module scenebuilder.application {
     exports com.oracle.javafx.scenebuilder.app.util;
     exports com.oracle.javafx.scenebuilder.app.message;
 
-    opens com.oracle.javafx.scenebuilder.app.splash to javafx.fxml;
-    opens com.oracle.javafx.scenebuilder.app to spring.core;
+    //opens com.oracle.javafx.scenebuilder.app.splash to javafx.fxml;
+    //opens com.oracle.javafx.scenebuilder.app to spring.core;
     
     requires io.reactivex.rxjava2;
     requires java.desktop;

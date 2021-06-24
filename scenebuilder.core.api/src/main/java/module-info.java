@@ -2,7 +2,7 @@ import com.oracle.javafx.scenebuilder.api.ApiExtension;
 import com.oracle.javafx.scenebuilder.core.CoreExtension;
 import com.oracle.javafx.scenebuilder.extension.Extension;
 
-module scenebuilder.core.api {
+open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.action;
     exports com.oracle.javafx.scenebuilder.api.alert;
     exports com.oracle.javafx.scenebuilder.api.content.gesture;
@@ -69,7 +69,9 @@ module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.editors.drag.target;
     exports com.oracle.javafx.scenebuilder.core.ui;
 
-    opens com.oracle.javafx.scenebuilder.api.util to spring.core;
+    //opens com.oracle.javafx.scenebuilder.api.util to spring.core;
+    //opens com.oracle.javafx.scenebuilder.core.metadata to spring.core;
+    //opens com.oracle.javafx.scenebuilder.api to spring.core;
     
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;

@@ -1,4 +1,7 @@
-module scenebuilder.ext.templates {
+import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.oracle.javafx.scenebuilder.template.TemplateExtension;
+
+open module scenebuilder.ext.templates {
     exports com.oracle.javafx.scenebuilder.template.menu;
     exports com.oracle.javafx.scenebuilder.template.i18n;
     exports com.oracle.javafx.scenebuilder.template.controller;
@@ -17,4 +20,6 @@ module scenebuilder.ext.templates {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with TemplateExtension;
 }

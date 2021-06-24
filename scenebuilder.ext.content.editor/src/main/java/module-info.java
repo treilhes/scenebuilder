@@ -1,4 +1,7 @@
-module scenebuilder.ext.content.editor {
+import com.oracle.javafx.scenebuilder.contenteditor.ContentEditorExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
+open module scenebuilder.ext.content.editor {
     exports com.oracle.javafx.scenebuilder.contenteditor.preferences.global;
     exports com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
     exports com.oracle.javafx.scenebuilder.contenteditor.actions;
@@ -25,4 +28,6 @@ module scenebuilder.ext.content.editor {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    
+    provides Extension with ContentEditorExtension;
 }
