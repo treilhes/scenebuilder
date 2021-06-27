@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -46,6 +46,10 @@
         <module>scenebuilder.ext.source.view</module>
         <module>scenebuilder.ext.templates</module>
         <module>scenebuilder.ext.update.manager</module>
+        <module>scenebuilder.core.layout</module>
+        <module>scenebuilder.extension.archetype</module>
+        <module>scenebuilder.starter</module>
+        <module>scenebuilder.starter.test</module>
     </modules>
 
     <properties>
@@ -58,6 +62,9 @@
         <junit.version>5.7.0</junit.version>
         <junit-platform.version>1.7.1</junit-platform.version>
         <jackson.version>2.11.3</jackson.version>
+        <spring.boot.version>2.5.0</spring.boot.version>
+        <testfx.junit.version>4.0.16-alpha</testfx.junit.version>
+        <mockserver.jupiter.version>5.11.2</mockserver.jupiter.version>
         <lombok.version>1.18.20</lombok.version>
     </properties>
 
@@ -79,56 +86,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.5.0</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>${junit-platform.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testfx</groupId>
-            <artifactId>testfx-junit5</artifactId>
-            <version>4.0.16-alpha</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-junit-jupiter</artifactId>
-            <version>5.11.2</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
@@ -298,6 +255,17 @@
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.update.manager</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.starter.test</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -496,7 +464,7 @@
             <organizationUrl>https://www.gluonhq.com</organizationUrl>
         </developer>
         <developer>
-            <name>José Pereda</name>
+            <name>Jos� Pereda</name>
             <email>jose.pereda@gluonhq.com</email>
             <organization>Gluon</organization>
             <organizationUrl>https://www.gluonhq.com</organizationUrl>

@@ -14,7 +14,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-        </dependency>    
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.starter.test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
