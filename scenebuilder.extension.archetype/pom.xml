@@ -52,25 +52,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.soebes.maven.plugins</groupId>
-        <artifactId>echo-maven-plugin</artifactId>
-        <version>0.4.0</version>
-        <executions>
-          <execution>
-            <id>echo-first-time</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>echo</goal>
-            </goals>
-            <configuration>
-              <echos>
-                <echo>This message is very ${maven.home} early in the build process.</echo>
-              </echos>
-            </configuration>
-          </execution>
-          </executions>
-            </plugin>
         </plugins>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
@@ -81,13 +62,6 @@
                 <plugin>
                     <artifactId>maven-archetype-plugin</artifactId>
                     <version>3.2.0</version>
-                    <configuration>
-
-                        <properties>
-                            <M2_HOME>${maven.home}XXXX</M2_HOME>
-                        </properties>
-
-                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>

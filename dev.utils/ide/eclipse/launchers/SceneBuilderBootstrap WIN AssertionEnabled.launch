@@ -25,5 +25,5 @@
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="scenebuilder.application"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="scenebuilder.application"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:${project_loc:/scenebuilder.core.extension.api}/target/scenebuilder.core.extension.api-17.0.0-SNAPSHOT.jar&#13;&#10;-ea&#13;&#10;--illegal-access=permit&#13;&#10;--module-path ${env_var:JAVAFX_15_LIB} &#13;&#10;@${project_loc:/dev.utils}/module.config&#13;&#10;@${project_loc:/dev.utils}/log.config&#13;&#10;-Xverify:none"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:${project_loc:/scenebuilder.core.extension.api}/target/scenebuilder.core.extension.api-17.0.0-SNAPSHOT.jar&#13;&#10;-ea&#13;&#10;--illegal-access=permit&#13;&#10;@${project_loc:/dev.utils}/module.config&#13;&#10;@${project_loc:/dev.utils}/log.config&#13;&#10;-Xverify:none"/>
 </launchConfiguration>

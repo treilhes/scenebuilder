@@ -8,6 +8,8 @@ toc: true
 
 ## IDE Integrations
 
+
+
 ### Eclipse
 
 Eclipse integration is rather good but m2e still lacks some features about JPMS for a perfect integration
@@ -25,6 +27,10 @@ sample modification:
 	</attributes>
 </classpathentry>
 ```
+
+#### Provided launchers 
+
+Some Eclipse launchers are provided in "dev.utils\ide\eclipse\launchers"
 
 ### IDEA
 
