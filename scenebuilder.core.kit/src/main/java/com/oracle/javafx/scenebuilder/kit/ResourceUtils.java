@@ -47,10 +47,10 @@ public class ResourceUtils {
     public static List<String> getSupportedImageExtensions() {
         if (imageExtensions == null) {
             imageExtensions = new ArrayList<>();
-            imageExtensions.add("*.jpg"); //NOI18N
-            imageExtensions.add("*.jpeg"); //NOI18N
-            imageExtensions.add("*.png"); //NOI18N
-            imageExtensions.add("*.gif"); //NOI18N
+            imageExtensions.add("*.jpg"); //NOCHECK
+            imageExtensions.add("*.jpeg"); //NOCHECK
+            imageExtensions.add("*.png"); //NOCHECK
+            imageExtensions.add("*.gif"); //NOCHECK
             imageExtensions = Collections.unmodifiableList(imageExtensions);
         }
         return imageExtensions;
@@ -59,13 +59,13 @@ public class ResourceUtils {
     public static List<String> getSupportedAudioExtensions() {
         if (audioExtensions == null) {
             audioExtensions = new ArrayList<>();
-            audioExtensions.add("*.aif"); //NOI18N
-            audioExtensions.add("*.aiff"); //NOI18N
-            audioExtensions.add("*.mp3"); //NOI18N
-            audioExtensions.add("*.m4a"); //NOI18N
-            audioExtensions.add("*.wav"); //NOI18N
-            audioExtensions.add("*.m3u"); //NOI18N
-            audioExtensions.add("*.m3u8"); //NOI18N
+            audioExtensions.add("*.aif"); //NOCHECK
+            audioExtensions.add("*.aiff"); //NOCHECK
+            audioExtensions.add("*.mp3"); //NOCHECK
+            audioExtensions.add("*.m4a"); //NOCHECK
+            audioExtensions.add("*.wav"); //NOCHECK
+            audioExtensions.add("*.m3u"); //NOCHECK
+            audioExtensions.add("*.m3u8"); //NOCHECK
             audioExtensions = Collections.unmodifiableList(audioExtensions);
         }
         return audioExtensions;
@@ -74,10 +74,10 @@ public class ResourceUtils {
     public static List<String> getSupportedVideoExtensions() {
         if (videoExtensions == null) {
             videoExtensions = new ArrayList<>();
-            videoExtensions.add("*.flv"); //NOI18N
-            videoExtensions.add("*.fxm"); //NOI18N
-            videoExtensions.add("*.mp4"); //NOI18N
-            videoExtensions.add("*.m4v"); //NOI18N
+            videoExtensions.add("*.flv"); //NOCHECK
+            videoExtensions.add("*.fxm"); //NOCHECK
+            videoExtensions.add("*.mp4"); //NOCHECK
+            videoExtensions.add("*.m4v"); //NOCHECK
             videoExtensions = Collections.unmodifiableList(videoExtensions);
         }
         return videoExtensions;

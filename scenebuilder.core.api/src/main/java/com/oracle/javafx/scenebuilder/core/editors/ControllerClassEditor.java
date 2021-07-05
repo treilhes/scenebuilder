@@ -61,7 +61,7 @@ import javafx.event.EventHandler;
 @Lazy
 public class ControllerClassEditor extends AutoSuggestEditor {
 
-    private static final String PROPERTY_NAME = "Controller class"; //NOI18N
+    private static final String PROPERTY_NAME = "Controller class"; //NOCHECK
     private static final String DEFAULT_VALUE = null;
     private final Glossary glossary;
 

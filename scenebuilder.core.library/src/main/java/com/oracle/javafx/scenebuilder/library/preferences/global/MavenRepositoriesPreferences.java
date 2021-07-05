@@ -46,7 +46,7 @@ import com.oracle.javafx.scenebuilder.library.maven.repository.Repository;
 public class MavenRepositoriesPreferences extends ListPreferences<MavenRepositoryPreferences, Repository> {
 	
 	// NODE
-    protected static final String NODE_NAME = "REPOSITORIES"; //NOI18N
+    protected static final String NODE_NAME = "REPOSITORIES"; //NOCHECK
 	
     public MavenRepositoriesPreferences(@Autowired PreferencesContext preferencesContext) {
     	super(preferencesContext, NODE_NAME, MavenRepositoryPreferences.keyProvider(), MavenRepositoryPreferences.defaultProvider());

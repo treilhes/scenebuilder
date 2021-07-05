@@ -59,7 +59,7 @@ public class DummyWindowController extends AbstractFxmlViewController {
     public DummyWindowController(
             @Autowired Api api
             ) {
-        super(api, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle()); // NOI18N
+        super(api, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle());
     }
 
     @Override

@@ -60,8 +60,8 @@ public class ArcResizer extends AbstractResizer<Arc> {
     private double originalRadiusX;
     private double originalRadiusY;
     private Bounds canonicalBounds;
-    private final PropertyName radiusXName  = new PropertyName("radiusX"); //NOI18N
-    private final PropertyName radiusYName = new PropertyName("radiusY"); //NOI18N
+    private final PropertyName radiusXName  = new PropertyName("radiusX"); //NOCHECK
+    private final PropertyName radiusYName = new PropertyName("radiusY"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public ArcResizer() {

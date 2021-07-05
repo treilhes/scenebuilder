@@ -49,13 +49,13 @@ import javafx.scene.effect.MotionBlur;
 public class MotionBlurPropertyMetadata extends ComplexPropertyMetadata<MotionBlur> {
     
     private final AngleDoublePropertyMetadata angleMetadata
-            = new AngleDoublePropertyMetadata(new PropertyName("angle"), //NOI18N
+            = new AngleDoublePropertyMetadata(new PropertyName("angle"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final SizeDoublePropertyMetadata radiusMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOI18N
+            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
             true /* readWrite */, 10.0, InspectorPath.UNUSED);
 
     public MotionBlurPropertyMetadata(PropertyName name, boolean readWrite, 

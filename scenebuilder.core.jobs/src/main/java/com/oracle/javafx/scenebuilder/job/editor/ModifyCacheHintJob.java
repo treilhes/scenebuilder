@@ -58,8 +58,8 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 public class ModifyCacheHintJob extends ModifySelectionJob {
 
     private int subJobCount = 0;
-    private final PropertyName cachePN = new PropertyName("cache"); //NOI18N
-    private final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOI18N
+    private final PropertyName cachePN = new PropertyName("cache"); //NOCHECK
+    private final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOCHECK
 
     public ModifyCacheHintJob(ApplicationContext context, ValuePropertyMetadata propertyMetadata, Object newValue, Editor editor) {
         super(context, propertyMetadata, newValue, editor);
@@ -93,7 +93,7 @@ public class ModifyCacheHintJob extends ModifySelectionJob {
                 subJobCount++;
             }
             // ModifyObject job for the cache property
-            if ("DEFAULT".equals(newValue) == false) { //NOI18N
+            if ("DEFAULT".equals(newValue) == false) { //NOCHECK
                 final ValuePropertyMetadata cacheVPM
                         = Metadata.getMetadata().queryValueProperty(fxomInstance, cachePN);
                 final Job subJob2 = new ModifyObjectJob(getContext(),
@@ -113,7 +113,7 @@ public class ModifyCacheHintJob extends ModifySelectionJob {
 
         switch (subJobCount) {
             case 0:
-                result = "Unexecutable Set"; //NOI18N
+                result = "Unexecutable Set"; //NOCHECK
                 break;
             case 1: // Single selection
                 result = getSubJobs().get(0).getDescription();

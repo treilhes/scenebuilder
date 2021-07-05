@@ -49,8 +49,8 @@ import javafx.scene.paint.Color;
 @Component
 public class ParentRingColorPreference extends ColorPreference implements ManagedGlobalPreference, UserPreference<Color> {
 
-	public static final String PREFERENCE_KEY = "PARENT_RING_COLOR"; //NOI18N
-	public static final Color PREFERENCE_DEFAULT_VALUE = Color.rgb(238, 168, 47); //NOI18N
+	public static final String PREFERENCE_KEY = "PARENT_RING_COLOR"; //NOCHECK
+	public static final Color PREFERENCE_DEFAULT_VALUE = Color.rgb(238, 168, 47); //NOCHECK
 
 	private final PreferenceEditorFactory preferenceEditorFactory;
 

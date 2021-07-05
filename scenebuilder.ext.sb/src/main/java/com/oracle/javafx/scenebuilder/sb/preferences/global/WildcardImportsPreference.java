@@ -53,7 +53,7 @@ public class WildcardImportsPreference extends BooleanPreference implements Mana
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "WILDCARD_IMPORT"; //NOI18N
+    public static final String PREFERENCE_KEY = "WILDCARD_IMPORT"; //NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 	private final PreferenceEditorFactory preferenceEditorFactory;
 

@@ -132,7 +132,7 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
 
     // Method to please FindBugs
     private void initialize() {
-        root = FXMLUtils.load(this, "BoundedDoubleEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "BoundedDoubleEditor.fxml");
 
         //
         // Text field
@@ -225,7 +225,7 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     public Object getValue() {
         String val = getTextField().getText();
         if (val.isEmpty()) {
-            val = "0"; //NOI18N
+            val = "0"; //NOCHECK
             getTextField().setText(val);
             return Double.valueOf(val);
         }
@@ -354,7 +354,7 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
             }
             if (!different) {
                 assert propValue instanceof Double;
-                if (minMaxProp.contains("min")) { //NOI18N
+                if (minMaxProp.contains("min")) { //NOCHECK
                     this.min = (Double) propValue;
                 } else {
                     this.max = (Double) propValue;

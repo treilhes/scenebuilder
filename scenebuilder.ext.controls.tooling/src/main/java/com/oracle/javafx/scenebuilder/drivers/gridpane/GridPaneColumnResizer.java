@@ -50,10 +50,10 @@ import javafx.scene.layout.Region;
  */
 public class GridPaneColumnResizer {
     
-    private static final PropertyName minWidthName     = new PropertyName("minWidth"); //NOI18N
-    private static final PropertyName prefWidthName    = new PropertyName("prefWidth"); //NOI18N
-    private static final PropertyName maxWidthName     = new PropertyName("maxWidth"); //NOI18N
-    private static final PropertyName percentWidthName = new PropertyName("percentWidth"); //NOI18N
+    private static final PropertyName minWidthName     = new PropertyName("minWidth"); //NOCHECK
+    private static final PropertyName prefWidthName    = new PropertyName("prefWidth"); //NOCHECK
+    private static final PropertyName maxWidthName     = new PropertyName("maxWidth"); //NOCHECK
+    private static final PropertyName percentWidthName = new PropertyName("percentWidth"); //NOCHECK
 
     private final GridPane gridPane;
     private final int columnIndex;

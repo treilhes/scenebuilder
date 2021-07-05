@@ -50,11 +50,11 @@ import javafx.scene.image.Image;
  */
 public abstract class AbstractHandles<T> extends AbstractDecoration<T> implements Handles<T> {
 
-    public static final String SELECTION_RECT = "selection-rect"; //NOI18N
-    public static final String SELECTION_WIRE = "selection-wire"; //NOI18N
-    public static final String SELECTION_PIPE = "selection-pipe"; //NOI18N
-    public static final String SELECTION_HANDLES = "selection-handles"; //NOI18N
-    public static final String SELECTION_HANDLES_DIM = "selection-handles-dim"; //NOI18N
+    public static final String SELECTION_RECT = "selection-rect"; //NOCHECK
+    public static final String SELECTION_WIRE = "selection-wire"; //NOCHECK
+    public static final String SELECTION_PIPE = "selection-pipe"; //NOCHECK
+    public static final String SELECTION_HANDLES = "selection-handles"; //NOCHECK
+    public static final String SELECTION_HANDLES_DIM = "selection-handles-dim"; //NOCHECK
     public static final double SELECTION_HANDLES_SIZE = 10.0; // pixels
 
     private static Image squareHandleImage = null;

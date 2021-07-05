@@ -49,7 +49,7 @@ import javafx.scene.layout.ColumnConstraints;
 public class ColumnConstraintsListPropertyMetadata extends ListValuePropertyMetadata<ColumnConstraints> {
 
     private static final ColumnConstraintsPropertyMetadata itemMetadata
-            = new ColumnConstraintsPropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new ColumnConstraintsPropertyMetadata(new PropertyName("unused"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     
     public ColumnConstraintsListPropertyMetadata(PropertyName name, boolean readWrite, 

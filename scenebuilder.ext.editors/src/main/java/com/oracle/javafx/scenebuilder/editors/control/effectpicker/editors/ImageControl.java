@@ -131,7 +131,7 @@ public class ImageControl extends GridPane {
     @FXML
     void buttonOnAction(ActionEvent e) {
         try {
-            final String[] extensions = {"*.jpg", "*.jpeg", "*.png", "*.gif"}; //NOI18N
+            final String[] extensions = {"*.jpg", "*.jpeg", "*.png", "*.gif"}; //NOCHECK
             final FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter(
@@ -157,7 +157,7 @@ public class ImageControl extends GridPane {
 
     private void initialize(String labelString, Image initVal) {
 
-        final URL layoutURL = ImageControl.class.getResource("ImageControl.fxml"); //NOI18N
+        final URL layoutURL = ImageControl.class.getResource("ImageControl.fxml");
         try (InputStream is = layoutURL.openStream()) {
             FXMLLoader loader = new FXMLLoader();
             loader.setController(this);
@@ -170,7 +170,7 @@ public class ImageControl extends GridPane {
         }
 
         editor_label.setText(labelString);
-        editor_textfield.setText(initVal == null ? "" : initVal.getUrl()); //NOI18N
+        editor_textfield.setText(initVal == null ? "" : initVal.getUrl()); //NOCHECK
         setValue(initVal);
     }
 }

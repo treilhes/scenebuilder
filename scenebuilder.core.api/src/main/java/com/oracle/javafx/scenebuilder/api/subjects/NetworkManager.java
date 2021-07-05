@@ -112,11 +112,11 @@ public interface NetworkManager {
         private @Getter Subject<X509Certificate[]> untrusted;
 
         public NetworkSubjects() {
-            proxy = wrap(NetworkSubjects.class, "proxy", ReplaySubject.create(1));
-            trustRequest = wrap(NetworkSubjects.class, "trustRequest", PublishSubject.create());
-            trustedTemporarily = wrap(NetworkSubjects.class, "trustedTemporarily", PublishSubject.create());
-            trustedPermanently = wrap(NetworkSubjects.class, "trustedPermanently", PublishSubject.create());
-            untrusted = wrap(NetworkSubjects.class, "untrusted", PublishSubject.create());
+            proxy = wrap(NetworkSubjects.class, "proxy", ReplaySubject.create(1)); // NOI18N
+            trustRequest = wrap(NetworkSubjects.class, "trustRequest", PublishSubject.create()); // NOI18N
+            trustedTemporarily = wrap(NetworkSubjects.class, "trustedTemporarily", PublishSubject.create()); // NOI18N
+            trustedPermanently = wrap(NetworkSubjects.class, "trustedPermanently", PublishSubject.create()); // NOI18N
+            untrusted = wrap(NetworkSubjects.class, "untrusted", PublishSubject.create()); // NOI18N
         }
 
     }

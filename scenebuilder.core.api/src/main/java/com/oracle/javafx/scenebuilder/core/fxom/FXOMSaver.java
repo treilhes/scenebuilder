@@ -50,6 +50,7 @@ import javafx.fxml.FXMLLoader;
  */
 public class FXOMSaver {
 
+    private static final String IMPORT = "import";  // NOI18N
     private boolean wildcardImports;
 
     /**
@@ -85,8 +86,8 @@ public class FXOMSaver {
      * Private
      */
 
-    private static final String NAME_SPACE_FX = "http://javafx.com/javafx/" + FXMLLoader.JAVAFX_VERSION;
-    private static final String NAME_SPACE_FXML = "http://javafx.com/fxml/1";
+    private static final String NAME_SPACE_FX = "http://javafx.com/javafx/" + FXMLLoader.JAVAFX_VERSION;  // NOI18N
+    private static final String NAME_SPACE_FXML = "http://javafx.com/fxml/1"; // NOI18N
 
     private void updateNameSpace(FXOMDocument fxomDocument) {
         assert fxomDocument.getFxomRoot() != null;
@@ -143,7 +144,7 @@ public class FXOMSaver {
             .flatMap(List::stream) // add all to one list of FXOMProperties
             .map(FXOMProperty::getName) // list of all PropertyNames
             .filter(prop -> prop.getResidenceClass() != null) // filter for ResidenceClass (used for static methods example: HBox.hgrow="..")
-            .map(prop -> wildcardImports ? prop.getResidenceClass().getPackageName() + ".*" : prop.getResidenceClass().getName()) // list of classes
+            .map(prop -> wildcardImports ? prop.getResidenceClass().getPackageName() + ".*" : prop.getResidenceClass().getName()) // list of classes  // NOI18N
             .collect(Collectors.toSet());
     }
 
@@ -151,7 +152,7 @@ public class FXOMSaver {
     private List<GlueInstruction> createGlueInstructionsForImports(FXOMDocument fxomDocument, Set<String> imports) {
         List<GlueInstruction> importsList = new ArrayList<>();
         imports.forEach(name -> {
-            final GlueInstruction instruction = new GlueInstruction(fxomDocument.getGlue(), "import", name);
+            final GlueInstruction instruction = new GlueInstruction(fxomDocument.getGlue(), IMPORT, name); 
             importsList.add(instruction);
         });
         return importsList;
@@ -161,7 +162,7 @@ public class FXOMSaver {
         synchronized (this) {
             // find out where the first import instruction is located
             final int firstImportIndex;
-            List<GlueInstruction> existingImports = glue.collectInstructions("import");
+            List<GlueInstruction> existingImports = glue.collectInstructions(IMPORT);
             if (existingImports.isEmpty()) {
                 firstImportIndex = 0;
             } else {
@@ -172,7 +173,7 @@ public class FXOMSaver {
             // remove previously defined imports and leave all other things (like comments and such) intact
             glue.getHeader().removeIf(glueAuxiliary ->
                     glueAuxiliary instanceof GlueInstruction &&
-                    "import".equals(((GlueInstruction) glueAuxiliary).getTarget())
+                    IMPORT.equals(((GlueInstruction) glueAuxiliary).getTarget())
             );
 
             // insert the import instructions at the first import index

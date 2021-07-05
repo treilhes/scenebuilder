@@ -47,7 +47,7 @@ public class I18NCssAnalyser implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NCssAnalyser.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderCssAnalyser"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderCssAnalyser"); //NOCHECK
         }
         return bundle;
     }

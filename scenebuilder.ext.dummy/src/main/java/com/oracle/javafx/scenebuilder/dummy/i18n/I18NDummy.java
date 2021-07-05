@@ -47,7 +47,7 @@ public class I18NDummy implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NDummy.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDummy"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDummy"); //NOCHECK
         }
         return bundle;
     }

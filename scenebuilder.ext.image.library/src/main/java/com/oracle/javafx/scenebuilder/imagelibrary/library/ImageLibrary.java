@@ -86,20 +86,20 @@ import javafx.scene.text.Text;
  *
  *
  */
-@Component//("userLibrary")
+@Component//("userLibrary") //NOCHECK
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-@DependsOn("metadata")
+@DependsOn("metadata") //NOCHECK
 public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
     
-    public final static String TTF_EXTENSION = "ttf";
-    //public final static String OTF_EXTENSION = "otf";
-    public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
-    public final static List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");//, "otf");
-    public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");//, "otf");
+    public final static String TTF_EXTENSION = "ttf"; //NOCHECK
+    //public final static String OTF_EXTENSION = "otf"; //NOCHECK
+    public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar"); //NOCHECK
+    public final static List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
+    public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
     
     private final static Logger logger = LoggerFactory.getLogger(ImageLibrary.class);
 
-    private final static String LIBRARY_ID = "Images";
+    private final static String LIBRARY_ID = "Images"; //NOCHECK
     
     private final ImageBuiltinLibrary builtinLibrary;
  
@@ -110,7 +110,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
     // Where we store canonical class names of items we want to exclude from
     // the user defined one displayed in the Library panel.
     // As a consequence an empty file means we display all items.
-    private final String filterFileName = "filter.txt"; //NOI18N
+    private final String filterFileName = "filter.txt"; //NOCHECK
 
 //    private Supplier<List<Path>> additionalJarPaths;
 //    private Supplier<List<String>> additionalFilter;

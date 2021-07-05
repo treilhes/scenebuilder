@@ -154,8 +154,8 @@ import javafx.util.Duration;
 @ViewDescriptor(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Dock.BOTTOM_DOCK_ID, openOnStart = false)
 public class CssPanelController extends AbstractFxmlViewController {
 
-    public final static String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438";
-    public final static String VIEW_NAME = "csspanel";
+    public final static String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438"; // NOCHECK
+    public final static String VIEW_NAME = "csspanel"; // NOCHECK
 
     @FXML
     private StackPane cssPanelHost;
@@ -278,12 +278,12 @@ public class CssPanelController extends AbstractFxmlViewController {
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
             @Autowired Drag drag, 
-            @Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction,
-            @Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction,
-            @Autowired @Qualifier("cssPanelActions.ViewTextAction") Action viewTextAction,
-            @Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction,
-            @Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction,
-            @Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction,
+            @Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction, // NOCHECK
+            @Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction, // NOCHECK
+            @Autowired @Qualifier("cssPanelActions.ViewTextAction") Action viewTextAction, // NOCHECK
+            @Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction, // NOCHECK
+            @Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction, // NOCHECK
+            @Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction, // NOCHECK
             @Autowired ViewSearch viewSearch) {
      // @formatter:off
         super(api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
@@ -2259,7 +2259,7 @@ public class CssPanelController extends AbstractFxmlViewController {
 
     private static synchronized Image getLookupImage() {
         if (lookups == null) {
-            lookups = new Image(CssPanelController.class.getResource("images/css-lookup-icon.png").toExternalForm()); // NOI18N
+            lookups = new Image(CssPanelController.class.getResource("images/css-lookup-icon.png").toExternalForm());
         }
 
         return lookups;
@@ -2277,7 +2277,7 @@ public class CssPanelController extends AbstractFxmlViewController {
         hbox.getChildren().addAll(n, imgView);
         MenuButton lookupMb = new MenuButton();
         lookupMb.setGraphic(hbox);
-        lookupMb.getStyleClass().add("lookup-button");
+        lookupMb.getStyleClass().add("lookup-button"); //NOCHECK
         CustomMenuItem popupContentMi = new CustomMenuItem();
         popupContentMi.setHideOnClick(false);
         lookupMb.getItems().add(popupContentMi);

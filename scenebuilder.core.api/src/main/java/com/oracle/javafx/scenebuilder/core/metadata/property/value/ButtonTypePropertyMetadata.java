@@ -59,15 +59,15 @@ public class ButtonTypePropertyMetadata extends ComplexPropertyMetadata<ButtonTy
     public static synchronized Map<ButtonType, String> getButtonTypeMap() {
         if (buttonTypeMap == null) {
             buttonTypeMap = new HashMap<>();
-            buttonTypeMap.put(ButtonType.APPLY,   "APPLY"    ); //NOI18N
-            buttonTypeMap.put(ButtonType.CANCEL,  "CANCEL"   ); //NOI18N
-            buttonTypeMap.put(ButtonType.CLOSE,   "CLOSE"    ); //NOI18N
-            buttonTypeMap.put(ButtonType.FINISH,  "FINISH"   ); //NOI18N
-            buttonTypeMap.put(ButtonType.NEXT,    "NEXT"     ); //NOI18N
-            buttonTypeMap.put(ButtonType.NO,      "NO"       ); //NOI18N
-            buttonTypeMap.put(ButtonType.OK,      "OK"       ); //NOI18N
-            buttonTypeMap.put(ButtonType.PREVIOUS,"PREVIOUS" ); //NOI18N
-            buttonTypeMap.put(ButtonType.YES,     "YES"      ); //NOI18N
+            buttonTypeMap.put(ButtonType.APPLY,   "APPLY"    ); //NOCHECK
+            buttonTypeMap.put(ButtonType.CANCEL,  "CANCEL"   ); //NOCHECK
+            buttonTypeMap.put(ButtonType.CLOSE,   "CLOSE"    ); //NOCHECK
+            buttonTypeMap.put(ButtonType.FINISH,  "FINISH"   ); //NOCHECK
+            buttonTypeMap.put(ButtonType.NEXT,    "NEXT"     ); //NOCHECK
+            buttonTypeMap.put(ButtonType.NO,      "NO"       ); //NOCHECK
+            buttonTypeMap.put(ButtonType.OK,      "OK"       ); //NOCHECK
+            buttonTypeMap.put(ButtonType.PREVIOUS,"PREVIOUS" ); //NOCHECK
+            buttonTypeMap.put(ButtonType.YES,     "YES"      ); //NOCHECK
             buttonTypeMap = Collections.unmodifiableMap(buttonTypeMap);
         }
         

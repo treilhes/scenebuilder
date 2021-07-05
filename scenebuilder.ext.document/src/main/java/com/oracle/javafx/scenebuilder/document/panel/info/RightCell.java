@@ -55,10 +55,10 @@ class RightCell extends TableCell<IndexEntry, FXOMObject> {
         
         final String text;
         if (empty) {
-            text = ""; //NOI18N
+            text = ""; //NOCHECK
         } else {
             if (rightValue == null) {
-                text = "null"; //NOI18N
+                text = "null"; //NOCHECK
             } else {
                 text = rightValue.getGlueElement().getTagName();
             }

@@ -86,7 +86,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
     private boolean straightAnglesMode = false;
 
-    private static final PropertyName POINTS_NAME = new PropertyName("points"); //NOI18N
+    private static final PropertyName POINTS_NAME = new PropertyName("points"); //NOCHECK
     private static final int MAX_POINTS_HUD = 24;
 
     private final EnumMap<Tunable, Integer> tunableMap = new EnumMap<>(Tunable.class);

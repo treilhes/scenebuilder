@@ -54,7 +54,7 @@ public class LastDockUuidPreference extends MapPreferences<UUID, UUID> implement
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "LastDockUuid"; //NOI18N
+    public static final String PREFERENCE_KEY = "LastDockUuid"; //NOCHECK
     
 
     public LastDockUuidPreference(@Autowired PreferencesContext preferencesContext) {

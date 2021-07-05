@@ -89,7 +89,7 @@ public class BackgroundImagePreference extends EnumPreference<BackgroundImage> i
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "BACKGROUND_IMAGE"; //NOI18N
+    public static final String PREFERENCE_KEY = "BACKGROUND_IMAGE"; //NOCHECK
     public static final BackgroundImage PREFERENCE_DEFAULT_VALUE = BackgroundImage.BACKGROUND_03;
 
     private final PreferenceEditorFactory preferenceEditorFactory;
@@ -105,10 +105,10 @@ public class BackgroundImagePreference extends EnumPreference<BackgroundImage> i
         final URL url;
         switch (bgi) {
             case BACKGROUND_01:
-                url = BackgroundImagePreference.class.getResource("Background-Blue-Grid.png"); //NOI18N
+                url = BackgroundImagePreference.class.getResource("Background-Blue-Grid.png");
                 break;
             case BACKGROUND_02:
-                url = BackgroundImagePreference.class.getResource("Background-Neutral-Grid.png"); //NOI18N
+                url = BackgroundImagePreference.class.getResource("Background-Neutral-Grid.png");
                 break;
             case BACKGROUND_03:
                 url = BackgroundImagePreference.class.getResource("Background-Neutral-Uniform.png");

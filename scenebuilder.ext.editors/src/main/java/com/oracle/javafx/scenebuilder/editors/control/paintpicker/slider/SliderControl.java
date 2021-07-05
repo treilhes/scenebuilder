@@ -72,7 +72,7 @@ public class SliderControl extends GridPane {
     private void initialize(String text, double min, double max, double initVal) {
 
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(SliderControl.class.getResource("SliderControl.fxml")); //NOI18N
+        loader.setLocation(SliderControl.class.getResource("SliderControl.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {

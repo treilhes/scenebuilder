@@ -70,7 +70,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     private Layer<Handles> handleLayer;
 
     private static final PropertyName dividerPositionsName
-            = new PropertyName("dividerPositions"); //NOI18N
+            = new PropertyName("dividerPositions"); //NOCHECK
 
     public AdjustDividerGesture(
     		ApplicationContext context,
@@ -189,7 +189,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
                 = contentPanelController.getHudWindowController();
 
         hudWindowController.setRowCount(1);
-        hudWindowController.setNameAtRowIndex("dividerPosition", 0); //NOI18N
+        hudWindowController.setNameAtRowIndex("dividerPosition", 0); //NOCHECK
         updateHudWindow();
 
         final CardinalPoint cp;
@@ -211,7 +211,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
                 = contentPanelController.getHudWindowController();
 
         double dividerPosition = getSplitPane().getDividerPositions()[dividerIndex];
-        String str = String.format("%.2f %%", dividerPosition * 100); //NOI18N
+        String str = String.format("%.2f %%", dividerPosition * 100); //NOCHECK
         hudWindowController.setValueAtRowIndex(str, 0);
     }
 }

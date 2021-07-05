@@ -239,19 +239,19 @@ public interface DocumentManager {
         private @Getter ReplaySubject<ClassLoader> classLoaderDidChange;
 
         public DocumentSubjects() {
-            dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1));
-            saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1));
-            closed = wrap(DocumentSubjects.class, "closed", ReplaySubject.create(1));
-            dependenciesLoaded = wrap(DocumentSubjects.class, "dependenciesLoaded", ReplaySubject.create(1));
-            stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
-            i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1));
-            fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1));
-            selectionState = wrap(DocumentSubjects.class, "selectionState", PublishSubject.create());
-            classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1));
+            dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N
+            saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1)); // NOI18N
+            closed = wrap(DocumentSubjects.class, "closed", ReplaySubject.create(1)); // NOI18N
+            dependenciesLoaded = wrap(DocumentSubjects.class, "dependenciesLoaded", ReplaySubject.create(1)); // NOI18N
+            stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
+            i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
+            fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1)); // NOI18N
+            selectionState = wrap(DocumentSubjects.class, "selectionState", PublishSubject.create()); // NOI18N
+            classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1)); // NOI18N
 
-            sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange",
+            sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange", // NOI18N
                     PublishSubject.create());
-            cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create());
+            cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
         }
 
     }

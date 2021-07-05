@@ -58,7 +58,7 @@ import javafx.scene.text.Text;
 public class TextResizer extends AbstractResizer<Text> {
 
     private double originalWrappingWidth;
-    private final PropertyName wrappingWidthName = new PropertyName("wrappingWidth"); //NOI18N
+    private final PropertyName wrappingWidthName = new PropertyName("wrappingWidth"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public TextResizer() {

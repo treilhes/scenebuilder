@@ -63,7 +63,7 @@ import javafx.scene.layout.GridPane;
 public class ResizeColumnGesture extends AbstractMouseGesture {
 
     private static final PropertyName columnConstraintsName
-            = new PropertyName("columnConstraints"); //NOI18N
+            = new PropertyName("columnConstraints"); //NOCHECK
     private static final ValuePropertyMetadata columnConstraintsMeta
             = new ColumnConstraintsListPropertyMetadata(
                 columnConstraintsName,

@@ -127,7 +127,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, SearchMavenDialogController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, SearchMavenDialogController.class.getResource("SearchMavenDialog.fxml"), I18N.getBundle(), owner);
         this.context = api.getContext();
         this.userLibrary = library;
         this.owner = owner;

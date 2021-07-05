@@ -53,7 +53,7 @@ public class I18NResourcePreference extends ListOfStringPreference implements Ma
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "I18NResource"; //NOI18N
+    public static final String PREFERENCE_KEY = "I18NResource"; //NOCHECK
     public static final List<String> PREFERENCE_DEFAULT_VALUE = new ArrayList<>();
 
 	public I18NResourcePreference(@Autowired PreferencesContext preferencesContext) {

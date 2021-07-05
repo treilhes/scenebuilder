@@ -116,7 +116,7 @@ public class StylesheetEditor extends InlineListEditor {
         this.fxmlFileLocation = fxmlFileLocation;
         setLayoutFormat(AbstractPropertyEditor.LayoutFormat.DOUBLE_LINE);
         // Add initial button
-        rootInitialBt = FXMLUtils.load(this, "StylesheetEditorInitialBt.fxml"); //NOI18N
+        rootInitialBt = FXMLUtils.load(this, "StylesheetEditorInitialBt.fxml");
         root.getChildren().add(rootInitialBt);
         // Set the initial value to empty list (instead of null)
         valueProperty().setValue(FXCollections.observableArrayList());
@@ -270,7 +270,7 @@ public class StylesheetEditor extends InlineListEditor {
     @FXML
     void chooseStylesheet(ActionEvent event) {
 
-        String[] extensions = {"*.css"}; //NOI18N
+        String[] extensions = {"*.css"}; //NOCHECK
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(I18N.getString("inspector.select.css.title"));
         fileChooser.getExtensionFilters().add(
@@ -288,7 +288,7 @@ public class StylesheetEditor extends InlineListEditor {
         try {
             url = file.toURI().toURL();
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Invalid URL", ex); //NOI18N
+            throw new RuntimeException("Invalid URL", ex); //NOCHECK
         }
 
         switchToItemList();
@@ -351,7 +351,7 @@ public class StylesheetEditor extends InlineListEditor {
             String value = null;
             if ((url == null) || (type == Type.CLASSLOADER_RELATIVE_PATH)) {
                 // In this case we empty the text field (i.e. suffix) content
-                value = new PrefixedValue(type, "").toString(); //NOI18N
+                value = new PrefixedValue(type, "").toString(); //NOCHECK
             } else if (type == Type.PLAIN_STRING) {
                 value = url.toExternalForm();
             } else if (type == Type.DOCUMENT_RELATIVE_PATH) {
@@ -485,7 +485,7 @@ public class StylesheetEditor extends InlineListEditor {
         public Object getValue() {
             String suffix;
             if (stylesheetTf.getText().isEmpty()) {
-                return ""; //NOI18N
+                return ""; //NOCHECK
             } else {
                 suffix = stylesheetTf.getText().trim();
             }
@@ -501,7 +501,7 @@ public class StylesheetEditor extends InlineListEditor {
                 stylesheetTf.setText(prefixedValue.getSuffix().trim());
             } else {
                 // may happen if wrong style sheet
-                stylesheetTf.setText("");//NOI18N
+                stylesheetTf.setText("");//NOCHECK
             }
             updateButtons();
             updateOpenRevealMenuItems();
@@ -510,7 +510,7 @@ public class StylesheetEditor extends InlineListEditor {
 
         @Override
         public void reset() {
-            stylesheetTf.setText(""); //NOI18N
+            stylesheetTf.setText(""); //NOCHECK
             stylesheetTf.setPromptText(null);
         }
 
@@ -635,7 +635,7 @@ public class StylesheetEditor extends InlineListEditor {
             if (type == Type.DOCUMENT_RELATIVE_PATH) {
                 setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX);
             } else if (type == Type.CLASSLOADER_RELATIVE_PATH) {
-                setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOI18N
+                setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOCHECK
             } else {
                 // absolute
                 removeLabel();

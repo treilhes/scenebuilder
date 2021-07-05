@@ -43,37 +43,37 @@ package com.oracle.javafx.scenebuilder.kit.glossary;
 // The idea is that we can apply patterns to this tokenized version without fear that they will match inside
 // strings or comments. Since a string or comment is a single token, and since we removed any # characters that
 // might be inside strings or comments, we know that if we see for example #for#( then that is definitely an
-// occurrence of "for(" that is not inside a string or a comment. //NOI18N
-// The concept of a "token" here does not correspond exactly to Java's, both because sequences of whitespace are tokens //NOI18N
+// occurrence of "for(" that is not inside a string or a comment. //NOCHECK
+// The concept of a "token" here does not correspond exactly to Java's, both because sequences of whitespace are tokens //NOCHECK
 // and because the scanning is simplistic. We assume that the code is syntactically correct, and we also split some
 // tokens more than Java does, for example #-#1 or #+#=. This extra splitting has no effect on the particular rules
 // we will apply. We also do not scan keywords any differently from identifiers; since they are reserved words, if
-// we see #for# then that is definitely the "for" keyword. //NOI18N
+// we see #for# then that is definitely the "for" keyword. //NOCHECK
 class JavaTokenizer {
     private JavaTokenizer() {
         assert false;
     }
 
-    private static final String unicodeHash = "\\u" + String.format("%04x", (int) '#');//NOI18N
+    private static final String unicodeHash = "\\u" + String.format("%04x", (int) '#');//NOCHECK
 
     public static String tokenize(String text) throws ParseException {
         if (text.contains(unicodeHash)) {
-            throw new ParseException("Source file contains the sequence '" + unicodeHash + "'");//NOI18N
+            throw new ParseException("Source file contains the sequence '" + unicodeHash + "'");//NOCHECK
             // Why would we bother writing unicode when we can write #?
         }
 
-        final String noHashText = text.replace("#", unicodeHash);//NOI18N
+        final String noHashText = text.replace("#", unicodeHash);//NOCHECK
         final int len = noHashText.length();
         final StringBuilder tokens = new StringBuilder();
         int nexti;
         for (int i = 0; i < len; i = nexti) {
             char c = noHashText.charAt(i);
             switch (c) {
-                case '/'://NOI18N
+                case '/'://NOCHECK
                     nexti = scanSlash(noHashText, i);
                     break;
-                case '"'://NOI18N
-                case '\''://NOI18N
+                case '"'://NOCHECK
+                case '\''://NOCHECK
                     try {
                         nexti = scanQuote(noHashText, i, c);
                     } catch (Error e) {
@@ -81,22 +81,22 @@ class JavaTokenizer {
                         throw e;
                     }
                     break;
-                case '\\'://NOI18N
-                    throw new ParseException("Backslash outside quotes");//NOI18N
+                case '\\'://NOCHECK
+                    throw new ParseException("Backslash outside quotes");//NOCHECK
                     // It could be a unicode escape but why would we ever want that outside a string?
                 default:
                     if (Character.isWhitespace(c)) {
                         nexti = scanSpace(noHashText, i);
                     } else if (c == '.') {
                         if (i + 1 >= len) {
-                            throw new ParseException("Dot at end of file");//NOI18N
+                            throw new ParseException("Dot at end of file");//NOCHECK
                         }
                         if (Character.isDigit(noHashText.charAt(i + 1))) {
                             nexti = scanNumber(noHashText, i + 1);
                         } else {
                             nexti = i + 1;
                         }
-                    } else if (c == '.' || Character.isDigit(c)) {//NOI18N
+                    } else if (c == '.' || Character.isDigit(c)) {//NOCHECK
                         nexti = scanNumber(noHashText, i);
                     } else if (Character.isJavaIdentifierStart(c)) {
                         nexti = scanIdentifier(noHashText, i);
@@ -104,7 +104,7 @@ class JavaTokenizer {
                         nexti = i + 1;
                     }
             }
-            tokens.append('#').append(noHashText.substring(i, nexti));//NOI18N
+            tokens.append('#').append(noHashText.substring(i, nexti));//NOCHECK
         }
 
         return tokens.toString();
@@ -122,10 +122,10 @@ class JavaTokenizer {
         int len = s.length();
         while (i < len) {
             char c = s.charAt(i);
-            if (c == 'e' || c == 'E') {//NOI18N
+            if (c == 'e' || c == 'E') {//NOCHECK
                 i++;  // skip possible sign
             }
-            if (c == '.' || Character.isDigit(c) || Character.isLetter(c)) {//NOI18N
+            if (c == '.' || Character.isDigit(c) || Character.isLetter(c)) {//NOCHECK
                 i++;
             } else {
                 break;
@@ -148,16 +148,16 @@ class JavaTokenizer {
             return i + 1;
         }
         switch (s.charAt(i + 1)) {
-            case '/'://NOI18N
-                int newline = s.indexOf('\n', i);//NOI18N
+            case '/'://NOCHECK
+                int newline = s.indexOf('\n', i);//NOCHECK
                 if (newline < 0) {
-                    throw new ParseException("Unterminated // comment");//NOI18N
+                    throw new ParseException("Unterminated // comment");//NOCHECK
                 }
                 return newline + 1;
-            case '*'://NOI18N
-                int starSlash = s.indexOf("*/", i + 2);//NOI18N
+            case '*'://NOCHECK
+                int starSlash = s.indexOf("*/", i + 2);//NOCHECK
                 if (starSlash < 0) {
-                    throw new ParseException("Unterminated /* comment");//NOI18N
+                    throw new ParseException("Unterminated /* comment");//NOCHECK
                 }
                 return starSlash + 2;
             default:
@@ -169,18 +169,18 @@ class JavaTokenizer {
         assert s.charAt(i) == quote;
         int len = s.length();
         while (++i < len && s.charAt(i) != quote) {
-            if (s.charAt(i) == '\\') {//NOI18N
+            if (s.charAt(i) == '\\') {//NOCHECK
                 i++;
             }
         }
         if (i >= len) {
             System.err.println(s);
-            throw new ParseException("Unterminated char or string constant");//NOI18N
+            throw new ParseException("Unterminated char or string constant");//NOCHECK
         }
         return i + 1;
     }
 
-    @SuppressWarnings("serial")//NOI18N
+    @SuppressWarnings("serial")//NOCHECK
     public static class ParseException extends Exception {
         public ParseException(String msg) {
             super(msg);

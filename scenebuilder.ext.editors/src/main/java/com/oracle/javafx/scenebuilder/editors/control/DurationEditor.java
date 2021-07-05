@@ -172,7 +172,7 @@ public class DurationEditor extends AutoSuggestEditor{
 
     private SBDuration getValue(String valueString, String units) {
         if (valueString.isEmpty()) {
-            valueString = "0"; //NOI18N
+            valueString = "0"; //NOCHECK
             getTextField().setText(valueString);
             return new SBDuration(Duration.ZERO);
         }

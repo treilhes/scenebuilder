@@ -46,7 +46,7 @@ import javafx.scene.paint.Color;
 public class ColorListPropertyMetadata extends ListValuePropertyMetadata<Color> {
 
     private final static ColorPropertyMetadata itemMetadata
-            = new ColorPropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new ColorPropertyMetadata(new PropertyName("unused"), //NOCHECK
                     true, Color.BLACK, InspectorPath.UNUSED);
 
     public ColorListPropertyMetadata(PropertyName name, boolean readWrite, 

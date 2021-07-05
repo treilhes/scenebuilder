@@ -106,7 +106,7 @@ public class ImageEditor extends AbstractPropertyEditor {
     // Separate method to please FindBugs
     private void initialize(URL fxmlFileLocation) {
         this.fxmlFileLocation = fxmlFileLocation;
-        root = FXMLUtils.load(this, "ImageEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "ImageEditor.fxml");
 
         EventHandler<ActionEvent> valueListener = event -> {
             Image imageObj;
@@ -155,7 +155,7 @@ public class ImageEditor extends AbstractPropertyEditor {
         String newSuffix = null;
         if ((url == null) || (newType == PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH)) {
             // In this case we empty the text field (i.e. suffix) content
-            newSuffix = ""; //NOI18N
+            newSuffix = ""; //NOCHECK
         } else if (newType == PrefixedValue.Type.PLAIN_STRING) {
             newSuffix = url.toExternalForm();
         } else if (newType == PrefixedValue.Type.DOCUMENT_RELATIVE_PATH) {
@@ -192,7 +192,7 @@ public class ImageEditor extends AbstractPropertyEditor {
         if (type == PrefixedValue.Type.DOCUMENT_RELATIVE_PATH) {
             setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX);
         } else if (type == PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH) {
-            setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOI18N
+            setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOCHECK
         } else {
             // absolute
             removeLabel();
@@ -231,7 +231,7 @@ public class ImageEditor extends AbstractPropertyEditor {
 
         if (value == null) {
             image = null;
-            imagePathTf.setText(""); //NOI18N
+            imagePathTf.setText(""); //NOCHECK
         } else {
             assert value instanceof DesignImage;
             image = (DesignImage) value;
@@ -260,7 +260,7 @@ public class ImageEditor extends AbstractPropertyEditor {
     //
     @FXML
     void chooseImage(ActionEvent event) {
-        String[] extensions = {"*.jpg", "*.jpeg", "*.png", "*.gif"}; //NOI18N
+        String[] extensions = {"*.jpg", "*.jpeg", "*.png", "*.gif"}; //NOCHECK
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(I18N.getString("inspector.select.image"));
         fileChooser.getExtensionFilters().add(
@@ -278,7 +278,7 @@ public class ImageEditor extends AbstractPropertyEditor {
         try {
             url = file.toURI().toURL();
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Invalid URL", ex); //NOI18N
+            throw new RuntimeException("Invalid URL", ex); //NOCHECK
         }
 
         // If the document exists, make the type as document relative by default.

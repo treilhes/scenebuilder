@@ -47,7 +47,7 @@ public class I18NGluon implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NGluon.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderGluon"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderGluon"); //NOCHECK
         }
         return bundle;
     }

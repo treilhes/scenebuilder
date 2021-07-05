@@ -45,7 +45,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 
     public DoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
         super(name, Double.class, readWrite, defaultValue, inspectorPath);
-        //constants.put("MAX_VALUE", Double.MAX_VALUE); //NOI18N
+        //constants.put("MAX_VALUE", Double.MAX_VALUE); //NOCHECK
         setMin(-Double.MAX_VALUE);
         setMax(Double.MAX_VALUE);
     }

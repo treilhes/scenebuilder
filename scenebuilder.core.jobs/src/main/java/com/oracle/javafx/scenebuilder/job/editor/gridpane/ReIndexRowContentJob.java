@@ -125,7 +125,7 @@ public class ReIndexRowContentJob extends Job {
 
     @Override
     public String getDescription() {
-        return "ReIndex Row Content"; //NOI18N
+        return "ReIndex Row Content"; //NOCHECK
     }
 
     private void buildSubJobs() {
@@ -138,7 +138,7 @@ public class ReIndexRowContentJob extends Job {
         final GridPaneHierarchyMask targetGridPaneMask
                 = new GridPaneHierarchyMask(targetGridPane);
         final PropertyName propertyName = new PropertyName(
-                "rowIndex", javafx.scene.layout.GridPane.class); //NOI18N
+                "rowIndex", javafx.scene.layout.GridPane.class); //NOCHECK
 
         for (int targetIndex : targetIndexes) {
             final List<FXOMObject> children

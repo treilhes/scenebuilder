@@ -68,7 +68,7 @@ public class SearchController extends AbstractFxmlController implements ViewSear
 
     public SearchController(
             @Autowired Api api) {
-        super(api, SearchController.class.getResource("Search.fxml")); //NOI18N
+        super(api, SearchController.class.getResource("Search.fxml"));
     }
 
     @FXML
@@ -94,19 +94,19 @@ public class SearchController extends AbstractFxmlController implements ViewSear
     @Override
     public void controllerDidLoadFxml() {
         if (searchField.getLength() == 0) {
-            searchIcon.getStyleClass().add("search-magnifying-glass"); //NOI18N
+            searchIcon.getStyleClass().add("search-magnifying-glass"); //NOCHECK
         }
 
         // For SQE tests
-        searchField.setId("Search Text"); //NOI18N
+        searchField.setId("Search Text"); //NOCHECK
 
         searchField.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> {
             if (newStr.isEmpty()) {
                 searchIcon.getStyleClass().clear();
-                searchIcon.getStyleClass().add("search-magnifying-glass"); //NOI18N
+                searchIcon.getStyleClass().add("search-magnifying-glass"); //NOCHECK
             } else {
                 searchIcon.getStyleClass().clear();
-                searchIcon.getStyleClass().add("search-clear"); //NOI18N
+                searchIcon.getStyleClass().add("search-clear"); //NOCHECK
             }
         });
 

@@ -52,22 +52,22 @@ import javafx.scene.paint.Color;
 public class ShadowPropertyMetadata extends ComplexPropertyMetadata<Shadow> {
     
     private final EnumerationPropertyMetadata blurTypeMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("blurType"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("blurType"), //NOCHECK
             BlurType.class, true, BlurType.THREE_PASS_BOX, InspectorPath.UNUSED);
     private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
+            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
             true /* readWrite */, Color.BLACK, InspectorPath.UNUSED);
     private final SizeDoublePropertyMetadata heightMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            = new SizeDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
             true /* readWrite */, 21.0, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final SizeDoublePropertyMetadata widthMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            = new SizeDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
             true /* readWrite */, 21.0, InspectorPath.UNUSED);
     private final SizeDoublePropertyMetadata radiusMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOI18N
+            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
             true /* readWrite */, 10.0, InspectorPath.UNUSED);
 
     public ShadowPropertyMetadata(PropertyName name, boolean readWrite, 

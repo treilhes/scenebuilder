@@ -73,7 +73,7 @@ public abstract class TextEncodablePropertyMetadata<T> extends SingleValueProper
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(T value, FXOMDocument fxomDocument) {
-        throw new RuntimeException("Bug"); //NOI18N
+        throw new RuntimeException("Bug"); //NOCHECK
         // Should never be invoked because canMakeStringFromValue() always return true
     }
 

@@ -42,7 +42,7 @@ public interface Documentation {
     /**
      * Javadoc default home
      */
-    public final static String DEFAULT_JAVADOC_HOME = "https://openjfx.io/javadoc/11/"; //NOI18N
+    public final static String DEFAULT_JAVADOC_HOME = "https://openjfx.io/javadoc/11/"; //NOCHECK
     
 
     void openDocumentationUrl(Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta);

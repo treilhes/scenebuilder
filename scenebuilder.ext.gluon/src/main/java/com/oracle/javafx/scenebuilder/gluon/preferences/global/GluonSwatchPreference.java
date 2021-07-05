@@ -143,7 +143,7 @@ public class GluonSwatchPreference extends EnumPreference<GluonSwatch> implement
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "gluonSwatch"; //NOI18N
+    public static final String PREFERENCE_KEY = "gluonSwatch"; //NOCHECK
     public static final GluonSwatch PREFERENCE_DEFAULT_VALUE = GluonSwatch.BLUE;
 
     private final PreferenceEditorFactory preferenceEditorFactory;

@@ -54,7 +54,7 @@ public class LastDockDockTypePreference extends MapPreferences<UUID, String> imp
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "LastDockDockType"; //NOI18N
+    public static final String PREFERENCE_KEY = "LastDockDockType"; //NOCHECK
 
     public LastDockDockTypePreference(@Autowired PreferencesContext preferencesContext) {
         super(preferencesContext, PREFERENCE_KEY);

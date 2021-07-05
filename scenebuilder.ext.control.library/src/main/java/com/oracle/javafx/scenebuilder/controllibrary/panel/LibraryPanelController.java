@@ -204,16 +204,16 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             @Autowired DisplayModePreference displayModePreference,
             @Autowired AccordionAnimationPreference accordionAnimationPreference,
             @Autowired LibraryController libraryController,
-            @Autowired @Qualifier("libraryPanelActions.ViewAsListAction") Action viewAsListAction,
-            @Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction,
-            @Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
-            @Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction,
-            @Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
-            @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction,
+            @Autowired @Qualifier("libraryPanelActions.ViewAsListAction") Action viewAsListAction, //NOCHECK
+            @Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction, //NOCHECK
+            @Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction, //NOCHECK
+            @Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction, //NOCHECK
+            @Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction, //NOCHECK
+            @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction, //NOCHECK
             @Autowired ViewSearch viewSearch,
             @Autowired ControlLibrary controlLibrary
             ) { //, UserLibrary library) {
-        super(api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(api, LibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle());
         this.context = api.getContext();
         this.editorController = editor;
         this.sceneBuilderFactory = sceneBuilderFactory;
@@ -461,7 +461,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             // Parse our lib data structure and populate the Accordion accordingly.
             for (String sectionName : sectionNames) {
                 ListView<LibraryListItem> itemsList = new ListView<>();
-                itemsList.setId(sectionName + "List"); // for QE //NOI18N
+                itemsList.setId(sectionName + "List"); // for QE //NOCHECK
                 itemsList.setCellFactory(cb);
                 itemsList.addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
                 Collections.sort(libData.get(sectionName), new LibraryItemNameComparator());
@@ -601,7 +601,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
                         final List<File> files = db.getFiles();
                         for (File file : files) {
                             // Keep only jar and fxml files
-                            if (file.isFile() && LibraryUtil.hasExtension(file.toPath(), ControlLibrary.HANDLED_FILE_EXTENSIONS)) { //NOI18N
+                            if (file.isFile() && LibraryUtil.hasExtension(file.toPath(), ControlLibrary.HANDLED_FILE_EXTENSIONS)) { //NOCHECK
 //                                System.out.println("libPane onDragDropped - Retaining file " + file.getName());
                                 droppedFileList.add(file);
                             }
@@ -727,7 +727,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             Files.createFile(targetFilePath);
 
             // Write content of file
-            try (PrintWriter writer = new PrintWriter(targetFile, "UTF-8")) { //NOI18N
+            try (PrintWriter writer = new PrintWriter(targetFile, "UTF-8")) { //NOCHECK
                 writer.write(text);
             }
         } catch (IOException ioe) {
@@ -744,7 +744,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         File file = null;
         while (file == null || file.exists()) {
             suffix++;
-            file = new File(libDir, prefix + "_" + suffix + ".fxml"); //NOI18N
+            file = new File(libDir, prefix + "_" + suffix + ".fxml"); //NOCHECK
         }
 
         return file;

@@ -187,7 +187,7 @@ public abstract class EffectPathItem extends HBox {
 
     private void initialize() {
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(EffectPathItem.class.getResource("EffectPathItem.fxml")); //NOI18N
+        loader.setLocation(EffectPathItem.class.getResource("EffectPathItem.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {
@@ -210,7 +210,7 @@ public abstract class EffectPathItem extends HBox {
         toggle_button.setText(getSimpleName());
 
         // Update ImageView
-        final URL url = EffectPathItem.class.getResource("images/" + effect.getClass().getSimpleName() + ".png"); //NOI18N
+        final URL url = EffectPathItem.class.getResource("images/" + effect.getClass().getSimpleName() + ".png"); //NOCHECK
         final Image img = new Image(url.toExternalForm());
         image_view.setImage(img);
 

@@ -49,7 +49,7 @@ public class ListCellPropertyMetadata extends ComplexPropertyMetadata<Object> {
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Object value, FXOMDocument fxomDocument) {
-        throw new UnsupportedOperationException("Not supported yet."); //NOI18N
+        throw new UnsupportedOperationException("Not supported yet."); //NOCHECK
     }
     
 }

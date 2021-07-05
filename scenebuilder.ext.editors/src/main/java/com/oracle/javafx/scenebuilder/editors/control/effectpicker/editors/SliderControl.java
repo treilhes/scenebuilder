@@ -145,7 +145,7 @@ public class SliderControl extends GridPane {
             double incDec,
             boolean integerMode) {
 
-        final URL layoutURL = SliderControl.class.getResource("SliderControl.fxml"); //NOI18N
+        final URL layoutURL = SliderControl.class.getResource("SliderControl.fxml");
         try (InputStream is = layoutURL.openStream()) {
             FXMLLoader loader = new FXMLLoader();
             loader.setController(this);

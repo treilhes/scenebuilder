@@ -87,8 +87,8 @@ public class PngFormat implements ExportFormat {
         int targetIndex = 1;
         for (FXOMObject fxo : selection.getGroup().getItems()) {
             if (fxo.isNode()) {
-                String idx = targetIndex == 1 ? "" : "_" + String.format("%04d", targetIndex);
-                File target = new File(output.getParentFile(), baseName + idx + "." + extension);
+                String idx = targetIndex == 1 ? "" : "_" + String.format("%04d", targetIndex);//NOCHECK
+                File target = new File(output.getParentFile(), baseName + idx + "." + extension);//NOCHECK
                 exportScene((Node)fxo.getSceneGraphObject(), target);
                 targetIndex++;
             }
@@ -103,9 +103,9 @@ public class PngFormat implements ExportFormat {
         BufferedImage tempImg = SwingFXUtils.fromFXImage(snapshot, null);
         
         try (FileOutputStream fos = new FileOutputStream(output)){
-            ImageIO.write(tempImg, "png", fos);
+            ImageIO.write(tempImg, "png", fos);//NOCHECK
         } catch(Exception e) {
-            
+            // TODO do something here log or throw or message
         }
     }
 }

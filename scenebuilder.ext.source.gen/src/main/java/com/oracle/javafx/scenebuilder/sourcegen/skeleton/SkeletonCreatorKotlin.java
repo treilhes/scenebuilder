@@ -37,10 +37,10 @@ public class SkeletonCreatorKotlin extends AbstractSkeletonCreator {
     void appendPackage(SkeletonContext context, StringBuilder sb) {
         String controller = context.getFxController();
 
-        if (controller != null && controller.contains(".") && !controller.contains("$")) { //NOI18N
-            sb.append("package "); //NOI18N
-            sb.append(controller, 0, controller.lastIndexOf('.')); //NOI18N
-            sb.append(NL).append(NL); //NOI18N
+        if (controller != null && controller.contains(".") && !controller.contains("$")) { //NOCHECK
+            sb.append("package "); //NOCHECK
+            sb.append(controller, 0, controller.lastIndexOf('.')); //NOCHECK
+            sb.append(NL).append(NL); //NOCHECK
         }
     }
 
@@ -55,13 +55,13 @@ public class SkeletonCreatorKotlin extends AbstractSkeletonCreator {
 
     @Override
     void appendClassPart(SkeletonContext context, StringBuilder sb) {
-        sb.append("class "); //NOI18N
+        sb.append("class "); //NOCHECK
 
         if (hasController(context)) {
             String controllerClassName = getControllerClassName(context);
             sb.append(controllerClassName);
         } else {
-            sb.append("PleaseProvideControllerClassName"); //NOI18N
+            sb.append("PleaseProvideControllerClassName"); //NOCHECK
         }
     }
 
@@ -70,7 +70,7 @@ public class SkeletonCreatorKotlin extends AbstractSkeletonCreator {
     }
 
     private String getControllerClassName(SkeletonContext context) {
-        String simpleName = context.getFxController().replace("$", "."); //NOI18N
+        String simpleName = context.getFxController().replace("$", "."); //NOCHECK
         int dot = simpleName.lastIndexOf('.');
         if (dot > -1) {
             simpleName = simpleName.substring(dot + 1);
@@ -80,35 +80,35 @@ public class SkeletonCreatorKotlin extends AbstractSkeletonCreator {
 
     @Override
     void appendField(Class<?> fieldClass, String fieldName, StringBuilder sb) {
-        sb.append("private lateinit var ").append(fieldName).append(": ").append(fieldClass.getSimpleName()); //NOI18N
+        sb.append("private lateinit var ").append(fieldName).append(": ").append(fieldClass.getSimpleName()); //NOCHECK
         appendFieldParameters(sb, fieldClass);
     }
 
     @Override
     void appendFieldParameterType(StringBuilder sb) {
-        sb.append("Any"); //NOI18N
+        sb.append("Any"); //NOCHECK
     }
 
     @Override
     void appendEventHandler(String methodName, String eventClassName, StringBuilder sb) {
-        sb.append("fun "); //NOI18N
+        sb.append("fun "); //NOCHECK
         sb.append(methodName);
-        sb.append("(event: ").append(eventClassName).append(") {").append(NL).append(NL); //NOI18N
-        sb.append(INDENT).append("}"); //NOI18N
+        sb.append("(event: ").append(eventClassName).append(") {").append(NL).append(NL); //NOCHECK
+        sb.append(INDENT).append("}"); //NOCHECK
     }
 
     @Override
     void appendInitializeMethodPart(StringBuilder sb) {
-        sb.append("fun initialize()"); //NOI18N
+        sb.append("fun initialize()"); //NOCHECK
     }
 
     @Override
     void appendAssertions(SkeletonContext context, StringBuilder sb) {
         for (String assertion : context.getAssertions()) {
             sb.append(INDENT).append(INDENT)
-                .append("assert(").append(assertion).append(" != null) {") //NOI18N
-                .append("\"fx:id=\\\"").append(assertion).append("\\\" was not injected: check your FXML file ") //NOI18N
-                .append("'").append(context.getDocumentName()).append("'.\" }").append(NL); //NOI18N
+                .append("assert(").append(assertion).append(" != null) {") //NOCHECK
+                .append("\"fx:id=\\\"").append(assertion).append("\\\" was not injected: check your FXML file ") //NOCHECK
+                .append("'").append(context.getDocumentName()).append("'.\" }").append(NL); //NOCHECK
         }
     }
 }

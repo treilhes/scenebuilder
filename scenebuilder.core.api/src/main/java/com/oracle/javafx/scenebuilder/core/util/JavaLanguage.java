@@ -73,7 +73,7 @@ public class JavaLanguage {
             result = false;
         } else {
             result = true;
-            for (String item : value.split("\\.")) { //NOI18N
+            for (String item : value.split("\\.")) { //NOCHECK
                 if (isIdentifier(item) == false) {
                     result = false;
                     break;
@@ -109,25 +109,25 @@ public class JavaLanguage {
             keywords = new HashSet<>();
             Collections.addAll(
                     keywords,
-                    "abstract", "continue", "for", "new", "switch", //NOI18N
-                    "assert", "default", "if", "package", "synchronized", //NOI18N
-                    "boolean", "do", "goto", "private", "this", //NOI18N
-                    "break", "double", "implements", "protected", "throw", //NOI18N
-                    "byte", "else", "import", "public", "throws", //NOI18N
-                    "case", "enum", "instanceof", "return", "transient", //NOI18N
-                    "catch", "extends", "int", "short", "try", //NOI18N
-                    "char", "final", "interface", "static", "void", //NOI18N
-                    "class", "finally", "long", "strictfp", "volatile",  //NOI18N
-                    "const", "float", "native", "super", "while"); //NOI18N
+                    "abstract", "continue", "for", "new", "switch", //NOCHECK
+                    "assert", "default", "if", "package", "synchronized", //NOCHECK
+                    "boolean", "do", "goto", "private", "this", //NOCHECK
+                    "break", "double", "implements", "protected", "throw", //NOCHECK
+                    "byte", "else", "import", "public", "throws", //NOCHECK
+                    "case", "enum", "instanceof", "return", "transient", //NOCHECK
+                    "catch", "extends", "int", "short", "try", //NOCHECK
+                    "char", "final", "interface", "static", "void", //NOCHECK
+                    "class", "finally", "long", "strictfp", "volatile",  //NOCHECK
+                    "const", "float", "native", "super", "while"); //NOCHECK
         }
         return keywords.contains(value);
     }
     
     private static boolean isBooleanLiteral(String value) {
-        return value.equals("true") || value.equals("false"); //NOI18N
+        return value.equals("true") || value.equals("false"); //NOCHECK
     }
     
     private static boolean isNullLiteral(String value) {
-        return value.equals("null"); //NOI18N
+        return value.equals("null"); //NOCHECK
     }
 }

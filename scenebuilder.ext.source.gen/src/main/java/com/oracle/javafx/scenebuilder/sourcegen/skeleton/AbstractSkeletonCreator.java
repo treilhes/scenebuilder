@@ -41,8 +41,8 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 abstract class AbstractSkeletonCreator {
 
     static final String NL = System.lineSeparator();
-    static final String INDENT = "    "; //NOI18N
-    static final String FXML_ANNOTATION = "@FXML";
+    static final String INDENT = "    "; //NOCHECK
+    static final String FXML_ANNOTATION = "@FXML"; //NOCHECK
 
     String createFrom(SkeletonContext context) {
         final StringBuilder sb = new StringBuilder();
@@ -61,9 +61,9 @@ abstract class AbstractSkeletonCreator {
         }
 
         final String title = I18N.getString("skeleton.window.title", context.getDocumentName());
-        sb.append("/**").append(NL); //NOI18N
-        sb.append(" * ").append(title).append(NL); //NOI18N
-        sb.append(" */").append(NL); //NOI18N
+        sb.append("/**").append(NL); //NOCHECK
+        sb.append(" * ").append(title).append(NL); //NOCHECK
+        sb.append(" */").append(NL); //NOCHECK
         sb.append(NL);
     }
 
@@ -76,13 +76,13 @@ abstract class AbstractSkeletonCreator {
 
         appendClassPart(context, sb);
 
-        sb.append(" {").append(NL).append(NL); //NOI18N
+        sb.append(" {").append(NL).append(NL); //NOCHECK
 
         appendFields(context, sb);
 
         appendMethods(context, sb);
 
-        sb.append("}").append(NL); //NOI18N
+        sb.append("}").append(NL); //NOCHECK
     }
 
     abstract void appendClassPart(SkeletonContext context, StringBuilder sb);
@@ -100,20 +100,20 @@ abstract class AbstractSkeletonCreator {
 
         sb.append(INDENT).append(FXML_ANNOTATION);
         if (context.getSettings().isWithComments()) {
-            sb.append(" // ResourceBundle that was given to the FXMLLoader"); //NOI18N
+            sb.append(" // ResourceBundle that was given to the FXMLLoader"); //NOCHECK
         }
         sb.append(NL);
         sb.append(INDENT);
-        appendField(ResourceBundle.class, "resources", sb); //NOI18N
+        appendField(ResourceBundle.class, "resources", sb); //NOCHECK
         sb.append(NL).append(NL);
 
         sb.append(INDENT).append(FXML_ANNOTATION);
         if (context.getSettings().isWithComments()) {
-            sb.append(" // URL location of the FXML file that was given to the FXMLLoader"); //NOI18N
+            sb.append(" // URL location of the FXML file that was given to the FXMLLoader"); //NOCHECK
         }
         sb.append(NL);
         sb.append(INDENT);
-        appendField(URL.class, "location", sb); //NOI18N
+        appendField(URL.class, "location", sb); //NOCHECK
         sb.append(NL).append(NL);
     }
 
@@ -121,7 +121,7 @@ abstract class AbstractSkeletonCreator {
         for (Map.Entry<String, Class<?>> variable : context.getVariables().entrySet()) {
             sb.append(INDENT).append(FXML_ANNOTATION);
             if (context.getSettings().isWithComments()) {
-                sb.append(" // fx:id=\"").append(variable.getKey()).append("\""); //NOI18N
+                sb.append(" // fx:id=\"").append(variable.getKey()).append("\""); //NOCHECK
             }
             sb.append(NL);
 
@@ -129,7 +129,7 @@ abstract class AbstractSkeletonCreator {
             appendField(variable.getValue(), variable.getKey(), sb);
 
             if (context.getSettings().isWithComments()) {
-                sb.append(" // Value injected by FXMLLoader"); //NOI18N
+                sb.append(" // Value injected by FXMLLoader"); //NOCHECK
             }
             sb.append(NL).append(NL);
         }
@@ -140,14 +140,14 @@ abstract class AbstractSkeletonCreator {
     void appendFieldParameters(StringBuilder sb, Class<?> fieldClazz) {
         final TypeVariable<? extends Class<?>>[] parameters = fieldClazz.getTypeParameters();
         if (parameters.length > 0) {
-            sb.append("<"); //NOI18N
-            String sep = ""; //NOI18N
+            sb.append("<"); //NOCHECK
+            String sep = ""; //NOCHECK
             for (TypeVariable<?> ignored : parameters) {
                 sb.append(sep);
                 appendFieldParameterType(sb);
-                sep = ", "; //NOI18N
+                sep = ", "; //NOCHECK
             }
-            sb.append(">"); //NOI18N
+            sb.append(">"); //NOCHECK
         }
     }
 
@@ -164,7 +164,7 @@ abstract class AbstractSkeletonCreator {
             String methodName = entry.getKey();
             String eventClassName = entry.getValue();
 
-            final String methodNamePured = methodName.replace("#", ""); //NOI18N
+            final String methodNamePured = methodName.replace("#", ""); //NOCHECK
 
             sb.append(INDENT).append(FXML_ANNOTATION).append(NL).append(INDENT);
             appendEventHandler(methodNamePured, eventClassName, sb);
@@ -181,17 +181,17 @@ abstract class AbstractSkeletonCreator {
 
         sb.append(INDENT).append(FXML_ANNOTATION);
         if (context.getSettings().isWithComments()) {
-            sb.append(" // This method is called by the FXMLLoader when initialization is complete"); //NOI18N
+            sb.append(" // This method is called by the FXMLLoader when initialization is complete"); //NOCHECK
         }
         sb.append(NL);
 
         sb.append(INDENT);
         appendInitializeMethodPart(sb);
-        sb.append(" {").append(NL); //NOI18N
+        sb.append(" {").append(NL); //NOCHECK
         appendAssertions(context, sb);
         sb.append(NL);
         sb.append(INDENT);
-        sb.append("}").append(NL).append(NL); //NOI18N
+        sb.append("}").append(NL).append(NL); //NOCHECK
     }
 
     abstract void appendInitializeMethodPart(StringBuilder sb);

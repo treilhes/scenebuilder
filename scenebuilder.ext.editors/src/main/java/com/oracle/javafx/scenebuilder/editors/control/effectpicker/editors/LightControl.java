@@ -123,7 +123,7 @@ public class LightControl extends VBox {
 
     private void initialize(String label, Light initValue) {
 
-        final URL layoutURL = EnumControl.class.getResource("LightControl.fxml"); //NOI18N
+        final URL layoutURL = EnumControl.class.getResource("LightControl.fxml");
         try (InputStream is = layoutURL.openStream()) {
             final FXMLLoader loader = new FXMLLoader();
             loader.setController(this);
@@ -199,12 +199,12 @@ public class LightControl extends VBox {
                 final Distant distant = (Distant) getValue();
 
                 final SliderControl azimuthEditor = new SliderControl(
-                        effectPickerController, "azimuth", 0, 360.0, distant.getAzimuth(), 1.0, false); //NOI18N
+                        effectPickerController, "azimuth", 0, 360.0, distant.getAzimuth(), 1.0, false); //NOCHECK
                 distant.azimuthProperty().bind(azimuthEditor.valueProperty());
                 lightProperties.getChildren().add(azimuthEditor);
 
                 final SliderControl elevationEditor = new SliderControl(
-                        effectPickerController, "elevation", 0, 360.0, distant.getElevation(), 1.0, false); //NOI18N
+                        effectPickerController, "elevation", 0, 360.0, distant.getElevation(), 1.0, false); //NOCHECK
                 distant.elevationProperty().bind(elevationEditor.valueProperty());
                 lightProperties.getChildren().add(elevationEditor);
 
@@ -213,17 +213,17 @@ public class LightControl extends VBox {
                 final Point point = (Point) getValue();
 
                 final DoubleTextFieldControl xEditor = new DoubleTextFieldControl(
-                        effectPickerController, "x", -10.0, 10.0, point.getX(), 1.0); //NOI18N
+                        effectPickerController, "x", -10.0, 10.0, point.getX(), 1.0); //NOCHECK
                 point.xProperty().bind(xEditor.valueProperty());
                 lightProperties.getChildren().add(xEditor);
 
                 final DoubleTextFieldControl yEditor = new DoubleTextFieldControl(
-                        effectPickerController, "y", -10.0, 10.0, point.getY(), 1.0); //NOI18N
+                        effectPickerController, "y", -10.0, 10.0, point.getY(), 1.0); //NOCHECK
                 point.yProperty().bind(yEditor.valueProperty());
                 lightProperties.getChildren().add(yEditor);
 
                 final DoubleTextFieldControl zEditor = new DoubleTextFieldControl(
-                        effectPickerController, "z", -10.0, 10.0, point.getY(), 1.0); //NOI18N
+                        effectPickerController, "z", -10.0, 10.0, point.getY(), 1.0); //NOCHECK
                 point.zProperty().bind(zEditor.valueProperty());
                 lightProperties.getChildren().add(zEditor);
 
@@ -231,22 +231,22 @@ public class LightControl extends VBox {
                     final Spot spot = (Spot) getValue();
 
                     final DoubleTextFieldControl pointsAtXEditor = new DoubleTextFieldControl(
-                            effectPickerController, "pointsAtX", -10.0, 10.0, spot.getPointsAtX(), 1.0); //NOI18N
+                            effectPickerController, "pointsAtX", -10.0, 10.0, spot.getPointsAtX(), 1.0); //NOCHECK
                     spot.pointsAtXProperty().bind(pointsAtXEditor.valueProperty());
                     lightProperties.getChildren().add(pointsAtXEditor);
 
                     final DoubleTextFieldControl pointsAtYEditor = new DoubleTextFieldControl(
-                            effectPickerController, "pointsAtY", -10.0, 10.0, spot.getPointsAtY(), 1.0); //NOI18N
+                            effectPickerController, "pointsAtY", -10.0, 10.0, spot.getPointsAtY(), 1.0); //NOCHECK
                     spot.pointsAtYProperty().bind(pointsAtYEditor.valueProperty());
                     lightProperties.getChildren().add(pointsAtYEditor);
 
                     final DoubleTextFieldControl pointsAtZEditor = new DoubleTextFieldControl(
-                            effectPickerController, "pointsAtZ", -10.0, 10.0, spot.getPointsAtZ(), 1.0); //NOI18N
+                            effectPickerController, "pointsAtZ", -10.0, 10.0, spot.getPointsAtZ(), 1.0); //NOCHECK
                     spot.pointsAtZProperty().bind(pointsAtZEditor.valueProperty());
                     lightProperties.getChildren().add(pointsAtZEditor);
 
                     final SliderControl specularExponentEditor = new SliderControl(
-                            effectPickerController, "specularExponent", 0, 4.0, spot.getSpecularExponent(), 1.0, false); //NOI18N
+                            effectPickerController, "specularExponent", 0, 4.0, spot.getSpecularExponent(), 1.0, false); //NOCHECK
                     spot.specularExponentProperty().bind(specularExponentEditor.valueProperty());
                     lightProperties.getChildren().add(specularExponentEditor);
 

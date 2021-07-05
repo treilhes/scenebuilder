@@ -48,8 +48,8 @@ import javafx.scene.Parent;
 @Component
 public class RootContainerHeightPreference extends DoublePreference implements ManagedGlobalPreference, UserPreference<Double> {
 
-	public static final String PREFERENCE_KEY = "ROOT_CONTAINER_HEIGHT"; //NOI18N
-	public static final Double PREFERENCE_DEFAULT_VALUE = 400.0; //NOI18N
+	public static final String PREFERENCE_KEY = "ROOT_CONTAINER_HEIGHT"; //NOCHECK
+	public static final Double PREFERENCE_DEFAULT_VALUE = 400.0; //NOCHECK
 
 	private final PreferenceEditorFactory preferenceEditorFactory;
 

@@ -102,7 +102,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     		@Autowired Api api,
     		@Autowired Editor editor,
     		@Autowired PropertyEditorFactory propertyEditorFactory) {
-        super(api, InfoPanelController.class.getResource("InfoPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(api, InfoPanelController.class.getResource("InfoPanel.fxml"), I18N.getBundle());
         this.context = api.getContext();
         this.editor = editor;
         this.editorFactorysession = propertyEditorFactory.newSession();
@@ -232,8 +232,8 @@ public class InfoPanelController extends AbstractFxmlPanelController {
             }
         });
 
-        leftTableColumn.setCellValueFactory(new PropertyValueFactory<>("key")); //NOI18N
-        rightTableColumn.setCellValueFactory(new PropertyValueFactory<>("fxomObject")); //NOI18N
+        leftTableColumn.setCellValueFactory(new PropertyValueFactory<>("key")); //NOCHECK
+        rightTableColumn.setCellValueFactory(new PropertyValueFactory<>("fxomObject")); //NOCHECK
         leftTableColumn.setCellFactory(new LeftCell.Factory());
         rightTableColumn.setCellFactory(new RightCell.Factory());
 
@@ -250,7 +250,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     /*
      * Private
      */
-    private final static String IGNORED = "ignored"; //NOI18N
+    private final static String IGNORED = "ignored"; //NOCHECK
 
     private synchronized void updateControllerAndControllerClassEditor() {
         updateControllerAndControllerClassEditor(IGNORED);
@@ -364,14 +364,14 @@ public class InfoPanelController extends AbstractFxmlPanelController {
             final String labelText;
             switch(count) {
                 case 0:
-                    labelText = ""; //NOI18N
+                    labelText = ""; //NOCHECK
                     break;
                 case 1:
-                    labelText = "1 " //NOI18N
+                    labelText = "1 " //NOCHECK
                             + I18N.getString("info.label.item");
                     break;
                 default:
-                    labelText = count + " " //NOI18N
+                    labelText = count + " " //NOCHECK
                             + I18N.getString("info.label.items");
                     break;
             }
@@ -450,7 +450,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
                 fxrootCheckBox.setDisable(true);
                 controllerClassEditor.setDisable(true);
                 controllerClassEditor.setUpdateFromModel(true);
-                controllerClassEditor.setValue(null); //NOI18N
+                controllerClassEditor.setValue(null); //NOCHECK
                 controllerClassEditor.setUpdateFromModel(false);
             } else {
                 fxrootCheckBox.setDisable(false);

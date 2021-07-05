@@ -103,7 +103,7 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        return "Add Row Constraints"; //NOI18N
+        return "Add Row Constraints"; //NOCHECK
     }
 
     private Set<Job> addRowConstraints(
@@ -113,7 +113,7 @@ public class AddRowConstraintsJob extends BatchDocumentJob {
         final Set<Job> result = new LinkedHashSet<>();
 
         // Retrieve the constraints property for the specified target GridPane
-        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOI18N
+        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOCHECK
         FXOMProperty constraintsProperty = targetGridPane.getProperties().get(propertyName);
         if (constraintsProperty == null) {
             constraintsProperty = new FXOMPropertyC(fxomDocument, propertyName);

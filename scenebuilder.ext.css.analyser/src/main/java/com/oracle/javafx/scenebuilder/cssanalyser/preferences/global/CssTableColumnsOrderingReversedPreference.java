@@ -78,7 +78,7 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; //NOI18N
+    public static final String PREFERENCE_KEY = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; //NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
     private final PreferenceEditorFactory preferenceEditorFactory;

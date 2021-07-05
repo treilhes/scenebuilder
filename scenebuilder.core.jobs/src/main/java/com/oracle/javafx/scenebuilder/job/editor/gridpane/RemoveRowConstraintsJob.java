@@ -92,6 +92,6 @@ public class RemoveRowConstraintsJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        return "Remove Row Constraints"; //NOI18N
+        return "Remove Row Constraints"; //NOCHECK
     }
 }

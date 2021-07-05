@@ -57,7 +57,7 @@ import javafx.fxml.FXMLLoader;
 
 public class FXMLUtils {
 
-    private static final PropertyName valueName = new PropertyName("value"); //NOI18N
+    private static final PropertyName valueName = new PropertyName("value"); //NOCHECK
     
 	private FXMLUtils() {}
 
@@ -66,7 +66,7 @@ public class FXMLUtils {
 	}
 	
 	public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, String fxml) {
-        final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOI18N
+        final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOCHECK
         final FXMLLoader loader = new FXMLLoader();
 
         loader.setController(controllerInstance);
@@ -79,10 +79,10 @@ public class FXMLUtils {
         try {
             return loader.load();
         } catch (RuntimeException | IOException x) {
-            System.out.println("loader.getClassLoader()=" + resourceLoadingClass.getName()); //NOI18N
-            System.out.println("loader.getController()=" + loader.getController()); //NOI18N
-            System.out.println("loader.getLocation()=" + loader.getLocation()); //NOI18N
-            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
+            System.out.println("loader.getClassLoader()=" + resourceLoadingClass.getName()); //NOCHECK
+            System.out.println("loader.getController()=" + loader.getController()); //NOCHECK
+            System.out.println("loader.getLocation()=" + loader.getLocation()); //NOCHECK
+            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOCHECK
         }
     }
 	

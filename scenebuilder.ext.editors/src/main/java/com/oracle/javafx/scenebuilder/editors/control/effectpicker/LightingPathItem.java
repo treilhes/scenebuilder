@@ -44,8 +44,8 @@ import javafx.scene.effect.Lighting;
  */
 public class LightingPathItem extends EffectPathItem {
 
-    private final RadioMenuItem bumpMenuItem = new RadioMenuItem("BumpInput"); //NOI18N
-    private final RadioMenuItem contentMenuItem = new RadioMenuItem("ContentInput"); //NOI18N
+    private final RadioMenuItem bumpMenuItem = new RadioMenuItem("BumpInput"); //NOCHECK
+    private final RadioMenuItem contentMenuItem = new RadioMenuItem("ContentInput"); //NOCHECK
     private final ToggleGroup inputToggleGroup = new ToggleGroup();
     private EffectPathItem bumpInputPathItem;
     private EffectPathItem contentInputPathItem;
@@ -102,15 +102,15 @@ public class LightingPathItem extends EffectPathItem {
 
     private void initialize() {
         // Add Select Input Menu
-        final Menu inputMenu = new Menu("Select Input"); //NOI18N
+        final Menu inputMenu = new Menu("Select Input"); //NOCHECK
         bumpMenuItem.setToggleGroup(inputToggleGroup);
         bumpMenuItem.setOnAction(event -> {
-            toggle_button.setText(getSimpleName() + " (BumpInput)"); //NOI18N
+            toggle_button.setText(getSimpleName() + " (BumpInput)"); //NOCHECK
             effectPickerController.updateUI(LightingPathItem.this);
         });
         contentMenuItem.setToggleGroup(inputToggleGroup);
         contentMenuItem.setOnAction(event -> {
-            toggle_button.setText(getSimpleName() + " (ContentInput)"); //NOI18N
+            toggle_button.setText(getSimpleName() + " (ContentInput)"); //NOCHECK
             effectPickerController.updateUI(LightingPathItem.this);
         });
 
@@ -119,7 +119,7 @@ public class LightingPathItem extends EffectPathItem {
         menu_button.getItems().add(1, new SeparatorMenuItem());
 
         // BumpInput selected at init time
-        toggle_button.setText(getSimpleName() + " (BumpInput)"); //NOI18N
+        toggle_button.setText(getSimpleName() + " (BumpInput)"); //NOCHECK
         bumpMenuItem.setSelected(true);
         contentMenuItem.setSelected(false);
     }

@@ -137,7 +137,7 @@ public class ClassLoaderController {
                     result[i++] = url; // <-- file:/path/to/folder/
                 }
             } catch(MalformedURLException x) {
-                throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); //NOI18N
+                throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); //NOCHECK
             }
         }
 

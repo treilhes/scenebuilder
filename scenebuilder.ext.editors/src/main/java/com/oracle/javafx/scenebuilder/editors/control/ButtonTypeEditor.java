@@ -246,7 +246,7 @@ public class ButtonTypeEditor extends InlineListEditor {
         // Method to please FindBugs
         private void initialize(EditorItemDelegate editor, Collection<ButtonType> buttonList) {
             this.editor = editor;
-            root = FXMLUtils.load(this, "ButtonTypeEditorItem.fxml");//NOI18N
+            root = FXMLUtils.load(this, "ButtonTypeEditorItem.fxml");
 
             buttonTypeCb.setConverter(getButtonTypeConverter());
             buttonTypeCb.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ButtonType>() {

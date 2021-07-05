@@ -173,7 +173,7 @@ public abstract class AbstractPanelController  {
 //            try {
 //                fxomDocumentDidChange(fd);
 //            } catch(RuntimeException x) {
-//                LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//                LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //            }
 //        });
 //        
@@ -181,7 +181,7 @@ public abstract class AbstractPanelController  {
 //            try {
 //                sceneGraphRevisionDidChange();
 //            } catch(RuntimeException x) {
-//                LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//                LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //            }
 //        });
 //        
@@ -189,7 +189,7 @@ public abstract class AbstractPanelController  {
 //            try {
 //                cssRevisionDidChange();
 //            } catch(RuntimeException x) {
-//                LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//                LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //            }
 //        });
 //        
@@ -279,7 +279,7 @@ public abstract class AbstractPanelController  {
 //        try {
 //            sceneGraphRevisionDidChange();
 //        } catch(RuntimeException x) {
-//            LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//            LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //        }
 //    };
 //
@@ -289,7 +289,7 @@ public abstract class AbstractPanelController  {
 //        try {
 //            cssRevisionDidChange();
 //        } catch(RuntimeException x) {
-//            LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//            LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //        }
 //    };
 
@@ -301,7 +301,7 @@ public abstract class AbstractPanelController  {
 //        try {
 //            jobManagerRevisionDidChange();
 //        } catch(RuntimeException x) {
-//            LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//            LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //        }
 //    };
 //
@@ -319,7 +319,7 @@ public abstract class AbstractPanelController  {
 //            try {
 //                editorSelectionDidChange();
 //            } catch(RuntimeException x) {
-//                LOG.log(Level.SEVERE, "Bug", x); //NOI18N
+//                LOG.log(Level.SEVERE, "Bug", x); //NOCHECK
 //            }
 //        });
 //    }

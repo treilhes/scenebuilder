@@ -140,7 +140,7 @@ class TableViewSampleData extends AbstractSampleData {
         int index;
         
         public final static PropertyValueFactory<SampleDataItem, String> FACTORY
-                = new PropertyValueFactory<>("prop"); //NOI18N
+                = new PropertyValueFactory<>("prop"); //NOCHECK
         
         public SampleDataItem(int index) {
             this.index = index;

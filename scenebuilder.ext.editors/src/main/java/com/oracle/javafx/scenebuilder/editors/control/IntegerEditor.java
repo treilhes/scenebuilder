@@ -117,7 +117,7 @@ public class IntegerEditor extends AutoSuggestEditor {
     public Object getValue() {
         String val = getTextField().getText();
         if (val.isEmpty()) {
-            val = "0"; //NOI18N
+            val = "0"; //NOCHECK
             getTextField().setText(val);
             return Integer.valueOf(val);
         }

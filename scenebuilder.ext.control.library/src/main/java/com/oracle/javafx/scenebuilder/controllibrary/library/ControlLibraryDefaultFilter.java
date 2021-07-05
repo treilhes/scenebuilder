@@ -42,9 +42,9 @@ public class ControlLibraryDefaultFilter implements LibraryFilter {
     @Override
     public boolean isFiltered(String className) {
         // Filtering out what starts with com.javafx. is bound to DTL-6378.
-        return className == null || className.startsWith("java.") //NOI18N
-                || className.startsWith("javax.") || className.startsWith("javafx.") //NOI18N
-                || className.startsWith("com.oracle.javafx.scenebuilder.") //NOI18N
+        return className == null || className.startsWith("java.") //NOCHECK
+                || className.startsWith("javax.") || className.startsWith("javafx.") //NOCHECK
+                || className.startsWith("com.oracle.javafx.scenebuilder.") //NOCHECK
                 || className.startsWith("com.javafx.")
                 || className.startsWith("module-info");
     }

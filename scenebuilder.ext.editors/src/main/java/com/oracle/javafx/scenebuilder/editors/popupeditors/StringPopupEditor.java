@@ -90,11 +90,11 @@ public class StringPopupEditor extends PopupEditor {
     @Override
     public String getPreviewString(Object value) {
         if (value == null) {
-            return ""; //NOI18N
+            return ""; //NOCHECK
         }
         String valueAsString;
         if (isIndeterminate()) {
-            valueAsString = "-"; //NOI18N
+            valueAsString = "-"; //NOCHECK
         } else {
             valueAsString = value.toString();
         }

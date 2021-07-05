@@ -47,7 +47,7 @@ public class I18NDebugMenu implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NDebugMenu.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDebugMenu"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderDebugMenu"); //NOCHECK
         }
         return bundle;
     }

@@ -64,14 +64,14 @@ public class CubicCurveEditor extends AbstractCurveEditor<CubicCurve> {
     private double originalEndX;
     private double originalEndY;
 
-    private final PropertyName startXName = new PropertyName("startX"); //NOI18N
-    private final PropertyName startYName = new PropertyName("startY"); //NOI18N
-    private final PropertyName controlX1Name = new PropertyName("controlX1"); //NOI18N
-    private final PropertyName controlY1Name = new PropertyName("controlY1"); //NOI18N
-    private final PropertyName controlX2Name = new PropertyName("controlX2"); //NOI18N
-    private final PropertyName controlY2Name = new PropertyName("controlY2"); //NOI18N
-    private final PropertyName endXName = new PropertyName("endX"); //NOI18N
-    private final PropertyName endYName = new PropertyName("endY"); //NOI18N
+    private final PropertyName startXName = new PropertyName("startX"); //NOCHECK
+    private final PropertyName startYName = new PropertyName("startY"); //NOCHECK
+    private final PropertyName controlX1Name = new PropertyName("controlX1"); //NOCHECK
+    private final PropertyName controlY1Name = new PropertyName("controlY1"); //NOCHECK
+    private final PropertyName controlX2Name = new PropertyName("controlX2"); //NOCHECK
+    private final PropertyName controlY2Name = new PropertyName("controlY2"); //NOCHECK
+    private final PropertyName endXName = new PropertyName("endX"); //NOCHECK
+    private final PropertyName endYName = new PropertyName("endY"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
 
     public CubicCurveEditor() {

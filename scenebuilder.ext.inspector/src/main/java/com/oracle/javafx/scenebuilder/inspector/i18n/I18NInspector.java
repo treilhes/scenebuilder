@@ -47,7 +47,7 @@ public class I18NInspector implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NInspector.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderInspector"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderInspector"); //NOCHECK
         }
         return bundle;
     }

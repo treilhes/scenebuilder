@@ -62,7 +62,7 @@ public class AlertDialog extends AbstractModalDialog  implements Alert {
     private Runnable actionRunnable;
 
     public AlertDialog(Api api, Window owner) {
-        super(api, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner); //NOI18N
+        super(api, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class AlertDialog extends AbstractModalDialog  implements Alert {
     private static Image dialogImage;
     private static synchronized Image getDialogImage() {
         if (dialogImage == null) {
-            final URL dialogImageURL = AlertDialog.class.getResource("alert-question-mark.png"); //NOI18N
+            final URL dialogImageURL = AlertDialog.class.getResource("alert-question-mark.png");
             dialogImage = new Image(dialogImageURL.toExternalForm());
         }
         return dialogImage;

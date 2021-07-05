@@ -49,13 +49,13 @@ import javafx.scene.paint.Color;
 public class DistantLightPropertyMetadata extends ComplexPropertyMetadata<Light.Distant> {
     
     private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
+            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
             true, Color.WHITE, InspectorPath.UNUSED);
     private final AngleDoublePropertyMetadata azimuthMetadata
-            = new AngleDoublePropertyMetadata(new PropertyName("azimuth"), //NOI18N
+            = new AngleDoublePropertyMetadata(new PropertyName("azimuth"), //NOCHECK
             true, 45.0, InspectorPath.UNUSED);
     private final AngleDoublePropertyMetadata elevationMetadata
-            = new AngleDoublePropertyMetadata(new PropertyName("elevation"), //NOI18N
+            = new AngleDoublePropertyMetadata(new PropertyName("elevation"), //NOCHECK
             true, 45.0, InspectorPath.UNUSED);
     
     public DistantLightPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -177,7 +177,7 @@ public class DesignHierarchyMask implements HierarchyMask {
     public String getClassNameInfo(Accessory accessory) {
         final Object sceneGraphObject;
         String classNameInfo = null;
-        String prefix = "", suffix = ""; //NOI18N
+        String prefix = "", suffix = ""; //NOCHECK
 
         // For FXOMIntrinsic, we use the source sceneGraphObject
         if (fxomObject instanceof FXOMIntrinsic) {
@@ -185,7 +185,7 @@ public class DesignHierarchyMask implements HierarchyMask {
             sceneGraphObject = fxomIntrinsic.getSourceSceneGraphObject();
             if (fxomIntrinsic.getType() == FXOMIntrinsic.Type.FX_INCLUDE) {
                 // Add FXML prefix for included FXML file
-                prefix += "FXML "; //NOI18N
+                prefix += "FXML "; //NOCHECK
             }
         } else {
             sceneGraphObject = fxomObject.getSceneGraphObject();
@@ -240,7 +240,7 @@ public class DesignHierarchyMask implements HierarchyMask {
     public String getSingleLineDescription() {
         String result = getDescription();
         if (result != null && containsLineFeed(result)) {
-            result = result.substring(0, result.indexOf('\n')) + "..."; //NOI18N
+            result = result.substring(0, result.indexOf('\n')) + "..."; //NOCHECK
         }
         return result;
     }
@@ -254,7 +254,7 @@ public class DesignHierarchyMask implements HierarchyMask {
         Object result = null;
         if (fxomObject instanceof FXOMInstance) {
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final PropertyName propertyName = new PropertyName("id"); //NOI18N
+            final PropertyName propertyName = new PropertyName("id"); //NOCHECK
             final ValuePropertyMetadata vpm
                     = Metadata.getMetadata().queryValueProperty(fxomInstance, propertyName);
             result = vpm.getValueObject(fxomInstance);
@@ -281,7 +281,7 @@ public class DesignHierarchyMask implements HierarchyMask {
         if (fxomObject instanceof FXOMInstance) { // Can be null for place holder items
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
             final String fxId = fxomInstance.getFxId();
-            result = fxId == null ? "" : fxId; //NOI18N
+            result = fxId == null ? "" : fxId; //NOCHECK
         }
         return result;
     }
@@ -569,7 +569,7 @@ public class DesignHierarchyMask implements HierarchyMask {
         if (str == null) {
             return false;
         }
-        return str.contains("\n"); //NOI18N
+        return str.contains("\n"); //NOCHECK
     }
 
     /**

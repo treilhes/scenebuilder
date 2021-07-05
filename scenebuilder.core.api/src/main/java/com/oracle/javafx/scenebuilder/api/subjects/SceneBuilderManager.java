@@ -119,12 +119,12 @@ public interface SceneBuilderManager {
         private @Getter ReplaySubject<ClassLoader> classloader;
 
         public SceneBuilderSubjects() {
-            closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create());
-            debugMode = wrap(SceneBuilderSubjects.class, "debugMode", ReplaySubject.create(1));
-            stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1));
-            documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create());
-            documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create());
-            classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1));
+            closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create()); // NOI18N
+            debugMode = wrap(SceneBuilderSubjects.class, "debugMode", ReplaySubject.create(1)); // NOI18N
+            stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
+            documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create()); // NOI18N
+            documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create()); // NOI18N
+            classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
         }
 
     }

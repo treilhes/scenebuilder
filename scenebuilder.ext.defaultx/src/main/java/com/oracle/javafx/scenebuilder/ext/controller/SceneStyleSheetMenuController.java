@@ -90,7 +90,7 @@ public class SceneStyleSheetMenuController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
                 I18N.getString("scenestylesheet.filechooser.filter.msg"),
-                "*.css", "*.bss")); //NOI18N
+                "*.css", "*.bss")); //NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());
 

@@ -139,7 +139,7 @@ public class GradientPickerStop extends VBox {
     private void initialize() {
 
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(GradientPickerStop.class.getResource("GradientPickerStop.fxml")); //NOI18N
+        loader.setLocation(GradientPickerStop.class.getResource("GradientPickerStop.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {
@@ -151,7 +151,7 @@ public class GradientPickerStop extends VBox {
         assert offset_textfield != null;
         assert chip_rect != null;
 
-        offset_textfield.setText("" + offset); //NOI18N
+        offset_textfield.setText("" + offset); //NOCHECK
 
         chip_rect.setFill(color);
         gradientPicker.setSelectedStop(this);

@@ -60,10 +60,10 @@ public class LineEditor extends AbstractCurveEditor<Line> {
     private double originalEndX;
     private double originalEndY;
 
-    private final PropertyName startXName = new PropertyName("startX"); //NOI18N
-    private final PropertyName startYName = new PropertyName("startY"); //NOI18N
-    private final PropertyName endXName = new PropertyName("endX"); //NOI18N
-    private final PropertyName endYName = new PropertyName("endY"); //NOI18N
+    private final PropertyName startXName = new PropertyName("startX"); //NOCHECK
+    private final PropertyName startYName = new PropertyName("startY"); //NOCHECK
+    private final PropertyName endXName = new PropertyName("endX"); //NOCHECK
+    private final PropertyName endYName = new PropertyName("endY"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
 
     public LineEditor() {

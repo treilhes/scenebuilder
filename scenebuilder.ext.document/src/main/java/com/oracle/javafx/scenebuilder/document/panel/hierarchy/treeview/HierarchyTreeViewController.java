@@ -75,7 +75,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     		Api api,
     		Editor editorController,
     		ParentRingColorPreference parentRingColorPreference) {
-        super(api, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController); //NOI18N
+        super(api, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController);
         this.context = api.getContext();
         this.parentRingColorPreference = parentRingColorPreference;
     }

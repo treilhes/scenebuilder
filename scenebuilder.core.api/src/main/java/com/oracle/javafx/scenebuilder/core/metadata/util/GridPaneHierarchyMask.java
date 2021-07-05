@@ -52,9 +52,9 @@ import javafx.scene.layout.GridPane;
  */
 public class GridPaneHierarchyMask extends DesignHierarchyMask {
     
-    private static final PropertyName ROW_CONSTRAINTS = PropertyNames.rowConstraintsName; //NOI18N
-    private static final PropertyName COLUMN_CONSTRAINTS = PropertyNames.columnConstraintsName; //NOI18N
-    private static final PropertyName CHILDREN = PropertyNames.childrenName; //NOI18N
+    private static final PropertyName ROW_CONSTRAINTS = PropertyNames.rowConstraintsName; //NOCHECK
+    private static final PropertyName COLUMN_CONSTRAINTS = PropertyNames.columnConstraintsName; //NOCHECK
+    private static final PropertyName CHILDREN = PropertyNames.childrenName; //NOCHECK
     
     private Accessory childrenAccessory;
     
@@ -197,7 +197,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         FXOMObject result = null;
 
         // Retrieve the constraints property
-        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOI18N
+        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOCHECK
         final FXOMProperty constraintsProperty
                 = fxomInstance.getProperties().get(propertyName);
 
@@ -223,7 +223,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         FXOMObject result = null;
 
         // Retrieve the constraints property
-        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOI18N
+        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOCHECK
         final FXOMProperty constraintsProperty
                 = fxomInstance.getProperties().get(propertyName);
 
@@ -283,7 +283,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         assert parentFxomObject.getSceneGraphObject() instanceof GridPane;
 
         final PropertyName propertyName
-                = new PropertyName(columnOrRow, GridPane.class); //NOI18N
+                = new PropertyName(columnOrRow, GridPane.class); //NOCHECK
         final ValuePropertyMetadata vpm
                 = Metadata.getMetadata().queryValueProperty(fxomInstance, propertyName);
         final Object value = vpm.getValueObject(fxomInstance);

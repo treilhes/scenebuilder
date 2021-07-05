@@ -61,7 +61,7 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 public class ModifyToggleGroupJob extends BatchDocumentJob {
 
     private static final PropertyName toggleGroupName
-            = new PropertyName("toggleGroup"); //NOI18N
+            = new PropertyName("toggleGroup"); //NOCHECK
 
     private final FXOMObject targetObject;
     private final String toggleGroupId;
@@ -95,15 +95,15 @@ public class ModifyToggleGroupJob extends BatchDocumentJob {
                  *      => removes toggleGroup FXOMProperty if needed
                  *
                  * Case #1 : targetObject.toggleGroup is undefined
-                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOI18N
+                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOCHECK
                  *
                  * Case #2 : targetObject defines the ToggleGroup instance
                  *      => removes toggleGroup FXOMPropertyC
-                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOI18N
+                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOCHECK
                  *
                  * Case #3 : targetObject refers to a ToggleGroup instance
                  *      => removes toggleGroup FXOMPropertyT
-                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOI18N
+                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOCHECK
                  */
 
                 final FXOMDocument fxomDocument

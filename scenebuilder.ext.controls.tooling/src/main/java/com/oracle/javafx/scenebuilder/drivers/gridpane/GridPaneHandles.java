@@ -59,7 +59,7 @@ import javafx.scene.layout.GridPane;
 public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
 
     private final GridPaneMosaic mosaic
-            = new GridPaneMosaic("handles", //NOI18N
+            = new GridPaneMosaic("handles", //NOCHECK
                     true /* shouldShowTray */,
                     true /* shouldCreateSensors */ );
 	private final ApplicationContext context;

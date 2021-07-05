@@ -49,7 +49,7 @@ public class ShowUpdateDialogDatePreference extends LocalDatePreference implemen
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "UPDATE_DIALOG_DATE"; //NOI18N
+    public static final String PREFERENCE_KEY = "UPDATE_DIALOG_DATE"; //NOCHECK
     public static final LocalDate PREFERENCE_DEFAULT_VALUE = null;
 
 	public ShowUpdateDialogDatePreference(@Autowired PreferencesContext preferencesContext) {

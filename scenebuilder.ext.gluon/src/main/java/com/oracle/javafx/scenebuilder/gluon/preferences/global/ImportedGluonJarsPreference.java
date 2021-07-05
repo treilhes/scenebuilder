@@ -47,7 +47,7 @@ public class ImportedGluonJarsPreference extends StringArrayPreference implement
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "IMPORTED_GLUON_JARS"; //NOI18N
+    public static final String PREFERENCE_KEY = "IMPORTED_GLUON_JARS"; //NOCHECK
     public static final String[] PREFERENCE_DEFAULT_VALUE = new String[0];
 
 	public ImportedGluonJarsPreference(@Autowired PreferencesContext preferencesContext) {

@@ -86,24 +86,24 @@ public class ErrorReportEntryImpl implements ErrorReportEntry {
         final StringBuilder result = new StringBuilder();
 
         result.append(getClass().getSimpleName());
-        result.append("(fxomNode="); //NOI18N
+        result.append("(fxomNode="); //NOCHECK
         result.append(fxomNode.getClass().getSimpleName());
-        result.append(",type="); //NOI18N
+        result.append(",type="); //NOCHECK
         result.append(type.toString());
         switch(type) {
             case UNRESOLVED_CLASS:
                 break;
             case UNRESOLVED_LOCATION:
-                result.append(",location="); //NOI18N
+                result.append(",location="); //NOCHECK
                 break;
             case UNRESOLVED_RESOURCE:
-                result.append(",resource="); //NOI18N
+                result.append(",resource="); //NOCHECK
                 break;
             case INVALID_CSS_CONTENT:
-                result.append(",css file="); //NOI18N
+                result.append(",css file="); //NOCHECK
                 break;
             case UNSUPPORTED_EXPRESSION:
-                result.append(",expression="); //NOI18N
+                result.append(",expression="); //NOCHECK
                 break;
         }
         if (fxomNode instanceof FXOMPropertyT) {
@@ -113,9 +113,9 @@ public class ErrorReportEntryImpl implements ErrorReportEntry {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomNode;
             result.append(fxomIntrinsic.getSource());
         } else {
-            result.append("?"); //NOI18N
+            result.append("?"); //NOCHECK
         }
-        result.append(")"); //NOI18N
+        result.append(")"); //NOCHECK
 
         return result.toString();
     }

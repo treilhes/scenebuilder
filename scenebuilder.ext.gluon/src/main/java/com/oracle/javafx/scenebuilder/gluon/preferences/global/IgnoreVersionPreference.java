@@ -47,7 +47,7 @@ public class IgnoreVersionPreference extends StringPreference implements Managed
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "IGNORE_VERSION"; //NOI18N
+    public static final String PREFERENCE_KEY = "IGNORE_VERSION"; //NOCHECK
     public static final String PREFERENCE_DEFAULT_VALUE = null;
 
 	public IgnoreVersionPreference(@Autowired PreferencesContext preferencesContext) {

@@ -46,13 +46,13 @@ import javafx.geometry.Point3D;
 public class Point3DPropertyMetadata extends ComplexPropertyMetadata<Point3D> {
 
     private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"),  //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"),  //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata zMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
 
     public Point3DPropertyMetadata(PropertyName name, boolean readWrite, 

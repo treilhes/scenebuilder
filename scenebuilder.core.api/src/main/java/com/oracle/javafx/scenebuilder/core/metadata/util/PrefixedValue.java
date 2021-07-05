@@ -83,19 +83,19 @@ public class PrefixedValue {
             }
             case CLASSLOADER_RELATIVE_PATH: {
                 final String encoding = encodePath(new File(suffix));
-                this.value = FXMLLoader.RELATIVE_PATH_PREFIX + "/" + encoding; //NOI18N
+                this.value = FXMLLoader.RELATIVE_PATH_PREFIX + "/" + encoding; //NOCHECK
                 break;
             }
             case RESOURCE_KEY: {
-                this.value = FXMLLoader.RESOURCE_KEY_PREFIX + suffix; //NOI18N
+                this.value = FXMLLoader.RESOURCE_KEY_PREFIX + suffix; //NOCHECK
                 break;
             }
             case EXPRESSION: {
-                this.value = FXMLLoader.EXPRESSION_PREFIX + suffix; //NOI18N
+                this.value = FXMLLoader.EXPRESSION_PREFIX + suffix; //NOCHECK
                 break;
             }
             case BINDING_EXPRESSION: {
-                this.value = FXMLLoader.BINDING_EXPRESSION_PREFIX + suffix + FXMLLoader.BINDING_EXPRESSION_SUFFIX; //NOI18N
+                this.value = FXMLLoader.BINDING_EXPRESSION_PREFIX + suffix + FXMLLoader.BINDING_EXPRESSION_SUFFIX; //NOCHECK
                 break;
             }
             case PLAIN_STRING: {
@@ -112,7 +112,7 @@ public class PrefixedValue {
             default:
             case INVALID: {
                 // Emergency code
-                throw new IllegalArgumentException("Unexpected type " + Type.INVALID); //NOI18N
+                throw new IllegalArgumentException("Unexpected type " + Type.INVALID); //NOCHECK
             }
         }
     }
@@ -160,7 +160,7 @@ public class PrefixedValue {
                 break;
             }
             case CLASSLOADER_RELATIVE_PATH: {
-                assert value.startsWith(FXMLLoader.RELATIVE_PATH_PREFIX+"/"); //NOI18N
+                assert value.startsWith(FXMLLoader.RELATIVE_PATH_PREFIX+"/"); //NOCHECK
                 final String encoding = value.substring(FXMLLoader.RELATIVE_PATH_PREFIX.length()+1);
                 result = decodePath(encoding).getPath();
                 break;
@@ -377,7 +377,7 @@ public class PrefixedValue {
             if (file.isAbsolute()) {
                 result = file.toURI().toURL().getPath();
             } else {
-                final Path tmpPath = Paths.get(System.getProperty("java.io.tmpdir")); //NOI18N
+                final Path tmpPath = Paths.get(System.getProperty("java.io.tmpdir")); //NOCHECK
                 final String tmpPathEncoding = tmpPath.toFile().toURI().toURL().getPath();
                 final Path absolutePath = tmpPath.resolve(file.toPath());
                 final String absoluteEncoding = absolutePath.toFile().toURI().toURL().getPath();
@@ -395,12 +395,12 @@ public class PrefixedValue {
         File result;
         
         try {
-            if (encoding.startsWith("/")) { //NOI18N
-                result = new File(new URI("file:" + encoding)) ; //NOI18N
+            if (encoding.startsWith("/")) { //NOCHECK
+                result = new File(new URI("file:" + encoding)) ; //NOCHECK
             } else {
-                final Path tmpPath = Paths.get(System.getProperty("java.io.tmpdir")); //NOI18N
+                final Path tmpPath = Paths.get(System.getProperty("java.io.tmpdir")); //NOCHECK
                 final URL tmpPathURL = tmpPath.toFile().toURI().toURL();
-                final URL absoluteURL = new URL(tmpPathURL.toString() + "/" + encoding); //NOI18N
+                final URL absoluteURL = new URL(tmpPathURL.toString() + "/" + encoding); //NOCHECK
                 final File absoluteFile = new File(absoluteURL.toURI());
                 final Path absolutePath = absoluteFile.toPath();
                 assert absolutePath.startsWith(tmpPath);

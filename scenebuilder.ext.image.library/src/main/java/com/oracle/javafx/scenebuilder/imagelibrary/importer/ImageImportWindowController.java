@@ -221,7 +221,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
             // boolean copyFilesToUserLibraryDir,
             // List<String> artifactsFilter,
             ) {
-        super(api, ImageImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null); // NOI18N
+        super(api, ImageImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
         // libPanelController = lpc;
         // importFiles = new ArrayList<>(files);
         // this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
@@ -507,8 +507,8 @@ public class ImageImportWindowController extends AbstractModalDialog {
 //            Path userLibraryPath = userLibraryDir.toPath();
 //            try (DirectoryStream<Path> stream = Files.newDirectoryStream(userLibraryPath)) {
 //                for (Path entry : stream) {
-//                    if (entry.toString().endsWith(".jar")) { //NOI18N
-//    //                    System.out.println("ImportWindowController::buildListOfAllFiles: Adding " + element); //NOI18N
+//                    if (entry.toString().endsWith(".jar")) { //NOCHECK
+//    //                    System.out.println("ImportWindowController::buildListOfAllFiles: Adding " + element); //NOCHECK
 //                        res.add(entry.toFile());
 //                    }
 //                }

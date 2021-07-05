@@ -29,17 +29,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>parent</artifactId>
-                <version>${scenebuilder.version}</version>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    
+
     <build>
         <pluginManagement>
             <plugins>

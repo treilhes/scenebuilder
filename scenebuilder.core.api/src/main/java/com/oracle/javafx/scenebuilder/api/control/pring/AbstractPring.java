@@ -46,7 +46,7 @@ import javafx.scene.paint.Paint;
  */
 public abstract class AbstractPring<T> extends AbstractDecoration<T> implements Pring<T> {
 
-    public static final String PARENT_RING_CLASS = "parent-ring"; //NOI18N
+    public static final String PARENT_RING_CLASS = "parent-ring"; //NOCHECK
 
     public AbstractPring(Content contentPanelController, Class<T> sceneGraphClass) {
         super(contentPanelController, sceneGraphClass);
@@ -57,7 +57,7 @@ public abstract class AbstractPring<T> extends AbstractDecoration<T> implements 
     @Override
     public abstract AbstractGesture findGesture(Node node);
 
-    private static final String PRING = "PRING"; //NOI18N
+    private static final String PRING = "PRING"; //NOCHECK
 
     public static AbstractPring<?> lookupPring(Node node) {
         assert node != null;

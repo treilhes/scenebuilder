@@ -102,9 +102,9 @@ public interface ViewManager {
 		private @Getter PublishSubject<View> close;
 		
 		public ViewSubjects() {
-			dock = wrap(ViewSubjects.class, "dock", PublishSubject.create());
-			undock = wrap(ViewSubjects.class, "undock", PublishSubject.create());
-			close = wrap(ViewSubjects.class, "close", PublishSubject.create());
+			dock = wrap(ViewSubjects.class, "dock", PublishSubject.create()); // NOI18N
+			undock = wrap(ViewSubjects.class, "undock", PublishSubject.create()); // NOI18N
+			close = wrap(ViewSubjects.class, "close", PublishSubject.create()); // NOI18N
 		}
 
 	}

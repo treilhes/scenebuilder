@@ -48,10 +48,10 @@ import javafx.scene.effect.Bloom;
 public class BloomPropertyMetadata extends ComplexPropertyMetadata<Bloom> {
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final OpacityDoublePropertyMetadata thresholdMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("threshold"), //NOI18N
+            = new OpacityDoublePropertyMetadata(new PropertyName("threshold"), //NOCHECK
             true /* readWrite */, 0.3, InspectorPath.UNUSED);
 
     public BloomPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -49,16 +49,16 @@ import javafx.scene.paint.Color;
 public class PointLightPropertyMetadata extends ComplexPropertyMetadata<Light.Point> {
     
     private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
+            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
             true, Color.WHITE, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata zMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     
     public PointLightPropertyMetadata(PropertyName name, boolean readWrite, 

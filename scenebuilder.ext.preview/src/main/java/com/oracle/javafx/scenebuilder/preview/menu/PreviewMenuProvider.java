@@ -223,7 +223,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
         // it is kept.
         private String getStringFromDouble(double value) {
             String res = Double.toString(value);
-            if(res.endsWith(".0")) { //NOI18N
+            if(res.endsWith(".0")) { //NOCHECK
                 res = Integer.toString((int)value);
             }
             return res;

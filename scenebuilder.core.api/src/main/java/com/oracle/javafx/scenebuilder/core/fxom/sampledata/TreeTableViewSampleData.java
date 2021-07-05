@@ -158,7 +158,7 @@ class TreeTableViewSampleData extends AbstractSampleData {
         int index;
         
         public final static TreeItemPropertyValueFactory<SampleDataItem, String> FACTORY
-                = new TreeItemPropertyValueFactory<>("prop"); //NOI18N
+                = new TreeItemPropertyValueFactory<>("prop"); //NOCHECK
         
         public SampleDataItem(int index) {
             this.index = index;

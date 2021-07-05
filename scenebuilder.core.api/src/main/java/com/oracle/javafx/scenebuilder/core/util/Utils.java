@@ -47,12 +47,12 @@ public class Utils {
         } else if (fxomDocument.getLocation() == null) {
             title = I18N.getString("label.untitled");
         } else {
-            String name = ""; //NOI18N
+            String name = ""; //NOCHECK
             try {
                 final File toto = new File(fxomDocument.getLocation().toURI());
                 name = toto.getName();
             } catch (URISyntaxException ex) {
-                throw new RuntimeException("Bug", ex); //NOI18N
+                throw new RuntimeException("Bug", ex); //NOCHECK
             }
             title = name;
         }

@@ -113,7 +113,7 @@ public class GlueDocument extends GlueNode {
     public String toString() {
         final String result;
         if (rootElement == null) {
-            result = ""; //NOI18N
+            result = ""; //NOCHECK
         } else {
             final GlueSerializer serializer = new GlueSerializer(this);
             result = serializer.toString();
@@ -143,10 +143,10 @@ public class GlueDocument extends GlueNode {
         
         if ((rootElement != null) && rootElement.getChildren().isEmpty()) {
             if (rootElement.getFront().isEmpty()) {
-                rootElement.getFront().add(new GlueCharacters(this, GlueCharacters.Type.TEXT, "\n")); //NOI18N
+                rootElement.getFront().add(new GlueCharacters(this, GlueCharacters.Type.TEXT, "\n")); //NOCHECK
             }
             if (rootElement.getTail().isEmpty()) {
-                rootElement.getTail().add(new GlueCharacters(this, GlueCharacters.Type.TEXT, "\n")); //NOI18N
+                rootElement.getTail().add(new GlueCharacters(this, GlueCharacters.Type.TEXT, "\n")); //NOCHECK
             }
         }
     }

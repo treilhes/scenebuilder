@@ -48,10 +48,10 @@ import javafx.scene.effect.GaussianBlur;
 public class GaussianBlurPropertyMetadata extends ComplexPropertyMetadata<GaussianBlur> {
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata radiusMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("radius"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
             true /* readWrite */, 10.0, InspectorPath.UNUSED);
 
     public GaussianBlurPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -82,7 +82,7 @@ public class TextAlignmentEditor extends AbstractPropertyEditor {
 
     //Method to please FindBugs
     private void initialize() {
-        root = FXMLUtils.load(this, "TextAlignmentEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "TextAlignmentEditor.fxml");
 
         toggleButtons[0] = leftTb;
         toggleButtons[1] = centerTb;

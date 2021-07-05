@@ -47,7 +47,7 @@ public class I18NLogViewer implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NLogViewer.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderLogViewer"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderLogViewer"); //NOCHECK
         }
         return bundle;
     }

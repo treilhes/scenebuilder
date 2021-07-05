@@ -59,7 +59,7 @@ public class DragSourceShadow extends Group {
     
     private final ImageView imageView = new ImageView();
     private final Region glass = new Region();
-    private static final String NID_DRAG_SHADOW = "dragShadow"; //NOI18N
+    private static final String NID_DRAG_SHADOW = "dragShadow"; //NOCHECK
 
     
     public DragSourceShadow() {
@@ -67,8 +67,8 @@ public class DragSourceShadow extends Group {
         this.getChildren().add(imageView);
         this.getChildren().add(glass);
         
-        this.getStyleClass().add("drag-shadow"); //NOI18N
-        this.glass.getStyleClass().add("drag-shadow-glass"); //NOI18N
+        this.getStyleClass().add("drag-shadow"); //NOCHECK
+        this.glass.getStyleClass().add("drag-shadow-glass"); //NOCHECK
     }
     
     public void setupForNode(Node node) {
@@ -104,12 +104,12 @@ public class DragSourceShadow extends Group {
 
         final Bounds outputBounds = this.getLayoutBounds();
         assert MathUtils.equals(inputBounds.getMinX(), outputBounds.getMinX())
-                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOI18N
+                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOCHECK
         assert MathUtils.equals(inputBounds.getMinY(), outputBounds.getMinY())
-                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOI18N
+                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOCHECK
         assert MathUtils.equals(inputBounds.getWidth(), outputBounds.getWidth(), 5.0)
-                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOI18N
+                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOCHECK
         assert MathUtils.equals(inputBounds.getHeight(), outputBounds.getHeight(), 5.0)
-                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOI18N
+                : "inputBounds=" + inputBounds + ", outputBounds=" + outputBounds; //NOCHECK
     }
 }

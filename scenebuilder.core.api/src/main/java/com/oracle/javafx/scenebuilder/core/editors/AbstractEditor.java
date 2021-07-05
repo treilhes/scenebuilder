@@ -56,7 +56,7 @@ public abstract class AbstractEditor implements PropertyEditor {
 //    public static final String vMinPropName = "vmin";
 //    public static final String vMaxPropName = "vmax";
 
-    public static final String INDETERMINATE_STR = "-"; //NOI18N
+    public static final String INDETERMINATE_STR = "-"; //NOCHECK
 
     @Override
     public abstract Node getValueEditor();

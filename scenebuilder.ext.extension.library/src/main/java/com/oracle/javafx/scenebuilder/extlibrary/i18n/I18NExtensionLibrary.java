@@ -47,7 +47,7 @@ public class I18NExtensionLibrary implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NExtensionLibrary.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderExtensionLibrary"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderExtensionLibrary"); //NOCHECK
         }
         return bundle;
     }

@@ -70,13 +70,13 @@ public class TreeTableViewResizePolicyPropertyMetadata extends CallbackPropertyM
         final String fxConstant;
         
         if (value == TreeTableView.CONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOI18N
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
         } else if (value == TreeTableView.UNCONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; //NOI18N
+            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; //NOCHECK
         } else {
             // Emergency code
             assert false;
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOI18N
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
         }
         
         valueInstance.setFxConstant(fxConstant);

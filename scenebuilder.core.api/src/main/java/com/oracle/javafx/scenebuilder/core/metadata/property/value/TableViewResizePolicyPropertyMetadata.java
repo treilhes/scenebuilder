@@ -70,13 +70,13 @@ public class TableViewResizePolicyPropertyMetadata extends CallbackPropertyMetad
         final String fxConstant;
         
         if (value == TableView.CONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOI18N
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
         } else if (value == TableView.UNCONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; //NOI18N
+            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; //NOCHECK
         } else {
             // Emergency code
             assert false;
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOI18N
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
         }
         
         valueInstance.setFxConstant(fxConstant);

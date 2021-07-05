@@ -91,7 +91,7 @@ public class CursorEditor extends AbstractPropertyEditor {
 
     // Separate method to please FindBugs
     private void initialize() {
-        root = FXMLUtils.load(this, "CursorEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "CursorEditor.fxml");
         int index = 0;
         Map<Cursor, String> predefinedCursors = CursorPropertyMetadata.getCursorMap();
         // Order the cursors
@@ -144,7 +144,7 @@ public class CursorEditor extends AbstractPropertyEditor {
             assert value instanceof Cursor;
             if (value instanceof ImageCursor) {
                 // Custom cursor
-                selectCursor(""); //NOI18N
+                selectCursor(""); //NOCHECK
                 cursorMb.setText(I18N.getString("inspector.cursor.custom"));
             } else {
                 // predefined cursor

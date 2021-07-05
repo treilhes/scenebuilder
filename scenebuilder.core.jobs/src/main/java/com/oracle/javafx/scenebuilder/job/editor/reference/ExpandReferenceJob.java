@@ -58,7 +58,7 @@ public class ExpandReferenceJob  extends Job {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) reference;
             subJob = new ExpandExpressionReferenceJob(getContext(), fxomProperty, cloner, getEditorController()).extend();
         } else {
-            throw new RuntimeException("Bug"); //NOI18N
+            throw new RuntimeException("Bug"); //NOCHECK
         }
     }
 

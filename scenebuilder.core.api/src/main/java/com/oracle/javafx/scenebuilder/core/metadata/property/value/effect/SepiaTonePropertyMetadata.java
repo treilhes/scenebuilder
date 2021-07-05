@@ -48,10 +48,10 @@ import javafx.scene.effect.SepiaTone;
 public class SepiaTonePropertyMetadata extends ComplexPropertyMetadata<SepiaTone> {
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final EffectSizeDoublePropertyMetadata levelMetadata
-            = new EffectSizeDoublePropertyMetadata(new PropertyName("level"), //NOI18N
+            = new EffectSizeDoublePropertyMetadata(new PropertyName("level"), //NOCHECK
             true /* readWrite */, 1.0, InspectorPath.UNUSED);
 
     public SepiaTonePropertyMetadata(PropertyName name, boolean readWrite, 

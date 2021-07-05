@@ -91,7 +91,7 @@ public class BoundsPopupEditor extends PopupEditor {
     
     @Override
     public void initializePopupContent() {
-        root = FXMLUtils.load(this, "BoundsPopupEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "BoundsPopupEditor.fxml");
     }
 
     @Override
@@ -101,12 +101,12 @@ public class BoundsPopupEditor extends PopupEditor {
         Bounds boundsVal = (Bounds) value;
         String valueAsString;
         if (isIndeterminate()) {
-            valueAsString = "-"; //NOI18N
+            valueAsString = "-"; //NOCHECK
         } else {
-            valueAsString = EditorUtils.valAsStr(boundsVal.getMinX()) + "," //NOI18N
+            valueAsString = EditorUtils.valAsStr(boundsVal.getMinX()) + "," //NOCHECK
                     + EditorUtils.valAsStr(boundsVal.getMinY())
-                    + "  " + EditorUtils.valAsStr(boundsVal.getWidth()) //NOI18N
-                    + "x" + EditorUtils.valAsStr(boundsVal.getHeight()); //NOI18N
+                    + "  " + EditorUtils.valAsStr(boundsVal.getWidth()) //NOCHECK
+                    + "x" + EditorUtils.valAsStr(boundsVal.getHeight()); //NOCHECK
         }
         return valueAsString;
     }
@@ -129,15 +129,15 @@ public class BoundsPopupEditor extends PopupEditor {
     }
     
     private void updateValues() {
-        minX.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinX() : ""));//NOI18N
-        minY.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinY() : ""));//NOI18N
-        minZ.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinZ() : ""));//NOI18N
-        maxX.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMaxX() : ""));//NOI18N
-        maxY.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMaxY() : ""));//NOI18N
-        maxZ.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMaxZ() : ""));//NOI18N
-        width.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getWidth() : ""));//NOI18N
-        height.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getHeight() : ""));//NOI18N
-        depth.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getDepth() : ""));//NOI18N
+        minX.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinX() : ""));//NOCHECK
+        minY.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinY() : ""));//NOCHECK
+        minZ.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinZ() : ""));//NOCHECK
+        maxX.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMaxX() : ""));//NOCHECK
+        maxY.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMaxY() : ""));//NOCHECK
+        maxZ.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMaxZ() : ""));//NOCHECK
+        width.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getWidth() : ""));//NOCHECK
+        height.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getHeight() : ""));//NOCHECK
+        depth.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getDepth() : ""));//NOCHECK
     }
 
 }

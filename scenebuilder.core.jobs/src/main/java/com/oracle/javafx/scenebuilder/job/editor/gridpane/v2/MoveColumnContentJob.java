@@ -57,7 +57,7 @@ public class MoveColumnContentJob extends BatchDocumentJob {
 
     private final IntegerPropertyMetadata columnIndexMeta =
             new IntegerPropertyMetadata(
-                new PropertyName("columnIndex", GridPane.class), //NOI18N
+                new PropertyName("columnIndex", GridPane.class), //NOCHECK
                 true, /* readWrite */
                 0, /* defaultValue */
                 InspectorPath.UNUSED);

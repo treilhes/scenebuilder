@@ -59,8 +59,8 @@ public class ImageViewResizer extends AbstractResizer<ImageView> {
 
     private double originalFitWidth;
     private double originalFitHeight;
-    private final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOI18N
-    private final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOI18N
+    private final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOCHECK
+    private final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public ImageViewResizer() {

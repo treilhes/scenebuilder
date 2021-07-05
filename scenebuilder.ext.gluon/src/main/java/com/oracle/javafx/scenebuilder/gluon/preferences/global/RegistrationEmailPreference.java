@@ -47,7 +47,7 @@ public class RegistrationEmailPreference extends StringPreference implements Man
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "REGISTRATION_EMAIL"; //NOI18N
+    public static final String PREFERENCE_KEY = "REGISTRATION_EMAIL"; //NOCHECK
     public static final String PREFERENCE_DEFAULT_VALUE = null;
 
 	public RegistrationEmailPreference(@Autowired PreferencesContext preferencesContext) {

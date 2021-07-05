@@ -52,8 +52,8 @@ public class RootRelocater extends AbstractRelocater<Node> {
 
     private double originalLayoutX;
     private double originalLayoutY;
-    private final PropertyName layoutXName = new PropertyName("layoutX"); //NOI18N
-    private final PropertyName layoutYName = new PropertyName("layoutY"); //NOI18N
+    private final PropertyName layoutXName = new PropertyName("layoutX"); //NOCHECK
+    private final PropertyName layoutYName = new PropertyName("layoutY"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public RootRelocater() {

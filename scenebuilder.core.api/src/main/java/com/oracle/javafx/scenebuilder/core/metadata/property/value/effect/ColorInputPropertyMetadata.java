@@ -50,19 +50,19 @@ import javafx.scene.paint.Color;
 public class ColorInputPropertyMetadata extends ComplexPropertyMetadata<ColorInput> {
     
     private final CoordinateDoublePropertyMetadata heightMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata widthMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final PaintPropertyMetadata paintMetadata
-            = new PaintPropertyMetadata(new PropertyName("paint"), //NOI18N
+            = new PaintPropertyMetadata(new PropertyName("paint"), //NOCHECK
             true /* readWrite */, Color.RED, InspectorPath.UNUSED);
 
     public ColorInputPropertyMetadata(PropertyName name, boolean readWrite, 

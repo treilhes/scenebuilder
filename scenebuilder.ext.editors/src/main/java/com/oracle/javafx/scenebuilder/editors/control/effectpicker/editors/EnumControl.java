@@ -80,7 +80,7 @@ public class EnumControl<T> extends GridPane {
 
     private void initialize(String label, T[] values, T initValue) {
 
-        final URL layoutURL = EnumControl.class.getResource("EnumControl.fxml"); //NOI18N
+        final URL layoutURL = EnumControl.class.getResource("EnumControl.fxml");
         try (InputStream is = layoutURL.openStream()) {
             final FXMLLoader loader = new FXMLLoader();
             loader.setController(this);

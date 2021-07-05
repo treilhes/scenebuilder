@@ -150,7 +150,7 @@ public class PropertyName implements Comparable<PropertyName> {
         if (residenceClass == null) {
             result = name;
         } else {
-            result = makeClassFullName(residenceClass) + "." + name; //NOI18N
+            result = makeClassFullName(residenceClass) + "." + name; //NOCHECK
         }
         
         return result;

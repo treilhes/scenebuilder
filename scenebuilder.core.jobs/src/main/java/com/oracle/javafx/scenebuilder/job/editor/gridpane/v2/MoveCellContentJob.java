@@ -54,13 +54,13 @@ public class MoveCellContentJob extends Job {
 
     private static final IntegerPropertyMetadata columnIndexMeta =
             new IntegerPropertyMetadata(
-                new PropertyName("columnIndex", GridPane.class), //NOI18N
+                new PropertyName("columnIndex", GridPane.class), //NOCHECK
                 true, /* readWrite */
                 0, /* defaultValue */
                 InspectorPath.UNUSED);
     private static final IntegerPropertyMetadata rowIndexMeta =
             new IntegerPropertyMetadata(
-                new PropertyName("rowIndex", GridPane.class), //NOI18N
+                new PropertyName("rowIndex", GridPane.class), //NOCHECK
                 true, /* readWrite */
                 0, /* defaultValue */
                 InspectorPath.UNUSED);

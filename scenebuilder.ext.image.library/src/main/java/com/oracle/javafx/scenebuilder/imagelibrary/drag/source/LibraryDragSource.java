@@ -187,7 +187,7 @@ public class LibraryDragSource extends AbstractDragSource {
         URL iconURL = libraryItem.getIconURL();
 
         if (iconURL == null) {
-            iconURL = ImageUtils.getNodeIconURL("MissingIcon.png"); //NOI18N
+            iconURL = ImageUtils.getNodeIconURL("MissingIcon.png");
         }
 
         final Image imageFromIcon = new Image(iconURL.toExternalForm());
@@ -195,7 +195,7 @@ public class LibraryDragSource extends AbstractDragSource {
         final Label visualNode = new Label();
         visualNode.setGraphic(new ImageView(imageFromIcon));
         visualNode.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
-        visualNode.getStyleClass().add("drag-preview"); //NOI18N
+        visualNode.getStyleClass().add("drag-preview"); //NOCHECK
 
         return ImageUtils.getImageFromNode(visualNode);
     }
@@ -281,7 +281,7 @@ public class LibraryDragSource extends AbstractDragSource {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ": libraryItem=(" + libraryItem + ")"; //NOI18N
+        return getClass().getSimpleName() + ": libraryItem=(" + libraryItem + ")"; //NOCHECK
     }
 
 }

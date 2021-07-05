@@ -62,7 +62,7 @@ public class ResizeRudder extends AbstractRudder<Node> {
         super(contentPanelController, Node.class);
 
         diagonalLine.setMouseTransparent(true);
-        diagonalLine.getStyleClass().add("resize-rudder"); //NOI18N
+        diagonalLine.getStyleClass().add("resize-rudder"); //NOCHECK
         getRootNode().getChildren().add(diagonalLine);
     }
 

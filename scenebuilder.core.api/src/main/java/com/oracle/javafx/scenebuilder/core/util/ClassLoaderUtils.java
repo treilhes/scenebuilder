@@ -89,7 +89,7 @@ public class ClassLoaderUtils {
                     result[i++] = url; // <-- file:/path/to/folder/
                 }
             } catch(MalformedURLException x) {
-                throw new RuntimeException("Bug in " + ClassLoaderUtils.class.getSimpleName(), x); //NOI18N
+                throw new RuntimeException("Bug in " + ClassLoaderUtils.class.getSimpleName(), x); //NOCHECK
             }
         }
 
@@ -107,7 +107,7 @@ public class ClassLoaderUtils {
                     result[i++] = url; // <-- file:/path/to/folder/
                 }
             } catch(MalformedURLException x) {
-                throw new RuntimeException("Bug in " + ClassLoaderUtils.class.getSimpleName(), x); //NOI18N
+                throw new RuntimeException("Bug in " + ClassLoaderUtils.class.getSimpleName(), x); //NOCHECK
             }
         }
 

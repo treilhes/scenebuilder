@@ -125,7 +125,7 @@ public class EffectPopupEditor extends PopupEditor {
     @Override
     public String getPreviewString(Object value) {
         if (value == null) {
-            return "+"; //NOI18N
+            return "+"; //NOCHECK
         }
         assert value instanceof Effect;
         Effect effect = (Effect) value;
@@ -134,7 +134,7 @@ public class EffectPopupEditor extends PopupEditor {
             sb.append(effect.getClass().getSimpleName());
             effect = Utils.getDefaultInput(effect);
             if (effect != null) {
-                sb.append(", "); //NOI18N
+                sb.append(", "); //NOCHECK
             }
         }
         return sb.toString();

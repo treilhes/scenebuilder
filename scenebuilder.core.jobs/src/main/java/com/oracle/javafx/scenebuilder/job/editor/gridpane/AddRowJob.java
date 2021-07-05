@@ -109,7 +109,7 @@ public class AddRowJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return "Add Row " + position.name(); //NOI18N
+        return "Add Row " + position.name(); //NOCHECK
     }
 
     @Override

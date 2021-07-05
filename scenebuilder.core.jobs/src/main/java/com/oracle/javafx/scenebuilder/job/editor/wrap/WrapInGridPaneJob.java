@@ -87,14 +87,14 @@ public class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
 
             // Modify child column index
             final Job modifyColumnIndex = WrapJobUtils.modifyObjectJob(getContext(),
-                    (FXOMInstance) child, GridPane.class, "columnIndex", //NOI18N
+                    (FXOMInstance) child, GridPane.class, "columnIndex", //NOCHECK
                     childIndices[GridCourse.COL_BY_COL.index()],
                     getEditorController());
             jobs.add(modifyColumnIndex);
 
             // Modify child row index
             final Job modifyRowIndex = WrapJobUtils.modifyObjectJob(getContext(),
-                    (FXOMInstance) child, GridPane.class, "rowIndex", //NOI18N
+                    (FXOMInstance) child, GridPane.class, "rowIndex", //NOCHECK
                     childIndices[GridCourse.ROW_BY_ROW.index()],
                     getEditorController());
             jobs.add(modifyRowIndex);

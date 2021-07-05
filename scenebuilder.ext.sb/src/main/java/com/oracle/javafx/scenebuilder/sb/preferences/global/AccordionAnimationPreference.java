@@ -52,7 +52,7 @@ public class AccordionAnimationPreference extends BooleanPreference implements M
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "ACCORDION_ANIMATION"; //NOI18N
+    public static final String PREFERENCE_KEY = "ACCORDION_ANIMATION"; //NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = true;
 
 	private final PreferenceEditorFactory preferenceEditorFactory;

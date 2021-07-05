@@ -47,10 +47,10 @@ import javafx.scene.effect.FloatMap;
 public class FloatMapPropertyMetadata extends ComplexPropertyMetadata<FloatMap> {
     
     private final IntegerPropertyMetadata widthMetadata
-            = new IntegerPropertyMetadata(new PropertyName("width"), //NOI18N
+            = new IntegerPropertyMetadata(new PropertyName("width"), //NOCHECK
             true, 1, InspectorPath.UNUSED);
     private final IntegerPropertyMetadata heightMetadata
-            = new IntegerPropertyMetadata(new PropertyName("height"), //NOI18N
+            = new IntegerPropertyMetadata(new PropertyName("height"), //NOCHECK
             true, 1, InspectorPath.UNUSED);
     
     public FloatMapPropertyMetadata(PropertyName name, boolean readWrite, 

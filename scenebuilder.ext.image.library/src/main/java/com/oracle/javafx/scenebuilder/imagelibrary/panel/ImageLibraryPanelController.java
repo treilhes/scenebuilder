@@ -216,7 +216,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             @Autowired ImageLibrary imageLibrary,
             @Autowired ThumbnailServiceController thumbnailServiceController 
             ) { //, UserLibrary library) {
-        super(api, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(api, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle());
         this.context = api.getContext();
         this.editorController = editor;
         this.sceneBuilderFactory = sceneBuilderFactory;
@@ -465,7 +465,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             // Parse our lib data structure and populate the Accordion accordingly.
             for (String sectionName : sectionNames) {
                 ListView<LibraryListItem> itemsList = new ListView<>();
-                itemsList.setId(sectionName + "List"); // for QE //NOI18N
+                itemsList.setId(sectionName + "List"); // for QE //NOCHECK
                 itemsList.setCellFactory(cb);
                 itemsList.addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
                 Collections.sort(libData.get(sectionName), new LibraryItemNameComparator());
@@ -605,7 +605,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
                         final List<File> files = db.getFiles();
                         for (File file : files) {
                             // Keep only jar and fxml files
-                            if (file.isFile() && LibraryUtil.hasExtension(file.toPath(), ImageLibrary.HANDLED_FILE_EXTENSIONS)) { //NOI18N
+                            if (file.isFile() && LibraryUtil.hasExtension(file.toPath(), ImageLibrary.HANDLED_FILE_EXTENSIONS)) { //NOCHECK
 //                                System.out.println("libPane onDragDropped - Retaining file " + file.getName());
                                 droppedFileList.add(file);
                             }
@@ -731,7 +731,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             Files.createFile(targetFilePath);
 
             // Write content of file
-            try (PrintWriter writer = new PrintWriter(targetFile, "UTF-8")) { //NOI18N
+            try (PrintWriter writer = new PrintWriter(targetFile, "UTF-8")) { //NOCHECK
                 writer.write(text);
             }
         } catch (IOException ioe) {
@@ -748,7 +748,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         File file = null;
         while (file == null || file.exists()) {
             suffix++;
-            file = new File(libDir, prefix + "_" + suffix + ".fxml"); //NOI18N
+            file = new File(libDir, prefix + "_" + suffix + ".fxml"); //NOCHECK
         }
 
         return file;

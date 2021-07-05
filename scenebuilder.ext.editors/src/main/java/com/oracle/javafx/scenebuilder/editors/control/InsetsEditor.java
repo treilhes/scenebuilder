@@ -128,7 +128,7 @@ public class InsetsEditor extends AbstractPropertyEditor {
         for (TextField tf : textFields) {
             String val = tf.getText();
             if (val == null || val.isEmpty()) {
-                val = "0"; //NOI18N
+                val = "0"; //NOCHECK
             }
             try {
                 Double.parseDouble(val);

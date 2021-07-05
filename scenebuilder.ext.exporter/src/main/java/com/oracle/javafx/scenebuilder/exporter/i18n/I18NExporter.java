@@ -47,7 +47,7 @@ public class I18NExporter implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NExporter.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderExporter"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderExporter"); //NOCHECK
         }
         return bundle;
     }

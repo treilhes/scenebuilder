@@ -47,7 +47,7 @@ public class I18NPreferenceEditor implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NPreferenceEditor.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderPreferenceEditor"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderPreferenceEditor"); //NOCHECK
         }
         return bundle;
     }

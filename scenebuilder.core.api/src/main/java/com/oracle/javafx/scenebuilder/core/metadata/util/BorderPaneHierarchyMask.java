@@ -40,11 +40,11 @@ import com.oracle.javafx.scenebuilder.core.metadata.PropertyNames;
  */
 public class BorderPaneHierarchyMask extends DesignHierarchyMask {
     
-    private static final PropertyName TOP = PropertyNames.topName; //NOI18N
-    private static final PropertyName BOTTOM = PropertyNames.bottomName; //NOI18N
-    private static final PropertyName CENTER = PropertyNames.centerName; //NOI18N
-    private static final PropertyName LEFT = PropertyNames.leftName; //NOI18N
-    private static final PropertyName RIGHT = PropertyNames.rightName; //NOI18N
+    private static final PropertyName TOP = PropertyNames.topName; //NOCHECK
+    private static final PropertyName BOTTOM = PropertyNames.bottomName; //NOCHECK
+    private static final PropertyName CENTER = PropertyNames.centerName; //NOCHECK
+    private static final PropertyName LEFT = PropertyNames.leftName; //NOCHECK
+    private static final PropertyName RIGHT = PropertyNames.rightName; //NOCHECK
     
     private final Accessory topAccessory;
     private final Accessory bottomAccessory;

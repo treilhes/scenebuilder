@@ -126,7 +126,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, RepositoryDialogController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, RepositoryDialogController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner);
         this.owner = owner;
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;

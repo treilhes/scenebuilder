@@ -89,7 +89,7 @@ public class I18nResourceMenuController {
         // Open a file chooser for *.properties & *.bss
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("resource.filechooser.filter.msg"),
-                "*.properties")); //NOI18N
+                "*.properties")); //NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());

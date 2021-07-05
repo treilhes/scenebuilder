@@ -49,7 +49,7 @@ import javafx.scene.layout.RowConstraints;
 public class RowConstraintsListPropertyMetadata extends ListValuePropertyMetadata<RowConstraints> {
 
     private static final RowConstraintsPropertyMetadata itemMetadata
-            = new RowConstraintsPropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new RowConstraintsPropertyMetadata(new PropertyName("unused"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     
     public RowConstraintsListPropertyMetadata(PropertyName name, boolean readWrite, 
@@ -58,7 +58,7 @@ public class RowConstraintsListPropertyMetadata extends ListValuePropertyMetadat
     }
 
     public RowConstraintsListPropertyMetadata() {
-        this(new PropertyName("rowConstraints"), true /* readWrite */,  //NOI18N
+        this(new PropertyName("rowConstraints"), true /* readWrite */,  //NOCHECK
                 Collections.emptyList(), InspectorPath.UNUSED);
     }
     

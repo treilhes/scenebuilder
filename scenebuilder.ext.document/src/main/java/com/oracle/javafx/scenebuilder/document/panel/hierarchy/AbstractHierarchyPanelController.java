@@ -324,7 +324,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
      */
     public ScrollBar getScrollBar(final Orientation orientation) {
         final Control panelControl = getPanelControl();
-        final Set<Node> scrollBars = panelControl.lookupAll(".scroll-bar"); //NOI18N
+        final Set<Node> scrollBars = panelControl.lookupAll(".scroll-bar"); //NOCHECK
         for (Node node : scrollBars) {
             if (node instanceof ScrollBar) {
                 final ScrollBar scrollBar = (ScrollBar) node;

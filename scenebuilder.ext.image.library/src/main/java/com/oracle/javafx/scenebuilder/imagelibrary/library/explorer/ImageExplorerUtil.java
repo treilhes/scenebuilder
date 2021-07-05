@@ -70,7 +70,7 @@ public class ImageExplorerUtil {
         BoundingBox boundingBox = null;
         Type type = null; 
         // Filtering out what starts with com.javafx. is bound to DTL-6378.
-        if (filters.stream().anyMatch(f -> f.isFiltered(resourceName))) { //NOI18N
+        if (filters.stream().anyMatch(f -> f.isFiltered(resourceName))) { //NOCHECK
             status = ImageReportEntry.Status.IGNORED;
             entryException = null;
         } else {

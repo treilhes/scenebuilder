@@ -77,7 +77,7 @@ public abstract class ComplexPropertyMetadata<T> extends SingleValuePropertyMeta
     
     @Override
     public T makeValueFromString(String string) {
-        throw new RuntimeException("Bug"); //NOI18N
+        throw new RuntimeException("Bug"); //NOCHECK
     }
 
     @Override
@@ -88,7 +88,7 @@ public abstract class ComplexPropertyMetadata<T> extends SingleValuePropertyMeta
     @Override
     public String makeStringFromValue(T value) {
         assert value == null;
-        return "$null"; //NOI18N
+        return "$null"; //NOCHECK
     }
 
     @Override

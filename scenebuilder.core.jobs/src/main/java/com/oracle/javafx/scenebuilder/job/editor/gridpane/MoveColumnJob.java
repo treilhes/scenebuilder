@@ -104,7 +104,7 @@ public class MoveColumnJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return "Move Column " + position.name(); //NOI18N
+        return "Move Column " + position.name(); //NOCHECK
     }
 
     @Override
@@ -123,7 +123,7 @@ public class MoveColumnJob extends BatchSelectionJob {
         final List<Job> result = new ArrayList<>();
 
         // Retrieve the constraints property for the specified target GridPane
-        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOI18N
+        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOCHECK
         assert targetGridPane instanceof FXOMInstance;
         FXOMProperty constraintsProperty
                 = ((FXOMInstance) targetGridPane).getProperties().get(propertyName);

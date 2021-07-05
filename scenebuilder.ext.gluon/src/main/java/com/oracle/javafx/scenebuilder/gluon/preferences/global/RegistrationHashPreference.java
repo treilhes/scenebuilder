@@ -47,7 +47,7 @@ public class RegistrationHashPreference extends StringPreference implements Mana
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "REGISTRATION_HASH"; //NOI18N
+    public static final String PREFERENCE_KEY = "REGISTRATION_HASH"; //NOCHECK
     public static final String PREFERENCE_DEFAULT_VALUE = null;
 
 	public RegistrationHashPreference(@Autowired PreferencesContext preferencesContext) {

@@ -62,7 +62,7 @@ public class HitNodeChrome extends AbstractDecoration<Object> {
         this.hitNode = hitNode;
         
         chrome.setMouseTransparent(true);
-        chrome.getRegion().getStyleClass().add("css-pick-chrome"); //NOI18N
+        chrome.getRegion().getStyleClass().add("css-pick-chrome"); //NOCHECK
         getRootNode().getChildren().add(chrome);
     }
     

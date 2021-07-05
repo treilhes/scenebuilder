@@ -216,7 +216,7 @@ public class DragGesture extends AbstractGesture {
          */
 
         if (lastDragEvent.isDropCompleted()) {
-            logger.warn("Ignored dragOver() after dragDropped()"); //NOI18N
+            logger.warn("Ignored dragOver() after dragDropped()"); //NOCHECK
         } else {
             dragOverGlassLayerBis();
         }

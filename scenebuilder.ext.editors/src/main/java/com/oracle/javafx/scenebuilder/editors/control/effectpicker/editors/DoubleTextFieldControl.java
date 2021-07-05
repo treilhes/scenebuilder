@@ -145,7 +145,7 @@ public class DoubleTextFieldControl extends GridPane {
     private void initialize(String labelString,
             double min, double max, double initVal, double incDec) {
 
-        final URL layoutURL = DoubleTextFieldControl.class.getResource("NumFieldControl.fxml"); //NOI18N
+        final URL layoutURL = DoubleTextFieldControl.class.getResource("NumFieldControl.fxml");
         try (InputStream is = layoutURL.openStream()) {
             FXMLLoader loader = new FXMLLoader();
             loader.setController(this);

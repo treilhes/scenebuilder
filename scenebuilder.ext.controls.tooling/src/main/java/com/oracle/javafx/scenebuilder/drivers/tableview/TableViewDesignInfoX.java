@@ -100,7 +100,7 @@ public class TableViewDesignInfoX /* extends TableViewDesignInfo */ {
 
         // Looks for the sub nodes which match the .column-header CSS selector
         final TableView<?> tableView = tableColumn.getTableView();
-        final Set<Node> set = tableView.lookupAll(".column-header"); //NOI18N
+        final Set<Node> set = tableView.lookupAll(".column-header"); //NOCHECK
         
         // Searches the result for the node associated to 'tableColumn'.
         // This item has (TableColumn.class, tableColumn) in its property list.

@@ -49,22 +49,22 @@ public class DoubleTextField extends TextField {
     public void replaceText(int start, int end, String text) {
         String newText = getNewText(start, end, text);
         if (!text.isEmpty() // Always allow text deletion
-                && (!newText.equals("-") && !newText.equals(".") && !newText.equals("-."))) { //NOI18N
+                && (!newText.equals("-") && !newText.equals(".") && !newText.equals("-."))) { //NOCHECK
             try {
-                if (newText.toLowerCase(Locale.ROOT).contains("d") || newText.toLowerCase(Locale.ROOT).contains("f")) { //NOI18N
+                if (newText.toLowerCase(Locale.ROOT).contains("d") || newText.toLowerCase(Locale.ROOT).contains("f")) { //NOCHECK
                     // 'd' and 'f' are valid for a Double,
                     // but we don't want to accept them in the editor
                     return;
                 }
                 // Replace ',' by '.'
-                newText = newText.replace(',', '.'); //NOI18N
+                newText = newText.replace(',', '.'); //NOCHECK
                 Double.parseDouble(newText);
             } catch (NumberFormatException e) {
                 return;
             }
         }
         // Replace ',' by '.'
-        text = text.replace(',', '.'); //NOI18N
+        text = text.replace(',', '.'); //NOCHECK
         super.replaceText(start, end, text);
     }
 
@@ -88,7 +88,7 @@ public class DoubleTextField extends TextField {
             newText = oldText + text;
         } else {
             String headerStr = oldText.substring(0, start);
-            String trailerStr = ""; //NOI18N
+            String trailerStr = ""; //NOCHECK
             if (end < oldText.length()) {
                 trailerStr = oldText.substring(end, oldText.length());
             }

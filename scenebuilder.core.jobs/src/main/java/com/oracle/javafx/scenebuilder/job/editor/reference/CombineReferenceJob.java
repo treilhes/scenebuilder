@@ -57,7 +57,7 @@ public class CombineReferenceJob  extends Job {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) reference;
             subJob = new CombineExpressionReferenceJob(getContext(), fxomProperty, getEditorController()).extend();
         } else {
-            throw new RuntimeException("Bug"); //NOI18N
+            throw new RuntimeException("Bug"); //NOCHECK
         }
     }
 

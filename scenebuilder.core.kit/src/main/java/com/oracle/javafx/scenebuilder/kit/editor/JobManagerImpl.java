@@ -102,7 +102,7 @@ public class JobManagerImpl implements JobManager {
 
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); //NOI18N
+            throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); //NOCHECK
         }
 
         final Job fixJob = new UpdateReferencesJob(context, job);
@@ -120,7 +120,7 @@ public class JobManagerImpl implements JobManager {
     public void clear() {
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Clearing job stack from another job or a job manager listener is forbidden"); //NOI18N
+            throw new IllegalStateException("Clearing job stack from another job or a job manager listener is forbidden"); //NOCHECK
         }
 
         undoStack.clear();
@@ -150,7 +150,7 @@ public class JobManagerImpl implements JobManager {
 
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Undoing jobs from another job or a job manager listener is forbidden"); //NOI18N
+            throw new IllegalStateException("Undoing jobs from another job or a job manager listener is forbidden"); //NOCHECK
         }
 
         final Job job = undoStack.get(0);
@@ -182,7 +182,7 @@ public class JobManagerImpl implements JobManager {
 
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Redoing jobs from another job or a job manager listener is forbidden"); //NOI18N
+            throw new IllegalStateException("Redoing jobs from another job or a job manager listener is forbidden"); //NOCHECK
         }
 
         final Job job = redoStack.get(0);

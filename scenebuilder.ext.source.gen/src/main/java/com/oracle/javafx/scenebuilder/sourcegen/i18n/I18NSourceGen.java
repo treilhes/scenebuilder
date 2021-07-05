@@ -47,7 +47,7 @@ public class I18NSourceGen implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NSourceGen.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderSourceGen"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderSourceGen"); //NOCHECK
         }
         return bundle;
     }

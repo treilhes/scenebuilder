@@ -62,12 +62,12 @@ public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
     private double originalEndX;
     private double originalEndY;
 
-    private final PropertyName startXName = new PropertyName("startX"); //NOI18N
-    private final PropertyName startYName = new PropertyName("startY"); //NOI18N
-    private final PropertyName controlXName = new PropertyName("controlX"); //NOI18N
-    private final PropertyName controlYName = new PropertyName("controlY"); //NOI18N
-    private final PropertyName endXName = new PropertyName("endX"); //NOI18N
-    private final PropertyName endYName = new PropertyName("endY"); //NOI18N
+    private final PropertyName startXName = new PropertyName("startX"); //NOCHECK
+    private final PropertyName startYName = new PropertyName("startY"); //NOCHECK
+    private final PropertyName controlXName = new PropertyName("controlX"); //NOCHECK
+    private final PropertyName controlYName = new PropertyName("controlY"); //NOCHECK
+    private final PropertyName endXName = new PropertyName("endX"); //NOCHECK
+    private final PropertyName endYName = new PropertyName("endY"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
 
     public QuadCurveEditor() {

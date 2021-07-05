@@ -108,7 +108,7 @@ public class AddColumnJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return "Add Column " + position.name(); //NOI18N
+        return "Add Column " + position.name(); //NOCHECK
     }
 
     @Override

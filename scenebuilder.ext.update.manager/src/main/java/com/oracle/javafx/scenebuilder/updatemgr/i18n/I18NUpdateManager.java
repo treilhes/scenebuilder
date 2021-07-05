@@ -47,7 +47,7 @@ public class I18NUpdateManager implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NUpdateManager.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderUpdateManager"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderUpdateManager"); //NOCHECK
         }
         return bundle;
     }

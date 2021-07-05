@@ -51,7 +51,7 @@ public class InspectorSectionIdPreference extends EnumPreference<SectionId> impl
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "inspectorSectionId"; //NOI18N
+    public static final String PREFERENCE_KEY = "inspectorSectionId"; //NOCHECK
     public static final SectionId PREFERENCE_DEFAULT_VALUE = SectionId.PROPERTIES;
 
 	public InspectorSectionIdPreference(@Autowired PreferencesContext preferencesContext) {

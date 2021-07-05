@@ -51,7 +51,7 @@ import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
 public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, MavenArtifact> {
 	
 	// NODE
-	protected static final String NODE_NAME = "ARTIFACTS"; //NOI18N
+	protected static final String NODE_NAME = "ARTIFACTS"; //NOCHECK
 	
 	@Autowired
     public MavenArtifactsPreferences(@Autowired PreferencesContext preferencesContext) {

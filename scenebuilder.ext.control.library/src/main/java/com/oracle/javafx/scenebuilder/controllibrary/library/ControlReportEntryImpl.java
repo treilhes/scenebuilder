@@ -111,7 +111,7 @@ public class ControlReportEntryImpl implements ReportEntry {
             case OK:
                 assert klass != null;
                 sb.append(klass.getCanonicalName());
-                sb.append(" - OK"); //NOI18N
+                sb.append(" - OK"); //NOCHECK
                 break;
             case KO:
                 switch(subStatus) {
@@ -119,13 +119,13 @@ public class ControlReportEntryImpl implements ReportEntry {
                         assert klass == null;
                         assert exception != null;
                         sb.append(name);
-                        sb.append(" - CANNOT_LOAD - "); //NOI18N
+                        sb.append(" - CANNOT_LOAD - "); //NOCHECK
                         sb.append(exception.getMessage());
                         break;
                     case CANNOT_INSTANTIATE:
                         assert klass != null;
                         sb.append(klass.getCanonicalName());
-                        sb.append(" - CANNOT_INSTANTIATE - "); //NOI18N
+                        sb.append(" - CANNOT_INSTANTIATE - "); //NOCHECK
                         sb.append(exception.getMessage());
                         break;
                     case NONE:
@@ -135,10 +135,10 @@ public class ControlReportEntryImpl implements ReportEntry {
             case IGNORED:
                 assert klass == null;
                 sb.append(name);
-                sb.append(" - IGNORED"); //NOI18N
+                sb.append(" - IGNORED"); //NOCHECK
                 break;
             default:
-                throw new IllegalStateException("Unexpected status " + status); //NOI18N
+                throw new IllegalStateException("Unexpected status " + status); //NOCHECK
         }
         
         return sb.toString();

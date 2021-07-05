@@ -49,7 +49,7 @@ public class LastSentTrackingInfoDatePreference extends LocalDatePreference impl
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "LAST_SENT_TRACKING_INFO_DATE"; //NOI18N
+    public static final String PREFERENCE_KEY = "LAST_SENT_TRACKING_INFO_DATE"; //NOCHECK
     public static final LocalDate PREFERENCE_DEFAULT_VALUE = null;
 
 	public LastSentTrackingInfoDatePreference(@Autowired PreferencesContext preferencesContext) {

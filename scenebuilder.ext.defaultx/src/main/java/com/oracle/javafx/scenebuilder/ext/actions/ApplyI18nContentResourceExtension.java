@@ -83,7 +83,7 @@ public class ApplyI18nContentResourceExtension extends AbstractActionExtension<A
 	private static PropertyResourceBundle readPropertyResourceBundle(File f) {
         PropertyResourceBundle result;
         try( Reader reader = new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8")) ) {
-            result = new PropertyResourceBundle(reader); //NOI18N
+            result = new PropertyResourceBundle(reader); //NOCHECK
         } catch (IOException ex) {
             result = null;
         }

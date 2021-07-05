@@ -76,11 +76,11 @@ class XMLAttrComparator implements Comparator<Map.Entry<String,String>> {
          */
         final int result;
         switch(attr.getKey()) {
-            case "id": //NOI18N
+            case "id": //NOCHECK
                 result = 0;
                 break;
-            case "fx:id": //NOI18N
-                if (attr.getValue().startsWith("x")) { //NOI18N
+            case "fx:id": //NOCHECK
+                if (attr.getValue().startsWith("x")) { //NOCHECK
                     // Auto-generated fx:id goes at the end
                     result = 10000;
                 } else {
@@ -90,19 +90,19 @@ class XMLAttrComparator implements Comparator<Map.Entry<String,String>> {
             default:
                 result = 2;
                 break;
-            case "fx:value": //NOI18N
+            case "fx:value": //NOCHECK
                 result = 3;
                 break;
-            case "fx:factory": //NOI18N
+            case "fx:factory": //NOCHECK
                 result = 4;
                 break;
-            case "xmlns": //NOI18N
+            case "xmlns": //NOCHECK
                 result = 5;
                 break;
-            case "xmlns:fx": //NOI18N
+            case "xmlns:fx": //NOCHECK
                 result = 5;
                 break;
-            case "fx:controller": //NOI18N
+            case "fx:controller": //NOCHECK
                 result = 6;
                 break;
         }

@@ -146,7 +146,7 @@ public class EffectPropertyMetadata extends ComplexPropertyMetadata<Effect> {
                     = new ShadowPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
             result = subclassMetadata.makeFxomInstanceFromValue((Shadow) value, fxomDocument);
         } else {
-            assert false : "unexpected effect class = " + value.getClass().getSimpleName(); //NOI18N
+            assert false : "unexpected effect class = " + value.getClass().getSimpleName(); //NOCHECK
             result = null;
         }
         

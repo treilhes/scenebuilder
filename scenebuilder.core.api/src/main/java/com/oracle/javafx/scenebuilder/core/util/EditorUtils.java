@@ -70,7 +70,7 @@ import javafx.scene.layout.RowConstraints;
  */
 public class EditorUtils {
 
-    static final String[] FXML_RESERVED_KEYWORDS = {"null"}; //NOI18N
+    static final String[] FXML_RESERVED_KEYWORDS = {"null"}; //NOCHECK
     //private static final String FXINCLUDE_JAVADOC_URL = "https://openjfx.io/javadoc/11/javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html#include_elements";
 
     public static void makeWidthStretchable(final Node node) {
@@ -161,7 +161,7 @@ public class EditorUtils {
             return null;
         }
         String str = val.toString();
-        if ((val instanceof Double) && str.endsWith(".0")) { //NOI18N
+        if ((val instanceof Double) && str.endsWith(".0")) { //NOCHECK
             str = str.substring(0, str.length() - 2);
         }
         return str;
@@ -192,7 +192,7 @@ public class EditorUtils {
             return name;
         }
         // Replace all underscores with empty spaces
-        name = name.replace("_", " "); //NOI18N
+        name = name.replace("_", " "); //NOCHECK
         // Trim out any leading or trailing space (which also effectively
         // removes any underscores that were leading or trailing, since the
         // above line had converted them all to spaces).
@@ -215,20 +215,20 @@ public class EditorUtils {
             ch = name.charAt(i);
             if ((Character.isUpperCase(ch) && !previousWasCapital)
                     || (Character.isUpperCase(ch) && previousWasDigit)) {
-                builder.append(" "); //NOI18N
+                builder.append(" "); //NOCHECK
                 builder.append(ch);
                 previousWasCapital = true;
                 previousWasDigit = false;
             } else if ((Character.isDigit(ch) && !previousWasDigit)
                     || (Character.isDigit(ch) && previousWasCapital)) {
-                builder.append(" "); //NOI18N
+                builder.append(" "); //NOCHECK
                 builder.append(ch);
                 previousWasCapital = false;
                 previousWasDigit = true;
             } else if (Character.isUpperCase(ch) || Character.isDigit(ch)) {
                 builder.append(ch);
             } else if (Character.isWhitespace(ch)) {
-                builder.append(" "); //NOI18N
+                builder.append(" "); //NOCHECK
                 // There might have been multiple underscores in a row, so
                 // we might now have multiple whitespace in a row. Search ahead
                 // to the first non-whitespace character.
@@ -399,7 +399,7 @@ public class EditorUtils {
         try {
             url = new URL(urlStr);
         } catch (MalformedURLException ex) {
-            System.err.println("Invalid URL: " + urlStr); //NOI18N
+            System.err.println("Invalid URL: " + urlStr); //NOCHECK
             assert false;
             return null;
         }
@@ -421,7 +421,7 @@ public class EditorUtils {
     public static URL getUrl(String suffix, PrefixedValue.Type type, URL fxmlFileLocation) {
         String prefixedString;
         if (suffix.isEmpty()) {
-            prefixedString = ""; //NOI18N
+            prefixedString = ""; //NOCHECK
         } else {
             prefixedString = (new PrefixedValue(type, suffix)).toString();
         }

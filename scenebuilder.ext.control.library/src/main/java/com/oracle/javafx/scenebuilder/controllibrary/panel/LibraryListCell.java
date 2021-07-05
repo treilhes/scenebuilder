@@ -72,10 +72,10 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
         super();
         this.libraryController = libraryController;
 
-        graphic.getStyleClass().add("list-cell-graphic"); //NOI18N
-        classNameLabel.getStyleClass().add("library-classname-label"); //NOI18N
-        qualifierLabel.getStyleClass().add("library-qualifier-label"); //NOI18N
-        sectionLabel.getStyleClass().add("library-section-label"); //NOI18N
+        graphic.getStyleClass().add("list-cell-graphic"); //NOCHECK
+        classNameLabel.getStyleClass().add("library-classname-label"); //NOCHECK
+        qualifierLabel.getStyleClass().add("library-qualifier-label"); //NOCHECK
+        sectionLabel.getStyleClass().add("library-section-label"); //NOCHECK
 
         graphic.getChildren().add(iconImageView);
         graphic.getChildren().add(classNameLabel);

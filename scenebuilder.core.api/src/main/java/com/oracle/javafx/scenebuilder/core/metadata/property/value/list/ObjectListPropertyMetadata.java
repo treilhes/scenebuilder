@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 public class ObjectListPropertyMetadata extends ListValuePropertyMetadata<Object> {
 
     private final static ObjectPropertyMetadata itemMetadata
-            = new ObjectPropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new ObjectPropertyMetadata(new PropertyName("unused"), //NOCHECK
                     true, null, InspectorPath.UNUSED);
 
     public ObjectListPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -65,7 +65,7 @@ public class TabPaneDesignInfoX /* extends TabDesignInfo */ {
         assert tabPane.getTabs().contains(tab);
 
         // Looks for the sub nodes which match the .tab CSS selector
-        final Set<Node> set = tabPane.lookupAll(".tab"); //NOI18N
+        final Set<Node> set = tabPane.lookupAll(".tab"); //NOCHECK
 
         // Searches the result for the node associated to 'tab'.
         // This item has (Tab.class, tab) in its property list.
@@ -118,7 +118,7 @@ public class TabPaneDesignInfoX /* extends TabDesignInfo */ {
         assert tabPane != null;
 
         // Looks for the sub node which matches the '.control-buttons-tab' selector
-        return tabPane.lookup(".control-buttons-tab"); //NOI18N
+        return tabPane.lookup(".control-buttons-tab"); //NOCHECK
     }
 
 

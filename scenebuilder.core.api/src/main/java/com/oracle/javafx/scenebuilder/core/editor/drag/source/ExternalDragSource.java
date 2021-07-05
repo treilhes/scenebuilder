@@ -225,12 +225,12 @@ public class ExternalDragSource extends AbstractDragSource {
 
     @Override
     public ClipboardContent makeClipboardContent() {
-        throw new UnsupportedOperationException("should not be called"); //NOI18N
+        throw new UnsupportedOperationException("should not be called"); //NOCHECK
     }
 
     @Override
     public Image makeDragView() {
-        throw new UnsupportedOperationException("should not be called"); //NOI18N
+        throw new UnsupportedOperationException("should not be called"); //NOCHECK
     }
 
     @Override
@@ -317,7 +317,7 @@ public class ExternalDragSource extends AbstractDragSource {
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ": dragboard=(" + dragboard + ")"; //NOI18N
+        return getClass().getSimpleName() + ": dragboard=(" + dragboard + ")"; //NOCHECK
     }
     
     
@@ -354,9 +354,9 @@ public class ExternalDragSource extends AbstractDragSource {
         return makeFxomDocumentFromImageURL(image, fitWidth, fitHeight);
     }
     
-    static final PropertyName imageName = new PropertyName("image"); //NOI18N
-    static final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOI18N
-    static final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOI18N
+    static final PropertyName imageName = new PropertyName("image"); //NOCHECK
+    static final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOCHECK
+    static final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
     
     static FXOMDocument makeFxomDocumentFromImageURL(Image image, double fitWidth, double fitHeight) {
         final FXOMDocument result = new FXOMDocument();

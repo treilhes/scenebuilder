@@ -55,7 +55,7 @@ public class JobUtils {
             final FXOMDocument fxomDocument,
             final FXOMInstance gridPane,
             final FXOMInstance constraints, int index) {
-        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOI18N
+        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOCHECK
         FXOMProperty property = gridPane.getProperties().get(propertyName);
         if (property == null) {
             property = new FXOMPropertyC(fxomDocument, propertyName);
@@ -71,7 +71,7 @@ public class JobUtils {
             final FXOMDocument fxomDocument,
             final FXOMInstance gridPane,
             final FXOMInstance constraints, int index) {
-        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOI18N
+        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOCHECK
         FXOMProperty property = gridPane.getProperties().get(propertyName);
         if (property == null) {
             property = new FXOMPropertyC(fxomDocument, propertyName);
@@ -88,7 +88,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "fillHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "fillHeight"); //NOCHECK
         assert propertyMeta instanceof BooleanPropertyMetadata;
         return ((BooleanPropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -98,7 +98,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "fillHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "fillHeight"); //NOCHECK
         assert propertyMeta instanceof BooleanPropertyMetadata;
         ((BooleanPropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -108,7 +108,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "fillWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "fillWidth"); //NOCHECK
         assert propertyMeta instanceof BooleanPropertyMetadata;
         return ((BooleanPropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -118,7 +118,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "fillWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "fillWidth"); //NOCHECK
         assert propertyMeta instanceof BooleanPropertyMetadata;
         ((BooleanPropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -127,13 +127,13 @@ public class JobUtils {
             final FXOMInstance instance, final Class<?> clazz) {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
-        final PropertyName propertyName = new PropertyName("halignment"); //NOI18N
+        final PropertyName propertyName = new PropertyName("halignment"); //NOCHECK
         final FXOMProperty property = instance.getProperties().get(propertyName);
         if (property == null) {
             return null;
         } else {
             final PropertyMetadata propertyMeta
-                    = getPropertyMetadata(clazz, "halignment"); //NOI18N
+                    = getPropertyMetadata(clazz, "halignment"); //NOCHECK
             assert propertyMeta instanceof EnumerationPropertyMetadata;
             return ((EnumerationPropertyMetadata) propertyMeta).getValue(instance);
         }
@@ -144,7 +144,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "halignment"); //NOI18N
+                = getPropertyMetadata(clazz, "halignment"); //NOCHECK
         assert propertyMeta instanceof EnumerationPropertyMetadata;
         if (value != null) {
             ((EnumerationPropertyMetadata) propertyMeta).setValue(instance, value);
@@ -155,13 +155,13 @@ public class JobUtils {
             final FXOMInstance instance, final Class<?> clazz) {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
-        final PropertyName propertyName = new PropertyName("hgrow"); //NOI18N
+        final PropertyName propertyName = new PropertyName("hgrow"); //NOCHECK
         final FXOMProperty property = instance.getProperties().get(propertyName);
         if (property == null) {
             return null;
         } else {
             final PropertyMetadata propertyMeta
-                    = getPropertyMetadata(clazz, "hgrow"); //NOI18N
+                    = getPropertyMetadata(clazz, "hgrow"); //NOCHECK
             assert propertyMeta instanceof EnumerationPropertyMetadata;
             return ((EnumerationPropertyMetadata) propertyMeta).getValue(instance);
         }
@@ -172,7 +172,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "hgrow"); //NOI18N
+                = getPropertyMetadata(clazz, "hgrow"); //NOCHECK
         assert propertyMeta instanceof EnumerationPropertyMetadata;
         if (value != null) {
             ((EnumerationPropertyMetadata) propertyMeta).setValue(instance, value);
@@ -184,7 +184,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "layoutX"); //NOI18N
+                = getPropertyMetadata(clazz, "layoutX"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -194,7 +194,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "layoutY"); //NOI18N
+                = getPropertyMetadata(clazz, "layoutY"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -204,7 +204,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "maxHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "maxHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -214,7 +214,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "maxHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "maxHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -224,7 +224,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "maxWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "maxWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -234,7 +234,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "maxWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "maxWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -244,7 +244,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "minHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "minHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -254,7 +254,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "minHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "minHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -264,7 +264,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "minWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "minWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -274,7 +274,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "minWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "minWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -284,7 +284,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "orientation"); //NOI18N
+                = getPropertyMetadata(clazz, "orientation"); //NOCHECK
         assert propertyMeta instanceof EnumerationPropertyMetadata;
         if (value != null) {
             ((EnumerationPropertyMetadata) propertyMeta).setValue(instance, value);
@@ -296,7 +296,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "percentHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "percentHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -306,7 +306,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "percentHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "percentHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -316,7 +316,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "percentWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "percentWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -326,7 +326,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "percentWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "percentWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -336,7 +336,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "prefHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "prefHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -346,7 +346,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "prefHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "prefHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -356,7 +356,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "prefViewportHeight"); //NOI18N
+                = getPropertyMetadata(clazz, "prefViewportHeight"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -366,7 +366,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "prefViewportWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "prefViewportWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -376,7 +376,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "prefWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "prefWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         return ((DoublePropertyMetadata) propertyMeta).getValue(instance);
     }
@@ -386,7 +386,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "prefWidth"); //NOI18N
+                = getPropertyMetadata(clazz, "prefWidth"); //NOCHECK
         assert propertyMeta instanceof DoublePropertyMetadata;
         ((DoublePropertyMetadata) propertyMeta).setValue(instance, value);
     }
@@ -395,13 +395,13 @@ public class JobUtils {
             final FXOMInstance instance, final Class<?> clazz) {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
-        final PropertyName propertyName = new PropertyName("valignment");  //NOI18N
+        final PropertyName propertyName = new PropertyName("valignment");  //NOCHECK
         final FXOMProperty property = instance.getProperties().get(propertyName);
         if (property == null) {
             return null;
         } else {
             final PropertyMetadata propertyMeta
-                    = getPropertyMetadata(clazz, "valignment"); //NOI18N
+                    = getPropertyMetadata(clazz, "valignment"); //NOCHECK
             assert propertyMeta instanceof EnumerationPropertyMetadata;
             return ((EnumerationPropertyMetadata) propertyMeta).getValue(instance);
         }
@@ -412,7 +412,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "valignment"); //NOI18N
+                = getPropertyMetadata(clazz, "valignment"); //NOCHECK
         assert propertyMeta instanceof EnumerationPropertyMetadata;
         if (value != null) {
             ((EnumerationPropertyMetadata) propertyMeta).setValue(instance, value);
@@ -423,13 +423,13 @@ public class JobUtils {
             final FXOMInstance instance, final Class<?> clazz) {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
-        final PropertyName propertyName = new PropertyName("vgrow");  //NOI18N
+        final PropertyName propertyName = new PropertyName("vgrow");  //NOCHECK
         final FXOMProperty property = instance.getProperties().get(propertyName);
         if (property == null) {
             return null;
         } else {
             final PropertyMetadata propertyMeta
-                    = getPropertyMetadata(clazz, "vgrow"); //NOI18N
+                    = getPropertyMetadata(clazz, "vgrow"); //NOCHECK
             assert propertyMeta instanceof EnumerationPropertyMetadata;
             return ((EnumerationPropertyMetadata) propertyMeta).getValue(instance);
         }
@@ -440,7 +440,7 @@ public class JobUtils {
         assert instance != null && clazz != null;
         assert clazz.isAssignableFrom(instance.getDeclaredClass());
         final PropertyMetadata propertyMeta
-                = getPropertyMetadata(clazz, "vgrow"); //NOI18N
+                = getPropertyMetadata(clazz, "vgrow"); //NOCHECK
         assert propertyMeta instanceof EnumerationPropertyMetadata;
         if (value != null) {
             ((EnumerationPropertyMetadata) propertyMeta).setValue(instance, value);
@@ -451,7 +451,7 @@ public class JobUtils {
     // it is kept.
     public static String getStringFromDouble(double value) {
         String res = Double.toString(value);
-        if(res.endsWith(".0")) { //NOI18N
+        if(res.endsWith(".0")) { //NOCHECK
             res = Integer.toString((int)value);
         }
         return res;

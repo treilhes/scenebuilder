@@ -59,7 +59,7 @@ public class InsertRowJob extends BatchSelectionJob {
 
     private static final RowConstraintsListPropertyMetadata rowContraintsMeta =
             new RowConstraintsListPropertyMetadata(
-                new PropertyName("rowConstraints"), //NOI18N
+                new PropertyName("rowConstraints"), //NOCHECK
                 true, /* readWrite */
                 Collections.emptyList(), /* defaultValue */
                 InspectorPath.UNUSED);

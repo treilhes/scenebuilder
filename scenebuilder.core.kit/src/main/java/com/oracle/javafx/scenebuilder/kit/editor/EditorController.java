@@ -1093,7 +1093,7 @@ public class EditorController implements Editor {
                 break;
             }
             default:
-                throw new UnsupportedOperationException("Not yet implemented"); //NOI18N
+                throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
         }
         assert getFxomDocument().isUpdateOnGoing() == false;
     }
@@ -1397,7 +1397,7 @@ public class EditorController implements Editor {
                 break;
             }
             default:
-                throw new UnsupportedOperationException("Not yet implemented"); //NOI18N
+                throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
         }
     }
 
@@ -1616,7 +1616,7 @@ public class EditorController implements Editor {
 //                final FXOMObject rootObject = getFxomDocument().getFxomRoot();
 //                if (rootObject == null) { // Empty document
 //                    final Job job = new SetDocumentRootJob(context,
-//                            newItemRoot, true /* usePredefinedSize */, "unused", this).extend(); //NOI18N
+//                            newItemRoot, true /* usePredefinedSize */, "unused", this).extend(); //NOCHECK
 //                    result = job.isExecutable();
 //                } else {
 //                    if (selection.isEmpty() || selection.isSelected(rootObject)) {
@@ -1746,7 +1746,7 @@ public class EditorController implements Editor {
             }
         } else {
             assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOI18N
+                    "Add implementation for " + selection.getGroup(); //NOCHECK
 
         }
     }
@@ -1801,7 +1801,7 @@ public class EditorController implements Editor {
             return true;
         } else {
             assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOI18N
+                    "Add implementation for " + selection.getGroup(); //NOCHECK
         }
         return false;
     }
@@ -1917,7 +1917,7 @@ public class EditorController implements Editor {
             return index < size - 1;
         } else {
             assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOI18N
+                    "Add implementation for " + selection.getGroup(); //NOCHECK
         }
         return false;
     }
@@ -1982,7 +1982,7 @@ public class EditorController implements Editor {
             return index > 0;
         } else {
             assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOI18N
+                    "Add implementation for " + selection.getGroup(); //NOCHECK
         }
         return false;
     }
@@ -2043,7 +2043,7 @@ public class EditorController implements Editor {
         if (source == null) {
             return null; // Can this happen ?
         }
-        if (source.startsWith("/")) { //NOI18N
+        if (source.startsWith("/")) { //NOCHECK
             // Source relative to FXOM document class loader
             final ClassLoader classLoader = getFxomDocument().getClassLoader();
             if (classLoader != null) {
@@ -2145,7 +2145,7 @@ public class EditorController implements Editor {
             //TODO use a factory here, expecting a noarg constructor is bad
             final Effect effect = effectClass.getDeclaredConstructor().newInstance();
             
-            final PropertyName pn = new PropertyName("effect"); //NOI18N
+            final PropertyName pn = new PropertyName("effect"); //NOCHECK
 
             final PropertyMetadata pm
                     = Metadata.getMetadata().queryProperty(Node.class, pn);
@@ -2285,19 +2285,19 @@ public class EditorController implements Editor {
 				@Override
 				public void modified(Path path) {
 					assert Platform.isFxApplicationThread();
-			        updateEditorController("file.watching.file.modified", path); //NOI18N
+			        updateEditorController("file.watching.file.modified", path);
 				}
 
 				@Override
 				public void deleted(Path path) {
 					assert Platform.isFxApplicationThread();
-			        updateEditorController("file.watching.file.deleted", path); //NOI18N
+			        updateEditorController("file.watching.file.deleted", path);
 				}
 
 				@Override
 				public void created(Path path) {
 					assert Platform.isFxApplicationThread();
-			        updateEditorController("file.watching.file.created", path); //NOI18N
+			        updateEditorController("file.watching.file.created", path);
 				}
 
                 @Override
@@ -2312,7 +2312,7 @@ public class EditorController implements Editor {
         final String targetFileName = target.getFileName().toString();
         messageLogger.logInfoMessage(messageKey, targetFileName);
         getErrorReport().forget();
-        if (targetFileName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOI18N
+        if (targetFileName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOCHECK
             getErrorReport().cssFileDidChange(target);
             getFxomDocument().reapplyCSS(target);
         } else {

@@ -60,7 +60,7 @@ public abstract class HierarchyTreeViewUtils {
     public static <T> Set<Node> getTreeCells(final TreeView<T> treeView) {
         assert treeView != null;
         // Looks for the sub nodes which match the CSS selector
-        return treeView.lookupAll("." + HIERARCHY_TREE_CELL); //NOI18N
+        return treeView.lookupAll("." + HIERARCHY_TREE_CELL); //NOCHECK
     }
 
     /**

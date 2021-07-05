@@ -135,25 +135,25 @@ class MetadataIntrospector {
         Object result;
         
         /*
-         * <?xml version="1.0" encoding="UTF-8"?>
+         * <?xml version="1.0" encoding="UTF-8"?>  // NOCHECK
          * 
          * <?import a.b.C?>
          * 
          * <C/>
          */
         
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");  // NOI18N
         
-        sb.append("<?import ");
+        sb.append("<?import ");  // NOI18N
         sb.append(componentClass.getCanonicalName());
-        sb.append("?>");
-        sb.append("<");
+        sb.append("?>"); // NOI18N
+        sb.append("<"); // NOI18N
         sb.append(componentClass.getSimpleName());
-        sb.append("/>\n");
+        sb.append("/>\n"); // NOI18N
         
         final FXMLLoader fxmlLoader = new FXMLLoader();
         final String fxmlText = sb.toString();
-        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8"));
+        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); // NOI18N
 
         try {
             fxmlLoader.setClassLoader(componentClass.getClassLoader());
@@ -275,7 +275,7 @@ class MetadataIntrospector {
 //                        inspectorPath, FUNCTION);
             } else if (propertyType == javafx.collections.ObservableList.class) {
                 String propertyName = name.getName();
-                String methodName = "get" + propertyName.substring(0, 1).toUpperCase(Locale.ROOT) + propertyName.substring(1);
+                String methodName = "get" + propertyName.substring(0, 1).toUpperCase(Locale.ROOT) + propertyName.substring(1);  // NOI18N
                 result = null;
                 try {
                     Method method = sample.getClass().getMethod(methodName);

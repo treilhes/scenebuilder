@@ -76,7 +76,7 @@ public class URLUtils {
         
         File result;
         final String scheme = uri.getScheme();
-        if ((scheme == null) || ! scheme.toLowerCase(Locale.ROOT).equals("file")) { //NOI18N
+        if ((scheme == null) || ! scheme.toLowerCase(Locale.ROOT).equals("file")) { //NOCHECK
             result = null;
         } else {
             try {

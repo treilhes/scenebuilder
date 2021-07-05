@@ -73,7 +73,7 @@ import javafx.scene.layout.Priority;
 @Lazy
 public class I18nStringEditor extends AbstractPropertyEditor {
 
-    private static final String PERCENT_STR = "%"; //NOI18N
+    private static final String PERCENT_STR = "%"; //NOCHECK
     private TextInputControl textNode = new TextField();
     private HBox i18nHBox = null;
     private EventHandler<ActionEvent> valueListener;
@@ -110,7 +110,7 @@ public class I18nStringEditor extends AbstractPropertyEditor {
             if (!i18nMode) {
                 setValue(new PrefixedValue(PrefixedValue.Type.RESOURCE_KEY, I18N.getString("inspector.i18n.dummykey")).toString());
             } else {
-                setValue(""); //NOI18N
+                setValue(""); //NOCHECK
             }
             I18nStringEditor.this.getCommitListener().handle(null);
             updateMenuItems();
@@ -248,7 +248,7 @@ public class I18nStringEditor extends AbstractPropertyEditor {
         }
         // Move the node from TextArea to TextField.
         // The current text is compacted to a single line.
-        String val = textNode.getText().replace("\n", "");//NOI18N
+        String val = textNode.getText().replace("\n", "");//NOCHECK
         TextField textField = new TextField(val);
         setTextEditorBehavior(this, textField, valueListener);
         setLayoutFormat(LayoutFormat.SIMPLE_LINE_CENTERED);
@@ -264,7 +264,7 @@ public class I18nStringEditor extends AbstractPropertyEditor {
         i18nHBox.setAlignment(Pos.CENTER);
         EditorUtils.replaceNode(textNode, i18nHBox, null);
         Label percentLabel = new Label(PERCENT_STR);
-        percentLabel.getStyleClass().add("symbol-prefix"); //NOI18N
+        percentLabel.getStyleClass().add("symbol-prefix"); //NOCHECK
         i18nHBox.getChildren().addAll(percentLabel, textNode);
         HBox.setHgrow(percentLabel, Priority.NEVER);
         // we have to set a small pref width for the text node else it will
@@ -279,7 +279,7 @@ public class I18nStringEditor extends AbstractPropertyEditor {
     }
 
     private static boolean containsLineFeed(String str) {
-        return str.contains("\n"); //NOI18N
+        return str.contains("\n"); //NOCHECK
     }
 
     @Override

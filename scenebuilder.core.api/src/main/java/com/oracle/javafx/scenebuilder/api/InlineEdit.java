@@ -38,7 +38,7 @@ import javafx.util.Callback;
 
 public interface InlineEdit {
     
-    public static final String INLINE_EDITOR_CLASS = "inline-editor"; //NOI18N
+    public static final String INLINE_EDITOR_CLASS = "inline-editor"; //NOCHECK
     
 	public enum Type {
 

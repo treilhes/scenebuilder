@@ -103,7 +103,7 @@ public class GenericEditor extends AbstractPropertyEditor {
         if (value == null) {
             textField.setText(null);
         } else {
-            textField.setText("" + value); //NOI18N
+            textField.setText("" + value); //NOCHECK
         }
     }
 

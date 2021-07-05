@@ -57,7 +57,7 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 public class NexusSearch implements Search {
 
     // nexus
-    private static final String URL_PREFIX = "/service/local/data_index?q=";
+    private static final String URL_PREFIX = "/service/local/data_index?q="; //NOCHECK
     private static final String URL_SUFFIX = "&from=";
     
     private final HttpClient client;
@@ -86,18 +86,18 @@ public class NexusSearch implements Search {
     @Override
     public List<DefaultArtifact> getCoordinates(String query) {
         try {
-            HttpGet request = new HttpGet(domain + URL_PREFIX + query + (first ? "" : URL_SUFFIX + iteration * ITEMS_ITERATION));
+            HttpGet request = new HttpGet(domain + URL_PREFIX + query + (first ? "" : URL_SUFFIX + iteration * ITEMS_ITERATION)); //NOCHECK
             if (!username.isEmpty() && !password.isEmpty()) {
-                String authStringEnc = new String(encodeBase64((username + ":" + password).getBytes()));
-                request.addHeader("Authorization", "Basic " + authStringEnc);
+                String authStringEnc = new String(encodeBase64((username + ":" + password).getBytes())); //NOCHECK
+                request.addHeader("Authorization", "Basic " + authStringEnc); //NOCHECK
             }
-            request.setHeader("Accept", "application/json");
+            request.setHeader("Accept", "application/json"); //NOCHECK
             HttpResponse response = client.execute(request);
             try (JsonReader rdr = Json.createReader(response.getEntity().getContent())) {
                 JsonObject obj = rdr.readObject();
-                if (first && obj != null && !obj.isEmpty() && obj.containsKey("totalCount")) {
+                if (first && obj != null && !obj.isEmpty() && obj.containsKey("totalCount")) { //NOCHECK
                     first = false;
-                    totalCount = Math.min(obj.getInt("totalCount", 0), MAX_RESULTS);
+                    totalCount = Math.min(obj.getInt("totalCount", 0), MAX_RESULTS); //NOCHECK
                     if (totalCount > ITEMS_ITERATION) {
                         List<DefaultArtifact> coordinates = new ArrayList<>(processRequest(obj));
                         while (totalCount > ITEMS_ITERATION) {
@@ -123,15 +123,15 @@ public class NexusSearch implements Search {
     }
     
     private List<DefaultArtifact> processRequest(JsonObject obj) {
-        if (obj != null && !obj.isEmpty() && obj.containsKey("data")) {
-            JsonArray docResults = obj.getJsonArray("data");
+        if (obj != null && !obj.isEmpty() && obj.containsKey("data")) { //NOCHECK
+            JsonArray docResults = obj.getJsonArray("data"); //NOCHECK
             return docResults.getValuesAs(JsonObject.class)
                     .stream()
                     .map(doc -> {
                         final Map<String, String> map = new HashMap<>();
-                        map.put("Repository", name + " (" + doc.getString("repoId", "") + ")");
-                        return new DefaultArtifact(doc.getString("groupId", "") + ":" + 
-                                doc.getString("artifactId", "") + ":" + MIN_VERSION, map);
+                        map.put("Repository", name + " (" + doc.getString("repoId", "") + ")"); //NOCHECK
+                        return new DefaultArtifact(doc.getString("groupId", "") + ":" + //NOCHECK
+                                doc.getString("artifactId", "") + ":" + MIN_VERSION, map); //NOCHECK
                     })
                     .distinct()
                     .collect(Collectors.toList());

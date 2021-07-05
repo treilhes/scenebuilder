@@ -127,7 +127,7 @@ public class ColorPicker extends VBox {
     private void initialize() {
 
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(ColorPicker.class.getResource("ColorPicker.fxml")); //NOI18N
+        loader.setLocation(ColorPicker.class.getResource("ColorPicker.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {
@@ -438,7 +438,7 @@ public class ColorPicker extends VBox {
         int red   = (int) Math.round(color.getRed() * 255);
         int green = (int) Math.round(color.getGreen() * 255);
         int blue  = (int) Math.round(color.getBlue() * 255);
-        final String hexa = String.format("#%02x%02x%02x", red, green, blue); //NOI18N
+        final String hexa = String.format("#%02x%02x%02x", red, green, blue); //NOCHECK
 
         // Set TextFields value
         hue_textfield.setText(String.valueOf((int) hue));
@@ -453,27 +453,27 @@ public class ColorPicker extends VBox {
 
         // Set the background color of the chips
         final StringBuilder sb = new StringBuilder();
-        sb.append("hsb("); //NOI18N
+        sb.append("hsb("); //NOCHECK
         sb.append(hue);
-        sb.append(", "); //NOI18N
+        sb.append(", "); //NOCHECK
         sb.append(saturation * 100);
-        sb.append("%, "); //NOI18N
+        sb.append("%, "); //NOCHECK
         sb.append(brightness * 100);
-        sb.append("%, "); //NOI18N
+        sb.append("%, "); //NOCHECK
         sb.append(alpha);
-        sb.append(")"); //NOI18N
+        sb.append(")"); //NOCHECK
         final String hsbCssValue = sb.toString();
-        final String chipStyle = "-fx-background-color: " + hsbCssValue; //NOI18N
+        final String chipStyle = "-fx-background-color: " + hsbCssValue; //NOCHECK
         chip_region.setStyle(chipStyle);
         picker_handle_chip_circle.setFill(Color.rgb(red, green, blue));
-        final String alphaChipStyle = "-fx-background-color: " //NOI18N
-                + "linear-gradient(to right, transparent, " + hsbCssValue + ")"; //NOI18N
+        final String alphaChipStyle = "-fx-background-color: " //NOCHECK
+                + "linear-gradient(to right, transparent, " + hsbCssValue + ")"; //NOCHECK
         alpha_region.setStyle(alphaChipStyle);
 
         // Set the background color of the picker region
         // (force saturation and brightness to 100% - don't add opacity)
-        final String pickerRegionStyle = "-fx-background-color: hsb(" //NOI18N
-                + hue + ", 100%, 100%, 1.0);"; //NOI18N
+        final String pickerRegionStyle = "-fx-background-color: hsb(" //NOCHECK
+                + hue + ", 100%, 100%, 1.0);"; //NOCHECK
         picker_region.setStyle(pickerRegionStyle);
 
         // Position the picker dot
@@ -494,13 +494,13 @@ public class ColorPicker extends VBox {
 
     private String makeHueSliderCSS() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("-fx-background-color: linear-gradient(to right "); //NOI18N
+        sb.append("-fx-background-color: linear-gradient(to right "); //NOCHECK
         for (int i = 0; i < 12; i++) { // max 12 gradient stops
-            sb.append(", hsb("); //NOI18N
+            sb.append(", hsb("); //NOCHECK
             sb.append(i * (360 / 11));
-            sb.append(", 100%, 100%)"); //NOI18N
+            sb.append(", 100%, 100%)"); //NOCHECK
         }
-        sb.append(");"); //NOI18N
+        sb.append(");"); //NOCHECK
         return sb.toString();
     }
 

@@ -47,7 +47,7 @@ public class I18N${extensionCamelCasedName} implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18N${extensionCamelCasedName}.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilder${extensionCamelCasedName}"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilder${extensionCamelCasedName}"); //NOCHECK
         }
         return bundle;
     }

@@ -55,7 +55,7 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     
     private final static Logger logger = LoggerFactory.getLogger(ExtensionFileSystemImpl.class);
     
-    private final String TEMP_FILE_EXTENSION = ".tmp"; //NOI18N
+    private final String TEMP_FILE_EXTENSION = ".tmp"; //NOCHECK
     private final Path root;
 
     private final Dialog dialog;

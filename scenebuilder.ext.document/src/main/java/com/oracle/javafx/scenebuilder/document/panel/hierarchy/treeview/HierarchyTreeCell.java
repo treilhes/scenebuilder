@@ -643,7 +643,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         final ObservableList<String> styleSheets
                 = panelController.getRoot().getStylesheets();
         editor.getStylesheets().addAll(styleSheets);
-        editor.getStyleClass().add("theme-presets"); //NOI18N
+        editor.getStyleClass().add("theme-presets"); //NOCHECK
         editor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
 
         // 2) Build the COMMIT Callback
@@ -744,7 +744,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         // Included file
         if (fxomObject instanceof FXOMIntrinsic
                 && ((FXOMIntrinsic) fxomObject).getType() == FXOMIntrinsic.Type.FX_INCLUDE) {
-            final URL resource = ImageUtils.getNodeIconURL("Included.png"); //NOI18N
+            final URL resource = ImageUtils.getNodeIconURL("Included.png");
             includedFileImageView.setImage(ImageUtils.getImage(resource));
             includedFileImageView.setManaged(true);
         } else {
@@ -829,7 +829,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 result.append(I18N.getString("hierarchy.unsupported.expression"));
                 break;
         }
-        result.append(" "); //NOI18N
+        result.append(" "); //NOCHECK
         if (fxomNode instanceof FXOMPropertyT) {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) fxomNode;
             result.append(fxomProperty.getValue());

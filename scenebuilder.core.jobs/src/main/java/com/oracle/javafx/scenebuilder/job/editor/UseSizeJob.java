@@ -172,9 +172,9 @@ public class UseSizeJob extends Job {
     private List<Job> modifyHeightJobs(final FXOMInstance candidate) {
         final List<Job> result = new ArrayList<>();
 
-        final PropertyName maxHeight = new PropertyName("maxHeight"); //NOI18N
-        final PropertyName minHeight = new PropertyName("minHeight"); //NOI18N
-        final PropertyName prefHeight = new PropertyName("prefHeight"); //NOI18N
+        final PropertyName maxHeight = new PropertyName("maxHeight"); //NOCHECK
+        final PropertyName minHeight = new PropertyName("minHeight"); //NOCHECK
+        final PropertyName prefHeight = new PropertyName("prefHeight"); //NOCHECK
 
         final ValuePropertyMetadata maxHeightVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, maxHeight);
@@ -205,9 +205,9 @@ public class UseSizeJob extends Job {
     private List<Job> modifyWidthJobs(final FXOMInstance candidate) {
         final List<Job> result = new ArrayList<>();
 
-        final PropertyName maxWidth = new PropertyName("maxWidth"); //NOI18N
-        final PropertyName minWidth = new PropertyName("minWidth"); //NOI18N
-        final PropertyName prefWidth = new PropertyName("prefWidth"); //NOI18N
+        final PropertyName maxWidth = new PropertyName("maxWidth"); //NOCHECK
+        final PropertyName minWidth = new PropertyName("minWidth"); //NOCHECK
+        final PropertyName prefWidth = new PropertyName("prefWidth"); //NOCHECK
 
         final ValuePropertyMetadata maxWidthVPM
                 = Metadata.getMetadata().queryValueProperty(candidate, maxWidth);

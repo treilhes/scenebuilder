@@ -46,7 +46,7 @@ import javafx.scene.control.ButtonType;
 public class ButtonTypeListPropertyMetadata extends ListValuePropertyMetadata<ButtonType> {
 
     private final static ButtonTypePropertyMetadata itemMetadata
-            = new ButtonTypePropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new ButtonTypePropertyMetadata(new PropertyName("unused"), //NOCHECK
                     true, ButtonType.CLOSE, InspectorPath.UNUSED);
 
     public ButtonTypeListPropertyMetadata(PropertyName name, boolean readWrite, 

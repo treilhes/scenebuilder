@@ -49,11 +49,11 @@ public class ClipboardEncoder {
     
     // Internal SB2 data format
     static final DataFormat SB_DATA_FORMAT 
-            = new DataFormat("com.oracle.javafx.scenebuilder2/internal"); //NOI18N
+            = new DataFormat("com.oracle.javafx.scenebuilder2/internal"); //NOCHECK
 
     // FXML Format
     static final DataFormat FXML_DATA_FORMAT 
-            = new DataFormat("com.oracle.javafx/fxml"); //NOI18N
+            = new DataFormat("com.oracle.javafx/fxml"); //NOCHECK
     
     private final List<FXOMObject> fxomObjects;
 

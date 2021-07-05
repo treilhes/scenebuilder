@@ -65,7 +65,7 @@ import javafx.scene.layout.RowConstraints;
 public class ResizeRowGesture extends AbstractMouseGesture {
 
     private static final PropertyName rowConstraintsName
-            = new PropertyName("rowConstraints"); //NOI18N
+            = new PropertyName("rowConstraints"); //NOCHECK
     private static final ValuePropertyMetadata rowConstraintsMeta
             = new RowConstraintsListPropertyMetadata(
                 rowConstraintsName,

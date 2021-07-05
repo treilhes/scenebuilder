@@ -58,7 +58,7 @@ import javafx.scene.shape.Circle;
 public class CircleResizer extends AbstractResizer<Circle> {
 
     private double originalRadius;
-    private final PropertyName radiusName = new PropertyName("radius"); //NOI18N
+    private final PropertyName radiusName = new PropertyName("radius"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public CircleResizer() {

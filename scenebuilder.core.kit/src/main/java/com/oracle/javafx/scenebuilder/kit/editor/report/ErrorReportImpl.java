@@ -164,7 +164,7 @@ public class ErrorReportImpl implements ErrorReport {
                 addEntry(e.getValue(), newEntry);
             } else {
                 final String assetPathName = assetPath.toString();
-                if (assetPathName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOI18N
+                if (assetPathName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOCHECK
                     // assetPath is a CSS file : check its parsing report
                     final CSSParsingReportImpl r = getCSSParsingReport(assetPath);
                     assert r != null;

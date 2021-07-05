@@ -48,20 +48,26 @@ import javafx.scene.control.SelectionMode;
 @Component
 public class GluonValuePropertyMetadataCatalog {
 
+    // sectionTags
+    private static final String PROPERTIES = "Properties";
+    
+    //subSectionTags
+    private static final String SPECIFIC = "Specific";
+    
     //Gluon
     public final ValuePropertyMetadata expandedPropertyMetadata =
             new BooleanPropertyMetadata(
                 PropertyNames.expandedName,
                 true, /* readWrite */
                 false, /* defaultValue */
-                new InspectorPath("Properties", "Specific", 0)
+                new InspectorPath(PROPERTIES, SPECIFIC, 0)
             );
     public final ValuePropertyMetadata onPullToRefreshPropertyMetadata =
             new EventHandlerPropertyMetadata(
                 PropertyNames.    onPullToRefreshName,
                     true, /* readWrite */
                     null, /* defaultValue */
-                    new InspectorPath("Code", "Specific", 0)
+                    new InspectorPath("Code", SPECIFIC, 0)
             );
     public final ValuePropertyMetadata bottomNavigationTypePropertyMetadata =
             new EnumerationPropertyMetadata(
@@ -69,25 +75,25 @@ public class GluonValuePropertyMetadataCatalog {
                 BottomNavigation.Type.class,
                 true, /* readWrite */
                 BottomNavigation.Type.FIXED, /* defaultValue */
-                new InspectorPath("Properties", "Specific", 0));
+                new InspectorPath(PROPERTIES, SPECIFIC, 0));
     public final ValuePropertyMetadata searchBoxVisiblePropertyMetadata =
             new BooleanPropertyMetadata(
                 PropertyNames.searchBoxVisibleName,
                 true, /* readWrite */
                 true, /* defaultValue */
-                new InspectorPath("Properties", "Specific", 0));
+                new InspectorPath(PROPERTIES, SPECIFIC, 0));
     public final ValuePropertyMetadata titleFilterPropertyMetadata =
             new I18nStringPropertyMetadata(
                 PropertyNames.titleFilterName,
                 true, /* readWrite */
                 "",
-                new InspectorPath("Properties", "Specific", 1));
+                new InspectorPath(PROPERTIES, SPECIFIC, 1));
     public final ValuePropertyMetadata selectionTypePropertyMetadata =
             new EnumerationPropertyMetadata(
                 PropertyNames.selectionTypeName,
                 javafx.scene.control.SelectionMode.class,
                 true, /* readWrite */
                 SelectionMode.SINGLE,
-                new InspectorPath("Properties", "Specific", 0));
+                new InspectorPath(PROPERTIES, SPECIFIC, 0));
     
 }

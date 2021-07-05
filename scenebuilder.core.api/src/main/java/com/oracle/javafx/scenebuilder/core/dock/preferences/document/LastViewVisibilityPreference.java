@@ -54,7 +54,7 @@ public class LastViewVisibilityPreference extends MapPreferences<UUID, Boolean> 
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "LastViewVisibility"; //NOI18N
+    public static final String PREFERENCE_KEY = "LastViewVisibility"; //NOCHECK
     
 
     public LastViewVisibilityPreference(@Autowired PreferencesContext preferencesContext) {

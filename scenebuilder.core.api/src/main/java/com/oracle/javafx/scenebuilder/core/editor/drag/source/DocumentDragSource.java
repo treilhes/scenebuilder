@@ -228,7 +228,7 @@ public class DocumentDragSource extends AbstractDragSource {
         final URL resource = mask.getClassNameIconURL();
         // Resource may be null for unresolved classes
         if (resource == null) {
-            image = ImageUtils.getNodeIcon("MissingIcon.png"); //NOI18N
+            image = ImageUtils.getNodeIcon("MissingIcon.png");
         } else {
             image = new Image(resource.toExternalForm());
         }
@@ -237,7 +237,7 @@ public class DocumentDragSource extends AbstractDragSource {
         visualNode.setGraphic(new ImageView(image));
 //        visualNode.setText(mask.getClassNameInfo());
         visualNode.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
-        visualNode.getStyleClass().add("drag-preview"); //NOI18N
+        visualNode.getStyleClass().add("drag-preview"); //NOCHECK
 
         return ImageUtils.getImageFromNode(visualNode);
     }
@@ -338,7 +338,7 @@ public class DocumentDragSource extends AbstractDragSource {
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ": hitObject=(" + hitObject + ")"; //NOI18N
+        return getClass().getSimpleName() + ": hitObject=(" + hitObject + ")"; //NOCHECK
     }
     
     

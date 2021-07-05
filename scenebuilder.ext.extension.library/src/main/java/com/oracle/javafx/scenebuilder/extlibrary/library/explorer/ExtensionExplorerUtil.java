@@ -63,7 +63,7 @@ public class ExtensionExplorerUtil {
         Class<?> entryClass = null;
 
         // Filtering out what starts with com.javafx. is bound to DTL-6378.
-        if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
+        if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOCHECK
             status = ExtensionReportEntry.Status.IGNORED;
             entryClass = null;
             entryException = null;

@@ -371,7 +371,7 @@ class GridPaneMosaic {
 
         if (trayColor != null) {
             final String webColor = ColorEncoder.encodeColorToRGBA(trayColor);
-            final String style = "-fx-background-color:"+ webColor +";";//NOI18N
+            final String style = "-fx-background-color:"+ webColor +";";//NOCHECK
             result.setStyle(style);
         }
         
@@ -382,10 +382,10 @@ class GridPaneMosaic {
         final String style;
         
         if (trayColor == null) {
-            style = "";//NOI18N
+            style = "";//NOCHECK
         } else {
             final String webColor = ColorEncoder.encodeColorToRGBA(trayColor);
-            style = "-fx-background-color:"+ webColor +";";//NOI18N
+            style = "-fx-background-color:"+ webColor +";";//NOCHECK
         }
 
         adjustTrayStyle(northTrayGroup.getChildren(), style);

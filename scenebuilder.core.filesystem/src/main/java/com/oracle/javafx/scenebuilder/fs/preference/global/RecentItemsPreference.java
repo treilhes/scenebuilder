@@ -56,7 +56,7 @@ public class RecentItemsPreference extends ListOfStringPreference implements Man
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "RECENT_ITEMS"; //NOI18N
+    public static final String PREFERENCE_KEY = "RECENT_ITEMS"; //NOCHECK
     public static final List<String> PREFERENCE_DEFAULT_VALUE = new ArrayList<>();
 
 	private final RecentItemsSizePreference recentItemsSize;

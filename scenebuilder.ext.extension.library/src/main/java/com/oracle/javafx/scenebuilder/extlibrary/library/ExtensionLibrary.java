@@ -92,7 +92,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
     // Where we store canonical class names of items we want to exclude from
     // the user defined one displayed in the Library panel.
     // As a consequence an empty file means we display all items.
-    private final String filterFileName = "filter.txt"; //NOI18N
+    private final String filterFileName = "filter.txt"; //NOCHECK
 
 	private UILogger uiLogger;
 

@@ -59,7 +59,7 @@ public class ThemePreference extends ObjectPreference<Class<? extends Theme>> im
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "theme"; //NOI18N
+    public static final String PREFERENCE_KEY = "theme"; //NOCHECK
     public static final Class<? extends Theme> PREFERENCE_DEFAULT_VALUE = DefaultThemesList.Modena.class;
 
     private final List<Class<? extends Theme>> themeClasses;

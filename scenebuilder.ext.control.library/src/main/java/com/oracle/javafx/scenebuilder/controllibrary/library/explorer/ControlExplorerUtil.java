@@ -68,7 +68,7 @@ public class ControlExplorerUtil {
     public static Object instantiateWithFXMLLoader(String fxmlText, ClassLoader classLoader) throws IOException {
         Object result;
 
-        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); //NOI18N
+        final byte[] fxmlBytes = fxmlText.getBytes(Charset.forName("UTF-8")); //NOCHECK
 
         final FXMLLoader fxmlLoader = new FXMLLoader();
         try {
@@ -95,7 +95,7 @@ public class ControlExplorerUtil {
         Class<?> entryClass = null;
 
         // Filtering out what starts with com.javafx. is bound to DTL-6378.
-        if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOI18N
+        if (filters.stream().anyMatch(f -> f.isFiltered(className))) { //NOCHECK
             status = ControlReportEntryImpl.Status.IGNORED;
             entryClass = null;
             entryException = null;

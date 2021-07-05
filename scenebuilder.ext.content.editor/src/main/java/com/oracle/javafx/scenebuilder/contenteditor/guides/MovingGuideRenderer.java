@@ -55,7 +55,7 @@ import javafx.scene.shape.Line;
  */
 public class MovingGuideRenderer {
     
-    private static final String NID_MOVING_GUIDE = "movingGuide"; //NOI18N
+    private static final String NID_MOVING_GUIDE = "movingGuide"; //NOCHECK
 
     private final Group guideGroup = new Group();
     private final Map<AbstractSegment, Line> chromeMap = new HashMap<>();

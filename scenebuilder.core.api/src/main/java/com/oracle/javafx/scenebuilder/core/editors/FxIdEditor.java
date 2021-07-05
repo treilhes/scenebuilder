@@ -72,13 +72,13 @@ public class FxIdEditor extends AutoSuggestEditor {
     private final Glossary glossary;
 
 //    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
-//        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOI18N
+//        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOCHECK
 //        initialize(editorController);
 //    }
     
     public FxIdEditor(
             @Autowired Api api) {
-        super(api); //NOI18N
+        super(api); //NOCHECK
         this.messageLog = api.getApiDoc().getMessageLogger();
         this.glossary = api.getGlossary();
         
@@ -104,10 +104,10 @@ public class FxIdEditor extends AutoSuggestEditor {
                     // Avoid multiple identical messages
                     if (getFxIdsInUse().contains(value)) {
                         messageLog.logWarningMessage(
-                                "log.warning.duplicate.fxid", value); //NOI18N
+                                "log.warning.duplicate.fxid", value);
                     } else if ((getControllerClass() != null) && !getSuggestedList().contains(value)) {
                         messageLog.logWarningMessage(
-                                "log.warning.no.injectable.fxid", value); //NOI18N
+                                "log.warning.no.injectable.fxid", value);
                     }
                 }
             }

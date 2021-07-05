@@ -170,7 +170,7 @@ public class AddContextMenuToSelectionJob extends BatchSelectionJob {
                     contextMenuMap.put(fxomObject, contextMenuObject);
                 }
             } catch(IOException x) {
-                throw new IllegalStateException("Bug in " + getClass().getSimpleName(), x); //NOI18N
+                throw new IllegalStateException("Bug in " + getClass().getSimpleName(), x); //NOCHECK
             }
         }
     }

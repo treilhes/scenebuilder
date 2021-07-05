@@ -53,30 +53,30 @@ public class KeyCharacterCombinationPropertyMetadata extends ComplexPropertyMeta
      * 
      * Same as KeyCodeCombination => see comments in KeyCodeCombination
      */
-    private static final String DUMMY = "dummy"; //NOI18N
+    private static final String DUMMY = "dummy"; //NOCHECK
 
     private final EnumerationPropertyMetadata altMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("alt"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("alt"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata controlMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("control"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("control"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata metaMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("meta"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("meta"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata shiftMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("shift"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("shift"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata shortcutMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("shortcut"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("shortcut"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final I18nStringPropertyMetadata characterMetadata
-            = new I18nStringPropertyMetadata(new PropertyName("character"), //NOI18N
+            = new I18nStringPropertyMetadata(new PropertyName("character"), //NOCHECK
             true, null, InspectorPath.UNUSED);
 
     public KeyCharacterCombinationPropertyMetadata(PropertyName name, boolean readWrite, 

@@ -50,7 +50,7 @@ class LeftCell extends TableCell<IndexEntry, String> {
     @Override
     protected void updateItem(String leftValue, boolean empty) {
         super.updateItem(leftValue, empty);
-        setText(empty ? "" : leftValue); //NOI18N
+        setText(empty ? "" : leftValue); //NOCHECK
     }
     
     

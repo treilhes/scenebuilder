@@ -79,7 +79,7 @@ public class LogViewerController extends AbstractFxmlViewController {
     public LogViewerController(
             @Autowired Api api,
             @Autowired Editor editor) {
-        super(api, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle()); // NOI18N
+        super(api, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle());
         
     }
     

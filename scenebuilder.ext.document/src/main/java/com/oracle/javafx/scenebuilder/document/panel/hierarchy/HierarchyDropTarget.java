@@ -188,10 +188,10 @@ public class HierarchyDropTarget extends AbstractDropTarget {
                 final FXOMInstance draggedInstance
                         = (FXOMInstance) draggedObject;
                 final PropertyName alignmentName
-                        = new PropertyName("alignment", BorderPane.class); //NOI18N
+                        = new PropertyName("alignment", BorderPane.class); //NOCHECK
                 final EnumerationPropertyMetadata alignmentMeta
                         = new EnumerationPropertyMetadata(alignmentName, Pos.class,
-                        "UNUSED", true /* readWrite */, InspectorPath.UNUSED); //NOI18N
+                        "UNUSED", true /* readWrite */, InspectorPath.UNUSED); //NOCHECK
                 final Job alignmentJob
                         = new ModifyObjectJob(context, draggedInstance, alignmentMeta,
                                 Pos.CENTER.toString(), editorController).extend();
@@ -241,7 +241,7 @@ public class HierarchyDropTarget extends AbstractDropTarget {
 
     @Override
     public String toString() {
-        return "HierarchyDropTarget{" + "targetContainer=" + targetContainer + ", accessory=" + accessory + '}'; //NOI18N
+        return "HierarchyDropTarget{" + "targetContainer=" + targetContainer + ", accessory=" + accessory + '}'; //NOCHECK
     }
 
 

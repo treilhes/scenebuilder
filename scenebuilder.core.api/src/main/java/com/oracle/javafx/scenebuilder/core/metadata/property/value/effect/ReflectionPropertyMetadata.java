@@ -49,19 +49,19 @@ import javafx.scene.effect.Reflection;
 public class ReflectionPropertyMetadata extends ComplexPropertyMetadata<Reflection> {
     
     private final OpacityDoublePropertyMetadata bottomOpacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("bottomOpacity"), //NOI18N
+            = new OpacityDoublePropertyMetadata(new PropertyName("bottomOpacity"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final OpacityDoublePropertyMetadata fractionMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("fraction"), //NOI18N
+            = new OpacityDoublePropertyMetadata(new PropertyName("fraction"), //NOCHECK
             true /* readWrite */, 0.75, InspectorPath.UNUSED);
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata topOffsetMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("topOffset"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("topOffset"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final OpacityDoublePropertyMetadata topOpacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("topOpacity"), //NOI18N
+            = new OpacityDoublePropertyMetadata(new PropertyName("topOpacity"), //NOCHECK
             true /* readWrite */, 0.5, InspectorPath.UNUSED);
 
     public ReflectionPropertyMetadata(PropertyName name, boolean readWrite, 

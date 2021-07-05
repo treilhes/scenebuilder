@@ -58,7 +58,7 @@ import javafx.scene.paint.Paint;
 public class GridPanePring extends AbstractPring<GridPane> {
 
     private final GridPaneMosaic mosaic
-            = new GridPaneMosaic("pring", //NOI18N
+            = new GridPaneMosaic("pring", //NOCHECK
                     true /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
 

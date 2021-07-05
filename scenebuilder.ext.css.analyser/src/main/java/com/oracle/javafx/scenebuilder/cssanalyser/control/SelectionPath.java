@@ -117,12 +117,12 @@ public class SelectionPath extends HBox {
             if (optional != null) {
                 HBox hbox = new HBox(0);
                 hbox.getChildren().add(label);
-                final Hyperlink opt = new Hyperlink(" " + optional);//NOI18N
+                final Hyperlink opt = new Hyperlink(" " + optional);//NOCHECK
                 opt.setOnAction(eh);
                 hbox.setOnMouseEntered(new MouseEnterListener(opt, label));
                 hbox.setOnMouseExited(new MouseExitedListener(opt, label));
                 opt.setMaxHeight(Double.MAX_VALUE);
-                opt.getStyleClass().add("styleable-path-optional-label");//NOI18N
+                opt.getStyleClass().add("styleable-path-optional-label");//NOCHECK
                 hbox.getChildren().add(opt);
                 getChildren().add(hbox);
             } else {
@@ -138,7 +138,7 @@ public class SelectionPath extends HBox {
                 getChildren().add(mb);
             }
             if (i < selection.getItems().size() - 1) {
-                builder.append(" ");//NOI18N
+                builder.append(" ");//NOCHECK
             }
         }
         selector = builder.toString();
@@ -194,7 +194,7 @@ public class SelectionPath extends HBox {
         private ChildButton(List<Item> children, final List<Item> childrenPath, final Item selectedChild) {
             
             Region pathButtonGraphic = new Region();
-            pathButtonGraphic.getStyleClass().add("styleable-path-button-shape");//NOI18N
+            pathButtonGraphic.getStyleClass().add("styleable-path-button-shape");//NOCHECK
             pathButton.setGraphic(pathButtonGraphic);
             
             getChildren().add(pathButton);

@@ -51,28 +51,28 @@ public class LightingPropertyMetadata extends ComplexPropertyMetadata<Lighting> 
     private static final Lighting LIGHTING_DEFAULT = new Lighting();
     
     private final EffectPropertyMetadata bumpInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("bumpInput"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("bumpInput"), //NOCHECK
             true /* readWrite */, LIGHTING_DEFAULT.getBumpInput(), InspectorPath.UNUSED);
     private final EffectPropertyMetadata contentInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("contentInput"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("contentInput"), //NOCHECK
             true /* readWrite */, LIGHTING_DEFAULT.getContentInput(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata diffuseConstantMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("diffuseConstant"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("diffuseConstant"), //NOCHECK
             true /* readWrite */, 
             LIGHTING_DEFAULT.getDiffuseConstant(), InspectorPath.UNUSED);
     private final LightPropertyMetadata lightMetadata
-            = new LightPropertyMetadata(new PropertyName("light"), //NOI18N
+            = new LightPropertyMetadata(new PropertyName("light"), //NOCHECK
             true /* readWrite */, LIGHTING_DEFAULT.getLight(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata specularConstantMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("specularConstant"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("specularConstant"), //NOCHECK
             true /* readWrite */, 
             LIGHTING_DEFAULT.getSpecularConstant(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata specularExponentMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOCHECK
             true /* readWrite */, 
             LIGHTING_DEFAULT.getSpecularExponent(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata surfaceScaleMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("surfaceScale"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("surfaceScale"), //NOCHECK
             true /* readWrite */, 
             LIGHTING_DEFAULT.getSurfaceScale(), InspectorPath.UNUSED);
 

@@ -79,7 +79,7 @@ public class CheckBoxControl extends GridPane {
 
     private void initialize(String label, boolean initValue) {
 
-        final URL layoutURL = CheckBoxControl.class.getResource("CheckBoxControl.fxml"); //NOI18N
+        final URL layoutURL = CheckBoxControl.class.getResource("CheckBoxControl.fxml");
         try (InputStream is = layoutURL.openStream()) {
             final FXMLLoader loader = new FXMLLoader();
             loader.setController(this);

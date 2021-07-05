@@ -69,7 +69,7 @@ public class FileWatcher {
 
         this.pollingTime = pollingTime;
         this.delegate = delegate;
-        this.name = getClass().getSimpleName() + "[" + name + "]"; //NOI18N
+        this.name = getClass().getSimpleName() + "[" + name + "]"; //NOCHECK
     }
 
     public boolean hasTarget(Path target) {

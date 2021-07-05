@@ -47,7 +47,7 @@ public class I18NJavaFxFeatures implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NJavaFxFeatures.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderJavaFxFeatures"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderJavaFxFeatures"); //NOCHECK
         }
         return bundle;
     }

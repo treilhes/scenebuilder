@@ -55,7 +55,7 @@ public class UserStylesheetsPreference extends ListOfStringPreference implements
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "userStylesheets"; //NOI18N
+    public static final String PREFERENCE_KEY = "userStylesheets"; //NOCHECK
     public static final List<String> PREFERENCE_DEFAULT_VALUE = new ArrayList<>();
 
 	public UserStylesheetsPreference(

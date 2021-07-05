@@ -53,7 +53,7 @@ public class RecentItemsSizePreference extends IntegerPreference implements Mana
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "RECENT_ITEMS_SIZE"; //NOI18N
+    public static final String PREFERENCE_KEY = "RECENT_ITEMS_SIZE"; //NOCHECK
     public static final int PREFERENCE_DEFAULT_VALUE = 15;
     public static final Integer[] RECENT_ITEMS_SIZE = {5, 10, 15, 20};
 

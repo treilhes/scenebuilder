@@ -112,7 +112,7 @@ public class SpanJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        String description = ""; //NOI18N
+        String description = ""; //NOCHECK
 
         switch (spanAction) {
             default:
@@ -213,20 +213,20 @@ public class SpanJob extends BatchDocumentJob {
     }
 
     private String getName(PROPERTY property) {
-        String propertyName = ""; //NOI18N
+        String propertyName = ""; //NOCHECK
 
         switch (property) {
             case COLUMN_INDEX:
-                propertyName = "columnIndex"; //NOI18N
+                propertyName = "columnIndex"; //NOCHECK
                 break;
             case COLUMN_SPAN:
-                propertyName = "columnSpan"; //NOI18N
+                propertyName = "columnSpan"; //NOCHECK
                 break;
             case ROW_INDEX:
-                propertyName = "rowIndex"; //NOI18N
+                propertyName = "rowIndex"; //NOCHECK
                 break;
             case ROW_SPAN:
-                propertyName = "rowSpan"; //NOI18N
+                propertyName = "rowSpan"; //NOCHECK
                 break;
         }
 

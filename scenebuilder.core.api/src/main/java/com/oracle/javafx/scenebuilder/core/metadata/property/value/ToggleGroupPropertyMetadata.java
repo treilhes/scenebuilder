@@ -87,17 +87,17 @@ public class ToggleGroupPropertyMetadata extends SingleValuePropertyMetadata<Str
 
     @Override
     public boolean canMakeStringFromValue(String value) {
-        throw new UnsupportedOperationException("Should not be invoked"); //NOI18N
+        throw new UnsupportedOperationException("Should not be invoked"); //NOCHECK
     }
 
     @Override
     public String makeStringFromValue(String value) {
-        throw new UnsupportedOperationException("Should not be invoked"); //NOI18N
+        throw new UnsupportedOperationException("Should not be invoked"); //NOCHECK
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(String value, FXOMDocument fxomDocument) {
-        throw new UnsupportedOperationException("Should not be invoked"); //NOI18N
+        throw new UnsupportedOperationException("Should not be invoked"); //NOCHECK
     }
     
 }

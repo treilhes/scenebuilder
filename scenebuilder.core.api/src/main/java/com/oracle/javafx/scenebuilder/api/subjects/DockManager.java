@@ -103,10 +103,10 @@ public interface DockManager {
         private @Getter ReplaySubject<Collection<Dock>> availableDocks;
 
         public DockSubjects() {
-            dockCreated = wrap(DockSubjects.class, "dockCreated", PublishSubject.create());
-            dockShow = wrap(DockSubjects.class, "dockShow", PublishSubject.create());
-            dockHide = wrap(DockSubjects.class, "dockHide", PublishSubject.create());
-            availableDocks = wrap(DockSubjects.class, "availableDocks", ReplaySubject.create(1));
+            dockCreated = wrap(DockSubjects.class, "dockCreated", PublishSubject.create()); // NOI18N
+            dockShow = wrap(DockSubjects.class, "dockShow", PublishSubject.create()); // NOI18N
+            dockHide = wrap(DockSubjects.class, "dockHide", PublishSubject.create()); // NOI18N
+            availableDocks = wrap(DockSubjects.class, "availableDocks", ReplaySubject.create(1)); // NOI18N
         }
     }
 }

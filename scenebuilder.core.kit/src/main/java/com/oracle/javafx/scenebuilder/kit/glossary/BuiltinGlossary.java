@@ -135,7 +135,7 @@ public class BuiltinGlossary extends AbstractGlossary {
         try {
             res= new File(location.toURI());
         } catch (URISyntaxException ex) {
-            throw new RuntimeException("Bug", ex); //NOI18N
+            throw new RuntimeException("Bug", ex); //NOCHECK
         }
         
         return res;

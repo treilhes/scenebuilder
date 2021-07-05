@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 public class DoubleListPropertyMetadata extends ListValuePropertyMetadata<Double> {
 
     private final static CoordinateDoublePropertyMetadata itemMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("unused"), //NOCHECK
                     true, 0.0, InspectorPath.UNUSED);
 
     public DoubleListPropertyMetadata(PropertyName name, boolean readWrite, 

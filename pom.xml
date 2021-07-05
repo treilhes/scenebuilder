@@ -21,6 +21,7 @@
         <module>scenebuilder.core.jobs</module>
         <module>scenebuilder.core.kit</module>
         <module>scenebuilder.core.library</module>
+        <module>scenebuilder.core.ui</module>
         <module>scenebuilder.ext.certificate.manager</module>
         <module>scenebuilder.ext.content.editor</module>
         <module>scenebuilder.ext.control.library</module>
@@ -46,7 +47,6 @@
         <module>scenebuilder.ext.source.view</module>
         <module>scenebuilder.ext.templates</module>
         <module>scenebuilder.ext.update.manager</module>
-        <module>scenebuilder.core.layout</module>
         <module>scenebuilder.extension.archetype</module>
         <module>scenebuilder.starter</module>
         <module>scenebuilder.starter.test</module>
@@ -129,6 +129,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.kit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.layout</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -78,7 +78,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
      * @param resources I18n resource bundle
      */
     public AbstractFxmlViewController(Api api, URL fxmlURL, ResourceBundle resources) {
-        super(api, fxmlURL, resources); //NOI18N
+        super(api, fxmlURL, resources); //NOCHECK
         String viewName = getViewName();
         name = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
     }

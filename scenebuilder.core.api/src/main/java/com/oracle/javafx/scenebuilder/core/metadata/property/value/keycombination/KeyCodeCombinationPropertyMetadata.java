@@ -63,30 +63,30 @@ public class KeyCodeCombinationPropertyMetadata extends ComplexPropertyMetadata<
      * To force this behavior, the EnumerationPropertyMetadata below are all
      * set with a dummy default value.
      */
-    private static final String DUMMY = "dummy"; //NOI18N
+    private static final String DUMMY = "dummy"; //NOCHECK
     
     private final EnumerationPropertyMetadata altMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("alt"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("alt"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata controlMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("control"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("control"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata metaMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("meta"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("meta"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata shiftMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("shift"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("shift"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata shortcutMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("shortcut"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("shortcut"), //NOCHECK
             KeyCombination.ModifierValue.class, DUMMY, true, 
             InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata codeMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("code"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("code"), //NOCHECK
             KeyCode.class, DUMMY, true, 
             InspectorPath.UNUSED);
 

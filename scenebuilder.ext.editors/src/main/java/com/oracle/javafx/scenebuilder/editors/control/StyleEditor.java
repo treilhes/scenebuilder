@@ -129,13 +129,13 @@ public class StyleEditor extends InlineListEditor {
                 continue;
             }
             if (value == null) {
-                value = ""; //NOI18N
+                value = ""; //NOCHECK
             }
             assert styleItem instanceof StyleItem;
             if (((StyleItem) styleItem).hasParsingError()) {
                 messageLogger.logWarningMessage("inspector.style.parsingerror", itemValue);
             }
-            value += itemValue + " "; //NOI18N
+            value += itemValue + " "; //NOCHECK
         }
         if (value != null) {
             value = value.trim();
@@ -353,11 +353,11 @@ public class StyleEditor extends InlineListEditor {
         public Object getValue() {
             String value;
             if (propertyTf.getText().isEmpty() && valueTf.getText().isEmpty()) {
-                return ""; //NOI18N
+                return ""; //NOCHECK
             } else {
                 String propertyVal = EditorUtils.getPlainString(propertyTf.getText()).trim();
                 String valueVal = EditorUtils.getPlainString(valueTf.getText()).trim();
-                value = propertyVal + ": " + valueVal + ";"; //NOI18N
+                value = propertyVal + ": " + valueVal + ";"; //NOCHECK
             }
 
             // Parse the style, and set the parsingError boolean if any error
@@ -377,13 +377,13 @@ public class StyleEditor extends InlineListEditor {
         public void setValue(Object style) {
             String styleStr = EditorUtils.toString(style);
             // remove last ';' if any
-            if (styleStr.endsWith(";")) { //NOI18N
+            if (styleStr.endsWith(";")) { //NOCHECK
                 styleStr = styleStr.substring(0, styleStr.length() - 1);
             }
             // split in property and value
             int dotIndex = styleStr.indexOf(':');
             String propertyStr;
-            String valueStr = ""; //NOI18N
+            String valueStr = ""; //NOCHECK
             if (dotIndex != -1) {
                 propertyStr = styleStr.substring(0, dotIndex);
                 valueStr = styleStr.substring(dotIndex + 1);
@@ -398,8 +398,8 @@ public class StyleEditor extends InlineListEditor {
 
         @Override
         public void reset() {
-            propertyTf.setText(""); //NOI18N
-            valueTf.setText(""); //NOI18N
+            propertyTf.setText(""); //NOCHECK
+            valueTf.setText(""); //NOCHECK
             propertyTf.setPromptText(null);
             valueTf.setPromptText(null);
         }

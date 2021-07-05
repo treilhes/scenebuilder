@@ -44,8 +44,8 @@ import javafx.scene.effect.Effect;
  */
 public class BlendPathItem extends EffectPathItem {
 
-    private final RadioMenuItem topMenuItem = new RadioMenuItem("TopInput"); //NOI18N
-    private final RadioMenuItem bottomMenuItem = new RadioMenuItem("BottomInput"); //NOI18N
+    private final RadioMenuItem topMenuItem = new RadioMenuItem("TopInput"); //NOCHECK
+    private final RadioMenuItem bottomMenuItem = new RadioMenuItem("BottomInput"); //NOCHECK
     private final ToggleGroup inputToggleGroup = new ToggleGroup();
     private EffectPathItem topInputPathItem;
     private EffectPathItem bottomInputPathItem;
@@ -102,15 +102,15 @@ public class BlendPathItem extends EffectPathItem {
 
     private void initialize() {
         // Add Select Input Menu
-        final Menu inputMenu = new Menu("Select Input"); //NOI18N
+        final Menu inputMenu = new Menu("Select Input"); //NOCHECK
         topMenuItem.setToggleGroup(inputToggleGroup);
         topMenuItem.setOnAction(event -> {
-            toggle_button.setText(getSimpleName() + " (TopInput)"); //NOI18N
+            toggle_button.setText(getSimpleName() + " (TopInput)"); //NOCHECK
             effectPickerController.updateUI(BlendPathItem.this);
         });
         bottomMenuItem.setToggleGroup(inputToggleGroup);
         bottomMenuItem.setOnAction(event -> {
-            toggle_button.setText(getSimpleName() + " (BottomInput)"); //NOI18N
+            toggle_button.setText(getSimpleName() + " (BottomInput)"); //NOCHECK
             effectPickerController.updateUI(BlendPathItem.this);
         });
 
@@ -119,7 +119,7 @@ public class BlendPathItem extends EffectPathItem {
         menu_button.getItems().add(1, new SeparatorMenuItem());
 
         // TopInput selected at init time
-        toggle_button.setText(getSimpleName() + " (TopInput)"); //NOI18N
+        toggle_button.setText(getSimpleName() + " (TopInput)"); //NOCHECK
         topMenuItem.setSelected(true);
         bottomMenuItem.setSelected(false);
     }

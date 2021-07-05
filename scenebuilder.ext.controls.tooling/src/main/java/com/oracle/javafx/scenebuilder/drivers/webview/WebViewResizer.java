@@ -65,12 +65,12 @@ public class WebViewResizer extends AbstractResizer<WebView> {
     private double originalPrefHeight;
     private double originalMaxWidth;
     private double originalMaxHeight;
-    private final PropertyName minWidthName  = new PropertyName("minWidth"); //NOI18N
-    private final PropertyName minHeightName = new PropertyName("minHeight"); //NOI18N
-    private final PropertyName prefWidthName  = new PropertyName("prefWidth"); //NOI18N
-    private final PropertyName prefHeightName = new PropertyName("prefHeight"); //NOI18N
-    private final PropertyName maxWidthName  = new PropertyName("maxWidth"); //NOI18N
-    private final PropertyName maxHeightName = new PropertyName("maxHeight"); //NOI18N
+    private final PropertyName minWidthName  = new PropertyName("minWidth"); //NOCHECK
+    private final PropertyName minHeightName = new PropertyName("minHeight"); //NOCHECK
+    private final PropertyName prefWidthName  = new PropertyName("prefWidth"); //NOCHECK
+    private final PropertyName prefHeightName = new PropertyName("prefHeight"); //NOCHECK
+    private final PropertyName maxWidthName  = new PropertyName("maxWidth"); //NOCHECK
+    private final PropertyName maxHeightName = new PropertyName("maxHeight"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public WebViewResizer() {

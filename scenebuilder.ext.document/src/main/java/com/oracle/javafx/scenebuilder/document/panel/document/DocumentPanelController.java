@@ -128,7 +128,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		@Autowired @Qualifier("documentPanelActions.ShowFxIdAction") Action showFxIdAction,
     		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction
     		) { //, UserLibrary library) {
-        super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;

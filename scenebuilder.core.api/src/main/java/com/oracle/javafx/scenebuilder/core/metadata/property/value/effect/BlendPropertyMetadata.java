@@ -50,16 +50,16 @@ import javafx.scene.effect.BlendMode;
 public class BlendPropertyMetadata extends ComplexPropertyMetadata<Blend> {
     
     private final EffectPropertyMetadata bottomInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("bottomInput"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("bottomInput"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final EffectPropertyMetadata topInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("topInput"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("topInput"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final OpacityDoublePropertyMetadata opacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("opacity"), //NOI18N
+            = new OpacityDoublePropertyMetadata(new PropertyName("opacity"), //NOCHECK
             true /* readWrite */, 1.0, InspectorPath.UNUSED);
     private final EnumerationPropertyMetadata modeMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("mode"), //NOI18N
+            = new EnumerationPropertyMetadata(new PropertyName("mode"), //NOCHECK
             BlendMode.class, true, BlendMode.SRC_OVER, InspectorPath.UNUSED);
 
     public BlendPropertyMetadata(PropertyName name, boolean readWrite, 

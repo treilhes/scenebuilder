@@ -47,10 +47,10 @@ import javafx.scene.paint.Stop;
 public class StopPropertyMetadata extends ComplexPropertyMetadata<Stop> {
     
     private final CoordinateDoublePropertyMetadata offsetMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offset"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offset"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
+            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
             true, null, InspectorPath.UNUSED);
     
     public StopPropertyMetadata(PropertyName name, boolean readWrite, 

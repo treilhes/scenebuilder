@@ -72,7 +72,7 @@ public class FXOMAssetIndex {
      * Private
      */
     
-    private static final PropertyName valueName = new PropertyName("value"); //NOI18N
+    private static final PropertyName valueName = new PropertyName("value"); //NOCHECK
     
     private Map<Path, FXOMNode> collectAssets() {
         final Map<Path, FXOMNode> result = new HashMap<>();

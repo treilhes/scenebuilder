@@ -64,7 +64,7 @@ public class BackupSelectionJob extends Job {
                 this.oldSelectionGroup = selection.getGroup().clone();
             }
         } catch(CloneNotSupportedException x) {
-            throw new RuntimeException("Bug", x); //NOI18N
+            throw new RuntimeException("Bug", x); //NOCHECK
         }
     }
 

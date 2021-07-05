@@ -124,20 +124,20 @@ public class ImageReportEntry implements ReportEntry, Cloneable {
             case OK:
                 //assert klass != null;
                 //sb.append(klass.getCanonicalName());
-                sb.append(" - OK"); //NOI18N
+                sb.append(" - OK"); //NOCHECK
                 break;
             case KO:
                 assert exception != null;
                 sb.append(name);
-                sb.append(" - KO - "); //NOI18N
+                sb.append(" - KO - "); //NOCHECK
                 sb.append(exception.getMessage());
                 break;
             case IGNORED:
                 sb.append(name);
-                sb.append(" - IGNORED"); //NOI18N
+                sb.append(" - IGNORED"); //NOCHECK
                 break;
             default:
-                throw new IllegalStateException("Unexpected status " + status); //NOI18N
+                throw new IllegalStateException("Unexpected status " + status); //NOCHECK
         }
         
         return sb.toString();

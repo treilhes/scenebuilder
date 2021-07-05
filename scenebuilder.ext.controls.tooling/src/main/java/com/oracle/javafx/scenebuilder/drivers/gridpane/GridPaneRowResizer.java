@@ -50,10 +50,10 @@ import javafx.scene.layout.RowConstraints;
  */
 public class GridPaneRowResizer {
     
-    private static final PropertyName minHeightName     = new PropertyName("minHeight"); //NOI18N
-    private static final PropertyName prefHeightName    = new PropertyName("prefHeight"); //NOI18N
-    private static final PropertyName maxHeightName     = new PropertyName("maxHeight"); //NOI18N
-    private static final PropertyName percentHeightName = new PropertyName("percentHeight"); //NOI18N
+    private static final PropertyName minHeightName     = new PropertyName("minHeight"); //NOCHECK
+    private static final PropertyName prefHeightName    = new PropertyName("prefHeight"); //NOCHECK
+    private static final PropertyName maxHeightName     = new PropertyName("maxHeight"); //NOCHECK
+    private static final PropertyName percentHeightName = new PropertyName("percentHeight"); //NOCHECK
 
     private final GridPane gridPane;
     private final int rowIndex;

@@ -50,13 +50,13 @@ import javafx.scene.effect.ImageInput;
 public class ImageInputPropertyMetadata extends ComplexPropertyMetadata<ImageInput> {
     
     private final ImagePropertyMetadata sourceMetadata
-            = new ImagePropertyMetadata(new PropertyName("source"), //NOI18N
+            = new ImagePropertyMetadata(new PropertyName("source"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
 
     public ImageInputPropertyMetadata(PropertyName name, boolean readWrite, 

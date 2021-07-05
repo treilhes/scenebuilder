@@ -59,16 +59,16 @@ public class GluonDocumentationUrlBuilder implements DocumentationUrlBuilder {
         String posfix = "--";
 
         if (propMeta.getValueClass() == Boolean.class) {
-            methodName = "is" + propNameStr + posfix; //NOI18N
+            methodName = "is" + propNameStr + posfix; //NOCHECK
         } else if (propMeta.isStaticProperty()) {
-            methodName = "get" + propNameStr + "(" + Node.class.getName() + ")"; //NOI18N
+            methodName = "get" + propNameStr + "(" + Node.class.getName() + ")"; //NOCHECK
         } else {
-            methodName = "get" + propNameStr + posfix; //NOI18N
+            methodName = "get" + propNameStr + posfix; //NOCHECK
         }
 
         String url = GluonConstants.GLUON_JAVADOC_HOME;
-        url += cls.getName().replaceAll("\\.", "/") + ".html"; //NOI18N
-        url += "#" + methodName; //NOI18N
+        url += cls.getName().replaceAll("\\.", "/") + ".html"; //NOCHECK
+        url += "#" + methodName; //NOCHECK
         return url;
     }
 

@@ -47,7 +47,7 @@ public class I18NCertificateManager implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NCertificateManager.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderCertificateManager"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderCertificateManager"); //NOCHECK
         }
         return bundle;
     }

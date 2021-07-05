@@ -49,8 +49,8 @@ import javafx.scene.paint.Color;
 @Component
 public class AlignmentGuidesColorPreference extends ColorPreference implements ManagedGlobalPreference, UserPreference<Color> {
 
-	public static final String PREFERENCE_KEY = "ALIGNMENT_GUIDES_COLOR"; //NOI18N
-	public static final Color PREFERENCE_DEFAULT_VALUE = Color.RED; //NOI18N
+	public static final String PREFERENCE_KEY = "ALIGNMENT_GUIDES_COLOR"; //NOCHECK
+	public static final Color PREFERENCE_DEFAULT_VALUE = Color.RED; //NOCHECK
 
 	private final PreferenceEditorFactory preferenceEditorFactory;
 

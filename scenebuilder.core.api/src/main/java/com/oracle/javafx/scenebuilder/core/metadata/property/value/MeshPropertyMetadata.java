@@ -51,7 +51,7 @@ public class MeshPropertyMetadata extends ComplexPropertyMetadata<Mesh> {
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Mesh value, FXOMDocument fxomDocument) {
-        throw new UnsupportedOperationException("Not supported yet."); //NOI18N
+        throw new UnsupportedOperationException("Not supported yet."); //NOCHECK
     }
     
 }

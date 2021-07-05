@@ -36,21 +36,21 @@ import java.util.Locale;
 
 public interface OsPlatform {
 
-    public static final String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT); //NOI18N
+    public static final String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT); //NOCHECK
     
     /**
      * True if current platform is running Linux.
      */
-    public static final boolean IS_LINUX = osName.contains("linux"); //NOI18N
+    public static final boolean IS_LINUX = osName.contains("linux"); //NOCHECK
 
     /**
      * True if current platform is running Mac OS X.
      */
-    public static final boolean IS_MAC = osName.contains("mac"); //NOI18N
+    public static final boolean IS_MAC = osName.contains("mac"); //NOCHECK
 
     /**
      * True if current platform is running Windows.
      */
-    public static final boolean IS_WINDOWS = osName.contains("windows"); //NOI18N
+    public static final boolean IS_WINDOWS = osName.contains("windows"); //NOCHECK
 
 }

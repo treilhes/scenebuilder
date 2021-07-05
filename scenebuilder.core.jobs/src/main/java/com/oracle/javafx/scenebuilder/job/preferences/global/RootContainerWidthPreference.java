@@ -48,8 +48,8 @@ import javafx.scene.Parent;
 @Component
 public class RootContainerWidthPreference extends DoublePreference implements ManagedGlobalPreference, UserPreference<Double> {
 
-	public static final String PREFERENCE_KEY = "ROOT_CONTAINER_WIDTH"; //NOI18N
-	public static final Double PREFERENCE_DEFAULT_VALUE = 600.0; //NOI18N
+	public static final String PREFERENCE_KEY = "ROOT_CONTAINER_WIDTH"; //NOCHECK
+	public static final Double PREFERENCE_DEFAULT_VALUE = 600.0; //NOCHECK
 
 	private final PreferenceEditorFactory preferenceEditorFactory;
 

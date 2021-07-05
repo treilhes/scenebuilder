@@ -171,7 +171,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 //    		@Autowired @Lazy PickModeController pickModeController,
 //    		@Autowired WorkspaceController workspaceController
     		) {
-        super(api, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle()); //NOI18N
+        super(api, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle());
         this.context = api.getContext();
         this.editorController = editorController;
         this.driver = driver;
@@ -378,7 +378,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
      */
 //    public static URL getDefaultWorkspaceBackgroundURL() {
 //        assert ImageUtils.getUIURL("Background-Neutral-Uniform.png") != null;
-//        return ImageUtils.getUIURL("Background-Neutral-Uniform.png"); //NOI18N
+//        return ImageUtils.getUIURL("Background-Neutral-Uniform.png");
 //    }
 
     /**
@@ -858,7 +858,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 //        rudderLayer.setManaged(false);
 
         // Remove fake content used to help design
-        backgroundPane.setText(""); //NOI18N
+        backgroundPane.setText(""); //NOCHECK
 
         // Setup our workspace controller
         workspaceController.panelControllerDidLoadFxml(
@@ -925,13 +925,13 @@ public class ContentPanelController extends AbstractFxmlPanelController
     private void traceEvent(Event e) {
         final StringBuilder sb = new StringBuilder();
 
-        sb.append("ContentPanelController: eventType="); //NOI18N
+        sb.append("ContentPanelController: eventType="); //NOCHECK
         sb.append(e.getEventType());
-        sb.append(", target="); //NOI18N
+        sb.append(", target="); //NOCHECK
         sb.append(e.getTarget());
         if (e instanceof KeyEvent) {
             final KeyEvent ke = (KeyEvent) e;
-            sb.append(", keyCode="); //NOI18N
+            sb.append(", keyCode="); //NOCHECK
             sb.append(ke.getCode());
         }
         

@@ -150,12 +150,12 @@ public class BoundsUtils {
 
         @Override
         public String toString() {
-            return "EdgeInfo{" //NOI18N
-                    + "northDistance=" + northDistance  //NOI18N
-                    + ", eastDistance=" + eastDistance  //NOI18N
-                    + ", southDistance=" + southDistance  //NOI18N
-                    + ", westDistance=" + westDistance  //NOI18N
-                    + '}'; //NOI18N
+            return "EdgeInfo{" //NOCHECK
+                    + "northDistance=" + northDistance  //NOCHECK
+                    + ", eastDistance=" + eastDistance  //NOCHECK
+                    + ", southDistance=" + southDistance  //NOCHECK
+                    + ", westDistance=" + westDistance  //NOCHECK
+                    + '}'; //NOCHECK
         }
 
     }

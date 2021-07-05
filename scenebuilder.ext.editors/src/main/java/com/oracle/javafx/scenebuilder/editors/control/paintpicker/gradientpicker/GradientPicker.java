@@ -102,11 +102,11 @@ public class GradientPicker extends VBox {
     private final PaintPickerController paintPicker;
 
     private final RotatorControl focusAngleRotator
-            = new RotatorControl("focusAngle"); //NOI18N
+            = new RotatorControl("focusAngle"); //NOCHECK
     private final SliderControl focusDistanceSlider
-            = new SliderControl("focusDistance", -1.0, 1.0, 0.0); //NOI18N
+            = new SliderControl("focusDistance", -1.0, 1.0, 0.0); //NOCHECK
     private final SliderControl radiusSlider
-            = new SliderControl("radius", 0.0, 1.0, 0.5); //NOI18N
+            = new SliderControl("radius", 0.0, 1.0, 0.5); //NOCHECK
     private final List<GradientPickerStop> gradientPickerStops = new ArrayList<>();
     private final int maxStops = 12; // the numbers of stops supported in platform
 
@@ -235,7 +235,7 @@ public class GradientPicker extends VBox {
     private void initialize() {
 
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(GradientPicker.class.getResource("GradientPicker.fxml")); //NOI18N
+        loader.setLocation(GradientPicker.class.getResource("GradientPicker.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {

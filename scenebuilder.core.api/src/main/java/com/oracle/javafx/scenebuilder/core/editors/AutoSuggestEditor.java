@@ -132,7 +132,7 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
         this.type = type;
         setSuggestedList(suggestedList);
         if (type == Type.ALPHA) {
-            root = FXMLUtils.load(this, AutoSuggestEditor.class, "StringAutoSuggestEditor.fxml"); //NOI18N
+            root = FXMLUtils.load(this, AutoSuggestEditor.class, "StringAutoSuggestEditor.fxml");
             assert textField != null;
             // Select all text when selected
             textField.setOnMousePressed(event -> textField.selectAll());
@@ -144,11 +144,11 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
 
             entryField = textField;
         } else if (type == Type.DOUBLE) {
-            root = FXMLUtils.load(this, AutoSuggestEditor.class, "DoubleAutoSuggestEditor.fxml"); //NOI18N
+            root = FXMLUtils.load(this, AutoSuggestEditor.class, "DoubleAutoSuggestEditor.fxml");
             entryField = doubleField;
         } else {
             assert type == Type.INTEGER;
-            root = FXMLUtils.load(this, AutoSuggestEditor.class, "IntegerAutoSuggestEditor.fxml"); //NOI18N
+            root = FXMLUtils.load(this, AutoSuggestEditor.class, "IntegerAutoSuggestEditor.fxml");
             entryField = integerField;
         }
 
@@ -199,7 +199,7 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
             entryField.setText(null);
         } else {
             assert value instanceof String;
-            entryField.setText((String) value); //NOI18N
+            entryField.setText((String) value); //NOCHECK
         }
     }
 

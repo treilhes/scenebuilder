@@ -47,7 +47,7 @@ public class RegistrationOptInPreference extends BooleanPreference implements Ma
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "REGISTRATION_OPT_IN"; //NOI18N
+    public static final String PREFERENCE_KEY = "REGISTRATION_OPT_IN"; //NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
 	public RegistrationOptInPreference(@Autowired PreferencesContext preferencesContext) {

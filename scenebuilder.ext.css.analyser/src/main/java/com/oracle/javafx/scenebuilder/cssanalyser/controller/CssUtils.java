@@ -71,7 +71,7 @@ public class CssUtils {
 //         * if there is no redefinition in the Author space, 
 //         * then this container is reached and the caspian lookups are resolved.
 //         */
-//        grp.getStyleClass().add("root"); //NOI18N
+//        grp.getStyleClass().add("root"); //NOCHECK
 //        return grp;
 //    }
 //    
@@ -79,13 +79,13 @@ public class CssUtils {
 //    private static <N extends Node> void resetCssProperty(N node, CssMetaData<N,?> p) {
 //        try {            
 //            Object val = getResetValue(node, p);
-//            @SuppressWarnings("unchecked") //NOI18N
+//            @SuppressWarnings("unchecked") //NOCHECK
 //            CssMetaData<Node, Object> sp = (CssMetaData<Node, Object>) p;
 //            if (sp.isSettable(node)) {
 //                sp.getStyleableProperty(node).applyStyle(StyleOrigin.USER_AGENT, val);
 //            }
 //        } catch (RuntimeException ex) {
-//            Utils.println("Can't reset property " + p.getProperty() + " on " + node.getClass() + ": " + ex.toString()); //NOI18N
+//            Utils.println("Can't reset property " + p.getProperty() + " on " + node.getClass() + ": " + ex.toString()); //NOCHECK
 //        }
 //    }
 //
@@ -131,7 +131,7 @@ public class CssUtils {
 //                        if (stylableNode == null) {
 //                            stylableNode = getNode(bean);
 //                        }
-//                        @SuppressWarnings("unchecked") //NOI18N
+//                        @SuppressWarnings("unchecked") //NOCHECK
 //                        CssMetaData<Node, Object> sp = (CssMetaData<Node, Object>) ((StyleableProperty)beanProp).getCssMetaData();
 //                        if (sp != null && stylableNode != null) {
 //                            if (sp.isSettable(stylableNode)) {
@@ -142,7 +142,7 @@ public class CssUtils {
 //                    }
 //                }
 //            } catch (RuntimeException ex) {
-//                Utils.println("can't set Bean property " + prop.name + " on " + bean.getClass() + " :" + ex.toString()); //NOI18N
+//                Utils.println("can't set Bean property " + prop.name + " on " + bean.getClass() + " :" + ex.toString()); //NOCHECK
 //            }
 //            
 //            if(!set){
@@ -158,14 +158,14 @@ public class CssUtils {
             final StyleableProperty<Object> val = raw.getStyleableProperty(node);
             property = CssInternal.getBeanPropertyName(val);
         } catch (RuntimeException ex) {
-            System.out.println("Can't retrieve property " + ex); //NOI18N
+            System.out.println("Can't retrieve property " + ex); //NOCHECK
         }
         return property;
     }
 
 //    private static void resetSkinNode(Node node) {
 //        for (CssMetaData<?,?> p : node.getCssMetaData()) {
-//            @SuppressWarnings("unchecked") //NOI18N
+//            @SuppressWarnings("unchecked") //NOCHECK
 //            final CssMetaData<Node, ?> sp = (CssMetaData<Node, ?>) p;
 //            resetCssProperty(node, sp);
 //        }
@@ -208,15 +208,15 @@ public class CssUtils {
 //        @SuppressWarnings("rawtypes")
 //        final List<CssMetaData<? extends Styleable, ?>> lst = node.getCssMetaData();
 //        for(CssMetaData<?,?> stp : lst){
-//            @SuppressWarnings("unchecked") //NOI18N
+//            @SuppressWarnings("unchecked") //NOCHECK
 //            final CssMetaData<Node, ?> st = (CssMetaData<Node, ?>)stp;
 //            
 //            // Skip the skin
-//            if(st.getProperty().equals("-fx-skin")) { //NOI18N
+//            if(st.getProperty().equals("-fx-skin")) { //NOCHECK
 //                continue;
 //            }
 //            
-//            @SuppressWarnings("unchecked") //NOI18N
+//            @SuppressWarnings("unchecked") //NOCHECK
 //            StyleableProperty<?> val = st.getStyleableProperty(node);
 //            boolean needsReset = false;
 //            if(val == null){ // reset property that have no Bean property.
@@ -287,7 +287,7 @@ public class CssUtils {
 //                            return new File(url.toURI());
 //                        }
 //                    } catch (Exception ex) {
-//                        Utils.println("Exception parsing Stylesheet " + ex); //NOI18N
+//                        Utils.println("Exception parsing Stylesheet " + ex); //NOCHECK
 //                    }
 //                }
 //            }
@@ -350,47 +350,47 @@ public class CssUtils {
 //    public static final String TOOL;
 //    static {
 //        if (Utils.IS_MAC) {
-//            TOOL = "tool-mac"; //NOI18N
+//            TOOL = "tool-mac"; //NOCHECK
 //        } else if (Utils.IS_WINDOWS_XP) {
-//            TOOL = "tool-win-xp"; //NOI18N
+//            TOOL = "tool-win-xp"; //NOCHECK
 //        } else {
-//            TOOL = "tool"; //NOI18N
+//            TOOL = "tool"; //NOCHECK
 //        }
 //    }
 //    
 //    
-//    public static final String THEME_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/SceneBuilderTheme.css"); //NOI18N
+//    public static final String THEME_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/SceneBuilderTheme.css"); //NOCHECK
 //    
-//    public static final String TOOL_ROOT_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/ToolRoot.css"); //NOI18N
-//    public static final String CONTENT_VIEW_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/ContentView.css"); //NOI18N
-//    public static final String MESSAGE_BAR_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/MessageBar.css"); //NOI18N
-//    public static final String LIBRARY_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Library.css"); //NOI18N
-//    public static final String HIERARCHY_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Hierarchy.css"); //NOI18N
-//    public static final String INSPECTOR_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Inspector.css"); //NOI18N
-//    public static final String CSS_VIEWER_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/CssViewer.css"); //NOI18N
+//    public static final String TOOL_ROOT_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/ToolRoot.css"); //NOCHECK
+//    public static final String CONTENT_VIEW_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/ContentView.css"); //NOCHECK
+//    public static final String MESSAGE_BAR_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/MessageBar.css"); //NOCHECK
+//    public static final String LIBRARY_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Library.css"); //NOCHECK
+//    public static final String HIERARCHY_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Hierarchy.css"); //NOCHECK
+//    public static final String INSPECTOR_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Inspector.css"); //NOCHECK
+//    public static final String CSS_VIEWER_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/CssViewer.css"); //NOCHECK
 //
-//    public static final String POPUP_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Popup.css"); //NOI18N
+//    public static final String POPUP_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Popup.css"); //NOCHECK
 //    
-//    public static final String SCENE_BUILDER_THEME_STYLECLASS = "SCENE_BUILDER_THEME"; //NOI18N
-//    private static final String SCENE_BUILDER_WIN_FONT_STYLECLASS = "SCENE_BUILDER_WIN_FONT"; //NOI18N
-//    private static final String SCENE_BUILDER_WINXP_FONT_STYLECLASS = "SCENE_BUILDER_WINXP_FONT"; //NOI18N
+//    public static final String SCENE_BUILDER_THEME_STYLECLASS = "SCENE_BUILDER_THEME"; //NOCHECK
+//    private static final String SCENE_BUILDER_WIN_FONT_STYLECLASS = "SCENE_BUILDER_WIN_FONT"; //NOCHECK
+//    private static final String SCENE_BUILDER_WINXP_FONT_STYLECLASS = "SCENE_BUILDER_WINXP_FONT"; //NOCHECK
 //    
-//    public static final String CONTENT_AREA_ID = "JFX_SB_ContentArea"; //NOI18N
-//    private static final String ROOT_STYLECLASS = "root"; //NOI18N
+//    public static final String CONTENT_AREA_ID = "JFX_SB_ContentArea"; //NOCHECK
+//    private static final String ROOT_STYLECLASS = "root"; //NOCHECK
 //    private static Stylesheet STYLE_SHEET_TOOL_CSS = null;
 //    private static final Map<Class<?>, Set<String>> ALTERNATE_STYLECLASSES = new HashMap<>();
 //
 //    static Set<FileChooser.ExtensionFilter> SS_EXTENSIONS =
-//            Collections.singleton(new FileChooser.ExtensionFilter(Utils.getI18N().getString("popup.style.sheets"), "*.css", "*.bss")); //NOI18N
+//            Collections.singleton(new FileChooser.ExtensionFilter(Utils.getI18N().getString("popup.style.sheets"), "*.css", "*.bss")); //NOCHECK
 //    
 //    static {
 //        try {
 //            STYLE_SHEET_TOOL_CSS = new CssParser().parse(new URL(TOOL_ROOT_CSS));
 //        } catch (IOException ex) {
-//            Utils.println("Failed to parse " + TOOL_ROOT_CSS, ex); //NOI18N
+//            Utils.println("Failed to parse " + TOOL_ROOT_CSS, ex); //NOCHECK
 //        }
 //        Set<String> alternates = new HashSet<>();
-//        alternates.add("floating"); //NOI18N
+//        alternates.add("floating"); //NOCHECK
 //        ALTERNATE_STYLECLASSES.put(TabPane.class, alternates);
 //    }
 //    //Properties that are impacting CSS/Pages.
@@ -420,7 +420,7 @@ public class CssUtils {
 //    private static void resetStyle(Element elem) {
 //        final Node n = elem.getNode();
 //        if (n.getScene() == null) {
-//            //System.out.println("RESET, not yet in scene, returning" + n); //NOI18N
+//            //System.out.println("RESET, not yet in scene, returning" + n); //NOCHECK
 //            return;
 //        }
 //        resetStyle(n);
@@ -431,7 +431,7 @@ public class CssUtils {
 ////            try{
 ////                removeStyleClasses(parent, new URL(css));
 ////            } catch (MalformedURLException ex) {
-////                Utils.println("Cannot remove style classes", ex); //NOI18N
+////                Utils.println("Cannot remove style classes", ex); //NOCHECK
 ////            }
 ////        }
 ////        parent.getStylesheets().clear();       
@@ -515,7 +515,7 @@ public class CssUtils {
 //                    }
 //                } else {
 //                    // Should not occur
-//                    throw new IllegalArgumentException("Unsupported !!!!"); //NOI18N
+//                    throw new IllegalArgumentException("Unsupported !!!!"); //NOCHECK
 //                }
 //            }
 //        }
@@ -743,7 +743,7 @@ public class CssUtils {
 //                }
 //            }
 //        } catch (Throwable thr) {
-//            Utils.println("Exception styling " + ref, thr); //NOI18N
+//            Utils.println("Exception styling " + ref, thr); //NOCHECK
 //        }
 //        return false;
 //    }
@@ -769,7 +769,7 @@ public class CssUtils {
                         // Access the Skin Node
                         Tab tab = (Tab) target;
                         TabPane tp = tab.getTabPane();
-                        Set<Node> tabs = tp.lookupAll(".tab"); //NOI18N
+                        Set<Node> tabs = tp.lookupAll(".tab"); //NOCHECK
                         for (Node n : tabs) {
                             Tab result = (Tab) n.getProperties().get(Tab.class);
                             assert result != null;
@@ -868,7 +868,7 @@ public class CssUtils {
 //                                assert Utils.isRunningUnitTests();
 //                            }
 //                            if(frame == null){
-//                                Utils.println("No Frame to route CSS error " + error.getMessage());//NOI18N
+//                                Utils.println("No Frame to route CSS error " + error.getMessage());//NOCHECK
 //                                continue;
 //                            }
 //                            proj = frame.getProject();;
@@ -876,7 +876,7 @@ public class CssUtils {
 //                        final Project project = proj;
 //                        assert project != null;
 //                        if(project == null){
-//                            Utils.println("No Project to route CSS error " + error.getMessage());//NOI18N
+//                            Utils.println("No Project to route CSS error " + error.getMessage());//NOCHECK
 //                            continue;
 //                        }
 //                        
@@ -885,12 +885,12 @@ public class CssUtils {
 //                            StylesheetParsingError serror = (StylesheetParsingError) error;
 //                            URL url = serror.getURL();
 //                            if(url == null){
-//                                Utils.println("No URL for Stylesheet CSS error " + error.getMessage());//NOI18N
+//                                Utils.println("No URL for Stylesheet CSS error " + error.getMessage());//NOCHECK
 //                                continue;
 //                            }
 //                            String strURL = url.toExternalForm();
-//                            if(strURL.contains("com/oracle/javafx/authoring/css_stylesheets")){//NOI18N
-//                                Utils.println("Error in SceneBuilder CSS " + error.getMessage());//NOI18N
+//                            if(strURL.contains("com/oracle/javafx/authoring/css_stylesheets")){//NOCHECK
+//                                Utils.println("Error in SceneBuilder CSS " + error.getMessage());//NOCHECK
 //                                continue;
 //                            }
 //                            printMessage(project, serror);
@@ -904,7 +904,7 @@ public class CssUtils {
 //                                        printMessage(project, error);
 //                                    } else {
 //                                        // The node is not in the ContentView, this is a SceneBuilder CSS error.
-//                                        Utils.println("Error in SceneBuilder CSS " + error.getMessage());//NOI18N
+//                                        Utils.println("Error in SceneBuilder CSS " + error.getMessage());//NOCHECK
 //                                        continue;
 //                                    }
 //                                } else {
@@ -976,10 +976,10 @@ public class CssUtils {
 //    private static void printMessage(final Project project, final StylesheetParsingError error) {
 //        URL url = error.getURL();
 //        String fileName = url.toExternalForm();
-//        if(fileName.toLowerCase().startsWith("file:")){//NOI18N
+//        if(fileName.toLowerCase().startsWith("file:")){//NOCHECK
 //            fileName = new File(fileName).getName();
 //        }
-//        printMessage(project, fileName + " " + error.getMessage()); //NOI18N
+//        printMessage(project, fileName + " " + error.getMessage()); //NOCHECK
 //    }
 //    
 //    private static void printMessage(final Project project, final String message) {
@@ -1037,7 +1037,7 @@ public class CssUtils {
 //            // Replacing the whole list fires unwanted file parsing.
 //            for(int i = 0; i < parent.getStylesheets().size(); i++){
 //                String url = parent.getStylesheets().get(i);
-//                if(url.toLowerCase().startsWith("file:")){//NOI18N
+//                if(url.toLowerCase().startsWith("file:")){//NOCHECK
 //                    File f;
 //                    try {
 //                        f = new File(new URL(url).toURI());
@@ -1128,7 +1128,7 @@ public class CssUtils {
 //                        Set<String> classes = getStyleClasses(new URL(ss));
 //                        fullSet.addAll(classes);
 //                    } catch (Exception ex) {
-//                        Utils.println("Can't parse Stylesheet " + ex); //NOI18N
+//                        Utils.println("Can't parse Stylesheet " + ex); //NOCHECK
 //                    }
 //                }
 //            }
@@ -1146,7 +1146,7 @@ public class CssUtils {
 //    }
 //
 //    public static boolean checkStyle(final Project project, String style) {
-//        if (style == null || style.equals("")) { //NOI18N
+//        if (style == null || style.equals("")) { //NOCHECK
 //            return true;
 //        }
 //        Stylesheet s = null;
@@ -1161,7 +1161,7 @@ public class CssUtils {
 //            }catch(final RuntimeException ex){
 //                // Parser exception that has not been tracked by the listener.
 //                // Bug in CSS RT
-//                Utils.println("Unexpected error parsing CSS style", ex); //NOI18N
+//                Utils.println("Unexpected error parsing CSS style", ex); //NOCHECK
 //            }
 //        } finally {
 //            stopListeningToCssErrors(project);
@@ -1201,13 +1201,13 @@ public class CssUtils {
 //    private static final Set<String> IMG_PROPERTIES = Utils.newSet();
 //    static {
 //        // String
-//        IMG_PROPERTIES.add("-fx-image");//NOI18N
+//        IMG_PROPERTIES.add("-fx-image");//NOCHECK
 //        // String
-//        IMG_PROPERTIES.add("-fx-graphic");//NOI18N
+//        IMG_PROPERTIES.add("-fx-graphic");//NOCHECK
 //        // String[]
-//        IMG_PROPERTIES.add("-fx-background-image");//NOI18N
+//        IMG_PROPERTIES.add("-fx-background-image");//NOCHECK
 //        // String[]
-//        IMG_PROPERTIES.add("-fx-border-image-source");//NOI18N
+//        IMG_PROPERTIES.add("-fx-border-image-source");//NOCHECK
 //    }
 //    
 //    private static class StyleableStub implements Styleable {
@@ -1307,14 +1307,14 @@ public class CssUtils {
 //                                    }
 //                                }
 //                            } else {
-//                                Utils.println("Unknown type for CSS Img value " + obj);//NOI18N
+//                                Utils.println("Unknown type for CSS Img value " + obj);//NOCHECK
 //                            }
 //                        }
 //                    }
 //                }
 //            }
 //        } catch (RuntimeException ex) {
-//            Utils.println(ex.getMessage());//NOI18N
+//            Utils.println(ex.getMessage());//NOCHECK
 //        }
 //        return files;
 //    }
@@ -1332,7 +1332,7 @@ public class CssUtils {
 //    // Only applies to Windows 7 and Vista, XP keep its 11px menu.
 //    public static void workaroundForRT19435(MenuItem menu){
 //        if (Utils.IS_WINDOWS_7 || Utils.IS_WINDOWS_VISTA) {
-//            menu.setStyle("-fx-font-size: 1.083em;");//NOI18N
+//            menu.setStyle("-fx-font-size: 1.083em;");//NOCHECK
 //        } 
 //    }
 //    

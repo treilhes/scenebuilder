@@ -50,7 +50,7 @@ public class InitialDirectoryPreference extends FilePreference implements Manage
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "initialDirectory"; //NOI18N
+    public static final String PREFERENCE_KEY = "initialDirectory"; //NOCHECK
     public static final File PREFERENCE_DEFAULT_VALUE = DefaultFolders.USER_HOME;
 
 	public InitialDirectoryPreference(

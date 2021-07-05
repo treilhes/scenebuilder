@@ -91,6 +91,6 @@ public class RemoveColumnContentJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        return "Remove Column Content"; //NOI18N
+        return "Remove Column Content"; //NOCHECK
     }
 }

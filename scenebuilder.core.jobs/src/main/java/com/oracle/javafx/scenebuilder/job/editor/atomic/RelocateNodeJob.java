@@ -86,12 +86,12 @@ public class RelocateNodeJob extends Job {
 
         final Metadata metadata = Metadata.getMetadata();
         final Class<?> sgoClass = fxomInstance.getSceneGraphObject().getClass();
-        final PropertyName layoutXName = new PropertyName("layoutX"); //NOI18N
-        final PropertyName layoutYName = new PropertyName("layoutY"); //NOI18N
-        final PropertyName leftAnchorName   = new PropertyName("leftAnchor",   AnchorPane.class); //NOI18N
-        final PropertyName rightAnchorName  = new PropertyName("rightAnchor",  AnchorPane.class); //NOI18N
-        final PropertyName topAnchorName    = new PropertyName("topAnchor",    AnchorPane.class); //NOI18N
-        final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOI18N
+        final PropertyName layoutXName = new PropertyName("layoutX"); //NOCHECK
+        final PropertyName layoutYName = new PropertyName("layoutY"); //NOCHECK
+        final PropertyName leftAnchorName   = new PropertyName("leftAnchor",   AnchorPane.class); //NOCHECK
+        final PropertyName rightAnchorName  = new PropertyName("rightAnchor",  AnchorPane.class); //NOCHECK
+        final PropertyName topAnchorName    = new PropertyName("topAnchor",    AnchorPane.class); //NOCHECK
+        final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOCHECK
         this.layoutXMeta = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, layoutXName);
         this.layoutYMeta = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, layoutYName);
         this.leftAnchorMeta   = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, leftAnchorName  );

@@ -104,7 +104,7 @@ public class FontPopupEditor extends PopupEditor {
 //    }
 
     private void setStyle() {
-        fontStyleEditor.reset(new ArrayList<>(getStyles(EditorUtils.toString(familyEditor.getValue()), false, messageLogger)));//NOI18N
+        fontStyleEditor.reset(new ArrayList<>(getStyles(EditorUtils.toString(familyEditor.getValue()), false, messageLogger)));//NOCHECK
         fontStyleEditor.setUpdateFromModel(true);
         fontStyleEditor.setValue(font.getStyle());
         fontStyleEditor.setUpdateFromModel(false);
@@ -150,13 +150,13 @@ public class FontPopupEditor extends PopupEditor {
     //
     @Override
     public void initializePopupContent() {
-        root = FXMLUtils.load(this, "FontPopupEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "FontPopupEditor.fxml");
         // Add the editors in the scene graph
-        familyEditor = new FontFamilyEditor(getApi(), "", "", getFamilies(messageLogger), messageLogger);//NOI18N
+        familyEditor = new FontFamilyEditor(getApi(), "", "", getFamilies(messageLogger), messageLogger);//NOCHECK
         familySp.getChildren().add(familyEditor.getValueEditor());
-        fontStyleEditor = new FontStyleEditor(getApi(), "", "", new ArrayList<>(), messageLogger);//NOI18N
+        fontStyleEditor = new FontStyleEditor(getApi(), "", "", new ArrayList<>(), messageLogger);//NOCHECK
         styleSp.getChildren().add(fontStyleEditor.getValueEditor());
-        sizeEditor = new BoundedDoubleEditor(getApi(), "", "", getPredefinedFontSizes(), 1.0, 96.0, true);//NOI18N
+        sizeEditor = new BoundedDoubleEditor(getApi(), "", "", getPredefinedFontSizes(), 1.0, 96.0, true);//NOCHECK
         sizeEditor.setMinMaxForSliderOnly(true);
         commitOnFocusLost(sizeEditor);
         sizeSp.getChildren().add(sizeEditor.getValueEditor());
@@ -195,12 +195,12 @@ public class FontPopupEditor extends PopupEditor {
         assert value instanceof Font;
         Font fontVal = (Font) value;
         if (isIndeterminate()) {
-            return "-"; //NOI18N
+            return "-"; //NOCHECK
         } else {
             String size = EditorUtils.valAsStr(fontVal.getSize());
-            return fontVal.getFamily() + " " + size + "px" //NOI18N
-                    + (!fontVal.getName().equals(fontVal.getFamily()) && !"Regular".equals(fontVal.getStyle()) ? //NOI18N
-                    " (" + fontVal.getStyle() + ")" : ""); //NOI18N
+            return fontVal.getFamily() + " " + size + "px" //NOCHECK
+                    + (!fontVal.getName().equals(fontVal.getFamily()) && !"Regular".equals(fontVal.getStyle()) ? //NOCHECK
+                    " (" + fontVal.getStyle() + ")" : ""); //NOCHECK
         }
     }
 
@@ -244,7 +244,7 @@ public class FontPopupEditor extends PopupEditor {
                 family = getTextField().getText();
                 if (family.isEmpty() || !FontFamilyEditor.this.families.contains(family)) {
                     messageLogger.logWarningMessage(
-                            "inspector.font.invalidfamily", family); //NOI18N
+                            "inspector.font.invalidfamily", family); //NOCHECK
                     return;
                 }
 //                    System.out.println("Setting family from '" + valueProperty().get() + "' to '" + value + "'");
@@ -289,7 +289,7 @@ public class FontPopupEditor extends PopupEditor {
                 }
                 style = getTextField().getText();
                 if (style.isEmpty() || !getSuggestedList().contains(style)) {
-                    messageLogger.logWarningMessage("inspector.font.invalidstyle", style); //NOI18N
+                    messageLogger.logWarningMessage("inspector.font.invalidstyle", style); //NOCHECK
                     return;
                 }
                 valueProperty().setValue(style);
@@ -338,11 +338,11 @@ public class FontPopupEditor extends PopupEditor {
         double defSize = f.getSize();
         Set<Font> allFonts = new TreeSet<>(fontComparator);
         for (String familly : Font.getFamilies()) {
-            //System.out.println("*** FAMILY: " + familly); //NOI18N
+            //System.out.println("*** FAMILY: " + familly); //NOCHECK
             for (String name : Font.getFontNames(familly)) {
                 Font font = new Font(name, defSize);
                 allFonts.add(font);
-                //System.out.println("\t\""+name+"\" -- name=\""+font.getName()+"\", familly=\""+font.getFamily()+"\", style=\""+font.getStyle()+"\""); //NOI18N
+                //System.out.println("\t\""+name+"\" -- name=\""+font.getName()+"\", familly=\""+font.getFamily()+"\", style=\""+font.getStyle()+"\""); //NOCHECK
             }
         }
         // some font will not appear with the code above: we also need to use getAllNames!
@@ -415,8 +415,8 @@ public class FontPopupEditor extends PopupEditor {
                 if (f.getName().equals(name)) {
                     continue;
                 }
-                if (f.getName().equals(defaultName) || f.getName().equals("System")) { //NOI18N
-                    continue; //NOI18N
+                if (f.getName().equals(defaultName) || f.getName().equals("System")) { //NOCHECK
+                    continue; //NOCHECK
                 }
                 final Font f2 = new Font(f.getName(), size);
                 if (f2.getName().equals(f.getName())) {
@@ -433,18 +433,18 @@ public class FontPopupEditor extends PopupEditor {
         // The block below is an ugly workaround for
         // RT-23021: Inconsitent naming for fonts in the 'Tahoma' family.
         final Map<String, String> problems = getPathologicalFonts();
-        if (problems.containsKey(font.getName())) { // e.g. font.getName() is "Tahoma Bold" //NOI18N
+        if (problems.containsKey(font.getName())) { // e.g. font.getName() is "Tahoma Bold" //NOCHECK
             final Font test = new Font(font.getName(), font.getSize());
             if (test.getName().equals(font.getName())) {
                 // OK
                 return font.getName();
             } else {
-                final String alternateName = problems.get(font.getName()); // e.g: "Tahoma Negreta" //NOI18N
+                final String alternateName = problems.get(font.getName()); // e.g: "Tahoma Negreta" //NOCHECK
                 assert alternateName != null;
-                final Font test2 = new Font(alternateName, font.getSize()); //NOI18N
+                final Font test2 = new Font(alternateName, font.getSize()); //NOCHECK
                 if (test2.getName().equals(font.getName())) {
                     // OK
-                    return alternateName; // e.g: "Tahoma Negreta" //NOI18N
+                    return alternateName; // e.g: "Tahoma Negreta" //NOCHECK
                 }
             }
         }
@@ -489,7 +489,7 @@ public class FontPopupEditor extends PopupEditor {
                 int size = fontSet.size();
                 assert 1 <= size;
                 if (1 < size) {
-                    messageLogger.logWarningMessage("inspector.font.samefamilystyle", styleMap.get(style)); //NOI18N
+                    messageLogger.logWarningMessage("inspector.font.samefamilystyle", styleMap.get(style)); //NOCHECK
                 }
                 resMap.put(style, styleMap.get(style).iterator().next());
             }
@@ -500,7 +500,7 @@ public class FontPopupEditor extends PopupEditor {
 
     private static List<String> getPredefinedFontSizes() {
         String[] predefinedFontSizes
-                = {"9", "10", "11", "12", "13", "14", "18", "24", "36", "48", "64", "72", "96"};//NOI18N
+                = {"9", "10", "11", "12", "13", "14", "18", "24", "36", "48", "64", "72", "96"};//NOCHECK
         return Arrays.asList(predefinedFontSizes);
     }
 

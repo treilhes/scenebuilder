@@ -55,11 +55,11 @@ class StaticPropertyIntrospector {
     
     public Object getValue(String propertyName) {
         // So far we have no use for this : we'll implement when needed.
-        throw new UnsupportedOperationException("Not yet implemented"); //NOI18N
+        throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
     }
     
     public void setValue(String propertyName, Object value) {
         // So far we have no use for this : we'll implement when needed.
-        throw new UnsupportedOperationException("Not yet implemented"); //NOI18N
+        throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
     }
 }

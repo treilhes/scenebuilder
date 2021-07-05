@@ -51,25 +51,25 @@ public class DisplacementMapPropertyMetadata extends ComplexPropertyMetadata<Dis
     private final DisplacementMap DEFAULT = new DisplacementMap();
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata offsetXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetX"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetX"), //NOCHECK
             true /* readWrite */, DEFAULT.getOffsetX(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata offsetYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetY"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetY"), //NOCHECK
             true /* readWrite */, DEFAULT.getOffsetY(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata scaleXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleX"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleX"), //NOCHECK
             true /* readWrite */, DEFAULT.getScaleX(), InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata scaleYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleY"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleY"), //NOCHECK
             true /* readWrite */, DEFAULT.getScaleY(), InspectorPath.UNUSED);
     private final BooleanPropertyMetadata wrapMetadata
-            = new BooleanPropertyMetadata(new PropertyName("wrap"), //NOI18N
+            = new BooleanPropertyMetadata(new PropertyName("wrap"), //NOCHECK
             true /* readWrite */, DEFAULT.isWrap(), InspectorPath.UNUSED);
     private final FloatMapPropertyMetadata mapDataMetadata
-            = new FloatMapPropertyMetadata(new PropertyName("mapData"), //NOI18N
+            = new FloatMapPropertyMetadata(new PropertyName("mapData"), //NOCHECK
             true /* readWrite */, DEFAULT.getMapData(), InspectorPath.UNUSED);
 
     public DisplacementMapPropertyMetadata(PropertyName name, boolean readWrite, 

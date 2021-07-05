@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 public class DoubleArrayPropertyMetadata extends ListValuePropertyMetadata<Double> {
     
     private final static PropertyName unusedName
-            = new PropertyName("unused"); //NOI18N
+            = new PropertyName("unused"); //NOCHECK
     private final static CoordinateDoublePropertyMetadata doubleMetadata
             = new CoordinateDoublePropertyMetadata(unusedName, 
                     true, 0.0, InspectorPath.UNUSED);

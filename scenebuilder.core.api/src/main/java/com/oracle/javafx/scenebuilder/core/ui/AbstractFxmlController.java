@@ -99,7 +99,7 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
 //        } catch (RuntimeException | IOException x) {
 //            System.out.println("loader.getController()=" + loader.getController());
 //            System.out.println("loader.getLocation()=" + loader.getLocation());
-//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOI18N
+//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOCHECK
 //        }
 //    }
 

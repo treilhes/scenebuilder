@@ -81,7 +81,7 @@ public class EditorPlatform implements OsPlatform {
     /**
      * This URL is where you go when the user takes Scene Builder Help action (shortcut F1)
      */
-    public static final String DOCUMENTATION_URL = "https://docs.oracle.com/javafx/index.html"; //NOI18N
+    public static final String DOCUMENTATION_URL = "https://docs.oracle.com/javafx/index.html"; //NOCHECK
 
     /**
      * Returns true if the modifier key for continuous selection is down.

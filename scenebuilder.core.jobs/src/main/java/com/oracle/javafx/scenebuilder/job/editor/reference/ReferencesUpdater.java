@@ -111,7 +111,7 @@ public class ReferencesUpdater {
         } else if (node instanceof FXOMPropertyT) {
             updatePropertyT((FXOMPropertyT) node);
         } else {
-            throw new RuntimeException("Bug"); //NOI18N
+            throw new RuntimeException("Bug"); //NOCHECK
         }
     }
 

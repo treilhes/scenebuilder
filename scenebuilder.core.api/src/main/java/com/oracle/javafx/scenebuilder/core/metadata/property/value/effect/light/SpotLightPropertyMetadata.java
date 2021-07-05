@@ -49,19 +49,19 @@ import javafx.scene.paint.Color;
 public class SpotLightPropertyMetadata extends ComplexPropertyMetadata<Light.Spot> {
     
     private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOI18N
+            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
             true, Color.WHITE, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata pointsAtXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtX"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtX"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata pointsAtYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtY"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtY"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata pointsAtZMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtZ"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtZ"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata specularExponentMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOCHECK
             true, 1.0, InspectorPath.UNUSED);
     
     public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, 

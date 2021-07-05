@@ -391,7 +391,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
      */
     private List<File> performSelectFiles() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(library.getDialogConfiguration().getFileExtensionFilter()); //NOI18N
+        fileChooser.getExtensionFilters().add(library.getDialogConfiguration().getFileExtensionFilter()); //NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(this.getStage());
         if(selectedFiles != null && !selectedFiles.isEmpty()){

@@ -63,12 +63,12 @@ public class RegionResizer extends AbstractResizer<Region> {
     private double originalPrefHeight;
     private double originalMaxWidth;
     private double originalMaxHeight;
-    private final PropertyName minWidthName  = new PropertyName("minWidth"); //NOI18N
-    private final PropertyName minHeightName = new PropertyName("minHeight"); //NOI18N
-    private final PropertyName prefWidthName  = new PropertyName("prefWidth"); //NOI18N
-    private final PropertyName prefHeightName = new PropertyName("prefHeight"); //NOI18N
-    private final PropertyName maxWidthName  = new PropertyName("maxWidth"); //NOI18N
-    private final PropertyName maxHeightName = new PropertyName("maxHeight"); //NOI18N
+    private final PropertyName minWidthName  = new PropertyName("minWidth"); //NOCHECK
+    private final PropertyName minHeightName = new PropertyName("minHeight"); //NOCHECK
+    private final PropertyName prefWidthName  = new PropertyName("prefWidth"); //NOCHECK
+    private final PropertyName prefHeightName = new PropertyName("prefHeight"); //NOCHECK
+    private final PropertyName maxWidthName  = new PropertyName("maxWidth"); //NOCHECK
+    private final PropertyName maxHeightName = new PropertyName("maxHeight"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public RegionResizer() {
@@ -94,7 +94,7 @@ public class RegionResizer extends AbstractResizer<Region> {
     public static String makeSizeString(double size) {
         final String result;
         if (size == Double.MAX_VALUE) {
-            result = "MAX_VALUE"; //NOI18N
+            result = "MAX_VALUE"; //NOCHECK
         } else {
             result = String.valueOf(size);
         }
@@ -104,7 +104,7 @@ public class RegionResizer extends AbstractResizer<Region> {
     public static String makeComputedSizeString(double size) {
         final String result;
         if (size == Region.USE_COMPUTED_SIZE) {
-            result = "USE_COMPUTED_SIZE"; //NOI18N
+            result = "USE_COMPUTED_SIZE"; //NOCHECK
         } else {
             result = makeSizeString(size);
         }
@@ -114,7 +114,7 @@ public class RegionResizer extends AbstractResizer<Region> {
     public static String makePrefSizeString(double size) {
         final String result;
         if (size == Region.USE_PREF_SIZE) {
-            result = "USE_PREF_SIZE"; //NOI18N
+            result = "USE_PREF_SIZE"; //NOCHECK
         } else {
             result = makeComputedSizeString(size);
         }

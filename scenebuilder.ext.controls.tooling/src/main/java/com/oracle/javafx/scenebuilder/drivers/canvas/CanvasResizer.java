@@ -59,8 +59,8 @@ public class CanvasResizer extends AbstractResizer<Canvas> {
 
     private double originalWidth;
     private double originalHeight;
-    private final PropertyName widthName = new PropertyName("width"); //NOI18N
-    private final PropertyName heightName = new PropertyName("height"); //NOI18N
+    private final PropertyName widthName = new PropertyName("width"); //NOCHECK
+    private final PropertyName heightName = new PropertyName("height"); //NOCHECK
     private final List<PropertyName> propertyNames = new ArrayList<>();
     
     public CanvasResizer() {

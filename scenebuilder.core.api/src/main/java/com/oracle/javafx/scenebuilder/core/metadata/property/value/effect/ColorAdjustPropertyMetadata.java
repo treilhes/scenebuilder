@@ -48,19 +48,19 @@ import javafx.scene.effect.ColorAdjust;
 public class ColorAdjustPropertyMetadata extends ComplexPropertyMetadata<ColorAdjust> {
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata brightnessMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("brightness"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("brightness"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata contrastMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("contrast"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("contrast"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata hueMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("hue"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("hue"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
     private final CoordinateDoublePropertyMetadata saturationMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("saturation"), //NOI18N
+            = new CoordinateDoublePropertyMetadata(new PropertyName("saturation"), //NOCHECK
             true /* readWrite */, 0.0, InspectorPath.UNUSED);
 
     public ColorAdjustPropertyMetadata(PropertyName name, boolean readWrite, 

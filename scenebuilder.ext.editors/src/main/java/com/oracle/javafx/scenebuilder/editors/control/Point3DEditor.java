@@ -81,7 +81,7 @@ public class Point3DEditor extends AbstractPropertyEditor {
 
     //Method to please FindBugs
     private void initialize() {
-        root = FXMLUtils.load(this, "Point3DEditor.fxml");//NOI18N
+        root = FXMLUtils.load(this, "Point3DEditor.fxml");
 
         doubleFields[0] = xDf;
         doubleFields[1] = yDf;
@@ -105,7 +105,7 @@ public class Point3DEditor extends AbstractPropertyEditor {
         for (DoubleField doubleField : doubleFields) {
             String val = doubleField.getText();
             if (val.isEmpty()) {
-                val = "0"; //NOI18N
+                val = "0"; //NOCHECK
                 doubleField.setText(val);
             } else {
                 try {

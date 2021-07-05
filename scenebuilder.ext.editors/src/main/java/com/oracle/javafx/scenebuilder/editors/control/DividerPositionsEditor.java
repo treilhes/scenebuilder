@@ -87,7 +87,7 @@ public class DividerPositionsEditor extends AbstractPropertyEditor {
             DoubleField doubleField = (DoubleField) node;
             String val = doubleField.getText();
             if (val.isEmpty()) {
-                val = "0"; //NOI18N
+                val = "0"; //NOCHECK
                 doubleField.setText(val);
             } else {
                 try {

@@ -59,7 +59,7 @@ public class InsertColumnJob extends BatchSelectionJob {
 
     private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta =
             new ColumnConstraintsListPropertyMetadata(
-                new PropertyName("columnConstraints"), //NOI18N
+                new PropertyName("columnConstraints"), //NOCHECK
                 true, /* readWrite */
                 Collections.emptyList(), /* defaultValue */
                 InspectorPath.UNUSED);

@@ -119,7 +119,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
     //
     @Override
     public void initializePopupContent() {
-        Parent root = FXMLUtils.load(this, "KeyCombinationPopupEditor.fxml"); //NOI18N
+        Parent root = FXMLUtils.load(this, "KeyCombinationPopupEditor.fxml");
         assert root instanceof GridPane;
         gridPane = (GridPane) root;
         // Build suggested key code list
@@ -151,7 +151,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         KeyCombination keyCombinationVal = (KeyCombination) value;
         String valueAsString;
         if (isIndeterminate()) {
-            valueAsString = "-"; //NOI18N
+            valueAsString = "-"; //NOCHECK
         } else {
             valueAsString = keyCombinationVal.toString();
         }
@@ -295,7 +295,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         try {
             keyComb = new KeyCodeCombination(mainKey.getKeyCode(), modifiers.toArray(new KeyCombination.Modifier[1]));
         } catch (IllegalArgumentException | NullPointerException ex) {
-            System.out.println("Invalid key combination" + ex); //NOI18N
+            System.out.println("Invalid key combination" + ex); //NOCHECK
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage() + ex);
         }
@@ -412,7 +412,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
 
     private void addModifierRow(ModifierRow row, int lineIndex) {
         row.getLabel().setText(I18N.getString("inspector.keycombination.modifier")
-                + " " + (lineIndex + 1)); //NOI18N
+                + " " + (lineIndex + 1)); //NOCHECK
         gridPane.add(row.getLabel(), 0, lineIndex);
         gridPane.add(row.getChoiceBox(), 1, lineIndex);
     }
@@ -430,7 +430,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         String mainKey = null;
 
         public MainKey(Api api, List<String> suggestedKeys, MessageLogger messageLogger) {
-            super(api); //NOI18N
+            super(api); //NOCHECK
             preInit(Type.ALPHA, suggestedKeys);
             initialize(messageLogger);
         }
@@ -460,7 +460,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         }
 
         public void setKeyCode(KeyCode keyCode) {
-            setValue((keyCode != null) ? keyCode.toString() : "");//NOI18N
+            setValue((keyCode != null) ? keyCode.toString() : "");//NOCHECK
         }
 
         public KeyCode getKeyCode() {
@@ -476,7 +476,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
                 keyCode = KeyCode.valueOf(valStr);
             } catch (Exception ex) {
                 messageLogger.logWarningMessage(
-                        "inspector.keycombination.invalidkeycode", valStr); //NOI18N
+                        "inspector.keycombination.invalidkeycode", valStr); //NOCHECK
             }
             return keyCode;
         }
@@ -539,7 +539,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
             if (object == null) {
                 return I18N.getString("inspector.keycombination.none");
             }
-            return object.getKey() + "_" + object.getValue(); //NOI18N
+            return object.getKey() + "_" + object.getValue(); //NOCHECK
         }
 
         @Override

@@ -126,7 +126,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
             // boolean copyFilesToUserLibraryDir,
             // List<String> artifactsFilter,
             ) {
-        super(api, ExtensionImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null); // NOI18N
+        super(api, ExtensionImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
         // libPanelController = lpc;
         // importFiles = new ArrayList<>(files);
         // this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
@@ -162,11 +162,16 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
         for (ExtensionReport jarReport : jarReportList) {
             Path file = jarReport.getSource();
             String jarName = file.getName(file.getNameCount() - 1).toString();
-            StringBuilder sb = new StringBuilder(I18N.getString(
-                    "log.info.explore." + (Files.isDirectory(file) ? "folder" : "jar") + ".results", jarName))
-                            .append("\n");
+            StringBuilder sb = new StringBuilder();
+            
+            if (Files.isDirectory(file)) {
+                sb.append(I18N.getString("log.info.explore.folder.results", jarName));
+            } else {
+                sb.append(I18N.getString("log.info.explore.folder.jar", jarName));
+            }
+            sb.append("\n"); //NOCHECK
             for (ExtensionReportEntry e : jarReport.getEntries()) {
-                sb.append("> ").append(e.toString()).append("\n");
+                sb.append("> ").append(e.toString()).append("\n"); //NOCHECK
                 if ((e.getStatus() == ExtensionReportEntry.Status.OK)) {
                     boolean checked = true;
                     
@@ -310,8 +315,8 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
 //            Path userLibraryPath = userLibraryDir.toPath();
 //            try (DirectoryStream<Path> stream = Files.newDirectoryStream(userLibraryPath)) {
 //                for (Path entry : stream) {
-//                    if (entry.toString().endsWith(".jar")) { //NOI18N
-//    //                    System.out.println("ImportWindowController::buildListOfAllFiles: Adding " + element); //NOI18N
+//                    if (entry.toString().endsWith(".jar")) { //NOCHECK
+//    //                    System.out.println("ImportWindowController::buildListOfAllFiles: Adding " + element); //NOCHECK
 //                        res.add(entry.toFile());
 //                    }
 //                }
@@ -353,9 +358,9 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
             
             String name = t1.getReport().getSource().getFileName().toString();
             if (t1.getReportEntry().getClassName() != null) {
-                name += " > " + t1.getReportEntry().getClassName();
+                name += " > " + t1.getReportEntry().getClassName(); //NOCHECK
             } else {
-                name += " > " + t1.getReportEntry().getName();
+                name += " > " + t1.getReportEntry().getName(); //NOCHECK
             }
             classNameLabel.setText(name);//t1.getReportEntry().getKlass().getName());
 
@@ -390,8 +395,8 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
             int index = 0;
             for (File file : files) {
                 URL url = file.toURI().toURL();
-                if (url.toString().endsWith(".jar")) {
-                    result[index] = new URL("jar", "", url + "!/"); // <-- jar:file/path/to/jar!/
+                if (url.toString().endsWith(".jar")) { //NOCHECK
+                    result[index] = new URL("jar", "", url + "!/"); // <-- jar:file/path/to/jar!/ // NOCHECK
                 } else {
                     result[index] = url; // <-- file:/path/to/folder/
                 }
@@ -399,7 +404,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
                 index++;
             }
         } catch (MalformedURLException x) {
-            throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); // NOI18N
+            throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); // NOCHECK
         }
 
         return result;

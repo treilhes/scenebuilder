@@ -48,10 +48,10 @@ import javafx.scene.effect.Glow;
 public class GlowPropertyMetadata extends ComplexPropertyMetadata<Glow> {
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final OpacityDoublePropertyMetadata levelMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("level"), //NOI18N
+            = new OpacityDoublePropertyMetadata(new PropertyName("level"), //NOCHECK
             true /* readWrite */, 0.3, InspectorPath.UNUSED);
 
     public GlowPropertyMetadata(PropertyName name, boolean readWrite, 

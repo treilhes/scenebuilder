@@ -146,7 +146,7 @@ public class ModifySelectionJob extends BatchDocumentJob {
 
         switch (subJobCount) {
             case 0:
-                result = "Unexecutable Set"; //NOI18N
+                result = "Unexecutable Set"; //NOCHECK
                 break;
             case 1: // Single selection
                 result = subJobs.get(0).getDescription();

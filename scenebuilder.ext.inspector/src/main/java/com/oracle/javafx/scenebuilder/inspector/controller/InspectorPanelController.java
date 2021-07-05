@@ -201,7 +201,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     //
-    private static final String fxmlFile = "Inspector.fxml"; // NOI18N
+    private static final String fxmlFile = "Inspector.fxml";
     private static final String FXID_SUBSECTION_NAME = "Identity";
     private String searchPattern;
     private SectionId previousExpandedSection;
@@ -1469,8 +1469,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        String propNameStr = doublePropMeta.getName().getName();
 //        
 //        // TODO this kind of details must be part of metadata
-//        if (propNameStr.contains("maxWidth") || propNameStr.contains("maxHeight")) { //NOI18N
-//            constants.put("MAX_VALUE", Double.MAX_VALUE); //NOI18N
+//        if (propNameStr.contains("maxWidth") || propNameStr.contains("maxHeight")) { //NOCHECK
+//            constants.put("MAX_VALUE", Double.MAX_VALUE); //NOCHECK
 //        }
 //        if (doublePropMeta instanceof ComputedSizeDoublePropertyMetadata) {
 //            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
@@ -1478,7 +1478,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
 //            constants.put("USE_PREF_SIZE", Region.USE_PREF_SIZE);
 //        } else if (doublePropMeta instanceof NullableCoordinateDoublePropertyMetadata) {
-//            constants.put("NULL", null); //NOI18N
+//            constants.put("NULL", null); //NOCHECK
 //        } else if (doublePropMeta instanceof ProgressDoublePropertyMetadata) {
 //            constants.put("INDETERMINATE", ProgressIndicator.INDETERMINATE_PROGRESS);
 //        }
@@ -1488,53 +1488,53 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //    private Map<String, Object> getConstants(IntegerPropertyMetadata integerPropMeta) {
 //        Map<String, Object> constants = new TreeMap<>();
 //        String propNameStr = integerPropMeta.getName().getName();
-//        if (propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan")) { //NOI18N
-//            constants.put("REMAINING", GridPane.REMAINING); //NOI18N
+//        if (propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan")) { //NOCHECK
+//            constants.put("REMAINING", GridPane.REMAINING); //NOCHECK
 //        } else if (propNameStr.contains("prefColumnCount")) {
 //            if (getSelectedClasses().size() == 1) {
 //                if (getSelectedClass() == TextField.class || getSelectedClass() == PasswordField.class) {
-//                    constants.put("DEFAULT_PREF_COLUMN_COUNT", TextField.DEFAULT_PREF_COLUMN_COUNT); //NOI18N
+//                    constants.put("DEFAULT_PREF_COLUMN_COUNT", TextField.DEFAULT_PREF_COLUMN_COUNT); //NOCHECK
 //                } else if (getSelectedClass() == TextArea.class) {
-//                    constants.put("DEFAULT_PREF_COLUMN_COUNT", TextArea.DEFAULT_PREF_COLUMN_COUNT); //NOI18N
+//                    constants.put("DEFAULT_PREF_COLUMN_COUNT", TextArea.DEFAULT_PREF_COLUMN_COUNT); //NOCHECK
 //                }
 //            }
 //        } else if (propNameStr.contains("prefRowCount")) {
 //            assert getSelectedClass() == TextArea.class;
-//            constants.put("DEFAULT_PREF_ROW_COUNT", TextArea.DEFAULT_PREF_ROW_COUNT); //NOI18N
+//            constants.put("DEFAULT_PREF_ROW_COUNT", TextArea.DEFAULT_PREF_ROW_COUNT); //NOCHECK
 //        }
 //        return constants;
 //    }
 
 //    private int getMax(IntegerPropertyMetadata integerPropMeta) {
 //        String propNameStr = integerPropMeta.getName().getName();
-//        if (propNameStr.contains("columnIndex") || propNameStr.contains("columnSpan")) { //NOI18N
+//        if (propNameStr.contains("columnIndex") || propNameStr.contains("columnSpan")) { //NOCHECK
 //            GridPane gridPane = getGridPane(propNameStr);
 //            if (gridPane == null) {
 //                // multi-selection from different GridPanes: not supported for now
 //                return getMin(integerPropMeta);
 //            }
 //            int nbColumns = Deprecation.getGridPaneColumnCount(gridPane);
-//            if (propNameStr.contains("columnIndex")) {//NOI18N
+//            if (propNameStr.contains("columnIndex")) {//NOCHECK
 //                // index start to 0
 //                return nbColumns - 1;
 //            }
-//            if (propNameStr.contains("columnSpan")) {//NOI18N
+//            if (propNameStr.contains("columnSpan")) {//NOCHECK
 //                int maxIndex = getSpanPropertyMaxIndex(propNameStr);
 //                return nbColumns - maxIndex;
 //            }
 //        }
-//        if (propNameStr.contains("rowIndex") || propNameStr.contains("rowSpan")) { //NOI18N
+//        if (propNameStr.contains("rowIndex") || propNameStr.contains("rowSpan")) { //NOCHECK
 //            GridPane gridPane = getGridPane(propNameStr);
 //            if (gridPane == null) {
 //                // multi-selection from different GridPanes: not supported for now
 //                return getMin(integerPropMeta);
 //            }
 //            int nbRow = Deprecation.getGridPaneRowCount(gridPane);
-//            if (propNameStr.contains("rowIndex")) {//NOI18N
+//            if (propNameStr.contains("rowIndex")) {//NOCHECK
 //                // index start to 0
 //                return nbRow - 1;
 //            }
-//            if (propNameStr.contains("rowSpan")) {//NOI18N
+//            if (propNameStr.contains("rowSpan")) {//NOCHECK
 //                int maxIndex = getSpanPropertyMaxIndex(propNameStr);
 //                return nbRow - maxIndex;
 //            }
@@ -1544,7 +1544,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
 //    private int getMin(IntegerPropertyMetadata integerPropMeta) {
 //        String propNameStr = integerPropMeta.getName().getName();
-//        if (propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan")) { //NOI18N
+//        if (propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan")) { //NOCHECK
 //            return 1;
 //        }
 //        return 0;
@@ -1574,7 +1574,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //            assert instance.getSceneGraphObject() instanceof Node;
 //            Integer index;
 //            Node node = (Node) instance.getSceneGraphObject();
-//            if (propNameStr.contains("columnSpan")) {//NOI18N
+//            if (propNameStr.contains("columnSpan")) {//NOCHECK
 //                index = GridPane.getColumnIndex(node);
 //            } else {
 //                index = GridPane.getRowIndex(node);
@@ -1590,8 +1590,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //    }
 
 //    private GridPane getGridPane(String propNameStr) {
-//        assert propNameStr.contains("columnIndex") || propNameStr.contains("columnSpan") //NOI18N
-//                || propNameStr.contains("rowIndex") || propNameStr.contains("rowSpan");//NOI18N
+//        assert propNameStr.contains("columnIndex") || propNameStr.contains("columnSpan") //NOCHECK
+//                || propNameStr.contains("rowIndex") || propNameStr.contains("rowSpan");//NOCHECK
 //            FXOMObject commonParent = selectionState.getCommonParentObject();
 //            if (commonParent == null) {
 //                return null;

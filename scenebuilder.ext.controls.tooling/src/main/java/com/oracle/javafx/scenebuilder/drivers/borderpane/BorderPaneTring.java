@@ -238,7 +238,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
                 break;
             default:
                 // Emergency code
-                assert false : "Unexpected area " + area; //NOI18N
+                assert false : "Unexpected area " + area; //NOCHECK
                 xmin = cb.getMinX();
                 ymin = cb.getMinY();
                 xmax = cb.getMaxX();
@@ -321,7 +321,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
      * Private
      */
 
-    private static final String SELECTED = "selected"; //NOI18N
+    private static final String SELECTED = "selected"; //NOCHECK
 
     private static void setupSelectedStyleClass(Label label, boolean selected) {
             final List<String> styleClass = label.getStyleClass();

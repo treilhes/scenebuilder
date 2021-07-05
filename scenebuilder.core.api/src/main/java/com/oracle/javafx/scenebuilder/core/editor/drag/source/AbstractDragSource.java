@@ -59,7 +59,7 @@ public abstract class AbstractDragSource implements DragSource{
      */
     public synchronized static URL getStylesheet() {
         if (stylesheet == null) {
-            stylesheet = AbstractDragSource.class.getResource("DragSource.css"); //NOI18N
+            stylesheet = AbstractDragSource.class.getResource("DragSource.css");
             assert stylesheet != null;
         }
         return stylesheet;

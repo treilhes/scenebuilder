@@ -45,8 +45,8 @@ import javafx.scene.paint.Paint;
  */
 public abstract class AbstractTring<T> extends AbstractDecoration<T> implements Tring<T> {
 
-    public static final String TARGET_RING_CLASS = "target-ring"; //NOI18N
-    public static final String TARGET_CRACK_CLASS = "target-crack"; //NOI18N
+    public static final String TARGET_RING_CLASS = "target-ring"; //NOCHECK
+    public static final String TARGET_CRACK_CLASS = "target-crack"; //NOCHECK
 
     public AbstractTring(Content contentPanelController, Class<T> sceneGraphClass) {
         super(contentPanelController, sceneGraphClass);

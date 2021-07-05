@@ -357,7 +357,7 @@ public class StringListEditor extends InlineListEditor {
             if (type == PrefixedValue.Type.DOCUMENT_RELATIVE_PATH) {
                 setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX);
             } else if (type == PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH) {
-                setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOI18N
+                setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOCHECK
             } else {
                 // absolute
                 removeLabel();

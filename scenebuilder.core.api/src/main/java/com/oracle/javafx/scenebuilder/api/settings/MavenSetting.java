@@ -43,7 +43,7 @@ public class MavenSetting extends AbstractSetting {
 	
 	public String getUserM2Repository() {
         String m2Path = System.getProperty("user.home") + File.separator +
-                ".m2" + File.separator + "repository"; //NOI18N
+                ".m2" + File.separator + "repository"; //NOCHECK
 
         // TODO: Allow custom path for .m2
 
@@ -53,7 +53,7 @@ public class MavenSetting extends AbstractSetting {
     }
 
     public String getTempM2Repository() {
-        String m2Path = System.getProperty("java.io.tmpdir") + File.separator + "m2Tmp"; //NOI18N
+        String m2Path = System.getProperty("java.io.tmpdir") + File.separator + "m2Tmp"; //NOCHECK
 
         assert m2Path != null;
 

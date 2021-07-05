@@ -50,7 +50,7 @@ import javafx.scene.paint.Paint;
  */
 public class ResizingGuideRenderer {
     
-    private static final String NID_RESIZING_GUIDE = "resizingGuide"; //NOI18N
+    private static final String NID_RESIZING_GUIDE = "resizingGuide"; //NOCHECK
 
     private final Group guideGroup = new Group();
     private final Map<AbstractSegment, ResizingGuideChrome> chromeMap = new HashMap<>();

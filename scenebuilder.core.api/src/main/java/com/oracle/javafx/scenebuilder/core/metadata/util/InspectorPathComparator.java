@@ -70,8 +70,8 @@ public class InspectorPathComparator implements Comparator<InspectorPath> {
             final int sectionIndex1 = sectionNames.indexOf(p1.getSectionTag());
             final int sectionIndex2 = sectionNames.indexOf(p2.getSectionTag());
             
-            assert sectionIndex1 != -1 : "sectionTag=" + p1.getSectionTag();
-            assert sectionIndex2 != -1 : "sectionTag=" + p2.getSectionTag();
+            assert sectionIndex1 != -1 : "sectionTag=" + p1.getSectionTag(); // NOI18N
+            assert sectionIndex2 != -1 : "sectionTag=" + p2.getSectionTag(); // NOI18N
 
             if (sectionIndex1 < sectionIndex2) {
                 result = -1;
@@ -82,13 +82,13 @@ public class InspectorPathComparator implements Comparator<InspectorPath> {
                 assert p1.getSectionTag().equals(p2.getSectionTag());
                 final List<String> subSections = subSectionMap.get(p1.getSectionTag());
                 
-                assert subSections != null : "sectionTag=" + p1.getSectionTag();
+                assert subSections != null : "sectionTag=" + p1.getSectionTag(); // NOI18N
                 
                 final int subSectionIndex1 = subSections.indexOf(p1.getSubSectionTag());
                 final int subSectionIndex2 = subSections.indexOf(p2.getSubSectionTag());
                 
-                assert subSectionIndex1 != -1 : "subSectionTag=" + p1.getSubSectionTag();
-                assert subSectionIndex2 != -1 : "subSectionTag=" + p2.getSubSectionTag();
+                assert subSectionIndex1 != -1 : "subSectionTag=" + p1.getSubSectionTag(); // NOI18N
+                assert subSectionIndex2 != -1 : "subSectionTag=" + p2.getSubSectionTag(); // NOI18N
 
                 if (subSectionIndex1 < subSectionIndex2) {
                     result = -1;

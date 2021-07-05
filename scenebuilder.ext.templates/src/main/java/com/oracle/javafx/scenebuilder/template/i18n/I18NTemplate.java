@@ -47,7 +47,7 @@ public class I18NTemplate implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NTemplate.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderTemplate"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderTemplate"); //NOCHECK
         }
         return bundle;
     }

@@ -86,7 +86,7 @@ public class EffectPicker extends Pane {
 
     public EffectPicker(EffectPicker.Delegate epd, PaintPicker.Delegate ppd) {
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(EffectPicker.class.getResource("EffectPicker.fxml")); //NOI18N
+        loader.setLocation(EffectPicker.class.getResource("EffectPicker.fxml"));
 
         try {
             // Loading

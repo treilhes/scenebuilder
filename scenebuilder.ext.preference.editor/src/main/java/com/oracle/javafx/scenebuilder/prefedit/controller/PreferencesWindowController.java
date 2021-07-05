@@ -95,7 +95,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
             @Autowired DocumentWindow documentWindowController,
             @Autowired List<ManagedGlobalPreference> globalPreferences,
             @Autowired List<ManagedDocumentPreference> documentPreferences) {
-        super(api, PreferencesWindowController.class.getResource("Preferences.fxml"), // NOI18N
+        super(api, PreferencesWindowController.class.getResource("Preferences.fxml"),
                 I18N.getBundle(), documentWindowController);
         this.ownerWindow = documentWindowController;
 

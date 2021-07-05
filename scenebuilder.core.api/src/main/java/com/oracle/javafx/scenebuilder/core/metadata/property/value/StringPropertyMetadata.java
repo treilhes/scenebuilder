@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.core.util.URLUtils;
  */
 public abstract class StringPropertyMetadata extends TextEncodablePropertyMetadata<String> {
     
-    private static final PropertyName valueName = new PropertyName("value"); //NOI18N
+    private static final PropertyName valueName = new PropertyName("value"); //NOCHECK
 
     private final boolean detectFileURL;
     
@@ -137,7 +137,7 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
         
         if (shouldEncodeAsURL) {
             // String value must be expressed using a URL element
-            // <URL value="@Desktop/IssueTracking.css" />
+            // <URL value='@Desktop/IssueTracking.css' /> 
             final FXOMPropertyT newProperty = new FXOMPropertyT(fxomDocument, valueName, value);
             result = new FXOMInstance(fxomDocument, URL.class);
             newProperty.addToParentInstance(-1, result);

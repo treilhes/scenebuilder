@@ -57,7 +57,7 @@ class XMLBuffer {
         elementStack.clear();
         tagOpened = false;
         buffer.delete(0, buffer.length());
-        buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //NOI18N
+        buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //NOCHECK
     }
     
     public void addProcessingInstruction(String target, String content) {
@@ -66,18 +66,18 @@ class XMLBuffer {
         assert elementStack.isEmpty();
         assert tagOpened == false;
         
-        buffer.append("<?"); //NOI18N
+        buffer.append("<?"); //NOCHECK
         buffer.append(target);
         buffer.append(' ');
         buffer.append(content);
-        buffer.append("?>"); //NOI18N
+        buffer.append("?>"); //NOCHECK
     }
     
     public void beginElement(String elementName) {
         assert elementName != null;
         
         if (tagOpened) {
-            buffer.append(">"); //NOI18N
+            buffer.append(">"); //NOCHECK
         }
         buffer.append('<');
         buffer.append(elementName);
@@ -92,7 +92,7 @@ class XMLBuffer {
         
         buffer.append(' ');
         buffer.append(attributeName);
-        buffer.append("=\""); //NOI18N
+        buffer.append("=\""); //NOCHECK
         buffer.append(encodeToAttributeValue(attributeValue));
         buffer.append('"');
     }
@@ -103,19 +103,19 @@ class XMLBuffer {
         final String elementName = elementStack.get(elementStack.size()-1);
         elementStack.remove(elementStack.size()-1);
         if (tagOpened) {
-            buffer.append(" />"); //NOI18N
+            buffer.append(" />"); //NOCHECK
             tagOpened = false;
         } else {
-            buffer.append("</"); //NOI18N
+            buffer.append("</"); //NOCHECK
             buffer.append(elementName);
-            buffer.append(">"); //NOI18N
+            buffer.append(">"); //NOCHECK
         }
     }
     
     
     public void addText(String text) {
         if (tagOpened) {
-            buffer.append(">"); //NOI18N
+            buffer.append(">"); //NOCHECK
             tagOpened = false;
         }
         buffer.append(text);
@@ -124,14 +124,14 @@ class XMLBuffer {
     
     public void addComment(String comment) {
         assert tagOpened == false;
-        buffer.append("<!--"); //NOI18N
+        buffer.append("<!--"); //NOCHECK
         buffer.append(comment);
-        buffer.append("-->"); //NOI18N
+        buffer.append("-->"); //NOCHECK
     }
     
     public void addLineSeparator() {
         if (tagOpened) {
-            buffer.append(">"); //NOI18N
+            buffer.append(">"); //NOCHECK
             tagOpened = false;
         }
         buffer.append('\n');
@@ -159,20 +159,20 @@ class XMLBuffer {
             final char c = s.charAt(i);
             switch (c) {
                 case '&': 
-                    result.append("&amp;");  //NOI18N
+                    result.append("&amp;");  //NOCHECK
                     break;
                 case '<':
-                    result.append("&lt;"); //NOI18N
+                    result.append("&lt;"); //NOCHECK
                     break;
                 case '>':
-                    result.append("&gt;"); //NOI18N
+                    result.append("&gt;"); //NOCHECK
                     break;
                 case '"': 
-                    result.append("&quot;"); //NOI18N
+                    result.append("&quot;"); //NOCHECK
                     break;
                 default :
                     if (Character.isISOControl(c)) {
-                        result.append("&#"); //NOI18N
+                        result.append("&#"); //NOCHECK
                         result.append((int) c);
                         result.append(';');
                     } else {

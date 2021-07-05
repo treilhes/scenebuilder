@@ -73,7 +73,7 @@ import javafx.scene.layout.StackPane;
 @Lazy
 public class EventHandlerEditor extends AutoSuggestEditor {
 
-    private static final String HASH_STR = "#"; //NOI18N
+    private static final String HASH_STR = "#"; //NOCHECK
     private final MenuItem controllerMethodMenuItem = new MenuItem(I18N.getString("inspector.event.menu.methodmode"));
     private final MenuItem scriptMenuItem = new MenuItem(I18N.getString("inspector.event.menu.scriptmode"));
     private boolean methodNameMode;
@@ -86,7 +86,7 @@ public class EventHandlerEditor extends AutoSuggestEditor {
     public EventHandlerEditor(
             @Autowired Api api
             ) {
-        super(api); //NOI18N
+        super(api); //NOCHECK
         this.glossary = api.getGlossary();
         
         suggestedMethods = new ArrayList<>();

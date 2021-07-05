@@ -69,7 +69,7 @@ public class TextViewDialog extends AbstractModalDialog {
 
     protected TextViewDialog(
             @Autowired Api api) {
-        super(api, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null); //NOI18N
+        super(api, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null);
     }
 
     public void setText(String text) {

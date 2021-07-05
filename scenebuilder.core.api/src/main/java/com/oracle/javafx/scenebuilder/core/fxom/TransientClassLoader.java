@@ -63,9 +63,9 @@ class TransientClassLoader extends ClassLoader {
         URL  result = super.getResource(name);
         if (result == null) {
             try {
-                result = new URL("file", null, name); //NOI18N
+                result = new URL("file", null, name); //NOCHECK
             } catch(MalformedURLException x) {
-                throw new RuntimeException("Bug", x); //NOI18N
+                throw new RuntimeException("Bug", x); //NOCHECK
             }
         }
         return result;

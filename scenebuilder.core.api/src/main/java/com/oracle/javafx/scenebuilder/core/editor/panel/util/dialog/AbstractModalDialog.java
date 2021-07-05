@@ -109,7 +109,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
                 controllerDidLoadContentFxml();
             } catch (IOException x) {
                 contentRoot = null;
-                throw new RuntimeException("Failed to load " + contentFxmlURL.getFile(), x); //NOI18N
+                throw new RuntimeException("Failed to load " + contentFxmlURL.getFile(), x); //NOCHECK
             }
         }
 
@@ -329,9 +329,9 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         final String fxmlName;
 
         if (EditorPlatform.IS_WINDOWS) {
-            fxmlName = "AbstractModalDialogW.fxml"; //NOI18N
+            fxmlName = "AbstractModalDialogW.fxml";
         } else {
-            fxmlName = "AbstractModalDialogM.fxml"; //NOI18N
+            fxmlName = "AbstractModalDialogM.fxml";
         }
 
         return AbstractModalDialog.class.getResource(fxmlName);
@@ -378,7 +378,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         } else if (source == getActionButton()) {
             clickedButtonID = AbstractModalDialog.ButtonID.ACTION;
         } else {
-            throw new IllegalArgumentException("Bug"); //NOI18N
+            throw new IllegalArgumentException("Bug"); //NOCHECK
         }
     }
 

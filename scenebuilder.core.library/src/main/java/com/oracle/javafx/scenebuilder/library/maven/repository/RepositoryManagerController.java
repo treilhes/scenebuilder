@@ -86,7 +86,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, RepositoryManagerController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner); //NOI18N
+        super(api, RepositoryManagerController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner);
         this.context = api.getContext();
         this.owner = owner;
         this.editorController = editorController;

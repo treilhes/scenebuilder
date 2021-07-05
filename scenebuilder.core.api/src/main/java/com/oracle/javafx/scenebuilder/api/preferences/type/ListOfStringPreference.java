@@ -47,8 +47,8 @@ import javafx.collections.ObservableList;
 
 public class ListOfStringPreference extends AbstractPreference<ObservableList<String>> {
 
-	private final static String JOIN_SEPARATOR = "\\" + File.pathSeparator;
-	private final static String REGEX_JOIN_SEPARATOR = "\\"+ JOIN_SEPARATOR;
+	private final static String JOIN_SEPARATOR = "\\" + File.pathSeparator;  // NOI18N
+	private final static String REGEX_JOIN_SEPARATOR = "\\"+ JOIN_SEPARATOR;  // NOI18N
 	public ListOfStringPreference(PreferencesContext preferencesContext, String name, List<String> defaultValue) {
 		super(preferencesContext, name, defaultValue == null ? null : FXCollections.observableArrayList(defaultValue), new SimpleObjectProperty<>(), false);
 	}
@@ -61,7 +61,7 @@ public class ListOfStringPreference extends AbstractPreference<ObservableList<St
 	@Override
 	public void read() {
 		assert getName() != null;
-		String defaultValue = getDefault() == null || getDefault().isEmpty() ? "" : String.join(JOIN_SEPARATOR, getDefault());
+		String defaultValue = getDefault() == null || getDefault().isEmpty() ? "" : String.join(JOIN_SEPARATOR, getDefault()); // NOI18N
 		String value = getNode().get(getName(), defaultValue);
 		final String[] items = value.isEmpty() ? new String[0] : value.split(REGEX_JOIN_SEPARATOR);
 		final List<String> newValue = new ArrayList<>();

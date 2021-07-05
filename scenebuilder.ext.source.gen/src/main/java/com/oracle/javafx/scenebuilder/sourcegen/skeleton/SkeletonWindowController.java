@@ -89,7 +89,7 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
     public SkeletonWindowController(
             @Autowired Api api,
             @Autowired DocumentWindow document) {
-        super(api, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle()); // NOI18N
+        super(api, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle());
         
         this.documentManager = api.getApiDoc().getDocumentManager();
     }

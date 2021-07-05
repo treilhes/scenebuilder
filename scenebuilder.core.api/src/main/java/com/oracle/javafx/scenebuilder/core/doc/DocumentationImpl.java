@@ -75,7 +75,7 @@ public class DocumentationImpl implements Documentation {
             } else {
                 // Special case for non-properties (fx:id, ...)
                 fileSystem.open(DEFAULT_JAVADOC_HOME
-                        + "javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html"); //NOI18N
+                        + "javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html"); //NOCHECK
             }
             // Selection of multiple different classes ==> no link
         } catch (IOException ex) {

@@ -46,7 +46,7 @@ import javafx.scene.paint.Stop;
 public class StopListPropertyMetadata extends ListValuePropertyMetadata<Stop> {
     
     private static final StopPropertyMetadata itemMetadata
-            = new StopPropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new StopPropertyMetadata(new PropertyName("unused"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     
     public StopListPropertyMetadata(PropertyName name, boolean readWrite, 

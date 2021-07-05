@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.devutils;
 
 import com.oracle.javafx.scenebuilder.devutils.tbview.TestContent3;
+import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.stage.Stage;

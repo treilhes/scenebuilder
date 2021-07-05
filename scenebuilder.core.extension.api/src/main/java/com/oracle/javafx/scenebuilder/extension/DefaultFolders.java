@@ -39,7 +39,7 @@ public class DefaultFolders {
     
     public static String APP_FOLDER_NAME = "Scene BuilderX";
 
-    public static File USER_HOME = new File(System.getProperty("user.home")); //NOI18N
+    public static File USER_HOME = new File(System.getProperty("user.home")); //NOCHECK
 
     private static File messageBoxFolder;
     //private static File userLibraryFolder;
@@ -52,19 +52,19 @@ public class DefaultFolders {
     public static synchronized File getApplicationDataFolder() {
 
         if (applicationDataFolder == null) {
-            final String appName = APP_FOLDER_NAME; //NOI18N
+            final String appName = APP_FOLDER_NAME; //NOCHECK
 
             if (OsPlatform.IS_WINDOWS) {
                 applicationDataFolder
-                        = new File(System.getenv("APPDATA") + "\\" + appName); //NOI18N
+                        = new File(System.getenv("APPDATA") + "\\" + appName); //NOCHECK
             } else if (OsPlatform.IS_MAC) {
                 applicationDataFolder
-                        = new File(System.getProperty("user.home") //NOI18N
-                        + "/Library/Application Support/" //NOI18N
+                        = new File(System.getProperty("user.home") //NOCHECK
+                        + "/Library/Application Support/" //NOCHECK
                         + appName);
             } else if (OsPlatform.IS_LINUX) {
                 applicationDataFolder
-                        = new File(System.getProperty("user.home") + "/.scenebuilder"); //NOI18N
+                        = new File(System.getProperty("user.home") + "/.scenebuilder"); //NOCHECK
             }
         }
 
@@ -77,20 +77,20 @@ public class DefaultFolders {
 //    public static synchronized File getUserLibraryFolder() {
 //
 //        if (userLibraryFolder == null) {
-//            userLibraryFolder = new File(getApplicationDataFolder(), "/Library"); //NOI18N
+//            userLibraryFolder = new File(getApplicationDataFolder(), "/Library"); //NOCHECK
 //        }
 //
 //        return userLibraryFolder;
 //    }
 //    
     public static synchronized File getUserExtensionsFolder(UUID extensionId) {
-        return new File(getApplicationDataFolder(), extensionId.toString()); //NOI18N
+        return new File(getApplicationDataFolder(), extensionId.toString()); //NOCHECK
     }
 
     public static synchronized File getMessageBoxFolder() {
 
         if (messageBoxFolder == null) {
-            messageBoxFolder = new File(getApplicationDataFolder(), "/MB"); //NOI18N
+            messageBoxFolder = new File(getApplicationDataFolder(), "/MB"); //NOCHECK
         }
 
         return messageBoxFolder;

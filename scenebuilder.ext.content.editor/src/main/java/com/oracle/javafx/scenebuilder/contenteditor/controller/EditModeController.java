@@ -527,7 +527,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             final ObservableList<String> styleSheets
                     = getContentPanelController().getRoot().getStylesheets();
             inlineEditor.getStylesheets().addAll(styleSheets);
-            inlineEditor.getStyleClass().add("theme-presets"); //NOI18N
+            inlineEditor.getStyleClass().add("theme-presets"); //NOCHECK
             inlineEditor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
             final Callback<String, Boolean> requestCommit
                     = value -> inlineEditingDidRequestCommit(value);

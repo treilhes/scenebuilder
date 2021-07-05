@@ -262,7 +262,7 @@ public class StyleClassEditor extends InlineListEditor {
         public StyleClassItem(EditorItemDelegate editor, Map<String, String> cssClassesMap) {
 //            System.out.println("New StyleClassItem.");
             // It is an AutoSuggestEditor without MenuButton
-            //super("", "", new ArrayList<>(cssClassesMap.keySet()), false); //NOI18N
+            //super("", "", new ArrayList<>(cssClassesMap.keySet()), false); //NOCHECK
             super(StyleClassEditor.this.getApi());
             preInit(Type.ALPHA, new ArrayList<>(cssClassesMap.keySet()));
             initialize(editor, cssClassesMap);
@@ -272,7 +272,7 @@ public class StyleClassEditor extends InlineListEditor {
         private void initialize(EditorItemDelegate editor, Map<String, String> cssClassesMap) {
             this.editor = editor;
             this.cssClassesMap = cssClassesMap;
-            root = FXMLUtils.load(this, "StyleClassEditorItem.fxml");//NOI18N
+            root = FXMLUtils.load(this, "StyleClassEditorItem.fxml");
 
             // Add the AutoSuggest text field in the scene graph
             styleClassSp.getChildren().add(super.getRoot());
@@ -359,7 +359,7 @@ public class StyleClassEditor extends InlineListEditor {
 
         @Override
         public void reset() {
-            styleClassTf.setText(""); //NOI18N
+            styleClassTf.setText(""); //NOCHECK
         }
 
         // Please findBugs
@@ -440,7 +440,7 @@ public class StyleClassEditor extends InlineListEditor {
                 getApi().getFileSystem().open(urlStr);
             } catch (IOException ex) {
                 editorController.getMessageLog().logWarningMessage(
-                        "inspector.stylesheet.cannotopen", urlStr); //NOI18N
+                        "inspector.stylesheet.cannotopen", urlStr); //NOCHECK
             }
         }
 
@@ -460,7 +460,7 @@ public class StyleClassEditor extends InlineListEditor {
                 
             } catch (URISyntaxException | IOException ex) {
                 editorController.getMessageLog().logWarningMessage(
-                        "inspector.stylesheet.cannotreveal", urlStr); //NOI18N
+                        "inspector.stylesheet.cannotreveal", urlStr); //NOCHECK
             }
         }
 

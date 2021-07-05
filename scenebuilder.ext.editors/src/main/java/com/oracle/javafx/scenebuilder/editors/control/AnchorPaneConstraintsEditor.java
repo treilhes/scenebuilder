@@ -273,7 +273,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
             };
             setNumericEditorBehavior(this, textField, valueListener, false);
             // Override default promptText
-            textField.setPromptText(""); //NOI18N
+            textField.setPromptText(""); //NOCHECK
 
             textField.setOnMouseClicked(t -> ConstraintEditor.this.toggleButton.setSelected(true));
 
@@ -361,7 +361,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
             this.selectedInstances = selectedInstances;
             this.propMeta = propMeta;
             // For SQE tests
-            textField.setId(EditorUtils.toDisplayName(propMeta.getName().getName()) + " Value"); //NOI18N
+            textField.setId(EditorUtils.toDisplayName(propMeta.getName().getName()) + " Value"); //NOCHECK
             textField.setPromptText(null);
         }
 

@@ -88,7 +88,7 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     protected ImportProgressDialogController(
             Api api
             ) {
-        super(api, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), I18N.getBundle(), null); //NOI18N
+        super(api, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), I18N.getBundle(), null);
         this.dialog = api.getApiDoc().getDialog();
     }
     

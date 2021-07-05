@@ -97,7 +97,7 @@ public class FXOMCloner {
             result = cloneIntrinsic((FXOMIntrinsic) fxomObject);
         } else {
             throw new RuntimeException(getClass().getSimpleName()
-                    + " needs some additional implementation"); //NOI18N
+                    + " needs some additional implementation"); //NOCHECK
         }
         
         return result;
@@ -219,7 +219,7 @@ public class FXOMCloner {
             result = clonePropertyT((FXOMPropertyT) source);
         } else {
             throw new RuntimeException(getClass().getSimpleName()
-                    + " needs some additional implementation"); //NOI18N
+                    + " needs some additional implementation"); //NOCHECK
         }
         
         return result;
@@ -311,7 +311,7 @@ public class FXOMCloner {
                  * We renamed candidateFxId as renamedFxId 
                  *  1) on the declarer object
                  *  2) in each fx:reference/fx:copy object
-                 *  3) in each xxx="$candidateFxId" expression property //NOI18N
+                 *  3) in each xxx="$candidateFxId" expression property //NOCHECK
                  */
                 
                 // 1)

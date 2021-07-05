@@ -47,7 +47,7 @@ public class I18NContentEditor implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NContentEditor.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderContentEditor"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderContentEditor"); //NOCHECK
         }
         return bundle;
     }

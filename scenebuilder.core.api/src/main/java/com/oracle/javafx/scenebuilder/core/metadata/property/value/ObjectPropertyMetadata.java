@@ -67,12 +67,12 @@ public class ObjectPropertyMetadata extends SingleValuePropertyMetadata<Object> 
 
     @Override
     public String makeStringFromValue(Object value) {
-        throw new RuntimeException("Bug"); //NOI18N
+        throw new RuntimeException("Bug"); //NOCHECK
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Object value, FXOMDocument fxomDocument) {
-        throw new RuntimeException("Bug"); //NOI18N
+        throw new RuntimeException("Bug"); //NOCHECK
     }
     
 }

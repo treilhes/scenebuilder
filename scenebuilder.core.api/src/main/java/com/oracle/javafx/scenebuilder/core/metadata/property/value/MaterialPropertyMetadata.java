@@ -51,7 +51,7 @@ public class MaterialPropertyMetadata extends ComplexPropertyMetadata<Material> 
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Material value, FXOMDocument fxomDocument) {
-        throw new UnsupportedOperationException("Not supported yet."); //NOI18N
+        throw new UnsupportedOperationException("Not supported yet."); //NOCHECK
     }
     
 }

@@ -94,7 +94,7 @@ public class PreviewWindowController extends AbstractWindowController implements
     private final int HEIGHT_WHEN_EMPTY = 200;
     private CameraType cameraType;
     private boolean autoResize3DContent = true;
-    private static final String NID_PREVIEW_ROOT = "previewRoot"; //NOI18N
+    private static final String NID_PREVIEW_ROOT = "previewRoot"; //NOCHECK
 
     private ObservableList<File> sceneStyleSheet;
     private Size currentSize = Size.SIZE_PREFERRED;
@@ -226,7 +226,7 @@ public class PreviewWindowController extends AbstractWindowController implements
                     fxomDocument.getResources());
             clone.setSampleDataEnabled(fxomDocument.isSampleDataEnabled());
         } catch (IOException ex) {
-            throw new RuntimeException("Bug in PreviewWindowController::openDialog", ex); //NOI18N
+            throw new RuntimeException("Bug in PreviewWindowController::openDialog", ex); //NOCHECK
         }
 
         final Object sceneGraphRoot = clone.getSceneGraphRoot();
@@ -279,7 +279,7 @@ public class PreviewWindowController extends AbstractWindowController implements
                                 fxomDocument.getResources());
                         clone.setSampleDataEnabled(fxomDocument.isSampleDataEnabled());
                     } catch (IOException ex) {
-                        throw new RuntimeException("Bug in PreviewWindowController::requestUpdate", ex); //NOI18N
+                        throw new RuntimeException("Bug in PreviewWindowController::requestUpdate", ex); //NOCHECK
                     }
 
                     Object sceneGraphRoot = clone.getDisplayNodeOrSceneGraphRoot();
@@ -548,11 +548,11 @@ public class PreviewWindowController extends AbstractWindowController implements
         // Add style sheet set thanks Preview > Scene Style Sheets > Add a Style Sheet
         if (sceneStyleSheet != null) {
             for (File f : sceneStyleSheet) {
-                String urlString = ""; //NOI18N
+                String urlString = ""; //NOCHECK
                 try {
                     urlString = f.toURI().toURL().toString();
                 } catch (MalformedURLException ex) {
-                    throw new RuntimeException("Bug in PreviewWindowController", ex); //NOI18N
+                    throw new RuntimeException("Bug in PreviewWindowController", ex); //NOCHECK
                 }
                 newStyleSheets.add(urlString);
             }

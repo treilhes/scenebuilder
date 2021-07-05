@@ -84,13 +84,13 @@ public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
         /*
          *    <RadioButton>
          *       <toggleGroup>
-         *           <fx:reference source="oxebo" />        // reference        //NOI18N
+         *           <fx:reference source="oxebo" />        // reference        //NOCHECK
          *       </toggleGroup>
          *    </RadioButton>
          *    ...
          *    <RadioButton>
          *       <toggleGroup>
-         *           <ToggleGroup fx:id="oxebo" />          // referee          //NOI18N
+         *           <ToggleGroup fx:id="oxebo" />          // referee          //NOCHECK
          *       </toggleGroup>
          *    </RadioButton>
          */

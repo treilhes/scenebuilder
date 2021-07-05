@@ -55,7 +55,7 @@ public class PaintPicker extends Pane {
 
     public PaintPicker(Delegate delegate) {        
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(PaintPicker.class.getResource("PaintPicker.fxml")); //NOI18N
+        loader.setLocation(PaintPicker.class.getResource("PaintPicker.fxml"));
 
         try {
             // Loading

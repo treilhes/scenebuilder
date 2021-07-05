@@ -48,10 +48,10 @@ import javafx.scene.text.Font;
 public class FontPropertyMetadata extends ComplexPropertyMetadata<Font> {
 
     private final I18nStringPropertyMetadata nameMetadata
-            = new I18nStringPropertyMetadata(new PropertyName("name"), //NOI18N
+            = new I18nStringPropertyMetadata(new PropertyName("name"), //NOCHECK
             true, Font.getDefault().getName(), InspectorPath.UNUSED);
     private final SizeDoublePropertyMetadata sizeMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("size"), //NOI18N
+            = new SizeDoublePropertyMetadata(new PropertyName("size"), //NOCHECK
             true, 0.0, InspectorPath.UNUSED);
 
     

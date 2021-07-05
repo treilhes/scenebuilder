@@ -54,7 +54,7 @@ public class DisplayOptionPreference extends EnumPreference<DisplayOption> imple
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "HIERARCHY_DISPLAY_OPTION"; //NOI18N
+    public static final String PREFERENCE_KEY = "HIERARCHY_DISPLAY_OPTION"; //NOCHECK
     public static final DisplayOption PREFERENCE_DEFAULT_VALUE = DisplayOption.INFO;
 
     private final PreferenceEditorFactory preferenceEditorFactory;

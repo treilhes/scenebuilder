@@ -43,13 +43,13 @@ import java.util.stream.Collectors;
 
 public class LibraryUtil {
 
-    public static final String FOLDERS_FOR_FILES = "Files"; //NOI18N
-    public static final String FOLDERS_FOR_THUMBNAILS = "Thumbnails"; //NOI18N
-    public static final String FOLDERS_LIBRARY_FILENAME = "library.folders"; //NOI18N
+    public static final String FOLDERS_FOR_FILES = "Files"; //NOCHECK
+    public static final String FOLDERS_FOR_THUMBNAILS = "Thumbnails"; //NOCHECK
+    public static final String FOLDERS_LIBRARY_FILENAME = "library.folders"; //NOCHECK
 
     public static boolean isJarPath(Path path) {
         final String pathString = path.toString().toLowerCase(Locale.ROOT);
-        return pathString.endsWith(".jar"); //NOI18N
+        return pathString.endsWith(".jar"); //NOCHECK
     }
 
     public static boolean hasExtension(Path path, List<String> extensions) {
@@ -59,17 +59,17 @@ public class LibraryUtil {
     public static boolean hasExtension(String path, List<String> extensions) {
         final String pathString = path.toLowerCase(Locale.ROOT);
         String upperPath = pathString.toUpperCase();
-        return extensions.stream().anyMatch(e -> upperPath.endsWith("." + e.toUpperCase())); //NOI18N
+        return extensions.stream().anyMatch(e -> upperPath.endsWith("." + e.toUpperCase())); //NOCHECK
     }
     
     public static boolean isFxmlPath(Path path) {
         final String pathString = path.toString().toLowerCase(Locale.ROOT);
-        return pathString.endsWith(".fxml"); //NOI18N
+        return pathString.endsWith(".fxml"); //NOCHECK
     }
 
     public static boolean isFolderMarkerPath(Path path) {
         final String pathString = path.toString().toLowerCase(Locale.ROOT);
-        return pathString.endsWith(".folders"); //NOI18N
+        return pathString.endsWith(".folders"); //NOCHECK
     }
 
     public static List<Path> getFolderPaths(Path libraryFile) throws IOException {
@@ -92,7 +92,7 @@ public class LibraryUtil {
         final StringBuilder sb = new StringBuilder();
 
         /*
-         * <?xml version="1.0" encoding="UTF-8"?> //NOI18N
+         * <?xml version="1.0" encoding="UTF-8"?> //NOCHECK
          *
          * <?import a.b.C?>
          *
@@ -114,20 +114,20 @@ public class LibraryUtil {
     public static String makeClassName(String jarEntryName, String separator) {
         final String result;
 
-        if (! jarEntryName.endsWith(".class")) { //NOI18N
+        if (! jarEntryName.endsWith(".class")) { //NOCHECK
             result = null;
-        } else if (jarEntryName.contains("$")) { //NOI18N
+        } else if (jarEntryName.contains("$")) { //NOCHECK
             // We skip inner classes for now
             result = null;
         } else {
-            final int endIndex = jarEntryName.length()-6; // ".class" -> 6 //NOI18N
-            result = jarEntryName.substring(0, endIndex).replace(separator, "."); //NOI18N
+            final int endIndex = jarEntryName.length()-6; // ".class" -> 6 //NOCHECK
+            result = jarEntryName.substring(0, endIndex).replace(separator, "."); //NOCHECK
         }
 
         return result;
     }
     
     public static String makeResourceName(String jarEntryName) {
-        return jarEntryName.replace("\\", "/"); //NOI18N
+        return jarEntryName.replace("\\", "/"); //NOCHECK
     }
 }

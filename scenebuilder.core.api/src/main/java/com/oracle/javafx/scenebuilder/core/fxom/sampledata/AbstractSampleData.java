@@ -41,40 +41,40 @@ import javafx.scene.paint.Color;
 abstract class AbstractSampleData {
     
     private static final String[] lorem = {
-        "Lorem ipsum ", //NOI18N
-        "dolor sit amet, ", //NOI18N
-        "consectetur adipiscing elit. ", //NOI18N
-        "Donec eu justo ", //NOI18N
-        "at tortor porta ", //NOI18N
-        "commodo nec vitae magna. ", //NOI18N
-        "Maecenas tempus ", //NOI18N
-        "hendrerit elementum. ", //NOI18N
-        "Nam sed mi ", //NOI18N
-        "a lorem tincidunt ", //NOI18N
-        "luctus sed non sem. ", //NOI18N
-        "Aliquam erat volutpat. ", //NOI18N
-        "Donec tempus egestas ", //NOI18N
-        "libero a cursus. ", //NOI18N
-        "In lectus nunc, ", //NOI18N
-        "dapibus vel suscipit vel, ", //NOI18N
-        "faucibus eget justo. ", //NOI18N
-        "Aliquam erat volutpat. ", //NOI18N
-        "Nulla facilisi. ", //NOI18N
-        "Donec at enim ipsum, ", //NOI18N
-        "sed facilisis leo. ", //NOI18N
-        "Aliquam tincidunt ", //NOI18N
-        "adipiscing euismod. ", //NOI18N
-        "Sed aliquet eros ", //NOI18N
-        "ut libero congue ", //NOI18N
-        "quis bibendum ", //NOI18N
-        "felis ullamcorper. ", //NOI18N
-        "Vestibulum ipsum ante, ", //NOI18N
-        "semper eu sollicitudin rutrum, ", //NOI18N
-        "consectetur a enim. ", //NOI18N
-        "Ut eget nisl sed turpis ", //NOI18N
-        "egestas viverra ", //NOI18N
-        "ut tristique sem. ", //NOI18N
-        "Nunc in neque nulla. " //NOI18N
+        "Lorem ipsum ", //NOCHECK
+        "dolor sit amet, ", //NOCHECK
+        "consectetur adipiscing elit. ", //NOCHECK
+        "Donec eu justo ", //NOCHECK
+        "at tortor porta ", //NOCHECK
+        "commodo nec vitae magna. ", //NOCHECK
+        "Maecenas tempus ", //NOCHECK
+        "hendrerit elementum. ", //NOCHECK
+        "Nam sed mi ", //NOCHECK
+        "a lorem tincidunt ", //NOCHECK
+        "luctus sed non sem. ", //NOCHECK
+        "Aliquam erat volutpat. ", //NOCHECK
+        "Donec tempus egestas ", //NOCHECK
+        "libero a cursus. ", //NOCHECK
+        "In lectus nunc, ", //NOCHECK
+        "dapibus vel suscipit vel, ", //NOCHECK
+        "faucibus eget justo. ", //NOCHECK
+        "Aliquam erat volutpat. ", //NOCHECK
+        "Nulla facilisi. ", //NOCHECK
+        "Donec at enim ipsum, ", //NOCHECK
+        "sed facilisis leo. ", //NOCHECK
+        "Aliquam tincidunt ", //NOCHECK
+        "adipiscing euismod. ", //NOCHECK
+        "Sed aliquet eros ", //NOCHECK
+        "ut libero congue ", //NOCHECK
+        "quis bibendum ", //NOCHECK
+        "felis ullamcorper. ", //NOCHECK
+        "Vestibulum ipsum ante, ", //NOCHECK
+        "semper eu sollicitudin rutrum, ", //NOCHECK
+        "consectetur a enim. ", //NOCHECK
+        "Ut eget nisl sed turpis ", //NOCHECK
+        "egestas viverra ", //NOCHECK
+        "ut tristique sem. ", //NOCHECK
+        "Nunc in neque nulla. " //NOCHECK
     };
     
     private final static Color[] colors = {
@@ -82,8 +82,8 @@ abstract class AbstractSampleData {
     };
     
     private static final String[] alphabet = {
-        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", //NOI18N
-        "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" //NOI18N
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", //NOCHECK
+        "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" //NOCHECK
     };
     
     public abstract void applyTo(Object sceneGraphObject);

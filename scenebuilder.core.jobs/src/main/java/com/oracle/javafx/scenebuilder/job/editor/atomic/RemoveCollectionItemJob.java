@@ -111,9 +111,9 @@ public class RemoveCollectionItemJob extends Job {
     public String getDescription() {
         // Should normally not reach the user
         return getClass().getSimpleName()
-                + "[" //NOI18N
+                + "[" //NOCHECK
                 + targetValue.getGlueElement().getTagName()
-                + "]"; //NOI18N
+                + "]"; //NOCHECK
     }
 
 }

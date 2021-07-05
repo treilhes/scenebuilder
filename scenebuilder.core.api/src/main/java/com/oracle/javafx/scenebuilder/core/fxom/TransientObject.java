@@ -179,9 +179,9 @@ class TransientObject extends TransientNode {
          * 
          *  <Pane>                          this.glueElement
          *      ...
-         *      <Button text="B1" />        this.collectedItems.get(0).glueElement   //NOI18N
+         *      <Button text="B1" />        this.collectedItems.get(0).glueElement   //NOCHECK
          *      <TextField />               this.collectedItems.get(1).glueElement
-         *      <Label text="Label" />      this.collectedItems.get(2).glueElement   //NOI18N
+         *      <Label text="Label" />      this.collectedItems.get(2).glueElement   //NOCHECK
          *      ...
          *  </Pane>
          * 
@@ -190,9 +190,9 @@ class TransientObject extends TransientNode {
          *  <Pane>                          this.glueElement
          *      ...
          *      <children>                  syntheticElement
-         *          <Button text="B1" />    this.collectedItems.get(0).glueElement   //NOI18N
+         *          <Button text="B1" />    this.collectedItems.get(0).glueElement   //NOCHECK
          *          <TextField />           this.collectedItems.get(1).glueElement
-         *          <Label text="Label" />  this.collectedItems.get(2).glueElement   //NOI18N
+         *          <Label text="Label" />  this.collectedItems.get(2).glueElement   //NOCHECK
          *      </children>
          *      ...
          *  </Pane>

@@ -87,11 +87,11 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
         final FXOMObject referee = fxomDocument.searchWithFxId(fxId);
 
         /*
-         *    <RadioButton toggleGroup="$oxebo" />          // reference    //NOI18N
+         *    <RadioButton toggleGroup="$oxebo" />          // reference    //NOCHECK
          *    ...
          *    <RadioButton>
          *       <toggleGroup>
-         *           <ToggleGroup fx:id="oxebo" />          // referee      //NOI18N
+         *           <ToggleGroup fx:id="oxebo" />          // referee      //NOCHECK
          *       </toggleGroup>
          *    </RadioButton>
          */

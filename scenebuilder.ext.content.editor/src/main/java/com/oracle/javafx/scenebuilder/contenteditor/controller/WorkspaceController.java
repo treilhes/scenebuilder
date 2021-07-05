@@ -295,11 +295,11 @@ public class WorkspaceController implements Workspace{
 
         boolean canDisplayDocument = false;
         if (fxomDocument == null) {
-            statusMessageText = "FXOMDocument is null"; //NOI18N
-            statusStyleClass = "stage-prompt"; //NOI18N
+            statusMessageText = "FXOMDocument is null"; //NOCHECK
+            statusStyleClass = "stage-prompt"; //NOCHECK
         } else if (fxomDocument.getFxomRoot() == null) {
             statusMessageText = I18N.getString("content.label.status.invitation");
-            statusStyleClass = "stage-prompt"; //NOI18N
+            statusStyleClass = "stage-prompt"; //NOCHECK
         } else {
             final Object userSceneGraph = fxomDocument.getDisplayNodeOrSceneGraphRoot();
             if (userSceneGraph instanceof Node) {
@@ -308,17 +308,17 @@ public class WorkspaceController implements Workspace{
                 contentGroup.getChildren().add(rootNode);
                 layoutContent(true /* applyCSS */);
                 if (layoutException == null) {
-                    statusMessageText = ""; //NOI18N
-                    statusStyleClass = "stage-prompt-default"; //NOI18N
+                    statusMessageText = ""; //NOCHECK
+                    statusStyleClass = "stage-prompt-default"; //NOCHECK
                     canDisplayDocument = true;
                 } else {
                     contentGroup.getChildren().clear();
                     statusMessageText = I18N.getString("content.label.status.cannot.display");
-                    statusStyleClass = "stage-prompt"; //NOI18N
+                    statusStyleClass = "stage-prompt"; //NOCHECK
                 }
             } else {
                 statusMessageText = I18N.getString("content.label.status.cannot.display");
-                statusStyleClass = "stage-prompt"; //NOI18N
+                statusStyleClass = "stage-prompt"; //NOCHECK
             }
         }
 

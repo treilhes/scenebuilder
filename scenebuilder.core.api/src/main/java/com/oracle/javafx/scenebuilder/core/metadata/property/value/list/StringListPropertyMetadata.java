@@ -47,7 +47,7 @@ import javafx.fxml.FXMLLoader;
 public class StringListPropertyMetadata extends ListValuePropertyMetadata<String> {
 
     private final static I18nStringPropertyMetadata itemMetadata
-            = new I18nStringPropertyMetadata(new PropertyName("unused"), //NOI18N
+            = new I18nStringPropertyMetadata(new PropertyName("unused"), //NOCHECK
                     true, null, InspectorPath.UNUSED, true /* detectFileURL */);
 
     public StringListPropertyMetadata(PropertyName name, boolean readWrite, 

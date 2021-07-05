@@ -54,34 +54,34 @@ import java.util.regex.Pattern;
  */
 class ControllerClass {
 
-    private static final Pattern PACKAGE_PATTERN = Pattern.compile("#package# (.*?)#;#");//NOI18N
-    private static final Pattern CLASS_PATTERN = Pattern.compile("#class# (.*?)\\s");//NOI18N
-    private static final Pattern INITIALIZABLE_PATTERN = Pattern.compile("#implements# (.*?)\\s#\\{#");//NOI18N
+    private static final Pattern PACKAGE_PATTERN = Pattern.compile("#package# (.*?)#;#");//NOCHECK
+    private static final Pattern CLASS_PATTERN = Pattern.compile("#class# (.*?)\\s");//NOCHECK
+    private static final Pattern INITIALIZABLE_PATTERN = Pattern.compile("#implements# (.*?)\\s#\\{#");//NOCHECK
     // Never found a ( before the ; or = for Fields.
     //#@#FXML#<\n><static></n><final></n><modifier><\n><type></n><instance></n>[=|;]
-    private static final Pattern FXID_PATTERN_1 = Pattern.compile("#@#FXML#(\\s*?[^\\(]*?\\s*?)[;|=]#");//NOI18N
+    private static final Pattern FXID_PATTERN_1 = Pattern.compile("#@#FXML#(\\s*?[^\\(]*?\\s*?)[;|=]#");//NOCHECK
 
     //#public# #Button# b;
-    private static final Pattern FXID_PATTERN_2 = Pattern.compile("#public#(\\s*?[^\\(\\{]*?\\s*?)[;|=]#");//NOI18N
+    private static final Pattern FXID_PATTERN_2 = Pattern.compile("#public#(\\s*?[^\\(\\{]*?\\s*?)[;|=]#");//NOCHECK
 
     // Never found a = before the ( for methods.
     //#@#FXML#<\n><modifier><\n><return type></n><methodName></n>#(#
-    private static final Pattern EVENT_PATTERN_1 = Pattern.compile("#@#FXML#(\\s*?[^=]*?\\s*?)#\\{#");//NOI18N
+    private static final Pattern EVENT_PATTERN_1 = Pattern.compile("#@#FXML#(\\s*?[^=]*?\\s*?)#\\{#");//NOCHECK
 
-    private static final String anyMethodToken = "\\s*?[^\\(\\{]*?\\s*?";//NOI18N
-    private static final String staticFinalToken = "\\s*?(?:#static#|#final#)?\\s*?";//NOI18N
-    private static final String voidToken = "\\s*?#void#\\s*?";//NOI18N
-    private static final String publicToken = "#public#";//NOI18N
-    private static final String methodNameToken = "#[^\\(\\{]*?#\\s*?#?";//NOI18N
-    private static final String typeEventToken = "#\\s*?.*?Event#\\s*?#";//NOI18N
-    private static final String argEventToken = ".*?#\\s*?#?";//NOI18N
-    private static final String throwsToken = "\\s*?(?:#throws#)?\\s*?";//NOI18N
+    private static final String anyMethodToken = "\\s*?[^\\(\\{]*?\\s*?";//NOCHECK
+    private static final String staticFinalToken = "\\s*?(?:#static#|#final#)?\\s*?";//NOCHECK
+    private static final String voidToken = "\\s*?#void#\\s*?";//NOCHECK
+    private static final String publicToken = "#public#";//NOCHECK
+    private static final String methodNameToken = "#[^\\(\\{]*?#\\s*?#?";//NOCHECK
+    private static final String typeEventToken = "#\\s*?.*?Event#\\s*?#";//NOCHECK
+    private static final String argEventToken = ".*?#\\s*?#?";//NOCHECK
+    private static final String throwsToken = "\\s*?(?:#throws#)?\\s*?";//NOCHECK
     private static final String exceptionToken = anyMethodToken;
-    private static final String startBlockToken = "#?\\{#";//NOI18N
-    private static final Pattern EVENT_PATTERN_2 = Pattern.compile(publicToken + staticFinalToken + staticFinalToken + voidToken + "(" + //NOI18N
-            methodNameToken + "\\(" + typeEventToken + argEventToken + "\\)#)" + throwsToken + exceptionToken + startBlockToken);//NOI18N
-    private static final Pattern EVENT_PATTERN_3 = Pattern.compile(publicToken + staticFinalToken + staticFinalToken + voidToken + "(" + //NOI18N
-            methodNameToken + "\\(#\\s*?#?\\)#)" + throwsToken + exceptionToken + startBlockToken);//NOI18N  
+    private static final String startBlockToken = "#?\\{#";//NOCHECK
+    private static final Pattern EVENT_PATTERN_2 = Pattern.compile(publicToken + staticFinalToken + staticFinalToken + voidToken + "(" + //NOCHECK
+            methodNameToken + "\\(" + typeEventToken + argEventToken + "\\)#)" + throwsToken + exceptionToken + startBlockToken);//NOCHECK
+    private static final Pattern EVENT_PATTERN_3 = Pattern.compile(publicToken + staticFinalToken + staticFinalToken + voidToken + "(" + //NOCHECK
+            methodNameToken + "\\(#\\s*?#?\\)#)" + throwsToken + exceptionToken + startBlockToken);//NOCHECK  
     private final String javaContent;
     private final String tokenizedContent;
     private final boolean isInitializable;
@@ -91,16 +91,16 @@ class ControllerClass {
     private Set<String> events;
 
     private static final String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
-    private static final String MAVEN_JAVA_SOURCES_DIR = "java";
-    private static final String MAVEN_RESOURCES_DIR = "resources";
-    private static final String MAVEN_DIR_PATTERN_STRING = "(.*src" + FILE_SEPARATOR + "(?:main|test)" + FILE_SEPARATOR + ")"
-            + MAVEN_RESOURCES_DIR + "(" + FILE_SEPARATOR + "(?:.*))";
-    private static final Pattern MAVEN_DIR_PATTERN = Pattern.compile(FILE_SEPARATOR.equals("\\")
-            ? MAVEN_DIR_PATTERN_STRING.replace("\\", "\\\\")
+    private static final String MAVEN_JAVA_SOURCES_DIR = "java";//NOCHECK
+    private static final String MAVEN_RESOURCES_DIR = "resources";//NOCHECK
+    private static final String MAVEN_DIR_PATTERN_STRING = "(.*src" + FILE_SEPARATOR + "(?:main|test)" + FILE_SEPARATOR + ")"//NOCHECK
+            + MAVEN_RESOURCES_DIR + "(" + FILE_SEPARATOR + "(?:.*))";//NOCHECK
+    private static final Pattern MAVEN_DIR_PATTERN = Pattern.compile(FILE_SEPARATOR.equals("\\")//NOCHECK
+            ? MAVEN_DIR_PATTERN_STRING.replace("\\", "\\\\")//NOCHECK
             : MAVEN_DIR_PATTERN_STRING);
 
-    private static final String MAVEN_DIR_REPLACEMENT_STRING = "$1" + MAVEN_JAVA_SOURCES_DIR + "$2";
-    private static final boolean IGNORE_MAVEN_DIR_STRUCTURE = System.getProperty("ignore.maven.structure") != null;
+    private static final String MAVEN_DIR_REPLACEMENT_STRING = "$1" + MAVEN_JAVA_SOURCES_DIR + "$2";//NOCHECK
+    private static final boolean IGNORE_MAVEN_DIR_STRUCTURE = System.getProperty("ignore.maven.structure") != null;//NOCHECK
 
     private ControllerClass(File file) throws IOException, JavaTokenizer.ParseException {
         assert file != null;
@@ -157,7 +157,7 @@ class ControllerClass {
     private static void scanDirectory(String name, File directory, ScanData data) {
         try {
             //1) Same name .java
-            File f = new File(directory, name + ".java");//NOI18N
+            File f = new File(directory, name + ".java");//NOCHECK
             if (f.exists()) {
                 try {
                     ControllerClass clazz = new ControllerClass(f);
@@ -167,7 +167,7 @@ class ControllerClass {
                 }
             }
             //2) Same nameController.java
-            File f2 = new File(directory, name + "Controller.java");//NOI18N
+            File f2 = new File(directory, name + "Controller.java");//NOCHECK
             if (f2.exists()) {
                 try {
                     ControllerClass clazz = new ControllerClass(f2);
@@ -204,7 +204,7 @@ class ControllerClass {
 
     private static String getNoExtensionName(File file) {
         String name = file.getName();
-        int index = name.lastIndexOf('.');//NOI18N
+        int index = name.lastIndexOf('.');//NOCHECK
         if (index == -1) {
             index = name.length();
         }
@@ -216,7 +216,7 @@ class ControllerClass {
         final List<File> fileList = new ArrayList<>();
         FilenameFilter ff = (dir, name) -> {
             // count[0] = count[0] + 1;
-            if (name.endsWith(".java")) { //NOI18N
+            if (name.endsWith(".java")) { //NOCHECK
                 final File file = new File(dir, name);
                 if (file.canRead() && !file.isDirectory()) {
                     fileList.add(file);
@@ -238,13 +238,13 @@ class ControllerClass {
         Matcher m = CLASS_PATTERN.matcher(content);
         if (m.find()) {
             clazzName = m.group(1);
-            clazzName = clazzName.replaceAll("#", "");//NOI18N
+            clazzName = clazzName.replaceAll("#", "");//NOCHECK
         }
         m = PACKAGE_PATTERN.matcher(content);
         if (m.find()) {
             packageName = m.group(1);
-            packageName = packageName.replaceAll("#", "");//NOI18N
-            clazzName = packageName + "." + clazzName; //NOI18N
+            packageName = packageName.replaceAll("#", "");//NOCHECK
+            clazzName = packageName + "." + clazzName; //NOCHECK
         }
         return clazzName;
     }
@@ -255,7 +255,7 @@ class ControllerClass {
             return false;
         }
         for (String s : str) {
-            if (s.contains("Initializable")) {//NOI18N
+            if (s.contains("Initializable")) {//NOCHECK
                 return true;
             }
         }
@@ -303,7 +303,7 @@ class ControllerClass {
     private static List<String> cleanEvents(List<String> extracted) {
         List<String> ret = new ArrayList<>();
         for (String str : extracted) {
-            int index = str.indexOf("#(#");//NOI18N
+            int index = str.indexOf("#(#");//NOCHECK
             if (index == -1) {
                 continue;
             }
@@ -359,9 +359,9 @@ class ControllerClass {
         String line;
 
         try (BufferedReader bufReader =
-                new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")))) { //NOI18N
+                new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")))) { //NOCHECK
             while ((line = bufReader.readLine()) != null) {
-                sb.append(line).append("\n"); //NOI18N
+                sb.append(line).append("\n"); //NOCHECK
             }
         }
         return sb.toString();

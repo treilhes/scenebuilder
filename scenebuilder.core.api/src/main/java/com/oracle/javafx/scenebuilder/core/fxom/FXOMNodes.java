@@ -151,7 +151,7 @@ public class FXOMNodes {
         assert targetDocument != null;
         assert file != null;
         FXOMObject result = null;
-        if (file.getAbsolutePath().endsWith(".fxml")) { //NOI18N
+        if (file.getAbsolutePath().endsWith(".fxml")) { //NOCHECK
             final String fxmlText
                     = FXOMDocument.readContentFromURL(file.toURI().toURL());
             final FXOMDocument transientDoc = new FXOMDocument(
@@ -202,7 +202,7 @@ public class FXOMNodes {
         assert targetDocument.getLocation() != null;
         assert file != null;
         FXOMIntrinsic result = null;
-        if (file.getAbsolutePath().endsWith(".fxml")) { //NOI18N
+        if (file.getAbsolutePath().endsWith(".fxml")) { //NOCHECK
             final URL fxmlURL = file.toURI().toURL();
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
             final FXOMDocument transientDoc = new FXOMDocument(
@@ -739,9 +739,9 @@ public class FXOMNodes {
         final FXOMDocument result = new FXOMDocument();
         final FXOMInstance imageView = new FXOMInstance(result, ImageView.class);
 
-        final PropertyName imageName = new PropertyName("image"); //NOI18N
-        final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOI18N
-        final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOI18N
+        final PropertyName imageName = new PropertyName("image"); //NOCHECK
+        final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOCHECK
+        final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
 
         final ComponentClassMetadata<?> imageViewMeta
                 = Metadata.getMetadata().queryComponentMetadata(ImageView.class);
@@ -822,7 +822,7 @@ public class FXOMNodes {
          * URL
          */
         final PropertyName valueName
-                = new PropertyName("value"); //NOI18N
+                = new PropertyName("value"); //NOCHECK
         final FXOMPropertyT valueProperty
                 = new FXOMPropertyT(result, valueName, media.getSource());
         final FXOMInstance urlInstance
@@ -833,7 +833,7 @@ public class FXOMNodes {
          * Media
          */
         final PropertyName sourceName
-                = new PropertyName("source"); //NOI18N
+                = new PropertyName("source"); //NOCHECK
         final FXOMPropertyC sourceProperty
                 = new FXOMPropertyC(result, sourceName, urlInstance);
         final FXOMInstance mediaInstance
@@ -844,7 +844,7 @@ public class FXOMNodes {
          * MediaPlayer
          */
         final PropertyName mediaName
-                = new PropertyName("media"); //NOI18N
+                = new PropertyName("media"); //NOCHECK
         final FXOMPropertyC mediaProperty
                 = new FXOMPropertyC(result, mediaName, mediaInstance);
         final FXOMInstance mediaPlayerInstance
@@ -855,15 +855,15 @@ public class FXOMNodes {
          * MediaView
          */
         final PropertyName mediaPlayerName
-                = new PropertyName("mediaPlayer"); //NOI18N
+                = new PropertyName("mediaPlayer"); //NOCHECK
         final FXOMPropertyC mediaPlayerProperty
                 = new FXOMPropertyC(result, mediaPlayerName, mediaPlayerInstance);
         final PropertyName fitWidthName
-                = new PropertyName("fitWidth"); //NOI18N
+                = new PropertyName("fitWidth"); //NOCHECK
         final FXOMPropertyT fitWidthProperty
                 = new FXOMPropertyT(result, fitWidthName, String.valueOf(fitWidth));
         final PropertyName fitHeightName
-                = new PropertyName("fitHeight"); //NOI18N
+                = new PropertyName("fitHeight"); //NOCHECK
         final FXOMPropertyT fitHeightProperty
                 = new FXOMPropertyT(result, fitHeightName, String.valueOf(fitHeight));
         final FXOMInstance mediaView

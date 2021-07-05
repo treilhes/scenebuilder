@@ -85,7 +85,7 @@ public class Rectangle2DPopupEditor extends PopupEditor {
         for (DoubleField doubleField : doubleFields) {
             String val = doubleField.getText();
             if (val == null || val.isEmpty()) {
-                val = "0"; //NOI18N
+                val = "0"; //NOCHECK
             } else {
                 try {
                     Double.parseDouble(val);
@@ -107,7 +107,7 @@ public class Rectangle2DPopupEditor extends PopupEditor {
     //
     @Override
     public void initializePopupContent() {
-        root = FXMLUtils.load(this, "Rectangle2DPopupEditor.fxml"); //NOI18N
+        root = FXMLUtils.load(this, "Rectangle2DPopupEditor.fxml");
         doubleFields[0] = minXDf;
         doubleFields[1] = minYDf;
         doubleFields[2] = widthDf;
@@ -127,12 +127,12 @@ public class Rectangle2DPopupEditor extends PopupEditor {
         Rectangle2D rectangle2DVal = (Rectangle2D) value;
         String valueAsString;
         if (isIndeterminate()) {
-            valueAsString = "-"; //NOI18N
+            valueAsString = "-"; //NOCHECK
         } else {
-            valueAsString = EditorUtils.valAsStr(rectangle2DVal.getMinX()) + "," //NOI18N
+            valueAsString = EditorUtils.valAsStr(rectangle2DVal.getMinX()) + "," //NOCHECK
                     + EditorUtils.valAsStr(rectangle2DVal.getMinY())
-                    + "  " + EditorUtils.valAsStr(rectangle2DVal.getWidth()) //NOI18N
-                    + "x" + EditorUtils.valAsStr(rectangle2DVal.getHeight()); //NOI18N
+                    + "  " + EditorUtils.valAsStr(rectangle2DVal.getWidth()) //NOCHECK
+                    + "x" + EditorUtils.valAsStr(rectangle2DVal.getHeight()); //NOCHECK
         }
         return valueAsString;
     }
@@ -142,7 +142,7 @@ public class Rectangle2DPopupEditor extends PopupEditor {
         if (value == null) {
             rectangle2D = null;
             for (DoubleField doubleField : doubleFields) {
-                doubleField.setText(""); //NOI18N
+                doubleField.setText(""); //NOCHECK
             }
         } else {
             assert value instanceof Rectangle2D;

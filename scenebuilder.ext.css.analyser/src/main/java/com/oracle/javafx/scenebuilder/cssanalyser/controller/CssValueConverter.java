@@ -179,13 +179,13 @@ public class CssValueConverter {
     }
 
     static {
-        STRING_VALUE.add("-fx-skin");//NOI18N
-        STRING_VALUE.add("-fx-shape");//NOI18N
+        STRING_VALUE.add("-fx-skin");//NOCHECK
+        STRING_VALUE.add("-fx-shape");//NOCHECK
     }
 
     private static String format(String property, String value) {
         if (STRING_VALUE.contains(property)) {
-            return "\"" + value + "\"";//NOI18N
+            return "\"" + value + "\"";//NOCHECK
         } else {
             return value;
         }
@@ -199,26 +199,26 @@ public class CssValueConverter {
 
         for (Declaration d : r.getDeclarations()) {
             if (d.getProperty().equals(property)) {
-                if (property.equals("-fx-background-radius") || property.equals("-fx-border-radius")) { //NOI18N
+                if (property.equals("-fx-background-radius") || property.equals("-fx-border-radius")) { //NOCHECK
                     return format(property, getRadiusCssString(property, d.getParsedValue()));
                 } else {
                     return format(property, getCssString(property, d.getParsedValue()));
                 }
             }
         }
-        throw new IllegalArgumentException("Can't compute a value");//NOI18N
+        throw new IllegalArgumentException("Can't compute a value");//NOCHECK
     }
 
     static {
-        SINGLE_WHEN_EQUALITY.add("-fx-padding"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-background-radius"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-background-insets"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-border-color"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-border-radius"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-border-insets"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-border-image-insets"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-border-image-slice"); //NOI18N
-        SINGLE_WHEN_EQUALITY.add("-fx-border-image-width"); //NOI18N
+        SINGLE_WHEN_EQUALITY.add("-fx-padding"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-background-radius"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-background-insets"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-border-color"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-border-radius"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-border-insets"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-border-image-insets"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-border-image-slice"); //NOCHECK
+        SINGLE_WHEN_EQUALITY.add("-fx-border-image-width"); //NOCHECK
 
     }
 
@@ -236,7 +236,7 @@ public class CssValueConverter {
 
         // TODO : this method should be rewritten in a cleaner way...
         if (value == null) {
-            return "null"; //NOI18N
+            return "null"; //NOCHECK
         }
 
         // I don't like that but this is needed to only have a conversion for gradient.
@@ -245,7 +245,7 @@ public class CssValueConverter {
                 || value.getConverter() instanceof PaintConverter.RadialGradientConverter) {
 
             try {
-                @SuppressWarnings("unchecked")//NOI18N
+                @SuppressWarnings("unchecked")//NOCHECK
                 Object converted = value.getConverter().convert(value, null);
 
                 return toCssString(converted);
@@ -261,10 +261,10 @@ public class CssValueConverter {
         boolean isDerive = value.getConverter() instanceof DeriveColorConverter || value.getConverter() instanceof DeriveSizeConverter;
         boolean isLadder = value.getConverter() instanceof LadderConverter;
         if (isDerive) {
-            builder.append("derive("); //NOI18N
+            builder.append("derive("); //NOCHECK
         }
         if (isLadder) {
-            builder.append("ladder("); //NOI18N
+            builder.append("ladder("); //NOCHECK
         }
         if (obj instanceof ParsedValue[]) {
             ParsedValue[] array = (ParsedValue[]) obj;
@@ -302,7 +302,7 @@ public class CssValueConverter {
                     for (int i = 0; i < values.size(); i++) {
                         b.append(values.get(i));
                         if (i < array.length - 1) {
-                            b.append(" "); //NOI18N
+                            b.append(" "); //NOCHECK
                         }
                     }
                 }
@@ -313,7 +313,7 @@ public class CssValueConverter {
                     val = removeDotZeroPxPercent(val);
                     b.append(val);
                     if ((i < array.length - 1) && val.length() > 0) {
-                        b.append(", "); //NOI18N
+                        b.append(", "); //NOCHECK
                     }
                 }
             }
@@ -326,7 +326,7 @@ public class CssValueConverter {
                     String val = retrieveValue(property, arr[i]);
                     builder.append(val);
                     if ((i < arr.length - 1) && val.length() > 0) {
-                        builder.append(", "); //NOI18N
+                        builder.append(", "); //NOCHECK
                     }
                 }
             } else {
@@ -334,7 +334,7 @@ public class CssValueConverter {
             }
         }
         if (isDerive || isLadder) {
-            builder.append(")"); //NOI18N
+            builder.append(")"); //NOCHECK
         }
         return builder.toString();
     }
@@ -345,7 +345,7 @@ public class CssValueConverter {
         
         // See  http://www.w3.org/TR/css3-background/#the-border-radius 
         
-        assert property.equals("-fx-background-radius") || property.equals("-fx-border-radius"); //NOI18N
+        assert property.equals("-fx-background-radius") || property.equals("-fx-border-radius"); //NOCHECK
         StringBuilder sbAll = new StringBuilder();
         Object obj = value.getValue();
         if (!(obj instanceof ParsedValue[])) {
@@ -376,7 +376,7 @@ public class CssValueConverter {
                         return null;
                     }
                     Size size = (Size) obj;
-                    sbCornerRadii.append(size).append(" "); //NOI18N
+                    sbCornerRadii.append(size).append(" "); //NOCHECK
                     if (initSize == null) {
                         initSize = size;
                     } else if (!initSize.equals(size)) {
@@ -385,7 +385,7 @@ public class CssValueConverter {
                 }
                 if (index2 != pvArray2.length - 1) {
                     // Separator between the horizontal / vertical lists
-                    sbCornerRadii.append(" / "); //NOI18N
+                    sbCornerRadii.append(" / "); //NOCHECK
                 }
                 index2++;
             }
@@ -395,7 +395,7 @@ public class CssValueConverter {
                 sbAll.append(sbCornerRadii.toString().trim());
             }
             if (index != pvArray.length - 1) {
-                sbAll.append(", "); //NOI18N
+                sbAll.append(", "); //NOCHECK
             }
             index++;
         }
@@ -408,7 +408,7 @@ public class CssValueConverter {
         }
 
         if (eventValue == null) {
-            return "null"; //NOI18N
+            return "null"; //NOCHECK
         }
         StringBuilder builder = new StringBuilder();
         if (eventValue instanceof List) {
@@ -418,7 +418,7 @@ public class CssValueConverter {
                 String val = retrieveValue(property, values.get(i));
                 builder.append(val);
                 if ((i < length - 1) && val.length() > 0) {
-                    builder.append(", "); //NOI18N
+                    builder.append(", "); //NOCHECK
                 }
             }
         } else if (eventValue.getClass().isArray()) {
@@ -427,7 +427,7 @@ public class CssValueConverter {
                 String val = retrieveValue(property, Array.get(eventValue, i));
                 builder.append(val);
                 if ((i < length - 1) && val.length() > 0) {
-                    builder.append(", "); //NOI18N
+                    builder.append(", "); //NOCHECK
                 }
             }
         } else if (eventValue instanceof Background) {
@@ -465,11 +465,11 @@ public class CssValueConverter {
         } else {
             String str = EditorUtils.valAsStr(eventValue);
             if (str == null) {
-                str = "null"; //NOI18N
+                str = "null"; //NOCHECK
             } else {
-                str = str.replaceAll("\n", " ");//NOI18N
+                str = str.replaceAll("\n", " ");//NOCHECK
                 // Remove memory address if any
-                str = str.split("@")[0]; //NOI18N
+                str = str.split("@")[0]; //NOCHECK
                 str = removeDotZeroPxPercent(str);
             }
             builder.append(str);
@@ -483,9 +483,9 @@ public class CssValueConverter {
         int blue = (int) Math.round(c.getBlue() * 255.0);
         int alpha = (int) Math.round(c.getOpacity() * 255.0);
         if (alpha == 255) {
-            return String.format("#%02x%02x%02x", red, green, blue); //NOI18N
+            return String.format("#%02x%02x%02x", red, green, blue); //NOCHECK
         } else {
-            return String.format("#%02x%02x%02x%02x", red, green, blue, alpha); //NOI18N
+            return String.format("#%02x%02x%02x%02x", red, green, blue, alpha); //NOCHECK
         }
     }
 
@@ -511,15 +511,15 @@ public class CssValueConverter {
             return bf.toString();
         }
         StringBuilder builder = new StringBuilder();
-        if (property.equals("-fx-background-color")) { //NOI18N
+        if (property.equals("-fx-background-color")) { //NOCHECK
             Paint p = bf.getFill();
             builder.append(paintToString(p));
         } else {
-            if (property.equals("-fx-background-insets")) { //NOI18N
+            if (property.equals("-fx-background-insets")) { //NOCHECK
                 builder.append(insetsValue(bf.getInsets()));
             } else {
                 //the top right, bottom right, bottom left, and top left
-                if (property.equals("-fx-background-radius")) { //NOI18N
+                if (property.equals("-fx-background-radius")) { //NOCHECK
                     handleCornerRadii(bf.getRadii(), builder);
                 }
             }
@@ -541,11 +541,11 @@ public class CssValueConverter {
             return bi.toString();
         }
         StringBuilder builder = new StringBuilder();
-        if (property.equals("-fx-background-image")) { //NOI18N
+        if (property.equals("-fx-background-image")) { //NOCHECK
             Image p = bi.getImage();
             builder.append(p.getUrl());
         } else {
-            if (property.equals("-fx-background-position")) {             //NOI18N
+            if (property.equals("-fx-background-position")) {             //NOCHECK
                 double left = 0, right = 0, top = 0, bottom = 0;
                 if (bi.getPosition().getHorizontalSide() == Side.LEFT) {
                     left = bi.getPosition().getHorizontalPosition();
@@ -557,43 +557,43 @@ public class CssValueConverter {
                 } else {
                     bottom = bi.getPosition().getVerticalPosition();
                 }
-                builder.append("left:"); //NOI18N
+                builder.append("left:"); //NOCHECK
                 builder.append(EditorUtils.valAsStr(left));
-                builder.append(" right:"); //NOI18N
+                builder.append(" right:"); //NOCHECK
                 builder.append(EditorUtils.valAsStr(right));
-                builder.append(" top:"); //NOI18N
+                builder.append(" top:"); //NOCHECK
                 builder.append(EditorUtils.valAsStr(top));
-                builder.append(" bottom:"); //NOI18N
+                builder.append(" bottom:"); //NOCHECK
                 builder.append(EditorUtils.valAsStr(bottom));
             } else {
-                if (property.equals("-fx-background-repeat")) {          //NOI18N
+                if (property.equals("-fx-background-repeat")) {          //NOCHECK
                     if (bi.getRepeatX() != null) {
                         builder.append(bi.getRepeatX().toString());
                     } else {
                         if (bi.getRepeatY() != null) {
                             builder.append(bi.getRepeatY().toString());
                         } else {
-                            builder.append("unknown repeat"); //NOI18N
+                            builder.append("unknown repeat"); //NOCHECK
                         }
                     }
                 } else {
-                    if (property.equals("-fx-background-size")) { //NOI18N
+                    if (property.equals("-fx-background-size")) { //NOCHECK
                         BackgroundSize bs = bi.getSize();
                         if (bs.isContain()) {
-                            builder.append("contain"); //NOI18N
+                            builder.append("contain"); //NOCHECK
                         } else {
                             if (bs.isCover()) {
-                                builder.append("cover"); //NOI18N
+                                builder.append("cover"); //NOCHECK
                             } else {
                                 if (bs.getWidth() == BackgroundSize.AUTO) {
-                                    builder.append("width: auto"); //NOI18N
+                                    builder.append("width: auto"); //NOCHECK
                                 } else {
-                                    builder.append("width: ").append(EditorUtils.valAsStr(bs.getWidth())); //NOI18N
+                                    builder.append("width: ").append(EditorUtils.valAsStr(bs.getWidth())); //NOCHECK
                                 }
                                 if (bs.getHeight() == BackgroundSize.AUTO) {
-                                    builder.append("height: auto"); //NOI18N
+                                    builder.append("height: auto"); //NOCHECK
                                 } else {
-                                    builder.append("height: ").append(EditorUtils.valAsStr(bs.getHeight())); //NOI18N
+                                    builder.append("height: ").append(EditorUtils.valAsStr(bs.getHeight())); //NOCHECK
                                 }
                             }
                         }
@@ -609,48 +609,48 @@ public class CssValueConverter {
             return bi.toString();
         }
         StringBuilder builder = new StringBuilder();
-        if (property.equals("-fx-border-image")) { //NOI18N
+        if (property.equals("-fx-border-image")) { //NOCHECK
             Image p = bi.getImage();
             builder.append(p.getUrl());
         } else {
-            if (property.equals("-fx-background-position")) {             //NOI18N
+            if (property.equals("-fx-background-position")) {             //NOCHECK
 
             } else {
-                if (property.equals("-fx-border-image-repeat")) {          //NOI18N
+                if (property.equals("-fx-border-image-repeat")) {          //NOCHECK
                     if (bi.getRepeatX() != null) {
                         builder.append(bi.getRepeatX().toString());
                     } else {
                         if (bi.getRepeatY() != null) {
                             builder.append(bi.getRepeatY().toString());
                         } else {
-                            builder.append("unknown repeat"); //NOI18N
+                            builder.append("unknown repeat"); //NOCHECK
                         }
                     }
                 } else {
-                    if (property.equals("-fx-border-image-insets")) { //NOI18N
+                    if (property.equals("-fx-border-image-insets")) { //NOCHECK
                         builder.append(insetsValue(bi.getInsets()));
                     } else {
-                        if (property.equals("-fx-border-image-width")) { //NOI18N
+                        if (property.equals("-fx-border-image-width")) { //NOCHECK
                             BorderWidths bw = bi.getWidths();
                             if (MathUtils.equals(bw.getTop(), bw.getBottom())
                                     && MathUtils.equals(bw.getLeft(), bw.getRight())) {
                                 builder.append(EditorUtils.valAsStr(bw.getTop()));
                             } else {
-                                builder.append(EditorUtils.valAsStr(bw.getTop())).append(" "). //NOI18N
-                                        append(EditorUtils.valAsStr(bw.getRight())).append(" "). //NOI18N
-                                        append(EditorUtils.valAsStr(bw.getBottom())).append(" "). //NOI18N
+                                builder.append(EditorUtils.valAsStr(bw.getTop())).append(" "). //NOCHECK
+                                        append(EditorUtils.valAsStr(bw.getRight())).append(" "). //NOCHECK
+                                        append(EditorUtils.valAsStr(bw.getBottom())).append(" "). //NOCHECK
                                         append(EditorUtils.valAsStr(bw.getLeft()));
                             }
                         } else {
-                            if (property.equals("-fx-border-image-slice")) { //NOI18N
+                            if (property.equals("-fx-border-image-slice")) { //NOCHECK
                                 BorderWidths bw = bi.getSlices();
                                 if (MathUtils.equals(bw.getTop(), bw.getBottom())
                                         && MathUtils.equals(bw.getLeft(), bw.getRight())) {
                                     builder.append(EditorUtils.valAsStr(bw.getTop()));
                                 } else {
-                                    builder.append(EditorUtils.valAsStr(bw.getTop())).append(" "). //NOI18N
-                                            append(EditorUtils.valAsStr(bw.getRight())).append(" "). //NOI18N
-                                            append(EditorUtils.valAsStr(bw.getBottom())).append(" "). //NOI18N
+                                    builder.append(EditorUtils.valAsStr(bw.getTop())).append(" "). //NOCHECK
+                                            append(EditorUtils.valAsStr(bw.getRight())).append(" "). //NOCHECK
+                                            append(EditorUtils.valAsStr(bw.getBottom())).append(" "). //NOCHECK
                                             append(EditorUtils.valAsStr(bw.getLeft()));
                                 }
                             }
@@ -668,41 +668,41 @@ public class CssValueConverter {
         }
         StringBuilder builder = new StringBuilder();
         //top, right, bottom, and left 
-        if (property.equals("-fx-border-color")) { //NOI18N
+        if (property.equals("-fx-border-color")) { //NOCHECK
             if (bs.getTopStroke().equals(bs.getBottomStroke())
                     && bs.getRightStroke().equals(bs.getBottomStroke())
                     && bs.getLeftStroke().equals(bs.getBottomStroke())) {
                 builder.append(paintToString(bs.getBottomStroke()));
             } else {
-                builder.append(paintToString(bs.getTopStroke())).append(" "); //NOI18N
-                builder.append(paintToString(bs.getRightStroke())).append(" "); //NOI18N
-                builder.append(paintToString(bs.getBottomStroke())).append(" "); //NOI18N
+                builder.append(paintToString(bs.getTopStroke())).append(" "); //NOCHECK
+                builder.append(paintToString(bs.getRightStroke())).append(" "); //NOCHECK
+                builder.append(paintToString(bs.getBottomStroke())).append(" "); //NOCHECK
                 builder.append(paintToString(bs.getLeftStroke()));
             }
         } else {
-            if (property.equals("-fx-border-insets")) { //NOI18N
+            if (property.equals("-fx-border-insets")) { //NOCHECK
                 builder.append(insetsValue(bs.getInsets()));
             } else {
                 //the top right, bottom right, bottom left, and top left
-                if (property.equals("-fx-border-radius")) { //NOI18N
+                if (property.equals("-fx-border-radius")) { //NOCHECK
                     handleCornerRadii(bs.getRadii(), builder);
                 } else {
-                    if (property.equals("-fx-border-style")) { //NOI18N
-                        builder.append(bs.getTopStyle().toString()).append(", "); //NOI18N
-                        builder.append(bs.getRightStyle().toString()).append(", "); //NOI18N
-                        builder.append(bs.getBottomStyle().toString()).append(", "); //NOI18N
+                    if (property.equals("-fx-border-style")) { //NOCHECK
+                        builder.append(bs.getTopStyle().toString()).append(", "); //NOCHECK
+                        builder.append(bs.getRightStyle().toString()).append(", "); //NOCHECK
+                        builder.append(bs.getBottomStyle().toString()).append(", "); //NOCHECK
                         builder.append(bs.getLeftStyle().toString());
                     } else {
-                        if (property.equals("-fx-border-width")) { //NOI18N
+                        if (property.equals("-fx-border-width")) { //NOCHECK
                             BorderWidths bw = bs.getWidths();
                             if (MathUtils.equals(bw.getTop(), bw.getBottom())
                                     && MathUtils.equals(bw.getRight(), bw.getBottom())
                                     && MathUtils.equals(bw.getLeft(), bw.getBottom())) {
                                 builder.append(EditorUtils.valAsStr(bw.getBottom()));
                             } else {
-                                builder.append(EditorUtils.valAsStr(bw.getTop())).append(" "). //NOI18N
-                                        append(EditorUtils.valAsStr(bw.getRight())).append(" "). //NOI18N
-                                        append(EditorUtils.valAsStr(bw.getBottom())).append(" "). //NOI18N
+                                builder.append(EditorUtils.valAsStr(bw.getTop())).append(" "). //NOCHECK
+                                        append(EditorUtils.valAsStr(bw.getRight())).append(" "). //NOCHECK
+                                        append(EditorUtils.valAsStr(bw.getBottom())).append(" "). //NOCHECK
                                         append(EditorUtils.valAsStr(bw.getLeft()));
                             }
                         }
@@ -719,7 +719,7 @@ public class CssValueConverter {
         } else {
             String gradient = p.toString();
             // Workaround for RT-22910
-            gradient = gradient.replaceAll("0x", "#");//NOI18N
+            gradient = gradient.replaceAll("0x", "#");//NOCHECK
             gradient = removeDotZeroPxPercent(gradient);
             return gradient;
         }
@@ -730,27 +730,27 @@ public class CssValueConverter {
             return removeAllDotZero(font.toString());
         }
         StringBuilder builder = new StringBuilder();
-        if (property.equals("-fx-font")) { //NOI18N
-            String size = EditorUtils.valAsStr(font.getSize()); //NOI18N
-            String previewStr = font.getFamily() + " " + size + "px" //NOI18N
+        if (property.equals("-fx-font")) { //NOCHECK
+            String size = EditorUtils.valAsStr(font.getSize()); //NOCHECK
+            String previewStr = font.getFamily() + " " + size + "px" //NOCHECK
                     + (!font.getName().equals(font.getFamily())
-                    && !"Regular".equals(font.getStyle()) //NOI18N
-                    ? " (" + font.getStyle() + ")" : ""); //NOI18N
+                    && !"Regular".equals(font.getStyle()) //NOCHECK
+                    ? " (" + font.getStyle() + ")" : ""); //NOCHECK
             builder.append(previewStr);
         } else {
-            if (property.equals("-fx-font-size")) { //NOI18N
+            if (property.equals("-fx-font-size")) { //NOCHECK
                 double p = font.getSize();
-                builder.append(EditorUtils.valAsStr(p)).append("px"); //NOI18N
+                builder.append(EditorUtils.valAsStr(p)).append("px"); //NOCHECK
 
             } else {
-                if (property.equals("-fx-font-family")) { //NOI18N
+                if (property.equals("-fx-font-family")) { //NOCHECK
                     builder.append(font.getFamily());
                 } else {
-                    if (property.equals("-fx-font-weight")) { //NOI18N
+                    if (property.equals("-fx-font-weight")) { //NOCHECK
                         // There is no such property.
                         builder.append(removeAllDotZero(font.toString()));
                     } else {
-                        if (property.equals("-fx-font-style")) { //NOI18N
+                        if (property.equals("-fx-font-style")) { //NOCHECK
                             builder.append(font.getStyle());
                         }
                     }
@@ -766,8 +766,8 @@ public class CssValueConverter {
                 && MathUtils.equals(insets.getTop(), insets.getLeft())) {
             return EditorUtils.valAsStr(insets.getLeft());
         } else {
-            return EditorUtils.valAsStr(insets.getTop()) + " " + EditorUtils.valAsStr(insets.getRight()) //NOI18N
-                    + " " + EditorUtils.valAsStr(insets.getBottom()) + " " + EditorUtils.valAsStr(insets.getLeft()); //NOI18N
+            return EditorUtils.valAsStr(insets.getTop()) + " " + EditorUtils.valAsStr(insets.getRight()) //NOCHECK
+                    + " " + EditorUtils.valAsStr(insets.getBottom()) + " " + EditorUtils.valAsStr(insets.getLeft()); //NOCHECK
         }
     }
 
@@ -778,7 +778,7 @@ public class CssValueConverter {
             strBuild.append(adding.getClass().getSimpleName());
             adding = getEffectInput(adding);
             if (adding != null) {
-                strBuild.append(", "); //NOI18N
+                strBuild.append(", "); //NOCHECK
             }
         }
         return strBuild.toString();
@@ -788,10 +788,10 @@ public class CssValueConverter {
         if (property == null) {
             return bf;
         }
-        if (property.equals("-fx-background-color")) { //NOI18N
+        if (property.equals("-fx-background-color")) { //NOCHECK
             return bf.getFill();
         } else {
-            if (property.equals("-fx-background-insets")) { //NOI18N
+            if (property.equals("-fx-background-insets")) { //NOCHECK
                 return bf.getInsets();
             } else {
                 return backgroundFillToString(property, bf);
@@ -803,7 +803,7 @@ public class CssValueConverter {
         if (property == null) {
             return bi;
         }
-        if (property.equals("-fx-background-image")) { //NOI18N
+        if (property.equals("-fx-background-image")) { //NOCHECK
             return bi.getImage();
         } else {
             return backgroundImageToString(property, bi);
@@ -814,7 +814,7 @@ public class CssValueConverter {
         if (property == null) {
             return bi;
         }
-        if (property.equals("-fx-border-image")) { //NOI18N
+        if (property.equals("-fx-border-image")) { //NOCHECK
             return bi.getImage();
         } else {
             return borderImageToString(property, bi);
@@ -826,7 +826,7 @@ public class CssValueConverter {
             return bs;
         }
         //top, right, bottom, and left 
-        if (property.equals("-fx-border-color")) { //NOI18N
+        if (property.equals("-fx-border-color")) { //NOCHECK
             if (bs.getTopStroke().equals(bs.getBottomStroke())
                     && bs.getRightStroke().equals(bs.getBottomStroke())
                     && bs.getLeftStroke().equals(bs.getBottomStroke())) {
@@ -840,7 +840,7 @@ public class CssValueConverter {
                 return p;
             }
         } else {
-            if (property.equals("-fx-border-insets")) { //NOI18N
+            if (property.equals("-fx-border-insets")) { //NOCHECK
                 return bs.getInsets();
             } else {
                 return borderStrokeToString(property, bs);
@@ -852,18 +852,18 @@ public class CssValueConverter {
         if (property == null) {
             return font;
         }
-        if (property.equals("-fx-font-size")) { //NOI18N
+        if (property.equals("-fx-font-size")) { //NOCHECK
             return EditorUtils.valAsStr(font.getSize());
         } else {
-            if (property.equals("-fx-font-style")) { //NOI18N
+            if (property.equals("-fx-font-style")) { //NOCHECK
                 return font.getStyle();
             } else {
-                if (property.equals("-fx-font-family")) { //NOI18N
+                if (property.equals("-fx-font-family")) { //NOCHECK
                     return font.getFamily();
                 } else {
-                    if (property.equals("-fx-font-weight")) { //NOI18N
+                    if (property.equals("-fx-font-weight")) { //NOCHECK
                         // No font weight
-                        return font.getFamily() + " " + font.getStyle(); //NOI18N
+                        return font.getFamily() + " " + font.getStyle(); //NOCHECK
                     } else {
                         return font;
                     }
@@ -874,15 +874,15 @@ public class CssValueConverter {
 
     private static String removeDotZeroPxPercent(String str) {
         // Remove ".0" in strings, for "px" and "%" notations
-        str = str.replaceAll("\\.0px", "px"); //NOI18N
-        str = str.replaceAll("\\.0em", "em"); //NOI18N
-        str = str.replaceAll("\\.0\\%", "%"); //NOI18N
+        str = str.replaceAll("\\.0px", "px"); //NOCHECK
+        str = str.replaceAll("\\.0em", "em"); //NOCHECK
+        str = str.replaceAll("\\.0\\%", "%"); //NOCHECK
         return str;
     }
 
     private static String removeAllDotZero(String str) {
         // Remove all ".0" in string
-        str = str.replaceAll("\\.0", ""); //NOI18N
+        str = str.replaceAll("\\.0", ""); //NOCHECK
         return str;
     }
 
@@ -908,36 +908,36 @@ public class CssValueConverter {
             } else {
                 // Same value for vertical and horizontal radii 
                 // => 4 values for topLeft, topRight, bottomLeft, bottomRight
-                builder.append(EditorUtils.valAsStr(topLeftH)).append(" "). //NOI18N
-                        append(EditorUtils.valAsStr(topRightH)).append(" "). //NOI18N
-                        append(EditorUtils.valAsStr(bottomRightH)).append(" "). //NOI18N
+                builder.append(EditorUtils.valAsStr(topLeftH)).append(" "). //NOCHECK
+                        append(EditorUtils.valAsStr(topRightH)).append(" "). //NOCHECK
+                        append(EditorUtils.valAsStr(bottomRightH)).append(" "). //NOCHECK
                         append(EditorUtils.valAsStr(bottomLeftH));
             }
         } else {
             // Separate value for each.
             // Syntax: "horizontal values / vertical values"
-            builder.append(EditorUtils.valAsStr(topLeftH)).append(" "). //NOI18N
-                    append(EditorUtils.valAsStr(topRightH)).append(" "). //NOI18N
-                    append(EditorUtils.valAsStr(bottomRightH)).append(" "). //NOI18N
+            builder.append(EditorUtils.valAsStr(topLeftH)).append(" "). //NOCHECK
+                    append(EditorUtils.valAsStr(topRightH)).append(" "). //NOCHECK
+                    append(EditorUtils.valAsStr(bottomRightH)).append(" "). //NOCHECK
                     append(EditorUtils.valAsStr(bottomLeftH)).
-                    append(" / ").//NOI18N
-                    append(EditorUtils.valAsStr(topLeftV)).append(" "). //NOI18N
-                    append(EditorUtils.valAsStr(topRightV)).append(" "). //NOI18N
-                    append(EditorUtils.valAsStr(bottomRightV)).append(" "). //NOI18N
+                    append(" / ").//NOCHECK
+                    append(EditorUtils.valAsStr(topLeftV)).append(" "). //NOCHECK
+                    append(EditorUtils.valAsStr(topRightV)).append(" "). //NOCHECK
+                    append(EditorUtils.valAsStr(bottomRightV)).append(" "). //NOCHECK
                     append(EditorUtils.valAsStr(bottomLeftV));
         }
     }
 
-//    @SuppressWarnings({"BroadCatchBlock", "TooBroadCatch"}) //NOI18N
+//    @SuppressWarnings({"BroadCatchBlock", "TooBroadCatch"}) //NOCHECK
     private static Effect getEffectInput(Effect effect) {
         Effect found = null;
         try {
-            found = (Effect) effect.getClass().getMethod("getInput").invoke(effect); //NOI18N
+            found = (Effect) effect.getClass().getMethod("getInput").invoke(effect); //NOCHECK
         } catch (Throwable e) {
             // DO NOT use multi-catch syntax here, this generates a FindBugs Warning (because of SecurityException catching)
 //                e.printStackTrace();
             try {
-                found = (Effect) effect.getClass().getMethod("getContentInput").invoke(effect); //NOI18N
+                found = (Effect) effect.getClass().getMethod("getContentInput").invoke(effect); //NOCHECK
             } catch (Throwable ee) {
                 // DO NOT use multi-catch syntax here, this generates a FindBugs Warning (because of SecurityException catching)
 //                    ee.printStackTrace();

@@ -49,16 +49,16 @@ import javafx.scene.effect.BoxBlur;
 public class BoxBlurPropertyMetadata extends ComplexPropertyMetadata<BoxBlur> {
     
     private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOI18N
+            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
             true /* readWrite */, null, InspectorPath.UNUSED);
     private final EffectSizeDoublePropertyMetadata heightMetadata
-            = new EffectSizeDoublePropertyMetadata(new PropertyName("height"), //NOI18N
+            = new EffectSizeDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
             true /* readWrite */, 5.0, InspectorPath.UNUSED);
     private final EffectSizeDoublePropertyMetadata widthMetadata
-            = new EffectSizeDoublePropertyMetadata(new PropertyName("width"), //NOI18N
+            = new EffectSizeDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
             true /* readWrite */, 5.0, InspectorPath.UNUSED);
     private final IntegerPropertyMetadata iterationsMetadata
-            = new IntegerPropertyMetadata(new PropertyName("iterations"), //NOI18N
+            = new IntegerPropertyMetadata(new PropertyName("iterations"), //NOCHECK
              true /* readWrite */, 1, InspectorPath.UNUSED);
 
     public BoxBlurPropertyMetadata(PropertyName name, boolean readWrite, 

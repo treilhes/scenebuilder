@@ -96,7 +96,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     }
     public final static LayoutFormat DEFAULT_LAYOUT_FORMAT = LayoutFormat.SIMPLE_LINE_CENTERED;
     private static final Image cssIcon = new Image(
-            AbstractPropertyEditor.class.getResource("css-icon.png").toExternalForm()); //NOI18N
+            AbstractPropertyEditor.class.getResource("css-icon.png").toExternalForm());
     private Hyperlink propName;
     private HBox propNameNode;
     private MenuButton menu;
@@ -145,7 +145,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         propName.setOnAction(event -> {
             getApi().getDocumentation().openDocumentationUrl(selectedClasses, propMeta);
         });
-        propName.getStyleClass().add("property-link"); //NOI18N
+        propName.getStyleClass().add("property-link"); //NOCHECK
         propName.setFocusTraversable(false);
 
         // The hyperlink is wrapped in an HBox so that the HBox grows in width, not the hyperlink
@@ -185,10 +185,10 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
 
             Region region = new Region();
             menu.setGraphic(region);
-            region.getStyleClass().add("cog-shape"); //NOI18N
+            region.getStyleClass().add("cog-shape"); //NOCHECK
 
             menu.disableProperty().bind(disableProperty);
-            menu.getStyleClass().add("cog-menubutton"); //NOI18N
+            menu.getStyleClass().add("cog-menubutton"); //NOCHECK
             menu.setOpacity(0);
             if (fadeTransition == null) {
                 fadeTransition = new FadeTransition(Duration.millis(500), menu);
@@ -537,31 +537,31 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         TextField bindingTf = new TextField();
         bindingTf.setText(bindingExp);
         bindingTf.setEditable(false);
-//                bindingTf.getStyleClass().add("read-only"); //NOI18N
+//                bindingTf.getStyleClass().add("read-only"); //NOCHECK
         HBox hbox = new HBox(5);
         EditorUtils.replaceNode(valueEditor, hbox, null);
-        hbox.getChildren().addAll(new Label("${"), bindingTf, new Label("}")); //NOI18N
+        hbox.getChildren().addAll(new Label("${"), bindingTf, new Label("}")); //NOCHECK
         return hbox;
     }
 
     protected static boolean isBindingExpression(String str) {
-        return str.startsWith("${") && str.endsWith("}"); //NOI18N
+        return str.startsWith("${") && str.endsWith("}"); //NOCHECK
     }
 
     private void addCssVisual() {
-        if (!propNameNode.getStyleClass().contains("css-override")) { //NOI18N
+        if (!propNameNode.getStyleClass().contains("css-override")) { //NOCHECK
             ImageView iv = new ImageView(cssIcon);
             propName.setGraphic(iv);
-            propNameNode.getStyleClass().add("css-override"); //NOI18N
+            propNameNode.getStyleClass().add("css-override"); //NOCHECK
 
             // menu
             if (showCssMenuItem == null) {
-                showCssMenuItem = new MenuItem(I18N.getString("inspector.css.showcss")); //NOI18N
+                showCssMenuItem = new MenuItem(I18N.getString("inspector.css.showcss"));
                 showCssMenuItem.setOnAction(e -> {
                     assert cssInfo != null;
                     if (cssInfo.isInline()) {
                         // Jump to the "style" property
-                        navigateRequestProperty.setValue("style"); //NOI18N
+                        navigateRequestProperty.setValue("style"); //NOCHECK
                         navigateRequestProperty.setValue(null);
                     } else {
                         // Open the css file
@@ -582,9 +582,9 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     }
 
     private void removeCssVisual() {
-        if (propNameNode.getStyleClass().contains("css-override")) { //NOI18N
+        if (propNameNode.getStyleClass().contains("css-override")) { //NOCHECK
             propName.setGraphic(null);
-            propNameNode.getStyleClass().remove("css-override"); //NOI18N
+            propNameNode.getStyleClass().remove("css-override"); //NOCHECK
         }
         cssMenuUpdate();
     }
@@ -688,10 +688,10 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
 
     protected static void handleIndeterminate(Node node) {
         if (node instanceof TextField) {
-            ((TextField) node).setText(""); //NOI18N
+            ((TextField) node).setText(""); //NOCHECK
             ((TextField) node).setPromptText(AbstractEditor.INDETERMINATE_STR);
         } else if (node instanceof ComboBox) {
-            ((ComboBox<?>) node).getEditor().setText("");//NOI18N
+            ((ComboBox<?>) node).getEditor().setText("");//NOCHECK
             ((ComboBox<?>) node).setPromptText(AbstractEditor.INDETERMINATE_STR);
         } else if (node instanceof ChoiceBox) {
             ((ChoiceBox<?>) node).getSelectionModel().clearSelection();

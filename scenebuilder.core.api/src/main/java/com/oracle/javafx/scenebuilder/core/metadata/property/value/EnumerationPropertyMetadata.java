@@ -49,9 +49,9 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
  */
 public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
     
-    public static final String EQUIV_NONE = "NONE"; //NOI18N
-    public static final String EQUIV_AUTOMATIC = "AUTOMATIC"; //NOI18N
-    public static final String EQUIV_INHERITED = "INHERIT"; //NOI18N
+    public static final String EQUIV_NONE = "NONE"; //NOCHECK
+    public static final String EQUIV_AUTOMATIC = "AUTOMATIC"; //NOCHECK
+    public static final String EQUIV_INHERITED = "INHERIT"; //NOCHECK
     
     private final Class<?> enumClass;
     private final Enum<?> defaultValue;

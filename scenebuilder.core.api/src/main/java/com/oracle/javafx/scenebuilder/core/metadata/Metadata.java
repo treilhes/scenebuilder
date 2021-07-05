@@ -97,94 +97,94 @@ public class Metadata implements InitializingBean {
         componentClassMetadatas.forEach(c -> componentClassMap.put(c.getKlass(), c));
         
         // Populates hiddenProperties
-        hiddenProperties.add(new PropertyName("activated"));
-        hiddenProperties.add(new PropertyName("alignWithContentOrigin"));
-        hiddenProperties.add(new PropertyName("armed"));
-        hiddenProperties.add(new PropertyName("anchor"));
-        hiddenProperties.add(new PropertyName("antiAliasing"));
-        hiddenProperties.add(new PropertyName("border"));
-        hiddenProperties.add(new PropertyName("background"));
-        hiddenProperties.add(new PropertyName("caretPosition"));
-        hiddenProperties.add(new PropertyName("camera"));
-        hiddenProperties.add(new PropertyName("cellFactory"));
-        hiddenProperties.add(new PropertyName("cellValueFactory"));
-        hiddenProperties.add(new PropertyName("characters"));
-        hiddenProperties.add(new PropertyName("childrenUnmodifiable"));
-        hiddenProperties.add(new PropertyName("chronology"));
-        hiddenProperties.add(new PropertyName("class"));
-        hiddenProperties.add(new PropertyName("comparator"));
-        hiddenProperties.add(new PropertyName("converter"));
-        hiddenProperties.add(new PropertyName("controlCssMetaData"));
-        hiddenProperties.add(new PropertyName("cssMetaData"));
-        hiddenProperties.add(new PropertyName("customColors"));
-        hiddenProperties.add(new PropertyName("data"));
-        hiddenProperties.add(new PropertyName("dayCellFactory"));
-        hiddenProperties.add(new PropertyName("depthBuffer"));
-        hiddenProperties.add(new PropertyName("disabled"));
-        hiddenProperties.add(new PropertyName("dividers"));
-        hiddenProperties.add(new PropertyName("editingCell"));
-        hiddenProperties.add(new PropertyName("editingIndex"));
-        hiddenProperties.add(new PropertyName("editingItem"));
-        hiddenProperties.add(new PropertyName("editor"));
-        hiddenProperties.add(new PropertyName("engine"));
-        hiddenProperties.add(new PropertyName("eventDispatcher"));
-        hiddenProperties.add(new PropertyName("expandedPane"));
-        hiddenProperties.add(new PropertyName("filter"));
-        hiddenProperties.add(new PropertyName("focused"));
-        hiddenProperties.add(new PropertyName("focusModel"));
-        hiddenProperties.add(new PropertyName("graphicsContext2D"));
-        hiddenProperties.add(new PropertyName("hover"));
-        hiddenProperties.add(new PropertyName("inputMethodRequests"));
-        hiddenProperties.add(new PropertyName("localToParentTransform"));
-        hiddenProperties.add(new PropertyName("localToSceneTransform"));
-        hiddenProperties.add(new PropertyName("managed"));
-        hiddenProperties.add(new PropertyName("mediaPlayer"));
-        hiddenProperties.add(new PropertyName("needsLayout"));
-        hiddenProperties.add(new PropertyName("nodeColumnEnd", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeColumnIndex", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeColumnSpan", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeHgrow", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeMargin", javafx.scene.layout.BorderPane.class));
-        hiddenProperties.add(new PropertyName("nodeRowEnd", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeRowIndex", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeRowSpan", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("nodeVgrow", javafx.scene.layout.GridPane.class));
-        hiddenProperties.add(new PropertyName("ownerWindow"));
-        hiddenProperties.add(new PropertyName("ownerNode"));
-        hiddenProperties.add(new PropertyName("pageFactory"));
-        hiddenProperties.add(new PropertyName("paragraphs"));
-        hiddenProperties.add(new PropertyName("parent"));
-        hiddenProperties.add(new PropertyName("parentColumn"));
-        hiddenProperties.add(new PropertyName("parentMenu"));
-        hiddenProperties.add(new PropertyName("parentPopup"));
-        hiddenProperties.add(new PropertyName("pressed"));
-        hiddenProperties.add(new PropertyName("properties"));
-        hiddenProperties.add(new PropertyName("pseudoClassStates"));
-        hiddenProperties.add(new PropertyName("redoable"));
-        hiddenProperties.add(new PropertyName("root"));
-        hiddenProperties.add(new PropertyName("rowFactory"));
-        hiddenProperties.add(new PropertyName("scene"));
-        hiddenProperties.add(new PropertyName("selection"));
-        hiddenProperties.add(new PropertyName("selectionModel"));
-        hiddenProperties.add(new PropertyName("selectedText"));
-        hiddenProperties.add(new PropertyName("showing"));
-        hiddenProperties.add(new PropertyName("sortPolicy"));
-        hiddenProperties.add(new PropertyName("skin"));
-        hiddenProperties.add(new PropertyName("strokeDashArray"));
-        hiddenProperties.add(new PropertyName("styleableParent"));
-        hiddenProperties.add(new PropertyName("tableView"));
-        hiddenProperties.add(new PropertyName("tabPane"));
-        hiddenProperties.add(new PropertyName("transforms"));
-        hiddenProperties.add(new PropertyName("treeTableView"));
-        hiddenProperties.add(new PropertyName("typeInternal"));
-        hiddenProperties.add(new PropertyName("typeSelector"));
-        hiddenProperties.add(new PropertyName("undoable"));
-        hiddenProperties.add(new PropertyName("userData"));
-        hiddenProperties.add(new PropertyName("useSystemMenuBar"));
-        hiddenProperties.add(new PropertyName("valueChanging"));
-        hiddenProperties.add(new PropertyName("valueConverter"));
-        hiddenProperties.add(new PropertyName("valueFactory"));
-        hiddenProperties.add(new PropertyName("visibleLeafColumns"));
+        hiddenProperties.add(new PropertyName("activated")); //NOCHECK
+        hiddenProperties.add(new PropertyName("alignWithContentOrigin")); //NOCHECK
+        hiddenProperties.add(new PropertyName("armed")); //NOCHECK
+        hiddenProperties.add(new PropertyName("anchor")); //NOCHECK
+        hiddenProperties.add(new PropertyName("antiAliasing")); //NOCHECK
+        hiddenProperties.add(new PropertyName("border")); //NOCHECK
+        hiddenProperties.add(new PropertyName("background")); //NOCHECK
+        hiddenProperties.add(new PropertyName("caretPosition")); //NOCHECK
+        hiddenProperties.add(new PropertyName("camera")); //NOCHECK
+        hiddenProperties.add(new PropertyName("cellFactory")); //NOCHECK
+        hiddenProperties.add(new PropertyName("cellValueFactory")); //NOCHECK
+        hiddenProperties.add(new PropertyName("characters")); //NOCHECK
+        hiddenProperties.add(new PropertyName("childrenUnmodifiable")); //NOCHECK
+        hiddenProperties.add(new PropertyName("chronology")); //NOCHECK
+        hiddenProperties.add(new PropertyName("class")); //NOCHECK
+        hiddenProperties.add(new PropertyName("comparator")); //NOCHECK
+        hiddenProperties.add(new PropertyName("converter")); //NOCHECK
+        hiddenProperties.add(new PropertyName("controlCssMetaData")); //NOCHECK
+        hiddenProperties.add(new PropertyName("cssMetaData")); //NOCHECK
+        hiddenProperties.add(new PropertyName("customColors")); //NOCHECK
+        hiddenProperties.add(new PropertyName("data")); //NOCHECK
+        hiddenProperties.add(new PropertyName("dayCellFactory")); //NOCHECK
+        hiddenProperties.add(new PropertyName("depthBuffer")); //NOCHECK
+        hiddenProperties.add(new PropertyName("disabled")); //NOCHECK
+        hiddenProperties.add(new PropertyName("dividers")); //NOCHECK
+        hiddenProperties.add(new PropertyName("editingCell")); //NOCHECK
+        hiddenProperties.add(new PropertyName("editingIndex")); //NOCHECK
+        hiddenProperties.add(new PropertyName("editingItem")); //NOCHECK
+        hiddenProperties.add(new PropertyName("editor")); //NOCHECK
+        hiddenProperties.add(new PropertyName("engine")); //NOCHECK
+        hiddenProperties.add(new PropertyName("eventDispatcher")); //NOCHECK
+        hiddenProperties.add(new PropertyName("expandedPane")); //NOCHECK
+        hiddenProperties.add(new PropertyName("filter")); //NOCHECK
+        hiddenProperties.add(new PropertyName("focused")); //NOCHECK
+        hiddenProperties.add(new PropertyName("focusModel")); //NOCHECK
+        hiddenProperties.add(new PropertyName("graphicsContext2D")); //NOCHECK
+        hiddenProperties.add(new PropertyName("hover")); //NOCHECK
+        hiddenProperties.add(new PropertyName("inputMethodRequests")); //NOCHECK
+        hiddenProperties.add(new PropertyName("localToParentTransform")); //NOCHECK
+        hiddenProperties.add(new PropertyName("localToSceneTransform")); //NOCHECK
+        hiddenProperties.add(new PropertyName("managed")); //NOCHECK
+        hiddenProperties.add(new PropertyName("mediaPlayer")); //NOCHECK
+        hiddenProperties.add(new PropertyName("needsLayout")); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeColumnEnd", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeColumnIndex", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeColumnSpan", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeHgrow", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeMargin", javafx.scene.layout.BorderPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeRowEnd", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeRowIndex", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeRowSpan", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("nodeVgrow", javafx.scene.layout.GridPane.class)); //NOCHECK
+        hiddenProperties.add(new PropertyName("ownerWindow")); //NOCHECK
+        hiddenProperties.add(new PropertyName("ownerNode")); //NOCHECK
+        hiddenProperties.add(new PropertyName("pageFactory")); //NOCHECK
+        hiddenProperties.add(new PropertyName("paragraphs")); //NOCHECK
+        hiddenProperties.add(new PropertyName("parent")); //NOCHECK
+        hiddenProperties.add(new PropertyName("parentColumn")); //NOCHECK
+        hiddenProperties.add(new PropertyName("parentMenu")); //NOCHECK
+        hiddenProperties.add(new PropertyName("parentPopup")); //NOCHECK
+        hiddenProperties.add(new PropertyName("pressed")); //NOCHECK
+        hiddenProperties.add(new PropertyName("properties")); //NOCHECK
+        hiddenProperties.add(new PropertyName("pseudoClassStates")); //NOCHECK
+        hiddenProperties.add(new PropertyName("redoable")); //NOCHECK
+        hiddenProperties.add(new PropertyName("root")); //NOCHECK
+        hiddenProperties.add(new PropertyName("rowFactory")); //NOCHECK
+        hiddenProperties.add(new PropertyName("scene")); //NOCHECK
+        hiddenProperties.add(new PropertyName("selection")); //NOCHECK
+        hiddenProperties.add(new PropertyName("selectionModel")); //NOCHECK
+        hiddenProperties.add(new PropertyName("selectedText")); //NOCHECK
+        hiddenProperties.add(new PropertyName("showing")); //NOCHECK
+        hiddenProperties.add(new PropertyName("sortPolicy")); //NOCHECK
+        hiddenProperties.add(new PropertyName("skin")); //NOCHECK
+        hiddenProperties.add(new PropertyName("strokeDashArray")); //NOCHECK
+        hiddenProperties.add(new PropertyName("styleableParent")); //NOCHECK
+        hiddenProperties.add(new PropertyName("tableView")); //NOCHECK
+        hiddenProperties.add(new PropertyName("tabPane")); //NOCHECK
+        hiddenProperties.add(new PropertyName("transforms")); //NOCHECK
+        hiddenProperties.add(new PropertyName("treeTableView")); //NOCHECK
+        hiddenProperties.add(new PropertyName("typeInternal")); //NOCHECK
+        hiddenProperties.add(new PropertyName("typeSelector")); //NOCHECK
+        hiddenProperties.add(new PropertyName("undoable")); //NOCHECK
+        hiddenProperties.add(new PropertyName("userData")); //NOCHECK
+        hiddenProperties.add(new PropertyName("useSystemMenuBar")); //NOCHECK
+        hiddenProperties.add(new PropertyName("valueChanging")); //NOCHECK
+        hiddenProperties.add(new PropertyName("valueConverter")); //NOCHECK
+        hiddenProperties.add(new PropertyName("valueFactory")); //NOCHECK
+        hiddenProperties.add(new PropertyName("visibleLeafColumns")); //NOCHECK
 
         // Populates parentRelatedProperties
         parentRelatedProperties.add(PropertyNames.layoutXName);
@@ -199,56 +199,56 @@ public class Metadata implements InitializingBean {
         parentRelatedProperties.add(PropertyNames.rotateName);
 
         // Populates sectionNames
-        sectionNames.add("Properties");
-        sectionNames.add("Layout");
-        sectionNames.add("Code");
+        sectionNames.add("Properties"); //NOCHECK
+        sectionNames.add("Layout"); //NOCHECK
+        sectionNames.add("Code"); //NOCHECK
 
         // Populates subSectionMap
         final List<String> ss0 = new ArrayList<>();
-        ss0.add("Custom");
-        ss0.add("Text");
-        ss0.add("Specific");
-        ss0.add("Graphic");
-        ss0.add("3D");
-        ss0.add("Pagination");
-        ss0.add("Stroke");
-        ss0.add("Node");
-        ss0.add("JavaFX CSS");
-        ss0.add("Extras");
-        ss0.add("Accessibility");
-        subSectionMap.put("Properties", ss0);
+        ss0.add("Custom"); //NOCHECK
+        ss0.add("Text"); //NOCHECK
+        ss0.add("Specific"); //NOCHECK
+        ss0.add("Graphic"); //NOCHECK
+        ss0.add("3D"); //NOCHECK
+        ss0.add("Pagination"); //NOCHECK
+        ss0.add("Stroke"); //NOCHECK
+        ss0.add("Node"); //NOCHECK
+        ss0.add("JavaFX CSS"); //NOCHECK
+        ss0.add("Extras"); //NOCHECK
+        ss0.add("Accessibility"); //NOCHECK
+        subSectionMap.put("Properties", ss0); //NOCHECK
         final List<String> ss1 = new ArrayList<>();
-        ss1.add("Anchor Pane Constraints");
-        ss1.add("Border Pane Constraints");
-        ss1.add("Flow Pane Constraints");
-        ss1.add("Grid Pane Constraints");
-        ss1.add("HBox Constraints");
-        ss1.add("Split Pane Constraints");
-        ss1.add("Stack Pane Constraints");
-        ss1.add("Tile Pane Constraints");
-        ss1.add("VBox Constraints");
-        ss1.add("Internal");
-        ss1.add("Specific");
-        ss1.add("Size");
-        ss1.add("Position");
-        ss1.add("Transforms");
-        ss1.add("Bounds");
-        ss1.add("Extras");
-        ss1.add("Specific");
-        subSectionMap.put("Layout", ss1);
+        ss1.add("Anchor Pane Constraints"); //NOCHECK
+        ss1.add("Border Pane Constraints"); //NOCHECK
+        ss1.add("Flow Pane Constraints"); //NOCHECK
+        ss1.add("Grid Pane Constraints"); //NOCHECK
+        ss1.add("HBox Constraints"); //NOCHECK
+        ss1.add("Split Pane Constraints"); //NOCHECK
+        ss1.add("Stack Pane Constraints"); //NOCHECK
+        ss1.add("Tile Pane Constraints"); //NOCHECK
+        ss1.add("VBox Constraints"); //NOCHECK
+        ss1.add("Internal"); //NOCHECK
+        ss1.add("Specific"); //NOCHECK
+        ss1.add("Size"); //NOCHECK
+        ss1.add("Position"); //NOCHECK
+        ss1.add("Transforms"); //NOCHECK
+        ss1.add("Bounds"); //NOCHECK
+        ss1.add("Extras"); //NOCHECK
+        ss1.add("Specific"); //NOCHECK
+        subSectionMap.put("Layout", ss1); //NOCHECK
         final List<String> ss2 = new ArrayList<>();
-        ss2.add("Main");
-        ss2.add("Edit");
-        ss2.add("DragDrop");
-        ss2.add("Closing");
-        ss2.add("HideShow");
-        ss2.add("Keyboard");
-        ss2.add("Mouse");
-        ss2.add("Rotation");
-        ss2.add("Swipe");
-        ss2.add("Touch");
-        ss2.add("Zoom");
-        subSectionMap.put("Code", ss2);
+        ss2.add("Main"); //NOCHECK
+        ss2.add("Edit"); //NOCHECK
+        ss2.add("DragDrop"); //NOCHECK
+        ss2.add("Closing"); //NOCHECK
+        ss2.add("HideShow"); //NOCHECK
+        ss2.add("Keyboard"); //NOCHECK
+        ss2.add("Mouse"); //NOCHECK
+        ss2.add("Rotation"); //NOCHECK
+        ss2.add("Swipe"); //NOCHECK
+        ss2.add("Touch"); //NOCHECK
+        ss2.add("Zoom"); //NOCHECK
+        subSectionMap.put("Code", ss2); //NOCHECK
     }
     
     public ComponentClassMetadata queryComponentMetadata(Class<?> componentClass) {

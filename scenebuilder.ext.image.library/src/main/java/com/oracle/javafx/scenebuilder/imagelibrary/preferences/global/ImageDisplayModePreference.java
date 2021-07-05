@@ -54,7 +54,7 @@ public class ImageDisplayModePreference extends EnumPreference<DISPLAY_MODE> imp
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "IMGLIBRARY_DISPLAY_OPTION"; //NOI18N
+    public static final String PREFERENCE_KEY = "IMGLIBRARY_DISPLAY_OPTION"; //NOCHECK
     public static final DISPLAY_MODE PREFERENCE_DEFAULT_VALUE = DISPLAY_MODE.SECTIONS;
 
     private final PreferenceEditorFactory preferenceEditorFactory;

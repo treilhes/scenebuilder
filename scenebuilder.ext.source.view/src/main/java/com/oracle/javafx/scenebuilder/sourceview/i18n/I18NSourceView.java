@@ -47,7 +47,7 @@ public class I18NSourceView implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NSourceView.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderSourceView"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderSourceView"); //NOCHECK
         }
         return bundle;
     }

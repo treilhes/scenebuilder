@@ -115,7 +115,7 @@ public class WrapInSceneJob extends AbstractWrapInJob {
         final FXOMInstance result = new FXOMInstance(newDocument, containerClass);
         // Scenes must have a root -- add a dummy one for now
         final FXOMInstance dummyPane = new FXOMInstance(newDocument, javafx.scene.layout.Pane.class);
-        final PropertyName newContainerPropertyName = new PropertyName("root"); //NOI18N
+        final PropertyName newContainerPropertyName = new PropertyName("root"); //NOCHECK
         // Create the new container property
         final FXOMPropertyC newContainerProperty = new FXOMPropertyC(
                 newDocument, newContainerPropertyName);

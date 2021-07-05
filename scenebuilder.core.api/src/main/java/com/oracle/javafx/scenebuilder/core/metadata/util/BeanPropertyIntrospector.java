@@ -68,7 +68,7 @@ class BeanPropertyIntrospector {
                 throw new RuntimeException(x);
             }
         } else {
-            throw new RuntimeException(propertyName + " not found"); //NOI18N
+            throw new RuntimeException(propertyName + " not found"); //NOCHECK
         }
         
         return result;
@@ -85,7 +85,7 @@ class BeanPropertyIntrospector {
                 throw new RuntimeException(x);
             }
         } else {
-            throw new RuntimeException(propertyName + " not found"); //NOI18N
+            throw new RuntimeException(propertyName + " not found"); //NOCHECK
         }
     }
     

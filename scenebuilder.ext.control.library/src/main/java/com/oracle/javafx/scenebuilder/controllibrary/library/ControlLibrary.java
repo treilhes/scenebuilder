@@ -102,7 +102,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
     // Where we store canonical class names of items we want to exclude from
     // the user defined one displayed in the Library panel.
     // As a consequence an empty file means we display all items.
-    private final String filterFileName = "filter.txt"; //NOI18N
+    private final String filterFileName = "filter.txt"; //NOCHECK
 
 //    private Supplier<List<Path>> additionalJarPaths;
 //    private Supplier<List<String>> additionalFilter;
@@ -267,7 +267,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
             if ((e.getStatus() == ControlReportEntryImpl.Status.OK) && e.isNode()) {
                 if (isFxml) {
                     String fileName = reports.getSource().getFileName().toString();
-                    String itemName = fileName.substring(0, fileName.indexOf(".fxml")); //NOI18N
+                    String itemName = fileName.substring(0, fileName.indexOf(".fxml")); //NOCHECK
                     String fxmlText = Files.readString(reports.getSource(), StandardCharsets.UTF_8);
                     result.add(new LibraryItemImpl(itemName, Qualifier.UNKNOWN, fxmlText));
                 } else {

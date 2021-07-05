@@ -53,8 +53,8 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 @Component
 public class PreferencesContext {
 
-	private static final String HASH_PATH_SEPARATOR = "-"; //NOI18N
-	public static final String DEFAULT_DOCUMENT_NODE = "<<<empty>>>"; //NOI18N
+	private static final String HASH_PATH_SEPARATOR = "-"; //NOCHECK
+	public static final String DEFAULT_DOCUMENT_NODE = "<<<empty>>>"; //NOCHECK
 	
 	private final GenericApplicationContext context;
 		
