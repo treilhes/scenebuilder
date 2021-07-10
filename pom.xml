@@ -19,7 +19,6 @@
         <module>scenebuilder.core.extension.store</module>
         <module>scenebuilder.core.filesystem</module>
         <module>scenebuilder.core.jobs</module>
-        <module>scenebuilder.core.kit</module>
         <module>scenebuilder.core.library</module>
         <module>scenebuilder.core.ui</module>
         <module>scenebuilder.ext.certificate.manager</module>
@@ -50,7 +49,8 @@
         <module>scenebuilder.extension.archetype</module>
         <module>scenebuilder.starter</module>
         <module>scenebuilder.starter.test</module>
-    </modules>
+    <module>scenebuilder.ext.glossary</module>
+  </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -128,12 +128,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.kit</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.layout</artifactId>
+                <artifactId>scenebuilder.core.ui</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -199,6 +194,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.extension.library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.glossary</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -469,7 +469,7 @@
             <organizationUrl>https://www.gluonhq.com</organizationUrl>
         </developer>
         <developer>
-            <name>Jos� Pereda</name>
+            <name>Jos? Pereda</name>
             <email>jose.pereda@gluonhq.com</email>
             <organization>Gluon</organization>
             <organizationUrl>https://www.gluonhq.com</organizationUrl>

@@ -46,7 +46,7 @@ public class SceneBuilderApp {
      * But on Mac OS, this method seems to be called by the javafx launcher.
      */
 	public static void main(String[] args) {
-	    System.setProperty("javafx.preloader", SplashScreenPreloader.class.getName());
+	    System.setProperty("javafx.preloader", SplashScreenPreloader.class.getName()); //NOCHECK
 	    SceneBuilderLoadingProgress.get().start();
         Application.launch(SceneBuilderBootstrap.class, args);
 	}

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.job.manager.JobManagerImpl;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
 
@@ -51,6 +52,7 @@ public class JobsExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                JobManagerImpl.class,
                 RootContainerHeightPreference.class,
                 RootContainerWidthPreference.class
             );

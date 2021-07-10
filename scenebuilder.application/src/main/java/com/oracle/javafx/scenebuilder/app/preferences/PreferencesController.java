@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
  * Defines preferences for Scene Builder App.
  */
 @Component
-@DependsOn("i18n")
+@DependsOn("i18n") //NOCHECK
 public class PreferencesController  {
 
     private final List<ManagedGlobalPreference> preferences;

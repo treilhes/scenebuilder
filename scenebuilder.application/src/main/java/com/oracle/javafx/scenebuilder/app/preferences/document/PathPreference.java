@@ -50,7 +50,7 @@ public class PathPreference extends StringPreference implements ManagedDocumentP
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "path"; //NOI18N
+    public static final String PREFERENCE_KEY = "path"; //NOCHECK
     public static final String PREFERENCE_DEFAULT_VALUE = null;
 
 	public PathPreference(@Autowired PreferencesContext preferencesContext) {

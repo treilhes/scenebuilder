@@ -16,7 +16,7 @@ open module scenebuilder.ext.certificate.manager {
     requires javafx.graphics;
     requires org.slf4j;
     requires rxjavafx;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

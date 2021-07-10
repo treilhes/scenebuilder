@@ -81,11 +81,13 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected Class<?> newContainerClass;
     protected FXOMInstance oldContainer, newContainer;
     private final FXOMDocument fxomDocument;
+    private final Selection selection;
 
     public AbstractWrapInJob(ApplicationContext context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.selection = documentManager.selectionDidChange().get().getSelection();
     }
 
     //TODO find who use this method and make them extend the result
@@ -156,7 +158,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         if (osg.hasSingleParent() == false) {
             return false;
         }
-        if (getEditorController().isSelectionNode() == false) {
+        if (selection.isSelectionNode() == false) {
             return false;
         }
         // Cannot wrap in Axis nodes

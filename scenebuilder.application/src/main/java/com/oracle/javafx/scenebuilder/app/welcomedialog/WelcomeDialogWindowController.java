@@ -92,7 +92,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     		@Autowired TemplateController templateController,
     		@Autowired List<TemplateGroup> templateGroups,
             @Autowired List<Template> templates) {
-        super(api, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"), //NOI18N
+        super(api, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
                 I18N.getBundle(),
                 null, templateGroups, templates); // We want it to be a top level window so we're setting the owner to null.
 

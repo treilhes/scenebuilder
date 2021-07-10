@@ -30,7 +30,7 @@ open module scenebuilder.ext.control.library {
     requires scenebuilder.core.library;
     requires org.slf4j;
     requires scenebuilder.ext.sb;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.filesystem;
     requires spring.beans;

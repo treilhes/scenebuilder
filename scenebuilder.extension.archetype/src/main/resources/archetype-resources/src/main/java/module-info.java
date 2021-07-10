@@ -5,9 +5,7 @@ open module ${artifactId} {
     exports ${package};
     exports ${package}.i18n;
     
-    requires scenebuilder.core.extension.api;
-    requires scenebuilder.core.api;
-    requires spring.context;
+    requires transitive scenebuilder.core.api;
     
     provides Extension with ${extensionCamelCasedName}Extension;
 }

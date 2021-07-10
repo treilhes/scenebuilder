@@ -79,22 +79,22 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
             ) {
         super(api, AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
         
-        try (InputStream in = getClass().getResourceAsStream("about.properties")) { //NOI18N
+        try (InputStream in = getClass().getResourceAsStream("about.properties")) {
 
             if (in != null) {
                 Properties sbProps = new Properties();
                 sbProps.load(in);
-                sbBuildInfo = sbProps.getProperty("build.info", "UNSET"); //NOI18N
-                sbBuildVersion = sbProps.getProperty("build.version", "UNSET"); //NOI18N
-                sbBuildDate = sbProps.getProperty("build.date", "UNSET"); //NOI18N
-                sbBuildJavaVersion = sbProps.getProperty("build.java.version", "UNSET"); //NOI18N
-                sbBuildJavaFXVersion = sbProps.getProperty("build.javafx.version", "UNSET"); //NOI18N
-                sbAboutCopyrightKeyName = sbProps.getProperty("copyright.key.name", "UNSET"); //NOI18N
+                sbBuildInfo = sbProps.getProperty("build.info", "UNSET");
+                sbBuildVersion = sbProps.getProperty("build.version", "UNSET");
+                sbBuildDate = sbProps.getProperty("build.date", "UNSET");
+                sbBuildJavaVersion = sbProps.getProperty("build.java.version", "UNSET");
+                sbBuildJavaFXVersion = sbProps.getProperty("build.javafx.version", "UNSET");
+                sbAboutCopyrightKeyName = sbProps.getProperty("copyright.key.name", "UNSET");
             }
         } catch (IOException ex) {
             // We go with default values
         }
-        this.LOG_FILE_NAME = "scenebuilder-" + sbBuildVersion + ".log"; //NOI18N
+        this.LOG_FILE_NAME = "scenebuilder-" + sbBuildVersion + ".log"; //NOCHECK
     }
 
     @FXML
@@ -169,12 +169,12 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
 
     private StringBuilder getVersionParagraph() {
         StringBuilder sb = new StringBuilder(I18N.getString("about.product.version"));
-        sb.append("\nJavaFX Scene Builder ").append(sbBuildVersion) //NOI18N
-                .append("\n\n"); //NOI18N
+        sb.append("\nJavaFX Scene Builder ").append(sbBuildVersion) //NOCHECK
+                .append("\n\n"); //NOCHECK
         return sb;
     }
     private String getLogFilePath() {
-        StringBuilder sb = new StringBuilder(System.getProperty("java.io.tmpdir")); //NOI18N
+        StringBuilder sb = new StringBuilder(System.getProperty("java.io.tmpdir")); //NOCHECK
         if (sb.charAt(sb.length() - 1) != File.separatorChar) {
             sb.append(File.separatorChar);
         }
@@ -185,42 +185,42 @@ public final class AboutWindowController extends AbstractFxmlWindowController im
 
     private StringBuilder getBuildInfoParagraph() {
         StringBuilder sb = new StringBuilder(I18N.getString("about.build.information"));
-        sb.append("\n").append(sbBuildInfo).append("\n") //NOI18N
+        sb.append("\n").append(sbBuildInfo).append("\n") //NOCHECK
                 .append(I18N.getString("about.build.date", sbBuildDate)).append("\n")
                 .append(I18N.getString("about.build.javafx.version", sbBuildJavaFXVersion)).append("\n")
                 .append(I18N.getString("about.build.java.version", sbBuildJavaVersion))
-                .append("\n\n"); //NOI18N
+                .append("\n\n"); //NOCHECK
         return sb;
     }
 
     private StringBuilder getLoggingParagraph() {
         StringBuilder sb = new StringBuilder(I18N.getString("about.logging.title"));
-        sb.append("\n") //NOI18N
+        sb.append("\n") //NOCHECK
                 .append(I18N.getString("about.logging.body.first", LOG_FILE_NAME))
-                .append("\n") //NOI18N
+                .append("\n") //NOCHECK
                 .append(I18N.getString("about.logging.body.second", getLogFilePath()))
-                .append("\n\n"); //NOI18N
+                .append("\n\n"); //NOCHECK
         return sb;
     }
 
     private StringBuilder getJavaFXParagraph() {
-        StringBuilder sb = new StringBuilder("JavaFX\n"); //NOI18N
-        sb.append(System.getProperty("javafx.version")).append("\n\n"); //NOI18N
+        StringBuilder sb = new StringBuilder("JavaFX\n"); //NOCHECK
+        sb.append(System.getProperty("javafx.version")).append("\n\n"); //NOCHECK
         return sb;
     }
     
     private StringBuilder getJavaParagraph() {
-        StringBuilder sb = new StringBuilder("Java\n"); //NOI18N
-        sb.append(System.getProperty("java.runtime.version")).append(", ") //NOI18N
-                .append(System.getProperty("java.vendor")).append("\n\n"); //NOI18N
+        StringBuilder sb = new StringBuilder("Java\n"); //NOCHECK
+        sb.append(System.getProperty("java.runtime.version")).append(", ") //NOCHECK
+                .append(System.getProperty("java.vendor")).append("\n\n"); //NOCHECK
         return sb;
     }
 
     private StringBuilder getOsParagraph() {
         StringBuilder sb = new StringBuilder(I18N.getString("about.operating.system"));
-        sb.append("\n").append(System.getProperty("os.name")).append(", ") //NOI18N
-                .append(System.getProperty("os.arch")).append(", ") //NOI18N
-                .append(System.getProperty("os.version")).append("\n\n"); //NOI18N
+        sb.append("\n").append(System.getProperty("os.name")).append(", ") //NOCHECK
+                .append(System.getProperty("os.arch")).append(", ") //NOCHECK
+                .append(System.getProperty("os.version")).append("\n\n"); //NOCHECK
         return sb;
     }
 }

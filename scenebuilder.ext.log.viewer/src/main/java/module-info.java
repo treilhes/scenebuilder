@@ -13,7 +13,7 @@ open module scenebuilder.ext.log.viewer {
     requires logback.classic;
     requires logback.core;
     requires org.slf4j;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

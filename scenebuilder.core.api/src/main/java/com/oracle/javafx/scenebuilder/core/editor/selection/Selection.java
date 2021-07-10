@@ -52,6 +52,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -521,4 +522,45 @@ public class Selection {
         }
         lastListenerInvocationTime = System.nanoTime() - startTime;
     }
+    
+    /**
+     * Check if the current selection objects are all instances of a {@link Node},
+     * @return true if the current selection objects are all instances of a {@link Node},
+     * false otherwise.
+     */
+    public boolean isSelectionNode() {
+        return isSelectionOfType(Node.class);
+    }
+
+    /**
+     * Check if the current selection objects are all instances of a {@link Control}
+     * @return true if the current selection objects are all instances of a {@link Control},
+     * false otherwise.
+     */
+    public boolean isSelectionControl() {
+        return isSelectionOfType(Control.class);
+    }
+    
+    /**
+     * Check if the current selection objects are all instances of the provided type,
+     * @param the required type of selected objects
+     * @return true if the current selection objects are all instances of the provided type,
+     * false otherwise.
+     */
+    public boolean isSelectionOfType(Class<?> type) {
+        final AbstractSelectionGroup asg = getGroup();
+        if (asg instanceof ObjectSelectionGroup) {
+            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+            for (FXOMObject fxomObject : osg.getItems()) {
+                final boolean isClass = type.isAssignableFrom(fxomObject.getSceneGraphObject().getClass());
+                if (isClass == false) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
 }
+

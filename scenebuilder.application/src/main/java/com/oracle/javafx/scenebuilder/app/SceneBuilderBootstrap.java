@@ -44,22 +44,11 @@ import org.springframework.context.annotation.Bean;
 
 import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NApp;
-import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
-import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
-import com.oracle.javafx.scenebuilder.app.message.MessagePanelController;
 import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.RootPreferencesNodeImpl;
-import com.oracle.javafx.scenebuilder.app.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.MaximizedPreference;
 import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.RightDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.StageHeightPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.StageWidthPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.XPosPreference;
-import com.oracle.javafx.scenebuilder.app.preferences.document.YPosPreference;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
@@ -76,28 +65,14 @@ public class SceneBuilderBootstrap extends JavafxApplication {
         return Arrays.asList(
                 AboutWindowController.class,
                 I18NApp.class,
-                MenuBarController.class, 
-                MessageBarController.class,
-                MessagePanelController.class,
-                
                 DocumentPreferencesController.class,
                 DocumentPreferencesNodeImpl.class,
                 PreferencesController.class,
                 RootPreferencesNodeImpl.class,
-                
-                BottomDividerVPosPreference.class,
-                LeftDividerHPosPreference.class,
-                MaximizedPreference.class,
                 PathPreference.class,
-                RightDividerHPosPreference.class,
-                StageHeightPreference.class,
-                StageWidthPreference.class,
-                XPosPreference.class,
-                YPosPreference.class,
                 WindowIconSetting.class,
                 WelcomeDialogWindowController.class, 
                 DocumentController.class,
-                DocumentWindowController.class,
                 MainController.class
                 );
     }

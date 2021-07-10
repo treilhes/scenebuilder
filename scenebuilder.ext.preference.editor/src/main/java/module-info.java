@@ -14,7 +14,7 @@ open module scenebuilder.ext.preference.editor {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.ext.editors;
     requires scenebuilder.core.extension.api;
     requires spring.beans;

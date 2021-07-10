@@ -138,12 +138,12 @@ public class CharsetEditor extends AutoSuggestEditor {
      */
     public static Map<String, Charset> getStandardCharsets() {
         Map<String, Charset> charsets = new HashMap<>();
-        charsets.put("UTF-8", StandardCharsets.UTF_8);
-        charsets.put("UTF-16", StandardCharsets.UTF_16);
-        charsets.put("UTF-16BE", StandardCharsets.UTF_16BE);
-        charsets.put("UTF-16LE", StandardCharsets.UTF_16LE);
-        charsets.put("US-ASCII", StandardCharsets.US_ASCII);
-        charsets.put("ISO-8859-1", StandardCharsets.ISO_8859_1);
+        charsets.put("UTF-8", StandardCharsets.UTF_8); //NOCHECK
+        charsets.put("UTF-16", StandardCharsets.UTF_16); //NOCHECK
+        charsets.put("UTF-16BE", StandardCharsets.UTF_16BE); //NOCHECK
+        charsets.put("UTF-16LE", StandardCharsets.UTF_16LE); //NOCHECK
+        charsets.put("US-ASCII", StandardCharsets.US_ASCII); //NOCHECK
+        charsets.put("ISO-8859-1", StandardCharsets.ISO_8859_1); //NOCHECK
         return charsets;
     }
 

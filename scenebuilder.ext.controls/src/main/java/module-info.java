@@ -14,7 +14,7 @@ open module scenebuilder.ext.controls {
     requires javafx.media;
     requires javafx.swing;
     requires javafx.web;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

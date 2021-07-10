@@ -116,7 +116,7 @@ class FileMutex {
         } catch(FileAlreadyExistsException x) {
             // Someone else already created it
         }
-        lockRAF = new RandomAccessFile(lockFile.toFile(), "rw"); //NOI18N
+        lockRAF = new RandomAccessFile(lockFile.toFile(), "rw"); //NOCHECK
     }
     
     private static class InterruptTask extends TimerTask {
@@ -125,13 +125,5 @@ class FileMutex {
             Thread.currentThread().interrupt();
         }
     }
-    
-//    public static void main(String[] args) throws IOException {
-//        final Path mutexPath = Paths.get(System.getProperty("user.home"), "test.mtx");
-//        final FileMutex fm = new FileMutex(mutexPath);
-//        for (int i = 0; i < 100000; i++) {
-//            fm.lock();
-//            fm.unlock();
-//        }
-//    }
+
 }

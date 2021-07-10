@@ -83,12 +83,12 @@ public class MessageBox<T extends Serializable> {
         this.folder = folder;
         this.messageClass = messageClass;
         this.pollingTime = pollingTime;
-        this.messageFile = folder.toPath().resolve("message.dat"); //NOI18N
-        this.boxMutex = new FileMutex(folder.toPath().resolve("box.mtx")); //NOI18N
-        this.messageMutex = new FileMutex(folder.toPath().resolve("message.mtx")); //NOI18N
+        this.messageFile = folder.toPath().resolve("message.dat"); //NOCHECK
+        this.boxMutex = new FileMutex(folder.toPath().resolve("box.mtx")); //NOCHECK
+        this.messageMutex = new FileMutex(folder.toPath().resolve("message.mtx")); //NOCHECK
 
         if (!folder.exists()) {
-            throw new IllegalArgumentException(folder + " does not exist"); //NOI18N
+            throw new IllegalArgumentException(folder + " does not exist"); //NOCHECK
         }
     }
 
@@ -223,7 +223,7 @@ public class MessageBox<T extends Serializable> {
         private final MessageBox<T> messageBox;
 
         public PollingThread(MessageBox<T> messageBox) {
-            super("MessageBox[" + messageBox.getFolder().getAbsolutePath() + "]"); //NOI18N
+            super("MessageBox[" + messageBox.getFolder().getAbsolutePath() + "]"); //NOCHECK
             this.messageBox = messageBox;
         }
 

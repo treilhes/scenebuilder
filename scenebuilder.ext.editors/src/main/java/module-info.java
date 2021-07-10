@@ -13,17 +13,8 @@ open module scenebuilder.ext.editors {
     exports com.oracle.javafx.scenebuilder.editors.control.paintpicker.gradientpicker;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker;
 
-    requires io.reactivex.rxjava2;
-    requires java.logging;
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires scenebuilder.core.api;
-    requires scenebuilder.core.extension.api;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
+    requires transitive scenebuilder.core.api;
+    requires scenebuilder.core.jobs;
     
     provides Extension with DefaultEditorsExtension;
 }

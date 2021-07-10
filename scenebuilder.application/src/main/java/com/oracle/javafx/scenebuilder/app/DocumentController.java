@@ -72,8 +72,6 @@ import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
-import com.oracle.javafx.scenebuilder.app.menubar.MenuBarController;
-import com.oracle.javafx.scenebuilder.app.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
@@ -85,18 +83,19 @@ import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.util.ResourceUtils;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.SectionId;
-import com.oracle.javafx.scenebuilder.kit.ResourceUtils;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.kit.selectionbar.SelectionBarController;
 //import com.oracle.javafx.scenebuilder.library.controller.JarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
+import com.oracle.javafx.scenebuilder.ui.dialog.AlertDialog;
+import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
+import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
+import com.oracle.javafx.scenebuilder.ui.selectionbar.SelectionBarController;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
@@ -156,7 +155,6 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired Api api, 
             @Autowired RecentItemsPreference recentItemsPreference,
             @Autowired WildcardImportsPreference wildcardImportsPreference,
-            @Autowired PreviewWindowController previewWindowController,
             @Autowired DocumentPreferencesController documentPreferencesController,
             @Autowired ContentPanelController contentPanelController,
             @Autowired Editor editorController,
@@ -316,14 +314,11 @@ public class DocumentController implements Document, InitializingBean {
             
             
             documentWindow.untrack();
-            System.out.println("UNTRACKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
             documentPreferencesController.readFromJavaPreferences();
             
             Platform.runLater(() -> {
-                System.out.println("222SETTINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
                 documentWindow.apply();
                 documentWindow.track();
-                System.out.println("222TRACK kkkkkkkkkkkkkkkkkkkkkkk");
             });
             // TODO remove after checking the new watching system is operational in
             // EditorController or in filesystem
@@ -721,7 +716,7 @@ public class DocumentController implements Document, InitializingBean {
     @Override
     public boolean isUnused() {
         /*
-         * A document window controller is considered as "unused" if: //NOI18N 1) it has
+         * A document window controller is considered as "unused" if: //NOCHECK 1) it has
          * not fxml text 2) it is not dirty 3) it is unamed
          */
         final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
@@ -795,11 +790,7 @@ public class DocumentController implements Document, InitializingBean {
         documentWindow.setFocusHandler(this::onFocus);
 
         documentWindow.setMainKeyPressedEvent(mainKeyEventFilter);
-        documentWindow.setMenuBar(menuBarController.getMenuBar());
         documentWindow.setContentPane(contentPanelController.getRoot());
-        documentWindow.setMessageBar(messageBarController.getRoot());
-
-        messageBarController.getSelectionBarHost().getChildren().add(selectionBarController.getRoot());
         
         assert libraryPanelController != null;
         libraryPanelController.getSearchController().requestFocus();
@@ -1060,7 +1051,8 @@ public class DocumentController implements Document, InitializingBean {
 
     private Optional<File> fetchFXMLFile() {
         var fileChooser = new FileChooser();
-        var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"), "*.fxml"); // NOI18N
+        var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"), 
+                "*.fxml"); // NOI18N
         fileChooser.getExtensionFilters().add(f);
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
@@ -1283,7 +1275,8 @@ public class DocumentController implements Document, InitializingBean {
         if (editorController.canGetFxmlText()) {
             final FileChooser fileChooser = new FileChooser();
             final FileChooser.ExtensionFilter f = new FileChooser.ExtensionFilter(
-                    I18N.getString("file.filter.label.fxml"), "*.fxml"); // NOI18N
+                    I18N.getString("file.filter.label.fxml"), 
+                    "*.fxml"); // NOI18N
             fileChooser.getExtensionFilters().add(f);
             fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 

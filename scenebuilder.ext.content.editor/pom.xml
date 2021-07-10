@@ -26,5 +26,10 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.sb</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.starter.test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

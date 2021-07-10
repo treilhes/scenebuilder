@@ -13,7 +13,7 @@ open module scenebuilder.ext.debug.menu {
     requires javafx.fxml;
     requires javafx.graphics;
     requires scenebuilder.core.jobs;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

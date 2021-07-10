@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.editors.actions.SetEffectAction;
 import com.oracle.javafx.scenebuilder.editors.control.AnchorPaneConstraintsEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
@@ -66,6 +67,7 @@ import com.oracle.javafx.scenebuilder.editors.control.StyleEditor;
 import com.oracle.javafx.scenebuilder.editors.control.StylesheetEditor;
 import com.oracle.javafx.scenebuilder.editors.control.TextAlignmentEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.editors.menu.SetEffectsMenuProvider;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.BoundsPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.EffectPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.FontPopupEditor;
@@ -86,6 +88,8 @@ public class DefaultEditorsExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+            SetEffectAction.class,
+            SetEffectsMenuProvider.class,
             AnchorPaneConstraintsEditor.class,
             BooleanEditor.class,
             BoundedDoubleEditor.class,

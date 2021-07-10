@@ -90,7 +90,7 @@ import javafx.stage.Stage;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-@DependsOn("i18n")
+@DependsOn("i18n") //NOCHECK
 public class MainController implements AppPlatform.AppNotificationHandler, ApplicationListener<JavafxApplication.StageReadyEvent>, UILogger, Main {
 
     private static MainController singleton;
@@ -308,7 +308,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             }
         } catch (URISyntaxException x) {
             // Should not happen
-            throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); //NOI18N
+            throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); //NOCHECK
         }
 
         return result;
@@ -423,8 +423,8 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
       //TODO allow a more easy usage of scenic
         // Show ScenicView Tool when the JVM is started with option -Dscenic.
         // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
-        //if (System.getProperty("scenic") != null) 
-        { //NOI18N
+        //if (System.getProperty("scenic") != null) //NOCHECK
+        { 
             Platform.runLater(new ScenicViewStarter(context));
         }
         });
@@ -584,7 +584,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         final FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
-                "*.fxml")); //NOI18N
+                "*.fxml")); //NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
         if (fxmlFiles != null) {

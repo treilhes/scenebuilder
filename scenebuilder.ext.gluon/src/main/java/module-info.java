@@ -33,7 +33,7 @@ open module scenebuilder.ext.gluon {
     requires org.slf4j;
     requires scenebuilder.ext.control.library;
     requires scenebuilder.ext.controls;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.ext.defaultx;
     requires scenebuilder.core.extension.api;
     requires spring.beans;

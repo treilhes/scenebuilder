@@ -46,7 +46,7 @@ import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
 public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {
 
 	// PREFERENCES NODE NAME
-    static final String NODE_NAME = "DOCUMENTS"; //NOI18N
+    static final String NODE_NAME = "DOCUMENTS"; //NOCHECK
     
 	@Override
 	public Preferences getNode() {

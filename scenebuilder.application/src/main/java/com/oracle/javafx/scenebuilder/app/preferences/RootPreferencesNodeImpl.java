@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 public class RootPreferencesNodeImpl implements RootPreferencesNode {
 
 	// PREFERENCES NODE NAME
-    static final String SB_RELEASE_NODE = "SB_3.0"; //NOI18N
+    static final String SB_RELEASE_NODE = "SB_3.0"; //NOCHECK
 
 	@Override
 	public Preferences getNode() {

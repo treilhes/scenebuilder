@@ -8,7 +8,7 @@ open module scenebuilder.core.extension.store {
 
     requires javafx.graphics;
     requires org.slf4j;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

@@ -28,7 +28,7 @@ open module scenebuilder.ext.image.library {
     requires org.apache.fontbox;
     requires org.slf4j;
     requires scenebuilder.ext.sb;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.extension.store;
     requires scenebuilder.core.filesystem;

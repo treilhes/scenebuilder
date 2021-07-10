@@ -8,6 +8,10 @@
   <artifactId>scenebuilder.starter.test</artifactId>
   
   <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.starter</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>

@@ -29,10 +29,6 @@
         <!-- temp -->
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.kit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.control.library</artifactId>
         </dependency>
         

@@ -332,8 +332,9 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
         if (!scrollBarProps.contains(propMeta.getName().toString())) {
             return;
         }
+        // TODO read/understand and update
         String[] minMaxProps;
-        if (propMeta.getName().toString().equals("XSXSXS")) { //AbstractEditor.hValuePropName)) {
+        if (propMeta.getName().toString().equals("This condition is a temporary fake")) { //AbstractEditor.hValuePropName)) {
             minMaxProps = scrollBarHprops;
         } else {
             minMaxProps = scrollBarVprops;

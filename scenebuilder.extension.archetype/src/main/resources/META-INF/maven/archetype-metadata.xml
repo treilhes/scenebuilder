@@ -41,17 +41,16 @@
         </fileSet>
         <fileSet filtered="true" packaged="true">
             <directory>src/main/resources</directory>
-        </fileSet>
-        <fileSet filtered="true" packaged="true">
-            <directory>src/test/java</directory>
             <excludes>
                 <exclude>META-INF/**</exclude>
+                <exclude>LICENSE</exclude>
             </excludes>
         </fileSet>
         <fileSet filtered="true" packaged="false">
-            <directory>src/test/java</directory>
+            <directory>src/main/resources</directory>
             <includes>
                 <include>META-INF/**</include>
+                <include>LICENSE</include>
             </includes>
         </fileSet>
     </fileSets>

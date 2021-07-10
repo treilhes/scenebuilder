@@ -19,7 +19,7 @@ open module scenebuilder.core.jobs {
     requires javafx.graphics;
     requires javafx.web;
     requires org.slf4j;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

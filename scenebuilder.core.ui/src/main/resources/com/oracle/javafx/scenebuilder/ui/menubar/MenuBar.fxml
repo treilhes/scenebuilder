@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2016, 2019, Gluon and/or its affiliates.
+  Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <MenuBar fx:id="menuBar">
+      <menus>
+        <Menu fx:id="editMenu" mnemonicParsing="true" text="%menu.title.edit">
+          <items>
+            <MenuItem fx:id="undoMenuItem" mnemonicParsing="true" text="%menu.title.undo" />
+            <MenuItem fx:id="redoMenuItem" mnemonicParsing="true" text="%menu.title.redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="cutMenuItem" mnemonicParsing="true" text="%menu.title.cut" />
+            <MenuItem fx:id="copyMenuItem" mnemonicParsing="true" text="%menu.title.copy" />
+            <MenuItem fx:id="pasteMenuItem" mnemonicParsing="true" text="%menu.title.paste" />
+            <MenuItem fx:id="pasteIntoMenuItem" mnemonicParsing="false" text="%menu.title.paste.into" />
+            <MenuItem fx:id="duplicateMenuItem" mnemonicParsing="true" text="%menu.title.duplicate" />
+            <MenuItem fx:id="deleteMenuItem" mnemonicParsing="true" text="%menu.title.delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="selectAllMenuItem" mnemonicParsing="false" text="%menu.title.select.all" />
+            <MenuItem fx:id="selectNoneMenuItem" mnemonicParsing="true" text="%menu.title.select.none" />
+            <MenuItem fx:id="selectParentMenuItem" mnemonicParsing="false" text="%menu.title.select.parent" />
+            <MenuItem fx:id="selectNextMenuItem" mnemonicParsing="true" text="%menu.title.select.next" />
+            <MenuItem fx:id="selectPreviousMenuItem" mnemonicParsing="true" text="%menu.title.select.previous" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="trimMenuItem" mnemonicParsing="false" text="%menu.title.trim" />
+          </items>
+        </Menu>
+        <Menu fx:id="viewMenu" mnemonicParsing="true" text="%menu.title.view">
+          <items>
+            <MenuItem fx:id="gotoContentMenuItem" mnemonicParsing="true" text="%menu.title.content" />
+            <MenuItem fx:id="gotoPropertiesMenuItem" mnemonicParsing="true" text="%menu.title.properties" />
+            <MenuItem fx:id="gotoLayoutMenuItem" mnemonicParsing="true" text="%menu.title.layout" />
+            <MenuItem fx:id="gotoCodeMenuItem" mnemonicParsing="true" text="%menu.title.code" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="toggleLibraryPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.library.panel" />
+            <MenuItem fx:id="toggleHierarchyPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.document.panel" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="toggleCSSPanelMenuItem" mnemonicParsing="true" text="%menu.title.show.bottom.panel" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="toggleLeftPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.left.panel" />
+            <MenuItem fx:id="toggleRightPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.right.panel" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="toggleOutlinesMenuItem" mnemonicParsing="true" text="%menu.title.show.outlines" />
+            <MenuItem fx:id="toggleSampleDataMenuItem" mnemonicParsing="true" text="%menu.title.show.sample.data" />
+            <MenuItem fx:id="toggleAlignmentGuidesMenuItem" mnemonicParsing="true" text="%menu.title.disable.guides" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu fx:id="zoomMenu" mnemonicParsing="true" text="%menu.title.zoom" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+          </items>
+        </Menu>
+        <Menu fx:id="insertMenu" mnemonicParsing="true" text="%menu.title.insert">
+          <items>
+            <SeparatorMenuItem mnemonicParsing="false" />
+          </items>
+        </Menu>
+        <Menu fx:id="modifyMenu" mnemonicParsing="true" text="%menu.title.modify">
+          <items>
+            <MenuItem fx:id="fitToParentMenuItem" mnemonicParsing="true" text="%menu.title.fit" />
+            <MenuItem fx:id="useComputedSizesMenuItem" mnemonicParsing="true" text="%menu.title.use.computed.sizes" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu fx:id="gridMenu" mnemonicParsing="true" text="%menu.title.grid">
+              <items>
+                <MenuItem fx:id="moveRowAboveMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.row.above" />
+                <MenuItem fx:id="moveRowBelowMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.row.below" />
+                <MenuItem fx:id="moveColumnBeforeMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.column.before" />
+                <MenuItem fx:id="moveColumnAfterMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.column.after" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="addRowAboveMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.row.above" />
+                <MenuItem fx:id="addRowBelowMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.row.below" />
+                <MenuItem fx:id="addColumnBeforeMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.column.before" />
+                <MenuItem fx:id="addColumnAfterMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.column.after" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="increaseRowSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.increase.row.span" />
+                <MenuItem fx:id="decreaseRowSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.decrease.row.span" />
+                <MenuItem fx:id="increaseColumnSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.increase.column.span" />
+                <MenuItem fx:id="decreaseColumnSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.decrease.column.span" />
+              </items>
+            </Menu>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu fx:id="addPopupControlMenu" mnemonicParsing="true" text="%menu.title.add.popup">
+              <items>
+                <MenuItem fx:id="addContextMenuMenuItem" mnemonicParsing="false" text="%menu.title.add.popup.context.menu" />
+                <MenuItem fx:id="addTooltipMenuItem" mnemonicParsing="false" text="%menu.title.add.popup.tooltip" />
+              </items>
+            </Menu>
+          </items>
+        </Menu>
+        <Menu fx:id="arrangeMenu" mnemonicParsing="true" text="%menu.title.arrange">
+          <items>
+            <MenuItem fx:id="bringToFrontMenuItem" mnemonicParsing="true" text="%menu.title.front" />
+            <MenuItem fx:id="sendToBackMenuItem" mnemonicParsing="true" text="%menu.title.back" />
+            <MenuItem fx:id="bringForwardMenuItem" mnemonicParsing="true" text="%menu.title.forward" />
+            <MenuItem fx:id="sendBackwardMenuItem" mnemonicParsing="true" text="%menu.title.backward" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu fx:id="wrapMenu" mnemonicParsing="true" text="%menu.title.wrap">
+              <items>
+                <MenuItem fx:id="wrapInAnchorPaneMenuItem" mnemonicParsing="false" text="AnchorPane" />
+                <MenuItem fx:id="wrapInBorderPaneMenuItem" mnemonicParsing="false" text="BorderPane" />
+                <MenuItem fx:id="wrapInButtonBarMenuItem" mnemonicParsing="false" text="ButtonBar" />
+                <MenuItem fx:id="wrapInDialogPaneMenuItem" mnemonicParsing="false" text="DialogPane" />
+                <MenuItem fx:id="wrapInFlowPaneMenuItem" mnemonicParsing="false" text="FlowPane" />
+                <MenuItem fx:id="wrapInGridPaneMenuItem" mnemonicParsing="false" text="GridPane" />
+                <MenuItem fx:id="wrapInGroupMenuItem" mnemonicParsing="false" text="Group" />
+                <MenuItem fx:id="wrapInHBoxMenuItem" mnemonicParsing="false" text="HBox" />
+                <MenuItem fx:id="wrapInPaneMenuItem" mnemonicParsing="false" text="Pane" />
+                <MenuItem fx:id="wrapInScrollPaneMenuItem" mnemonicParsing="false" text="ScrollPane" />
+                <MenuItem fx:id="wrapInSplitPaneMenuItem" mnemonicParsing="false" text="SplitPane" />
+                <MenuItem fx:id="wrapInStackPaneMenuItem" mnemonicParsing="false" text="StackPane" />
+                <MenuItem fx:id="wrapInTabPaneMenuItem" mnemonicParsing="false" text="TabPane" />
+                <MenuItem fx:id="wrapInTextFlowMenuItem" mnemonicParsing="false" text="TextFlow" />
+                <MenuItem fx:id="wrapInTilePaneMenuItem" mnemonicParsing="false" text="TilePane" />
+                <MenuItem fx:id="wrapInTitledPaneMenuItem" mnemonicParsing="false" text="TitledPane" />
+                <MenuItem fx:id="wrapInToolBarMenuItem" mnemonicParsing="false" text="ToolBar" />
+                <MenuItem fx:id="wrapInVBoxMenuItem" mnemonicParsing="false" text="VBox" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="wrapInSceneMenuItem" mnemonicParsing="false" text="Scene" />
+                <MenuItem fx:id="wrapInStageMenuItem" mnemonicParsing="false" text="Stage" />
+              </items>
+            </Menu>
+            <MenuItem fx:id="unwrapMenuItem" mnemonicParsing="true" text="%menu.title.unwrap" />
+          </items>
+        </Menu>
+        <Menu fx:id="previewMenu" mnemonicParsing="true" text="%menu.title.preview" />
+        <Menu fx:id="windowMenu" mnemonicParsing="true" text="%menu.title.window">
+          <items>
+            <SeparatorMenuItem mnemonicParsing="false" />
+          </items>
+        </Menu>
+        <Menu fx:id="helpMenu" mnemonicParsing="false" text="%menu.title.help">
+          <items>
+            <MenuItem fx:id="helpMenuItem" mnemonicParsing="true" text="%menu.title.scene.builder.help" />
+            <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="%menu.title.about" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+  </children>
+</StackPane>

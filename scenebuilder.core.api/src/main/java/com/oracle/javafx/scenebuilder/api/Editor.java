@@ -42,7 +42,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ObservableValue;
-import javafx.scene.effect.Effect;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -67,7 +66,7 @@ public interface Editor {
 
 	//public Class<? extends Theme> getTheme();
 
-	public boolean isSelectionNode();
+	//public boolean isSelectionNode();
 
 	//public Library getLibrary();
 
@@ -221,9 +220,9 @@ public interface Editor {
 
     public void redo();
 
-    public void performSetEffect(Class<? extends Effect> effectClass);
+    //public void performSetEffect(Class<? extends Effect> effectClass);
 
-    public boolean canPerformSetEffect();
+    //public boolean canPerformSetEffect();
 
     public void undo();
 

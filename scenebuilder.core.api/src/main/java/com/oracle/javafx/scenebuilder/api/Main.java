@@ -72,4 +72,6 @@ public interface Main {
 
     void performOpenFile(Document document);
 
+    boolean canPerformControlAction(ApplicationControlAction controlAction, Document document);
+
 }

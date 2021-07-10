@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.preview.actions.SetRootSizeExtension;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewMenuController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.preview.menu.PreviewMenuProvider;
@@ -54,7 +55,8 @@ public class PreviewExtension extends AbstractExtension {
         return Arrays.asList(
                 PreviewMenuController.class,
                 PreviewWindowController.class,
-                PreviewMenuProvider.class
+                PreviewMenuProvider.class,
+                SetRootSizeExtension.class
             );
      // @formatter:on
     }

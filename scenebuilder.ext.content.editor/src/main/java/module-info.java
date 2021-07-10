@@ -7,11 +7,13 @@ open module scenebuilder.ext.content.editor {
     exports com.oracle.javafx.scenebuilder.contenteditor.actions;
     exports com.oracle.javafx.scenebuilder.contenteditor.guides;
     exports com.oracle.javafx.scenebuilder.contenteditor;
+    exports com.oracle.javafx.scenebuilder.contenteditor.menu;
     exports com.oracle.javafx.scenebuilder.contenteditor.gesture;
     exports com.oracle.javafx.scenebuilder.contenteditor.controller;
     exports com.oracle.javafx.scenebuilder.contenteditor.i18n;
     exports com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
-
+    
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.core.drag.and.drop;
     requires io.reactivex.rxjava2;
     requires java.logging;
@@ -23,7 +25,7 @@ open module scenebuilder.ext.content.editor {
     requires scenebuilder.core.jobs;
     requires org.slf4j;
     requires scenebuilder.ext.sb;
-    requires scenebuilder.core.api;
+    
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;

@@ -13,7 +13,7 @@ open module scenebuilder.ext.templates {
     requires javafx.fxml;
     requires javafx.graphics;
     requires lombok;
-    requires scenebuilder.core.api;
+    requires transitive scenebuilder.core.api;
     requires scenebuilder.ext.defaultx;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.jobs;

@@ -47,7 +47,7 @@ public class I18NApp implements BundleProvider {
 	public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
             final String packageName = I18NApp.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderApp"); //NOI18N
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderApp"); //NOCHECK
         }
         return bundle;
     }
