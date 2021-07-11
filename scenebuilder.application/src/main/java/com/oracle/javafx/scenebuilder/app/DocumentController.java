@@ -85,6 +85,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.util.ResourceUtils;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+//import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -94,7 +95,6 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.ui.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
-import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.selectionbar.SelectionBarController;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -127,8 +127,7 @@ public class DocumentController implements Document, InitializingBean {
     private final InspectorPanelController inspectorPanelController;
     private final CssPanelController cssPanelController;
     private final LibraryPanel libraryPanelController;
-    private final SelectionBarController selectionBarController;
-    private final MessageBarController messageBarController;
+    //private final SelectionBarController selectionBarController;
     private final WildcardImportsPreference wildcardImportsPreference;
     private final RecentItemsPreference recentItemsPreference;
     private final DocumentPreferencesController documentPreferencesController;
@@ -165,7 +164,6 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired LibraryPanel libraryPanelController,
             @Autowired @Lazy CssPanelController cssPanelController,
             @Autowired SelectionBarController selectionBarController,
-            @Autowired MessageBarController messageBarController,
             @Autowired DockManager dockManager,
             @Lazy @Autowired ThemePreference themePreference,
             @Lazy @Autowired PathPreference pathPreference,
@@ -191,8 +189,6 @@ public class DocumentController implements Document, InitializingBean {
         this.inspectorPanelController = inspectorPanelController;
         this.libraryPanelController = libraryPanelController;
         this.cssPanelController = cssPanelController;
-        this.selectionBarController = selectionBarController;
-        this.messageBarController = messageBarController;
         this.pathPreference = pathPreference;
         this.initializations = initializations;
         this.finalizations = finalizations;

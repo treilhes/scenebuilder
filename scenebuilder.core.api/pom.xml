@@ -30,14 +30,32 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    
+                    <execution>
+                        <id>test</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>--add-exports</arg>
+                                <arg>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
-                    <compilerArgs>
-                        <arg>--add-exports</arg>
-                        <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.api</arg>
-                        <arg>--add-exports</arg>
-                        <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
-                    </compilerArgs>
-                </configuration>
+                            <compilerArgs>
+                                <arg>--add-exports</arg>
+                                <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.api</arg>
+                                <arg>--add-exports</arg>
+                                <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
+                                <arg>--add-opens</arg>
+                                <arg>javafx.fxml/javafx.fxml=scenebuilder.core.api</arg>
+                            </compilerArgs>
+                        </configuration>
             </plugin>
         </plugins>
     </build>

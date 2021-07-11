@@ -19,7 +19,8 @@
             <defaultValue>extensionCamelCasedName</defaultValue>
         </requiredProperty>
         <requiredProperty key="generatedUUID">
-            <defaultValue>${package.getClass().forName("java.util.UUID").getMethod("randomUUID").invoke(null).toString()}</defaultValue>
+            <defaultValue>${package.getClass().forName("java.util.UUID").getMethod("randomUUID").invoke(null).toString()}
+            </defaultValue>
         </requiredProperty>
         <requiredProperty key="scenebuilderVersion">
             <defaultValue>${project.version}</defaultValue>

@@ -35,6 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -46,30 +47,38 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
 
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueCharacters;
-import com.oracle.javafx.scenebuilder.test.JfxInitializer;
+
+import javafx.stage.Stage;
 
 /**
  * Unit test for {@link FXOMSaver#updateImportInstructions(FXOMDocument)}.
  */
+@ExtendWith(ApplicationExtension.class)
 public class FXOMSaverUpdateImportInstructionsTest {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
     private static FXOMDocument fxomDocument;
     private static FXOMSaver serviceUnderTest;
 
-    @BeforeClass
-    public static void initialize() {
-        JfxInitializer.initialize();
-    }
+//    @BeforeClass
+//    public static void initialize() {
+//        JfxInitializer.initialize();
+//    }
 
+    @Start
+    private void start(Stage stage) {
+        
+    }
+    
     @Test
     public void testEmptyFXML() throws IOException {
         setupTestCase(FxmlTestInfo.EMPTY);
@@ -259,7 +268,7 @@ public class FXOMSaverUpdateImportInstructionsTest {
     private void setupTestCase(FxmlTestInfo n) {
         Path pathToFXML = Paths.get("src/test/resources/com/oracle/javafx/scenebuilder/core/fxom/" + n.getFilename() + ".fxml");
         try {
-            Path pathToTestFXML = temporaryFolder.newFile("testerFXML.fxml").toPath();
+            Path pathToTestFXML = new File(temporaryFolder, "testerFXML.fxml").toPath();
 
             // Setup for the fxomDocument from the FXML file that will be tested
             setupFXOMDocument(pathToFXML);

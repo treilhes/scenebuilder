@@ -6,6 +6,7 @@ open module ${artifactId} {
     exports ${package}.i18n;
     
     requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.core.extension.api;
     
     provides Extension with ${extensionCamelCasedName}Extension;
 }

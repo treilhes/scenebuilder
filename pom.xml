@@ -49,8 +49,10 @@
         <module>scenebuilder.extension.archetype</module>
         <module>scenebuilder.starter</module>
         <module>scenebuilder.starter.test</module>
-    <module>scenebuilder.ext.glossary</module>
-  </modules>
+        <module>scenebuilder.ext.glossary</module>
+
+        <module>scenebuilder.core.clipboard</module>
+    </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -271,11 +273,6 @@
                 <artifactId>scenebuilder.starter.test</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.30</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
