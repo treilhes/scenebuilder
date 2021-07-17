@@ -32,17 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
 
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.scene.Parent;
 
 // TODO: Auto-generated Javadoc
@@ -64,24 +59,10 @@ import javafx.scene.Parent;
  *
  *
  */
-public abstract class AbstractPanelController  {
+public abstract class AbstractPanelController extends AbstractCommonUiController {
 
     /** The Constant LOG. */
     private static final Logger LOG = Logger.getLogger(AbstractPanelController.class.getName());
-
-    /** The scene builder api. */
-    private final Api api;
-
-    /** The panel root. */
-    private Parent panelRoot;
-
-    /** The tool stylesheet config. */
-    private StylesheetProvider toolStylesheetConfig;
-
-    /** The scene builder manager. */
-    private final SceneBuilderManager sceneBuilderManager;
-
-    //private DocumentManager documentManager;
 
     /**
      * Base constructor for invocation by the subclasses.
@@ -91,78 +72,7 @@ public abstract class AbstractPanelController  {
      * @param api the api object
      */
     protected AbstractPanelController(Api api) {
-        this.api = api;
-        this.sceneBuilderManager = api.getSceneBuilderManager();
-       //this.documentManager = api.getApiDoc().getDocumentManager();
-    }
-    
-    /**
-     * Returns the root FX object of this panel.
-     *
-     * @return the root object of the panel (never null)
-     */
-    public Parent getRoot() {
-        assert panelRoot != null;
-        //startListeners();
-        return panelRoot;
-    }
-    
-    /**
-     * Set the root of this panel controller.<br>
-     * This routine is invoked by {@link SceneBuilderBeanFactoryPostProcessor#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)}
-     * using {@link FxmlController#setRoot(Parent)}
-     *
-     * @param panelRoot the root panel (non null).
-     */
-    public void setRoot(Parent panelRoot) {
-        assert panelRoot != null;
-        this.panelRoot = panelRoot;
-
-        if (sceneBuilderManager != null) {
-            sceneBuilderManager.stylesheetConfig()
-                .subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
-                toolStylesheetDidChange(s);
-            });
-        }
-    }
-    
-    public Api getApi() {
-        return api;
-    }
-    
-    /**
-     * Replaces old Stylesheet config by the tool style sheet assigned to this
-     * controller. This methods is event binded to {@link DocumentManager#stylesheetConfig()} using an RxJava2 subscription.
-     *
-     * @param newToolStylesheetConfig null or the new style sheet configuration to apply
-     */
-    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
-
-        if (panelRoot == null) { // nothing to style so return
-            return;
-        }
-
-        if (toolStylesheetConfig != null) { // if old conf then removeit
-            panelRoot.getStylesheets().remove(toolStylesheetConfig.getUserAgentStylesheet());
-            panelRoot.getStylesheets().removeAll(toolStylesheetConfig.getStylesheets());
-        }
-
-        if (newToolStylesheetConfig != null) { // replace the active conf only if the new one is valid
-            toolStylesheetConfig = newToolStylesheetConfig;
-        }
-
-        //apply the conf if the current one is valid
-        if (toolStylesheetConfig != null) {
-            if (toolStylesheetConfig.getUserAgentStylesheet() != null) {
-                panelRoot.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
-            }
-            if (toolStylesheetConfig.getStylesheets() != null) {
-                Logger.getLogger(AbstractWindowController.class.getName()).log(Level.INFO,
-                        "Applying new tool theme using {0} on {1}",
-                        new Object[] { toolStylesheetConfig.getStylesheets(), this.getClass().getName() });
-                panelRoot.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
-            }
-        }
+        super(api);
     }
 
 //    public void startListeners() {

@@ -178,8 +178,8 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private MenuItem trimMenuItem;
 
     // View
-    @FXML
-    private MenuItem gotoContentMenuItem;
+//    @FXML
+//    private MenuItem gotoContentMenuItem;
     @FXML
     private MenuItem gotoPropertiesMenuItem;
     @FXML
@@ -307,10 +307,8 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     // Window
     // Help
-    @FXML
-    private MenuItem helpMenuItem;
-    @FXML
-    private MenuItem aboutMenuItem;
+//    @FXML
+//    private MenuItem helpMenuItem;
 
     private static final KeyCombination.Modifier modifier = KeyboardModifier.control();
     private final Map<KeyCombination, MenuItem> keyToMenu = new HashMap<>();
@@ -386,7 +384,10 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     @Override
     public void afterPropertiesSet() throws Exception {
         systemMenuBarController = this;
-
+        //setupMenuBar()
+    }
+    
+    private void setupMenuBar() {
         MenuBar menuBar = getMenuBar();
         buildMenuMap(menuBar);
         populateMenus();
@@ -718,7 +719,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         assert selectPreviousMenuItem != null;
         assert trimMenuItem != null;
 
-        assert gotoContentMenuItem != null;
+        //assert gotoContentMenuItem != null;
         assert gotoPropertiesMenuItem != null;
         assert gotoLayoutMenuItem != null;
         assert gotoCodeMenuItem != null;
@@ -782,8 +783,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         assert wrapInStageMenuItem != null;
         assert unwrapMenuItem != null;
 
-        assert helpMenuItem != null;
-        assert aboutMenuItem != null;
+        //assert helpMenuItem != null;
 
         /*
          * To make MenuBar.fxml editable with SB 1.1, the menu bar is enclosed
@@ -916,8 +916,8 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         /*
          * View menu
          */
-        gotoContentMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_CONTENT));
-        gotoContentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, modifier));
+//        gotoContentMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_CONTENT));
+//        gotoContentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, modifier));
         gotoPropertiesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_PROPERTIES));
         gotoPropertiesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, modifier));
         gotoLayoutMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_LAYOUT));
@@ -1006,21 +1006,21 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             }
         });
         toggleRightPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT8, modifier));
-        toggleOutlinesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_OUTLINES_VISIBILITY) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.hide.outlines";
-                } else if (content.isOutlinesVisible()) {
-                    titleKey = "menu.title.hide.outlines";
-                } else {
-                    titleKey = "menu.title.show.outlines";
-                }
-                return I18N.getString(titleKey);
-            }
-        });
-        toggleOutlinesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, modifier));
+//        toggleOutlinesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_OUTLINES_VISIBILITY) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.hide.outlines";
+//                } else if (content.isOutlinesVisible()) {
+//                    titleKey = "menu.title.hide.outlines";
+//                } else {
+//                    titleKey = "menu.title.show.outlines";
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
+//        toggleOutlinesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, modifier));
         toggleSampleDataMenuItem.setUserData(new ControlActionController(ControlAction.TOGGLE_SAMPLE_DATA) {
             @Override
             public String getTitle() {
@@ -1035,22 +1035,22 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 return I18N.getString(titleKey);
             }
         });
-        toggleAlignmentGuidesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_GUIDES_VISIBILITY) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.disable.guides";
-                } else {
-                    if (content.isGuidesVisible()) {
-                        titleKey = "menu.title.disable.guides";
-                    } else {
-                        titleKey = "menu.title.enable.guides";
-                    }
-                }
-                return I18N.getString(titleKey);
-            }
-        });
+//        toggleAlignmentGuidesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_GUIDES_VISIBILITY) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.disable.guides";
+//                } else {
+//                    if (content.isGuidesVisible()) {
+//                        titleKey = "menu.title.disable.guides";
+//                    } else {
+//                        titleKey = "menu.title.enable.guides";
+//                    }
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
         updateZoomMenu();
 
         /*
@@ -1173,9 +1173,8 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         /*
          * Help menu
          */
-        aboutMenuItem.setUserData(new ApplicationControlActionController(ApplicationControlAction.ABOUT));
-        helpMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.HELP));
-        helpMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.F1));
+//        helpMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.HELP));
+//        helpMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.F1));
 
         /*
          * Put some generic handlers on each Menu and MenuItem.
@@ -1186,6 +1185,8 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         }
 
         windowMenu.setOnMenuValidation(onWindowMenuValidationHandler);
+        
+        setupMenuBar();
     }
 
 

@@ -56,6 +56,7 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.Size;
@@ -66,6 +67,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -76,7 +78,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.util.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.job.editor.AddContextMenuToSelectionJob;
@@ -140,7 +141,7 @@ public class EditorController implements Editor {
     private final MessageLogger messageLogger;
     private final ErrorReport errorReport;
 //    private final DragController dragController;
-    private final InlineEditController inlineEditController;// = new InlineEditController(this);
+    private final InlineEdit inlineEditController;// = new InlineEditController(this);
     private final ContextMenuController contextMenuController;// = new ContextMenuController(this);
     //private final WatchingController watchingController;// = new WatchingController(this);
 
@@ -171,7 +172,7 @@ public class EditorController implements Editor {
      */
     public EditorController(
             @Autowired Api api,
-    	    @Lazy @Autowired InlineEditController inlineEditController,
+    	    @Lazy @Autowired InlineEdit inlineEditController,
     		@Lazy @Autowired ContextMenuController contextMenuController
 
     		) {
@@ -750,7 +751,7 @@ public class EditorController implements Editor {
      * @return the inline edit controller associated to this editor.
      */
     @Override
-    public InlineEditController getInlineEditController() {
+    public InlineEdit getInlineEditController() {
         return inlineEditController;
     }
 

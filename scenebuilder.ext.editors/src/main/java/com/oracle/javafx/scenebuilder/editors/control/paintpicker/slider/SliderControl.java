@@ -140,7 +140,7 @@ public class SliderControl extends GridPane {
         tf.setText(Double.toString(newValue));
         // Avoid using runLater
         // This should be done somewhere else (need to investigate)
-//        Platform.runLater(new Runnable() {
+//        SbPlatform.runLater(new Runnable() {
 //            @Override
 //            public void run() {
 //                // position caret after new value for easy editing

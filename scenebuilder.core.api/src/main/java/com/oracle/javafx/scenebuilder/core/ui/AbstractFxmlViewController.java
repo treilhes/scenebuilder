@@ -98,12 +98,16 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
         return null;
     }
 
+    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
+    // maybe markAsShown
     @Override
     public void shown() {
         this.hidden = false;
         onShow();
     }
 
+    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
+    // maybe markAsHidden
     @Override
     public void hidden() {
         this.hidden = true;
@@ -117,4 +121,10 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
     protected boolean isHidden() {
         return hidden;
     }
+    
+    @Override
+    public boolean isVisible() {
+        return !hidden;
+    }
+
 }

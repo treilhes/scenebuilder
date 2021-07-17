@@ -82,6 +82,8 @@ public abstract class AbstractFxmlPanelController extends AbstractPanelControlle
 	public ResourceBundle getResources() {
 		return resources;
 	}
+    
+    
 
     /*
      * Protected

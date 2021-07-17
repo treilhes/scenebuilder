@@ -61,6 +61,7 @@ import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialogController;
@@ -190,7 +191,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         ExecutorService executor = Executors.newFixedThreadPool(4);
         
         // go back to fx thread for ui update
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             
             setExploring(true);
             
@@ -328,14 +329,14 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         if (Platform.isFxApplicationThread())
             exploringProperty().set(value);
         else
-            Platform.runLater(() -> setExploring(value));
+            SbPlatform.runLater(() -> setExploring(value));
     }
 
     protected void setItems(Collection<I> items) {
         if (Platform.isFxApplicationThread()) {
             itemsProperty.setAll(items);
         } else {
-            Platform.runLater(() -> {
+            SbPlatform.runLater(() -> {
                 itemsProperty.setAll(items);
             });
         }
@@ -345,7 +346,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         if (Platform.isFxApplicationThread()) {
             itemsProperty.addAll(items);
         } else {
-            Platform.runLater(() -> itemsProperty.addAll(items));
+            SbPlatform.runLater(() -> itemsProperty.addAll(items));
         }
     }
 
@@ -353,7 +354,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         if (Platform.isFxApplicationThread()) {
             explorationCountProperty.add(1);
         } else {
-            Platform.runLater(() -> explorationCountProperty.add(1));
+            SbPlatform.runLater(() -> explorationCountProperty.add(1));
         }
     }
 
@@ -361,7 +362,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         if (Platform.isFxApplicationThread()) {
             explorationDateProperty.set(date);
         } else {
-            Platform.runLater(() -> explorationDateProperty.set(date));
+            SbPlatform.runLater(() -> explorationDateProperty.set(date));
         }
     }
 
@@ -369,7 +370,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         if (Platform.isFxApplicationThread()) {
             firstExplorationCompleted.set(true);
         } else {
-            Platform.runLater(() -> firstExplorationCompleted.set(true));
+            SbPlatform.runLater(() -> firstExplorationCompleted.set(true));
         }
     }
 

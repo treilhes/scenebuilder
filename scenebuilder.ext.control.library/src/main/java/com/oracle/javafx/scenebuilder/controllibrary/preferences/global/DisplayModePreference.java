@@ -36,10 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
+import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController.DISPLAY_MODE;

@@ -85,9 +85,10 @@ public class GenerateSkeletonContentAction extends AbstractAction implements Ini
 	}
 
 	@Override
-	public void perform() {
+	public ActionStatus perform() {
 		assert getActionConfig() != null;
 		documentManager.stylesheetConfig().set(getActionConfig());
+		return ActionStatus.DONE;
 	}
 
 	public static class ApplyCssContentConfig implements StylesheetProvider {

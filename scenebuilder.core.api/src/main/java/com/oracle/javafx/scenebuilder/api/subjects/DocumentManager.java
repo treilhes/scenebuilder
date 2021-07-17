@@ -112,6 +112,8 @@ public interface DocumentManager {
      */
     SubjectItem<Boolean> dependenciesLoaded();
     
+    SubjectItem<Object> focused();
+    
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
     public class DocumentManagerImpl implements InitializingBean, DocumentManager {
@@ -129,6 +131,7 @@ public interface DocumentManager {
         private final SubjectItem<Integer> sceneGraphRevisionDidChange;
         private final SubjectItem<Integer> cssRevisionDidChange;
         private final SubjectItem<ClassLoader> classLoaderDidChange;
+        private final SubjectItem<Object> focused;
         
         private ChangeListener<? super Number> sceneGraphRevisionChangeListener = 
                 (ob, o, n) -> sceneGraphRevisionDidChange().set(n.intValue());
@@ -161,6 +164,7 @@ public interface DocumentManager {
             sceneGraphRevisionDidChange = new SubjectItem<Integer>(subjects.getSceneGraphRevisionDidChange());
             cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
             classLoaderDidChange = new SubjectItem<ClassLoader>(subjects.getClassLoaderDidChange());
+            focused = new SubjectItem<Object>(subjects.getFocused());
         }
 
         @Override
@@ -221,6 +225,11 @@ public interface DocumentManager {
         public SubjectItem<Boolean> dependenciesLoaded() {
             return dependenciesLoaded;
         }
+        
+        @Override
+        public SubjectItem<Object> focused() {
+            return focused;
+        }
     }
 
     public class DocumentSubjects extends SubjectManager {
@@ -237,6 +246,8 @@ public interface DocumentManager {
         private @Getter PublishSubject<Integer> sceneGraphRevisionDidChange;
         private @Getter PublishSubject<Integer> cssRevisionDidChange;
         private @Getter ReplaySubject<ClassLoader> classLoaderDidChange;
+        
+        private @Getter ReplaySubject<Object> focused;
 
         public DocumentSubjects() {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N
@@ -252,6 +263,7 @@ public interface DocumentManager {
             sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange", // NOI18N
                     PublishSubject.create());
             cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
+            focused = wrap(DocumentSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
         }
 
     }

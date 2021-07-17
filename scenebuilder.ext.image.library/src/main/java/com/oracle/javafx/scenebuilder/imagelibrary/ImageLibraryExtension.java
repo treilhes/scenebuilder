@@ -39,7 +39,12 @@ import java.util.UUID;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ImageLibraryPanelActions;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ImportSelectionAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ManageJarFxmlAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.RevealCustomFolderAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ShowJarAnalysisReportAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsListAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsSectionsAction;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
@@ -71,7 +76,6 @@ public class ImageLibraryExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                ImageLibraryPanelActions.class,
                 ImageLibraryController.class,
                 ImageLibraryMenuProvider.class,
                 ImageImportWindowController.class,
@@ -86,7 +90,13 @@ public class ImageLibraryExtension extends AbstractExtension {
                 ImageFileExplorer.class,
                 ImageFolderExplorer.class,
                 ImageMavenArtifactExplorer.class,
-                ThumbnailServiceController.class
+                ThumbnailServiceController.class,
+                ImportSelectionAction.class,
+                ManageJarFxmlAction.class,
+                RevealCustomFolderAction.class,
+                ShowJarAnalysisReportAction.class,
+                ViewAsListAction.class,
+                ViewAsSectionsAction.class
             );
      // @formatter:on
     }

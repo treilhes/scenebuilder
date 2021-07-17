@@ -22,6 +22,7 @@ open module scenebuilder.core.layout {
     requires org.slf4j;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
+    requires scenebuilder.core.filesystem;
     requires spring.beans;
     requires spring.context;
     requires spring.core;

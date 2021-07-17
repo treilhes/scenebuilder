@@ -46,6 +46,7 @@ public interface View {
 	ViewMenuProvider getViewMenus();
 	void shown();
 	void hidden();
+	boolean isVisible();
 	
 	public static ViewDescriptor viewDescriptorAnnotation(Class<? extends View> cls) {
         ViewDescriptor viewDescriptor = cls.getAnnotation(ViewDescriptor.class);

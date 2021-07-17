@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.app.util.MessageBox;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 
@@ -137,13 +138,13 @@ public class AppPlatform {
         @Override
         public void messageBoxDidGetMessage(MessageBoxMessage message) {
             assert Platform.isFxApplicationThread() == false;
-            Platform.runLater(() -> eventHandler.handleOpenFilesAction(message));
+            SbPlatform.runLater(() -> eventHandler.handleOpenFilesAction(message));
         }
 
         @Override
         public void messageBoxDidCatchException(Exception x) {
             assert Platform.isFxApplicationThread() == false;
-            Platform.runLater(() -> eventHandler.handleMessageBoxFailure(x));
+            SbPlatform.runLater(() -> eventHandler.handleMessageBoxFailure(x));
         }
 
     }

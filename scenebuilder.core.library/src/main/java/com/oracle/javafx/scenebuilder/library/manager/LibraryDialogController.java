@@ -52,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
@@ -63,7 +64,6 @@ import com.oracle.javafx.scenebuilder.library.maven.search.SearchMavenDialogCont
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 
-import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
@@ -238,7 +238,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         Stream<DialogListItem> filesStream = library.getStore().getFilesOrFolders().stream()
             .map(f -> new LibraryDialogListItem(this, f));
         
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream)
                     .sorted(new DialogListItemComparator())
                     .collect(Collectors.toList()));

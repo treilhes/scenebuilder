@@ -35,7 +35,10 @@ package com.oracle.javafx.scenebuilder.api;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
+
+import com.oracle.javafx.scenebuilder.api.action.Action.ActionStatus;
 
 public interface Document {
     //API validated
@@ -46,9 +49,9 @@ public interface Document {
     boolean hasName();
     String getName();
 
-    ActionStatus save();
-    ActionStatus saveAs();
-    void revert();
+//    ActionStatus save();
+//    ActionStatus saveAs();
+//    void revert();
     
     //API to be validated
     
@@ -77,7 +80,7 @@ public interface Document {
     void updateWithDefaultContent();
 
     
-    ActionStatus performCloseAction();
+    //ActionStatus performCloseAction();
 
     void performImportFxml();
     void performIncludeFxml();
@@ -119,7 +122,7 @@ public interface Document {
         //REVERT_FILE,
         CLOSE_FILE,
         //REVEAL_FILE,
-        GOTO_CONTENT,
+        //GOTO_CONTENT,
         GOTO_PROPERTIES,
         GOTO_LAYOUT,
         GOTO_CODE,
@@ -128,15 +131,15 @@ public interface Document {
         TOGGLE_CSS_PANEL,
         TOGGLE_LEFT_PANEL,
         TOGGLE_RIGHT_PANEL,
-        TOGGLE_OUTLINES_VISIBILITY,
-        TOGGLE_GUIDES_VISIBILITY,
+        //TOGGLE_OUTLINES_VISIBILITY,
+        //TOGGLE_GUIDES_VISIBILITY,
         SHOW_PREVIEW_WINDOW,
         SHOW_PREVIEW_DIALOG,
         ADD_SCENE_STYLE_SHEET,
         SET_RESOURCE,
         REMOVE_RESOURCE,
-        REVEAL_RESOURCE,
-        HELP
+        REVEAL_RESOURCE
+        //,HELP
     }
 
     public enum DocumentEditAction {
@@ -148,11 +151,6 @@ public interface Document {
         //INCLUDE_FXML
     }
 
-    public enum ActionStatus {
-        CANCELLED,
-        DONE
-    }
-
     void onCloseRequest();
     void onFocus();
     DocumentWindow getDocumentWindow();
@@ -162,6 +160,9 @@ public interface Document {
     URL getFxmlLocation();
     void closeWindow();
     Editor getEditorController();
+    FileTime getLoadFileTime();
+    void updateLoadFileTime();
+    ActionStatus performCloseAction();
 
     
 }

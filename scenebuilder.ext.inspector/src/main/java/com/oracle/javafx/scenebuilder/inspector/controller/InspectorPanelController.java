@@ -52,7 +52,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -70,6 +69,7 @@ import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
@@ -99,6 +99,11 @@ import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.inspector.actions.ShowAllAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.job.editor.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.job.editor.ModifySelectionJob;
@@ -107,7 +112,6 @@ import com.oracle.javafx.scenebuilder.job.editor.togglegroup.ModifySelectionTogg
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -182,10 +186,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     @FXML
     private SplitPane inspectorRoot;
 
-    public enum SectionId {
-
-        PROPERTIES, LAYOUT, CODE, NONE
-    }
 
     public enum ViewMode {
 
@@ -265,11 +265,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired PropertyEditorFactory propertyEditorFactory,
             @Autowired AccordionAnimationPreference accordionAnimationPreference,
-            @Autowired @Qualifier("inspectorPanelActions.ShowAllAction") Action showAllAction,
-            @Autowired @Qualifier("inspectorPanelActions.ShowEditedAction") Action showEditedAction,
-            @Autowired @Qualifier("inspectorPanelActions.ViewBySectionsAction") Action viewBySectionsAction,
-            @Autowired @Qualifier("inspectorPanelActions.ViewByPropertyNameAction") Action viewByPropertyNameAction,
-            @Autowired @Qualifier("inspectorPanelActions.ViewByPropertyTypeAction") Action viewByPropertyTypeAction,
+            @Autowired ShowAllAction showAllAction,
+            @Autowired ShowEditedAction showEditedAction,
+            @Autowired ViewBySectionsAction viewBySectionsAction,
+            @Autowired ViewByPropertyNameAction viewByPropertyNameAction,
+            @Autowired ViewByPropertyTypeAction viewByPropertyTypeAction,
             @Autowired ViewSearch viewSearch) {
         super(api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
         this.context = api.getContext();
@@ -408,6 +408,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         return expandedSectionProperty.getValue();
     }
 
+    @Override
     public void setExpandedSection(SectionId sectionId) {
         assert sectionId != null;
         expandedSectionProperty.setValue(sectionId);
@@ -473,7 +474,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     protected void cssRevisionDidChange() {
 //        System.out.println("CSS changed.");
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             if (!dragOnGoing) {
                 updateInspector();
             }

@@ -43,12 +43,14 @@ import com.oracle.javafx.scenebuilder.ui.dialog.ErrorDialog;
 import com.oracle.javafx.scenebuilder.ui.dialog.TextViewDialog;
 import com.oracle.javafx.scenebuilder.ui.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.ui.i18n.I18NLayout;
+import com.oracle.javafx.scenebuilder.ui.inlineedit.InlineEditController;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessagePanelController;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
+import com.oracle.javafx.scenebuilder.ui.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageHeightPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageWidthPreference;
@@ -85,7 +87,10 @@ public class BaseUiExtension extends AbstractExtension {
                 AlertDialog.class,
                 DialogController.class,
                 ErrorDialog.class,
-                TextViewDialog.class
+                TextViewDialog.class,
+                InlineEditController.class,
+                DocumentController.class,
+                PathPreference.class
             );
      // @formatter:on
     }

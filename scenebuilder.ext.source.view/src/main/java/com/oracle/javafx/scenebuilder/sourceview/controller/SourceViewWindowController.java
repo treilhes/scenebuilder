@@ -48,15 +48,15 @@ import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.WildcardImportsPreference;
+import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -186,7 +186,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
             
-            Platform.runLater(() -> {
+            SbPlatform.runLater(() -> {
                 textArea.setScrollLeft(scrollLeftSave);
                 textArea.setScrollTop(scrollTopSave);
             });

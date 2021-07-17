@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javafx.application.Platform;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 
 /**
  *
@@ -189,16 +189,16 @@ public class FileWatcher {
                 if ((lastModifiedTime == null) && (newModifiedTime != null)) {
                     // target has been created
                     modifiedTimes.put(target, newModifiedTime);
-                    Platform.runLater(() -> delegate.fileWatcherDidWatchTargetCreation(target));
+                    SbPlatform.runLater(() -> delegate.fileWatcherDidWatchTargetCreation(target));
                 } else if ((lastModifiedTime != null) && (newModifiedTime == null)) {
                     // target has been deleted
                     modifiedTimes.remove(target);
-                    Platform.runLater(() -> delegate.fileWatcherDidWatchTargetDeletion(target));
+                    SbPlatform.runLater(() -> delegate.fileWatcherDidWatchTargetDeletion(target));
                 } else if (Objects.equals(lastModifiedTime, newModifiedTime) == false) {
                     // target has been modified
                     assert newModifiedTime != null;
                     modifiedTimes.put(target, newModifiedTime);
-                    Platform.runLater(() -> delegate.fileWatcherDidWatchTargetModification(target));
+                    SbPlatform.runLater(() -> delegate.fileWatcherDidWatchTargetModification(target));
                 }
             }
         }

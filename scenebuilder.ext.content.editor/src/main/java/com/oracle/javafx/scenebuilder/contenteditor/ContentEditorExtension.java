@@ -36,20 +36,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.contenteditor.actions.FocusContentAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleGuidesVisibilityAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleOutlinesVisibilityAction;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.EditorController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.HudWindowController;
-import com.oracle.javafx.scenebuilder.contenteditor.controller.InlineEditController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
+import com.oracle.javafx.scenebuilder.contenteditor.menu.FocusContentMenuItemProvider;
 import com.oracle.javafx.scenebuilder.contenteditor.menu.SetRootSizesMenuItemProvider;
+import com.oracle.javafx.scenebuilder.contenteditor.menu.ToggleMenuItemProvider;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.contenteditor.report.ErrorReportImpl;
@@ -79,10 +83,14 @@ public class ContentEditorExtension extends AbstractExtension {
             EditModeController.class,
             EditorController.class, 
             ContextMenuController.class,
-            InlineEditController.class,
             ErrorReportImpl.class,
             SetRootSizesMenuItemProvider.class,
-            SetRootSizeAction.class
+            SetRootSizeAction.class,
+            ToggleGuidesVisibilityAction.class,
+            ToggleOutlinesVisibilityAction.class,
+            ToggleMenuItemProvider.class,
+            FocusContentAction.class,
+            FocusContentMenuItemProvider.class
             );
      // @formatter:on
     }

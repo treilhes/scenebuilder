@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.prefedit.controller.PreferenceEditorMenuController;
+import com.oracle.javafx.scenebuilder.prefedit.actions.ShowPreferencesAction;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
 import com.oracle.javafx.scenebuilder.prefedit.editor.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.prefedit.i18n.I18NPreferenceEditor;
@@ -54,7 +54,7 @@ public class PreferenceEditorExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 PreferencesWindowController.class,
-                PreferenceEditorMenuController.class,
+                ShowPreferencesAction.class,
                 I18NPreferenceEditor.class,
                 PreferenceEditorMenuProvider.class,
                 PreferenceEditorFactoryImpl.class

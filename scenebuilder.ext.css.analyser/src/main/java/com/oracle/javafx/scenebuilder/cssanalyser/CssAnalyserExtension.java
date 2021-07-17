@@ -36,9 +36,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssPanelActions;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ShowStyledOnlyAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.SplitDefaultsAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewRulesAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTableAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTextAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelDelegate;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
@@ -47,11 +50,6 @@ import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-
-@ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.cssanalyser.actions"
-        })
 public class CssAnalyserExtension extends AbstractExtension {
     @Override
     public UUID getId() {
@@ -68,8 +66,13 @@ public class CssAnalyserExtension extends AbstractExtension {
             CssAnalyserModeProvider.class,
             CssPanelMenuController.class,
             CssPanelDelegate.class,
-            CssPanelActions.class,
-            PickModeController.class
+            PickModeController.class,
+            CopyStyleablePathAction.class,
+            ShowStyledOnlyAction.class,
+            SplitDefaultsAction.class,
+            ViewRulesAction.class,
+            ViewTableAction.class,
+            ViewTextAction.class
             );
      // @formatter:on
     }

@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -58,7 +59,6 @@ import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.BackupSelectionJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.UpdateSelectionJob;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -290,7 +290,7 @@ public class DragController implements Drag{
 
         mouseTimer.schedule(new TimerTask() {
             @Override public void run() {
-                Platform.runLater(() -> {
+                SbPlatform.runLater(() -> {
                     mouseTimer = null;
                     mouseDidStopMoving();
                 });

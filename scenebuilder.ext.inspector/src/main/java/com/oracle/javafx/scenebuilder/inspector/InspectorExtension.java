@@ -36,19 +36,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.inspector.actions.InspectorPanelActions;
+import com.oracle.javafx.scenebuilder.inspector.actions.ShowAllAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.i18n.I18NInspector;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 
-
-@ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.inspector.actions"
-        })
 public class InspectorExtension extends AbstractExtension {
     @Override
     public UUID getId() {
@@ -62,7 +59,11 @@ public class InspectorExtension extends AbstractExtension {
                 I18NInspector.class,
                 InspectorPanelController.class,
                 InspectorSectionIdPreference.class,
-                InspectorPanelActions.class
+                ShowAllAction.class,
+                ShowEditedAction.class,
+                ViewByPropertyNameAction.class,
+                ViewByPropertyTypeAction.class,
+                ViewBySectionsAction.class
             );
      // @formatter:on
     }

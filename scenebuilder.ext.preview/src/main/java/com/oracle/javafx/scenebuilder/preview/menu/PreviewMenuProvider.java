@@ -41,24 +41,23 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Size;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
+import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewAction;
+import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewMenuController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -72,11 +71,14 @@ public class PreviewMenuProvider implements MenuItemProvider {
     private final DocumentManager documentManager;
     private final PreviewMenuController previewMenuController;
     private final PreviewWindowController previewWindowController;
+    private final ActionFactory actionFactory;
 
     public PreviewMenuProvider(
+            @Autowired ActionFactory actionFactory,
             @Autowired DocumentManager documentManager,
             @Autowired  @Lazy PreviewMenuController previewMenuController,
             @Autowired  @Lazy PreviewWindowController previewWindowController) {
+        this.actionFactory = actionFactory;
         this.documentManager = documentManager;
         this.previewMenuController = previewMenuController;
         this.previewWindowController = previewWindowController;
@@ -84,76 +86,18 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        return Arrays.asList(new LaunchPreviewWindowAttachment(), new LaunchPreviewDialogAttachment(),
+        
+        MenuItemAttachment launchPreview = MenuItemAttachment.single(PREVIEW_MENU_ID, PositionRequest.AsFirstChild, 
+                "menu.title.show.preview.in.window", SHOW_PREVIEW_IN_WINDOW_ID, actionFactory, ShowPreviewAction.class);
+        
+        MenuItemAttachment launchPreviewDialog = MenuItemAttachment.single(SHOW_PREVIEW_IN_WINDOW_ID, PositionRequest.AsNextSibling, 
+                "menu.title.show.preview.in.dialog", SHOW_PREVIEW_IN_DIALOG_ID, actionFactory, ShowPreviewDialogAction.class);
+        
+        return Arrays.asList(
+                launchPreview, 
+                launchPreviewDialog,
                 MenuItemAttachment.separator(SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
                 new ChangePreviewSizeAttachment());
-    }
-
-    public class LaunchPreviewWindowAttachment implements MenuItemAttachment {
-
-        private MenuItem menu = null;
-
-        public LaunchPreviewWindowAttachment() {
-        }
-
-        @Override
-        public String getTargetId() {
-            return PREVIEW_MENU_ID;
-        }
-
-        @Override
-        public PositionRequest getPositionRequest() {
-            return PositionRequest.AsFirstChild;
-        }
-
-        @Override
-        public MenuItem getMenuItem() {
-
-            if (menu != null) {
-                return menu;
-            }
-
-            menu = new MenuItem(I18N.getString("menu.title.show.preview.in.window"));
-            menu.setId(SHOW_PREVIEW_IN_WINDOW_ID);
-            menu.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyboardModifier.control()));
-            menu.setOnAction((e) -> previewMenuController.performOpenPreviewWindow());
-            
-            documentManager.fxomDocument().subscribe(fd -> menu.setDisable(fd == null));
-            return menu;
-        }
-    }
-
-    public class LaunchPreviewDialogAttachment implements MenuItemAttachment {
-
-        private MenuItem menu = null;
-
-        public LaunchPreviewDialogAttachment() {
-        }
-
-        @Override
-        public String getTargetId() {
-            return SHOW_PREVIEW_IN_WINDOW_ID;
-        }
-
-        @Override
-        public PositionRequest getPositionRequest() {
-            return PositionRequest.AsNextSibling;
-        }
-
-        @Override
-        public MenuItem getMenuItem() {
-
-            if (menu != null) {
-                return menu;
-            }
-
-            menu = new MenuItem(I18N.getString("menu.title.show.preview.in.dialog"));
-            menu.setId(SHOW_PREVIEW_IN_DIALOG_ID);
-            menu.setOnAction((e) -> previewMenuController.performOpenPreviewWindow());
-            
-            documentManager.fxomDocument().subscribe(fd -> menu.setDisable(fd == null || !(fd.getSceneGraphRoot() instanceof DialogPane)));
-            return menu;
-        }
     }
 
     public class ChangePreviewSizeAttachment implements MenuItemAttachment {
@@ -173,6 +117,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
             return PositionRequest.AsLastChild;
         }
 
+        // TODO use corresponding action here
         @Override
         public MenuItem getMenuItem() {
 

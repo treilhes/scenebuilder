@@ -48,6 +48,7 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
@@ -61,7 +62,6 @@ import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -495,7 +495,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
         if (controllerClassEditor != null) {
             // The listener on fxmlLocationProperty is called before the file
             // denoted by the location is created on disk, hence the runLater.
-            Platform.runLater(() -> {
+            SbPlatform.runLater(() -> {
                 controllerClassEditor.setUpdateFromModel(true);
                 controllerClassEditor.reset(null, null);
                 controllerClassEditor.setUpdateFromModel(false);

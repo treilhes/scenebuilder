@@ -37,10 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.EventNames;
-import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.EventTypeNames;
-import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
-
 /**
  * Unit test for {@link FindEventNamesUtil#findEventName(String)}
  */

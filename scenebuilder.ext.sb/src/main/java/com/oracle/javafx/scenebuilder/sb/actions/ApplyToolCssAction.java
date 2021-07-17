@@ -85,9 +85,10 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
 	}
 
 	@Override
-	public void perform() {
+	public ActionStatus perform() {
 		assert getActionConfig() != null;
 		sceneBuilderManager.stylesheetConfig().onNext(getActionConfig());
+		return ActionStatus.DONE;
 	}
 
 	public static class ApplyToolCssConfig implements StylesheetProvider {

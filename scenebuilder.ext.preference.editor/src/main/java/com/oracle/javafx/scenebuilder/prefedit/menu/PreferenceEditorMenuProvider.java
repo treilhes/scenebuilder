@@ -40,13 +40,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
-import com.oracle.javafx.scenebuilder.prefedit.controller.PreferenceEditorMenuController;
+import com.oracle.javafx.scenebuilder.prefedit.actions.ShowPreferencesAction;
 
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
@@ -63,12 +64,12 @@ public class PreferenceEditorMenuProvider implements MenuItemProvider {
     private final static String FILE_MENU_ID = "fileMenu";
     private final static String SHOW_PREF_EDITOR_WINDOW_ID = "showPreferencesMenuItem";
     
-    private final PreferenceEditorMenuController preferenceEditorMenuController;
+    private final ActionFactory actionFactory;
 
     public PreferenceEditorMenuProvider(
-            @Autowired  @Lazy PreferenceEditorMenuController preferenceEditorMenuController
+            @Autowired ActionFactory actionFactory
             ) {
-        this.preferenceEditorMenuController = preferenceEditorMenuController;
+        this.actionFactory = actionFactory;
     }
 
     @Override
@@ -103,7 +104,7 @@ public class PreferenceEditorMenuProvider implements MenuItemProvider {
             menu = new MenuItem(I18N.getString("menu.title.preferences"));
             menu.setId(SHOW_PREF_EDITOR_WINDOW_ID);
             menu.setAccelerator(new KeyCodeCombination(KeyCode.COMMA, modifier));
-            menu.setOnAction((e) -> preferenceEditorMenuController.performOpenPreferenceEditorWindow());
+            menu.setOnAction((e) -> actionFactory.create(ShowPreferencesAction.class).perform());
             return menu;
         }
     }

@@ -36,19 +36,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
-import com.oracle.javafx.scenebuilder.document.actions.DocumentPanelActions;
+import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
+import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
+import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.document.actions"
-        })
 public class DocumentExtension extends AbstractExtension {
 
     @Override
@@ -64,7 +60,9 @@ public class DocumentExtension extends AbstractExtension {
             HierarchyPanelController.class,
             InfoPanelController.class,
             DisplayOptionPreference.class,
-            DocumentPanelActions.class
+            ShowFxIdAction.class,
+            ShowInfoAction.class,
+            ShowNodeIdAction.class
             );
      // @formatter:on
     }

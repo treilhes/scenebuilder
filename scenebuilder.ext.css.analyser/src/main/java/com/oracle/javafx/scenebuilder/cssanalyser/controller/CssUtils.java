@@ -632,7 +632,7 @@ public class CssUtils {
 //        // Start to listen in the same tick, CSS can resolve lookup in a tick 
 //        // running in between now and the following runLater.
 //        startListeningToCssErrors();
-//        Platform.runLater(new Runnable() {
+//        SbPlatform.runLater(new Runnable() {
 //
 //            @Override
 //            public void run() {
@@ -986,7 +986,7 @@ public class CssUtils {
 //        if (Utils.isRunningUnitTests()) {
 //            Utils.printWarning(project, message);
 //        } else {
-//            Platform.runLater(new Runnable() {
+//            SbPlatform.runLater(new Runnable() {
 //                @Override
 //                public void run() {
 //                    Utils.printWarning(project, message);

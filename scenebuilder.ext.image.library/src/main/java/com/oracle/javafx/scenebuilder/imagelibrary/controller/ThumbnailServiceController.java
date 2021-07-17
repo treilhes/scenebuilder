@@ -47,11 +47,11 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -92,7 +92,7 @@ public class ThumbnailServiceController implements DisposeWithSceneBuilder {
             if (view.getImage() != null && url.toExternalForm().equals(view.getImage().getUrl())) {
                 return;
             } else {
-                Platform.runLater(() -> view.setImage(new Image(url.toExternalForm())));
+                SbPlatform.runLater(() -> view.setImage(new Image(url.toExternalForm())));
                 return;
             }
         }
@@ -116,7 +116,7 @@ public class ThumbnailServiceController implements DisposeWithSceneBuilder {
                     final CountDownLatch latch = new CountDownLatch(1);
                     final SimpleObjectProperty<WritableImage> imageProperty = new SimpleObjectProperty<>();
                     
-                    Platform.runLater(() -> {
+                    SbPlatform.runLater(() -> {
                         WritableImage snapshot = node.snapshot(param, null);
                         
                         ImageView imageView = new ImageView(snapshot);
@@ -136,7 +136,7 @@ public class ThumbnailServiceController implements DisposeWithSceneBuilder {
                     URL newUrl = imageLibrary.getStore().getThumbnail(name, width, height);
                     
                     if (newUrl != null) {
-                        Platform.runLater(() -> view.setImage(new Image(newUrl.toExternalForm())));
+                        SbPlatform.runLater(() -> view.setImage(new Image(newUrl.toExternalForm())));
                         return newUrl;
                     }
                     

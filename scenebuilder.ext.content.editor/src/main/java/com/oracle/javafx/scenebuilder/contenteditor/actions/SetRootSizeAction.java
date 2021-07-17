@@ -50,8 +50,9 @@ public class SetRootSizeAction extends AbstractAction {
     }
 
     @Override
-    public void perform() {
+    public ActionStatus perform() {
         final Job job = new UsePredefinedSizeJob(getApi().getContext(), editor, size).extend();
         getApi().getApiDoc().getJobManager().push(job);
+        return ActionStatus.DONE;
     }
 }

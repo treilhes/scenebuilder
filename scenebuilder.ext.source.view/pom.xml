@@ -16,7 +16,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.sb</artifactId>
+            <artifactId>scenebuilder.core.filesystem</artifactId>
         </dependency>
     </dependencies>
     

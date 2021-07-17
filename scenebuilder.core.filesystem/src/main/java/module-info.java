@@ -7,6 +7,7 @@ open module scenebuilder.core.filesystem {
     exports com.oracle.javafx.scenebuilder.fs.controller;
     exports com.oracle.javafx.scenebuilder.fs;
     exports com.oracle.javafx.scenebuilder.fs.menu;
+    exports com.oracle.javafx.scenebuilder.fs.action;
 
     //opens com.oracle.javafx.scenebuilder.fs.preference.global to spring.core;
     

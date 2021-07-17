@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ResolvableType;
@@ -43,60 +45,87 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
+import javafx.scene.input.KeyCombination;
+
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta
 public class ExtendedAction<T extends AbstractAction> extends AbstractAction {
 
-	private List<ActionExtension<T>> extensions;
+    private static final Logger logger = LoggerFactory.getLogger(ExtendedAction.class);
 
-	private boolean extended = false;
-	private final AbstractAction action;
+    private List<ActionExtension<T>> extensions;
 
-	@SuppressWarnings("unchecked")
-	public ExtendedAction(T action) {
-		super(action.getApi());
+    private boolean extended = false;
+    private final AbstractAction action;
 
-		this.action = action;
+    @SuppressWarnings("unchecked")
+    public ExtendedAction(T action) {
+        super(action.getApi());
 
-		ResolvableType resolvable = ResolvableType.forClassWithGenerics(ActionExtension.class, action.getClass());
-		String[] beanNamesForType = getApi().getContext().getBeanNamesForType(resolvable);
+        this.action = action;
 
-		if (beanNamesForType.length > 0) {
-			extensions = Arrays.asList(beanNamesForType).stream()
-					.map(b -> (ActionExtension<T>)getApi().getContext().getBean(b)).collect(Collectors.toList());
-		}
+        ResolvableType resolvable = ResolvableType.forClassWithGenerics(ActionExtension.class, action.getClass());
+        String[] beanNamesForType = getApi().getContext().getBeanNamesForType(resolvable);
 
-		if (extensions != null) {
-			extensions.forEach(ext -> ext.setExtendedAction(action));
-			extended = true;
-		}
+        if (beanNamesForType.length > 0) {
+            extensions = Arrays.asList(beanNamesForType).stream()
+                    .map(b -> (ActionExtension<T>) getApi().getContext().getBean(b)).collect(Collectors.toList());
+        }
 
-	}
+        if (extensions != null) {
+            extensions.forEach(ext -> ext.setExtendedAction(action));
+            extended = true;
+        }
 
-	@Override
-	public boolean canPerform() {
-		return action.canPerform();
-	}
+    }
 
-	@Override
-	public void perform() {
-		if (extended) {
-			extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> ext.prePerform());
-		}
+    @Override
+    public boolean canPerform() {
+        return action.canPerform();
+    }
 
-		action.perform();
+    @Override
+    public ActionStatus perform() {
+        if (extended) {
+            extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> {
+                ext.prePerform();
+                logger.info("Executed prePerform on {}", ext.getClass());
+            });
+        }
 
-		if (extended) {
-			extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> ext.postPerform());
-		}
-	}
+        ActionStatus status = action.perform();
+        logger.info("Executed perform on {} : {}", action.getClass(), status);
 
-	public Action getExtendedAction() {
-		return action;
-	}
+        if (extended) {
+            extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> {
+                ext.postPerform();
+                logger.info("Executed postPerform on {}", ext.getClass());
+            });
+        }
 
+        return status;
+    }
 
+    public Action getExtendedAction() {
+        return action;
+    }
 
+    @Override
+    public String getName() {
+        return getExtendedAction().getName();
+    }
+
+    @Override
+    public String getDescription() {
+        return getExtendedAction().getDescription();
+    }
+
+    @Override
+    public KeyCombination getWishedAccelerator() {
+        return getExtendedAction().getWishedAccelerator();
+    }
+
+    
 }

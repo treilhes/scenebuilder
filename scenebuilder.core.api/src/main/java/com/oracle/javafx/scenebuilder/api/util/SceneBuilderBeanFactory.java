@@ -294,6 +294,9 @@ public class SceneBuilderBeanFactory {
         /** The current scope id. */
         private static UUID currentScope;
 
+        /** The temporary thread scope id. */
+        private static ThreadLocal<UUID> threadScope = new ThreadLocal<>();
+        
         /** Map {@link DocumentWindow} to scopes id. */
         private static Map<Document, UUID> scopesId = new ConcurrentHashMap<>();
 
@@ -301,12 +304,23 @@ public class SceneBuilderBeanFactory {
         private static Map<UUID, Map<String, Object>> scopes = new ConcurrentHashMap<>();
 
         /**
-         * Gets the current scope.
+         * Gets the active scope taking into account thread local scope that may be active
+         *
+         */
+        public static Document getActiveScope() {
+            UUID threadScopeUuid = threadScope.get();
+            UUID activeScope = threadScope != null ? threadScopeUuid : currentScope;
+            return (Document)scopes.get(activeScope).get(SCOPE_OBJECT_NAME);
+        }
+        
+        /**
+         * Gets the current scope ignoring any thread local scope that may be active
          *
          */
         public static Document getCurrentScope() {
             return (Document)scopes.get(currentScope).get(SCOPE_OBJECT_NAME);
         }
+        
         /**
          * Sets the current scope.
          *
@@ -338,6 +352,25 @@ public class SceneBuilderBeanFactory {
                     logger.info(
                             String.format(SCOPE_CHANGE_MSG, scopeId, scopedDocument, "", "", "", ""));
                 }
+            }
+        }
+        
+        /**
+         * Sets the current scope.
+         *
+         * @param scopedDocument the new current scope
+         */
+        protected static void executeWithScope(Document scopedDocument, Runnable runnable) {
+            UUID backupScope = threadScope.get();
+            try {
+                UUID documentUuid = scopesId.get(scopedDocument);
+                if (documentUuid == null) {
+                    throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+                }
+                threadScope.set(documentUuid);
+                runnable.run();
+            } finally {
+                threadScope.set(backupScope);
             }
         }
 
@@ -395,7 +428,11 @@ public class SceneBuilderBeanFactory {
             } else {
                 // simple bean instantiation or retrieve it from the existing beans
                 assert currentScope != null;
-                Map<String, Object> scopedObjects = scopes.get(currentScope);
+                
+                UUID threadScopeUuid = threadScope.get();
+                UUID activeScope = threadScope != null ? threadScopeUuid : currentScope;
+                
+                Map<String, Object> scopedObjects = scopes.get(activeScope);
                 if (!scopedObjects.containsKey(name)) {
                     scopedObjects.put(name, objectFactory.getObject());
                 }

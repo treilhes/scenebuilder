@@ -126,7 +126,7 @@ public class DoubleTextFieldControl extends GridPane {
 
     private void incOrDecValue(double delta) {
         setValue(getValue() + delta);
-//        Platform.runLater(new Runnable() {
+//        SbPlatform.runLater(new Runnable() {
 //            @Override
 //            public void run() {
 //                // position caret after new value for easy editing

@@ -50,12 +50,12 @@ import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -165,7 +165,7 @@ public class DockPanelController implements Dock {
     private void changedDockType(DockType<?> dockType, View view) {
         updateActiveDockType(dockType);
 
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             updateViews();
             var dockContext = views.stream().filter(v -> v.getView() == view).findFirst().orElse(null);
             updateDockView(dockContext);
@@ -209,7 +209,7 @@ public class DockPanelController implements Dock {
             views.remove(dockContext);
             viewDeleted(dockContext.getView());
 
-            Platform.runLater(() -> {
+            SbPlatform.runLater(() -> {
                 updateDockView(null);
             });
         }
@@ -223,7 +223,7 @@ public class DockPanelController implements Dock {
         lastDockUuidPreference.put(view.getId(), this.getId());
         lastDockUuidPreference.writeToJavaPreferences();
 
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             var dockContext = activeDockType.computeView(view);
             dockContext.getController().getViewMenuButton().getItems().addAll(0, createDockMenu(view));
             views.add(dockContext);

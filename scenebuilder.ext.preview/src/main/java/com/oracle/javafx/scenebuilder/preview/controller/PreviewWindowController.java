@@ -54,14 +54,15 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
+import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController.CameraType;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -265,8 +266,8 @@ public class PreviewWindowController extends AbstractWindowController implements
             @Override
             public void run() {
             // JavaFX data should only be accessed on the JavaFX thread.
-            // => we must wrap the code into a Runnable object and call the Platform.runLater
-            Platform.runLater(() -> {
+            // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
+            SbPlatform.runLater(() -> {
                 String themeStyleSheetString = null;
                 if (fxomDocument != null) {
                     // We clone the FXOMDocument

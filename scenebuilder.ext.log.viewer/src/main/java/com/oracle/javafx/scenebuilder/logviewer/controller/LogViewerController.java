@@ -47,10 +47,10 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -122,7 +122,7 @@ public class LogViewerController extends AbstractFxmlViewController {
         int numNewLines = newLines.size();
         int toDelete = numLines + numNewLines - MAX_LINES;
 
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             if (toDelete > 0) {
                 logs.getItems().remove(0, toDelete);
             }

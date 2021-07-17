@@ -50,8 +50,6 @@ import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
-import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
@@ -60,7 +58,6 @@ import com.oracle.javafx.scenebuilder.ui.preferences.document.StageHeightPrefere
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.YPosPreference;
-import com.oracle.javafx.scenebuilder.ui.selectionbar.SelectionBarController;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
@@ -128,10 +125,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private FocusHandler focusHandler;
 
     private PreferenceManager preferenceManager;
-    private MenuBarController menuBarController;
+    //private MenuBarController menuBarController;
     //private Content contentPanelController;
-    private MessageBarController messageBarController;
-    private SelectionBarController selectionBarController;
+    //private MessageBarController messageBarController;
+    //private SelectionBarController selectionBarController;
     
     /*
      * DocumentWindowController
@@ -140,15 +137,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     // @formatter:off
     public DocumentWindowController(
             @Autowired Api api, 
-            //@Lazy @Autowired Editor editorController,
-            @Lazy @Autowired MenuBarController menuBarController,
-            //@Lazy @Autowired Content contentPanelController,
-            //@Lazy @Autowired DocumentPanelController documentPanelController,
-            //@Lazy @Autowired InspectorPanelController inspectorPanelController,
-            //@Lazy @Autowired CssPanelController cssPanelController,
-            //@Lazy @Autowired LibraryPanel libraryPanelController,
-            @Lazy @Autowired SelectionBarController selectionBarController,
-            @Lazy @Autowired MessageBarController messageBarController,
 
             @Lazy @Autowired XPosPreference xPos, 
             @Lazy @Autowired YPosPreference yPos,
@@ -192,10 +180,10 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.viewMenuController = viewMenuController;
         this.preferenceManager = new PreferenceManager();
         
-        this.menuBarController = menuBarController;
-        //this.contentPanelController = contentPanelController;
-        this.messageBarController = messageBarController;
-        this.selectionBarController = selectionBarController;
+//        this.menuBarController = menuBarController;
+//        //this.contentPanelController = contentPanelController;
+//        this.messageBarController = messageBarController;
+//        this.selectionBarController = selectionBarController;
     }
 
     @FXML
@@ -232,11 +220,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         assert mainSplitPane != null;
         assert leftRightSplitPane != null;
         
-        setMenuBar(menuBarController.getMenuBar());
-        //setContentPane(contentPanelController.getRoot());
-        setMessageBar(messageBarController.getRoot());
-
-        messageBarController.getSelectionBarHost().getChildren().add(selectionBarController.getRoot());
+        
 
         // Add a border to the Windows app, because of the specific window decoration on
         // Windows.

@@ -33,13 +33,15 @@
 package com.oracle.javafx.scenebuilder.api;
 
 import java.io.File;
+import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
 public interface Main {
     
     public enum ApplicationControlAction {
 
-        ABOUT,
+        //ABOUT,
         CHECK_UPDATES,
         REGISTER,
         //NEW_FILE,
@@ -48,11 +50,12 @@ public interface Main {
         //CLOSE_FRONT_WINDOW,
         //USE_DEFAULT_THEME,
         //USE_DARK_THEME,
-        SHOW_PREFERENCES,
+        //SHOW_PREFERENCES,
         EXIT
     }
 
     Document lookupUnusedDocumentWindowController();
+    Document lookupUnusedDocumentWindowController(Collection<Document> ignored);
 
     void performOpenRecent(Document documentWindowController, File file);
 
@@ -73,5 +76,9 @@ public interface Main {
     void performOpenFile(Document document);
 
     boolean canPerformControlAction(ApplicationControlAction controlAction, Document document);
+
+    Document lookupDocumentWindowControllers(URL newLocation);
+
+    void documentWindowRequestClose(Document document);
 
 }

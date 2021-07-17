@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.Workspace;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -271,7 +272,7 @@ public class WorkspaceController implements Workspace{
             // visual artifacts. After the two steps are done, we turn the
             // visible by calling revealScalingGroup().
 
-            Platform.runLater(() -> {
+            SbPlatform.runLater(() -> {
                 layoutContent(true /* applyCSS */);
                 adjustWorkspace();
                 revealScalingGroup();

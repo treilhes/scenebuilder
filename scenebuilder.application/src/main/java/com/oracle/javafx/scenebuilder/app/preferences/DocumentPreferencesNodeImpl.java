@@ -40,7 +40,7 @@ import java.util.prefs.Preferences;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
-import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
+import com.oracle.javafx.scenebuilder.ui.preferences.document.PathPreference;
 
 @Component
 public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {

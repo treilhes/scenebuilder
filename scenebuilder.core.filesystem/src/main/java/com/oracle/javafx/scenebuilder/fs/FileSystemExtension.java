@@ -37,6 +37,18 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.fs.action.CloseFileAction;
+import com.oracle.javafx.scenebuilder.fs.action.LoadBlankAction;
+import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
+import com.oracle.javafx.scenebuilder.fs.action.LoadFileAction;
+import com.oracle.javafx.scenebuilder.fs.action.LoadUrlAction;
+import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
+import com.oracle.javafx.scenebuilder.fs.action.ReloadFileAction;
+import com.oracle.javafx.scenebuilder.fs.action.RevealFxmlFileAction;
+import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveOrSaveAsAction;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
@@ -62,8 +74,19 @@ public class FileSystemExtension extends AbstractExtension {
                 InitialDirectoryPreference.class,
                 RecentItemsPreference.class,
                 RecentItemsSizePreference.class,
-                ClassLoaderController.class
-                
+                ClassLoaderController.class,
+                CloseFileAction.class,
+                LoadBlankAction.class,
+                LoadBlankInNewWindowAction.class,
+                LoadFileAction.class,
+                LoadUrlAction.class,
+                OpenFilesAction.class,
+                ReloadFileAction.class,
+                RevealFxmlFileAction.class,
+                RevertAction.class,
+                SaveAction.class,
+                SaveAsAction.class,
+                SaveOrSaveAsAction.class
             );
      // @formatter:on
     }

@@ -50,7 +50,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -70,8 +69,16 @@ import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
+import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ImportSelectionAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ManageJarFxmlAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.RevealCustomFolderAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ShowJarAnalysisReportAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ViewAsListAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ViewAsSectionsAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSectionComparator;
@@ -90,7 +97,6 @@ import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsP
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -122,7 +128,7 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 @ViewDescriptor(name = LibraryPanelController.VIEW_NAME, id = LibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true)
-public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
+public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel, InitWithDocument {
     
     public final static String VIEW_ID = "30acd1e6-a848-4ac6-95b2-0effa0b76932";
     public final static String VIEW_NAME = "library";
@@ -204,12 +210,12 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             @Autowired DisplayModePreference displayModePreference,
             @Autowired AccordionAnimationPreference accordionAnimationPreference,
             @Autowired LibraryController libraryController,
-            @Autowired @Qualifier("libraryPanelActions.ViewAsListAction") Action viewAsListAction, //NOCHECK
-            @Autowired @Qualifier("libraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction, //NOCHECK
-            @Autowired @Qualifier("libraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction, //NOCHECK
-            @Autowired @Qualifier("libraryPanelActions.ImportSelectionAction") Action importSelectionAction, //NOCHECK
-            @Autowired @Qualifier("libraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction, //NOCHECK
-            @Autowired @Qualifier("libraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction, //NOCHECK
+            @Autowired ViewAsListAction viewAsListAction, //NOCHECK
+            @Autowired ViewAsSectionsAction viewAsSectionsAction, //NOCHECK
+            @Autowired ManageJarFxmlAction manageJarFxmlAction, //NOCHECK
+            @Autowired ImportSelectionAction importSelectionAction, //NOCHECK
+            @Autowired RevealCustomFolderAction revealCustomFolderAction, //NOCHECK
+            @Autowired ShowJarAnalysisReportAction showJarAnalysisReportAction, //NOCHECK
             @Autowired ViewSearch viewSearch,
             @Autowired ControlLibrary controlLibrary
             ) { //, UserLibrary library) {
@@ -634,7 +640,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
                     @Override
                     public void run() {
-                        Platform.runLater(() -> processImportJarFxml(droppedFileList));
+                        SbPlatform.runLater(() -> processImportJarFxml(droppedFileList));
                         // I don't need to use the timer later on so by
                         // cancelling it right here I'm sure free resources
                         // that otherwise would prevent the JVM from exiting.
@@ -930,6 +936,12 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     public void onHidden() {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public void init() {
+        //TODO this do not work, why?
+        getSearchController().requestFocus();
     }
 
 }

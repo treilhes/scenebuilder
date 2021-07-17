@@ -32,12 +32,17 @@
  */
 package com.oracle.javafx.scenebuilder.api.action;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import javafx.scene.input.KeyCombination;
 
 public abstract class AbstractAction implements Action {
+    
+    private static final Logger logger = LoggerFactory.getLogger(AbstractAction.class);
 
 	private final String nameI18nKey;
 	private final String descriptionI18nKey;
@@ -83,10 +88,16 @@ public abstract class AbstractAction implements Action {
 	}
 
 	@Override
-	public void checkAndPerform() {
-		if (canPerform()) {
-			perform();
-		}
+	public ActionStatus checkAndPerform() {
+		try {
+            if (canPerform()) {
+            	return perform();
+            }
+        } catch (Exception e) {
+            logger.error("Unable to complete action {}", this.getClass().getName(), e);
+            return ActionStatus.FAILED;
+        }
+        return ActionStatus.CANCELLED;
 	}
 
 	@Override

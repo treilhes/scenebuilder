@@ -163,7 +163,7 @@ public class DockViewController implements InitWithDocument {
         }
     }
 
-    protected Collection<ViewItem> getViewItems() {
+    public Collection<ViewItem> getViewItems() {
         return viewItems.values();
     }
 
@@ -243,7 +243,7 @@ public class DockViewController implements InitWithDocument {
         });
     }
     
-    protected static class ViewItem {
+    public static class ViewItem {
         
         private final @Getter Class<? extends View> viewClass;
         private final @Getter String viewName;

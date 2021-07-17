@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.util.FxmlController;
 
 /**
@@ -46,11 +47,12 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
     private final URL fxmlURL;
     private final ResourceBundle resources;
 
-    public AbstractFxmlPopupController(URL fxmlURL) {
-        this(fxmlURL, null);
+    public AbstractFxmlPopupController(Api api, URL fxmlURL) {
+        this(api, fxmlURL, null);
     };
 
-    public AbstractFxmlPopupController(URL fxmlURL, ResourceBundle resources) {
+    public AbstractFxmlPopupController(Api api, URL fxmlURL, ResourceBundle resources) {
+        super(api);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.resources = resources;

@@ -38,9 +38,9 @@ import java.util.TimerTask;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
 
-import javafx.application.Platform;
 import javafx.scene.control.Cell;
 import javafx.scene.control.TreeItem;
 
@@ -83,8 +83,8 @@ public class HierarchyTaskScheduler {
             @Override
             public void run() {
                 // JavaFX data should only be accessed on the JavaFX thread. 
-                // => we must wrap the code into a Runnable object and call the Platform.runLater
-                Platform.runLater(() -> {
+                // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
+                SbPlatform.runLater(() -> {
                     
                     for (Accessory accessory:owner.getAccessories()) {
                       //TODO may be deletable
@@ -143,8 +143,8 @@ public class HierarchyTaskScheduler {
         @Override
         public void run() {
             // JavaFX data should only be accessed on the JavaFX thread. 
-            // => we must wrap the code into a Runnable object and call the Platform.runLater
-            Platform.runLater(() -> treeItem.setExpanded(true));
+            // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
+            SbPlatform.runLater(() -> treeItem.setExpanded(true));
         }
     }
 }

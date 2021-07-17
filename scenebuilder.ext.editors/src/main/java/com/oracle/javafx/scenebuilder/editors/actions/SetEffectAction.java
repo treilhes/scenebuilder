@@ -70,8 +70,9 @@ public class SetEffectAction extends AbstractAction {
     }
 
     @Override
-    public void perform() {
+    public ActionStatus perform() {
         performSetEffect(getEffectClass());
+        return ActionStatus.DONE;
     }
 
     /**

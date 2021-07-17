@@ -14,5 +14,9 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.filesystem</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -85,9 +85,10 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 	}
 
 	@Override
-	public void perform() {
+	public ActionStatus perform() {
 		assert getActionConfig() != null;
 		documentManager.i18nResourceConfig().set(getActionConfig());
+		return ActionStatus.DONE;
 	}
 
 	public static class ApplyI18nContentConfig implements I18nResourceProvider {

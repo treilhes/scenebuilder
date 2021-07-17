@@ -48,7 +48,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -60,6 +59,7 @@ import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
@@ -77,6 +77,13 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.CssInternal;
+import com.oracle.javafx.scenebuilder.core.util.NodeUtils;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ShowStyledOnlyAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.SplitDefaultsAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewRulesAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTableAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTextAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Path;
@@ -152,7 +159,7 @@ import javafx.util.Duration;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 @ViewDescriptor(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Dock.BOTTOM_DOCK_ID, openOnStart = false)
-public class CssPanelController extends AbstractFxmlViewController {
+public class CssPanelController extends AbstractFxmlViewController implements ClipboardHandler {
 
     public final static String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438"; // NOCHECK
     public final static String VIEW_NAME = "csspanel"; // NOCHECK
@@ -278,14 +285,14 @@ public class CssPanelController extends AbstractFxmlViewController {
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
             @Autowired Drag drag, 
-            @Autowired @Qualifier("cssPanelActions.ViewTableAction") Action viewTableAction, // NOCHECK
-            @Autowired @Qualifier("cssPanelActions.ViewRulesAction") Action viewRulesAction, // NOCHECK
-            @Autowired @Qualifier("cssPanelActions.ViewTextAction") Action viewTextAction, // NOCHECK
-            @Autowired @Qualifier("cssPanelActions.CopyStyleablePathAction") Action copyStyleablePathAction, // NOCHECK
-            @Autowired @Qualifier("cssPanelActions.ShowStyledOnlyAction") Action showStyledOnlyAction, // NOCHECK
-            @Autowired @Qualifier("cssPanelActions.SplitDefaultsAction") Action splitDefaultsAction, // NOCHECK
+            @Autowired ViewTableAction viewTableAction,
+            @Autowired ViewRulesAction viewRulesAction,
+            @Autowired ViewTextAction viewTextAction,
+            @Autowired CopyStyleablePathAction copyStyleablePathAction,
+            @Autowired ShowStyledOnlyAction showStyledOnlyAction,
+            @Autowired SplitDefaultsAction splitDefaultsAction,
             @Autowired ViewSearch viewSearch) {
-     // @formatter:off
+     // @formatter:on
         super(api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
         this.editorController = editor;
         this.documentManager = api.getApiDoc().getDocumentManager();
@@ -2364,4 +2371,60 @@ public class CssPanelController extends AbstractFxmlViewController {
         
     }
 
+    //ClipboardHandler
+    @Override
+    public void performCopy() {
+        Node focusOwner = this.getRoot().getScene().getFocusOwner();
+        if (isCssRulesEditing(focusOwner)) {
+            copyRules();
+        } else if (isCssTextEditing(focusOwner)) {
+            // CSS text pane is a WebView
+            // Let the WebView handle the copy action natively
+        }
+    }
+
+    @Override
+    public void performCut() {}
+
+    @Override
+    public void performPaste() {}
+
+    @Override
+    public boolean canPerformCopy() {
+        Node focusOwner = this.getRoot().getScene().getFocusOwner();
+        if (isCssRulesEditing(focusOwner)) {
+            return true;
+        } else if (isCssTextEditing(focusOwner)) {
+            // CSS text pane is a WebView
+            // Let the WebView handle the copy action natively
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canPerformCut() {
+        return false;
+    }
+
+    @Override
+    public boolean canPerformPaste() {
+        return false;
+    }
+
+  private boolean isCssRulesEditing(Node node) {
+      final Node cssRules = getRulesPane();
+      if (cssRules != null) {
+          return NodeUtils.isDescendantOf(cssRules, node);
+      }
+      return false;
+    }
+
+private boolean isCssTextEditing(Node node) {
+  final Node cssText = getTextPane();
+  if (cssText != null) {
+      return NodeUtils.isDescendantOf(cssText, node);
+  }
+  return false;
+}
 }

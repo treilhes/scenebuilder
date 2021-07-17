@@ -48,7 +48,6 @@ import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesControl
 import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
 import com.oracle.javafx.scenebuilder.app.preferences.RootPreferencesNodeImpl;
-import com.oracle.javafx.scenebuilder.app.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
@@ -69,10 +68,8 @@ public class SceneBuilderBootstrap extends JavafxApplication {
                 DocumentPreferencesNodeImpl.class,
                 PreferencesController.class,
                 RootPreferencesNodeImpl.class,
-                PathPreference.class,
                 WindowIconSetting.class,
                 WelcomeDialogWindowController.class, 
-                DocumentController.class,
                 MainController.class
                 );
     }

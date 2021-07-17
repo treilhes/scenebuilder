@@ -39,10 +39,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;

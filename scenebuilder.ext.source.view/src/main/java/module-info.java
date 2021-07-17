@@ -16,9 +16,9 @@ open module scenebuilder.ext.source.view {
     requires rxjavafx;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
-    requires scenebuilder.ext.sb;
     requires spring.beans;
     requires spring.context;
+    requires scenebuilder.core.filesystem;
     
     provides Extension with SourceViewExtension;
 }

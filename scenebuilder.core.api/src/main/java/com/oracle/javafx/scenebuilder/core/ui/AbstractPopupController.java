@@ -32,12 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui;
 
+import com.oracle.javafx.scenebuilder.api.Api;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.transform.Transform;
 import javafx.stage.Popup;
 import javafx.stage.Window;
@@ -48,10 +49,7 @@ import javafx.stage.WindowEvent;
 /**
  * The Class AbstractPopupController.
  */
-public abstract class AbstractPopupController {
-
-    /** The root. */
-    private Parent root;
+public abstract class AbstractPopupController extends AbstractCommonUiController {
 
     /** The popup. */
     private Popup popup;
@@ -62,18 +60,8 @@ public abstract class AbstractPopupController {
     /** The anchor window. */
     private Window anchorWindow;
     
-    public AbstractPopupController() {
-        super();
-    }
-
-    /**
-     * Returns the root FX object of this popup.
-     *
-     * @return the root object of the panel (never null)
-     */
-    public Parent getRoot() {
-        assert root != null;
-        return root;
+    public AbstractPopupController(Api api) {
+        super(api);
     }
 
     /**
@@ -198,18 +186,6 @@ public abstract class AbstractPopupController {
     /*
      * For subclasses
      */
-
-    /**
-     * Set the root of this popup controller.
-     * This routine must be invoked by subclass's makeRoot() routine.
-     *
-     * @param panelRoot the root panel (non null).
-     */
-    public void setRoot(Parent panelRoot) {
-        assert panelRoot != null;
-        this.root = panelRoot;
-    }
-
 
     /*
      * Private

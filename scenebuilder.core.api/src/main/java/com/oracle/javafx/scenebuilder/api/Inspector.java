@@ -36,6 +36,13 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 
 public interface Inspector {
 
+    public enum SectionId {
+
+        PROPERTIES, LAYOUT, CODE, NONE
+    }
+    
     void setFocusToEditor(ValuePropertyMetadata propMeta);
+
+    void setExpandedSection(SectionId sectionId);
 
 }

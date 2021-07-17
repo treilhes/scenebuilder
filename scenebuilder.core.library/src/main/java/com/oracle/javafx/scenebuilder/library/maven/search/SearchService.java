@@ -47,9 +47,9 @@ import org.eclipse.aether.util.version.GenericVersionScheme;
 import org.eclipse.aether.version.InvalidVersionSpecificationException;
 import org.eclipse.aether.version.Version;
 
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.library.maven.preset.MavenPresets;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -141,7 +141,7 @@ public class SearchService extends Service<Void> {
                         }
                     }));
                 
-                Platform.runLater(() -> {
+                SbPlatform.runLater(() -> {
                     result.clear();
                     searching.set(true);
                 });

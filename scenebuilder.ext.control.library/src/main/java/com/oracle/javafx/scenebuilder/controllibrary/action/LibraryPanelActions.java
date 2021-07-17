@@ -85,9 +85,10 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public void perform() {
+        public ActionStatus perform() {
             // jarAnalysisReportController.setToolStylesheet(documentWindowController.getToolStylesheet());
             jarAnalysisReportController.openWindow();
+            return ActionStatus.DONE;
         }
 
     }
@@ -118,14 +119,16 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public void perform() {
+        public ActionStatus perform() {
             try {
                 fileSystem.revealInFileBrowser(userLibrary.getPath());
             } catch (IOException x) {
                 dialog.showErrorAndWait("",
                         I18N.getString("alert.reveal.failure.message", documentWindowController.getStage().getTitle()),
                         I18N.getString("alert.reveal.failure.details"), x);
+                return ActionStatus.FAILED;
             }
+            return ActionStatus.DONE;
         }
     }
 
@@ -153,12 +156,13 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public void perform() {
+        public ActionStatus perform() {
             AbstractSelectionGroup asg = editorController.getSelection().getGroup();
             ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
             assert !osg.getItems().isEmpty();
             List<FXOMObject> selection = new ArrayList<>(osg.getItems());
             libraryPanelController.performImportSelection(selection);
+            return ActionStatus.DONE;
         }
     }
 
@@ -184,7 +188,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public void perform() {
+        public ActionStatus perform() {
             if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
                 libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
             } else {
@@ -192,6 +196,7 @@ public class LibraryPanelActions {
             }
 
             displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+            return ActionStatus.DONE;
         }
     }
 
@@ -217,7 +222,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public void perform() {
+        public ActionStatus perform() {
             if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
                 libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
             } else {
@@ -225,6 +230,7 @@ public class LibraryPanelActions {
             }
 
             displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+            return ActionStatus.DONE;
         }
     }
 
@@ -258,7 +264,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public void perform() {
+        public ActionStatus perform() {
 //			libraryDialogController = new LibraryDialogController(editorController, libraryPanelController,
 //            		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
 
@@ -273,6 +279,7 @@ public class LibraryPanelActions {
              * onImportFromFolder(libraryDialogController.getStage()));
              */
             controlLibrary.openDialog();
+            return ActionStatus.DONE;
         }
 
     }

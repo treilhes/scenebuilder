@@ -45,8 +45,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -55,6 +57,8 @@ import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
+import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
+import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
@@ -82,16 +86,21 @@ public class FileSystemMenuProvider implements MenuProvider {
 
     private final DocumentManager documentManager;
 
+    private final ActionFactory actionFactory;
+
+    //TODO need an update here, completely outdated, use actions
     public FileSystemMenuProvider(
             @Autowired  @Lazy FileSystemMenuController fileSystemMenuController,
             @Autowired RecentItemsPreference recentItemsPreference,
             @Autowired Editor editor,
-            @Autowired DocumentManager documentManager
+            @Autowired DocumentManager documentManager,
+            @Autowired ActionFactory actionFactory
             ) {
         this.fileSystemMenuController = fileSystemMenuController;
         this.recentItemsPreference = recentItemsPreference;
         this.editor = editor;
         this.documentManager = documentManager;
+        this.actionFactory = actionFactory;
     }
 
     @Override
@@ -141,11 +150,15 @@ public class FileSystemMenuProvider implements MenuProvider {
             
             fileMenu.setId(FILE_MENU_ID);
             
-            newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
-            newMenuItem.setOnAction(e -> fileSystemMenuController.performNew());
+            //newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
+            //newMenuItem.setOnAction(e -> fileSystemMenuController.performNew());
             
-            openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
-            openMenuItem.setOnAction(e -> fileSystemMenuController.performOpen());
+            MenuItemFactory.bindSingle(newMenuItem, actionFactory, LoadBlankInNewWindowAction.class);
+            
+//            openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
+//            openMenuItem.setOnAction(e -> fileSystemMenuController.performOpen());
+            
+            MenuItemFactory.bindSingle(openMenuItem, actionFactory, OpenFilesAction.class);
             
             openRecentMenu.setOnShowing(t -> updateOpenRecentMenuItems());
             

@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
 import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
@@ -86,7 +87,8 @@ public class ApiExtension extends AbstractExtension {
             ModeManagerController.class,
             ViewController.class,
             SimilarInlineEditorBounds.class,
-            NoPickRefiner.class
+            NoPickRefiner.class,
+            ActionFactory.class
         );
     }
 

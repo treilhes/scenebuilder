@@ -40,10 +40,9 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-
-import javafx.application.Platform;
 
 /**
  * Implements the interface with the css panel.
@@ -77,7 +76,7 @@ public class CssPanelDelegate extends CssPanelController.Delegate {
 //        }
         
         // Need to delay the focus to the editor, so that the section is actually expanded first.
-        Platform.runLater(() -> Platform.runLater(() -> inspectorController.setFocusToEditor(propMeta)));
+        SbPlatform.runLater(() -> SbPlatform.runLater(() -> inspectorController.setFocusToEditor(propMeta)));
     }
 
 }

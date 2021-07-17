@@ -54,6 +54,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
@@ -62,7 +63,6 @@ import com.oracle.javafx.scenebuilder.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
@@ -301,7 +301,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
 
         if (artifact.getVersion().equals(Search.MIN_VERSION)) {
             addVersion();
-            Platform.runLater(() ->
+            SbPlatform.runLater(() ->
                 installLabel.setText(I18N.getString("search.maven.dialog.installing",
                         getArtifactCoordinates())));
         }

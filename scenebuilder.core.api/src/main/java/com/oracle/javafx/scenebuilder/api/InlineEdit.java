@@ -78,4 +78,24 @@ public interface InlineEdit {
     void textEditingSessionDidEnd();
 
     boolean isTextEditingSessionOnGoing();
+
+    /**
+     * Returns true if the specified node is part of the main scene and is either a
+     * TextInputControl or a ComboBox.
+     *
+     * @param node the focused node of the main scene
+     * @return
+     */
+    boolean isTextInputControlEditing(Node node);
+
+    TextInputControl getTextInputControl(Node node);
+
+    /**
+     * Returns true if we are editing within a popup window : either the specified
+     * node is showing a popup window or the inline editing popup is showing.
+     *
+     * @param node the focused node of the main scene
+     * @return
+     */
+    boolean isPopupEditing(Node node);
 }

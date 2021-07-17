@@ -39,6 +39,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -58,24 +59,23 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Document.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.UILogger;
+import com.oracle.javafx.scenebuilder.api.action.Action.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
-import com.oracle.javafx.scenebuilder.app.about.AboutWindowController;
 import com.oracle.javafx.scenebuilder.app.welcomedialog.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
 
 import javafx.application.Application.Parameters;
 import javafx.application.HostServices;
@@ -174,12 +174,12 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
     @Override
     public void performControlAction(ApplicationControlAction a, Document source) {
         switch (a) {
-            case ABOUT:
-                AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
-                //aboutWindowController.setToolStylesheet(getToolStylesheet());
-                aboutWindowController.openWindow();
-                windowIconSetting.setWindowIcon(aboutWindowController.getStage());
-                break;
+//            case ABOUT:
+//                AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
+//                //aboutWindowController.setToolStylesheet(getToolStylesheet());
+//                aboutWindowController.openWindow();
+//                windowIconSetting.setWindowIcon(aboutWindowController.getStage());
+//                break;
 
 //            case REGISTER:
 //                final RegistrationWindowController registrationWindowController = context.getBean(RegistrationWindowController.class);
@@ -216,11 +216,11 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //                performUseToolTheme(ToolTheme.DARK);
 //                break;
 
-            case SHOW_PREFERENCES:
-                PreferencesWindowController preferencesWindowController = context.getBean(PreferencesWindowController.class);
-                //preferencesWindowController.setToolStylesheet(getToolStylesheet());
-                preferencesWindowController.openWindow();
-                break;
+//            case SHOW_PREFERENCES:
+//                PreferencesWindowController preferencesWindowController = context.getBean(PreferencesWindowController.class);
+//                //preferencesWindowController.setToolStylesheet(getToolStylesheet());
+//                preferencesWindowController.openWindow();
+//                break;
 
             case EXIT:
                 performExit();
@@ -236,16 +236,17 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 //    }
 
 
+    @Override
     public boolean canPerformControlAction(ApplicationControlAction a, Document source) {
         final boolean result;
         switch (a) {
-            case ABOUT:
+            //case ABOUT:
             case REGISTER:
             case CHECK_UPDATES:
             //case NEW_FILE:
             //case NEW_TEMPLATE:
             case OPEN_FILE:
-            case SHOW_PREFERENCES:
+            //case SHOW_PREFERENCES:
             case EXIT:
                 result = true;
                 break;
@@ -279,6 +280,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         performOpenFiles(fxmlFiles, source);
     }
 
+    @Override
     public void documentWindowRequestClose(Document fromWindow) {
         closeWindow(fromWindow);
     }
@@ -293,6 +295,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         return Collections.unmodifiableList(windowList);
     }
 
+    @Override
     public Document lookupDocumentWindowControllers(URL fxmlLocation) {
         assert fxmlLocation != null;
 
@@ -316,10 +319,15 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
     @Override
     public Document lookupUnusedDocumentWindowController() {
+        return lookupUnusedDocumentWindowController(Collections.emptyList());
+    }
+    
+    @Override
+    public Document lookupUnusedDocumentWindowController(Collection<Document> ignored) {
         Document result = null;
 
         for (Document dwc : windowList) {
-            if (dwc.isUnused()) {
+            if (dwc.isUnused() && !ignored.contains(dwc)) {
                 result = dwc;
                 break;
             }
@@ -406,7 +414,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
             // Unless we're on a Mac we're starting SB directly (fresh start)
             // so we're not opening any file and as such we should show the Welcome Dialog
             
-            Platform.runLater(() -> {
+            SbPlatform.runLater(() -> {
                 newWindow.updateWithDefaultContent();
                 newWindow.openWindow();
                 wdwc.getStage().show();
@@ -425,7 +433,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
         //if (System.getProperty("scenic") != null) //NOCHECK
         { 
-            Platform.runLater(new ScenicViewStarter(context));
+            SbPlatform.runLater(new ScenicViewStarter(context));
         }
         });
         
@@ -510,7 +518,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
 
         sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
         
-        Platform.runLater(() -> windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
+        SbPlatform.runForDocumentLater(() -> windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
         
 
         windowList.add(result);
@@ -629,7 +637,7 @@ public class MainController implements AppPlatform.AppNotificationHandler, Appli
         SceneBuilderLoadingProgress.get().end();
         
         // execute ui related loading now
-        Platform.runLater(() -> {
+        SbPlatform.runLater(() -> {
             
             
             for (Entry<File, Document> entry:documents.entrySet()) {

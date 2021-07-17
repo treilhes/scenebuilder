@@ -44,14 +44,13 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJarsPreference;
-
-import javafx.application.Platform;
 
 @Component
 @Lazy
@@ -97,7 +96,7 @@ public class GluonJarImportController {
             }
 
             if (shouldShowImportGluonJarAlert) {
-                Platform.runLater(() -> {
+                SbPlatform.runLater(() -> {
                     Document dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         //TODO when started to fast will throw IndexOutOfBoundsException
@@ -127,7 +126,7 @@ public class GluonJarImportController {
 //            }
 //
 //            if (shouldShowImportGluonJarAlert) {
-//                Platform.runLater(() -> {
+//                SbPlatform.runLater(() -> {
 //                    Document dwc = main.getFrontDocumentWindow();
 //                    if (dwc == null) {
 //                        dwc = main.getDocumentWindowControllers().get(0);

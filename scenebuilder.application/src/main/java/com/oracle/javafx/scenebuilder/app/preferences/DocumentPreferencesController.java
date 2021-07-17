@@ -39,6 +39,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 
 /**
@@ -46,7 +47,7 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class DocumentPreferencesController  {
+public class DocumentPreferencesController implements Preferences {
 
     private final List<ManagedDocumentPreference> preferences;
 
@@ -62,10 +63,12 @@ public class DocumentPreferencesController  {
     	this.preferences = preferences;
     }
     
+    @Override
     public void readFromJavaPreferences() {
     	preferences.forEach((p) -> p.readFromJavaPreferences()); 
     }
     
+    @Override
     public void writeToJavaPreferences() {
     	preferences.forEach((p) -> p.writeToJavaPreferences());
     }

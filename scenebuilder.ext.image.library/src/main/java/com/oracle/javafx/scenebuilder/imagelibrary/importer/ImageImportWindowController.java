@@ -61,11 +61,11 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform;
-import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
-import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImage;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImageItem;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.StandardImage;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
+import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageExplorerUtil;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 

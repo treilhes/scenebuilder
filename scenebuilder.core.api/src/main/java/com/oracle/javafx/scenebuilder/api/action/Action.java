@@ -35,13 +35,20 @@ package com.oracle.javafx.scenebuilder.api.action;
 import javafx.scene.input.KeyCombination;
 
 public interface Action {
+    
+    public enum ActionStatus {
+        CANCELLED,
+        DONE,
+        FAILED
+    }
+    
 	String getUniqueId();
 	String getName();
 	String getDescription();
 	KeyCombination getWishedAccelerator();
 	boolean canPerform();
-	void perform();
-	void checkAndPerform();
+	ActionStatus perform();
+	ActionStatus checkAndPerform();
 
 	ExtendedAction<?> extend();
 }

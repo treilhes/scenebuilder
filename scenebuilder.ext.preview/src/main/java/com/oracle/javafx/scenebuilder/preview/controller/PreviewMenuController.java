@@ -43,9 +43,11 @@ import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 /**
  *
  */
+// TODO remove this class
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
+@Deprecated
 public class PreviewMenuController {
 
     private final PreviewWindowController previewWindowController;

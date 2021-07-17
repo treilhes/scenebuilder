@@ -50,7 +50,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -71,6 +70,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
@@ -80,6 +80,12 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ImportSelectionAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ManageJarFxmlAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.RevealCustomFolderAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ShowJarAnalysisReportAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsListAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsSectionsAction;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
@@ -91,7 +97,6 @@ import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsP
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -206,12 +211,12 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             @Autowired ImageDisplayModePreference displayModePreference,
             @Autowired AccordionAnimationPreference accordionAnimationPreference,
             @Autowired ImageLibraryController libraryController,
-            @Autowired @Qualifier("imageLibraryPanelActions.ViewAsListAction") Action viewAsListAction,
-            @Autowired @Qualifier("imageLibraryPanelActions.ViewAsSectionsAction") Action viewAsSectionsAction,
-            @Autowired @Qualifier("imageLibraryPanelActions.ManageJarFxmlAction") Action manageJarFxmlAction,
-            @Autowired @Qualifier("imageLibraryPanelActions.ImportSelectionAction") Action importSelectionAction,
-            @Autowired @Qualifier("imageLibraryPanelActions.RevealCustomFolderAction") Action revealCustomFolderAction,
-            @Autowired @Qualifier("imageLibraryPanelActions.ShowJarAnalysisReportAction") Action showJarAnalysisReportAction,
+            @Autowired ViewAsListAction viewAsListAction,
+            @Autowired ViewAsSectionsAction viewAsSectionsAction,
+            @Autowired ManageJarFxmlAction manageJarFxmlAction,
+            @Autowired ImportSelectionAction importSelectionAction,
+            @Autowired RevealCustomFolderAction revealCustomFolderAction,
+            @Autowired ShowJarAnalysisReportAction showJarAnalysisReportAction,
             @Autowired ViewSearch viewSearch,
             @Autowired ImageLibrary imageLibrary,
             @Autowired ThumbnailServiceController thumbnailServiceController 
@@ -638,7 +643,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 
                     @Override
                     public void run() {
-                        Platform.runLater(() -> processImportJarFxml(droppedFileList));
+                        SbPlatform.runLater(() -> processImportJarFxml(droppedFileList));
                         // I don't need to use the timer later on so by
                         // cancelling it right here I'm sure free resources
                         // that otherwise would prevent the JVM from exiting.

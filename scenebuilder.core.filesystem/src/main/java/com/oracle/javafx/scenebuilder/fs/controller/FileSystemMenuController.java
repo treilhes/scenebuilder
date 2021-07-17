@@ -42,7 +42,11 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Main;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
 /**
@@ -57,17 +61,20 @@ public class FileSystemMenuController {
     private final Main main;
     private final Document document;
     private final RecentItemsPreference recentItemsPreference;
+    private final ActionFactory actionFactory;
 
 
     public FileSystemMenuController(
             @Autowired Main main,
             @Autowired Document document, 
             @Autowired Editor editor,
+            @Autowired ActionFactory actionFactory,
             @Autowired RecentItemsPreference recentItemsPreference) {
         this.main = main;
         this.document = document;
         this.editor = editor;
         this.recentItemsPreference = recentItemsPreference;
+        this.actionFactory = actionFactory;
 
     }
 
@@ -100,16 +107,16 @@ public class FileSystemMenuController {
 
 
     public void performRevert() {
-        document.revert();
+        actionFactory.create(RevertAction.class).checkAndPerform();
     }
 
     public void performSave() {
-        document.save();
+        actionFactory.create(SaveAction.class).checkAndPerform();
     }
 
 
     public void performSaveAs() {
-        document.saveAs();
+        actionFactory.create(SaveAsAction.class).checkAndPerform();
     }
 
 

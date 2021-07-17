@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -51,6 +50,9 @@ import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
+import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
+import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
@@ -124,9 +126,9 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		@Autowired InfoPanelController infoPanelController,
     		@Autowired DisplayOptionPreference displayOptionPreference,
     		@Autowired AccordionAnimationPreference accordionAnimationPreference,
-    		@Autowired @Qualifier("documentPanelActions.ShowInfoAction") Action showInfoAction,
-    		@Autowired @Qualifier("documentPanelActions.ShowFxIdAction") Action showFxIdAction,
-    		@Autowired @Qualifier("documentPanelActions.ShowNodeIdAction") Action showNodeIdAction
+    		@Autowired ShowInfoAction showInfoAction,
+    		@Autowired ShowFxIdAction showFxIdAction,
+    		@Autowired ShowNodeIdAction showNodeIdAction
     		) { //, UserLibrary library) {
         super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
         this.sceneBuilderFactory = sceneBuilderFactory;

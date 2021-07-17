@@ -43,8 +43,8 @@ import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisRepor
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
-import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDialogConfiguration;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDefaultFilter;
+import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDialogConfiguration;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFileExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFolderExplorer;

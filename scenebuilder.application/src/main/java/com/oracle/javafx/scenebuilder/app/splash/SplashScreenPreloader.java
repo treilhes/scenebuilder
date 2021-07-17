@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.app.splash;
 
 import java.io.IOException;
 
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 
@@ -77,14 +78,14 @@ public class SplashScreenPreloader extends Preloader {
                     new Thread(() -> bar.setProgress(p)).start();
                     
                 } else {
-                    Platform.runLater(() -> bar.setProgress(p));
+                    SbPlatform.runLater(() -> bar.setProgress(p));
                 }
                 
             });
-            SceneBuilderLoadingProgress.get().setOnTextChange(t -> Platform.runLater(() -> {
+            SceneBuilderLoadingProgress.get().setOnTextChange(t -> SbPlatform.runLater(() -> {
                 text.setText(t.length() > TEXT_MAX_LENGTH ? t.substring(0, TEXT_MAX_LENGTH) : t );
             }));
-            SceneBuilderLoadingProgress.get().setOnLoadingDone(() -> Platform.runLater(() -> {
+            SceneBuilderLoadingProgress.get().setOnLoadingDone(() -> SbPlatform.runLater(() -> {
                 stage.hide();
             }));
             

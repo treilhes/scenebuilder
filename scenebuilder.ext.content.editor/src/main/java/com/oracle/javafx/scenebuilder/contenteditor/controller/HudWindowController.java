@@ -34,10 +34,12 @@ package com.oracle.javafx.scenebuilder.contenteditor.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
@@ -78,8 +80,10 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
     /**
      * Instantiates a new hud window controller.
      */
-    public HudWindowController() {
-        super(HudWindowController.class.getResource("HudWindow.fxml"));
+    public HudWindowController(
+            @Autowired Api api
+            ) {
+        super(api, HudWindowController.class.getResource("HudWindow.fxml"));
     }
 
     /** The relative position. */

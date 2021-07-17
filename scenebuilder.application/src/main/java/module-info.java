@@ -3,7 +3,6 @@ open module scenebuilder.application {
     exports com.oracle.javafx.scenebuilder.app.splash;
     exports com.oracle.javafx.scenebuilder.app.about;
     exports com.oracle.javafx.scenebuilder.app.preferences;
-    exports com.oracle.javafx.scenebuilder.app.preferences.document;
     exports com.oracle.javafx.scenebuilder.app.i18n;
     exports com.oracle.javafx.scenebuilder.app;
     exports com.oracle.javafx.scenebuilder.app.welcomedialog;

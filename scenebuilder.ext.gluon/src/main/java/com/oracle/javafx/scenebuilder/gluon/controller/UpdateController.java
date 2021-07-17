@@ -43,12 +43,11 @@ import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
 import com.oracle.javafx.scenebuilder.gluon.dialog.UpdateSceneBuilderDialog;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
-
-import javafx.application.Platform;
 
 @Component
 @Lazy
@@ -78,7 +77,7 @@ public class UpdateController {
     public void checkUpdates() {
         versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
-                Platform.runLater(() -> {
+                SbPlatform.runLater(() -> {
                     SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, 
                             main.getFrontDocumentWindow().getDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.error.title"));
@@ -90,7 +89,7 @@ public class UpdateController {
             try {
                 if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
                 //if (true) {
-                    Platform.runLater(() -> {
+                    SbPlatform.runLater(() -> {
                         UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
                         dialog.showAndWait();
                     });
@@ -103,7 +102,7 @@ public class UpdateController {
                     alert.showAndWait();
                 }
             } catch (NumberFormatException ex) {
-                Platform.runLater(() -> showVersionNumberFormatError(context.getBean(DocumentWindow.class)));
+                SbPlatform.runLater(() -> showVersionNumberFormatError(context.getBean(DocumentWindow.class)));
             }
         });
     }
@@ -129,7 +128,7 @@ public class UpdateController {
                 }
                 
                 if (showUpdateDialog) {
-                    Platform.runLater(() -> {
+                    SbPlatform.runLater(() -> {
                         UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
                         dialog.setOnHidden(event -> runAfterUpdateDialog.run());
                         dialog.showAndWait();
@@ -138,7 +137,7 @@ public class UpdateController {
                     runAfterUpdateDialog.run();
                 }
             } catch (NumberFormatException ex) {
-                Platform.runLater(() -> showVersionNumberFormatError(dwc));
+                SbPlatform.runLater(() -> showVersionNumberFormatError(dwc));
             }
         });
     }
