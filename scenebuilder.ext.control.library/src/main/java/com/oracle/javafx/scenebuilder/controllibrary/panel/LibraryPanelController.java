@@ -71,8 +71,6 @@ import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ImportSelectionAction;
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.ManageJarFxmlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions.RevealCustomFolderAction;
@@ -86,6 +84,8 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItem
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMArchive;

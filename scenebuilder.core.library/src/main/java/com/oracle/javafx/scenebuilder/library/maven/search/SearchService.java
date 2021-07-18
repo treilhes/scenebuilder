@@ -47,7 +47,7 @@ import org.eclipse.aether.util.version.GenericVersionScheme;
 import org.eclipse.aether.version.InvalidVersionSpecificationException;
 import org.eclipse.aether.version.Version;
 
-import com.oracle.javafx.scenebuilder.api.util.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.library.maven.preset.MavenPresets;
 
 import javafx.beans.property.BooleanProperty;

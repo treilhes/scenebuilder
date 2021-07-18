@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.api.theme.AbstractTheme;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeMeta;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
 import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
 @Component

@@ -32,15 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.core.fxom;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test for {@link FXOMIntrinsic#addIntrinsicProperty(FXOMDocument)}

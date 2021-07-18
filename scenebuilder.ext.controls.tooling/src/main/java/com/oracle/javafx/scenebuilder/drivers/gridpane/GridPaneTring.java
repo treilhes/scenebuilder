@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget;
 import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget.RowArea;

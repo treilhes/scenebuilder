@@ -43,7 +43,7 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;

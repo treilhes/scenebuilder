@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeViewController;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 

@@ -39,8 +39,8 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
-import com.oracle.javafx.scenebuilder.api.util.FxmlController;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
+import com.oracle.javafx.scenebuilder.core.di.FxmlController;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
 import com.oracle.javafx.scenebuilder.core.util.NodeUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;

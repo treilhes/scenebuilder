@@ -36,7 +36,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.util.FxmlController;
+import com.oracle.javafx.scenebuilder.core.di.FxmlController;
 
 /**
  *

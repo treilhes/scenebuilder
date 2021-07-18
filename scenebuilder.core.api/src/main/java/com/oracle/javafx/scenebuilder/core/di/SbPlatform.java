@@ -1,7 +1,6 @@
-package com.oracle.javafx.scenebuilder.api.util;
+package com.oracle.javafx.scenebuilder.core.di;
 
 import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.DocumentScope;
 
 import javafx.application.Platform;
 
@@ -12,7 +11,7 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runLater(Runnable runnable) {
-        SbPlatform.runLater(runnable);
+        Platform.runLater(runnable);
     }
     
     /**
@@ -22,7 +21,7 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runForDocumentLater(Document scope, Runnable runnable) {
-        DocumentScope.executeWithScope(scope, runnable);
+        Platform.runLater(() -> DocumentScope.executeWithScope(scope, runnable));
     }
     
     /**

@@ -41,7 +41,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
 
 @ExtendWith(ApplicationExtension.class)
 public class BooleanEditorTest {

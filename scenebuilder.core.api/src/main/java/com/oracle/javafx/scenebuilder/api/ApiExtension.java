@@ -54,7 +54,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager.DocumentManag
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager.NetworkManagerImpl;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager.SceneBuilderManagerImpl;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.ViewManagerImpl;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class ApiExtension extends AbstractExtension {

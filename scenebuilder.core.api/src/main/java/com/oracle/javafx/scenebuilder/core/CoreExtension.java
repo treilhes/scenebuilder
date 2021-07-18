@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.core.dock.DockNameHelper;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
@@ -69,27 +70,28 @@ public class CoreExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-            PropertyEditorFactory.class,
-            CoreEditors.class,
-            ControllerClassEditor.class,
-            FxIdEditor.class,
-            
-            Selection.class,
-            Metadata.class,
-            DocumentationImpl.class,
-            DockPanelController.class,
-            DockTypeAccordion.class,
-            DockTypeSplitH.class,
-            DockTypeSplitV.class,
-            DockTypeTab.class,
-            DockWindowController.class,
-            DockWindowFactory.class,
-            LastDockUuidPreference.class,
-            LastViewVisibilityPreference.class,
-            LastDockDockTypePreference.class,
-            DockViewController.class,
-            ViewMenuProvider.class,
-            DockNameHelper.class
+                SceneBuilderBeanFactoryPostProcessor.class,
+                PropertyEditorFactory.class,
+                CoreEditors.class,
+                ControllerClassEditor.class,
+                FxIdEditor.class,
+                
+                Selection.class,
+                Metadata.class,
+                DocumentationImpl.class,
+                DockPanelController.class,
+                DockTypeAccordion.class,
+                DockTypeSplitH.class,
+                DockTypeSplitV.class,
+                DockTypeTab.class,
+                DockWindowController.class,
+                DockWindowFactory.class,
+                LastDockUuidPreference.class,
+                LastViewVisibilityPreference.class,
+                LastDockDockTypePreference.class,
+                DockViewController.class,
+                ViewMenuProvider.class,
+                DockNameHelper.class
             );
      // @formatter:on
     }

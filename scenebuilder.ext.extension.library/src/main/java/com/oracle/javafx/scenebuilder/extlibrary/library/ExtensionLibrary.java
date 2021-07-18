@@ -54,7 +54,7 @@ import com.oracle.javafx.scenebuilder.api.UILogger;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extlibrary.ExtensionLibraryExtension;
 import com.oracle.javafx.scenebuilder.extlibrary.importer.ExtensionImportWindowController;
 import com.oracle.javafx.scenebuilder.extlibrary.library.builtin.ExtensionBuiltinLibrary;

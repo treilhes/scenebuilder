@@ -36,8 +36,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPickerController;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker.Mode;
+import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPickerController;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.gradientpicker.GradientPicker;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.gradientpicker.GradientPickerStop;
 

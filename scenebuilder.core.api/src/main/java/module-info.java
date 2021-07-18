@@ -43,6 +43,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.core.action.editor;
     exports com.oracle.javafx.scenebuilder.core.content.util;
     exports com.oracle.javafx.scenebuilder.core.controls;
+    exports com.oracle.javafx.scenebuilder.core.di;
     exports com.oracle.javafx.scenebuilder.core.doc;
     exports com.oracle.javafx.scenebuilder.core.dock.preferences.document;
     exports com.oracle.javafx.scenebuilder.core.dock;

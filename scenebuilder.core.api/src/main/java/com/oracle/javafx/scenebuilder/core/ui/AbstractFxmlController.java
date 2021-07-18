@@ -37,8 +37,8 @@ import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.util.FxmlController;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
+import com.oracle.javafx.scenebuilder.core.di.FxmlController;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
 
 /**
  * AbstractFxmlController is the abstract base class for all the

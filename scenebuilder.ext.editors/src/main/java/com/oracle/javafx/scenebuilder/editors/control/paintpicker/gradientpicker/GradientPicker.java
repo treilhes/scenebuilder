@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPickerController;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker.Mode;
+import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPickerController;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.rotator.RotatorControl;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.slider.SliderControl;
 

@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.util;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.PropertyNames;
 

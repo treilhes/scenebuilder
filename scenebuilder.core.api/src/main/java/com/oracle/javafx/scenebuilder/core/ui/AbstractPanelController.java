@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.core.ui;
 import java.util.logging.Logger;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.util.FxmlController;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory.SceneBuilderBeanFactoryPostProcessor;
+import com.oracle.javafx.scenebuilder.core.di.FxmlController;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
 
 import javafx.scene.Parent;
 

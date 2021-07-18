@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.controller.I18nResourceMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 
