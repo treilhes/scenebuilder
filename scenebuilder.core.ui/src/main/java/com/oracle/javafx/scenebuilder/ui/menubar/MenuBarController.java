@@ -1373,7 +1373,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
         @Override
         public void handle(ActionEvent t) {
-            DocumentScope.setCurrentScope(dwc);
+            DocumentScope.setCurrentScope(dwc); //TODO realy necessary ?, check if onFocus is not sufficient
             dwc.getDocumentWindow().getStage().toFront();
         }
     }

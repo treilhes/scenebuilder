@@ -21,7 +21,7 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runForDocumentLater(Document scope, Runnable runnable) {
-        Platform.runLater(() -> DocumentScope.executeWithScope(scope, runnable));
+        DocumentScope.executeLaterWithScope(scope, runnable);
     }
     
     /**

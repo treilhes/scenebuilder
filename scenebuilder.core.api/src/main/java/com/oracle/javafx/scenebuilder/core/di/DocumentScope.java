@@ -12,10 +12,13 @@ import org.springframework.beans.factory.config.Scope;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 
+import javafx.application.Platform;
+
 /**
  * The Class DocumentScope is a Spring scope.
  * The scope owner is a bean named {@link #SCOPE_OBJECT_NAME}
- * The scoped document change when a new Document window is instantiated
+ * The scoped document change when a new bean named {@link #SCOPE_OBJECT_NAME} is instantiated and currentScope is null
+ * So to create a new scope DocumentScope.setCurrentScope(null) must be called before context.getBean(Document.class)
  * The scoped document change when a Document window gain focus
  * The document scope is removed when a Document window is closed
  */
@@ -26,7 +29,7 @@ public class DocumentScope implements Scope {
     private static final String SCOPE_CHANGE_MSG = "DocumentScope changed to : %s - %s (unused: %s, dirty: %s, content: %s, name %s)";
     
     /** The Constant SCOPE_OBJECT_NAME. */
-    private static final String SCOPE_OBJECT_NAME = "documentController";
+    protected static final String SCOPE_OBJECT_NAME = "documentController";
 
     /** The current scope id. */
     private static UUID currentScope;
@@ -97,18 +100,20 @@ public class DocumentScope implements Scope {
      *
      * @param scopedDocument the new current scope
      */
-    protected static void executeWithScope(Document scopedDocument, Runnable runnable) {
+    protected static void executeLaterWithScope(Document scopedDocument, Runnable runnable) {
         UUID backupScope = threadScope.get();
-        try {
-            UUID documentUuid = scopesId.get(scopedDocument);
-            if (documentUuid == null) {
-                throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
-            }
-            threadScope.set(documentUuid);
-            runnable.run();
-        } finally {
-            threadScope.set(backupScope);
+        UUID documentUuid = scopesId.get(scopedDocument);
+        if (documentUuid == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
+        Platform.runLater(() -> {
+            try {
+                threadScope.set(documentUuid);
+                runnable.run();
+            } finally {
+                threadScope.set(backupScope);
+            }
+        });
     }
 
     /**
