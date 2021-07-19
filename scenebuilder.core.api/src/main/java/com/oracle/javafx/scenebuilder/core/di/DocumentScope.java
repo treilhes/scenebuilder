@@ -115,6 +115,47 @@ public class DocumentScope implements Scope {
             }
         });
     }
+    
+    /**
+     * Sets the current scope.
+     *
+     * @param scopedDocument the new current scope
+     */
+    protected static void executeWithScope(Document scopedDocument, Runnable runnable) {
+        UUID backupScope = threadScope.get();
+        UUID documentUuid = scopesId.get(scopedDocument);
+        if (documentUuid == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+        }
+        try {
+            threadScope.set(documentUuid);
+            runnable.run();
+        } finally {
+            threadScope.set(backupScope);
+        }
+    }
+    
+    /**
+     * Sets the current scope.
+     *
+     * @param scopedDocument the new current scope
+     */
+    protected static void executeOnThreadWithScope(Document scopedDocument, Runnable runnable) {
+        UUID backupScope = threadScope.get();
+        UUID documentUuid = scopesId.get(scopedDocument);
+        if (documentUuid == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+        }
+        Thread t = new Thread(() -> {
+            try {
+                threadScope.set(documentUuid);
+                runnable.run();
+            } finally {
+                threadScope.set(backupScope);
+            }
+        });
+        t.run();
+    }
 
     /**
      * Removes the scope and all the associated instances.

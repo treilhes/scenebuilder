@@ -32,4 +32,38 @@ public final class SbPlatform {
     public static void runForDocumentLater(Runnable runnable) {
         runForDocumentLater(DocumentScope.getActiveScope(), runnable);
     }
+    
+    /**
+     * Execute the Runnable with the provided {@link Document} scope
+     * @param scope
+     * @param runnable
+     */
+    public static void runForDocument(Document scope, Runnable runnable) {
+        DocumentScope.executeWithScope(scope, runnable);
+    }
+    
+    /**
+     * Execute the Runnable with the {@link Document} scope from {@link DocumentScope#getActiveScope()} 
+     * @param runnable
+     */
+    public static void runForDocument(Runnable runnable) {
+        runForDocument(DocumentScope.getActiveScope(), runnable);
+    }
+    
+    /**
+     * Execute the Runnable on a dedicated thread with the provided {@link Document} scope
+     * @param scope
+     * @param runnable
+     */
+    public static void runOnThreadForDocument(Document scope, Runnable runnable) {
+        DocumentScope.executeOnThreadWithScope(scope, runnable);
+    }
+    
+    /**
+     * Execute the Runnable on a dedicated thread with the {@link Document} scope from {@link DocumentScope#getActiveScope()}
+     * @param runnable
+     */
+    public static void runOnThreadForDocument(Runnable runnable) {
+        runOnThreadForDocument(DocumentScope.getActiveScope(), runnable);
+    }
 }
