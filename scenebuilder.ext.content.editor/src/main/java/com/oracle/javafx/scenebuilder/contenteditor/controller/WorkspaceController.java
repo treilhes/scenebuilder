@@ -272,7 +272,7 @@ public class WorkspaceController implements Workspace{
             // visual artifacts. After the two steps are done, we turn the
             // visible by calling revealScalingGroup().
 
-            SbPlatform.runLater(() -> {
+            SbPlatform.runForDocumentLater(() -> {
                 layoutContent(true /* applyCSS */);
                 adjustWorkspace();
                 revealScalingGroup();

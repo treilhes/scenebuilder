@@ -165,7 +165,7 @@ public class DockPanelController implements Dock {
     private void changedDockType(DockType<?> dockType, View view) {
         updateActiveDockType(dockType);
 
-        SbPlatform.runLater(() -> {
+        SbPlatform.runForDocumentLater(() -> {
             updateViews();
             var dockContext = views.stream().filter(v -> v.getView() == view).findFirst().orElse(null);
             updateDockView(dockContext);
@@ -209,7 +209,7 @@ public class DockPanelController implements Dock {
             views.remove(dockContext);
             viewDeleted(dockContext.getView());
 
-            SbPlatform.runLater(() -> {
+            SbPlatform.runForDocumentLater(() -> {
                 updateDockView(null);
             });
         }
@@ -223,7 +223,7 @@ public class DockPanelController implements Dock {
         lastDockUuidPreference.put(view.getId(), this.getId());
         lastDockUuidPreference.writeToJavaPreferences();
 
-        SbPlatform.runLater(() -> {
+        SbPlatform.runForDocumentLater(() -> {
             var dockContext = activeDockType.computeView(view);
             dockContext.getController().getViewMenuButton().getItems().addAll(0, createDockMenu(view));
             views.add(dockContext);

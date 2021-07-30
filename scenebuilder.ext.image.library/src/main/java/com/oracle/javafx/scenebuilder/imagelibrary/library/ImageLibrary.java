@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -310,7 +311,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
             }
             
         }
-
+        getStore().getConfiguration().put("fonts", String.join(",", loadedFonts.toArray(new String[0])));
         return result;
     }
 
@@ -496,5 +497,33 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 
         return sb.toString();
     }
+
+    @Override
+    public void init() {
+        super.init();
+        Properties props = getStore().getConfiguration();
+        
+        if (props != null && props.containsKey("fonts")) {
+            String fonts = props.getProperty("fonts");
+            if (fonts != null && !fonts.isEmpty()) {
+                String[] fontsArray = fonts.trim().split(",");
+                for (String font : fontsArray) {
+                    try(InputStream is = sceneBuilderManager.classloader().get().getResourceAsStream(font);){
+                        Font.loadFont(is, 0);
+                    } catch (Exception e) {
+                        try(InputStream is = new FileInputStream(font)){
+                            Font.loadFont(is, 0);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        
+    }
+    
     
 }

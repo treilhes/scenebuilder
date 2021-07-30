@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Consumer;
 
 import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
@@ -72,6 +73,8 @@ public interface LibraryStore {
     boolean saveThumbnail(String name, int width, int height, WritableImage snapshot);
 
     Path getFilesFolder();
+    Properties getConfiguration();
+    void saveConfiguration();
 
     
 }

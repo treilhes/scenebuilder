@@ -189,16 +189,16 @@ public class FileWatcher {
                 if ((lastModifiedTime == null) && (newModifiedTime != null)) {
                     // target has been created
                     modifiedTimes.put(target, newModifiedTime);
-                    SbPlatform.runLater(() -> delegate.fileWatcherDidWatchTargetCreation(target));
+                    SbPlatform.runForDocumentLater(() -> delegate.fileWatcherDidWatchTargetCreation(target));
                 } else if ((lastModifiedTime != null) && (newModifiedTime == null)) {
                     // target has been deleted
                     modifiedTimes.remove(target);
-                    SbPlatform.runLater(() -> delegate.fileWatcherDidWatchTargetDeletion(target));
+                    SbPlatform.runForDocumentLater(() -> delegate.fileWatcherDidWatchTargetDeletion(target));
                 } else if (Objects.equals(lastModifiedTime, newModifiedTime) == false) {
                     // target has been modified
                     assert newModifiedTime != null;
                     modifiedTimes.put(target, newModifiedTime);
-                    SbPlatform.runLater(() -> delegate.fileWatcherDidWatchTargetModification(target));
+                    SbPlatform.runForDocumentLater(() -> delegate.fileWatcherDidWatchTargetModification(target));
                 }
             }
         }

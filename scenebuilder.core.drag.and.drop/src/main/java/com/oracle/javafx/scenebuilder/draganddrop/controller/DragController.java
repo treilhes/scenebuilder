@@ -290,7 +290,7 @@ public class DragController implements Drag{
 
         mouseTimer.schedule(new TimerTask() {
             @Override public void run() {
-                SbPlatform.runLater(() -> {
+                SbPlatform.runForDocumentLater(() -> {
                     mouseTimer = null;
                     mouseDidStopMoving();
                 });

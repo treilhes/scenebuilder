@@ -286,7 +286,14 @@ public class DocumentController implements Document, InitializingBean {
             closeWindow();
         });
 
-        SbPlatform.runLater(() -> {
+        System.out.println(DocumentScope.getActiveScopeUUID().toString());
+        System.out.println(DocumentScope.getCurrentScopeUUID().toString());
+        System.out.println(this.toString());
+        System.out.println(this.menuBarController.toString());
+        System.out.println(DocumentScope.getActiveScopeUUID().toString());
+        
+        SbPlatform.runForDocumentLater(() -> {
+            System.out.println(DocumentScope.getActiveScopeUUID().toString());
             initializeDocumentWindow();
         });
     }

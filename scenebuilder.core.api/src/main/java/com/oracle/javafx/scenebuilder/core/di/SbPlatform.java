@@ -30,7 +30,7 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runForDocumentLater(Runnable runnable) {
-        runForDocumentLater(DocumentScope.getActiveScope(), runnable);
+        DocumentScope.executeLaterWithScope(DocumentScope.getActiveScopeUUID(), runnable);
     }
     
     /**
@@ -47,7 +47,7 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runForDocument(Runnable runnable) {
-        runForDocument(DocumentScope.getActiveScope(), runnable);
+        DocumentScope.executeWithScope(DocumentScope.getActiveScopeUUID(), runnable);
     }
     
     /**
@@ -64,6 +64,6 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runOnThreadForDocument(Runnable runnable) {
-        runOnThreadForDocument(DocumentScope.getActiveScope(), runnable);
+        DocumentScope.executeOnThreadWithScope(DocumentScope.getActiveScopeUUID(), runnable);
     }
 }

@@ -40,9 +40,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
@@ -63,7 +61,6 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
-import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary.Exploration;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialogController;
 import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
@@ -76,7 +73,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -135,28 +131,51 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
 
     @Override
     public void init() {
+
         try {
-            if (!isFirstExplorationCompleted()) {
-                store.onStoreUpdated((store) -> exploreStore());
+            if (!store.isReady()) {
+              store.create();
+          }
+          if (store.isReady()) {
+              store.load();
+              store.startWatching();
+          }
                 
-                if (!store.isReady()) {
-                    store.create();
-                }
-                if (store.isReady()) {
-                    store.load();
-                    store.startWatching();
-                }
-                explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
-                    Exploration<R> current = explorations.get(getExplorationDate());
-                    
-                    Entry<LocalDateTime, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDateTime());
-                    Exploration<R> previous = entry == null ? new Exploration<R>(LocalDateTime.now(), Collections.emptyList(), null) : entry.getValue();
-                    userLibraryExplorationDidChange(previous, current);
-                });
-            }
+            List<Path> sources = store.getArtifacts().stream()
+                    .flatMap(ma -> ma.toJarList().stream()).collect(Collectors.toList());
+            sources.addAll(store.getFilesOrFolders());
+            sources.add(store.getFilesFolder());
+            classLoaderController.getJarsOrFolders().addAll(sources);
+            classLoaderController.updateClassLoader();
         } catch (IOException e) {
-            logger.error("Unable to start library {}", this.getClass().getName(), e);
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        
+            
+            
+//        try {
+//            if (!isFirstExplorationCompleted()) {
+//                store.onStoreUpdated((store) -> exploreStore());
+//                
+//                if (!store.isReady()) {
+//                    store.create();
+//                }
+//                if (store.isReady()) {
+//                    store.load();
+//                    store.startWatching();
+//                }
+//                explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
+//                    Exploration<R> current = explorations.get(getExplorationDate());
+//                    
+//                    Map.Entry<LocalDateTime, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDateTime());
+//                    Exploration<R> previous = entry == null ? new Exploration<R>(LocalDateTime.now(), Collections.emptyList(), null) : entry.getValue();
+//                    userLibraryExplorationDidChange(previous, current);
+//                });
+//            }
+//        } catch (IOException e) {
+//            logger.error("Unable to start library {}", this.getClass().getName(), e);
+//        }
     }
     
     public abstract String getLibraryId();
@@ -243,6 +262,8 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                     .stream()
                     .distinct()
                     .collect(Collectors.toList()));
+            
+            getStore().saveConfiguration();
         } catch (IOException e) {
             logger.error("Unable to update the control library", e);
         } finally {

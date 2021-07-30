@@ -58,7 +58,7 @@ import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
-import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
+import com.oracle.javafx.scenebuilder.fs.action.SelectAndOpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
@@ -158,7 +158,7 @@ public class FileSystemMenuProvider implements MenuProvider {
 //            openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
 //            openMenuItem.setOnAction(e -> fileSystemMenuController.performOpen());
             
-            MenuItemFactory.bindSingle(openMenuItem, actionFactory, OpenFilesAction.class);
+            MenuItemFactory.bindSingle(openMenuItem, actionFactory, SelectAndOpenFilesAction.class);
             
             openRecentMenu.setOnShowing(t -> updateOpenRecentMenuItems());
             

@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveOrSaveAsAction;
+import com.oracle.javafx.scenebuilder.fs.action.SelectAndOpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
@@ -56,6 +57,7 @@ import com.oracle.javafx.scenebuilder.fs.menu.FileSystemMenuProvider;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
+import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
 public class FileSystemExtension extends AbstractExtension {
 
@@ -80,13 +82,16 @@ public class FileSystemExtension extends AbstractExtension {
                 LoadBlankInNewWindowAction.class,
                 LoadFileAction.class,
                 LoadUrlAction.class,
-                OpenFilesAction.class,
+                SelectAndOpenFilesAction.class,
                 ReloadFileAction.class,
                 RevealFxmlFileAction.class,
                 RevertAction.class,
                 SaveAction.class,
                 SaveAsAction.class,
-                SaveOrSaveAsAction.class
+                SaveOrSaveAsAction.class,
+                SelectAndOpenFilesAction.class,
+                OpenFilesAction.class,
+                WildcardImportsPreference.class
             );
      // @formatter:on
     }

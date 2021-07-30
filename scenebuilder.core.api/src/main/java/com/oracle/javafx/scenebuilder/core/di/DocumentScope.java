@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 
@@ -30,6 +31,9 @@ public class DocumentScope implements Scope {
     
     /** The Constant SCOPE_OBJECT_NAME. */
     protected static final String SCOPE_OBJECT_NAME = "documentController";
+    
+    /** The Constant MDC_SCOPE_NAME used for mapped diagnostic context (slf4j MDC). */
+    protected static final String MDC_SCOPE_NAME = "scope";
 
     /** The current scope id. */
     private static UUID currentScope;
@@ -45,6 +49,7 @@ public class DocumentScope implements Scope {
 
     /**
      * Gets the active scope taking into account thread local scope that may be active
+     * return null during the scope creation 
      *
      */
     public static Document getActiveScope() {
@@ -55,10 +60,29 @@ public class DocumentScope implements Scope {
     
     /**
      * Gets the current scope ignoring any thread local scope that may be active
+     * return null during the scope creation
      *
      */
     public static Document getCurrentScope() {
         return (Document)scopes.get(currentScope).get(SCOPE_OBJECT_NAME);
+    }
+    
+    /**
+     * Gets the active scope uuid taking into account thread local scope that may be active
+     *
+     */
+    public static UUID getActiveScopeUUID() {
+        UUID threadScopeUuid = threadScope.get();
+        UUID activeScope = threadScopeUuid != null ? threadScopeUuid : currentScope;
+        return activeScope;
+    }
+    
+    /**
+     * Gets the current scope uuid ignoring any thread local scope that may be active
+     *
+     */
+    public static UUID getCurrentScopeUUID() {
+        return currentScope;
     }
     
     /**
@@ -70,6 +94,7 @@ public class DocumentScope implements Scope {
         if (scopedDocument == null) {
             if (currentScope != null) {
                 currentScope = null;
+                MDC.put(MDC_SCOPE_NAME, "");
                 logger.info("DocumentScope is null");
             }
             return;
@@ -83,6 +108,7 @@ public class DocumentScope implements Scope {
         }
         if (DocumentScope.currentScope != scopeId) {
             DocumentScope.currentScope = scopeId;
+            MDC.put(MDC_SCOPE_NAME, currentScope.toString());
 
             if (scopedDocument.isInited()) {
                 logger.info(
@@ -96,65 +122,86 @@ public class DocumentScope implements Scope {
     }
     
     /**
-     * Sets the current scope.
-     *
-     * @param scopedDocument the new current scope
+     * Execute the runnable later on the fx thread
+     * @param scopedDocument the document scope
+     * @param runnable the code to run
      */
     protected static void executeLaterWithScope(Document scopedDocument, Runnable runnable) {
-        UUID backupScope = threadScope.get();
         UUID documentUuid = scopesId.get(scopedDocument);
-        if (documentUuid == null) {
+        executeLaterWithScope(documentUuid, runnable);
+    }
+    /**
+     * Execute the runnable later on the fx thread
+     * @param scopedDocument the document scope uuid
+     * @param runnable the code to run
+     */
+    protected static void executeLaterWithScope(UUID scopedDocument, Runnable runnable) {
+        if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
         Platform.runLater(() -> {
-            try {
-                threadScope.set(documentUuid);
-                runnable.run();
-            } finally {
-                threadScope.set(backupScope);
-            }
+            executeRunnable(runnable, scopedDocument);
         });
     }
     
     /**
-     * Sets the current scope.
-     *
-     * @param scopedDocument the new current scope
+     * Execute the runnable on the same thread ensuring an unchanging scope
+     * @param scopedDocument the document scope
+     * @param runnable the code to run
      */
     protected static void executeWithScope(Document scopedDocument, Runnable runnable) {
-        UUID backupScope = threadScope.get();
         UUID documentUuid = scopesId.get(scopedDocument);
-        if (documentUuid == null) {
-            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
-        }
-        try {
-            threadScope.set(documentUuid);
-            runnable.run();
-        } finally {
-            threadScope.set(backupScope);
-        }
+        executeWithScope(documentUuid, runnable);
     }
     
     /**
-     * Sets the current scope.
-     *
-     * @param scopedDocument the new current scope
+     * Execute the runnable on the same thread ensuring an unchanging scope
+     * @param scopedDocument the document scope uuid
+     * @param runnable the code to run
+     */
+    protected static void executeWithScope(UUID scopedDocument, Runnable runnable) {
+        if (scopedDocument == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+        }
+        executeRunnable(runnable, scopedDocument);
+    }
+    
+    /**
+     * Execute the runnable on a dedicated thread ensuring an unchanging scope
+     * @param scopedDocument the document scope
+     * @param runnable the code to run
      */
     protected static void executeOnThreadWithScope(Document scopedDocument, Runnable runnable) {
-        UUID backupScope = threadScope.get();
         UUID documentUuid = scopesId.get(scopedDocument);
-        if (documentUuid == null) {
+        executeOnThreadWithScope(documentUuid, runnable);
+        
+    }
+    
+    /**
+     * Execute the runnable on a dedicated thread ensuring an unchanging scope
+     * @param scopedDocument the document scope
+     * @param runnable the code to run
+     */
+    protected static void executeOnThreadWithScope(UUID scopedDocument, Runnable runnable) {
+        if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
         Thread t = new Thread(() -> {
-            try {
-                threadScope.set(documentUuid);
-                runnable.run();
-            } finally {
-                threadScope.set(backupScope);
-            }
+            executeRunnable(runnable, scopedDocument);
         });
         t.run();
+    }
+    
+    private static void executeRunnable(Runnable runnable, UUID scopedDocument) {
+        final UUID backupScope = threadScope.get();
+        try {
+            threadScope.set(scopedDocument);
+            MDC.put(MDC_SCOPE_NAME, scopedDocument.toString());
+            runnable.run();
+        } finally {
+            threadScope.set(backupScope);
+            MDC.put(MDC_SCOPE_NAME, backupScope == null ? "" : backupScope.toString());
+        }
     }
 
     /**
@@ -167,6 +214,7 @@ public class DocumentScope implements Scope {
         UUID scopeId = scopesId.get(document);
         if (currentScope == scopeId) {
             currentScope = null;
+            MDC.put(MDC_SCOPE_NAME, "");
         }
         scopes.remove(scopeId);
         scopesId.remove(document);
@@ -197,6 +245,7 @@ public class DocumentScope implements Scope {
             UUID scopeId = UUID.randomUUID();
             scopes.put(scopeId, new ConcurrentHashMap<>());
             currentScope = scopeId;
+            MDC.put(MDC_SCOPE_NAME, currentScope.toString());
             logger.info(String.format(SCOPE_CHANGE_MSG, scopeId, null, "", "", "", ""));
 
             Document scopeDocument = (Document) objectFactory.getObject();

@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.library.store;
 
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -49,6 +50,7 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
@@ -84,17 +86,20 @@ public class LibraryStoreController implements LibraryStore, Runnable {
 
     private final ObservableList<MavenArtifact> artifacts = FXCollections.observableArrayList();
     private final ObservableList<Path> filesOrFolders = FXCollections.observableArrayList();
+    private final Properties configuration = new Properties();
 
     private final Path libraryRoot;
     private final Path libraryFilesRoot;
     private final Path libraryFoldersFile;
     private final Path libraryThumbnailsRoot;
+    private final Path libraryConfigFile;
     
     private State state = State.READY;
     private Thread watcherThread;
     private Exception exception;
     private Consumer<LibraryStore> updateConsumer;
     private WatchService watchService;
+    
 
     public LibraryStoreController(
             String storeId,
@@ -106,8 +111,18 @@ public class LibraryStoreController implements LibraryStore, Runnable {
         this.libraryRoot = extensionFileSystem.get(storeId);
         this.libraryFilesRoot = libraryRoot.resolve(Paths.get(LibraryUtil.FOLDERS_FOR_FILES));
         this.libraryFoldersFile = libraryFilesRoot.resolve(Paths.get(LibraryUtil.FOLDERS_LIBRARY_FILENAME));
+        this.libraryConfigFile = libraryRoot.resolve(Paths.get(LibraryUtil.CONFIG_LIBRARY_FILENAME));
         this.libraryThumbnailsRoot = libraryRoot.resolve(Paths.get(LibraryUtil.FOLDERS_FOR_THUMBNAILS));
         mavenArtifactsPreferences.readFromJavaPreferences();
+        
+        if (Files.exists(this.libraryConfigFile)) {
+            try (FileInputStream input = new FileInputStream(this.libraryConfigFile.toFile())){
+                configuration.load(input);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
     }
 
     @Override
@@ -208,6 +223,15 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         Files.write(libraryFoldersFile, lines);
 
         return true;
+    }
+    
+    @Override
+    public void saveConfiguration() {
+        try (FileOutputStream output = new FileOutputStream(this.libraryConfigFile.toFile())) {
+            configuration.store(output, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public synchronized State getState() {
@@ -452,5 +476,12 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     public Path getFilesFolder() {
         return libraryFilesRoot;
     }
+
+    @Override
+    public Properties getConfiguration() {
+        return configuration;
+    }
+    
+    
 
 }

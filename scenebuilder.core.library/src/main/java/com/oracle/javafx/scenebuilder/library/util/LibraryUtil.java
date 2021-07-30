@@ -46,6 +46,7 @@ public class LibraryUtil {
     public static final String FOLDERS_FOR_FILES = "Files"; //NOCHECK
     public static final String FOLDERS_FOR_THUMBNAILS = "Thumbnails"; //NOCHECK
     public static final String FOLDERS_LIBRARY_FILENAME = "library.folders"; //NOCHECK
+    public static final String CONFIG_LIBRARY_FILENAME = "library.config"; //NOCHECK
 
     public static boolean isJarPath(Path path) {
         final String pathString = path.toString().toLowerCase(Locale.ROOT);

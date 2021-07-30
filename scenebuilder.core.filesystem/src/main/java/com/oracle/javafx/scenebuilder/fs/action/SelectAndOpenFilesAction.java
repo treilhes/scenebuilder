@@ -14,25 +14,26 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+
+import javafx.stage.FileChooser;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save",
         accelerator = "CTRL+O")
-public class OpenFilesAction extends AbstractOpenFilesAction {
+public class SelectAndOpenFilesAction extends AbstractOpenFilesAction {
     
-    //private static final Logger logger = LoggerFactory.getLogger(OpenFilesAction.class);
+    //private static final Logger logger = LoggerFactory.getLogger(SelectAndOpenFilesAction.class);
 
     private final Document document;
     private final FileSystem fileSystem;
 
-    private List<File> fxmlFiles;
-
     // @formatter:off
-    public OpenFilesAction(
+    public SelectAndOpenFilesAction(
             @Autowired Api api, 
             @Autowired Document document, 
             @Autowired Dialog dialog, 
@@ -45,23 +46,25 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
         this.fileSystem = fileSystem;
     }
 
-    public List<File> getFxmlFiles() {
-        return fxmlFiles;
-    }
-
-    public void setFxmlFile(List<File> fxmlFiles) {
-        this.fxmlFiles = fxmlFiles;
-    }
-
     @Override
     public boolean canPerform() {
-        return fxmlFiles != null && fxmlFiles.size() > 0;
+        return true;
     }
 
     @Override
     public ActionStatus perform() {
-        fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
-        performOpenFiles(fxmlFiles, document);
+        final FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
+                "*.fxml")); //NOCHECK
+        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
+        final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
+        if (fxmlFiles != null) {
+            assert fxmlFiles.isEmpty() == false;
+            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
+            performOpenFiles(fxmlFiles, document);
+        }
         return ActionStatus.DONE;
     }
+    
 }

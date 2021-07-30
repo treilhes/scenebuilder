@@ -102,7 +102,7 @@ public class LoadUrlAction extends AbstractAction {
             documentWindow.untrack();
             preferences.readFromJavaPreferences();
 
-            SbPlatform.runLater(() -> {
+            SbPlatform.runForDocumentLater(() -> {
                 documentWindow.apply();
                 documentWindow.track();
             });
