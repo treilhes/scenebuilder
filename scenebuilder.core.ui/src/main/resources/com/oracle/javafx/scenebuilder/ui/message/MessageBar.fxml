@@ -40,7 +40,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane minHeight="30.0" prefHeight="-1.0" prefWidth="458.0" stylesheets="@../css/MessageBar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane minHeight="30.0" prefHeight="-1.0" prefWidth="458.0" stylesheets="@../controller/css/MessageBar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <HBox fx:id="messageBox" alignment="CENTER" spacing="5.0" styleClass="message-bar">
       <children>

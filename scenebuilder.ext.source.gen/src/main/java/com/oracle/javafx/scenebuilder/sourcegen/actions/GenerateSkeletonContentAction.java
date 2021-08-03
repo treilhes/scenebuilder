@@ -97,7 +97,7 @@ public class GenerateSkeletonContentAction extends AbstractAction implements Ini
 	}
 
 	@Override
-	public void init() {
+	public void initWithDocument() {
 		extend().checkAndPerform();
 	}
 

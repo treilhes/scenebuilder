@@ -65,7 +65,7 @@ public interface Main {
 
     List<Document> getDocumentWindowControllers();
 
-    void handleOpenFilesAction(List<String> files);
+    //void handleOpenFilesAction(List<String> files);
     
     //void performNewTemplate(Template template);
 
@@ -80,5 +80,6 @@ public interface Main {
     Document lookupDocumentWindowControllers(URL newLocation);
 
     void documentWindowRequestClose(Document document);
+    int getOpenDocuments();
 
 }

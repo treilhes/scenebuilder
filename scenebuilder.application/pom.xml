@@ -155,6 +155,22 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.log.viewer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.about</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.welcome</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.scenicview</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.launcher</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

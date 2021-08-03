@@ -96,7 +96,7 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 	}
 
 	@Override
-	public void init() {
+	public void initWithDocument() {
 		extend().checkAndPerform();
 	}
 }

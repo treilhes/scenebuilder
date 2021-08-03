@@ -5,7 +5,7 @@ open module scenebuilder.core.layout {
     exports com.oracle.javafx.scenebuilder.ui.preferences.document;
     exports com.oracle.javafx.scenebuilder.ui.editor.messagelog;
     exports com.oracle.javafx.scenebuilder.ui.menubar;
-    exports com.oracle.javafx.scenebuilder.ui;
+    exports com.oracle.javafx.scenebuilder.ui.controller;
     exports com.oracle.javafx.scenebuilder.ui.dialog;
     exports com.oracle.javafx.scenebuilder.ui.i18n;
     exports com.oracle.javafx.scenebuilder.ui.message;

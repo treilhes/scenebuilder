@@ -73,7 +73,7 @@ import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.util.MathUtils;
-import com.oracle.javafx.scenebuilder.ui.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

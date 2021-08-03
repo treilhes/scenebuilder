@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
+import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.ui.controller.MainController;
 import com.oracle.javafx.scenebuilder.ui.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.ui.dialog.DialogController;
 import com.oracle.javafx.scenebuilder.ui.dialog.ErrorDialog;
@@ -70,6 +73,7 @@ public class BaseUiExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 I18NLayout.class,
+                MainController.class,
                 DocumentWindowController.class,
                 MenuBarController.class,
                 MessageBarController.class,

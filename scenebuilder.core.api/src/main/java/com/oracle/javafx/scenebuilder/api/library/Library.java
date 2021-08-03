@@ -41,23 +41,14 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 
-public interface Library<R extends Report, I> {
-
-	//ClassLoader getClassLoader();
-
+public interface Library<R extends Report, I extends LibraryItem> {
 	ObservableList<I> getItems();
-
-	//Comparator<String> getSectionComparator();
 
 	SimpleBooleanProperty exploringProperty();
 
     void setOnUpdatedJarReports(Consumer<List<R>> onFinishedUpdatingJarReports);
-    
-    //void setOnUpdatedExploringJarReports(Consumer<List<? extends ControlReport>> onFinishedExploringJarReports);
 
     ReadOnlyBooleanProperty firstExplorationCompletedProperty();
-
-    //ObservableList<JarReport> getJarReports();
 
     LocalDateTime getExplorationDate();
 

@@ -97,7 +97,7 @@ public class GenerateFxmlContentAction extends AbstractAction implements InitWit
 	}
 
 	@Override
-	public void init() {
+	public void initWithDocument() {
 		extend().checkAndPerform();
 	}
 

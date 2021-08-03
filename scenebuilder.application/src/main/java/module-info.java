@@ -1,12 +1,11 @@
+import com.oracle.javafx.scenebuilder.app.AppExtension;
+import com.oracle.javafx.scenebuilder.extension.Extension;
+
 open module scenebuilder.application {
     exports com.oracle.javafx.scenebuilder.app.settings;
-    exports com.oracle.javafx.scenebuilder.app.splash;
-    exports com.oracle.javafx.scenebuilder.app.about;
     exports com.oracle.javafx.scenebuilder.app.preferences;
     exports com.oracle.javafx.scenebuilder.app.i18n;
     exports com.oracle.javafx.scenebuilder.app;
-    exports com.oracle.javafx.scenebuilder.app.welcomedialog;
-    exports com.oracle.javafx.scenebuilder.app.util;
 
     requires io.reactivex.rxjava2;
     requires java.desktop;
@@ -42,4 +41,7 @@ open module scenebuilder.application {
     requires spring.boot;
     requires spring.context;
     requires spring.core;
+    requires scenebuilder.core.launcher;
+    
+    provides Extension with AppExtension;
 }

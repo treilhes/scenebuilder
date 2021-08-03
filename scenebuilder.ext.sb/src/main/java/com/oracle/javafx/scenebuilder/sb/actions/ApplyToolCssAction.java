@@ -97,7 +97,7 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
 	}
 
 	@Override
-	public void init() {
+	public void initWithDocument() {
 		extend().checkAndPerform();
 	}
 

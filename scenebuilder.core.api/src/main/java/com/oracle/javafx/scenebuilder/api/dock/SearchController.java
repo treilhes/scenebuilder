@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.dock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -57,7 +59,9 @@ import javafx.scene.layout.StackPane;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-public class SearchController extends AbstractFxmlController implements ViewSearch{
+public class SearchController extends AbstractFxmlController implements ViewSearch {
+
+    private final static Logger logger = LoggerFactory.getLogger(SearchController.class);
 
     @FXML
     private TextField searchField;
@@ -66,27 +70,26 @@ public class SearchController extends AbstractFxmlController implements ViewSear
     @FXML
     private StackPane searchIcon;
 
-    public SearchController(
-            @Autowired Api api) {
+    public SearchController(@Autowired Api api) {
         super(api, SearchController.class.getResource("Search.fxml"));
     }
 
     @FXML
     protected void initialize() {
-        System.out.println("SearchController initialize " + this.getClass().getSimpleName() +  this);
+        logger.info("SearchController initialize {} {}", this.getClass().getSimpleName(), this);
     }
 
     @Autowired
     private void initialize2(@Autowired Editor test) {
-        System.out.println("SearchController initialize2 " + this.getClass().getSimpleName() +  this);
+        logger.info("SearchController initialize2 {} {}", this.getClass().getSimpleName(), this);
     }
 
-	@Override
+    @Override
     public StringProperty textProperty() {
         return searchField.textProperty();
     }
 
-	@Override
+    @Override
     public void requestFocus() {
         searchField.requestFocus();
     }
@@ -94,19 +97,19 @@ public class SearchController extends AbstractFxmlController implements ViewSear
     @Override
     public void controllerDidLoadFxml() {
         if (searchField.getLength() == 0) {
-            searchIcon.getStyleClass().add("search-magnifying-glass"); //NOCHECK
+            searchIcon.getStyleClass().add("search-magnifying-glass"); // NOCHECK
         }
 
         // For SQE tests
-        searchField.setId("Search Text"); //NOCHECK
+        searchField.setId("Search Text"); // NOCHECK
 
         searchField.textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> {
             if (newStr.isEmpty()) {
                 searchIcon.getStyleClass().clear();
-                searchIcon.getStyleClass().add("search-magnifying-glass"); //NOCHECK
+                searchIcon.getStyleClass().add("search-magnifying-glass"); // NOCHECK
             } else {
                 searchIcon.getStyleClass().clear();
-                searchIcon.getStyleClass().add("search-clear"); //NOCHECK
+                searchIcon.getStyleClass().add("search-clear"); // NOCHECK
             }
         });
 

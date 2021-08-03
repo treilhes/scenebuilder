@@ -34,8 +34,6 @@ package com.oracle.javafx.scenebuilder.editors.control.effectpicker;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
@@ -56,33 +54,33 @@ public class EffectPicker extends Pane {
 
     private final EffectPickerController controller;
 
-    private static List<Class<? extends Effect>> effectClasses;
-
-    public synchronized static Collection<Class<? extends Effect>> getEffectClasses() {
-        if (effectClasses == null) {
-            effectClasses = new ArrayList<>();
-            effectClasses.add(javafx.scene.effect.Blend.class);
-            effectClasses.add(javafx.scene.effect.Bloom.class);
-            effectClasses.add(javafx.scene.effect.BoxBlur.class);
-            effectClasses.add(javafx.scene.effect.ColorAdjust.class);
-            effectClasses.add(javafx.scene.effect.ColorInput.class);
-            effectClasses.add(javafx.scene.effect.DisplacementMap.class);
-            effectClasses.add(javafx.scene.effect.DropShadow.class);
-            effectClasses.add(javafx.scene.effect.GaussianBlur.class);
-            effectClasses.add(javafx.scene.effect.Glow.class);
-            effectClasses.add(javafx.scene.effect.ImageInput.class);
-            effectClasses.add(javafx.scene.effect.InnerShadow.class);
-            effectClasses.add(javafx.scene.effect.Lighting.class);
-            effectClasses.add(javafx.scene.effect.MotionBlur.class);
-            effectClasses.add(javafx.scene.effect.PerspectiveTransform.class);
-            effectClasses.add(javafx.scene.effect.Reflection.class);
-            effectClasses.add(javafx.scene.effect.SepiaTone.class);
-            effectClasses.add(javafx.scene.effect.Shadow.class);
-            effectClasses = Collections.unmodifiableList(effectClasses);
-        }
-
-        return effectClasses;
-    }
+//    private static List<Class<? extends Effect>> effectClasses;
+//
+//    public synchronized static Collection<Class<? extends Effect>> getEffectClasses() {
+//        if (effectClasses == null) {
+//            effectClasses = new ArrayList<>();
+//            effectClasses.add(javafx.scene.effect.Blend.class);
+//            effectClasses.add(javafx.scene.effect.Bloom.class);
+//            effectClasses.add(javafx.scene.effect.BoxBlur.class);
+//            effectClasses.add(javafx.scene.effect.ColorAdjust.class);
+//            effectClasses.add(javafx.scene.effect.ColorInput.class);
+//            effectClasses.add(javafx.scene.effect.DisplacementMap.class);
+//            effectClasses.add(javafx.scene.effect.DropShadow.class);
+//            effectClasses.add(javafx.scene.effect.GaussianBlur.class);
+//            effectClasses.add(javafx.scene.effect.Glow.class);
+//            effectClasses.add(javafx.scene.effect.ImageInput.class);
+//            effectClasses.add(javafx.scene.effect.InnerShadow.class);
+//            effectClasses.add(javafx.scene.effect.Lighting.class);
+//            effectClasses.add(javafx.scene.effect.MotionBlur.class);
+//            effectClasses.add(javafx.scene.effect.PerspectiveTransform.class);
+//            effectClasses.add(javafx.scene.effect.Reflection.class);
+//            effectClasses.add(javafx.scene.effect.SepiaTone.class);
+//            effectClasses.add(javafx.scene.effect.Shadow.class);
+//            effectClasses = Collections.unmodifiableList(effectClasses);
+//        }
+//
+//        return effectClasses;
+//    }
 
     public EffectPicker(EffectPicker.Delegate epd, PaintPicker.Delegate ppd) {
         final FXMLLoader loader = new FXMLLoader();
@@ -137,9 +135,9 @@ public class EffectPicker extends Pane {
         return controller.getEffectPath();
     }
 
-    public List<MenuItem> getMenuItems() {
+    public List<MenuItem> getMenuItems(List<Class<? extends Effect>> effects) {
         final List<MenuItem> menuItems = new ArrayList<>();
-        for (final Class<? extends Effect> clazz : getEffectClasses()) {
+        for (final Class<? extends Effect> clazz : effects) {
             final MenuItem mi = new MenuItem(clazz.getSimpleName());
             mi.setOnAction(t -> {
                 final Effect effect = Utils.newInstance(clazz);

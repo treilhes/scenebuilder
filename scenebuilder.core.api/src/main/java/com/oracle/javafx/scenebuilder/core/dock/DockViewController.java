@@ -132,7 +132,7 @@ public class DockViewController implements InitWithDocument {
     }
     
     @Override
-    public void init() {
+    public void initWithDocument() {
         performResetDockAndViews();
     }
     

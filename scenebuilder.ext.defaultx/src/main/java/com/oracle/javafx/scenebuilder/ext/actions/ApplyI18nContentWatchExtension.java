@@ -111,7 +111,7 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
     }
 
     @Override
-    public void dispose() {
+    public void disposeWithDocument() {
         fileSystem.unwatch(this);
     }
 

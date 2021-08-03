@@ -164,5 +164,4 @@ public interface Document {
     void updateLoadFileTime();
     ActionStatus performCloseAction();
 
-    
 }

@@ -32,10 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
-import com.oracle.javafx.scenebuilder.app.splash.SplashScreenPreloader;
-
-import javafx.application.Application;
+import com.oracle.javafx.scenebuilder.launcher.app.SceneBuilderBootstrap;
 
 //@SpringBootApplication
 public class SceneBuilderApp {
@@ -46,9 +43,7 @@ public class SceneBuilderApp {
      * But on Mac OS, this method seems to be called by the javafx launcher.
      */
 	public static void main(String[] args) {
-	    System.setProperty("javafx.preloader", SplashScreenPreloader.class.getName()); //NOCHECK
-	    SceneBuilderLoadingProgress.get().start();
-        Application.launch(SceneBuilderBootstrap.class, args);
+        SceneBuilderBootstrap.start(args);
 	}
 
 }

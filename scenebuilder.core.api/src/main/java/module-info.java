@@ -13,6 +13,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.control.decoration;
     exports com.oracle.javafx.scenebuilder.api.control.driver;
     exports com.oracle.javafx.scenebuilder.api.control.droptarget;
+    exports com.oracle.javafx.scenebuilder.api.control.effect;
     exports com.oracle.javafx.scenebuilder.api.control.handles;
     exports com.oracle.javafx.scenebuilder.api.control.inlineedit;
     exports com.oracle.javafx.scenebuilder.api.control.intersect;

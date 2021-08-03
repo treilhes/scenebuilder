@@ -11,7 +11,7 @@
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
-		<module>dev.utils</module>
+        <module>dev.utils</module>
         <module>scenebuilder.application</module>
         <module>scenebuilder.core.api</module>
         <module>scenebuilder.core.drag.and.drop</module>
@@ -52,7 +52,12 @@
         <module>scenebuilder.ext.glossary</module>
 
         <module>scenebuilder.core.clipboard</module>
-    </modules>
+        <module>scenebuilder.core.preferences</module>
+        <module>scenebuilder.ext.about</module>
+        <module>scenebuilder.ext.welcome</module>
+        <module>scenebuilder.ext.scenicview</module>
+    <module>scenebuilder.core.launcher</module>
+  </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -98,7 +103,7 @@
                 <artifactId>scenebuilder.application</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.api</artifactId>
                 <version>${project.version}</version>
@@ -126,6 +131,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.jobs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.launcher</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -265,9 +275,25 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.about</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.welcome</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.scenicview</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.starter.test</artifactId>
@@ -310,7 +336,8 @@
                                 <option>--add-exports</option>
                                 <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.css.analyser</option>
                             </additionalOptions>
-                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated javadoc, see workaround below -->
+                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated 
+                                javadoc, see workaround below -->
                             <docfilessubdirs>true</docfilessubdirs>
                             <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
                             <outputDirectory>${basedir}/docs/apidocs</outputDirectory>
@@ -329,7 +356,8 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory in github_pages -->
+                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory 
+                            in github_pages -->
                         <groupId>org.codehaus.gmaven</groupId>
                         <artifactId>groovy-maven-plugin</artifactId>
                         <version>2.1.1</version>

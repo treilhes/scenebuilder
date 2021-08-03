@@ -939,7 +939,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     }
 
     @Override
-    public void init() {
+    public void initWithDocument() {
         //TODO this do not work, why?
         getSearchController().requestFocus();
     }

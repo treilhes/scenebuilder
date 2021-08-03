@@ -73,7 +73,7 @@ public class ApplyToolCssThemeExtension extends AbstractActionExtension<ApplyToo
 	}
 
     @Override
-    public void init() {
+    public void initWithDocument() {
         toolThemePreference.getObservableValue().addListener(
                 (ob, o, n) -> context.getBean(ApplyToolCssAction.class).extend().perform());
     }

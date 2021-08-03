@@ -97,7 +97,7 @@ public class ApplyCssContentAction extends AbstractAction implements InitWithDoc
 	}
 
 	@Override
-	public void init() {
+	public void initWithDocument() {
 		extend().checkAndPerform();
 	}
 

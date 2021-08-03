@@ -40,7 +40,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
@@ -56,8 +58,10 @@ import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
@@ -73,6 +77,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -83,14 +88,14 @@ import javafx.concurrent.Worker.State;
  *
  *
  */
-public abstract class AbstractLibrary<R extends Report, I> implements Library<R, I>, InitWithDocument{
-    
+public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
+        implements Library<R, I>, InitWithSceneBuilder, InitWithDocument {
+
     private final static Logger logger = LoggerFactory.getLogger(AbstractLibrary.class);
 
-    private static final List<String> JAVAFX_MODULES = Arrays.asList(
-            "javafx-base", "javafx-graphics", "javafx-controls",
-            "javafx-fxml", "javafx-media", "javafx-web", "javafx-swing");
-    
+    private static final List<String> JAVAFX_MODULES = Arrays.asList("javafx-base", "javafx-graphics",
+            "javafx-controls", "javafx-fxml", "javafx-media", "javafx-web", "javafx-swing");
+
     protected final ObservableList<I> itemsProperty = FXCollections.observableArrayList();
     private final SimpleIntegerProperty explorationCountProperty = new SimpleIntegerProperty();
     private final SimpleObjectProperty<LocalDateTime> explorationDateProperty = new SimpleObjectProperty<>();
@@ -98,13 +103,13 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
     private SimpleBooleanProperty exploring = new SimpleBooleanProperty();
 
     private final ObservableList<R> reports = FXCollections.observableArrayList();
-    
+
     private final LibraryStore store;
-    
+
     private final NavigableMap<LocalDateTime, Exploration<R>> explorations = new TreeMap<>();
-    
+
     private final SceneBuilderManager sceneBuilderManager;
-    
+
     private final ClassLoaderController classLoaderController;
 
     private final ApplicationContext context;
@@ -115,13 +120,9 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
      * Public
      */
 
-    public AbstractLibrary(
-            ApplicationContext context,
-            SceneBuilderManager sceneBuilderManager,
-            ClassLoaderController classLoaderController,
-            LibraryStore store,
-            LibraryStoreConfiguration dialogConfiguration
-            ) {
+    public AbstractLibrary(ApplicationContext context, SceneBuilderManager sceneBuilderManager,
+            ClassLoaderController classLoaderController, LibraryStore store,
+            LibraryStoreConfiguration dialogConfiguration) {
         this.context = context;
         this.sceneBuilderManager = sceneBuilderManager;
         this.store = store;
@@ -131,73 +132,73 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
 
     @Override
     public void init() {
-
         try {
             if (!store.isReady()) {
-              store.create();
-          }
-          if (store.isReady()) {
-              store.load();
-              store.startWatching();
-          }
-                
-            List<Path> sources = store.getArtifacts().stream()
-                    .flatMap(ma -> ma.toJarList().stream()).collect(Collectors.toList());
+                store.create();
+            }
+            if (store.isReady()) {
+                store.load();
+                store.startWatching();
+            }
+
+            List<Path> sources = store.getArtifacts().stream().flatMap(ma -> ma.toJarList().stream())
+                    .collect(Collectors.toList());
             sources.addAll(store.getFilesOrFolders());
             sources.add(store.getFilesFolder());
             classLoaderController.getJarsOrFolders().addAll(sources);
             classLoaderController.updateClassLoader();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Unable to start library {}", this.getClass().getName(), e);
         }
-        
-            
-            
-//        try {
-//            if (!isFirstExplorationCompleted()) {
-//                store.onStoreUpdated((store) -> exploreStore());
-//                
-//                if (!store.isReady()) {
-//                    store.create();
-//                }
-//                if (store.isReady()) {
-//                    store.load();
-//                    store.startWatching();
-//                }
-//                explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
-//                    Exploration<R> current = explorations.get(getExplorationDate());
-//                    
-//                    Map.Entry<LocalDateTime, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDateTime());
-//                    Exploration<R> previous = entry == null ? new Exploration<R>(LocalDateTime.now(), Collections.emptyList(), null) : entry.getValue();
-//                    userLibraryExplorationDidChange(previous, current);
-//                });
-//            }
-//        } catch (IOException e) {
-//            logger.error("Unable to start library {}", this.getClass().getName(), e);
-//        }
     }
-    
+
+    @Override
+    public void initWithDocument() {
+        if (!isFirstExplorationCompleted()) {
+            store.onStoreUpdated((store) -> exploreStore());
+
+            explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
+                Exploration<R> current = explorations.get(getExplorationDate());
+
+                Map.Entry<LocalDateTime, Exploration<R>> entry = explorations.lowerEntry(current.getLocalDateTime());
+                Exploration<R> previous = entry == null
+                        ? new Exploration<R>(LocalDateTime.now(), Collections.emptyList(), null)
+                        : entry.getValue();
+                userLibraryExplorationDidChange(previous, current);
+            });
+        }
+    }
+
     public abstract String getLibraryId();
+
     public abstract Explorer<MavenArtifact, R> newArtifactExplorer();
+
     public abstract Explorer<Path, R> newFolderExplorer();
+
     public abstract Explorer<Path, R> newFileExplorer();
+
     public abstract List<R> createApplyAndSaveFilter(List<R> reports);
+
     public abstract List<R> applySavedFilter(List<R> reports);
+
     protected abstract Collection<I> makeLibraryItems(R reports) throws IOException;
+
     protected abstract void updateItems(Collection<I> items);
+
     protected abstract void userLibraryExplorationDidChange(Exploration<R> previous, Exploration<R> current);
+
     public abstract void unlock(List<Path> pathes);
+
     public abstract void lock(List<Path> pathes);
-    
+
     private void exploreStore() {
         final List<MavenArtifact> artifacts = new ArrayList<>(store.getArtifacts());
         final List<Path> fileOrFolders = new ArrayList<>(store.getFilesOrFolders());
-        
+
         Stream<Task<List<R>>> artifactStream = artifacts.stream()
                 .filter(ma -> JAVAFX_MODULES.stream().noneMatch(ma.getArtifactId()::startsWith))
                 .map(ma -> newArtifactExplorer().explore(ma));
-        
+
         Stream<Task<List<R>>> pathStream = fileOrFolders.stream()
                 .filter(p -> JAVAFX_MODULES.stream().noneMatch(m -> p.getFileName().toString().startsWith(m)))
                 .map(p -> {
@@ -207,69 +208,65 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                         return newFileExplorer().explore(p);
                     }
                 });
-        
+
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        
+
         // go back to fx thread for ui update
         SbPlatform.runLater(() -> {
-            
+
             setExploring(true);
-            
-            List<Task<List<R>>> tasks = Stream.concat(artifactStream, pathStream)
-                    .peek(t -> executor.execute(t))
+
+            List<Task<List<R>>> tasks = Stream.concat(artifactStream, pathStream).peek(t -> executor.execute(t))
                     .collect(Collectors.toList());
             executor.shutdown();
-            
+
             Exploration<R> exploration = new Exploration<>(LocalDateTime.now(), tasks, this::updateLibrary);
             explorations.put(exploration.getLocalDateTime(), exploration);
-            
+
         });
     }
-    
+
     private void updateLibrary(Exploration<R> explorationResult) {
 
-        //  1) we create a classloader
-        //  2) we explore all the jars and folders
-        //  3) we construct a list of library items
-        //  4) we update the user library with the class loader and items
-        //  5) on startup only, we allow opening files that may/may not rely on the user library
+        // 1) we create a classloader
+        // 2) we explore all the jars and folders
+        // 3) we construct a list of library items
+        // 4) we update the user library with the class loader and items
+        // 5) on startup only, we allow opening files that may/may not rely on the user
+        // library
 
         // 1)
-        
 
         // 2)
-       
+
         final List<I> newItems = new ArrayList<>();
-        
-        List<Path> sources = explorationResult.getReports().stream()
-                .map(r -> r.getSource()).collect(Collectors.toList());
+
+        List<Path> sources = explorationResult.getReports().stream().map(r -> r.getSource())
+                .collect(Collectors.toList());
         sources.add(store.getFilesFolder());
-        
+
         List<R> reports = applySavedFilter(explorationResult.getReports());
-        
+
         try {
             classLoaderController.getJarsOrFolders().addAll(sources);
             classLoaderController.updateClassLoader();
-            
+
             resetBeforeUpdate();
-            
+
             for (R report : reports) {
                 newItems.addAll(makeLibraryItems(report));
             }
-            
+
             // Remove duplicated items
-            updateItems(newItems
-                    .stream()
-                    .distinct()
-                    .collect(Collectors.toList()));
-            
+            updateItems(newItems.stream().distinct().collect(Collectors.toList()));
+
             getStore().saveConfiguration();
         } catch (IOException e) {
             logger.error("Unable to update the control library", e);
         } finally {
-         // 5
+            // 5
             updateReports(new ArrayList<>(explorationResult.getReports()));
-            //getOnFinishedUpdatingJarReports().accept(jarOrFolderReports);
+            // getOnFinishedUpdatingJarReports().accept(jarOrFolderReports);
             updateExplorationCount();
             updateExplorationDate(explorationResult.getLocalDateTime());
             // Fix for #45: mark end of first exploration
@@ -277,7 +274,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
             setExploring(false);
         }
     }
-    
+
     @Override
     public ObservableList<I> getItems() {
         return itemsProperty;
@@ -311,24 +308,23 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         return explorationDateProperty;
     }
 
-
     void updateReports(Collection<R> newReports) {
         reports.setAll(newReports);
     }
-    
+
     @Override
     public void setOnUpdatedJarReports(Consumer<List<R>> onFinishedUpdatingJarReports) {
         if (this.explorations.size() > 0) {
             onFinishedUpdatingJarReports.accept(this.reports);
         } else {
-            this.reports.addListener((ListChangeListener<R>)(c -> {
+            this.reports.addListener((ListChangeListener<R>) (c -> {
                 while (c.next()) {
                     onFinishedUpdatingJarReports.accept((List<R>) c.getAddedSubList());
                 }
             }));
         }
     }
-    
+
     @Override
     public final ReadOnlyBooleanProperty firstExplorationCompletedProperty() {
         return firstExplorationCompleted.getReadOnlyProperty();
@@ -396,7 +392,6 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         }
     }
 
-
     public void stopWatching() {
         store.stopWatching();
     }
@@ -408,43 +403,41 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
     public LibraryStore getStore() {
         return store;
     }
-    
+
     @Override
     public ObservableList<R> getReports() {
         return reports;
     }
-    
-    
+
     public SceneBuilderWindow openDialog() {
         LibraryDialogController libraryDialogController = context.getBean(LibraryDialogController.class);
         libraryDialogController.initForLibrary(this);
         libraryDialogController.openWindow();
         return libraryDialogController;
     }
-     
+
     public LibraryStoreConfiguration getDialogConfiguration() {
         return dialogConfiguration;
     }
-
-
 
     public class Exploration<RE> {
 
         private final List<Task<List<RE>>> tasks;
         private final AtomicInteger completed = new AtomicInteger();
-        
+
         private final ObservableList<RE> reports = FXCollections.observableArrayList();
         private final LocalDateTime localDate;
         private final Consumer<Exploration<RE>> updateLibraryCallback;
-        
-        public Exploration(LocalDateTime localDate, List<Task<List<RE>>> tasks, Consumer<Exploration<RE>> updateLibraryCallback) {
+
+        public Exploration(LocalDateTime localDate, List<Task<List<RE>>> tasks,
+                Consumer<Exploration<RE>> updateLibraryCallback) {
             super();
-            this.localDate =localDate;
+            this.localDate = localDate;
             this.tasks = tasks;
             this.updateLibraryCallback = updateLibraryCallback;
             listenTasks();
         }
-        
+
         private void listenTasks() {
             if (tasks.isEmpty()) {
                 requestLibraryUpdate();
@@ -453,24 +446,22 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                 t.setOnCancelled((wse) -> onTaskEnded());
                 t.setOnFailed((wse) -> onTaskEnded());
                 t.setOnSucceeded((wse) -> onTaskEnded());
-                
+
                 if (t.isDone()) {
                     onTaskEnded();
                 }
             });
         }
-        
+
         private void onTaskEnded() {
             int count = completed.incrementAndGet();
-            
+
             if (count == tasks.size()) {
-                tasks.stream()
-                    .filter(t -> t.getState() == State.SUCCEEDED)
-                    .forEach(t -> reports.addAll(t.getValue()));
+                tasks.stream().filter(t -> t.getState() == State.SUCCEEDED).forEach(t -> reports.addAll(t.getValue()));
                 requestLibraryUpdate();
             }
         }
-        
+
         protected void requestLibraryUpdate() {
             updateLibraryCallback.accept(this);
         }
@@ -482,7 +473,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
         protected LocalDateTime getLocalDateTime() {
             return localDate;
         }
-        
+
         @Deprecated
         protected ObservableList<R> getJarReports() {
             return null;
@@ -503,73 +494,70 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
                     } else {
                         return newFolderExplorer().explore(p);
                     }
-                })
-                .filter(t -> t != null)
-                .collect(Collectors.toList());
-        
+                }).filter(t -> t != null).collect(Collectors.toList());
+
         List<Path> sources = processTaskListToAdd(taskList);
-        
+
         if (sources != null) {
             doThenReLoad(() -> getStore().addAll(sources));
         }
     }
-    
+
     public boolean performAddArtifact(MavenArtifact artifact) {
 
         List<Task<List<R>>> taskList = List.of(artifact).stream()
                 .filter(ma -> JAVAFX_MODULES.stream().noneMatch(ma.getArtifactId()::startsWith))
-                .map(ma -> newArtifactExplorer().explore(ma))
-                .filter(t -> t != null)
-                .collect(Collectors.toList());
-        
+                .map(ma -> newArtifactExplorer().explore(ma)).filter(t -> t != null).collect(Collectors.toList());
+
         List<Path> sources = processTaskListToAdd(taskList);
-        
+
         if (sources != null && sources.size() > 0) {
             doThenReLoad(() -> getStore().add(artifact));
             return true;
         }
         return false;
     }
-    
+
     public void performRemoveFilesOrFolders(List<Path> listFilesOrFolders) {
         unlock(listFilesOrFolders);
         doThenReLoad(() -> listFilesOrFolders.forEach(p -> getStore().remove(p)));
         lock(listFilesOrFolders);
     }
-    
+
     public void performRemoveArtifact(MavenArtifact artifact) {
         List<Path> files = artifact.toJarList();
         unlock(files);
         doThenReLoad(() -> getStore().remove(artifact));
         lock(files);
     }
-    
+
     public void performEditFilesOrFolders(List<Path> listFilesOrFolders) {
         performAddFilesOrFolders(listFilesOrFolders);
     }
-    
+
     public void performEditArtifact(MavenArtifact artifact) {
         performAddArtifact(artifact);
     }
-    
+
     private List<Path> processTaskListToAdd(List<Task<List<R>>> taskList) {
         ImportProgressDialogController progressDialog = context.getBean(ImportProgressDialogController.class);
-        //progressDialog.getStage().initOwner(owner);
+        // progressDialog.getStage().initOwner(owner);
         progressDialog.execute(taskList);
         progressDialog.showAndWait();
-        
-        List<R> results = taskList.stream().filter(t -> t.isDone()).flatMap(t -> t.getValue().stream()).collect(Collectors.toList());
-        
+
+        List<R> results = taskList.stream().filter(t -> t.isDone()).flatMap(t -> t.getValue().stream())
+                .collect(Collectors.toList());
+
         results = createApplyAndSaveFilter(results);
-        
+
         if (results == null) { // import cancelled
-            return null; 
+            return null;
         }
-        
+
         List<Path> sources = results.stream().map(r -> r.getSource()).distinct().collect(Collectors.toList());
         return sources;
     }
-    
+
     private void doThenReLoad(Runnable runnable) {
         try {
             getStore().stopWatching();
@@ -586,8 +574,7 @@ public abstract class AbstractLibrary<R extends Report, I> implements Library<R,
 
     protected void resetBeforeUpdate() {
         // TODO Auto-generated method stub
-        
-    }
 
+    }
 
 }

@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -41,6 +42,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.Utils;
@@ -63,12 +65,15 @@ public class EffectPopupEditor extends PopupEditor {
     
     private EffectPicker effectPicker;
     private List<MenuItem> effectMenuItems;
+    private List<Class<? extends Effect>> effects;
     
     public EffectPopupEditor(
-            @Autowired Api api
+            @Autowired Api api,
+            @Autowired List<EffectProvider> effectProviders
             ) {
         super(api);
         this.messageLogger = api.getApiDoc().getMessageLogger();
+        this.effects = effectProviders.stream().flatMap(p -> p.effects().stream()).collect(Collectors.toList());
     }
 
 
@@ -119,7 +124,7 @@ public class EffectPopupEditor extends PopupEditor {
         final EffectPicker.Delegate epd = (warningKey, arguments) -> messageLogger.logWarningMessage(warningKey, arguments);
         final PaintPicker.Delegate ppd = (warningKey, arguments) -> messageLogger.logWarningMessage(warningKey, arguments);
         effectPicker = new EffectPicker(epd, ppd);
-        effectMenuItems = effectPicker.getMenuItems();
+        effectMenuItems = effectPicker.getMenuItems(effects);
     }
 
     @Override
