@@ -43,6 +43,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -50,6 +51,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class SplashScreenPreloader extends Preloader {
+
+    public static final String APP_ICON_16 = SplashScreenPreloader.class.getResource("SceneBuilderLogo_16.png").toString();
+    public static final String APP_ICON_32 = SplashScreenPreloader.class.getResource("SceneBuilderLogo_32.png").toString();
+
+    
     private final static int TEXT_MAX_LENGTH = 50;
     
     @FXML
@@ -101,8 +107,10 @@ public class SplashScreenPreloader extends Preloader {
         this.scene = createPreloaderScene();
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);        
-        //TODO uncomment for icons
-        //new WindowIconSetting().setWindowIcon(stage);
+        //TODO find a way to get those icons from WindowIconSettings.class
+        Image icon16 = new Image(SplashScreenPreloader.APP_ICON_16);
+        Image icon32 = new Image(SplashScreenPreloader.APP_ICON_32);
+        stage.getIcons().addAll(icon16, icon32);
         stage.show();
     }
     
