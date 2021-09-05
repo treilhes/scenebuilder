@@ -3,6 +3,7 @@ package com.oracle.javafx.scenebuilder.core.di;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,6 +154,10 @@ public class DocumentScope implements Scope {
         UUID documentUuid = scopesId.get(scopedDocument);
         executeWithScope(documentUuid, runnable);
     }
+    protected static <T> T executeWithScope(Document scopedDocument, Supplier<T> runnable) {
+        UUID documentUuid = scopesId.get(scopedDocument);
+        return executeWithScope(documentUuid, runnable);
+    }
     
     /**
      * Execute the runnable on the same thread ensuring an unchanging scope
@@ -165,6 +170,13 @@ public class DocumentScope implements Scope {
         }
         executeRunnable(runnable, scopedDocument);
     }
+    protected static <T> T executeWithScope(UUID scopedDocument, Supplier<T> runnable) {
+        if (scopedDocument == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+        }
+        return executeSupplier(runnable, scopedDocument);
+    }
+    
     
     /**
      * Execute the runnable on a dedicated thread ensuring an unchanging scope
@@ -198,6 +210,18 @@ public class DocumentScope implements Scope {
             threadScope.set(scopedDocument);
             MDC.put(MDC_SCOPE_NAME, scopedDocument.toString());
             runnable.run();
+        } finally {
+            threadScope.set(backupScope);
+            MDC.put(MDC_SCOPE_NAME, backupScope == null ? "" : backupScope.toString());
+        }
+    }
+    
+    private static <T> T executeSupplier(Supplier<T> runnable, UUID scopedDocument) {
+        final UUID backupScope = threadScope.get();
+        try {
+            threadScope.set(scopedDocument);
+            MDC.put(MDC_SCOPE_NAME, scopedDocument.toString());
+            return runnable.get();
         } finally {
             threadScope.set(backupScope);
             MDC.put(MDC_SCOPE_NAME, backupScope == null ? "" : backupScope.toString());

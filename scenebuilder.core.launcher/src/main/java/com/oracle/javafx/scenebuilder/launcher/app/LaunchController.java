@@ -131,7 +131,6 @@ public class LaunchController implements AppPlatform.AppNotificationHandler, App
      * AppPlatform.AppNotificationHandler
      */
     @Override
-    // TODO there are some Gluon adherence here
     public void handleLaunch(List<String> files) {
         List<File> lFiles = files.stream().map(s -> new File(s)).filter(f -> f.exists()).collect(Collectors.toList()); 
         actionFactory.create(OpenScenebuilderAction.class, a -> a.setFiles(lFiles)).checkAndPerform();

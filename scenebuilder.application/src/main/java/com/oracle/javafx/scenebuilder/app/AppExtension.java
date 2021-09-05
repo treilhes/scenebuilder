@@ -37,10 +37,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.app.i18n.I18NApp;
-import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.DocumentPreferencesNodeImpl;
-import com.oracle.javafx.scenebuilder.app.preferences.PreferencesController;
-import com.oracle.javafx.scenebuilder.app.preferences.RootPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
@@ -55,10 +51,7 @@ public class AppExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 I18NApp.class,
-                DocumentPreferencesController.class,
-                DocumentPreferencesNodeImpl.class,
-                PreferencesController.class,
-                RootPreferencesNodeImpl.class,
+                
                 WindowIconSetting.class
             );
      // @formatter:on

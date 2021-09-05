@@ -90,16 +90,19 @@ public class ExtendedAction<T extends AbstractAction> extends AbstractAction {
     public ActionStatus perform() {
         if (extended) {
             extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> {
+                logger.debug("Will Execute prePerform on {}", ext.getClass());
                 ext.prePerform();
                 logger.info("Executed prePerform on {}", ext.getClass());
             });
         }
 
+        logger.debug("Will execute perform on {}", action.getClass());
         ActionStatus status = action.perform();
         logger.info("Executed perform on {} : {}", action.getClass(), status);
 
         if (extended) {
             extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> {
+                logger.info("Will execute postPerform on {}", ext.getClass());
                 ext.postPerform();
                 logger.info("Executed postPerform on {}", ext.getClass());
             });

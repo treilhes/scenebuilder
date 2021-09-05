@@ -30,47 +30,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.preferences;
+package com.oracle.javafx.scenebuilder.devutils.tbview;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+public class TestExternalFile {
 
-/**
- * Defines preferences for Scene Builder App.
- */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class DocumentPreferencesController implements Preferences {
+    public void start(Stage stage, String pathToFile) {
+        // Creating nodes
 
-    private final List<ManagedDocumentPreference> preferences;
+        try {
+            Pane gp = (Pane) FXMLLoader.load(new File(pathToFile).toURI().toURL());
 
-	/***************************************************************************
-     *                                                                         *
-     * Constructors                                                            *
-     *                                                                         *
-     **************************************************************************/
-
-    public DocumentPreferencesController(
-    		@Autowired List<ManagedDocumentPreference> preferences
-    	) {
-    	this.preferences = preferences;
-    }
-    
-    @Override
-    public void readFromJavaPreferences() {
-    	preferences.forEach((p) -> p.readFromJavaPreferences()); 
-    }
-    
-    @Override
-    public void writeToJavaPreferences() {
-    	preferences.forEach((p) -> p.writeToJavaPreferences());
+            // Setting the stage
+            Scene scene = new Scene(gp, 800, 600, Color.BEIGE);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }

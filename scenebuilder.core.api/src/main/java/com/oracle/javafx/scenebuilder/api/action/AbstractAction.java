@@ -61,7 +61,7 @@ public abstract class AbstractAction implements Action {
 
 		nameI18nKey = actionMeta.nameKey();
 		descriptionI18nKey = actionMeta.descriptionKey();
-		rawAccelerator = actionMeta.accelerator();
+		rawAccelerator = actionMeta.accelerator().isBlank() ? null : actionMeta.accelerator();
 	}
 
 	@Override

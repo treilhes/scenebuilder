@@ -52,15 +52,46 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.library</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.preferences</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.launcher</artifactId>
+        </dependency>
+        <!-- Here starts non core dependencies but required for a core start -->
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.glossary</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.content.editor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.preference.editor</artifactId>
+        </dependency>
+        <!-- Here starts optional dependencies but transitive -->
+        
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.sb</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.editors</artifactId>
+        </dependency>
+        <!-- Here starts optional dependencies -->
+        <!-- -->
         
         
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.certificate.manager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.content.editor</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
@@ -87,10 +118,7 @@
             <artifactId>scenebuilder.ext.document</artifactId>
         </dependency>
         
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.editors</artifactId>
-        </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.exporter</artifactId>
@@ -99,10 +127,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.extension.library</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.glossary</artifactId>
-        </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.gluon</artifactId>
@@ -123,17 +148,10 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.control.library</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.preference.editor</artifactId>
-        </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.preview</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.sb</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
@@ -167,10 +185,8 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.scenicview</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.launcher</artifactId>
-        </dependency>
+        
+         
     </dependencies>
 
     <build>

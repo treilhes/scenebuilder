@@ -84,7 +84,7 @@ public interface Document {
 
     void performImportFxml();
     void performIncludeFxml();
-    void performRevealAction();
+    //void performRevealAction();
     void performImportMedia();
     //boolean isRightPanelVisible();
     void performControlAction(DocumentControlAction toggleRightPanel);

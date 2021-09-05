@@ -138,6 +138,7 @@ public class DocumentController implements Document, InitializingBean {
     private final Main main;
     private final MessageBarController messageBarController;
     private final SelectionBarController selectionBarController;
+    private FXOMDocument fxomDocument;
     
 
     /*
@@ -286,16 +287,11 @@ public class DocumentController implements Document, InitializingBean {
             closeWindow();
         });
 
-        System.out.println(DocumentScope.getActiveScopeUUID().toString());
-        System.out.println(DocumentScope.getCurrentScopeUUID().toString());
-        System.out.println(this.toString());
-        System.out.println(this.menuBarController.toString());
-        System.out.println(DocumentScope.getActiveScopeUUID().toString());
-        
         SbPlatform.runForDocumentLater(() -> {
-            System.out.println(DocumentScope.getActiveScopeUUID().toString());
             initializeDocumentWindow();
         });
+        
+        documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
     }
 
     @Override
@@ -351,8 +347,6 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     public void reload() throws IOException {
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
-
         assert (fxomDocument != null) && (fxomDocument.getLocation() != null);
         final URL fxmlURL = fxomDocument.getLocation();
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -727,7 +721,6 @@ public class DocumentController implements Document, InitializingBean {
          * A document window controller is considered as "unused" if: //NOCHECK 1) it has
          * not fxml text 2) it is not dirty 3) it is unamed
          */
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean noFxmlText = (fxomDocument == null) || (fxomDocument.getFxomRoot() == null);
         final boolean clean = !isDocumentDirty();
         final boolean noName = (fxomDocument != null) && (fxomDocument.getLocation() == null);
@@ -742,21 +735,18 @@ public class DocumentController implements Document, InitializingBean {
 
     @Override
     public boolean hasContent() {
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean noFxmlText = (fxomDocument == null) || (fxomDocument.getFxomRoot() == null);
         return noFxmlText;
     }
 
     @Override
     public boolean hasName() {
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final boolean hasName = (fxomDocument != null) && (fxomDocument.getLocation() != null);
         return hasName;
     }
 
     @Override
     public String getName() {
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         final String name = hasName() ? fxomDocument.getLocation().toExternalForm() : "";
         return name;
     }
@@ -1364,22 +1354,22 @@ public class DocumentController implements Document, InitializingBean {
 //        return closeConfirmed ? ActionStatus.DONE : ActionStatus.CANCELLED;
 //    }
 
-    @Override
-    public void performRevealAction() {
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-        assert fxomDocument != null;
-        assert fxomDocument.getLocation() != null;
-
-        final URL location = fxomDocument.getLocation();
-
-        try {
-            fileSystem.revealInFileBrowser(new File(location.toURI()));
-        } catch (IOException | URISyntaxException x) {
-            dialog.showErrorAndWait("",
-                    I18N.getString("alert.reveal.failure.message", documentWindow.getStage().getTitle()),
-                    I18N.getString("alert.reveal.failure.details"), x);
-        }
-    }
+//    @Override
+//    public void performRevealAction() {
+//        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+//        assert fxomDocument != null;
+//        assert fxomDocument.getLocation() != null;
+//
+//        final URL location = fxomDocument.getLocation();
+//
+//        try {
+//            fileSystem.revealInFileBrowser(new File(location.toURI()));
+//        } catch (IOException | URISyntaxException x) {
+//            dialog.showErrorAndWait("",
+//                    I18N.getString("alert.reveal.failure.message", documentWindow.getStage().getTitle()),
+//                    I18N.getString("alert.reveal.failure.details"), x);
+//        }
+//    }
 
     @Override
     public void updateLoadFileTime() {
@@ -1485,10 +1475,9 @@ public class DocumentController implements Document, InitializingBean {
 
     @Override
     public ActionStatus performCloseAction() {
-        return actionFactory.create(CloseFileAction.class).checkAndPerform();
+        return SbPlatform.runForDocument(this, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
     }
 
-    
 }
 
 ///**

@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.editors;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -566,13 +567,11 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
                     } else {
                         // Open the css file
                         if (cssInfo.getMainUrl() != null) {
-                        	System.out.println("REACTIVATE ME");
-                        	//TODO reactivate the code below when editors are spring components
-//                            try {
-//                                EditorPlatform.open(cssInfo.getMainUrl().toString());
-//                            } catch (IOException ex) {
-//                                System.out.println(ex.getMessage() + ex);
-//                            }
+                        	try {
+                        	    getApi().getFileSystem().open(cssInfo.getMainUrl().toString());
+                            } catch (IOException ex) {
+                                System.out.println(ex.getMessage() + ex);
+                            }
                         }
                     }
                 });

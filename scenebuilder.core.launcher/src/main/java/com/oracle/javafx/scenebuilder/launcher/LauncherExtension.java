@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.fs.action.QuitScenebuilderAction;
 import com.oracle.javafx.scenebuilder.launcher.actions.OpenScenebuilderAction;
-import com.oracle.javafx.scenebuilder.launcher.actions.QuitScenebuilderAction;
 import com.oracle.javafx.scenebuilder.launcher.app.LaunchController;
 import com.oracle.javafx.scenebuilder.launcher.i18n.I18NLauncher;
 

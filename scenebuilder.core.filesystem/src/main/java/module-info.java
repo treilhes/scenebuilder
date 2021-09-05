@@ -23,6 +23,7 @@ open module scenebuilder.core.filesystem {
     requires scenebuilder.core.extension.api;
     requires spring.beans;
     requires spring.context;
+    requires scenebuilder.core.jobs;
     
     provides Extension with FileSystemExtension;
 }

@@ -19,7 +19,10 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread][%X{scope}] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="INFO">
+    
+    <logger name="com.oracle.javafx.scenebuilder.api.action" level="DEBUG"/>
+    
+    <root level="ERROR">
         <appender-ref ref="TIME_BASED_FILE" />
         <appender-ref ref="STDOUT" />
     </root>

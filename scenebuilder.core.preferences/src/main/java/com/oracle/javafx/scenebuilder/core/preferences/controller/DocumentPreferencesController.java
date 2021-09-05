@@ -30,13 +30,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.preferences;
+package com.oracle.javafx.scenebuilder.core.preferences.controller;
 
-public interface DocumentPreferencesNode extends PreferencesNode {
-    
-    public static final String PATH_PREFERENCE_KEY = "path"; //NOCHECK
-    
-	void cleanupCorruptedNodes();
+import java.util.List;
 
-	void clearAllDocumentNodes();
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
+import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+
+/**
+ * Defines preferences for Scene Builder App.
+ */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+public class DocumentPreferencesController implements Preferences {
+
+    private final List<ManagedDocumentPreference> preferences;
+
+	/***************************************************************************
+     *                                                                         *
+     * Constructors                                                            *
+     *                                                                         *
+     **************************************************************************/
+
+    public DocumentPreferencesController(
+    		@Autowired List<ManagedDocumentPreference> preferences
+    	) {
+    	this.preferences = preferences;
+    }
+    
+    @Override
+    public void readFromJavaPreferences() {
+    	preferences.forEach((p) -> p.readFromJavaPreferences()); 
+    }
+    
+    @Override
+    public void writeToJavaPreferences() {
+    	preferences.forEach((p) -> p.writeToJavaPreferences());
+    }
+
 }

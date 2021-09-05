@@ -142,14 +142,14 @@ public class SplitPositionController {
                 
                 ChangeListener<? super Number> dividerListener = (ob, o, n) -> {
                     if (logger.isDebugEnabled()) {
-                        logger.debug("SET this: " + this + " ob: " + ob + " c: " + preference.getClass().getSimpleName() + " o:" + o + " n:" + n);
+                        logger.debug("SET this: {} ob: {} c: {} o:{} n:{}", this, ob, preference.getClass().getSimpleName(), o, n);
                     }
                     preference.setValue(n.doubleValue());
                 };
                 
                 ChangeListener<? super Double> preferenceListener = (ob, o, n) -> {
                     if (logger.isDebugEnabled()) {
-                        System.out.println("SET this: " + this + " ob: " + ob + " c: " + preference.getClass().getSimpleName() + " o:" + o + " n:" + n);
+                        logger.debug("SET this: {} ob: {} c: {} o:{} n:{}", this, ob, preference.getClass().getSimpleName(), o, n);
                     }
                     divider.setPosition(n);
                 };

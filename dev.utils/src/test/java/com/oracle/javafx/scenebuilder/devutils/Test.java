@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.devutils;
 
-import com.oracle.javafx.scenebuilder.devutils.tbview.TestContent3;
+import com.oracle.javafx.scenebuilder.devutils.tbview.TestExternalFile;
 import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
 
 import javafx.beans.property.DoubleProperty;
@@ -47,10 +47,11 @@ public class Test extends AppTester {
     public void start(Stage stage) {
         //new TestContent().start(primaryStage);
         //new TestContent2().start(primaryStage);
-        new TestContent3().start(stage);
+        //new TestContent3().start(stage);
         //new TitlePaneBinding().start(stage);
         //new TableViewBinding().start(stage);
         //new TestContent4().start(stage);
+        new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\panInc.fxml");
     }
 
     public static void main(String args[]) {

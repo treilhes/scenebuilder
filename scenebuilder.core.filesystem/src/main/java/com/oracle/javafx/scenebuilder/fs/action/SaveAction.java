@@ -70,7 +70,9 @@ public class SaveAction extends AbstractAction {
 
     @Override
     public boolean canPerform() {
-        return true;
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        boolean locationSet = fxomDocument != null && fxomDocument.getLocation() != null;
+        return locationSet;
     }
 
     @Override
@@ -122,7 +124,7 @@ public class SaveAction extends AbstractAction {
                         // EditorController or in filesystem
                         // watchingController.update();
 
-                        messageLogger.logInfoMessage("log.info.save.confirmation", I18N.getBundle(), fileName);
+                        messageLogger.logInfoMessage("log.info.save.confirmation", fileName);
                         result = ActionStatus.DONE;
                     } catch (UnsupportedEncodingException x) {
                         // Should not happen

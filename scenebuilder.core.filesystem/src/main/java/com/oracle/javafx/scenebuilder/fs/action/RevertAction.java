@@ -72,7 +72,10 @@ public class RevertAction extends AbstractAction {
 
     @Override
     public boolean canPerform() {
-        return true;
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        boolean locationSet = fxomDocument != null && fxomDocument.getLocation() != null;
+        boolean dirty = documentManager.dirty().get();
+        return locationSet && dirty;
     }
 
     @Override

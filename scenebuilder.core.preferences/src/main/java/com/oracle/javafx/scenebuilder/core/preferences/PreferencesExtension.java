@@ -36,8 +36,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.core.preferences.controller.DocumentPreferencesController;
+import com.oracle.javafx.scenebuilder.core.preferences.controller.DocumentPreferencesNodeImpl;
+import com.oracle.javafx.scenebuilder.core.preferences.controller.PreferencesController;
+import com.oracle.javafx.scenebuilder.core.preferences.controller.RootPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.core.preferences.i18n.I18NPreferences;
+import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class PreferencesExtension extends AbstractExtension {
     @Override
@@ -49,7 +53,11 @@ public class PreferencesExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                I18NPreferences.class
+                I18NPreferences.class,
+                DocumentPreferencesController.class,
+                DocumentPreferencesNodeImpl.class,
+                PreferencesController.class,
+                RootPreferencesNodeImpl.class
             );
      // @formatter:on
     }

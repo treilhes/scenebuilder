@@ -44,8 +44,7 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
     }
 
     
-    protected void performOpenFiles(List<File> fxmlFiles,
-                                  Document fromWindow) {
+    protected void performOpenFiles(List<File> fxmlFiles) {
         assert fxmlFiles != null;
         assert fxmlFiles.isEmpty() == false;
 

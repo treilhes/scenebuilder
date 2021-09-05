@@ -86,8 +86,14 @@ public interface MenuItemFactory {
             menuItem.setAccelerator(accelerator);
         }
         
-        return bindSingle(menuItem, titleKey, menuId, (e) -> actionFactory.create(actionClass).perform(),
-                () -> actionFactory.create(actionClass).canPerform());
+        return bindSingle(menuItem, titleKey, menuId, 
+                (e) -> {
+                    System.out.println(menuItem.isDisable() +"");
+                    actionFactory.create(actionClass).perform();
+                },
+                () -> {
+                    return actionFactory.create(actionClass).canPerform();
+                });
     }
 
     static MenuItem bindSingle(MenuItem menuItem, String titleKey, String menuId, EventHandler<ActionEvent> menuAction,
@@ -99,7 +105,9 @@ public interface MenuItemFactory {
 
         if (enableStateSupplier != null) {
             newMenu.setDisable(!enableStateSupplier.getAsBoolean());
-            newMenu.setOnMenuValidation((e) -> newMenu.setDisable(!enableStateSupplier.getAsBoolean()));
+            newMenu.setOnMenuValidation((e) -> {
+                newMenu.setDisable(!enableStateSupplier.getAsBoolean());
+            });
         }
 
         return newMenu;
@@ -158,6 +166,13 @@ public interface MenuItemFactory {
 
     }
 
+    /**
+     * Resolve the provided i18n keys and return the localized String according to the onOffStateSupplier result
+     * @param titleOnKey i18n key used when onOffStateSupplier return true
+     * @param titleOffKey i18n key used when onOffStateSupplier is null or onOffStateSupplier return false 
+     * @param onOffStateSupplier boolean supplier switch
+     * @return a localized string
+     */
     private static String getTitle(String titleOnKey, String titleOffKey, BooleanSupplier onOffStateSupplier) {
         if (onOffStateSupplier == null) {
             return I18N.getString(titleOffKey);

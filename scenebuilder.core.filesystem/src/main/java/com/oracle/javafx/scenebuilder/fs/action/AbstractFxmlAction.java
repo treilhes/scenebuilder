@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.contenteditor.actions;
+package com.oracle.javafx.scenebuilder.fs.action;
 
 import java.io.File;
 import java.util.Optional;

@@ -38,6 +38,9 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fs.action.CloseFileAction;
+import com.oracle.javafx.scenebuilder.fs.action.ImportFxmlAction;
+import com.oracle.javafx.scenebuilder.fs.action.ImportMediaAction;
+import com.oracle.javafx.scenebuilder.fs.action.IncludeFxmlAction;
 import com.oracle.javafx.scenebuilder.fs.action.LoadBlankAction;
 import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
 import com.oracle.javafx.scenebuilder.fs.action.LoadFileAction;
@@ -91,7 +94,11 @@ public class FileSystemExtension extends AbstractExtension {
                 SaveOrSaveAsAction.class,
                 SelectAndOpenFilesAction.class,
                 OpenFilesAction.class,
-                WildcardImportsPreference.class
+                WildcardImportsPreference.class,
+                
+                ImportFxmlAction.class,
+                ImportMediaAction.class,
+                IncludeFxmlAction.class
             );
      // @formatter:on
     }

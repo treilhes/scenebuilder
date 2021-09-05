@@ -196,11 +196,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         leftRightController = SplitPositionController.of(leftRightSplitPane, 3).withContent(leftHost, false)
                 .withDivider(leftDividerHPos).withContent(centerHost, true).withDivider(rightDividerHPos)
                 .withContent(rightHost, false).build(SplitPositionController.MAIN_LEFT_RIGHT);
-        
-        
-        System.out.println("INITIALIZE");
-        
-        
     }
 
     /*
@@ -228,11 +223,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             getRoot().getStyleClass().add("windows-document-decoration");// NOI18N
         }
 
-        System.out.println("REMOVE START");
         setupDockContainer(leftDockController, leftRightSplitPane, leftHost, InsertPosition.First);
         setupDockContainer(rightDockController, leftRightSplitPane, rightHost, InsertPosition.Last);
         setupDockContainer(bottomDockController, mainSplitPane, bottomHost, InsertPosition.Last);
-        System.out.println("REMOVE END");
 
         messageBarHost.heightProperty().addListener((InvalidationListener) o -> {
             final double h = messageBarHost.getHeight();
@@ -459,13 +452,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             }
         };
         private ChangeListener<? super Boolean> maximizedPreferenceListener = (ob, o, n) -> {
-            System.out.println("MAXIMIZING " + n);
+            //System.out.println("MAXIMIZING " + n);
             getStage().setMaximized(n);
         };
 
         public void apply() {
-            getStage().maximizedProperty().addListener((ob, o, n) -> System.out.println("MAX" + n));
-            getStage().maximizedProperty().addListener((n) -> System.out.println("MAXINV" + n));
+//            getStage().maximizedProperty().addListener((ob, o, n) -> System.out.println("MAX" + n));
+//            getStage().maximizedProperty().addListener((n) -> System.out.println("MAXINV" + n));
 
             if (stageHeightPreference.isValid() && !maximizedWindowPreference.getValue()) {
                 getStage().setHeight(stageHeightPreference.getValue());

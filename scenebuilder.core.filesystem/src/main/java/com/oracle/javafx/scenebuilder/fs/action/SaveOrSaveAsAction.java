@@ -25,7 +25,7 @@ import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
+@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save", accelerator = "CTRL+S")
 public class SaveOrSaveAsAction extends AbstractAction {
 
     private final Document document;
@@ -69,7 +69,10 @@ public class SaveOrSaveAsAction extends AbstractAction {
 
     @Override
     public boolean canPerform() {
-        return true;
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        boolean locationSet = fxomDocument != null && fxomDocument.getLocation() != null;
+        boolean dirty = documentManager.dirty().get();
+        return !locationSet || dirty;
     }
 
     @Override

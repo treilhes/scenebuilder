@@ -150,6 +150,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.preferences</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.certificate.manager</artifactId>
                 <version>${project.version}</version>
             </dependency>

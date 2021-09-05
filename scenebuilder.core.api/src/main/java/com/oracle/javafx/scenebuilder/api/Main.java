@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +56,7 @@ public interface Main {
     Document lookupUnusedDocumentWindowController();
     Document lookupUnusedDocumentWindowController(Collection<Document> ignored);
 
-    void performOpenRecent(Document documentWindowController, File file);
+//    void performOpenRecent(Document documentWindowController, File file);
 
     //void performNewFromTemplate();
 
@@ -73,7 +72,7 @@ public interface Main {
 
     Document makeNewWindow();
 
-    void performOpenFile(Document document);
+//    void performOpenFile(Document document);
 
     boolean canPerformControlAction(ApplicationControlAction controlAction, Document document);
 

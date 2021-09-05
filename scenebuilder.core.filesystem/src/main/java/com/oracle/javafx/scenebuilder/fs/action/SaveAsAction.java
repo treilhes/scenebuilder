@@ -35,7 +35,8 @@ import javafx.stage.FileChooser;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
+@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save"
+        ,accelerator = "CTRL+SHIFT+S")
 public class SaveAsAction extends AbstractAction {
 
     private final Document document;

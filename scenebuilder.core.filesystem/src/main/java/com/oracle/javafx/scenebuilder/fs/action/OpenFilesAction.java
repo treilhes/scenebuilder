@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
@@ -26,7 +25,6 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
     
     //private static final Logger logger = LoggerFactory.getLogger(OpenFilesAction.class);
 
-    private final Document document;
     private final FileSystem fileSystem;
 
     private List<File> fxmlFiles;
@@ -34,14 +32,12 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
     // @formatter:off
     public OpenFilesAction(
             @Autowired Api api, 
-            @Autowired Document document, 
             @Autowired Dialog dialog, 
             @Autowired FileSystem fileSystem, 
             @Autowired Main main, 
             @Autowired RecentItemsPreference recentItemsPreference) {
      // @formatter:on
         super(api, dialog, main, recentItemsPreference);
-        this.document = document;
         this.fileSystem = fileSystem;
     }
 
@@ -61,7 +57,7 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
     @Override
     public ActionStatus perform() {
         fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
-        performOpenFiles(fxmlFiles, document);
+        performOpenFiles(fxmlFiles);
         return ActionStatus.DONE;
     }
 }

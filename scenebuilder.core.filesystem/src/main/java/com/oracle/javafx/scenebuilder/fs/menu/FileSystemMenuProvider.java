@@ -55,9 +55,15 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
+import com.oracle.javafx.scenebuilder.fs.action.ImportFxmlAction;
+import com.oracle.javafx.scenebuilder.fs.action.ImportMediaAction;
+import com.oracle.javafx.scenebuilder.fs.action.IncludeFxmlAction;
 import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
+import com.oracle.javafx.scenebuilder.fs.action.RevealFxmlFileAction;
+import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;
+import com.oracle.javafx.scenebuilder.fs.action.SaveOrSaveAsAction;
 import com.oracle.javafx.scenebuilder.fs.action.SelectAndOpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -66,8 +72,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 @Component
@@ -162,22 +166,29 @@ public class FileSystemMenuProvider implements MenuProvider {
             
             openRecentMenu.setOnShowing(t -> updateOpenRecentMenuItems());
             
-            saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, modifier));
-            saveMenuItem.setOnAction(e -> fileSystemMenuController.performSave());
+            //saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, modifier));
+            //saveMenuItem.setOnAction(e -> fileSystemMenuController.performSave());
+            MenuItemFactory.bindSingle(saveMenuItem, actionFactory, SaveOrSaveAsAction.class);
             
-            saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, modifier));
-            saveAsMenuItem.setOnAction(e -> fileSystemMenuController.performSaveAs());
+            //saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, modifier));
+            //saveAsMenuItem.setOnAction(e -> fileSystemMenuController.performSaveAs());
             
-            revertMenuItem.setOnAction(e -> fileSystemMenuController.performRevert());
+            MenuItemFactory.bindSingle(saveAsMenuItem, actionFactory, SaveAsAction.class);
             
+            MenuItemFactory.bindSingle(revertMenuItem, actionFactory, RevertAction.class);
             
+            MenuItemFactory.bindSingle(revealMenuItem, actionFactory, RevealFxmlFileAction.class);
             revealMenuItem.setText(getRevealMenuItemText());
-            revealMenuItem.setOnAction(e -> fileSystemMenuController.performReveal());
+            //revealMenuItem.setOnAction(e -> fileSystemMenuController.performReveal());
             
-            importFxmlMenuItem.setOnAction(e -> fileSystemMenuController.performImportFxml());
-            importMediaMenuItem.setOnAction(e -> fileSystemMenuController.performImportMedia());
+            MenuItemFactory.bindSingle(importFxmlMenuItem, actionFactory, ImportFxmlAction.class);
+            //importFxmlMenuItem.setOnAction(e -> fileSystemMenuController.performImportFxml());
+            
+            MenuItemFactory.bindSingle(importMediaMenuItem, actionFactory, ImportMediaAction.class);
+            //importMediaMenuItem.setOnAction(e -> fileSystemMenuController.performImportMedia());
 
-            includeFileMenuItem.setOnAction(e -> fileSystemMenuController.performIncludeFxml());
+            MenuItemFactory.bindSingle(includeFileMenuItem, actionFactory, IncludeFxmlAction.class);
+            //includeFileMenuItem.setOnAction(e -> fileSystemMenuController.performIncludeFxml());
             
             editIncludedFileMenuItem.setOnAction(e -> fileSystemMenuController.performEditIncludedFxml());
             editIncludedFileMenuItem.setOnMenuValidation(e -> {
@@ -205,16 +216,19 @@ public class FileSystemMenuProvider implements MenuProvider {
                 revealIncludedFileMenuItem.setDisable(file == null);
             });
             
-            documentManager.dirty().subscribe(dirty -> {
-                FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-                
-                saveMenuItem.setDisable(!dirty);
-                revertMenuItem.setDisable(!dirty || fxomDocument == null || fxomDocument.getLocation() == null);
-                revealMenuItem.setDisable(fxomDocument != null && fxomDocument.getLocation() != null);
-                importFxmlMenuItem.setDisable(fxomDocument != null && fxomDocument.getFxomRoot() != null &&  fxomDocument.getLocation() != null);
-            });
+            documentManager.dirty().subscribe(dirty -> updateStates());
+            documentManager.fxomDocument().subscribe(fxomDocument -> updateStates());
             
             return fileMenu;
+        }
+        
+        private void updateStates() {
+            saveMenuItem.setDisable(!actionFactory.create(SaveOrSaveAsAction.class).canPerform());
+            revertMenuItem.setDisable(!actionFactory.create(RevertAction.class).canPerform());
+            revealMenuItem.setDisable(!actionFactory.create(RevealFxmlFileAction.class).canPerform());
+            importFxmlMenuItem.setDisable(!actionFactory.create(ImportFxmlAction.class).canPerform());
+            importMediaMenuItem.setDisable(!actionFactory.create(ImportMediaAction.class).canPerform());
+            includeFileMenuItem.setDisable(!actionFactory.create(IncludeFxmlAction.class).canPerform());
         }
 
         private String getRevealMenuItemText() {

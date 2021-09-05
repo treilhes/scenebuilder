@@ -550,7 +550,10 @@ public class WorkspaceController implements Workspace{
     }
 
     private void contentGroupApplyCss() {
-        contentGroup.getStylesheets().setAll(stylesheetConfig.getStylesheets());
+        if (stylesheetConfig != null) {
+            contentGroup.getStylesheets().setAll(stylesheetConfig.getStylesheets());
+        }
+        
         if (fxomDocument != null) {
             contentGroup.getStylesheets().addAll(fxomDocument.getDisplayStylesheets());
         }

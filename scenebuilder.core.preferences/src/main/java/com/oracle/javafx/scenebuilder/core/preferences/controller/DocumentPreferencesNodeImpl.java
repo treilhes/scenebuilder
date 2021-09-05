@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.preferences;
+package com.oracle.javafx.scenebuilder.core.preferences.controller;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +40,6 @@ import java.util.prefs.Preferences;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
-import com.oracle.javafx.scenebuilder.ui.preferences.document.PathPreference;
 
 @Component
 public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {
@@ -64,7 +63,7 @@ public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {
             // which path matches the specified one
             for (String child : childrenNames) {
                 final Preferences documentPreferences = getNode().node(child);
-                final String nodePath = documentPreferences.get(PathPreference.PREFERENCE_KEY, null);
+                final String nodePath = documentPreferences.get(DocumentPreferencesNode.PATH_PREFERENCE_KEY, null);
                 // Each document node defines a path
                 // If path is null or empty, this means preferences DB has been corrupted
                 if (nodePath == null || nodePath.isEmpty()) {

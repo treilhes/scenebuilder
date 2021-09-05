@@ -1,5 +1,7 @@
 package com.oracle.javafx.scenebuilder.core.di;
 
+import java.util.function.Supplier;
+
 import com.oracle.javafx.scenebuilder.api.Document;
 
 import javafx.application.Platform;
@@ -40,6 +42,10 @@ public final class SbPlatform {
      */
     public static void runForDocument(Document scope, Runnable runnable) {
         DocumentScope.executeWithScope(scope, runnable);
+    }
+    
+    public static <T> T runForDocument(Document scope, Supplier<T> runnable) {
+        return DocumentScope.executeWithScope(scope, runnable);
     }
     
     /**

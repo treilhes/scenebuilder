@@ -107,12 +107,6 @@ public class FakeDocument implements Document {
     }
 
     @Override
-    public void performRevealAction() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void performImportMedia() {
         // TODO Auto-generated method stub
 

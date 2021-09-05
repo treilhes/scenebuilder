@@ -33,6 +33,7 @@
 package com.oracle.javafx.scenebuilder.fs.controller;
 
 import java.io.File;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,9 +45,12 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
+import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveAction;
 import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;
+import com.oracle.javafx.scenebuilder.fs.action.SelectAndOpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
 /**
@@ -90,19 +94,12 @@ public class FileSystemMenuController {
 
 
     public void performNew() {
-        final Document newWindow = main.makeNewWindow();
-        newWindow.updateWithDefaultContent();
-        newWindow.openWindow();
+        actionFactory.create(LoadBlankInNewWindowAction.class).checkAndPerform();
     }
 
 
     public void performOpen() {
-        main.performOpenFile(document);
-    }
-
-
-    public void performReveal() {
-        document.performRevealAction();
+        actionFactory.create(SelectAndOpenFilesAction.class).checkAndPerform();
     }
 
 
@@ -126,7 +123,8 @@ public class FileSystemMenuController {
 
 
     public void performOpenRecent(File file) {
-        main.performOpenRecent(document, file);
+        //main.performOpenRecent(document, file);
+        actionFactory.create(OpenFilesAction.class, a -> a.setFxmlFile(Arrays.asList(file))).checkAndPerform();
     }
 
     public void performImportMedia() {

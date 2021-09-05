@@ -32,8 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.ui.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,10 +39,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -66,7 +61,6 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.core.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
@@ -78,12 +72,10 @@ import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-//import javafx.scene.control.Alert;
-import javafx.stage.FileChooser;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-@DependsOn("i18n") //NOCHECK
+@DependsOn("i18n") // NOCHECK
 public class MainController implements UILogger, Main {
 
     private static MainController singleton;
@@ -111,42 +103,33 @@ public class MainController implements UILogger, Main {
 
     private final ObservableList<Document> windowList = FXCollections.observableArrayList();
 
-    //private UserLibrary userLibrary;
+    // private UserLibrary userLibrary;
 
 //    private ToolTheme toolTheme = ToolTheme.DEFAULT;
 //
 //	private final ToolThemePreference toolThemePreference;
 
-
-	private final FileSystem fileSystem;
+    private final FileSystem fileSystem;
 
     private final Dialog dialog;
     private final List<InitWithSceneBuilder> initializations;
     private final List<DisposeWithSceneBuilder> finalizations;
-    /*
-     * Public
-     * //TODO delete in favor of injection
-     */
-    public static MainController getSingleton() {
-        return singleton;
-    }
 
     public MainController(
-    		@Autowired FileSystem fileSystem,
-    		@Autowired @Lazy Dialog dialog,
-    		@Lazy @Autowired(required = false) List<InitWithSceneBuilder> initializations,
-            @Lazy @Autowired(required = false) List<DisposeWithSceneBuilder> finalizations
-    		) {
+            @Autowired FileSystem fileSystem, 
+            @Autowired @Lazy Dialog dialog,
+            @Lazy @Autowired(required = false) List<InitWithSceneBuilder> initializations,
+            @Lazy @Autowired(required = false) List<DisposeWithSceneBuilder> finalizations) {
 
-    	this.fileSystem = fileSystem;
-    	this.dialog = dialog;
-    	this.initializations = initializations;
-    	this.finalizations = finalizations;
+        this.fileSystem = fileSystem;
+        this.dialog = dialog;
+        this.initializations = initializations;
+        this.finalizations = finalizations;
 
-    	fileSystem.startWatcher();
+        fileSystem.startWatcher();
 
         if (singleton != null) {
-        	return;
+            return;
         }
         singleton = this;
 
@@ -193,9 +176,9 @@ public class MainController implements UILogger, Main {
 //                performNewFromTemplate();
 //                break;
 
-            case OPEN_FILE:
-                performOpenFile(source);
-                break;
+        case OPEN_FILE:
+            //performOpenFile(source);
+            break;
 
 //            case CLOSE_FRONT_WINDOW:
 //                performCloseFrontWindow();
@@ -215,9 +198,9 @@ public class MainController implements UILogger, Main {
 //                preferencesWindowController.openWindow();
 //                break;
 
-            case EXIT:
-                performExit();
-                break;
+        case EXIT:
+            performExit();
+            break;
         }
     }
 
@@ -228,21 +211,20 @@ public class MainController implements UILogger, Main {
 //        templatesWindowController.openWindow();
 //    }
 
-
     @Override
     public boolean canPerformControlAction(ApplicationControlAction a, Document source) {
         final boolean result;
         switch (a) {
-            //case ABOUT:
-            case REGISTER:
-            case CHECK_UPDATES:
-            //case NEW_FILE:
-            //case NEW_TEMPLATE:
-            case OPEN_FILE:
-            //case SHOW_PREFERENCES:
-            case EXIT:
-                result = true;
-                break;
+        // case ABOUT:
+        case REGISTER:
+        case CHECK_UPDATES:
+            // case NEW_FILE:
+            // case NEW_TEMPLATE:
+        case OPEN_FILE:
+            // case SHOW_PREFERENCES:
+        case EXIT:
+            result = true;
+            break;
 
 //            case CLOSE_FRONT_WINDOW:
 //                result = windowList.isEmpty() == false;
@@ -256,29 +238,29 @@ public class MainController implements UILogger, Main {
 //                result = toolTheme != ToolTheme.DARK;
 //                break;
 
-            default:
-                result = false;
-                assert false;
-                break;
+        default:
+            result = false;
+            assert false;
+            break;
         }
         return result;
     }
 
-    @Override
-    public void performOpenRecent(Document source, final File fxmlFile) {
-        assert fxmlFile != null && fxmlFile.exists();
-
-        final List<File> fxmlFiles = new ArrayList<>();
-        fxmlFiles.add(fxmlFile);
-        performOpenFiles(fxmlFiles, source);
-    }
+//    @Override
+//    public void performOpenRecent(Document source, final File fxmlFile) {
+//        assert fxmlFile != null && fxmlFile.exists();
+//
+//        final List<File> fxmlFiles = new ArrayList<>();
+//        fxmlFiles.add(fxmlFile);
+//        performOpenFiles(fxmlFiles, source);
+//    }
 
     @Override
     public void documentWindowRequestClose(Document fromWindow) {
         closeWindow(fromWindow);
     }
 
-    //TODO comment this
+    // TODO comment this
 //    public Library getUserLibrary() {
 //        return userLibrary;
 //    }
@@ -292,7 +274,7 @@ public class MainController implements UILogger, Main {
     public int getOpenDocuments() {
         return windowList.size();
     }
-    
+
     @Override
     public Document lookupDocumentWindowControllers(URL fxmlLocation) {
         assert fxmlLocation != null;
@@ -309,7 +291,7 @@ public class MainController implements UILogger, Main {
             }
         } catch (URISyntaxException x) {
             // Should not happen
-            throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); //NOCHECK
+            throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); // NOCHECK
         }
 
         return result;
@@ -319,7 +301,7 @@ public class MainController implements UILogger, Main {
     public Document lookupUnusedDocumentWindowController() {
         return lookupUnusedDocumentWindowController(Collections.emptyList());
     }
-    
+
     @Override
     public Document lookupUnusedDocumentWindowController(Collection<Document> ignored) {
         Document result = null;
@@ -499,14 +481,13 @@ public class MainController implements UILogger, Main {
      */
     @Override
     public Document makeNewWindow() {
-    	DocumentScope.setCurrentScope(null);
+        DocumentScope.setCurrentScope(null);
 
         final Document result = sceneBuilderFactory.get(Document.class);
 
         sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
-        
+
         SbPlatform.runForDocumentLater(() -> windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
-        
 
         windowList.add(result);
         return result;
@@ -516,7 +497,7 @@ public class MainController implements UILogger, Main {
         assert windowList.contains(w);
         windowList.remove(w);
         w.closeWindow();
-        
+
         if (windowList.size() == 0) {
             performExit();
         }
@@ -568,118 +549,109 @@ public class MainController implements UILogger, Main {
         } catch (Exception e) {
             return null;
         }
-        
+
     }
 
-    /*
-     * Private (control actions)
-     */
-    @Override
-    public void performOpenFile(Document fromWindow) {
-        final FileChooser fileChooser = new FileChooser();
+//    /*
+//     * Private (control actions)
+//     */
+//    @Override
+//    public void performOpenFile(Document fromWindow) {
+//        final FileChooser fileChooser = new FileChooser();
+//
+//        fileChooser.getExtensionFilters()
+//                .add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"), "*.fxml")); // NOCHECK
+//        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
+//        final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
+//        if (fxmlFiles != null) {
+//            assert fxmlFiles.isEmpty() == false;
+//            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
+//            performOpenFiles(fxmlFiles, fromWindow);
+//        }
+//    }
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("file.filter.label.fxml"),
-                "*.fxml")); //NOCHECK
-        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
-        final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
-        if (fxmlFiles != null) {
-            assert fxmlFiles.isEmpty() == false;
-            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
-            performOpenFiles(fxmlFiles, fromWindow);
-        }
-    }
-    
-    private void performOpenFiles(List<File> fxmlFiles,
-                                  Document fromWindow) {
-        assert fxmlFiles != null;
-        assert fxmlFiles.isEmpty() == false;
+//    private void performOpenFiles(List<File> fxmlFiles, Document fromWindow) {
+//        assert fxmlFiles != null;
+//        assert fxmlFiles.isEmpty() == false;
+//
+//        final Map<File, Document> documents = new HashMap<>();
+//
+//        final Map<File, IOException> exceptions = new HashMap<>();
+//
+//        // build dependency injections first
+//        for (File fxmlFile : fxmlFiles) {
+//            try {
+//                final Document dwc = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
+//                if (dwc != null) {
+//                    // fxmlFile is already opened
+//                    dwc.getDocumentWindow().getStage().toFront();
+//                } else {
+//                    // Open fxmlFile
+//                    final Document hostWindow;
+//                    final Document unusedWindow = lookupUnusedDocumentWindowController();
+//                    if (unusedWindow != null) {
+//                        hostWindow = unusedWindow;
+//                    } else {
+//                        hostWindow = makeNewWindow();
+//                    }
+//                    documents.put(fxmlFile, hostWindow);
+//                }
+//            } catch (IOException e) {
+//                exceptions.put(fxmlFile, e);
+//            }
+//        }
+//
+//        SceneBuilderLoadingProgress.get().end();
+//
+//        // execute ui related loading now
+//        SbPlatform.runLater(() -> {
+//
+//            for (Entry<File, Document> entry : documents.entrySet()) {
+//                File file = entry.getKey();
+//                Document hostWindow = entry.getValue();
+//
+//                try {
+//                    hostWindow.loadFromFile(file);
+//                    hostWindow.openWindow();
+//                } catch (IOException xx) {
+//                    hostWindow.closeWindow();
+//                    exceptions.put(file, xx);
+//                }
+//
+//                switch (exceptions.size()) {
+//                case 0: { // Good
+//                    // Update recent items with opened files
+//                    recentItemsPreference.addRecentItems(fxmlFiles);
+//                    break;
+//                }
+//                case 1: {
+//                    final File fxmlFile = exceptions.keySet().iterator().next();
+//                    final Exception x = exceptions.get(fxmlFile);
+//                    dialog.showErrorAndWait(I18N.getString("alert.title.open"),
+//                            I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
+//                            I18N.getString("alert.open.failure1.details"), x);
+//                    break;
+//                }
+//                default: {
+//                    if (exceptions.size() == fxmlFiles.size()) {
+//                        // Open operation has failed for all the files
+//                        dialog.showErrorAndWait(I18N.getString("alert.title.open"),
+//                                I18N.getString("alert.open.failureN.message"),
+//                                I18N.getString("alert.open.failureN.details"));
+//                    } else {
+//                        // Open operation has failed for some files
+//                        dialog.showErrorAndWait(I18N.getString("alert.title.open"),
+//                                I18N.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()),
+//                                I18N.getString("alert.open.failureMofN.details"));
+//                    }
+//                    break;
+//                }
+//                }
+//            }
+//        });
+//    }
 
-        final Map<File, Document> documents = new HashMap<>();
-        
-        final Map<File, IOException> exceptions = new HashMap<>();
-        
-        //build dependency injections first
-        for (File fxmlFile : fxmlFiles) {
-                try {
-                    final Document dwc = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
-                    if (dwc != null) {
-                        // fxmlFile is already opened
-                        dwc.getDocumentWindow().getStage().toFront();
-                    } else {
-                        // Open fxmlFile
-                        final Document hostWindow;
-                        final Document unusedWindow = lookupUnusedDocumentWindowController();
-                        if (unusedWindow != null) {
-                            hostWindow = unusedWindow;
-                        } else {
-                            hostWindow = makeNewWindow();
-                        }
-                        documents.put(fxmlFile, hostWindow);
-                    }
-                } catch (IOException e) {
-                    exceptions.put(fxmlFile, e);
-                }
-        }
-
-        SceneBuilderLoadingProgress.get().end();
-        
-        // execute ui related loading now
-        SbPlatform.runLater(() -> {
-            
-            
-            for (Entry<File, Document> entry:documents.entrySet()) {
-                File file = entry.getKey();
-                Document hostWindow = entry.getValue();
-                
-                try {
-                    hostWindow.loadFromFile(file);
-                    hostWindow.openWindow();
-                } catch (IOException xx) {
-                    hostWindow.closeWindow();
-                    exceptions.put(file, xx);
-                }
-                
-                switch (exceptions.size()) {
-                    case 0: { // Good
-                        // Update recent items with opened files
-                        recentItemsPreference.addRecentItems(fxmlFiles);
-                        break;
-                    }
-                    case 1: {
-                        final File fxmlFile = exceptions.keySet().iterator().next();
-                        final Exception x = exceptions.get(fxmlFile);
-                        dialog.showErrorAndWait(
-                                I18N.getString("alert.title.open"), 
-                                I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())), 
-                                I18N.getString("alert.open.failure1.details"), 
-                                x);
-                        break;
-                    }
-                    default: {
-                        if (exceptions.size() == fxmlFiles.size()) {
-                            // Open operation has failed for all the files
-                            dialog.showErrorAndWait(
-                                    I18N.getString("alert.title.open"), 
-                                    I18N.getString("alert.open.failureN.message"), 
-                                    I18N.getString("alert.open.failureN.details")
-                                    );
-                        } else {
-                            // Open operation has failed for some files
-                            dialog.showErrorAndWait(
-                                    I18N.getString("alert.title.open"), 
-                                    I18N.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()), 
-                                    I18N.getString("alert.open.failureMofN.details")
-                                    );
-                        }
-                        break;
-                    }
-                }
-            }
-        });
-    }
-    
-    
-   private void performExit() {
+    private void performExit() {
 
         // Check if an editing session is on going
         for (Document dwc : windowList) {
@@ -703,49 +675,49 @@ public class MainController implements UILogger, Main {
         // Notifies the user if some documents are dirty
         final boolean exitConfirmed;
         switch (pendingDocs.size()) {
-            case 0: {
+        case 0: {
+            exitConfirmed = true;
+            break;
+        }
+
+        case 1: {
+            final Document dwc0 = pendingDocs.get(0);
+            exitConfirmed = dwc0.performCloseAction() == ActionStatus.DONE;
+            break;
+        }
+
+        default: {
+            assert pendingDocs.size() >= 2;
+
+            final Alert d = dialog.customAlert();
+            d.setMessage(I18N.getString("alert.review.question.message", pendingDocs.size()));
+            d.setDetails(I18N.getString("alert.review.question.details"));
+            d.setOKButtonTitle(I18N.getString("label.review.changes"));
+            d.setActionButtonTitle(I18N.getString("label.discard.changes"));
+            d.setActionButtonVisible(true);
+
+            switch (d.showAndWait()) {
+            default:
+            case OK: { // Review
+                int i = 0;
+                ActionStatus status;
+                do {
+                    status = pendingDocs.get(i++).performCloseAction();
+                } while ((status == ActionStatus.DONE) && (i < pendingDocs.size()));
+                exitConfirmed = (status == ActionStatus.DONE);
+                break;
+            }
+            case CANCEL: {
+                exitConfirmed = false;
+                break;
+            }
+            case ACTION: { // Do not review
                 exitConfirmed = true;
                 break;
             }
-
-            case 1: {
-                final Document dwc0 = pendingDocs.get(0);
-                exitConfirmed = dwc0.performCloseAction() == ActionStatus.DONE;
-                break;
             }
-
-            default: {
-                assert pendingDocs.size() >= 2;
-
-                final Alert d = dialog.customAlert();
-                d.setMessage(I18N.getString("alert.review.question.message", pendingDocs.size()));
-                d.setDetails(I18N.getString("alert.review.question.details"));
-                d.setOKButtonTitle(I18N.getString("label.review.changes"));
-                d.setActionButtonTitle(I18N.getString("label.discard.changes"));
-                d.setActionButtonVisible(true);
-
-                switch (d.showAndWait()) {
-                    default:
-                    case OK: { // Review
-                        int i = 0;
-                        ActionStatus status;
-                        do {
-                            status = pendingDocs.get(i++).performCloseAction();
-                        } while ((status == ActionStatus.DONE) && (i < pendingDocs.size()));
-                        exitConfirmed = (status == ActionStatus.DONE);
-                        break;
-                    }
-                    case CANCEL: {
-                        exitConfirmed = false;
-                        break;
-                    }
-                    case ACTION: { // Do not review
-                        exitConfirmed = true;
-                        break;
-                    }
-                }
-                break;
-            }
+            break;
+        }
         }
 
         // Exit if confirmed
@@ -757,64 +729,54 @@ public class MainController implements UILogger, Main {
             }
             fileSystem.stopWatcher();
             logTimestamp(ACTION.STOP);
-            
+
             finalizations.forEach(a -> a.dispose());
             // TODO (elp): something else here ?
             Platform.exit();
         }
     }
 
-    private enum ACTION {START, STOP}
+    private enum ACTION {
+        START, STOP
+    }
 
     ;
 
     private void logTimestamp(ACTION type) {
         switch (type) {
-            case START:
-                Logger.getLogger(this.getClass().getName()).info(I18N.getString("log.start"));
-                break;
-            case STOP:
-                Logger.getLogger(this.getClass().getName()).info(I18N.getString("log.stop"));
-                break;
-            default:
-                assert false;
+        case START:
+            Logger.getLogger(this.getClass().getName()).info(I18N.getString("log.start"));
+            break;
+        case STOP:
+            Logger.getLogger(this.getClass().getName()).info(I18N.getString("log.stop"));
+            break;
+        default:
+            assert false;
         }
     }
 
-//    private String getToolStylesheet() {
-//        return toolThemePreference.getValue().getStylesheetURL();
-//    }
-
-
-
-
-
-
-    
-
     @Override
-	public void logInfoMessage(String key) {
+    public void logInfoMessage(String key) {
         for (Document dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle());
         }
     }
 
     @Override
-	public void logInfoMessage(String key, Object... args) {
+    public void logInfoMessage(String key, Object... args) {
         for (Document dwc : windowList) {
             dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
         }
     }
 
-    public static void applyToAllDocumentWindows(Consumer<Document> consumer) {
-    	//TODO check if this is realy working, cause i've some doubts
-        for (Document dwc : getSingleton().getDocumentWindowControllers()) {
+    public void applyToAllDocumentWindows(Consumer<Document> consumer) {
+        for (Document dwc : getDocumentWindowControllers()) {
             consumer.accept(dwc);
         }
     }
 
-	public HostServices getHostServices() {
-		return hostServices;
-	}
+    public HostServices getHostServices() {
+        return hostServices;
+    }
 
 }
