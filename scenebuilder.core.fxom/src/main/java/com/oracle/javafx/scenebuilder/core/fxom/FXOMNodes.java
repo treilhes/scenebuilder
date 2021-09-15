@@ -63,12 +63,14 @@ import javafx.scene.control.ToggleGroup;
  */
 public class FXOMNodes {
 
-    private static Set<WeakProperty> weakProperties;
-    private static Set<FileLoader> fileLoaders;
+    private static final Set<WeakProperty> weakProperties;
+    private static final Set<FileLoader> fileLoaders;
     
     static {
         ServiceLoader<WeakProperty> weakPropertyLoaders = ServiceLoader.load(WeakProperty.class);
         ServiceLoader<FileLoader> fileLoaderLoaders = ServiceLoader.load(FileLoader.class);
+        weakProperties = new HashSet<>();
+        fileLoaders = new HashSet<>();
         weakPropertyLoaders.forEach(wkp -> weakProperties.add(wkp));
         fileLoaderLoaders.forEach(fl -> fileLoaders.add(fl));
     }
@@ -78,15 +80,11 @@ public class FXOMNodes {
     //TODO the content is set in stone, how to expand it? Who may want to expand it?
     // anyway this is not the right place for this method
     // UPDATE: now it is extensible but legacy values still need to come from metadata
-    public static synchronized Set<WeakProperty> getWeakProperties() {
+    public static Set<WeakProperty> getWeakProperties() {
 
-        if (weakProperties == null) {
-            weakProperties = new HashSet<>();
 //            weakPropertyNames.add("labelFor");
 //            weakPropertyNames.add("expandedPane");
 //            weakPropertyNames.add("clip");
-        }
-
         return weakProperties;
     }
     /**

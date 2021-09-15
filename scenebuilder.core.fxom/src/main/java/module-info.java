@@ -1,5 +1,6 @@
 import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMNormalizer;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher;
+import com.oracle.javafx.scenebuilder.core.fxom.ext.FileLoader;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.TransientStateBackup;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.WeakProperty;
 
@@ -24,4 +25,5 @@ open module scenebuilder.core.fxom {
     uses FXOMRefresher;
     uses TransientStateBackup;
     uses WeakProperty;
+    uses FileLoader;
 }
