@@ -64,7 +64,7 @@ public class ClassMetadata<T> implements Comparable<ClassMetadata<T>> {
      * Comparable
      */
     @Override
-    public int compareTo(ClassMetadata o) {
+    public int compareTo(ClassMetadata<T> o) {
         return this.klass.getCanonicalName().compareTo(o.klass.getCanonicalName());
     }
 
@@ -86,7 +86,7 @@ public class ClassMetadata<T> implements Comparable<ClassMetadata<T>> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ClassMetadata other = (ClassMetadata) obj;
+        final ClassMetadata<?> other = (ClassMetadata<?>) obj;
         if (!Objects.equals(this.klass, other.klass)) {
             return false;
         }
