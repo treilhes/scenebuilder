@@ -16,6 +16,14 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.fxom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.metadata</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter</artifactId>
         </dependency>
         <dependency>
@@ -31,7 +39,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
-                    
+
                     <execution>
                         <id>test</id>
                         <phase>test-compile</phase>
@@ -47,17 +55,13 @@
                     </execution>
                 </executions>
                 <configuration>
-                            <compilerArgs>
-                                <arg>--add-exports</arg>
-                                <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.api</arg>
-                                <arg>--add-exports</arg>
-                                <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
-                                <arg>--add-exports</arg>
-                                <arg>javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.api</arg>
-                                <arg>--add-opens</arg>
-                                <arg>javafx.fxml/javafx.fxml=scenebuilder.core.api</arg>
-                            </compilerArgs>
-                        </configuration>
+                    <compilerArgs>
+                        <arg>--add-opens</arg>
+                        <arg>javafx.fxml/javafx.fxml=scenebuilder.core.api</arg>
+                        <arg>--add-exports</arg>
+                        <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

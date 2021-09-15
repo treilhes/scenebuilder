@@ -40,11 +40,10 @@ import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -288,8 +287,8 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
             // m.getFxomObject() is a skinned component : so its fxom children
             // are not the direct Node children.
             if (skinParent != null) {
-                final Point2D p0 = Deprecation.localToLocal(skinParent, crackX, crackY0, parent);
-                final Point2D p1 = Deprecation.localToLocal(skinParent, crackX, crackY1, parent);
+                final Point2D p0 = CoordinateHelper.localToLocal(skinParent, crackX, crackY0, parent);
+                final Point2D p1 = CoordinateHelper.localToLocal(skinParent, crackX, crackY1, parent);
                 assert MathUtils.equals(p0.getX(), p1.getX());
                 pCrackX = p0.getX();
                 pCrackY0 = p0.getY();

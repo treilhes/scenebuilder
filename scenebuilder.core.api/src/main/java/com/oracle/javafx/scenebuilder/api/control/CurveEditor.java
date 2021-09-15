@@ -38,7 +38,7 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.Node;
 

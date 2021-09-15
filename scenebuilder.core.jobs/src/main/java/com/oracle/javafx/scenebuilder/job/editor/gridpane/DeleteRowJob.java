@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGro
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 
 /**
  * Job invoked when removing rows.

@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -89,7 +89,7 @@ public class TreeTableViewDesignInfoX {
     public Bounds getColumnHeaderBounds(TreeTableColumn<?,?> treeTableColumn) {
         final TreeTableView<?> tv = treeTableColumn.getTreeTableView();
         final Node hn = getColumnNode(treeTableColumn);
-        return Deprecation.localToLocal(hn, hn.getLayoutBounds(), tv);
+        return CoordinateHelper.localToLocal(hn, hn.getLayoutBounds(), tv);
     }
     
     

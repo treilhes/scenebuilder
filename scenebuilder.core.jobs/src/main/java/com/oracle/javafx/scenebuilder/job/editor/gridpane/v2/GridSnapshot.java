@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.GridBounds;
+import com.oracle.javafx.scenebuilder.util.GridBounds;
 
 /**
  *

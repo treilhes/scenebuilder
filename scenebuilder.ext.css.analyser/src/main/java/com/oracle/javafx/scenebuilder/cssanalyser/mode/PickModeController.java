@@ -46,7 +46,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;

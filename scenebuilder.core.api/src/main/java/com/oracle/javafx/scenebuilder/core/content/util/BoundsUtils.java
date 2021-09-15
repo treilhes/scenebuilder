@@ -33,7 +33,7 @@
 
 package com.oracle.javafx.scenebuilder.core.content.util;
 
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
+import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.drivers.quadcurve.Quad;
 
 import javafx.geometry.BoundingBox;

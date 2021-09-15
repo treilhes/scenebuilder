@@ -24,6 +24,7 @@ open module scenebuilder.core.jobs {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    requires scenebuilder.core.utils;
     
     provides Extension with JobsExtension;
 }

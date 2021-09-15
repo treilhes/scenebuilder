@@ -58,9 +58,9 @@ import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController.CameraType;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.value.ChangeListener;

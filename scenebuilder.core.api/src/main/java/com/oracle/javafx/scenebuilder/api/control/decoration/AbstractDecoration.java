@@ -35,8 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.decoration;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.Decoration;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
@@ -192,7 +191,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 //        }
         //return resultOld;
         //return resultNew;
-        return Deprecation.localToLocal(getFxomObject(), x, y, getRootNode());
+        return CoordinateHelper.localToLocal(getFxomObject(), x, y, getRootNode());
     }
 
     protected void startListeningToLayoutBounds(Node node) {

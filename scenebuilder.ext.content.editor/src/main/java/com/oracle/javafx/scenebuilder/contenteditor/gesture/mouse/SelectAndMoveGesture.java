@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

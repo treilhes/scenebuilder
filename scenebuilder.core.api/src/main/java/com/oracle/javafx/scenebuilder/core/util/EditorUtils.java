@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;

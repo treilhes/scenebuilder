@@ -55,6 +55,7 @@ open module scenebuilder.ext.controls.tooling {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    requires scenebuilder.core.utils;
     
     provides Extension with BaseToolingExtension;
 }

@@ -42,8 +42,8 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

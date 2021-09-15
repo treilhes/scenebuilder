@@ -40,7 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.drivers.tabpane.TabPaneDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 
@@ -107,8 +107,8 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
 
         // Convert tabNode bounds from tabNode local space to tabPane local space
         final Bounds b = tabNode.getLayoutBounds();
-        final Point2D min = Deprecation.localToLocal(tabNode, b.getMinX(), b.getMinY(), tabPane);
-        final Point2D max = Deprecation.localToLocal(tabNode, b.getMaxX(), b.getMaxY(), tabPane);
+        final Point2D min = CoordinateHelper.localToLocal(tabNode, b.getMinX(), b.getMinY(), tabPane);
+        final Point2D max = CoordinateHelper.localToLocal(tabNode, b.getMaxX(), b.getMaxY(), tabPane);
 
         return BoundsUtils.makeBounds(min, max);
     }

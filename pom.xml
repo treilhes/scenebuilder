@@ -57,7 +57,11 @@
         <module>scenebuilder.ext.welcome</module>
         <module>scenebuilder.ext.scenicview</module>
     <module>scenebuilder.core.launcher</module>
-  </modules>
+    
+    <module>scenebuilder.core.fxom</module>
+    <module>scenebuilder.core.metadata</module>
+    <module>scenebuilder.core.utils</module>
+    </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -130,6 +134,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.fxom</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.jobs</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -145,7 +154,17 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.metadata</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

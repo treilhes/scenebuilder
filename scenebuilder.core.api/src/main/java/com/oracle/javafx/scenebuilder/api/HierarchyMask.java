@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.api;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 public interface HierarchyMask {
     // TODO this must disapear when control project will contain owned jobs/drivers

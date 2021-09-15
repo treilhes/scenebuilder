@@ -42,7 +42,7 @@ import java.util.Set;
 import com.oracle.javafx.scenebuilder.core.guides.AbstractSegment;
 import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
 import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

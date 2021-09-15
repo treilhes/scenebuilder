@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.guides;
 
 import java.util.Comparator;
 
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Point2D;
 

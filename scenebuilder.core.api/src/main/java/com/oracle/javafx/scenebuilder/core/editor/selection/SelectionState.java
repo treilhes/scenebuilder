@@ -41,6 +41,7 @@ import java.util.Set;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.BasicSelection;
 import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 
 import javafx.css.Style;
@@ -54,7 +55,7 @@ import javafx.css.StyleableProperty;
  *   - the unresolved selected instances (if any),
  *      in case of an instance is missing its corresponding object (for instance a png file)
  */
-public class SelectionState {
+public class SelectionState implements BasicSelection {
 
     private final Selection selection;
     private final Set<FXOMInstance> selectedInstances = new HashSet<>();
@@ -206,10 +207,12 @@ public class SelectionState {
         return commonParentClass;
     }
 
+    @Override
     public FXOMObject getCommonParentObject() {
         return commonParentObject;
     }
 
+    @Override
     public Set<FXOMInstance> getSelectedInstances() {
         return selectedInstances;
     }

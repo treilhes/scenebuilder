@@ -62,7 +62,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.core.util.URLUtils;
+import com.oracle.javafx.scenebuilder.util.URLUtils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

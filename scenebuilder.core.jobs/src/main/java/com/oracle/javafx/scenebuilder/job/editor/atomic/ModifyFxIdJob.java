@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.JavaLanguage;
+import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
 
 /**
  * Job used to modify an fx:id.

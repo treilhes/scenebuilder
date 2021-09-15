@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.drivers.splitpane;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;

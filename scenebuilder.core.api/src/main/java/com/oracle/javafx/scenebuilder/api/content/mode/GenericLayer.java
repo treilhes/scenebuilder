@@ -41,8 +41,8 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.Decoration;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.util.IOUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.util.IOUtils;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;

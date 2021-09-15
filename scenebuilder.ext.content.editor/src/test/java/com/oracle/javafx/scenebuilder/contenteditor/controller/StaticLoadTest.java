@@ -19,7 +19,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.test.JfxInitializer;
 
 /**
- * Unit test for {@link com.oracle.javafx.scenebuilder.core.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
+ * Unit test for {@link com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
  */
 @ExtendWith(MockitoExtension.class)
 public class StaticLoadTest {

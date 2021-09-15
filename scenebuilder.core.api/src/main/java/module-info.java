@@ -53,25 +53,13 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog;
     exports com.oracle.javafx.scenebuilder.core.editor.selection;
     exports com.oracle.javafx.scenebuilder.core.editors;
-    exports com.oracle.javafx.scenebuilder.core.fxom.glue;
-    exports com.oracle.javafx.scenebuilder.core.fxom.sampledata;
-    exports com.oracle.javafx.scenebuilder.core.fxom;
     exports com.oracle.javafx.scenebuilder.core.guides;
-    exports com.oracle.javafx.scenebuilder.core.metadata.klass;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.keycombination;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property;
-    exports com.oracle.javafx.scenebuilder.core.metadata.util;
-    exports com.oracle.javafx.scenebuilder.core.metadata;
-    exports com.oracle.javafx.scenebuilder.core.util;
     exports com.oracle.javafx.scenebuilder.core;
     exports com.oracle.javafx.scenebuilder.editors.drag.target;
     exports com.oracle.javafx.scenebuilder.core.ui;
     exports com.oracle.javafx.scenebuilder.core.clipboard.internal;
+    exports com.oracle.javafx.scenebuilder.core.mask;
+    exports com.oracle.javafx.scenebuilder.core.util;
     
     //opens com.oracle.javafx.scenebuilder.api.util to spring.core;
     //opens com.oracle.javafx.scenebuilder.core.metadata to spring.core;
@@ -100,6 +88,9 @@ open module scenebuilder.core.api {
     requires transitive spring.context;
     requires transitive spring.core;
     requires transitive scenebuilder.core.extension.api;
+    requires transitive scenebuilder.core.fxom;
+    requires transitive scenebuilder.core.metadata;
+    requires transitive scenebuilder.core.utils;
 
     provides Extension with CoreExtension, ApiExtension;
 

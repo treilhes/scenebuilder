@@ -72,12 +72,11 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.CssInternal;
-import com.oracle.javafx.scenebuilder.core.util.NodeUtils;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.ShowStyledOnlyAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.SplitDefaultsAction;
@@ -94,6 +93,7 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.Pro
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
+import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;

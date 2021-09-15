@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

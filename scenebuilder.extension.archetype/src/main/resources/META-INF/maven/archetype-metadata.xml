@@ -16,7 +16,7 @@
 
     <requiredProperties>
         <requiredProperty key="extensionCamelCasedName">
-            <defaultValue>extensionCamelCasedName</defaultValue>
+            <defaultValue>ExtensionCamelCasedName</defaultValue>
         </requiredProperty>
         <requiredProperty key="generatedUUID">
             <defaultValue>${package.getClass().forName("java.util.UUID").getMethod("randomUUID").invoke(null).toString()}

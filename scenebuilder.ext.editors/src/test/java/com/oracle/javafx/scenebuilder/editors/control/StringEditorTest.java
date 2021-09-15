@@ -39,9 +39,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.MultilineI18nStringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 
 @ExtendWith(ApplicationExtension.class)
 public class StringEditorTest {

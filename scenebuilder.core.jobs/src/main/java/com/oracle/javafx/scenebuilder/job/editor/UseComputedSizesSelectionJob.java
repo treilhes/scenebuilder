@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 
 /**
  *

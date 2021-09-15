@@ -85,16 +85,16 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.metadata.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.CssInternal;
-import com.oracle.javafx.scenebuilder.core.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
@@ -2157,7 +2157,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // possible)
         final ScrollPane scrollPane = sp;
         double editorHeight = valueEditorNode.getLayoutBounds().getHeight();
-        final Point2D pt = Deprecation.localToLocal(valueEditorNode, 0, 0, scrollPane.getContent());
+        final Point2D pt = CoordinateHelper.localToLocal(valueEditorNode, 0, 0, scrollPane.getContent());
         // viewport height
         double vpHeight = scrollPane.getViewportBounds().getHeight();
         // Position of the editor in the scrollPane content

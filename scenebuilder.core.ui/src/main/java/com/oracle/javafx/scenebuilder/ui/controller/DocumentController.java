@@ -81,13 +81,13 @@ import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.util.ResourceUtils;
 import com.oracle.javafx.scenebuilder.fs.action.CloseFileAction;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.ui.selectionbar.SelectionBarController;
+import com.oracle.javafx.scenebuilder.util.ResourceUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.event.EventHandler;

@@ -54,10 +54,10 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGro
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyMask;
 
 import javafx.scene.control.Tooltip;
 

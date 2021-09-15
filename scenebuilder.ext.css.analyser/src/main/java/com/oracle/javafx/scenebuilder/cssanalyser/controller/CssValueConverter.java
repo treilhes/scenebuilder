@@ -41,7 +41,7 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
-import com.oracle.javafx.scenebuilder.core.util.MathUtils;
+import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.css.Declaration;
 import javafx.css.ParsedValue;

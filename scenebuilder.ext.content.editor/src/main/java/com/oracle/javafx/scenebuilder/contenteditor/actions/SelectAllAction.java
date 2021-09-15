@@ -21,8 +21,8 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.util.GridPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;
