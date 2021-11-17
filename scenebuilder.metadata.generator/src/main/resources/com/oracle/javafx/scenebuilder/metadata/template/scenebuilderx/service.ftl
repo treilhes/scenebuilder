@@ -1,1 +1,1 @@
-${package}.MetadataExtension
+${package}.${extensionName}
