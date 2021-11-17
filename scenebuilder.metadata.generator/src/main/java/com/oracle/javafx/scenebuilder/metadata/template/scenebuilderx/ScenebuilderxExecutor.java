@@ -53,6 +53,7 @@ public class ScenebuilderxExecutor implements Executor {
         mainInputs.put("package", javaPackage);
         mainInputs.put("uuid", UUID.randomUUID().toString()); // need to get uuid from maven config
         mainInputs.put("components", components);
+        mainInputs.put("metadataPrefix", searchContext.getMetadataPrefix());
 
         generateSource(searchContext, mainInputs, "scenebuilderx/PropertyNames.ftl", packagePath + "/PropertyNames.java");
 
@@ -61,11 +62,12 @@ public class ScenebuilderxExecutor implements Executor {
         for (Component c : components.keySet()) {
             String category = sanitizeCategory(c.getRaw().getCategory());
             String componentPackage = javaPackage + "." + category.toLowerCase();
-            String componentMetadataClassName = componentPackage + "." + c.getRaw().getName() + "Metadata";
+            String componentMetadataClassName = componentPackage + "."+ searchContext.getMetadataPrefix() + c.getRaw().getName() + "Metadata";
 
             c.getCustom().put("package", componentPackage);
             c.getCustom().put("className", componentMetadataClassName);
             c.getCustom().put("category", category);
+            c.getCustom().put("metadataPrefix", searchContext.getMetadataPrefix());
             c.getCustom().put("propertyNamesClass", javaPackage + ".PropertyNames");
 
             classToComponents.put(c.getRaw().getType(), c);
@@ -90,8 +92,9 @@ public class ScenebuilderxExecutor implements Executor {
             inputs.put("component", cmp);
             inputs.put("properties", entry.getValue());
             inputs.put("metadataComponents", metadataTypesComponent);
+            inputs.put("metadataPrefix", searchContext.getMetadataPrefix());
 
-            String fileName = entry.getKey().getRaw().getType().getSimpleName() + "Metadata.java";
+            String fileName = searchContext.getMetadataPrefix() + entry.getKey().getRaw().getType().getSimpleName() + "Metadata.java";
 
             generateSource(searchContext, inputs, "scenebuilderx/ComponentClassMetadata.ftl", componentPackagePath + "/" + fileName);
 

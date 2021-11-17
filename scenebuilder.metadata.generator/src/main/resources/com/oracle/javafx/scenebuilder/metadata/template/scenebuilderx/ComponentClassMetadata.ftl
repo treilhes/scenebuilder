@@ -14,7 +14,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
  * THIS CODE IS AUTOMATICALLY GENERATED !
  */
 @Component
-public class ${component.raw.type.simpleName}Metadata extends ComponentClassMetadata<${component.raw.type.name?replace("$", ".")}> {
+public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends ComponentClassMetadata<${component.raw.type.name?replace("$", ".")}> {
 
 <#list properties as property>
 <#if property.type == "VALUE">
@@ -36,7 +36,7 @@ public class ${component.raw.type.simpleName}Metadata extends ComponentClassMeta
 </#if>
 </#list>
 
-    protected ${component.raw.type.simpleName}Metadata(<#if component.parent??>@Autowired ${component.parent.custom["className"]} parent</#if>
+    protected ${metadataPrefix}${component.raw.type.simpleName}Metadata(<#if component.parent??>@Autowired ${component.parent.custom["className"]} parent</#if>
 			<#list metadataComponents as cmp>
 			<#if cmp?index != 0 || component.parent??>, </#if>@Lazy @Autowired ${cmp.custom["className"]?replace("$", ".")} ${cmp.raw.type.simpleName?uncap_first}Metadata
 			</#list>

@@ -24,6 +24,7 @@ public class SearchContext {
     private Class<Executor> executorClass;
     private String extensionName;
     private String moduleName;
+    private String metadataPrefix;
     private UUID uuid;
     private List<String> moduleRequires = new ArrayList<>();
 
@@ -111,6 +112,12 @@ public class SearchContext {
     }
     public void setExtensionName(String extensionName) {
         this.extensionName = extensionName;
+    }
+    public String getMetadataPrefix() {
+        return metadataPrefix;
+    }
+    public void setMetadataPrefix(String metadataPrefix) {
+        this.metadataPrefix = metadataPrefix;
     }
 
 

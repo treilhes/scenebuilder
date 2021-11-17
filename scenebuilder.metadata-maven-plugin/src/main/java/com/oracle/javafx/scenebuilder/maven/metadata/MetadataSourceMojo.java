@@ -96,6 +96,9 @@ public class MetadataSourceMojo extends AbstractMojo {
     @Parameter(property = "javafxVersion", required = true)
     String javafxVersion;
 
+    @Parameter(property = "metadataPrefix", required = false, defaultValue = "")
+    String metadataPrefix = "";
+
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
@@ -287,6 +290,8 @@ public class MetadataSourceMojo extends AbstractMojo {
         searchContext.setUuid(uuid);
 
         searchContext.setExtensionName(extensionName);
+
+        searchContext.setMetadataPrefix(metadataPrefix);
 
         return searchContext;
     }

@@ -149,6 +149,7 @@
                     <uuid>975210e7-cba9-4a10-9c94-561746964ea2</uuid>
                     <failOnError>false</failOnError>
                     <javafxVersion>${javafx.version}</javafxVersion>
+                    <metadataPrefix>Gluon</metadataPrefix>
                 </configuration>
                 <dependencies>
                     <dependency>
