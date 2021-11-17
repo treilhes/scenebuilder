@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -54,15 +54,25 @@ public class PaintPropertyMetadata extends ComplexPropertyMetadata<Paint> {
     private final LinearGradientPropertyMetadata linearGradientMetadata;
     private final RadialGradientPropertyMetadata radialGradientMetadata;
 
-    public PaintPropertyMetadata(PropertyName name, boolean readWrite,
+    protected PaintPropertyMetadata(PropertyName name, boolean readWrite,
             Paint defaultValue, InspectorPath inspectorPath) {
         super(name, Paint.class, readWrite, defaultValue, inspectorPath);
-        colorMetadata = new ColorPropertyMetadata(name, readWrite, null, inspectorPath);
-        imagePatternMetadata = new ImagePatternPropertyMetadata(name, readWrite, null, inspectorPath);
-        linearGradientMetadata = new LinearGradientPropertyMetadata(name, readWrite, null, inspectorPath);
-        radialGradientMetadata = new RadialGradientPropertyMetadata(name, readWrite, null, inspectorPath);
+        
+        colorMetadata = fillBuilder(this, new ColorPropertyMetadata.Builder()).withDefaultValue(null).build();
+        imagePatternMetadata = fillBuilder(this, new ImagePatternPropertyMetadata.Builder()).withDefaultValue(null).build();
+        linearGradientMetadata = fillBuilder(this, new LinearGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
+        radialGradientMetadata = fillBuilder(this, new RadialGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
     }
 
+    protected PaintPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+        
+        colorMetadata = fillBuilder(this, new ColorPropertyMetadata.Builder()).withDefaultValue(null).build();
+        imagePatternMetadata = fillBuilder(this, new ImagePatternPropertyMetadata.Builder()).withDefaultValue(null).build();
+        linearGradientMetadata = fillBuilder(this, new LinearGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
+        radialGradientMetadata = fillBuilder(this, new RadialGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -104,4 +114,17 @@ public class PaintPropertyMetadata extends ComplexPropertyMetadata<Paint> {
         return result;
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Paint> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Paint.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, PaintPropertyMetadata> {
+        @Override
+        public PaintPropertyMetadata build() {
+            return new PaintPropertyMetadata(this);
+        }
+    }
 }

@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.PaintPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.ColorInput;
 import javafx.scene.paint.Color;
@@ -49,27 +49,45 @@ import javafx.scene.paint.Color;
  */
 public class ColorInputPropertyMetadata extends ComplexPropertyMetadata<ColorInput> {
     
-    private final CoordinateDoublePropertyMetadata heightMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata widthMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final PaintPropertyMetadata paintMetadata
-            = new PaintPropertyMetadata(new PropertyName("paint"), //NOCHECK
-            true /* readWrite */, Color.RED, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata heightMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("height")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public ColorInputPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final CoordinateDoublePropertyMetadata widthMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("width")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata xMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("x")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata yMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("y")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final PaintPropertyMetadata paintMetadata = new PaintPropertyMetadata.Builder()
+            .withName(new PropertyName("paint")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(Color.RED)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+
+    protected ColorInputPropertyMetadata(PropertyName name, boolean readWrite, 
             ColorInput defaultValue, InspectorPath inspectorPath) {
         super(name, ColorInput.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected ColorInputPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
@@ -85,5 +103,19 @@ public class ColorInputPropertyMetadata extends ComplexPropertyMetadata<ColorInp
         yMetadata.setValue(result, value.getY());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColorInput> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(ColorInput.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ColorInputPropertyMetadata> {
+        @Override
+        public ColorInputPropertyMetadata build() {
+            return new ColorInputPropertyMetadata(this);
+        }
     }
 }

@@ -42,10 +42,10 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  *
@@ -55,11 +55,17 @@ public abstract class SingleValuePropertyMetadata<T> extends ValuePropertyMetada
     private final Class<T> valueClass;
     private final T defaultValue;
 
-    public SingleValuePropertyMetadata(PropertyName name, Class<T> valueClass, 
+    protected SingleValuePropertyMetadata(PropertyName name, Class<T> valueClass, 
             boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
         super(name, readWrite, inspectorPath);
         this.defaultValue = defaultValue;
         this.valueClass = valueClass;
+    }
+    
+    protected SingleValuePropertyMetadata(AbstractBuilder<?,?,T> builder) {
+        super(builder);
+        this.defaultValue = builder.defaultValue;
+        this.valueClass = builder.valueClass;
     }
     
     public T getDefaultValue() {
@@ -161,4 +167,23 @@ public abstract class SingleValuePropertyMetadata<T> extends ValuePropertyMetada
     public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
         setValue(fxomInstance, valueClass.cast(valueObject));
     }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, T> extends ValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+        /** The property default value. */
+        protected T defaultValue;
+        
+        /** The property value class. */
+        protected Class<T> valueClass;
+        
+        public SELF withDefaultValue(T defaultValue) {
+            this.defaultValue = defaultValue;
+            return self();
+        }
+        
+        protected SELF withValueClass(Class<T> valueClass) {
+            this.valueClass = valueClass;
+            return self();
+        }
+    }
+    
 }

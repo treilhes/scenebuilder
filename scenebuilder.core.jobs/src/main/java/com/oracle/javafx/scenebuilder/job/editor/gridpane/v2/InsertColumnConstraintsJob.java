@@ -56,11 +56,11 @@ import javafx.scene.layout.GridPane;
 public class InsertColumnConstraintsJob extends Job {
 
     private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta =
-            new ColumnConstraintsListPropertyMetadata(
-                new PropertyName("columnConstraints"), //NOCHECK
-                true, /* readWrite */
-                Collections.emptyList(), /* defaultValue */
-                InspectorPath.UNUSED);
+            new ColumnConstraintsListPropertyMetadata.Builder()
+                .withName(new PropertyName("columnConstraints")) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(Collections.emptyList())
+                .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final FXOMInstance gridPaneObject;
     private final int columnIndex;

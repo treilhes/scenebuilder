@@ -64,12 +64,12 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
 
     private static final PropertyName columnConstraintsName
             = new PropertyName("columnConstraints"); //NOCHECK
-    private static final ValuePropertyMetadata columnConstraintsMeta
-            = new ColumnConstraintsListPropertyMetadata(
-                columnConstraintsName,
-                true, /* readWrite */
-                Collections.emptyList(), /* defaultValue */
-                InspectorPath.UNUSED);
+
+    private static final ValuePropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder()
+            .withName(columnConstraintsName)
+            .withReadWrite(true)
+            .withDefaultValue(Collections.emptyList())
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final GridPaneHandles gridPaneHandles;
     private final FXOMInstance fxomInstance;

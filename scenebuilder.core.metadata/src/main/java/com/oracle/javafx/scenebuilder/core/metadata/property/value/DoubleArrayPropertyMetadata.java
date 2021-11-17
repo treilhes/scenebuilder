@@ -36,35 +36,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ListValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
- * 
+ *
  */
 public class DoubleArrayPropertyMetadata extends ListValuePropertyMetadata<Double> {
-    
-    private final static PropertyName unusedName
-            = new PropertyName("unused"); //NOCHECK
-    private final static CoordinateDoublePropertyMetadata doubleMetadata
-            = new CoordinateDoublePropertyMetadata(unusedName, 
-                    true, 0.0, InspectorPath.UNUSED);
 
-    public DoubleArrayPropertyMetadata(PropertyName name, boolean readWrite, List<Double> defaultValue, InspectorPath inspectorPath) {
-        super(name, Double.class, doubleMetadata, readWrite, defaultValue, inspectorPath);
+    private final static PropertyName unusedName = new PropertyName("unused"); // NOCHECK
+
+    private final static CoordinateDoublePropertyMetadata itemMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(unusedName)
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+//    public DoubleArrayPropertyMetadata(PropertyName name, boolean readWrite, List<Double> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Double.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected DoubleArrayPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
-    
     public void synchronizeWithSceneGraphObject(FXOMInstance fxomInstance) {
         /*
-         * This routine transfers property value from the scene graph object
-         * to the matching FXOMProperty. This is primarily used for the
+         * This routine transfers property value from the scene graph object to the
+         * matching FXOMProperty. This is primarily used for the
          * SplitPane.dividerPositions property.
          */
-        
+
         final Object sceneGraphValue = getValueInSceneGraphObject(fxomInstance);
         final List<Double> value;
         if (sceneGraphValue == null) {
@@ -76,16 +82,45 @@ public class DoubleArrayPropertyMetadata extends ListValuePropertyMetadata<Doubl
                 value.add(Double.valueOf(d));
             }
         }
-        
+
         setValue(fxomInstance, value);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Double> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(Double.class);
+            withItemMetadata(DoubleArrayPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, DoubleArrayPropertyMetadata> {
+        @Override
+        public DoubleArrayPropertyMetadata build() {
+            return new DoubleArrayPropertyMetadata(this);
+        }
+    }
+
     public static class DividerPositionsDoubleArrayPropertyMetadata extends DoubleArrayPropertyMetadata {
 
-        public DividerPositionsDoubleArrayPropertyMetadata(PropertyName name, boolean readWrite,
-                List<Double> defaultValue, InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected DividerPositionsDoubleArrayPropertyMetadata(PropertyName name, boolean readWrite,
+//                List<Double> defaultValue, InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected DividerPositionsDoubleArrayPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD>
+                extends DoubleArrayPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {}
+
+        public static final class Builder extends AbstractBuilder<Builder, DividerPositionsDoubleArrayPropertyMetadata> {
+            @Override
+            public DividerPositionsDoubleArrayPropertyMetadata build() {
+                return new DividerPositionsDoubleArrayPropertyMetadata(this);
+            }
+        }
     }
 }

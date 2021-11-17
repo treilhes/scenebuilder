@@ -41,6 +41,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)
 public class CharsetEditorTest {
@@ -48,32 +49,36 @@ public class CharsetEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static CharsetStringPropertyMetadata someCharsetStringProp() {
-        return new CharsetStringPropertyMetadata(new PropertyName("charsetstring"), true, "", null);
+        return new CharsetStringPropertyMetadata.Builder()
+                .withName(new PropertyName("charsetstring"))
+                .withReadWrite(true)
+                .withDefaultValue("")
+                .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        
+
         CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        
+
         CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        
+
         CharsetEditor o = new CharsetEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someCharsetStringProp(), null);
     }
 

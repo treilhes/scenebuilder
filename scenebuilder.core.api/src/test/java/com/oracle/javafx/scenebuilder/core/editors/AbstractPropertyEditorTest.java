@@ -52,50 +52,60 @@ import javafx.scene.Node;
 
 @ExtendWith(ApplicationExtension.class)
 public class AbstractPropertyEditorTest {
-    
+
     static {
         I18N.initForTest();
     }
-    
+
     @Test
     public void shouldCreateAnEmptyInstance() {
         AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         assertNotNull(o);
     }
-    
+
     @Test
     public void shouldCreateAnEmptyMenu() {
         AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         assertNotNull(o.getMenu());
     }
-    
+
     @Test
     public void shouldResetTheInstance() {
         AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         o.reset(someIntProp(), null);
     }
-    
+
     @Test
     public void shouldResetTheInstanceForGroup() {
         AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
         o.reset(someGroupProp(), null);
     }
-    
+
 
     static IntegerPropertyMetadata someIntProp() {
-        return new IntegerPropertyMetadata(new PropertyName("int"), true, 123, null);
+        return new IntegerPropertyMetadata.Builder()
+                .withName(new PropertyName("int")) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(123).build();
     }
     static StringPropertyMetadata someStringProp() {
-        return new MultilineI18nStringPropertyMetadata(new PropertyName("string"), true, "123", null);
+        return new MultilineI18nStringPropertyMetadata.Builder()
+                .withName(new PropertyName("string")) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue("123").build();
     }
     static PropertyGroupMetadata someGroupProp() {
-        return new PropertyGroupMetadata(new PropertyName("group"), someIntProp(), someStringProp());
+        return new PropertyGroupMetadata.Builder()
+                .withName(new PropertyName("group")) //NOCHECK
+                .withReadWrite(true)
+                .withProperty("someInt", someIntProp())
+                .withProperty("someString", someStringProp()).build();
     }
-    
-    
+
+
     private class AbstractPropertyEditorImpl extends AbstractPropertyEditor {
         boolean localIndeterminate = false;
-        
+
         public AbstractPropertyEditorImpl(Api api) {
             super(api);
         }

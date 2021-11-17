@@ -34,11 +34,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.Color;
 
@@ -55,22 +55,34 @@ import javafx.scene.paint.Color;
  */
 public class ColorPropertyMetadata extends ComplexPropertyMetadata<Color> {
 
-    private final OpacityDoublePropertyMetadata redMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("red"),
-            true, 0.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata greenMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("green"),
-            true, 0.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata blueMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("blue"),
-            true, 0.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata opacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("opacity"),
-            true, 1.0, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata redMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("red")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+    private final OpacityDoublePropertyMetadata greenMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("green")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+    private final OpacityDoublePropertyMetadata blueMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("blue")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+    private final OpacityDoublePropertyMetadata opacityMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("opacity")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public ColorPropertyMetadata(PropertyName name, boolean readWrite, 
+    protected ColorPropertyMetadata(PropertyName name, boolean readWrite, 
             Color defaultValue, InspectorPath inspectorPath) {
         super(name, Color.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected ColorPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     @Override
@@ -94,5 +106,19 @@ public class ColorPropertyMetadata extends ComplexPropertyMetadata<Color> {
     public String makeStringFromValue(Color value) {
         assert value != null;
         return ColorEncoder.encodeColor(value);
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Color> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Color.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ColorPropertyMetadata> {
+        @Override
+        public ColorPropertyMetadata build() {
+            return new ColorPropertyMetadata(this);
+        }
     }
 }

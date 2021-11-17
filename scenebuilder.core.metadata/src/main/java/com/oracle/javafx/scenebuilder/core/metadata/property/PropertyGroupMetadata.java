@@ -33,27 +33,44 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
+// TODO check if complexmetadata is not a valid substitute of this one
 public class PropertyGroupMetadata extends ValuePropertyMetadata {
-    
-    private final ValuePropertyMetadata[] properties;
 
-    public PropertyGroupMetadata(PropertyName name, ValuePropertyMetadata... properties) {
-        super(name, true, Arrays.stream(properties).anyMatch(p -> p.isReadWrite()), properties[0].getInspectorPath());
-        this.properties = properties;
+    private final Map<String, ValuePropertyMetadata> properties = new HashMap<>();
+
+//    protected PropertyGroupMetadata(PropertyName name, ValuePropertyMetadata... properties) {
+//        super(name, true, Arrays.stream(properties).anyMatch(p -> p.isReadWrite()), properties[0].getInspectorPath());
+//
+//        for (ValuePropertyMetadata p:properties) {
+//            this.properties.put(p.getName().getName(), p);
+//        }
+//
+//    }
+
+    protected PropertyGroupMetadata(AbstractBuilder<?,?> builder) {
+        super(builder.name, true, builder.properties.values().stream().anyMatch(p -> p.isReadWrite()),
+                builder.properties.isEmpty() ? null : builder.properties.values().iterator().next().getInspectorPath());
+        this.properties.putAll(builder.properties);
+    }
+
+    protected Map<String, ValuePropertyMetadata> getPropertiesMap() {
+        return Collections.unmodifiableMap(properties);
     }
 
     public ValuePropertyMetadata[] getProperties() {
-        return properties;
+        return properties.values().toArray(new ValuePropertyMetadata[0]);
     }
 
     @Override
     public Object getDefaultValueObject() {
-        return Arrays.stream(properties)
+        return properties.values().stream()
                 .map(it -> it.getDefaultValueObject())
                 .collect(Collectors.toList())
                 .toArray();
@@ -63,18 +80,18 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     public void setValueInSceneGraphObject(FXOMInstance fxomInstance, Object newValue) {
         assert newValue instanceof Object[];
         Object[] values = (Object[])newValue;
-        
+
         assert values.length == getProperties().length;
-        
+
         for (int i=0; i<getProperties().length; i++) {
             Object value = values[i];
             ValuePropertyMetadata property = getProperties()[i];
-            
+
             assert property.getValueClass().isAssignableFrom(value.getClass());
-            
+
             property.setValueInSceneGraphObject(fxomInstance, value);
         }
-        
+
     }
 
     @Override
@@ -91,15 +108,15 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     public void setValueObject(FXOMInstance fxomInstance, Object newValue) {
         assert newValue instanceof Object[];
         Object[] values = (Object[])newValue;
-        
+
         assert values.length == getProperties().length;
-        
+
         for (int i=0; i<getProperties().length; i++) {
             Object value = values[i];
             ValuePropertyMetadata property = getProperties()[i];
-            
+
             assert value == null || property.getValueClass().isAssignableFrom(value.getClass());
-            
+
             property.setValueObject(fxomInstance, value);
         }
     }
@@ -107,10 +124,38 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     @Override
     public Class<?> getValueClass() {
         boolean sameClassForAll = Arrays.stream(getProperties()).map(v -> v.getValueClass()).distinct().count() == 1;
-        
+
         if (sameClassForAll) {
             return getProperties()[0].getValueClass();
         }
         return Object.class;
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+
+        private final Map<String, ValuePropertyMetadata> properties = new HashMap<>();
+
+        public AbstractBuilder() {
+            super();
+        }
+
+        protected SELF withProperty(String key, ValuePropertyMetadata property) {
+            properties.put(key, property);
+            return self();
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, PropertyGroupMetadata> {
+
+        @Override
+        public Builder withProperty(String key, ValuePropertyMetadata property) {
+            return super.withProperty(key, property);
+        }
+
+        @Override
+        public PropertyGroupMetadata build() {
+            return new PropertyGroupMetadata(this);
+        }
+
     }
 }

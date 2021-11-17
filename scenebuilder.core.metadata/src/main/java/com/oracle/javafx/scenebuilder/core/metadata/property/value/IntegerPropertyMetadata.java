@@ -34,26 +34,28 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.BasicSelection;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 /**
  *
- * 
+ *
  */
 public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
 
-    public IntegerPropertyMetadata(PropertyName name, boolean readWrite, 
-            Integer defaultValue, InspectorPath inspectorPath) {
-        super(name, Integer.class, readWrite, defaultValue, inspectorPath);
-        setMin(-Integer.MAX_VALUE);
-        setMax(Integer.MAX_VALUE);
+//    protected IntegerPropertyMetadata(PropertyName name, boolean readWrite,
+//            Integer defaultValue, InspectorPath inspectorPath) {
+//        super(name, Integer.class, readWrite, defaultValue, inspectorPath);
+//        setMin(-Integer.MAX_VALUE);
+//        setMax(Integer.MAX_VALUE);
+//    }
+
+    protected IntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
-    
+
     public boolean isValidValue(Integer value) {
         return (value != null);
     }
@@ -65,28 +67,66 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
     public Integer makeValueFromString(String string) {
         return Integer.valueOf(string);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends NumberPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Integer> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Integer.class);
+            withMin(-Integer.MAX_VALUE);
+            withMax(Integer.MAX_VALUE);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, IntegerPropertyMetadata> {
+        @Override
+        public IntegerPropertyMetadata build() {
+            return new IntegerPropertyMetadata(this);
+        }
+    }
+
     public static class PositiveIntegerPropertyMetadata extends IntegerPropertyMetadata {
 
-        public PositiveIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
-            setMin(0);
+//        protected PositiveIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//            setMin(0);
+//        }
+
+        protected PositiveIntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Integer value) {
             return super.isValidValue(value) && (0 <= value);
         }
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD> extends IntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+            public AbstractBuilder() {
+                super();
+                withMin(0);
+            }
+        }
+
+        public static final class Builder extends AbstractBuilder<Builder, PositiveIntegerPropertyMetadata> {
+            @Override
+            public PositiveIntegerPropertyMetadata build() {
+                return new PositiveIntegerPropertyMetadata(this);
+            }
+        }
     }
-    
+
     public abstract static class GridIntegerPropertyMetadata extends PositiveIntegerPropertyMetadata {
 
-        public GridIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected GridIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected GridIntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
         public static GridPane getGridPane(BasicSelection selectionState) {
                 FXOMObject commonParent = selectionState.getCommonParentObject();
                 if (commonParent == null) {
@@ -96,7 +136,7 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
                 assert parentObj instanceof GridPane;
                 return (GridPane) parentObj;
         }
-        
+
         public static int getGridPaneColumnCount(GridPane gridPane) {
             return gridPane.getColumnCount();
         }
@@ -104,7 +144,7 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
         public static int getGridPaneRowCount(GridPane gridPane) {
             return gridPane.getRowCount();
         }
-        
+
         public static int getRowSpanPropertyMaxIndex(BasicSelection selectionState) {
             int maxIndex = 0;
             for (FXOMInstance instance : selectionState.getSelectedInstances()) {
@@ -121,7 +161,7 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
             }
             return maxIndex;
         }
-        
+
         public static int getColumnSpanPropertyMaxIndex(BasicSelection selectionState) {
             int maxIndex = 0;
             for (FXOMInstance instance : selectionState.getSelectedInstances()) {
@@ -138,15 +178,22 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
             }
             return maxIndex;
         }
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD> extends PositiveIntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {}
+
     }
-    
+
     public static class GridRowIndexIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
 
-        public GridRowIndexIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected GridRowIndexIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected GridRowIndexIntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
         @Override
         public Integer getMax(BasicSelection selectionState) {
             GridPane gridPane = getGridPane(selectionState);
@@ -158,15 +205,28 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
             // index start to 0
             return nbRow - 1;
         }
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD> extends GridIntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {}
+
+        public static final class Builder extends AbstractBuilder<Builder, GridIntegerPropertyMetadata> {
+            @Override
+            public GridRowIndexIntegerPropertyMetadata build() {
+                return new GridRowIndexIntegerPropertyMetadata(this);
+            }
+        }
     }
-    
+
     public static class GridRowSpanIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
 
-        public GridRowSpanIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected GridRowSpanIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected GridRowSpanIntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
         @Override
         public Integer getMax(BasicSelection selectionState) {
             GridPane gridPane = getGridPane(selectionState);
@@ -178,13 +238,26 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
             int maxIndex = getRowSpanPropertyMaxIndex(selectionState);
             return nbRow - maxIndex;
         }
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD> extends GridIntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {}
+
+        public static final class Builder extends AbstractBuilder<Builder, GridRowSpanIntegerPropertyMetadata> {
+            @Override
+            public GridRowSpanIntegerPropertyMetadata build() {
+                return new GridRowSpanIntegerPropertyMetadata(this);
+            }
+        }
     }
-    
+
     public static class GridColumnIndexIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
 
-        public GridColumnIndexIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected GridColumnIndexIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected GridColumnIndexIntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
 
         @Override
@@ -198,15 +271,28 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
             // index start to 0
             return nbColumns - 1;
         }
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD> extends GridIntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {}
+
+        public static final class Builder extends AbstractBuilder<Builder, GridColumnIndexIntegerPropertyMetadata> {
+            @Override
+            public GridColumnIndexIntegerPropertyMetadata build() {
+                return new GridColumnIndexIntegerPropertyMetadata(this);
+            }
+        }
     }
-    
+
     public static class GridColumnSpanIntegerPropertyMetadata extends GridIntegerPropertyMetadata {
 
-        public GridColumnSpanIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected GridColumnSpanIntegerPropertyMetadata(PropertyName name, boolean readWrite, Integer defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected GridColumnSpanIntegerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
         @Override
         public Integer getMax(BasicSelection selectionState) {
             GridPane gridPane = getGridPane(selectionState);
@@ -217,6 +303,15 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
             int nbColumns = getGridPaneColumnCount(gridPane);
             int maxIndex = getColumnSpanPropertyMaxIndex(selectionState);
             return nbColumns - maxIndex;
+        }
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD> extends GridIntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {}
+
+        public static final class Builder extends AbstractBuilder<Builder, GridColumnSpanIntegerPropertyMetadata> {
+            @Override
+            public GridColumnSpanIntegerPropertyMetadata build() {
+                return new GridColumnSpanIntegerPropertyMetadata(this);
+            }
         }
     }
 }

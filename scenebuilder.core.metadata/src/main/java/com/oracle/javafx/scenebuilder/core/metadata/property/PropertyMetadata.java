@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -40,19 +41,19 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  * A base class that represents a property metadata of an fxml component
- * 
+ *
  */
 public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
-    
+
     /** The property name. */
     private final PropertyName name;
 
     /** The property is a group of properties. */
     private final boolean group;
-    
+
     /** The constants values of this property. */
     protected Map<String, Object> constants = new TreeMap<>();
-    
+
     /**
      * Instantiates a new property metadata.
      *
@@ -64,6 +65,17 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
     }
 
     /**
+     * Build a new property metadata.
+     *
+     * @param name the name of the property
+     */
+    protected PropertyMetadata(AbstractBuilder<?, ?> builder) {
+        this.name = builder.name;
+        this.group = builder.group;
+        this.constants.putAll(builder.constants);
+    }
+
+    /**
      * Gets the name.
      *
      * @return the name
@@ -71,7 +83,7 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
     public PropertyName getName() {
         return name;
     }
-    
+
     /**
      * Checks if this property is a group.
      *
@@ -86,18 +98,19 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
      * @return
      */
     public Map<String, Object> getConstants() {
-        return constants;
+        return Collections.unmodifiableMap(constants);
     }
-    
+
     /**
      * Add a constant for a specific instance and the corresponding value
      * @return
      */
+    //TODO disable mutability and clone instead
     public PropertyMetadata addConstant(String key, Object value) {
         constants.put(key, value);
         return this;
     }
-    
+
     /*
      * Comparable
      */
@@ -109,7 +122,7 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
     /*
      * Object
      */
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -131,5 +144,35 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
         }
         return true;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> {
+        /** The property name. */
+        protected PropertyName name;
+
+        /** The property is a group of properties. */
+        protected boolean group;
+
+        /** The constants values of this property. */
+        protected Map<String, Object> constants = new TreeMap<>();
+
+        @SuppressWarnings("unchecked")
+        protected SELF self() {
+            return (SELF)this;
+        }
+        public SELF withName(PropertyName name) {
+            this.name = name;
+            return self();
+        }
+
+        protected SELF withGroup(boolean group) {
+            this.group = group;
+            return self();
+        }
+
+        protected SELF withConstant(String constantName, Object constantValue) {
+            this.constants.put(constantName, constantValue);
+            return self();
+        }
+        public abstract TOBUILD build();
+    }
 }

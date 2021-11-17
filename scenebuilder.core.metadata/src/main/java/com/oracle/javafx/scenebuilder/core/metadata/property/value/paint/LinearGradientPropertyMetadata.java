@@ -36,13 +36,13 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StopListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -57,33 +57,57 @@ public class LinearGradientPropertyMetadata extends ComplexPropertyMetadata<Line
             = new LinearGradient(0.0, 0.0, 1.0, 1.0,
             true /* proportional */, CycleMethod.NO_CYCLE).getStops();
     
-    private final CoordinateDoublePropertyMetadata startXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("startX"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata startYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("startY"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata endXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("endX"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata endYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("endY"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final BooleanPropertyMetadata proportionalMetadata
-            = new BooleanPropertyMetadata(new PropertyName("proportional"), 
-            true, true, InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata cycleMethodMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("cycleMethod"),
-            CycleMethod.class, true, CycleMethod.NO_CYCLE, InspectorPath.UNUSED);
-    private final StopListPropertyMetadata stopsMetadata
-            = new StopListPropertyMetadata(new PropertyName("stops"),
-            true, DEFAULT_STOPS, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata startXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("startX")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public LinearGradientPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final CoordinateDoublePropertyMetadata startYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("startY")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata endXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("endX")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata endYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("endY")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final BooleanPropertyMetadata proportionalMetadata = new BooleanPropertyMetadata.Builder()
+            .withName(new PropertyName("proportional")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(true)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EnumerationPropertyMetadata cycleMethodMetadata = new EnumerationPropertyMetadata.Builder<>(CycleMethod.class)
+            .withName(new PropertyName("cycleMethod")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(CycleMethod.NO_CYCLE)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final StopListPropertyMetadata stopsMetadata = new StopListPropertyMetadata.Builder()
+            .withName(new PropertyName("stops")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT_STOPS)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected LinearGradientPropertyMetadata(PropertyName name, boolean readWrite, 
             LinearGradient defaultValue, InspectorPath inspectorPath) {
         super(name, LinearGradient.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected LinearGradientPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -103,4 +127,17 @@ public class LinearGradientPropertyMetadata extends ComplexPropertyMetadata<Line
         return result;
     }
     
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, LinearGradient> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(LinearGradient.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, LinearGradientPropertyMetadata> {
+        @Override
+        public LinearGradientPropertyMetadata build() {
+            return new LinearGradientPropertyMetadata(this);
+        }
+    }
 }

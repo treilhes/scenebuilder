@@ -34,17 +34,21 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  *
  */
 public class ObjectPropertyMetadata extends SingleValuePropertyMetadata<Object> {
 
-    public ObjectPropertyMetadata(PropertyName name, boolean readWrite, 
-            Object defaultValue, InspectorPath inspectorPath) {
+    public ObjectPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue,
+            InspectorPath inspectorPath) {
         super(name, Object.class, readWrite, defaultValue, inspectorPath);
+    }
+
+    protected ObjectPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -67,12 +71,26 @@ public class ObjectPropertyMetadata extends SingleValuePropertyMetadata<Object> 
 
     @Override
     public String makeStringFromValue(Object value) {
-        throw new RuntimeException("Bug"); //NOCHECK
+        throw new RuntimeException("Bug"); // NOCHECK
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Object value, FXOMDocument fxomDocument) {
-        throw new RuntimeException("Bug"); //NOCHECK
+        throw new RuntimeException("Bug"); // NOCHECK
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Object.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ObjectPropertyMetadata> {
+        @Override
+        public ObjectPropertyMetadata build() {
+            return new ObjectPropertyMetadata(this);
+        }
+    }
 }

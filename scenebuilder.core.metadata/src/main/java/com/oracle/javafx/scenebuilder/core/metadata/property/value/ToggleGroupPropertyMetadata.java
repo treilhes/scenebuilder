@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -46,58 +46,76 @@ import javafx.scene.control.ToggleGroup;
  */
 public class ToggleGroupPropertyMetadata extends SingleValuePropertyMetadata<String> {
 
-    public ToggleGroupPropertyMetadata(PropertyName name, boolean readWrite, String defaultValue, InspectorPath inspectorPath) {
+    public ToggleGroupPropertyMetadata(PropertyName name, boolean readWrite, String defaultValue,
+            InspectorPath inspectorPath) {
         super(name, String.class, readWrite, defaultValue, inspectorPath);
     }
 
-    
+    protected ToggleGroupPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+
     /*
      * SingleValuePropertyMetadata
      */
-    
+
     @Override
     public String makeValueFromString(String string) {
         final PrefixedValue pv = new PrefixedValue(string);
         final String result;
-        
+
         if (pv.isExpression()) {
             result = pv.getSuffix();
         } else {
             assert false : "Unexpected prefixed value " + string;
             result = null;
         }
-        
+
         return result;
     }
 
     @Override
     public String makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
         final String result;
-        
+
         if (valueFxomInstance.getDeclaredClass() == ToggleGroup.class) {
             result = valueFxomInstance.getFxId();
         } else {
-            assert false : "unexpected declared class "
-                    + valueFxomInstance.getDeclaredClass().getSimpleName();
+            assert false : "unexpected declared class " + valueFxomInstance.getDeclaredClass().getSimpleName();
             result = null;
         }
-        
+
         return result;
     }
 
     @Override
     public boolean canMakeStringFromValue(String value) {
-        throw new UnsupportedOperationException("Should not be invoked"); //NOCHECK
+        throw new UnsupportedOperationException("Should not be invoked"); // NOCHECK
     }
 
     @Override
     public String makeStringFromValue(String value) {
-        throw new UnsupportedOperationException("Should not be invoked"); //NOCHECK
+        throw new UnsupportedOperationException("Should not be invoked"); // NOCHECK
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(String value, FXOMDocument fxomDocument) {
-        throw new UnsupportedOperationException("Should not be invoked"); //NOCHECK
+        throw new UnsupportedOperationException("Should not be invoked"); // NOCHECK
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(String.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ToggleGroupPropertyMetadata> {
+        @Override
+        public ToggleGroupPropertyMetadata build() {
+            return new ToggleGroupPropertyMetadata(this);
+        }
+    }
+
 }

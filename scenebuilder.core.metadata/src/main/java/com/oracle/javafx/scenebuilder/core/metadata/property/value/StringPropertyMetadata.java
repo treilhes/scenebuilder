@@ -39,29 +39,33 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.util.URLUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.util.URLUtils;
 
 /**
  *
  */
 public abstract class StringPropertyMetadata extends TextEncodablePropertyMetadata<String> {
-    
+
     private static final PropertyName valueName = new PropertyName("value"); //NOCHECK
 
     private final boolean detectFileURL;
-    
-    public StringPropertyMetadata(PropertyName name, boolean readWrite, 
-            String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
-        super(name, String.class, readWrite, defaultValue, inspectorPath);
-        this.detectFileURL = detectFileURL;
-    }
 
-    public StringPropertyMetadata(PropertyName name, boolean readWrite, 
-            String defaultValue, InspectorPath inspectorPath) {
-        this(name, readWrite, defaultValue, inspectorPath, false);
+//    protected StringPropertyMetadata(PropertyName name, boolean readWrite,
+//            String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+//        super(name, String.class, readWrite, defaultValue, inspectorPath);
+//        this.detectFileURL = detectFileURL;
+//    }
+
+//    protected StringPropertyMetadata(PropertyName name, boolean readWrite,
+//            String defaultValue, InspectorPath inspectorPath) {
+//        this(name, readWrite, defaultValue, inspectorPath, false);
+//    }
+
+    protected StringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+        this.detectFileURL = builder.detectFileURL;
     }
 
     public boolean isMultiline() {
@@ -69,28 +73,28 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
     }
     /*
      * Values of a string property can be represented in multiple ways.
-     * 
+     *
      * Case 1 : as an XML attribute (ie an FXOMPropertyT)
-     *      text='Button'                                       
+     *      text='Button'
      *      url='@Desktop/Blah.css'
-     * 
+     *
      * Case 2 : as an XML element of type String (also an FXOMPropertyT)
      *      <text><String fx:value='Button'/><text>
-     * 
+     *
      * Case 3 : as an XML element of type URL/Boolean/Double... (ie an FXOMPropertyC)
      *      <text><URL value='@Desktop/Blah.css' /></text>
      *      <text><Double fx:value='12.0' /></text>
      */
 
-    
+
     /*
      * TextEncodablePropertyMetadata
      */
-    
+
     @Override
     public String makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
         final String result;
-        
+
         final Class<?> valueClass = valueFxomInstance.getDeclaredClass();
         if (valueClass == URL.class) {
             final FXOMProperty p = valueFxomInstance.getProperties().get(valueName);
@@ -120,7 +124,7 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
     @Override
     public FXOMInstance makeFxomInstanceFromValue(String value, FXOMDocument fxomDocument) {
         final FXOMInstance result;
-        
+
         boolean shouldEncodeAsURL;
         final PrefixedValue pv = new PrefixedValue(value);
         if (pv.isClassLoaderRelativePath() || pv.isDocumentRelativePath()) {
@@ -134,10 +138,10 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
         } else {
             shouldEncodeAsURL = false;
         }
-        
+
         if (shouldEncodeAsURL) {
             // String value must be expressed using a URL element
-            // <URL value='@Desktop/IssueTracking.css' /> 
+            // <URL value='@Desktop/IssueTracking.css' />
             final FXOMPropertyT newProperty = new FXOMPropertyT(fxomDocument, valueName, value);
             result = new FXOMInstance(fxomDocument, URL.class);
             newProperty.addToParentInstance(-1, result);
@@ -145,75 +149,137 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
             result = new FXOMInstance(fxomDocument, String.class);
             result.setFxValue(value);
         }
-        
+
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String> {
+        protected boolean detectFileURL;
+
+        public SELF withFileUrlDetection(boolean fileUrlDetection) {
+            this.detectFileURL = fileUrlDetection;
+            return self();
+        }
+    }
+
     public static class StyleStringPropertyMetadata extends StringPropertyMetadata {
-        public StyleStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
-            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        protected StyleStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+//            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        }
+//
+//        protected StyleStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath, false);
+//        }
+
+        public StyleStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
 
-        public StyleStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath, false);
+        public static final class Builder extends AbstractBuilder<Builder, StyleStringPropertyMetadata> {
+            @Override
+            public StyleStringPropertyMetadata build() {
+                return new StyleStringPropertyMetadata(this);
+            }
         }
     }
-    
+
     public static class IdStringPropertyMetadata extends StringPropertyMetadata {
-        public IdStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
-            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        protected IdStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+//            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        }
+//
+//        protected IdStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath, false);
+//        }
+
+        public IdStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
 
-        public IdStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath, false);
+        public static final class Builder extends AbstractBuilder<Builder, IdStringPropertyMetadata> {
+            @Override
+            public IdStringPropertyMetadata build() {
+                return new IdStringPropertyMetadata(this);
+            }
         }
     }
-    
+
     public static class CharsetStringPropertyMetadata extends StringPropertyMetadata {
-        public CharsetStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
-            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        protected CharsetStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+//            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        }
+//
+//        protected CharsetStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath, false);
+//        }
+
+        public CharsetStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
 
-        public CharsetStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath, false);
+        public static final class Builder extends AbstractBuilder<Builder, CharsetStringPropertyMetadata> {
+            @Override
+            public CharsetStringPropertyMetadata build() {
+                return new CharsetStringPropertyMetadata(this);
+            }
         }
     }
-    
+
     public static class I18nStringPropertyMetadata extends StringPropertyMetadata {
-        public I18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
-            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        protected I18nStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+//            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        }
+//
+//        protected I18nStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath, false);
+//        }
+
+        public I18nStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
 
-        public I18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath, false);
+        public static final class Builder extends AbstractBuilder<Builder, I18nStringPropertyMetadata> {
+            @Override
+            public I18nStringPropertyMetadata build() {
+                return new I18nStringPropertyMetadata(this);
+            }
         }
     }
-    
-    public static class MultilineI18nStringPropertyMetadata extends I18nStringPropertyMetadata {
-        public MultilineI18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
-            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
-        }
 
-        public MultilineI18nStringPropertyMetadata(PropertyName name, boolean readWrite, 
-                String defaultValue, InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath, false);
+    public static class MultilineI18nStringPropertyMetadata extends I18nStringPropertyMetadata {
+//        protected MultilineI18nStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath, boolean detectFileURL) {
+//            super(name, readWrite, defaultValue, inspectorPath, detectFileURL);
+//        }
+//
+//        protected MultilineI18nStringPropertyMetadata(PropertyName name, boolean readWrite,
+//                String defaultValue, InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath, false);
+//        }
+
+        public MultilineI18nStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
 
         @Override
         public boolean isMultiline() {
             return true;
         }
-        
-        
+
+        public static final class Builder extends AbstractBuilder<Builder, MultilineI18nStringPropertyMetadata> {
+            @Override
+            public MultilineI18nStringPropertyMetadata build() {
+                return new MultilineI18nStringPropertyMetadata(this);
+            }
+        }
     }
 
 }

@@ -32,9 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.BasicSelection;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  * Base class for number
@@ -43,16 +41,20 @@ public abstract class NumberPropertyMetadata<T extends Number> extends TextEncod
 
     private T min;
     private T max;
-    
-    public NumberPropertyMetadata(PropertyName name, Class<T> cls, boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
-        super(name, cls, readWrite, defaultValue, inspectorPath);
+
+//    protected NumberPropertyMetadata(PropertyName name, Class<T> cls, boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
+//        super(name, cls, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected NumberPropertyMetadata(AbstractBuilder<?,?,T> builder) {
+        super(builder);
     }
 
     public T getMin(BasicSelection selectionState) {
         return min;
     }
 
-    public NumberPropertyMetadata<T> setMin(T min) {
+    protected NumberPropertyMetadata<T> setMin(T min) {
         this.min = min;
         return this;
     }
@@ -61,10 +63,24 @@ public abstract class NumberPropertyMetadata<T extends Number> extends TextEncod
         return max;
     }
 
-    public NumberPropertyMetadata<T> setMax(T max) {
+    protected NumberPropertyMetadata<T> setMax(T max) {
         this.max = max;
         return this;
     }
-    
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, T> extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, T> {
+        protected T min;
+        protected T max;
+
+        protected SELF withMin(T min) {
+            this.min = min;
+            return self();
+        }
+
+        protected SELF withMax(T max) {
+            this.max = max;
+            return self();
+        }
+    }
+
 }

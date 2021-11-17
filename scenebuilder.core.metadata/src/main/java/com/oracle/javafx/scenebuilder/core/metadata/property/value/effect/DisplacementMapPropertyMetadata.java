@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.DisplacementMap;
 
@@ -50,33 +50,56 @@ public class DisplacementMapPropertyMetadata extends ComplexPropertyMetadata<Dis
     
     private final DisplacementMap DEFAULT = new DisplacementMap();
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata offsetXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetX"), //NOCHECK
-            true /* readWrite */, DEFAULT.getOffsetX(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata offsetYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetY"), //NOCHECK
-            true /* readWrite */, DEFAULT.getOffsetY(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata scaleXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleX"), //NOCHECK
-            true /* readWrite */, DEFAULT.getScaleX(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata scaleYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("scaleY"), //NOCHECK
-            true /* readWrite */, DEFAULT.getScaleY(), InspectorPath.UNUSED);
-    private final BooleanPropertyMetadata wrapMetadata
-            = new BooleanPropertyMetadata(new PropertyName("wrap"), //NOCHECK
-            true /* readWrite */, DEFAULT.isWrap(), InspectorPath.UNUSED);
-    private final FloatMapPropertyMetadata mapDataMetadata
-            = new FloatMapPropertyMetadata(new PropertyName("mapData"), //NOCHECK
-            true /* readWrite */, DEFAULT.getMapData(), InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public DisplacementMapPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final CoordinateDoublePropertyMetadata offsetXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("offsetX")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getOffsetX())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata offsetYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("offsetY")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getOffsetY())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata scaleXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("scaleX")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getScaleX())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata scaleYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("scaleY")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getScaleY())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final BooleanPropertyMetadata wrapMetadata = new BooleanPropertyMetadata.Builder()
+            .withName(new PropertyName("wrap")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.isWrap())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final FloatMapPropertyMetadata mapDataMetadata = new FloatMapPropertyMetadata.Builder()
+            .withName(new PropertyName("mapData")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getMapData())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected DisplacementMapPropertyMetadata(PropertyName name, boolean readWrite, 
             DisplacementMap defaultValue, InspectorPath inspectorPath) {
         super(name, DisplacementMap.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected DisplacementMapPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
@@ -94,5 +117,19 @@ public class DisplacementMapPropertyMetadata extends ComplexPropertyMetadata<Dis
         mapDataMetadata.setValue(result, value.getMapData());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, DisplacementMap> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(DisplacementMap.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, DisplacementMapPropertyMetadata> {
+        @Override
+        public DisplacementMapPropertyMetadata build() {
+            return new DisplacementMapPropertyMetadata(this);
+        }
     }
 }

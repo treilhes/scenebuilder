@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.scenebuilder</groupId>
+        <artifactId>scenebuilder.metadata.gluon</artifactId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>scenebuilder.metadata.gluondata</artifactId>
+
+    <build>
+        <plugins>
+            <!-- Why using this plugin: When using scenebuilder.metadata-maven-plugin to build javafx metadata, the native
+                libraries are loaded but failed to be released when the build end. Running the build using maven-invoker-plugin allows to
+                create a forked process which will successfully release the lock on native libs -->
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <projectsDirectory>${basedir}/..</projectsDirectory>
+                    <pomIncludes>
+                        <pomInclude>scenebuilder.metadata.gluon5/pom.xml</pomInclude>
+                    </pomIncludes>
+                    <streamLogs>true</streamLogs>
+                    <goals>
+                        <goal>install</goal>
+                    </goals>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>forked-install</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -37,10 +37,28 @@
     <build>
         <pluginManagement>
             <plugins>
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.plugin.version}</version>
+                    <executions>
+
+                        <execution>
+                            <id>test</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                            <configuration>
+                                <compilerArgs>
+                                    <arg>--add-exports</arg>
+                                    <arg>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
+                                </compilerArgs>
+                            </configuration>
+                        </execution>
+                    </executions>
                     <configuration>
                         <compilerArgs>
                             <arg>--add-exports</arg>

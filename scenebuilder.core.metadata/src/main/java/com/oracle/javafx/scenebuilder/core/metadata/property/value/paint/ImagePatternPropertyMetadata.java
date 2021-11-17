@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.ImagePattern;
 
@@ -50,28 +50,49 @@ import javafx.scene.paint.ImagePattern;
  */
 public class ImagePatternPropertyMetadata extends ComplexPropertyMetadata<ImagePattern> {
 
-    private final ImagePropertyMetadata imageMetadata
-            = new ImagePropertyMetadata(new PropertyName("image"), 
-            true, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata widthMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("width"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata heightMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("height"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final BooleanPropertyMetadata proportionalMetadata
-            = new BooleanPropertyMetadata(new PropertyName("proportional"), 
-            true, true, InspectorPath.UNUSED);
+    private final ImagePropertyMetadata imageMetadata = new ImagePropertyMetadata.Builder()
+            .withName(new PropertyName("image")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata xMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("x")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata yMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("y")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata widthMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("width")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata heightMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("height")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final BooleanPropertyMetadata proportionalMetadata = new BooleanPropertyMetadata.Builder()
+            .withName(new PropertyName("proportional")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(true)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     public ImagePatternPropertyMetadata(PropertyName name, boolean readWrite, 
             ImagePattern defaultValue, InspectorPath inspectorPath) {
         super(name, ImagePattern.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    public ImagePatternPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -92,4 +113,17 @@ public class ImagePatternPropertyMetadata extends ComplexPropertyMetadata<ImageP
         return result;
     }
     
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ImagePattern> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(ImagePattern.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ImagePatternPropertyMetadata> {
+        @Override
+        public ImagePatternPropertyMetadata build() {
+            return new ImagePatternPropertyMetadata(this);
+        }
+    }
 }

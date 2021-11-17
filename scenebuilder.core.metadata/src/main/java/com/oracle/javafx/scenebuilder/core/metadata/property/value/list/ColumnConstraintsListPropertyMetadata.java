@@ -33,13 +33,12 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ColumnConstraintsPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.layout.ColumnConstraints;
 
@@ -48,37 +47,44 @@ import javafx.scene.layout.ColumnConstraints;
  */
 public class ColumnConstraintsListPropertyMetadata extends ListValuePropertyMetadata<ColumnConstraints> {
 
-    private static final ColumnConstraintsPropertyMetadata itemMetadata
-            = new ColumnConstraintsPropertyMetadata(new PropertyName("unused"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    
-    public ColumnConstraintsListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<ColumnConstraints> defaultValue, InspectorPath inspectorPath) {
-        super(name, ColumnConstraints.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+    private static final ColumnConstraintsPropertyMetadata itemMetadata = new ColumnConstraintsPropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) // NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+//    public ColumnConstraintsListPropertyMetadata(PropertyName name, boolean readWrite,
+//            List<ColumnConstraints> defaultValue, InspectorPath inspectorPath) {
+//        super(name, ColumnConstraints.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+//    public ColumnConstraintsListPropertyMetadata() {
+//        this(new PropertyName("columnConstraints"), true /* readWrite */, Collections.emptyList(),
+//                InspectorPath.UNUSED);
+//    }
+
+    protected ColumnConstraintsListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
-    
-    public ColumnConstraintsListPropertyMetadata() {
-        this(new PropertyName("columnConstraints"), true /* readWrite */, 
-                Collections.emptyList(), InspectorPath.UNUSED);
-    }
-    
+
     public void pack(FXOMInstance fxomInstance) {
         final ColumnConstraints def = new ColumnConstraints();
         final List<ColumnConstraints> v = new ArrayList<>(getValue(fxomInstance));
         if (v.isEmpty() == false) {
-            ColumnConstraints last = v.get(v.size()-1);
+            ColumnConstraints last = v.get(v.size() - 1);
             while ((last != null) && ColumnConstraintsPropertyMetadata.equals(last, def)) {
-                v.remove(v.size()-1);
+                v.remove(v.size() - 1);
                 if (v.isEmpty()) {
                     last = null;
                 } else {
-                    last = v.get(v.size()-1);
+                    last = v.get(v.size() - 1);
                 }
             }
             setValue(fxomInstance, v);
         }
     }
-    
+
     public void unpack(FXOMInstance fxomInstance, int columnCount) {
         final List<ColumnConstraints> value = new ArrayList<>(getValue(fxomInstance));
         if (value.size() < columnCount) {
@@ -90,12 +96,12 @@ public class ColumnConstraintsListPropertyMetadata extends ListValuePropertyMeta
             setValue(fxomInstance, newValue);
         }
     }
-    
+
     public static boolean equals(List<ColumnConstraints> l1, List<ColumnConstraints> l2) {
-        
+
         assert l1 != null;
         assert l2 != null;
-        
+
         boolean result;
         if (l1.size() != l2.size()) {
             result = false;
@@ -107,8 +113,23 @@ public class ColumnConstraintsListPropertyMetadata extends ListValuePropertyMeta
                 result = ColumnConstraintsPropertyMetadata.equals(c1, c2);
             }
         }
-        
+
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColumnConstraints> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(ColumnConstraints.class);
+            withItemMetadata(ColumnConstraintsListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ColumnConstraintsListPropertyMetadata> {
+        @Override
+        public ColumnConstraintsListPropertyMetadata build() {
+            return new ColumnConstraintsListPropertyMetadata(this);
+        }
+    }
 }

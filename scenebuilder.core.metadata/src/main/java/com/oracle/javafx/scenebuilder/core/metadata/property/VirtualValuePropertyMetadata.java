@@ -66,4 +66,6 @@ public class VirtualValuePropertyMetadata extends ValuePropertyMetadata {
 
     }
 
+    protected static abstract class VirtualValuePropertyMetadataBuilder<SELF, TOBUILD> extends AbstractBuilder<SELF, TOBUILD> {
+    }
 }

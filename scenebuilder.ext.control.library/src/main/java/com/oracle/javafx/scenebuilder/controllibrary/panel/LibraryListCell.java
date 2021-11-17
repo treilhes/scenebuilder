@@ -107,7 +107,8 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
 
                 // If QE were about to test a localized version the ID should
                 // remain unchanged.
-                if (item.getLibItem().getQualifier().getLabel() != null) {
+                String qualifier = item.getLibItem().getQualifier().getLabel();
+                if (qualifier != null && !"default".equals(qualifier.toLowerCase())) {
                     id += String.format(" (%s)", item.getLibItem().getQualifier().getLabel());
                 }
                 graphic.setId(id); // for QE
@@ -195,32 +196,32 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
             }
         }
     }
-    
+
     private String makeQualifierLabel(Qualifier qualifier) {
         String label = qualifier.getLabel();
         String description = qualifier.getDescription();
-        
+
         if (label == null && description == null) {
             return "";
         }
-        
+
         String output = "";
-        
+
         if (label != null) {
             output += "(" + I18N.getStringOrDefault(String.format("label.qualifier.%s",label), label) + ")";
         }
-        
+
         if (description != null) {
             output += output.length() == 0 ? "" : " ";
             output += "(" + I18N.getStringOrDefault(String.format("description.qualifier.%s",description), description) + ")";
         }
         return output;
     }
-    
+
 
     private void updateLayout(LibraryListItem listItem) {
         assert listItem != null;
-        
+
         if (listItem.getLibItem() != null) {
             final LibraryItemImpl item = listItem.getLibItem();
             // The classname shall be space character free (it is an API name).

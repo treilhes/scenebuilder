@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.Bloom;
@@ -61,90 +61,68 @@ import javafx.scene.effect.Shadow;
  *
  * 
  */
+//TODO update this class to handle custom effects provided by extension if it is possible
 public class EffectPropertyMetadata extends ComplexPropertyMetadata<Effect> {
 
-    public EffectPropertyMetadata(PropertyName name, boolean readWrite, 
+    protected EffectPropertyMetadata(PropertyName name, boolean readWrite, 
             Effect defaultValue, InspectorPath inspectorPath) {
         super(name, Effect.class, readWrite, defaultValue, inspectorPath);
-        
+    }
+    
+    protected EffectPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
      * ComplexPropertyMetadata
      */
 
+    @SuppressWarnings("unchecked") // function makeFxomInstanceFromValue already check the value type
+    private <U, V extends ComplexPropertyMetadata<U> , T extends ComplexPropertyMetadata.AbstractBuilder<T, V, U>> FXOMInstance makeFxomInstanceFromBuilderAndValue(T builder, Effect value, FXOMDocument fxomDocument){
+        return fillBuilder(this, builder)
+                .withDefaultValue(null)
+                .build()
+                .makeFxomInstanceFromValue((U)value, fxomDocument);
+    }
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Effect value, FXOMDocument fxomDocument) {
         final FXOMInstance result;
         
         if (value instanceof Blend) {
-            final BlendPropertyMetadata subclassMetadata 
-                    = new BlendPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((Blend) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new BlendPropertyMetadata.Builder(), (Blend) value, fxomDocument);
         } else if (value instanceof Bloom) {
-            final BloomPropertyMetadata subclassMetadata 
-                    = new BloomPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((Bloom) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new BloomPropertyMetadata.Builder(), (Bloom) value, fxomDocument);
         } else if (value instanceof BoxBlur) {
-            final BoxBlurPropertyMetadata subclassMetadata 
-                    = new BoxBlurPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((BoxBlur) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new BoxBlurPropertyMetadata.Builder(), (BoxBlur) value, fxomDocument);
         } else if (value instanceof ColorAdjust) {
-            final ColorAdjustPropertyMetadata subclassMetadata 
-                    = new ColorAdjustPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((ColorAdjust) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new ColorAdjustPropertyMetadata.Builder(), (ColorAdjust) value, fxomDocument);
         } else if (value instanceof ColorInput) {
-            final ColorInputPropertyMetadata subclassMetadata 
-                    = new ColorInputPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((ColorInput) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new ColorInputPropertyMetadata.Builder(), (ColorInput) value, fxomDocument);
         } else if (value instanceof DisplacementMap) {
-            final DisplacementMapPropertyMetadata subclassMetadata 
-                    = new DisplacementMapPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((DisplacementMap) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new DisplacementMapPropertyMetadata.Builder(), (DisplacementMap) value, fxomDocument);
         } else if (value instanceof DropShadow) {
-            final DropShadowPropertyMetadata subclassMetadata 
-                    = new DropShadowPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((DropShadow) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new DropShadowPropertyMetadata.Builder(), (DropShadow) value, fxomDocument);
         } else if (value instanceof GaussianBlur) {
-            final GaussianBlurPropertyMetadata subclassMetadata 
-                    = new GaussianBlurPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((GaussianBlur) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new GaussianBlurPropertyMetadata.Builder(), (GaussianBlur) value, fxomDocument);
         } else if (value instanceof Glow) {
-            final GlowPropertyMetadata subclassMetadata 
-                    = new GlowPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((Glow) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new GlowPropertyMetadata.Builder(), (Glow) value, fxomDocument);
         } else if (value instanceof ImageInput) {
-            final ImageInputPropertyMetadata subclassMetadata 
-                    = new ImageInputPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((ImageInput) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new ImageInputPropertyMetadata.Builder(), (ImageInput) value, fxomDocument);
         } else if (value instanceof InnerShadow) {
-            final InnerShadowPropertyMetadata subclassMetadata 
-                    = new InnerShadowPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((InnerShadow) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new InnerShadowPropertyMetadata.Builder(), (InnerShadow) value, fxomDocument);
         } else if (value instanceof Lighting) {
-            final LightingPropertyMetadata subclassMetadata 
-                    = new LightingPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((Lighting) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new LightingPropertyMetadata.Builder(), (Lighting) value, fxomDocument);
         } else if (value instanceof MotionBlur) {
-            final MotionBlurPropertyMetadata subclassMetadata 
-                    = new MotionBlurPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((MotionBlur) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new MotionBlurPropertyMetadata.Builder(), (MotionBlur) value, fxomDocument);
         } else if (value instanceof PerspectiveTransform) {
-            final PerspectiveTransformPropertyMetadata subclassMetadata 
-                    = new PerspectiveTransformPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((PerspectiveTransform) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new PerspectiveTransformPropertyMetadata.Builder(), (PerspectiveTransform) value, fxomDocument);
         } else if (value instanceof Reflection) {
-            final ReflectionPropertyMetadata subclassMetadata 
-                    = new ReflectionPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((Reflection) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new ReflectionPropertyMetadata.Builder(), (Reflection) value, fxomDocument);
         } else if (value instanceof SepiaTone) {
-            final SepiaTonePropertyMetadata subclassMetadata 
-                    = new SepiaTonePropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((SepiaTone) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new SepiaTonePropertyMetadata.Builder(), (SepiaTone) value, fxomDocument);
         } else if (value instanceof Shadow) {
-            final ShadowPropertyMetadata subclassMetadata 
-                    = new ShadowPropertyMetadata(getName(), isReadWrite(), null, getInspectorPath());
-            result = subclassMetadata.makeFxomInstanceFromValue((Shadow) value, fxomDocument);
+            result = makeFxomInstanceFromBuilderAndValue(new ShadowPropertyMetadata.Builder(), (Shadow) value, fxomDocument);
         } else {
             assert false : "unexpected effect class = " + value.getClass().getSimpleName(); //NOCHECK
             result = null;
@@ -153,4 +131,19 @@ public class EffectPropertyMetadata extends ComplexPropertyMetadata<Effect> {
         return result;
     }
     
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Effect> {
+
+        public AbstractBuilder() {
+            super();
+            withValueClass(Effect.class);
+        }
+        
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, EffectPropertyMetadata> {
+        @Override
+        public EffectPropertyMetadata build() {
+            return new EffectPropertyMetadata(this);
+        }
+    }
 }

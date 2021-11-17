@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  *
@@ -46,9 +46,13 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  */
 public abstract class ComplexPropertyMetadata<T> extends SingleValuePropertyMetadata<T> {
 
-    public ComplexPropertyMetadata(PropertyName name, Class<T> valueClass, 
+    protected ComplexPropertyMetadata(PropertyName name, Class<T> valueClass, 
             boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
         super(name, valueClass, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected ComplexPropertyMetadata(AbstractBuilder<?, ?, T> builder) {
+        super(builder);
     }
     
     /*
@@ -94,6 +98,9 @@ public abstract class ComplexPropertyMetadata<T> extends SingleValuePropertyMeta
     @Override
     public T makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
         return getValueClass().cast(valueFxomInstance.getSceneGraphObject());
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, T> extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, T> {
     }
 
 }

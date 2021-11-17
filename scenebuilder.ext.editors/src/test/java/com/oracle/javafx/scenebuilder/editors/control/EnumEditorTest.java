@@ -41,6 +41,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)
 public class EnumEditorTest {
@@ -48,34 +49,38 @@ public class EnumEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static EnumerationPropertyMetadata someEnumProp() {
-        return new EnumerationPropertyMetadata(new PropertyName("enum"), javafx.scene.AccessibleRole.class, true,
-                javafx.scene.AccessibleRole.CHECK_BOX, null);
+        return new EnumerationPropertyMetadata.Builder<>(javafx.scene.AccessibleRole.class)
+                .withName(new PropertyName("enum"))
+                .withReadWrite(true)
+                .withDefaultValue(javafx.scene.AccessibleRole.CHECK_BOX)
+                .withInspectorPath(InspectorPath.UNUSED).build();
+
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        
+
         EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        
+
         EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstanceForTableView() {
-        
+
         EnumEditor o = new EnumEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someEnumProp(), null);
     }
-    
+
 }

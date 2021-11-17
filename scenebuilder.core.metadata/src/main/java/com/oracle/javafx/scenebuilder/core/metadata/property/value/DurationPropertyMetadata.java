@@ -33,20 +33,36 @@
 
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.SBDuration;
 
 public class DurationPropertyMetadata extends TextEncodablePropertyMetadata<SBDuration> {
 
-    public DurationPropertyMetadata(PropertyName name,
-                                    boolean readWrite, SBDuration defaultValue, InspectorPath inspectorPath) {
-        super(name, SBDuration.class, readWrite, defaultValue, inspectorPath);
-    }
+//    public DurationPropertyMetadata(PropertyName name,
+//                                    boolean readWrite, SBDuration defaultValue, InspectorPath inspectorPath) {
+//        super(name, SBDuration.class, readWrite, defaultValue, inspectorPath);
+//    }
 
+    protected DurationPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
 
     @Override
     public SBDuration makeValueFromString(String string) {
         return SBDuration.valueOf(string);
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, SBDuration> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(SBDuration.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, DurationPropertyMetadata> {
+        @Override
+        public DurationPropertyMetadata build() {
+            return new DurationPropertyMetadata(this);
+        }
     }
 }

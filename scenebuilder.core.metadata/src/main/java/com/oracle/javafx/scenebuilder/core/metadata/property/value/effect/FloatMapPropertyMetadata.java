@@ -34,10 +34,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.FloatMap;
 
@@ -46,18 +46,27 @@ import javafx.scene.effect.FloatMap;
  */
 public class FloatMapPropertyMetadata extends ComplexPropertyMetadata<FloatMap> {
     
-    private final IntegerPropertyMetadata widthMetadata
-            = new IntegerPropertyMetadata(new PropertyName("width"), //NOCHECK
-            true, 1, InspectorPath.UNUSED);
-    private final IntegerPropertyMetadata heightMetadata
-            = new IntegerPropertyMetadata(new PropertyName("height"), //NOCHECK
-            true, 1, InspectorPath.UNUSED);
-    
-    public FloatMapPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final IntegerPropertyMetadata widthMetadata = new IntegerPropertyMetadata.Builder()
+            .withName(new PropertyName("height")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final IntegerPropertyMetadata heightMetadata = new IntegerPropertyMetadata.Builder()
+            .withName(new PropertyName("height")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected FloatMapPropertyMetadata(PropertyName name, boolean readWrite, 
             FloatMap defaultValue, InspectorPath inspectorPath) {
         super(name, FloatMap.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected FloatMapPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -71,5 +80,18 @@ public class FloatMapPropertyMetadata extends ComplexPropertyMetadata<FloatMap> 
 
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, FloatMap> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(FloatMap.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, FloatMapPropertyMetadata> {
+        @Override
+        public FloatMapPropertyMetadata build() {
+            return new FloatMapPropertyMetadata(this);
+        }
+    }
 }

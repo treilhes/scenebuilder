@@ -41,6 +41,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)
 public class BooleanEditorTest {
@@ -48,29 +49,33 @@ public class BooleanEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static BooleanPropertyMetadata someBoolProp() {
-        return new BooleanPropertyMetadata(new PropertyName("boolean"), true, false, null);
+        return new BooleanPropertyMetadata.Builder()
+                .withName(new PropertyName("boolean"))
+                .withReadWrite(true)
+                .withDefaultValue(false)
+                .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         BooleanEditor o = new BooleanEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
         BooleanEditor o = new BooleanEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
         BooleanEditor o = new BooleanEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someBoolProp(), null);
     }
 

@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ButtonTypePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.control.ButtonType;
 
@@ -45,13 +45,35 @@ import javafx.scene.control.ButtonType;
  */
 public class ButtonTypeListPropertyMetadata extends ListValuePropertyMetadata<ButtonType> {
 
-    private final static ButtonTypePropertyMetadata itemMetadata
-            = new ButtonTypePropertyMetadata(new PropertyName("unused"), //NOCHECK
-                    true, ButtonType.CLOSE, InspectorPath.UNUSED);
+    private final static ButtonTypePropertyMetadata itemMetadata = new ButtonTypePropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) // NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(ButtonType.CLOSE)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public ButtonTypeListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<ButtonType> defaultValue, InspectorPath inspectorPath) {
+    public ButtonTypeListPropertyMetadata(PropertyName name, boolean readWrite, List<ButtonType> defaultValue,
+            InspectorPath inspectorPath) {
         super(name, ButtonType.class, itemMetadata, readWrite, defaultValue, inspectorPath);
     }
 
+    protected ButtonTypeListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, ButtonType> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(ButtonType.class);
+            withItemMetadata(ButtonTypeListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ButtonTypeListPropertyMetadata> {
+        @Override
+        public ButtonTypeListPropertyMetadata build() {
+            return new ButtonTypeListPropertyMetadata(this);
+        }
+    }
 }

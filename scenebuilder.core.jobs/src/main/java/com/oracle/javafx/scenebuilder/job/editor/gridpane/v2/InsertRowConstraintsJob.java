@@ -56,11 +56,11 @@ import javafx.scene.layout.RowConstraints;
 public class InsertRowConstraintsJob extends Job {
 
     private static final RowConstraintsListPropertyMetadata rowContraintsMeta =
-            new RowConstraintsListPropertyMetadata(
-                new PropertyName("rowConstraints"), //NOCHECK
-                true, /* readWrite */
-                Collections.emptyList(), /* defaultValue */
-                InspectorPath.UNUSED);
+            new RowConstraintsListPropertyMetadata.Builder()
+                .withName(new PropertyName("rowConstraints")) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(Collections.emptyList())
+                .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final FXOMInstance gridPaneObject;
     private final int rowIndex;

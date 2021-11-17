@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Reflection;
 
@@ -48,27 +48,45 @@ import javafx.scene.effect.Reflection;
  */
 public class ReflectionPropertyMetadata extends ComplexPropertyMetadata<Reflection> {
     
-    private final OpacityDoublePropertyMetadata bottomOpacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("bottomOpacity"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata fractionMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("fraction"), //NOCHECK
-            true /* readWrite */, 0.75, InspectorPath.UNUSED);
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata topOffsetMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("topOffset"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata topOpacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("topOpacity"), //NOCHECK
-            true /* readWrite */, 0.5, InspectorPath.UNUSED);
+    private final OpacityDoublePropertyMetadata bottomOpacityMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("bottomOpacity"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public ReflectionPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final OpacityDoublePropertyMetadata fractionMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("fraction"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.75)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata topOffsetMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("topOffset"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final OpacityDoublePropertyMetadata topOpacityMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("topOpacity"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.5)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected ReflectionPropertyMetadata(PropertyName name, boolean readWrite, 
             Reflection defaultValue, InspectorPath inspectorPath) {
         super(name, Reflection.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected ReflectionPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -84,5 +102,19 @@ public class ReflectionPropertyMetadata extends ComplexPropertyMetadata<Reflecti
         topOpacityMetadata.setValue(result, value.getTopOpacity());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Reflection> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Reflection.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, ReflectionPropertyMetadata> {
+        @Override
+        public ReflectionPropertyMetadata build() {
+            return new ReflectionPropertyMetadata(this);
+        }
     }
 }

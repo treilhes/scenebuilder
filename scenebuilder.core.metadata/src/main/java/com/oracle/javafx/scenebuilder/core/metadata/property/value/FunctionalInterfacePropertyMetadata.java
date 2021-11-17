@@ -34,8 +34,6 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 public class FunctionalInterfacePropertyMetadata extends TextEncodablePropertyMetadata<String> {
     private FunctionalInterface functionalInterface;
@@ -44,10 +42,14 @@ public class FunctionalInterfacePropertyMetadata extends TextEncodablePropertyMe
         FUNCTION
     }
 
-    public FunctionalInterfacePropertyMetadata(PropertyName name, boolean readWrite,
-                                        String defaultValue, InspectorPath inspectorPath, FunctionalInterface functionalInterface) {
-        super(name, String.class, readWrite, defaultValue, inspectorPath);
-        this.functionalInterface = functionalInterface;
+//    public FunctionalInterfacePropertyMetadata(PropertyName name, boolean readWrite,
+//                                        String defaultValue, InspectorPath inspectorPath, FunctionalInterface functionalInterface) {
+//        super(name, String.class, readWrite, defaultValue, inspectorPath);
+//        this.functionalInterface = functionalInterface;
+//    }
+
+    protected FunctionalInterfacePropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -70,5 +72,18 @@ public class FunctionalInterfacePropertyMetadata extends TextEncodablePropertyMe
         return functionalInterface;
     }
 
-}
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(String.class);
+        }
+    }
 
+    public static final class Builder extends AbstractBuilder<Builder, FunctionalInterfacePropertyMetadata> {
+        @Override
+        public FunctionalInterfacePropertyMetadata build() {
+            return new FunctionalInterfacePropertyMetadata(this);
+        }
+    }
+}

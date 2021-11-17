@@ -47,6 +47,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.AnchorPropertyGroupMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)
 public class AnchorPaneConstraintsEditorTest {
@@ -54,30 +55,34 @@ public class AnchorPaneConstraintsEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static DoublePropertyMetadata someAnchorProp(String name) {
-        return new NullableCoordinateDoublePropertyMetadata(new PropertyName(name), true, null, null);
+        return new NullableCoordinateDoublePropertyMetadata.Builder()
+                .withName(new PropertyName(name))
+                .withReadWrite(true)
+                .withDefaultValue(null)
+                .withInspectorPath(InspectorPath.UNUSED).build();
     }
     static AnchorPropertyGroupMetadata someAnchorGroupProp() {
-        return new AnchorPropertyGroupMetadata(new PropertyName("anchors"), 
-                someAnchorProp("top"),
-                someAnchorProp("right"),
-                someAnchorProp("bottom"),
-                someAnchorProp("left")
-                );
+        return new AnchorPropertyGroupMetadata.Builder()
+                .withName(new PropertyName("anchors"))
+                .withTopAnchorProperty(someAnchorProp("top"))
+                .withRightAnchorProperty(someAnchorProp("right"))
+                .withBottomAnchorProperty(someAnchorProp("bottom"))
+                .withLeftAnchorProperty(someAnchorProp("left")).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
         AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
@@ -85,9 +90,9 @@ public class AnchorPaneConstraintsEditorTest {
     public void shouldResetTheInstance() {
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
-        
+
         AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someAnchorGroupProp(), selectionState);
     }
 

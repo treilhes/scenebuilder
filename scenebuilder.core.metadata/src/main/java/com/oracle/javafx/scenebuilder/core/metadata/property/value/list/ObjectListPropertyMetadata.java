@@ -32,24 +32,40 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
-import java.util.List;
-
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ObjectPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
  */
 public class ObjectListPropertyMetadata extends ListValuePropertyMetadata<Object> {
 
-    private final static ObjectPropertyMetadata itemMetadata
-            = new ObjectPropertyMetadata(new PropertyName("unused"), //NOCHECK
-                    true, null, InspectorPath.UNUSED);
+    private final static ObjectPropertyMetadata itemMetadata = new ObjectPropertyMetadata(new PropertyName("unused"), // NOCHECK
+            true, null, InspectorPath.UNUSED);
 
-    public ObjectListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<Object> defaultValue, InspectorPath inspectorPath) {
-        super(name, Object.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    public ObjectListPropertyMetadata(PropertyName name, boolean readWrite, List<Object> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Object.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected ObjectListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(Object.class);
+            withItemMetadata(ObjectListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ObjectListPropertyMetadata> {
+        @Override
+        public ObjectListPropertyMetadata build() {
+            return new ObjectListPropertyMetadata(this);
+        }
+    }
 }

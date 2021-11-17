@@ -32,24 +32,44 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
-import java.util.List;
-
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
  */
 public class DoubleListPropertyMetadata extends ListValuePropertyMetadata<Double> {
 
-    private final static CoordinateDoublePropertyMetadata itemMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("unused"), //NOCHECK
-                    true, 0.0, InspectorPath.UNUSED);
+    private final static CoordinateDoublePropertyMetadata itemMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public DoubleListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<Double> defaultValue, InspectorPath inspectorPath) {
-        super(name, Double.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    public DoubleListPropertyMetadata(PropertyName name, boolean readWrite, List<Double> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Double.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected DoubleListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Double> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(Double.class);
+            withItemMetadata(DoubleListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, DoubleListPropertyMetadata> {
+        @Override
+        public DoubleListPropertyMetadata build() {
+            return new DoubleListPropertyMetadata(this);
+        }
+    }
 }

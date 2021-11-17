@@ -32,27 +32,41 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-
 /**
  *
- * 
+ *
  */
 public class BooleanPropertyMetadata extends TextEncodablePropertyMetadata<java.lang.Boolean> {
 
-    public BooleanPropertyMetadata(PropertyName name, boolean readWrite, 
-            Boolean defaultValue, InspectorPath inspectorPath) {
-        super(name, Boolean.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected BooleanPropertyMetadata(PropertyName name, boolean readWrite, Boolean defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Boolean.class, readWrite, defaultValue, inspectorPath);
+//    }
 
+    protected BooleanPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * TextEncodablePropertyMetadata
      */
-    
+
     @Override
     public Boolean makeValueFromString(String string) {
         return Boolean.valueOf(string);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Boolean> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Boolean.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, BooleanPropertyMetadata> {
+        @Override
+        public BooleanPropertyMetadata build() {
+            return new BooleanPropertyMetadata(this);
+        }
+    }
 }

@@ -38,49 +38,58 @@ import java.util.List;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+
+import javafx.scene.text.TextAlignment;
 
 /**
  *
- * 
+ *
  */
 public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
-    
-    public static final String EQUIV_NONE = "NONE"; //NOCHECK
-    public static final String EQUIV_AUTOMATIC = "AUTOMATIC"; //NOCHECK
-    public static final String EQUIV_INHERITED = "INHERIT"; //NOCHECK
-    
+
+    public static final String EQUIV_NONE = "NONE"; // NOCHECK
+    public static final String EQUIV_AUTOMATIC = "AUTOMATIC"; // NOCHECK
+    public static final String EQUIV_INHERITED = "INHERIT"; // NOCHECK
+
     private final Class<?> enumClass;
     private final Enum<?> defaultValue;
     private final String nullEquivalent;
     private List<String> validValues;
 
-    public EnumerationPropertyMetadata(PropertyName name, Class<?> enumClass,
-            boolean readWrite, Enum<?> defaultValue, InspectorPath inspectorPath) {
-        super(name, readWrite, inspectorPath);
-        assert enumClass.isEnum();
-        assert (readWrite == false) || (defaultValue != null);
-        this.enumClass = enumClass;
-        this.defaultValue = defaultValue;
-        this.nullEquivalent = null;
+//    protected EnumerationPropertyMetadata(PropertyName name, Class<?> enumClass, boolean readWrite, Enum<?> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, readWrite, inspectorPath);
+//        assert enumClass.isEnum();
+//        assert (readWrite == false) || (defaultValue != null);
+//        this.enumClass = enumClass;
+//        this.defaultValue = defaultValue;
+//        this.nullEquivalent = null;
+//    }
+//
+//    protected EnumerationPropertyMetadata(PropertyName name, Class<?> enumClass, String nullEquivalent, boolean readWrite,
+//            InspectorPath inspectorPath) {
+//        super(name, readWrite, inspectorPath);
+//        assert enumClass.isEnum();
+//        assert nullEquivalent != null;
+//        this.enumClass = enumClass;
+//        this.defaultValue = null;
+//        this.nullEquivalent = nullEquivalent;
+//    }
+
+    public EnumerationPropertyMetadata(AbstractBuilder<?, ?, ?> builder) {
+        super(builder);
+        assert builder.enumClass.isEnum();
+        assert builder.nullEquivalent != null || builder.defaultValue != null;
+        this.enumClass = builder.enumClass;
+        this.defaultValue = builder.defaultValue;
+        this.nullEquivalent = builder.nullEquivalent;
     }
-    
-    public EnumerationPropertyMetadata(PropertyName name, Class<?> enumClass,
-            String nullEquivalent, boolean readWrite, InspectorPath inspectorPath) {
-        super(name, readWrite, inspectorPath);
-        assert enumClass.isEnum();
-        assert nullEquivalent != null;
-        this.enumClass = enumClass;
-        this.defaultValue = null;
-        this.nullEquivalent = nullEquivalent;
-    }
-    
+
     public String getValue(FXOMInstance fxomInstance) {
         final String result;
-        
+
         if (isReadWrite()) {
             final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
             if (fxomProperty == null) {
@@ -107,22 +116,20 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
                 result = o.toString();
             }
         }
-        
+
         return result;
     }
 
     public void setValue(FXOMInstance fxomInstance, String value) {
         assert isReadWrite();
         assert value != null;
-        
+
         final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
         if (fxomProperty == null) {
             // propertyName is not specified in the fxom instance.
             if (value.equals(getDefaultValue()) == false) {
                 // We insert a new fxom property
-                final FXOMPropertyT newProperty 
-                        = new FXOMPropertyT(fxomInstance.getFxomDocument(),
-                        getName(), value);
+                final FXOMPropertyT newProperty = new FXOMPropertyT(fxomInstance.getFxomDocument(), getName(), value);
                 newProperty.addToParentInstance(-1, fxomInstance);
             }
         } else {
@@ -135,7 +142,7 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
             }
         }
     }
-    
+
     public String getDefaultValue() {
         final String result;
         if (isReadWrite()) {
@@ -146,7 +153,7 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
         }
         return result;
     }
-    
+
     public List<String> getValidValues() {
         if (validValues == null) {
             validValues = new ArrayList<>();
@@ -167,11 +174,11 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
     public int getValidValuesNumber() {
         return getValidValues().size();
     }
-    
+
     /*
      * ValuePropertyMetadata
      */
-    
+
     @Override
     public Class<?> getValueClass() {
         return enumClass;
@@ -192,13 +199,89 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
         assert valueObject instanceof String;
         setValue(fxomInstance, (String) valueObject);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, T extends Enum<?>>
+            extends ValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+        protected Class<?> enumClass;
+        protected Enum<?> defaultValue;
+        protected String nullEquivalent;
+
+        public AbstractBuilder(Class<T> cls) {
+            super();
+            withEnumClass(cls);
+        }
+
+        protected SELF withEnumClass(Class<T> enumClass) {
+            this.enumClass = enumClass;
+            return self();
+        }
+
+        public SELF withDefaultValue(T defaultValue) {
+            this.defaultValue = defaultValue;
+            return self();
+        }
+
+        protected SELF withNullEquivalent(String nullEquivalent) {
+            this.nullEquivalent = nullEquivalent;
+            return self();
+        }
+
+    }
+
+    public static class Builder<T extends Enum<?>> extends AbstractBuilder<Builder<T>, EnumerationPropertyMetadata, T> {
+
+        public Builder(Class<T> cls) {
+            super(cls);
+        }
+
+        @Override
+        public Builder<T> withNullEquivalent(String nullEquivalent) {
+            return super.withNullEquivalent(nullEquivalent);
+        }
+
+        @Override
+        public EnumerationPropertyMetadata build() {
+            return new EnumerationPropertyMetadata(this);
+        }
+    }
+
     public static class TextAlignmentEnumerationPropertyMetadata extends EnumerationPropertyMetadata {
 
-        public TextAlignmentEnumerationPropertyMetadata(PropertyName name, boolean readWrite,
-                Enum<javafx.scene.text.TextAlignment> defaultValue, InspectorPath inspectorPath) {
-            super(name, javafx.scene.text.TextAlignment.class, readWrite, defaultValue, inspectorPath);
+//        public TextAlignmentEnumerationPropertyMetadata(PropertyName name, boolean readWrite,
+//                Enum<javafx.scene.text.TextAlignment> defaultValue, InspectorPath inspectorPath) {
+//            super(name, javafx.scene.text.TextAlignment.class, readWrite, defaultValue, inspectorPath);
+//        }
+
+        public TextAlignmentEnumerationPropertyMetadata(
+                AbstractBuilder<?, ?> builder) {
+            super(builder);
         }
-        
+
+        protected static abstract class AbstractBuilder<SELF, TOBUILD>
+                extends EnumerationPropertyMetadata.AbstractBuilder<SELF, TOBUILD, TextAlignment> {
+
+            public AbstractBuilder(Class<javafx.scene.text.TextAlignment> cls) {
+                super(cls);
+            }
+
+        }
+
+        public static class Builder<T> extends AbstractBuilder<Builder<T>, TextAlignmentEnumerationPropertyMetadata> {
+
+
+            public Builder(Class<javafx.scene.text.TextAlignment> cls) {
+                super(cls);
+            }
+
+            public Builder() {
+                super(javafx.scene.text.TextAlignment.class);
+            }
+
+            @Override
+            public TextAlignmentEnumerationPropertyMetadata build() {
+                return new TextAlignmentEnumerationPropertyMetadata(this);
+            }
+
+        }
     }
 }

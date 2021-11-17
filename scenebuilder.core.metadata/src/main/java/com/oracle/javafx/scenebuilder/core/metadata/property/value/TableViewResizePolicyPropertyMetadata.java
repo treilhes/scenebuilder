@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
@@ -44,11 +44,16 @@ import javafx.util.Callback;
  *
  */
 public class TableViewResizePolicyPropertyMetadata extends CallbackPropertyMetadata {
-    
-    public TableViewResizePolicyPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue, InspectorPath inspectorPath) {
+
+    public TableViewResizePolicyPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue,
+            InspectorPath inspectorPath) {
         super(name, readWrite, defaultValue, inspectorPath);
         assert (defaultValue == TableView.CONSTRAINED_RESIZE_POLICY)
                 || (defaultValue == TableView.UNCONSTRAINED_RESIZE_POLICY);
+    }
+
+    protected TableViewResizePolicyPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -56,7 +61,7 @@ public class TableViewResizePolicyPropertyMetadata extends CallbackPropertyMetad
      */
     @Override
     protected Object castValue(Object value) {
-        assert value instanceof Callback<?,?>;
+        assert value instanceof Callback<?, ?>;
         return value;
     }
 
@@ -64,21 +69,45 @@ public class TableViewResizePolicyPropertyMetadata extends CallbackPropertyMetad
     protected Class<?> getFxConstantClass() {
         return TableView.class;
     }
-    
+
     @Override
     protected void updateFxomInstanceWithValue(FXOMInstance valueInstance, Object value) {
         final String fxConstant;
-        
+
         if (value == TableView.CONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; // NOCHECK
         } else if (value == TableView.UNCONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; //NOCHECK
+            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; // NOCHECK
         } else {
             // Emergency code
             assert false;
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; // NOCHECK
         }
-        
+
         valueInstance.setFxConstant(fxConstant);
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends CallbackPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+
+        public SELF withConstrainedResizePolicy() {
+            withDefaultValue(TableView.CONSTRAINED_RESIZE_POLICY);
+            return self();
+        }
+
+        public SELF withUnconstrainedResizePolicy() {
+            withDefaultValue(TableView.UNCONSTRAINED_RESIZE_POLICY);
+            return self();
+        }
+
+    }
+
+    public final static class Builder extends AbstractBuilder<Builder, TableViewResizePolicyPropertyMetadata> {
+
+        @Override
+        public TableViewResizePolicyPropertyMetadata build() {
+            return new TableViewResizePolicyPropertyMetadata(this);
+        }
+
     }
 }

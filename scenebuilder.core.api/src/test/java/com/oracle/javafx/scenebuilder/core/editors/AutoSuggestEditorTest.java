@@ -50,47 +50,57 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropert
 
 @ExtendWith(ApplicationExtension.class)
 public class AutoSuggestEditorTest {
-    
+
     static {
         I18N.initForTest();
     }
-    
+
     @Test
     public void shouldCreateAnEmptyInstance() {
         AutoSuggestEditorImpl o = new AutoSuggestEditorImpl(MockObjects.buildApiMock());
         assertNotNull(o);
     }
-    
+
     @Test
     public void shouldCreateAnEmptyMenu() {
         AutoSuggestEditorImpl o = new AutoSuggestEditorImpl(MockObjects.buildApiMock());
         assertNotNull(o.getMenu());
     }
-    
+
     @Test
     public void shouldResetTheInstance() {
         AutoSuggestEditorImpl o = new AutoSuggestEditorImpl(MockObjects.buildApiMock());
         o.reset(someIntProp(), null);
     }
-    
+
     @Test
     public void shouldResetTheInstanceForGroup() {
         AutoSuggestEditorImpl o = new AutoSuggestEditorImpl(MockObjects.buildApiMock());
         o.reset(someGroupProp(), null);
     }
-    
+
 
     static IntegerPropertyMetadata someIntProp() {
-        return new IntegerPropertyMetadata(new PropertyName("int"), true, 123, null);
+        return new IntegerPropertyMetadata.Builder()
+                .withName(new PropertyName("int")) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(123).build();
     }
     static StringPropertyMetadata someStringProp() {
-        return new MultilineI18nStringPropertyMetadata(new PropertyName("string"), true, "123", null);
+        return new MultilineI18nStringPropertyMetadata.Builder()
+                .withName(new PropertyName("string")) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue("123").build();
     }
     static PropertyGroupMetadata someGroupProp() {
-        return new PropertyGroupMetadata(new PropertyName("group"), someIntProp(), someStringProp());
+        return new PropertyGroupMetadata.Builder()
+                .withName(new PropertyName("group")) //NOCHECK
+                .withReadWrite(true)
+                .withProperty("someInt", someIntProp())
+                .withProperty("someString", someStringProp()).build();
     }
-    
-    
+
+
     private class AutoSuggestEditorImpl extends AutoSuggestEditor {
 
         public AutoSuggestEditorImpl(Api api) {
@@ -101,6 +111,6 @@ public class AutoSuggestEditorTest {
         public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
             super.reset(propMeta, selectionState);
         }
-        
+
     }
 }

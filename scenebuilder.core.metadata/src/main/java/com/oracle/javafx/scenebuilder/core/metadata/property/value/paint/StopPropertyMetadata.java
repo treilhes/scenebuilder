@@ -34,10 +34,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.Stop;
 
@@ -46,18 +46,27 @@ import javafx.scene.paint.Stop;
  */
 public class StopPropertyMetadata extends ComplexPropertyMetadata<Stop> {
     
-    private final CoordinateDoublePropertyMetadata offsetMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offset"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
-    private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
-            true, null, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata offsetMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("offset")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final ColorPropertyMetadata colorMetadata = new ColorPropertyMetadata.Builder()
+            .withName(new PropertyName("color")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
     
-    public StopPropertyMetadata(PropertyName name, boolean readWrite, 
+    protected StopPropertyMetadata(PropertyName name, boolean readWrite, 
             Stop defaultValue, InspectorPath inspectorPath) {
         super(name, Stop.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected StopPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -71,5 +80,19 @@ public class StopPropertyMetadata extends ComplexPropertyMetadata<Stop> {
 
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Stop> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Stop.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, StopPropertyMetadata> {
+        @Override
+        public StopPropertyMetadata build() {
+            return new StopPropertyMetadata(this);
+        }
+    }
+
 }

@@ -34,11 +34,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.keycombinati
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCombination;
@@ -47,51 +47,67 @@ import javafx.scene.input.KeyCombination;
  *
  */
 public class KeyCharacterCombinationPropertyMetadata extends ComplexPropertyMetadata<KeyCharacterCombination> {
-    
+
     /*
      * NOTE : KeyCharacterCombination singularity
      * 
      * Same as KeyCodeCombination => see comments in KeyCodeCombination
      */
-    private static final String DUMMY = "dummy"; //NOCHECK
+    private static final String DUMMY = "dummy"; // NOCHECK
 
-    private final EnumerationPropertyMetadata altMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("alt"), //NOCHECK
-            KeyCombination.ModifierValue.class, DUMMY, true, 
-            InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata controlMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("control"), //NOCHECK
-            KeyCombination.ModifierValue.class, DUMMY, true, 
-            InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata metaMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("meta"), //NOCHECK
-            KeyCombination.ModifierValue.class, DUMMY, true, 
-            InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata shiftMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("shift"), //NOCHECK
-            KeyCombination.ModifierValue.class, DUMMY, true, 
-            InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata shortcutMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("shortcut"), //NOCHECK
-            KeyCombination.ModifierValue.class, DUMMY, true, 
-            InspectorPath.UNUSED);
-    private final I18nStringPropertyMetadata characterMetadata
-            = new I18nStringPropertyMetadata(new PropertyName("character"), //NOCHECK
-            true, null, InspectorPath.UNUSED);
+    private final EnumerationPropertyMetadata altMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
+            .withName(new PropertyName("alt")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(DUMMY)
+            .withInspectorPath(getInspectorPath()).build();
 
-    public KeyCharacterCombinationPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final EnumerationPropertyMetadata controlMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
+            .withName(new PropertyName("control")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(DUMMY)
+            .withInspectorPath(getInspectorPath()).build();
+
+    private final EnumerationPropertyMetadata metaMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
+            .withName(new PropertyName("meta")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(DUMMY)
+            .withInspectorPath(getInspectorPath()).build();
+
+    private final EnumerationPropertyMetadata shiftMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
+            .withName(new PropertyName("shift")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(DUMMY)
+            .withInspectorPath(getInspectorPath()).build();
+
+    private final EnumerationPropertyMetadata shortcutMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
+            .withName(new PropertyName("shortcut")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(DUMMY)
+            .withInspectorPath(getInspectorPath()).build();
+
+    private final I18nStringPropertyMetadata characterMetadata = new I18nStringPropertyMetadata.Builder()
+            .withName(new PropertyName("character")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(getInspectorPath()).build();
+
+    public KeyCharacterCombinationPropertyMetadata(PropertyName name, boolean readWrite,
             KeyCharacterCombination defaultValue, InspectorPath inspectorPath) {
         super(name, KeyCharacterCombination.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected KeyCharacterCombinationPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(KeyCharacterCombination value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, value.getClass());
-        
+
         altMetadata.setValue(result, value.getAlt().toString());
         controlMetadata.setValue(result, value.getControl().toString());
         metaMetadata.setValue(result, value.getMeta().toString());
@@ -101,5 +117,19 @@ public class KeyCharacterCombinationPropertyMetadata extends ComplexPropertyMeta
 
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, KeyCharacterCombination> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(KeyCharacterCombination.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, KeyCharacterCombinationPropertyMetadata> {
+        @Override
+        public KeyCharacterCombinationPropertyMetadata build() {
+            return new KeyCharacterCombinationPropertyMetadata(this);
+        }
+    }
 }

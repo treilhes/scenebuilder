@@ -36,12 +36,12 @@ import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.ComputedAndPrefSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.ComputedSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.PercentageDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.geometry.VPos;
 import javafx.scene.layout.Priority;
@@ -54,25 +54,62 @@ public class RowConstraintsPropertyMetadata extends ComplexPropertyMetadata<RowC
 
     private static final RowConstraints DEFAULT = new RowConstraints();
 
-    private final BooleanPropertyMetadata fillHeightMetadata = new BooleanPropertyMetadata(
-            new PropertyName("fillHeight"), true, DEFAULT.isFillHeight(), InspectorPath.UNUSED);
-    private final ComputedSizeDoublePropertyMetadata maxHeightMetadata = new ComputedSizeDoublePropertyMetadata(
-            new PropertyName("maxHeight"), true, DEFAULT.getMaxHeight(), InspectorPath.UNUSED);
-    private final ComputedSizeDoublePropertyMetadata minHeightMetadata = new ComputedSizeDoublePropertyMetadata(
-            new PropertyName("minHeight"), true, DEFAULT.getMinHeight(), InspectorPath.UNUSED);
-    private final PercentageDoublePropertyMetadata percentHeightMetadata = new PercentageDoublePropertyMetadata(
-            new PropertyName("percentHeight"), true, DEFAULT.getPercentHeight(), InspectorPath.UNUSED);
-    private final ComputedAndPrefSizeDoublePropertyMetadata prefHeightMetadata = new ComputedAndPrefSizeDoublePropertyMetadata(
-            new PropertyName("prefHeight"), true, DEFAULT.getPrefHeight(), InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata valignmentMetadata = new EnumerationPropertyMetadata(
-            new PropertyName("valignment"), VPos.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true,
-            InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata vgrowMetadata = new EnumerationPropertyMetadata(new PropertyName("vgrow"),
-            Priority.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true, InspectorPath.UNUSED);
+    private final BooleanPropertyMetadata fillHeightMetadata = new BooleanPropertyMetadata.Builder()
+            .withName(new PropertyName("fillHeight")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.isFillHeight())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public RowConstraintsPropertyMetadata(PropertyName name, boolean readWrite, RowConstraints defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, RowConstraints.class, readWrite, defaultValue, inspectorPath);
+    private final ComputedSizeDoublePropertyMetadata maxHeightMetadata = new ComputedSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("maxHeight")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getMaxHeight())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final ComputedSizeDoublePropertyMetadata minHeightMetadata = new ComputedSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("minHeight")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getMinHeight())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final PercentageDoublePropertyMetadata percentHeightMetadata = new PercentageDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("percentHeight")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getPercentHeight())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final ComputedAndPrefSizeDoublePropertyMetadata prefHeightMetadata = new ComputedAndPrefSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("prefHeight")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getPrefHeight())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final EnumerationPropertyMetadata valignmentMetadata = new EnumerationPropertyMetadata.Builder<>(VPos.class)
+            .withName(new PropertyName("valignment")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final EnumerationPropertyMetadata vgrowMetadata = new EnumerationPropertyMetadata.Builder<>(Priority.class)
+            .withName(new PropertyName("vgrow")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+//    public RowConstraintsPropertyMetadata(PropertyName name, boolean readWrite, RowConstraints defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, RowConstraints.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected RowConstraintsPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -128,4 +165,17 @@ public class RowConstraintsPropertyMetadata extends ComplexPropertyMetadata<RowC
         return result;
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, RowConstraints> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(RowConstraints.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, RowConstraintsPropertyMetadata> {
+        @Override
+        public RowConstraintsPropertyMetadata build() {
+            return new RowConstraintsPropertyMetadata(this);
+        }
+    }
 }

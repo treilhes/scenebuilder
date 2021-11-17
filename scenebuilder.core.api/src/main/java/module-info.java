@@ -60,11 +60,10 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.core.clipboard.internal;
     exports com.oracle.javafx.scenebuilder.core.mask;
     exports com.oracle.javafx.scenebuilder.core.util;
-    
     //opens com.oracle.javafx.scenebuilder.api.util to spring.core;
     //opens com.oracle.javafx.scenebuilder.core.metadata to spring.core;
     //opens com.oracle.javafx.scenebuilder.api to spring.core;
-    
+
     requires transitive com.fasterxml.jackson.annotation;
     requires transitive com.fasterxml.jackson.core;
     requires transitive com.fasterxml.jackson.databind;

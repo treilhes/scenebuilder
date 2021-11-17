@@ -46,6 +46,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)
 public class BoundedDoubleEditorTest {
@@ -53,22 +54,26 @@ public class BoundedDoubleEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static DoublePropertyMetadata someDoubleProp() {
-        return new CoordinateDoublePropertyMetadata(new PropertyName("somdouble"), true, 0.0, null);
+        return new CoordinateDoublePropertyMetadata.Builder()
+                .withName(new PropertyName("somdouble"))
+                .withReadWrite(true)
+                .withDefaultValue(0.0)
+                .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
         BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
@@ -76,9 +81,9 @@ public class BoundedDoubleEditorTest {
     public void shouldResetTheInstance() {
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
-        
+
         BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someDoubleProp(), selectionState);
     }
 

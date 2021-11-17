@@ -95,7 +95,7 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class ImportWindowController extends AbstractModalDialog {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ImportWindowController.class);
 
     public enum PrefSize {
@@ -215,7 +215,7 @@ public class ImportWindowController extends AbstractModalDialog {
         // importFiles = new ArrayList<>(files);
         // this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
         // this.artifactsFilter = artifactsFilter;
-        this.owner = owner;
+        //this.owner = owner;
         // this.mavenPreferences = mavenPreferences;
         this.dialog = api.getApiDoc().getDialog();
     }
@@ -317,7 +317,7 @@ public class ImportWindowController extends AbstractModalDialog {
     protected void okButtonPressed(ActionEvent e) {
         getStage().close();
 //        exploringTask = null;
-//        
+//
 
 //        try {
 //            closeClassLoader();
@@ -507,7 +507,7 @@ public class ImportWindowController extends AbstractModalDialog {
 
         importList.getSelectionModel().selectedItemProperty().addListener((ChangeListener<ImportRow>) (ov, t, t1) -> {
             previewGroup.getChildren().clear();
-            
+
             String fxmlText;
             if (LibraryUtil.isFxmlPath(t1.getReport().getSource())) {
                 try {
@@ -519,8 +519,8 @@ public class ImportWindowController extends AbstractModalDialog {
             } else {
                 fxmlText = LibraryUtil.makeFxmlText(t1.getReportEntry().getKlass());
             }
-            
-            
+
+
             try {
                 FXOMDocument fxomDoc = new FXOMDocument(fxmlText, null, importClassLoader, null);
 //                FXOMDocument fxomDoc = new FXOMDocument(fxmlText, null, null, null);

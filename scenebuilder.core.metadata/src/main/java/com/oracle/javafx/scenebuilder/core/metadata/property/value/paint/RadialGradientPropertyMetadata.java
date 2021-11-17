@@ -36,6 +36,7 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.AngleDoublePropertyMetadata;
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropert
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StopListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -59,36 +59,63 @@ public class RadialGradientPropertyMetadata extends ComplexPropertyMetadata<Radi
             = new RadialGradient(0.0, 1.0, 0.0, 0.0, 1.0,
             true /* proportional */, CycleMethod.NO_CYCLE).getStops();
     
-    private final AngleDoublePropertyMetadata focusAngleMetadata
-            = new AngleDoublePropertyMetadata(new PropertyName("focusAngle"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata focusDistanceMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("focusDistance"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata centerXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("centerX"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata centerYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("centerY"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata radiusMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("radius"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final BooleanPropertyMetadata proportionalMetadata
-            = new BooleanPropertyMetadata(new PropertyName("proportional"), 
-            true, true, InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata cycleMethodMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("cycleMethod"),
-            CycleMethod.class, true, CycleMethod.NO_CYCLE, InspectorPath.UNUSED);
-    private final StopListPropertyMetadata stopsMetadata
-            = new StopListPropertyMetadata(new PropertyName("stops"),
-            true, DEFAULT_STOPS, InspectorPath.UNUSED);
+    private final AngleDoublePropertyMetadata focusAngleMetadata = new AngleDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("focusAngle")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public RadialGradientPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final SizeDoublePropertyMetadata focusDistanceMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("focusDistance")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata centerXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("centerX")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata centerYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("centerY")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata radiusMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("radius")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final BooleanPropertyMetadata proportionalMetadata = new BooleanPropertyMetadata.Builder()
+            .withName(new PropertyName("proportional")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(true)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EnumerationPropertyMetadata cycleMethodMetadata = new EnumerationPropertyMetadata.Builder<>(CycleMethod.class)
+            .withName(new PropertyName("cycleMethod")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(CycleMethod.NO_CYCLE)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final StopListPropertyMetadata stopsMetadata = new StopListPropertyMetadata.Builder()
+            .withName(new PropertyName("stops")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT_STOPS)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected RadialGradientPropertyMetadata(PropertyName name, boolean readWrite, 
             RadialGradient defaultValue, InspectorPath inspectorPath) {
         super(name, RadialGradient.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected RadialGradientPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -109,4 +136,17 @@ public class RadialGradientPropertyMetadata extends ComplexPropertyMetadata<Radi
         return result;
     }
     
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, RadialGradient> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(RadialGradient.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, RadialGradientPropertyMetadata> {
+        @Override
+        public RadialGradientPropertyMetadata build() {
+            return new RadialGradientPropertyMetadata(this);
+        }
+    }
 }

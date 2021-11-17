@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.EffectSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.SepiaTone;
 
@@ -47,18 +47,27 @@ import javafx.scene.effect.SepiaTone;
  */
 public class SepiaTonePropertyMetadata extends ComplexPropertyMetadata<SepiaTone> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final EffectSizeDoublePropertyMetadata levelMetadata
-            = new EffectSizeDoublePropertyMetadata(new PropertyName("level"), //NOCHECK
-            true /* readWrite */, 1.0, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public SepiaTonePropertyMetadata(PropertyName name, boolean readWrite, 
+    private final EffectSizeDoublePropertyMetadata levelMetadata = new EffectSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("level"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected SepiaTonePropertyMetadata(PropertyName name, boolean readWrite, 
             SepiaTone defaultValue, InspectorPath inspectorPath) {
         super(name, SepiaTone.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected SepiaTonePropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -71,5 +80,19 @@ public class SepiaTonePropertyMetadata extends ComplexPropertyMetadata<SepiaTone
         levelMetadata.setValue(result, value.getLevel());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, SepiaTone> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(SepiaTone.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, SepiaTonePropertyMetadata> {
+        @Override
+        public SepiaTonePropertyMetadata build() {
+            return new SepiaTonePropertyMetadata(this);
+        }
     }
 }

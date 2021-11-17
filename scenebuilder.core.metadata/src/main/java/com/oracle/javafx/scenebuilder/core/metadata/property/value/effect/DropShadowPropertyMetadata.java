@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
@@ -42,7 +43,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropert
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -53,39 +53,68 @@ import javafx.scene.paint.Color;
  */
 public class DropShadowPropertyMetadata extends ComplexPropertyMetadata<DropShadow> {
     
-    private final EnumerationPropertyMetadata blurTypeMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("blurType"), //NOCHECK
-            BlurType.class, true, BlurType.THREE_PASS_BOX, InspectorPath.UNUSED);
-    private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
-            true /* readWrite */, Color.BLACK, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata heightMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
-            true /* readWrite */, 21.0, InspectorPath.UNUSED);
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata offsetXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetX"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata offsetYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("offsetY"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata radiusMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
-            true /* readWrite */, 10.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata spreadMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("spread"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata widthMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
-            true /* readWrite */, 21.0, InspectorPath.UNUSED);
+    private final EnumerationPropertyMetadata blurTypeMetadata = new EnumerationPropertyMetadata.Builder<>(BlurType.class)
+            .withName(new PropertyName("blurType"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(BlurType.THREE_PASS_BOX)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public DropShadowPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final ColorPropertyMetadata colorMetadata = new ColorPropertyMetadata.Builder()
+            .withName(new PropertyName("color"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(Color.BLACK)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata heightMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("height"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(21.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata offsetXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("offsetX"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata offsetYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("offsetY"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata radiusMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("radius"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(10.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final OpacityDoublePropertyMetadata spreadMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("spread"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final OpacityDoublePropertyMetadata widthMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("width"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(21.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected DropShadowPropertyMetadata(PropertyName name, boolean readWrite, 
             DropShadow defaultValue, InspectorPath inspectorPath) {
         super(name, DropShadow.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected DropShadowPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
@@ -105,5 +134,21 @@ public class DropShadowPropertyMetadata extends ComplexPropertyMetadata<DropShad
         widthMetadata.setValue(result, value.getWidth());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, DropShadow> {
+
+        public AbstractBuilder() {
+            super();
+            withValueClass(DropShadow.class);
+        }
+        
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, DropShadowPropertyMetadata> {
+        @Override
+        public DropShadowPropertyMetadata build() {
+            return new DropShadowPropertyMetadata(this);
+        }
     }
 }

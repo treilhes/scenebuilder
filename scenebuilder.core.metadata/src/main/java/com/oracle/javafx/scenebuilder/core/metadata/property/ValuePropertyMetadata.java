@@ -36,8 +36,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  * This class describes a single valued property 
@@ -77,6 +77,13 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
         super(name, isGroup);
         this.readWrite = readWrite;
         this.inspectorPath = inspectorPath;
+    }
+    
+    protected ValuePropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+        this.readWrite = builder.readWrite;
+        this.inspectorPath = builder.inspectorPath;
+        this.defaultValueAlternatives.putAll(builder.defaultValueAlternatives);
     }
 
     /**
@@ -198,5 +205,43 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
         return (ValuePropertyMetadata)super.addConstant(key, value);
     }
 
-    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends PropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+        /** Is property writable. */
+        private boolean readWrite;
+        
+        //TODO this property must be extracted elsewhere in the future "Inspector extension" or better if possible
+        /** The inspector path. */
+        private InspectorPath inspectorPath;
+
+        /** The default value alternatives. */
+        private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
+        
+        @Override
+        protected SELF withConstant(String constantName, Object constantValue) {
+            return super.withConstant(constantName, constantValue);
+        }
+        
+        public SELF withReadWrite(boolean readWrite) {
+            this.readWrite = readWrite;
+            return self();
+        }
+        
+        public SELF withInspectorPath(InspectorPath inspectorPath) {
+            this.inspectorPath = inspectorPath;
+            return self();
+        }
+        
+        protected SELF withDefaultAlternativeValue(Class<?> cls, Object value) {
+            this.defaultValueAlternatives.put(cls, value);
+            return self();
+        }
+
+    }
+
+    public static <V extends ValuePropertyMetadata , T extends ValuePropertyMetadata.AbstractBuilder<T, V>> T fillBuilder(ValuePropertyMetadata source, T builder){
+        return builder
+                .withName(source.getName())
+                .withReadWrite(source.isReadWrite())
+                .withInspectorPath(source.getInspectorPath());
+    }
 }

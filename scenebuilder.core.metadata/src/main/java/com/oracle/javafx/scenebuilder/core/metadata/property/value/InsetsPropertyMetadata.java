@@ -34,35 +34,51 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.geometry.Insets;
 
 /**
  *
- * 
+ *
  */
 public class InsetsPropertyMetadata extends ComplexPropertyMetadata<Insets> {
-    
-    private final CoordinateDoublePropertyMetadata topMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("top"), 
-            true, Insets.EMPTY.getTop(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata bottomMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("bottom"), 
-            true, Insets.EMPTY.getBottom(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata leftMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("left"), 
-            true, Insets.EMPTY.getLeft(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata rightMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("right"), 
-            true, Insets.EMPTY.getRight(), InspectorPath.UNUSED);
 
-    
-    public InsetsPropertyMetadata(PropertyName name, boolean readWrite, 
-            Insets defaultValue, InspectorPath inspectorPath) {
-        super(name, Insets.class, readWrite, defaultValue, inspectorPath);
+    private final CoordinateDoublePropertyMetadata topMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("top"))
+            .withReadWrite(true)
+            .withDefaultValue(Insets.EMPTY.getTop())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+    private final CoordinateDoublePropertyMetadata bottomMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("bottom"))
+            .withReadWrite(true)
+            .withDefaultValue(Insets.EMPTY.getTop())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+    private final CoordinateDoublePropertyMetadata leftMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("left"))
+            .withReadWrite(true)
+            .withDefaultValue(Insets.EMPTY.getTop())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+    private final CoordinateDoublePropertyMetadata rightMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("right"))
+            .withReadWrite(true)
+            .withDefaultValue(Insets.EMPTY.getTop())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+
+//    public InsetsPropertyMetadata(PropertyName name, boolean readWrite,
+//            Insets defaultValue, InspectorPath inspectorPath) {
+//        super(name, Insets.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected InsetsPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -80,4 +96,17 @@ public class InsetsPropertyMetadata extends ComplexPropertyMetadata<Insets> {
         return result;
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Insets> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Insets.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, InsetsPropertyMetadata> {
+        @Override
+        public InsetsPropertyMetadata build() {
+            return new InsetsPropertyMetadata(this);
+        }
+    }
 }

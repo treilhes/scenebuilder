@@ -16,7 +16,7 @@ open module scenebuilder.core.metadata {
     requires spring.beans;
     
     requires javafx.graphics;
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires java.desktop;
     requires javafx.fxml;
     requires lombok;

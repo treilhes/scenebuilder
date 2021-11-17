@@ -34,8 +34,6 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.Material;
 
@@ -44,14 +42,33 @@ import javafx.scene.paint.Material;
  */
 public class MaterialPropertyMetadata extends ComplexPropertyMetadata<Material> {
 
-    public MaterialPropertyMetadata(PropertyName name, boolean readWrite, 
-            Material defaultValue, InspectorPath inspectorPath) {
-        super(name, Material.class, readWrite, defaultValue, inspectorPath);
+//    public MaterialPropertyMetadata(PropertyName name, boolean readWrite,
+//            Material defaultValue, InspectorPath inspectorPath) {
+//        super(name, Material.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected MaterialPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Material value, FXOMDocument fxomDocument) {
         throw new UnsupportedOperationException("Not supported yet."); //NOCHECK
     }
-    
+
+
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Material> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Material.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, MaterialPropertyMetadata> {
+        @Override
+        public MaterialPropertyMetadata build() {
+            return new MaterialPropertyMetadata(this);
+        }
+    }
 }

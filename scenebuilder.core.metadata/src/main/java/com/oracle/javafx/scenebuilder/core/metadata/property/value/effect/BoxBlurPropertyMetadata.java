@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.EffectSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.BoxBlur;
 
@@ -48,22 +48,37 @@ import javafx.scene.effect.BoxBlur;
  */
 public class BoxBlurPropertyMetadata extends ComplexPropertyMetadata<BoxBlur> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final EffectSizeDoublePropertyMetadata heightMetadata
-            = new EffectSizeDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
-            true /* readWrite */, 5.0, InspectorPath.UNUSED);
-    private final EffectSizeDoublePropertyMetadata widthMetadata
-            = new EffectSizeDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
-            true /* readWrite */, 5.0, InspectorPath.UNUSED);
-    private final IntegerPropertyMetadata iterationsMetadata
-            = new IntegerPropertyMetadata(new PropertyName("iterations"), //NOCHECK
-             true /* readWrite */, 1, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder() 
+            .withName(new PropertyName("input")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+    
+    private final EffectSizeDoublePropertyMetadata heightMetadata = new EffectSizeDoublePropertyMetadata.Builder() 
+            .withName(new PropertyName("height")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(5.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+    
+    private final EffectSizeDoublePropertyMetadata widthMetadata = new EffectSizeDoublePropertyMetadata.Builder() 
+            .withName(new PropertyName("width")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(5.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+    
+    private final IntegerPropertyMetadata iterationsMetadata = new IntegerPropertyMetadata.Builder() 
+            .withName(new PropertyName("iterations")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public BoxBlurPropertyMetadata(PropertyName name, boolean readWrite, 
+    protected BoxBlurPropertyMetadata(PropertyName name, boolean readWrite, 
             BoxBlur defaultValue, InspectorPath inspectorPath) {
         super(name, BoxBlur.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected BoxBlurPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -80,5 +95,19 @@ public class BoxBlurPropertyMetadata extends ComplexPropertyMetadata<BoxBlur> {
         iterationsMetadata.setValue(result, value.getIterations());
         
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, BoxBlur> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(BoxBlur.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, BoxBlurPropertyMetadata> {
+        @Override
+        public BoxBlurPropertyMetadata build() {
+            return new BoxBlurPropertyMetadata(this);
+        }
     }
 }

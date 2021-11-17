@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.geometry.Point3D;
 
@@ -45,34 +45,60 @@ import javafx.geometry.Point3D;
  */
 public class Point3DPropertyMetadata extends ComplexPropertyMetadata<Point3D> {
 
-    private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"),  //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata zMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("z"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata xMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("x")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+    private final CoordinateDoublePropertyMetadata yMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("y")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+    private final CoordinateDoublePropertyMetadata zMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("z")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public Point3DPropertyMetadata(PropertyName name, boolean readWrite, 
-            Point3D defaultValue, InspectorPath inspectorPath) {
-        super(name, Point3D.class, readWrite, defaultValue, inspectorPath);
+//    public Point3DPropertyMetadata(PropertyName name, boolean readWrite,
+//            Point3D defaultValue, InspectorPath inspectorPath) {
+//        super(name, Point3D.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected Point3DPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Point3D value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, value.getClass());
-        
+
         xMetadata.setValue(result, value.getX());
         yMetadata.setValue(result, value.getY());
         zMetadata.setValue(result, value.getZ());
 
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Point3D> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Point3D.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, Point3DPropertyMetadata> {
+        @Override
+        public Point3DPropertyMetadata build() {
+            return new Point3DPropertyMetadata(this);
+        }
+    }
 }

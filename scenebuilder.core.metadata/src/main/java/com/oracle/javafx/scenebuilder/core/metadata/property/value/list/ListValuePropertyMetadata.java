@@ -44,11 +44,11 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.SingleValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.fxml.FXMLLoader;
 
@@ -60,27 +60,33 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
     private final Class<T> itemClass;
     private final SingleValuePropertyMetadata<T> itemMetadata;
     private final List<T> defaultValue;
-    
-    public ListValuePropertyMetadata(PropertyName name, 
-            Class<T> itemClass, SingleValuePropertyMetadata<T> itemMetadata,
+
+    protected ListValuePropertyMetadata(PropertyName name, Class<T> itemClass, SingleValuePropertyMetadata<T> itemMetadata,
             boolean readWrite, List<T> defaultValue, InspectorPath inspectorPath) {
         super(name, readWrite, inspectorPath);
         this.itemClass = itemClass;
         this.defaultValue = defaultValue;
         this.itemMetadata = itemMetadata;
     }
-    
+
+    protected ListValuePropertyMetadata(AbstractBuilder<?, ?, T> builder) {
+        super(builder);
+        this.itemClass = builder.itemClass;
+        this.defaultValue = builder.defaultValue;
+        this.itemMetadata = builder.itemMetadata;
+    }
+
     public Class<T> getItemClass() {
         return itemClass;
     }
-    
+
     public List<T> getDefaultValue() {
         return defaultValue;
     }
 
     public List<T> getValue(FXOMInstance fxomInstance) {
         final List<T> result;
-        
+
         if (isReadWrite()) {
             final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
             if (fxomProperty == null) {
@@ -112,19 +118,19 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
                 result = defaultValue;
             }
         } else {
-            final List<?> items = (List<?>)getName().getValue(fxomInstance.getSceneGraphObject());
+            final List<?> items = (List<?>) getName().getValue(fxomInstance.getSceneGraphObject());
             result = new ArrayList<>();
             for (Object item : items) {
                 result.add(getItemClass().cast(item));
             }
         }
-        
+
         return result;
     }
 
     public void setValue(FXOMInstance fxomInstance, List<T> value) {
         assert isReadWrite();
-        
+
         final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
 
         if (Objects.equals(value, getDefaultValueObject()) || value.isEmpty()) {
@@ -149,29 +155,28 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
         }
     }
 
-    
     /*
      * To be subclassed
      */
-    
+
     protected boolean canMakeStringFromValue(List<T> value) {
         boolean result = true;
-        
+
         for (T i : value) {
             result = itemMetadata.canMakeStringFromValue(i);
             if (result == false) {
                 break;
             }
         }
-        
+
         return result;
     }
-    
+
     protected String makeStringFromValue(List<T> value) {
         assert canMakeStringFromValue(value);
-        
+
         final StringBuilder result = new StringBuilder();
-        
+
         for (T item : value) {
             if (result.length() >= 1) {
                 result.append(FXMLLoader.ARRAY_COMPONENT_DELIMITER);
@@ -179,14 +184,13 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
             }
             result.append(itemMetadata.makeStringFromValue(item));
         }
-        
+
         return result.toString();
     }
-    
-    
+
     protected List<T> makeValueFromString(String string) {
         final List<T> result;
-        
+
         final String[] items = string.split(FXMLLoader.ARRAY_COMPONENT_DELIMITER);
         if (items.length == 0) {
             result = Collections.emptyList();
@@ -196,14 +200,14 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
                 result.add(itemMetadata.makeValueFromString(itemString));
             }
         }
-        
+
         return result;
     }
-    
+
     /*
      * ValuePropertyMetadata
      */
-    
+
     @Override
     public Class<?> getValueClass() {
         return List.class;
@@ -222,20 +226,43 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
     @Override
     public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
         assert valueObject instanceof List;
-        setValue(fxomInstance, castItemList((List<?>)valueObject));
+        setValue(fxomInstance, castItemList((List<?>) valueObject));
     }
-    
+
     /*
      * Private
      */
-    
+
     private List<T> castItemList(List<?> valueObject) {
         final List<T> result = new ArrayList<>();
-        
+
         for (Object itemValueObject : valueObject) {
             result.add(getItemClass().cast(itemValueObject));
         }
-        
+
         return result;
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, T>
+            extends ValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+
+        protected Class<T> itemClass;
+        protected SingleValuePropertyMetadata<T> itemMetadata;
+        protected List<T> defaultValue;
+
+        protected SELF withItemClass(Class<T> itemClass) {
+            this.itemClass = itemClass;
+            return self();
+        }
+
+        protected SELF withItemMetadata(SingleValuePropertyMetadata<T> itemMetadata) {
+            this.itemMetadata = itemMetadata;
+            return self();
+        }
+
+        public SELF withDefaultValue(List<T> defaultValue) {
+            this.defaultValue = defaultValue;
+            return self();
+        }
     }
 }

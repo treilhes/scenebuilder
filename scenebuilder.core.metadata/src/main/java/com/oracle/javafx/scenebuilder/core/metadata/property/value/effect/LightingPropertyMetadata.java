@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light.LightPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Lighting;
 
@@ -50,37 +50,57 @@ public class LightingPropertyMetadata extends ComplexPropertyMetadata<Lighting> 
     
     private static final Lighting LIGHTING_DEFAULT = new Lighting();
     
-    private final EffectPropertyMetadata bumpInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("bumpInput"), //NOCHECK
-            true /* readWrite */, LIGHTING_DEFAULT.getBumpInput(), InspectorPath.UNUSED);
-    private final EffectPropertyMetadata contentInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("contentInput"), //NOCHECK
-            true /* readWrite */, LIGHTING_DEFAULT.getContentInput(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata diffuseConstantMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("diffuseConstant"), //NOCHECK
-            true /* readWrite */, 
-            LIGHTING_DEFAULT.getDiffuseConstant(), InspectorPath.UNUSED);
-    private final LightPropertyMetadata lightMetadata
-            = new LightPropertyMetadata(new PropertyName("light"), //NOCHECK
-            true /* readWrite */, LIGHTING_DEFAULT.getLight(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata specularConstantMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("specularConstant"), //NOCHECK
-            true /* readWrite */, 
-            LIGHTING_DEFAULT.getSpecularConstant(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata specularExponentMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOCHECK
-            true /* readWrite */, 
-            LIGHTING_DEFAULT.getSpecularExponent(), InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata surfaceScaleMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("surfaceScale"), //NOCHECK
-            true /* readWrite */, 
-            LIGHTING_DEFAULT.getSurfaceScale(), InspectorPath.UNUSED);
+    private final EffectPropertyMetadata bumpInputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("bumpInput"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getBumpInput())
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public LightingPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final EffectPropertyMetadata contentInputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("contentInput"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getContentInput())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata diffuseConstantMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("diffuseConstant"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getDiffuseConstant())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final LightPropertyMetadata lightMetadata = new LightPropertyMetadata.Builder()
+            .withName(new PropertyName("light"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getLight())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata specularConstantMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("specularConstant"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getSpecularConstant())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata specularExponentMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("specularExponent"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getSpecularExponent())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata surfaceScaleMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("surfaceScale"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(LIGHTING_DEFAULT.getSurfaceScale())
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected LightingPropertyMetadata(PropertyName name, boolean readWrite, 
             Lighting defaultValue, InspectorPath inspectorPath) {
         super(name, Lighting.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected LightingPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -98,5 +118,19 @@ public class LightingPropertyMetadata extends ComplexPropertyMetadata<Lighting> 
         surfaceScaleMetadata.setValue(result, value.getSurfaceScale());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Lighting> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Lighting.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, LightingPropertyMetadata> {
+        @Override
+        public LightingPropertyMetadata build() {
+            return new LightingPropertyMetadata(this);
+        }
     }
 }

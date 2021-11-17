@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
@@ -48,38 +48,67 @@ import javafx.scene.effect.BlendMode;
  *
  */
 public class BlendPropertyMetadata extends ComplexPropertyMetadata<Blend> {
-    
-    private final EffectPropertyMetadata bottomInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("bottomInput"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final EffectPropertyMetadata topInputMetadata
-            = new EffectPropertyMetadata(new PropertyName("topInput"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata opacityMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("opacity"), //NOCHECK
-            true /* readWrite */, 1.0, InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata modeMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("mode"), //NOCHECK
-            BlendMode.class, true, BlendMode.SRC_OVER, InspectorPath.UNUSED);
 
-    public BlendPropertyMetadata(PropertyName name, boolean readWrite, 
-            Blend defaultValue, InspectorPath inspectorPath) {
-        super(name, Blend.class, readWrite, defaultValue, inspectorPath);
+    private final EffectPropertyMetadata bottomInputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("bottomInput"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EffectPropertyMetadata topInputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("topInput"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final OpacityDoublePropertyMetadata opacityMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("opacity")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EnumerationPropertyMetadata modeMetadata = new EnumerationPropertyMetadata.Builder<>(BlendMode.class)
+            .withName(new PropertyName("mode")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(BlendMode.SRC_OVER)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+//    protected BlendPropertyMetadata(PropertyName name, boolean readWrite,
+//            Blend defaultValue, InspectorPath inspectorPath) {
+//        super(name, Blend.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected BlendPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Blend value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, value.getClass());
-        
+
         bottomInputMetadata.setValue(result, value.getBottomInput());
         topInputMetadata.setValue(result, value.getTopInput());
         opacityMetadata.setValue(result, value.getOpacity());
         modeMetadata.setValue(result, value.getMode().toString());
-        
+
         return result;
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Blend> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Blend.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, BlendPropertyMetadata> {
+        @Override
+        public BlendPropertyMetadata build() {
+            return new BlendPropertyMetadata(this);
+        }
     }
 }

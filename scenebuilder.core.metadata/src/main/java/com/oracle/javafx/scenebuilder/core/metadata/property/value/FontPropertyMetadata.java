@@ -34,10 +34,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.text.Font;
 
@@ -47,31 +47,53 @@ import javafx.scene.text.Font;
  */
 public class FontPropertyMetadata extends ComplexPropertyMetadata<Font> {
 
-    private final I18nStringPropertyMetadata nameMetadata
-            = new I18nStringPropertyMetadata(new PropertyName("name"), //NOCHECK
-            true, Font.getDefault().getName(), InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata sizeMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("size"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
+    public static final I18nStringPropertyMetadata nameMetadata = new I18nStringPropertyMetadata.Builder()
+                .withName(new PropertyName("name")) // NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(Font.getDefault().getName())
+                .withInspectorPath(InspectorPath.UNUSED).build();
 
-    
-    public FontPropertyMetadata(PropertyName name, boolean readWrite, 
-            Font defaultValue, InspectorPath inspectorPath) {
+    public static final SizeDoublePropertyMetadata sizeMetadata = new SizeDoublePropertyMetadata.Builder()
+                .withName(new PropertyName("size")) // NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(0.0)
+                .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected FontPropertyMetadata(PropertyName name, boolean readWrite, Font defaultValue, InspectorPath inspectorPath) {
         super(name, Font.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected FontPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Font value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, getValueClass());
-        
+
         nameMetadata.setValue(result, value.getName());
         sizeMetadata.setValue(result, value.getSize());
 
         return result;
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Font> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Font.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, FontPropertyMetadata> {
+        @Override
+        public FontPropertyMetadata build() {
+            return new FontPropertyMetadata(this);
+        }
     }
 
 }

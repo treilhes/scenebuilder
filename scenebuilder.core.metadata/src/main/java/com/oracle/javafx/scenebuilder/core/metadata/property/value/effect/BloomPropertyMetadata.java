@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Bloom;
 
@@ -47,16 +47,25 @@ import javafx.scene.effect.Bloom;
  */
 public class BloomPropertyMetadata extends ComplexPropertyMetadata<Bloom> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata thresholdMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("threshold"), //NOCHECK
-            true /* readWrite */, 0.3, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public BloomPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final OpacityDoublePropertyMetadata thresholdMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("threshold")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.3)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected BloomPropertyMetadata(PropertyName name, boolean readWrite, 
             Bloom defaultValue, InspectorPath inspectorPath) {
         super(name, Bloom.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected BloomPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -71,5 +80,19 @@ public class BloomPropertyMetadata extends ComplexPropertyMetadata<Bloom> {
         thresholdMetadata.setValue(result, value.getThreshold());
         
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Bloom> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Bloom.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, BloomPropertyMetadata> {
+        @Override
+        public BloomPropertyMetadata build() {
+            return new BloomPropertyMetadata(this);
+        }
     }
 }

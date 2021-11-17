@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.PerspectiveTransform;
 
@@ -47,39 +47,69 @@ import javafx.scene.effect.PerspectiveTransform;
  */
 public class PerspectiveTransformPropertyMetadata extends ComplexPropertyMetadata<PerspectiveTransform> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata llxMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("llx"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata llyMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("lly"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata lrxMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("lrx"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata lryMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("lry"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata ulxMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("ulx"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata ulyMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("uly"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata urxMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("urx"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata uryMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("ury"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public PerspectiveTransformPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final CoordinateDoublePropertyMetadata llxMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("llx"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata llyMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("lly"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata lrxMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("lrx"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata lryMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("lry"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata ulxMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("ulx"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata ulyMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("uly"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata urxMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("urx"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata uryMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("ury"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected PerspectiveTransformPropertyMetadata(PropertyName name, boolean readWrite, 
             PerspectiveTransform defaultValue, InspectorPath inspectorPath) {
         super(name, PerspectiveTransform.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected PerspectiveTransformPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -99,5 +129,19 @@ public class PerspectiveTransformPropertyMetadata extends ComplexPropertyMetadat
         uryMetadata.setValue(result, value.getUry());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, PerspectiveTransform> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(PerspectiveTransform.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, PerspectiveTransformPropertyMetadata> {
+        @Override
+        public PerspectiveTransformPropertyMetadata build() {
+            return new PerspectiveTransformPropertyMetadata(this);
+        }
     }
 }

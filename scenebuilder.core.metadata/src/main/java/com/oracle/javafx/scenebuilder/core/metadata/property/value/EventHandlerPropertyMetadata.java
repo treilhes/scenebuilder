@@ -33,34 +33,50 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
- * 
+ *
  */
 public class EventHandlerPropertyMetadata extends TextEncodablePropertyMetadata<String> {
 
-    public EventHandlerPropertyMetadata(PropertyName name, boolean readWrite, 
-            String defaultValue, InspectorPath inspectorPath) {
-        super(name, String.class, readWrite, defaultValue, inspectorPath);
+//    public EventHandlerPropertyMetadata(PropertyName name, boolean readWrite, String defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, String.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected EventHandlerPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
      * TextEncodablePropertyMetadata
      */
-    
+
     @Override
     public String makeValueFromString(String string) {
         return string;
     }
-    
+
     @Override
     public String getValue(FXOMInstance fxomInstance) {
         // We override just to add a sanity check
         assert isReadWrite();
         return super.getValue(fxomInstance);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(String.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, EventHandlerPropertyMetadata> {
+        @Override
+        public EventHandlerPropertyMetadata build() {
+            return new EventHandlerPropertyMetadata(this);
+        }
+    }
 }

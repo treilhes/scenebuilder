@@ -34,22 +34,40 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  *
  */
 public class ListCellPropertyMetadata extends ComplexPropertyMetadata<Object> {
 
-    public ListCellPropertyMetadata(PropertyName name, boolean readWrite, 
-            Object defaultValue, InspectorPath inspectorPath) {
+    public ListCellPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue,
+            InspectorPath inspectorPath) {
         super(name, Object.class, readWrite, defaultValue, inspectorPath);
+    }
+
+    protected ListCellPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Object value, FXOMDocument fxomDocument) {
-        throw new UnsupportedOperationException("Not supported yet."); //NOCHECK
+        throw new UnsupportedOperationException("Not supported yet."); // NOCHECK
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Object.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ListCellPropertyMetadata> {
+        @Override
+        public ListCellPropertyMetadata build() {
+            return new ListCellPropertyMetadata(this);
+        }
+    }
 }

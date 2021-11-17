@@ -36,15 +36,14 @@ import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.ComputedAndPrefSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.ComputedSizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.PercentageDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 
@@ -55,25 +54,62 @@ public class ColumnConstraintsPropertyMetadata extends ComplexPropertyMetadata<C
 
     private static final ColumnConstraints DEFAULT = new ColumnConstraints();
 
-    private final BooleanPropertyMetadata fillWidthMetadata = new BooleanPropertyMetadata(new PropertyName("fillWidth"),
-            true, DEFAULT.isFillWidth(), InspectorPath.UNUSED);
-    private final ComputedSizeDoublePropertyMetadata maxWidthMetadata = new ComputedSizeDoublePropertyMetadata(
-            new PropertyName("maxWidth"), true, DEFAULT.getMaxWidth(), InspectorPath.UNUSED);
-    private final ComputedSizeDoublePropertyMetadata minWidthMetadata = new ComputedSizeDoublePropertyMetadata(
-            new PropertyName("minWidth"), true, DEFAULT.getMinWidth(), InspectorPath.UNUSED);
-    private final PercentageDoublePropertyMetadata percentWidthMetadata = new PercentageDoublePropertyMetadata(
-            new PropertyName("percentWidth"), true, DEFAULT.getPercentWidth(), InspectorPath.UNUSED);
-    private final ComputedAndPrefSizeDoublePropertyMetadata prefWidthMetadata = new ComputedAndPrefSizeDoublePropertyMetadata(
-            new PropertyName("prefWidth"), true, DEFAULT.getPrefWidth(), InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata halignmentMetadata = new EnumerationPropertyMetadata(
-            new PropertyName("halignment"), VPos.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true,
-            InspectorPath.UNUSED);
-    private final EnumerationPropertyMetadata hgrowMetadata = new EnumerationPropertyMetadata(new PropertyName("hgrow"),
-            Priority.class, EnumerationPropertyMetadata.EQUIV_INHERITED, true, InspectorPath.UNUSED);
+    private final BooleanPropertyMetadata fillWidthMetadata = new BooleanPropertyMetadata.Builder()
+            .withName(new PropertyName("fillWidth")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.isFillWidth())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public ColumnConstraintsPropertyMetadata(PropertyName name, boolean readWrite, ColumnConstraints defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, ColumnConstraints.class, readWrite, defaultValue, inspectorPath);
+    private final ComputedSizeDoublePropertyMetadata maxWidthMetadata = new ComputedSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("maxWidth")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getMaxWidth())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final ComputedSizeDoublePropertyMetadata minWidthMetadata = new ComputedSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("minWidth")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getMinWidth())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final PercentageDoublePropertyMetadata percentWidthMetadata = new PercentageDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("percentWidth")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getPercentWidth())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final ComputedAndPrefSizeDoublePropertyMetadata prefWidthMetadata = new ComputedAndPrefSizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("prefWidth")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(DEFAULT.getPrefWidth())
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final EnumerationPropertyMetadata halignmentMetadata = new EnumerationPropertyMetadata.Builder<>(HPos.class)
+            .withName(new PropertyName("halignment")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final EnumerationPropertyMetadata hgrowMetadata = new EnumerationPropertyMetadata.Builder<>(Priority.class)
+            .withName(new PropertyName("hgrow")) //NOCHECK
+            .withReadWrite(true)
+            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+//    public ColumnConstraintsPropertyMetadata(PropertyName name, boolean readWrite, ColumnConstraints defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, ColumnConstraints.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected ColumnConstraintsPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -130,4 +166,17 @@ public class ColumnConstraintsPropertyMetadata extends ComplexPropertyMetadata<C
         return result;
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColumnConstraints> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(ColumnConstraints.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ColumnConstraintsPropertyMetadata> {
+        @Override
+        public ColumnConstraintsPropertyMetadata build() {
+            return new ColumnConstraintsPropertyMetadata(this);
+        }
+    }
 }

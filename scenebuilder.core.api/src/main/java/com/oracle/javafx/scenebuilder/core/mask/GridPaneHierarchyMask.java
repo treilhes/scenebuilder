@@ -43,7 +43,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.core.metadata.PropertyNames;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.layout.GridPane;
@@ -52,20 +51,20 @@ import javafx.scene.layout.GridPane;
  *
  */
 public class GridPaneHierarchyMask extends DesignHierarchyMask {
-    
-    private static final PropertyName ROW_CONSTRAINTS = PropertyNames.rowConstraintsName; //NOCHECK
-    private static final PropertyName COLUMN_CONSTRAINTS = PropertyNames.columnConstraintsName; //NOCHECK
-    private static final PropertyName CHILDREN = PropertyNames.childrenName; //NOCHECK
-    
+
+    private static final PropertyName ROW_CONSTRAINTS = new PropertyName("rowConstraints"); //NOCHECK
+    private static final PropertyName COLUMN_CONSTRAINTS = new PropertyName("columnConstraints"); //NOCHECK
+    private static final PropertyName CHILDREN = new PropertyName("children"); //NOCHECK
+
     private Accessory childrenAccessory;
-    
+
     public GridPaneHierarchyMask(FXOMObject fxomObject) {
         super(fxomObject);
-        
+
         childrenAccessory = getAccessoryForPropertyName(CHILDREN);
     }
 
-    
+
     /**
      * Returns the number of columns constraints for this GridPane mask.
      *

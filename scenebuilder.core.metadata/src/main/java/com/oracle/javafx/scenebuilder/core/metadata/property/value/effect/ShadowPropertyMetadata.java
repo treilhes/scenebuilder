@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.Shadow;
@@ -51,28 +51,49 @@ import javafx.scene.paint.Color;
  */
 public class ShadowPropertyMetadata extends ComplexPropertyMetadata<Shadow> {
     
-    private final EnumerationPropertyMetadata blurTypeMetadata
-            = new EnumerationPropertyMetadata(new PropertyName("blurType"), //NOCHECK
-            BlurType.class, true, BlurType.THREE_PASS_BOX, InspectorPath.UNUSED);
-    private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
-            true /* readWrite */, Color.BLACK, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata heightMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("height"), //NOCHECK
-            true /* readWrite */, 21.0, InspectorPath.UNUSED);
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata widthMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("width"), //NOCHECK
-            true /* readWrite */, 21.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata radiusMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
-            true /* readWrite */, 10.0, InspectorPath.UNUSED);
+    private final EnumerationPropertyMetadata blurTypeMetadata = new EnumerationPropertyMetadata.Builder<>(BlurType.class)
+            .withName(new PropertyName("blurType"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(BlurType.THREE_PASS_BOX)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public ShadowPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final ColorPropertyMetadata colorMetadata = new ColorPropertyMetadata.Builder()
+            .withName(new PropertyName("color"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(Color.BLACK)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata heightMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("height"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(21.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata widthMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("width"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(21.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata radiusMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("radius"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(10.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected ShadowPropertyMetadata(PropertyName name, boolean readWrite, 
             Shadow defaultValue, InspectorPath inspectorPath) {
         super(name, Shadow.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected ShadowPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -91,5 +112,19 @@ public class ShadowPropertyMetadata extends ComplexPropertyMetadata<Shadow> {
         widthMetadata.setValue(result, value.getWidth());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Shadow> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Shadow.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, ShadowPropertyMetadata> {
+        @Override
+        public ShadowPropertyMetadata build() {
+            return new ShadowPropertyMetadata(this);
+        }
     }
 }

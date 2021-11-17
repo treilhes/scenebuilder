@@ -33,13 +33,12 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.RowConstraintsPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.layout.RowConstraints;
 
@@ -48,37 +47,44 @@ import javafx.scene.layout.RowConstraints;
  */
 public class RowConstraintsListPropertyMetadata extends ListValuePropertyMetadata<RowConstraints> {
 
-    private static final RowConstraintsPropertyMetadata itemMetadata
-            = new RowConstraintsPropertyMetadata(new PropertyName("unused"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    
-    public RowConstraintsListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<RowConstraints> defaultValue, InspectorPath inspectorPath) {
-        super(name, RowConstraints.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+    private static final RowConstraintsPropertyMetadata itemMetadata = new RowConstraintsPropertyMetadata.Builder()
+            .withName(new PropertyName("unused"))
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+//    public RowConstraintsListPropertyMetadata(PropertyName name, boolean readWrite, List<RowConstraints> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, RowConstraints.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+//
+//    public RowConstraintsListPropertyMetadata() {
+//        this(new PropertyName("rowConstraints"), true /* readWrite */, // NOCHECK
+//                Collections.emptyList(), InspectorPath.UNUSED);
+//    }
+
+    protected RowConstraintsListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
-    public RowConstraintsListPropertyMetadata() {
-        this(new PropertyName("rowConstraints"), true /* readWrite */,  //NOCHECK
-                Collections.emptyList(), InspectorPath.UNUSED);
-    }
-    
     public void pack(FXOMInstance fxomInstance) {
         final RowConstraints def = new RowConstraints();
         final List<RowConstraints> v = new ArrayList<>(getValue(fxomInstance));
         if (v.isEmpty() == false) {
-            RowConstraints last = v.get(v.size()-1);
+            RowConstraints last = v.get(v.size() - 1);
             while ((last != null) && RowConstraintsPropertyMetadata.equals(last, def)) {
-                v.remove(v.size()-1);
+                v.remove(v.size() - 1);
                 if (v.isEmpty()) {
                     last = null;
                 } else {
-                    last = v.get(v.size()-1);
+                    last = v.get(v.size() - 1);
                 }
             }
             setValue(fxomInstance, v);
         }
     }
-    
+
     public void unpack(FXOMInstance fxomInstance, int rowCount) {
         final List<RowConstraints> value = new ArrayList<>(getValue(fxomInstance));
         if (value.size() < rowCount) {
@@ -90,12 +96,28 @@ public class RowConstraintsListPropertyMetadata extends ListValuePropertyMetadat
             setValue(fxomInstance, newValue);
         }
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, RowConstraints> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(RowConstraints.class);
+            withItemMetadata(RowConstraintsListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, RowConstraintsListPropertyMetadata> {
+        @Override
+        public RowConstraintsListPropertyMetadata build() {
+            return new RowConstraintsListPropertyMetadata(this);
+        }
+    }
+
     public static boolean equals(List<RowConstraints> l1, List<RowConstraints> l2) {
-        
+
         assert l1 != null;
         assert l2 != null;
-        
+
         boolean result;
         if (l1.size() != l2.size()) {
             result = false;
@@ -107,7 +129,7 @@ public class RowConstraintsListPropertyMetadata extends ListValuePropertyMetadat
                 result = RowConstraintsPropertyMetadata.equals(c1, c2);
             }
         }
-        
+
         return result;
     }
 

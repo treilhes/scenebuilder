@@ -39,9 +39,9 @@ import java.util.Map;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -52,21 +52,33 @@ import javafx.scene.ImageCursor;
  */
 public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
     
-    private final CoordinateDoublePropertyMetadata hotspotXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("hotspotX"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata hotspotYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("hotspotY"), 
-            true, 0.0, InspectorPath.UNUSED);
-    private final ImagePropertyMetadata imageMetadata
-            = new ImagePropertyMetadata(new PropertyName("image"), 
-            true, null, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata hotspotXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("hotspotX"))
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata hotspotYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("hotspotY"))
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final ImagePropertyMetadata imageMetadata = new ImagePropertyMetadata.Builder()
+            .withName(new PropertyName("image"))
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private static Map<Cursor, String> cursorMap;
     
-    public CursorPropertyMetadata(PropertyName name, boolean readWrite, 
+    protected CursorPropertyMetadata(PropertyName name, boolean readWrite, 
             Cursor defaultValue, InspectorPath inspectorPath) {
         super(name, Cursor.class, readWrite, defaultValue, inspectorPath);
+    }
+    
+    protected CursorPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     public static synchronized Map<Cursor, String> getCursorMap() {
@@ -125,6 +137,16 @@ public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
         }
         
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Cursor> {
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, CursorPropertyMetadata> {
+        @Override
+        public CursorPropertyMetadata build() {
+            return new CursorPropertyMetadata(this);
+        }
     }
 }
 

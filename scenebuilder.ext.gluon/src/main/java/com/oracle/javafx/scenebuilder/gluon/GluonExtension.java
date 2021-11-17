@@ -48,10 +48,7 @@ import com.oracle.javafx.scenebuilder.gluon.editor.job.AddPropertyValueJobExtens
 import com.oracle.javafx.scenebuilder.gluon.editor.job.SetFxomRootJobExtension;
 import com.oracle.javafx.scenebuilder.gluon.i18n.I18NGluon;
 import com.oracle.javafx.scenebuilder.gluon.menu.GluonMenuProvider;
-import com.oracle.javafx.scenebuilder.gluon.metadata.GluonComponentClassMetadatas;
-import com.oracle.javafx.scenebuilder.gluon.metadata.GluonComponentPropertyMetadataCatalog;
 import com.oracle.javafx.scenebuilder.gluon.metadata.GluonDocumentationUrlBuilder;
-import com.oracle.javafx.scenebuilder.gluon.metadata.GluonValuePropertyMetadataCatalog;
 import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJarsPreference;
@@ -64,7 +61,7 @@ import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 import com.oracle.javafx.scenebuilder.gluon.template.GluonTemplateList;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
-@ComponentScan(basePackages = { 
+@ComponentScan(basePackages = {
         "com.oracle.javafx.scenebuilder.gluon.template",
         "com.oracle.javafx.scenebuilder.gluon.theme"
         })
@@ -83,9 +80,9 @@ public class GluonExtension extends AbstractExtension {
                 AddPropertyValueJobExtension.class,
                 SetFxomRootJobExtension.class,
                 GluonMenuProvider.class,
-                GluonComponentClassMetadatas.class,
-                GluonComponentPropertyMetadataCatalog.class,
-                GluonValuePropertyMetadataCatalog.class,
+                //GluonComponentClassMetadatas.class,
+                //GluonComponentPropertyMetadataCatalog.class,
+                //GluonValuePropertyMetadataCatalog.class,
                 GluonThemesList.class,
                 GluonSwatchPreference.class,
                 com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.class,

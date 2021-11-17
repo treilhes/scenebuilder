@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.paint.Color;
 
@@ -52,35 +53,39 @@ public class ColorPopupEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static ColorPropertyMetadata someColorProp() {
-        return new ColorPropertyMetadata(new PropertyName("color"), true, Color.AQUA, null);
+        return new ColorPropertyMetadata.Builder()
+                .withName(new PropertyName("color"))
+                .withReadWrite(true)
+                .withDefaultValue(Color.AQUA)
+                .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        
+
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
         ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        
+
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
         ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        
+
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
         ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someColorProp(), null);
     }
 

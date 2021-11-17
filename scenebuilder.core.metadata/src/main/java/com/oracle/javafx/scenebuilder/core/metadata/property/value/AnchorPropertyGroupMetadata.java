@@ -34,31 +34,60 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyGroupMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 public class AnchorPropertyGroupMetadata extends PropertyGroupMetadata {
 
-    public AnchorPropertyGroupMetadata(PropertyName name, 
-            ValuePropertyMetadata topAnchorProperty,
-            ValuePropertyMetadata rightAnchorProperty,
-            ValuePropertyMetadata bottomAnchorProperty,
-            ValuePropertyMetadata leftAnchorProperty) {
-        super(name, topAnchorProperty, rightAnchorProperty, bottomAnchorProperty, leftAnchorProperty);
+//    public AnchorPropertyGroupMetadata(PropertyName name, ValuePropertyMetadata topAnchorProperty,
+//            ValuePropertyMetadata rightAnchorProperty, ValuePropertyMetadata bottomAnchorProperty,
+//            ValuePropertyMetadata leftAnchorProperty) {
+//        super(name, topAnchorProperty, rightAnchorProperty, bottomAnchorProperty, leftAnchorProperty);
+//    }
+
+    protected AnchorPropertyGroupMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     public ValuePropertyMetadata getTopAnchorPropertyPropertyMetadata() {
-        return getProperties()[0];
+        return getPropertiesMap().get("topAnchor");
     }
-    
+
     public ValuePropertyMetadata getRightAnchorPropertyPropertyMetadata() {
-        return getProperties()[1];
+        return getPropertiesMap().get("rightAnchor");
     }
-    
+
     public ValuePropertyMetadata getBottomAnchorPropertyPropertyMetadata() {
-        return getProperties()[2];
+        return getPropertiesMap().get("bottomAnchor");
     }
-    
+
     public ValuePropertyMetadata getLeftAnchorPropertyPropertyMetadata() {
-        return getProperties()[3];
+        return getPropertiesMap().get("leftAnchor");
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends PropertyGroupMetadata.AbstractBuilder<SELF, TOBUILD> {
+        public SELF withTopAnchorProperty(ValuePropertyMetadata property) {
+            return withProperty("topAnchor", property);
+        }
+
+        public SELF withRightAnchorProperty(ValuePropertyMetadata property) {
+            return withProperty("rightAnchor", property);
+        }
+
+        public SELF withBottomAnchorProperty(ValuePropertyMetadata property) {
+            return withProperty("bottomAnchor", property);
+        }
+
+        public SELF withLeftAnchorProperty(ValuePropertyMetadata property) {
+            return withProperty("leftAnchor", property);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, AnchorPropertyGroupMetadata> {
+
+        @Override
+        public AnchorPropertyGroupMetadata build() {
+            return new AnchorPropertyGroupMetadata(this);
+        }
+
     }
 }

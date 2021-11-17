@@ -37,7 +37,6 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.fxml.FXMLLoader;
 
@@ -46,29 +45,36 @@ import javafx.fxml.FXMLLoader;
  */
 public class StringListPropertyMetadata extends ListValuePropertyMetadata<String> {
 
-    private final static I18nStringPropertyMetadata itemMetadata
-            = new I18nStringPropertyMetadata(new PropertyName("unused"), //NOCHECK
-                    true, null, InspectorPath.UNUSED, true /* detectFileURL */);
+    private final static I18nStringPropertyMetadata itemMetadata = new I18nStringPropertyMetadata.Builder()
+            .withName(null)
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .withFileUrlDetection(true).build();
 
-    public StringListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<String> defaultValue, InspectorPath inspectorPath) {
-        super(name, String.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    public StringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, String.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    public StringListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
-    
+
     public static List<String> splitValue(String listValue) {
         final List<String> result = new ArrayList<>();
-        
+
         final String[] values = listValue.split(FXMLLoader.ARRAY_COMPONENT_DELIMITER);
         for (int i = 0, count = values.length; i < count; i++) {
             result.add(values[i]);
         }
-        
+
         return result;
     }
-    
-   public static String assembleValue(List<String> valueItems) {
+
+    public static String assembleValue(List<String> valueItems) {
         assert FXMLLoader.ARRAY_COMPONENT_DELIMITER.length() == 1;
-        
+
         final StringBuilder result = new StringBuilder();
         for (String s : valueItems) {
             assert s.indexOf(FXMLLoader.ARRAY_COMPONENT_DELIMITER.charAt(0)) == -1;
@@ -77,48 +83,105 @@ public class StringListPropertyMetadata extends ListValuePropertyMetadata<String
             }
             result.append(s);
         }
-        
+
         return result.toString();
     }
-    
+
     /*
      * ListValuePropertyMetadata
      */
-    
+
     @Override
     protected boolean canMakeStringFromValue(List<String> value) {
         return value.size() == 1;
     }
-    
+
     @Override
     protected String makeStringFromValue(List<String> value) {
         assert canMakeStringFromValue(value);
         return value.get(0);
     }
-    
+
     @Override
     protected List<String> makeValueFromString(String string) {
         return splitValue(string);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String> {
+
+        public AbstractBuilder() {
+            super();
+            withItemClass(String.class);
+            withItemMetadata(StringListPropertyMetadata.itemMetadata);
+        }
+
+        @Override
+        public SELF withDefaultValue(List<String> defaultValue) {
+            return super.withDefaultValue(defaultValue);
+        }
+
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, StringListPropertyMetadata> {
+        @Override
+        public StringListPropertyMetadata build() {
+            return new StringListPropertyMetadata(this);
+        }
+    }
+
     public static class StyleClassStringListPropertyMetadata extends StringListPropertyMetadata {
-        public StyleClassStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        protected StyleClassStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+//
+        protected StyleClassStringListPropertyMetadata(AbstractBuilder<?,?> builder) {
+            super(builder);
+        }
+
+        public static final class Builder extends AbstractBuilder<Builder, StyleClassStringListPropertyMetadata> {
+            @Override
+            public StyleClassStringListPropertyMetadata build() {
+                return new StyleClassStringListPropertyMetadata(this);
+            }
         }
     }
-    
+
     public static class StylesheetsStringListPropertyMetadata extends StringListPropertyMetadata {
-        public StylesheetsStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        public StylesheetsStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+
+        protected StylesheetsStringListPropertyMetadata(AbstractBuilder<?,?> builder) {
+            super(builder);
+        }
+
+        public static final class Builder extends AbstractBuilder<Builder, StylesheetsStringListPropertyMetadata> {
+            @Override
+            public StylesheetsStringListPropertyMetadata build() {
+                return new StylesheetsStringListPropertyMetadata(this);
+            }
         }
     }
-    
+
     public static class SourceStringListPropertyMetadata extends StringListPropertyMetadata {
-        public SourceStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
-                InspectorPath inspectorPath) {
-            super(name, readWrite, defaultValue, inspectorPath);
+//        public SourceStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
+//                InspectorPath inspectorPath) {
+//            super(name, readWrite, defaultValue, inspectorPath);
+//        }
+//
+        protected SourceStringListPropertyMetadata(AbstractBuilder<?,?> builder) {
+            super(builder);
+        }
+
+        public static final class Builder extends AbstractBuilder<Builder, SourceStringListPropertyMetadata> {
+            @Override
+            public SourceStringListPropertyMetadata build() {
+                return new SourceStringListPropertyMetadata(this);
+            }
         }
     }
+
 }

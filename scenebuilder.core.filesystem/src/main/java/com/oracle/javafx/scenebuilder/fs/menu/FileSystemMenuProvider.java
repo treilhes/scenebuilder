@@ -78,11 +78,11 @@ import javafx.scene.input.KeyCombination;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class FileSystemMenuProvider implements MenuProvider {
-    
+
     private static final KeyCombination.Modifier modifier = KeyboardModifier.control();
 
     private final static String FILE_MENU_ID = "fileMenu";
-    
+
     private final FileSystemMenuController fileSystemMenuController;
     private final RecentItemsPreference recentItemsPreference;
 
@@ -149,47 +149,47 @@ public class FileSystemMenuProvider implements MenuProvider {
             if (fileMenu != null) {
                 return fileMenu;
             }
-            
+
             FXMLUtils.load(this, "FileMenu.fxml");
-            
+
             fileMenu.setId(FILE_MENU_ID);
-            
+
             //newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
             //newMenuItem.setOnAction(e -> fileSystemMenuController.performNew());
-            
+
             MenuItemFactory.bindSingle(newMenuItem, actionFactory, LoadBlankInNewWindowAction.class);
-            
+
 //            openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
 //            openMenuItem.setOnAction(e -> fileSystemMenuController.performOpen());
-            
+
             MenuItemFactory.bindSingle(openMenuItem, actionFactory, SelectAndOpenFilesAction.class);
-            
+
             openRecentMenu.setOnShowing(t -> updateOpenRecentMenuItems());
-            
+
             //saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, modifier));
             //saveMenuItem.setOnAction(e -> fileSystemMenuController.performSave());
             MenuItemFactory.bindSingle(saveMenuItem, actionFactory, SaveOrSaveAsAction.class);
-            
+
             //saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, modifier));
             //saveAsMenuItem.setOnAction(e -> fileSystemMenuController.performSaveAs());
-            
+
             MenuItemFactory.bindSingle(saveAsMenuItem, actionFactory, SaveAsAction.class);
-            
+
             MenuItemFactory.bindSingle(revertMenuItem, actionFactory, RevertAction.class);
-            
+
             MenuItemFactory.bindSingle(revealMenuItem, actionFactory, RevealFxmlFileAction.class);
             revealMenuItem.setText(getRevealMenuItemText());
             //revealMenuItem.setOnAction(e -> fileSystemMenuController.performReveal());
-            
+
             MenuItemFactory.bindSingle(importFxmlMenuItem, actionFactory, ImportFxmlAction.class);
             //importFxmlMenuItem.setOnAction(e -> fileSystemMenuController.performImportFxml());
-            
+
             MenuItemFactory.bindSingle(importMediaMenuItem, actionFactory, ImportMediaAction.class);
             //importMediaMenuItem.setOnAction(e -> fileSystemMenuController.performImportMedia());
 
             MenuItemFactory.bindSingle(includeFileMenuItem, actionFactory, IncludeFxmlAction.class);
             //includeFileMenuItem.setOnAction(e -> fileSystemMenuController.performIncludeFxml());
-            
+
             editIncludedFileMenuItem.setOnAction(e -> fileSystemMenuController.performEditIncludedFxml());
             editIncludedFileMenuItem.setOnMenuValidation(e -> {
                 String title = I18N.getString("menu.title.edit.included.default");
@@ -200,7 +200,7 @@ public class FileSystemMenuProvider implements MenuProvider {
                 editIncludedFileMenuItem.setText(title);
                 editIncludedFileMenuItem.setDisable(file == null);
             });
-            
+
             revealIncludedFileMenuItem.setOnAction(e -> fileSystemMenuController.performRevealIncludeFxml());
             revealIncludedFileMenuItem.setOnMenuValidation(e -> {
                 String title = I18N.getString("menu.title.reveal.included.default");
@@ -215,13 +215,13 @@ public class FileSystemMenuProvider implements MenuProvider {
                 revealIncludedFileMenuItem.setText(title);
                 revealIncludedFileMenuItem.setDisable(file == null);
             });
-            
+
             documentManager.dirty().subscribe(dirty -> updateStates());
             documentManager.fxomDocument().subscribe(fxomDocument -> updateStates());
-            
+
             return fileMenu;
         }
-        
+
         private void updateStates() {
             saveMenuItem.setDisable(!actionFactory.create(SaveOrSaveAsAction.class).canPerform());
             revertMenuItem.setDisable(!actionFactory.create(RevertAction.class).canPerform());
@@ -232,7 +232,7 @@ public class FileSystemMenuProvider implements MenuProvider {
         }
 
         private String getRevealMenuItemText() {
-            
+
             /*
              * Setup title of the Reveal menu item according the underlying o/s.
              */

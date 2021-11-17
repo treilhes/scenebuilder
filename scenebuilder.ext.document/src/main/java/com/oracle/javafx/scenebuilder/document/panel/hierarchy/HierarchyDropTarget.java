@@ -73,7 +73,7 @@ public class HierarchyDropTarget extends AbstractDropTarget {
         this.accessory = accessory;
         this.beforeChild = beforeChild;
     }
-    
+
     public Accessory getAccessory() {
         return accessory;
     }
@@ -93,9 +93,9 @@ public class HierarchyDropTarget extends AbstractDropTarget {
     @Override
     public boolean acceptDragSource(DragSource dragSource) {
         assert dragSource != null;
-        
+
         final DesignHierarchyMask m = new DesignHierarchyMask(targetContainer);
-        
+
         if (accessory == null){
             accessory = m.getMainAccessory();
         }
@@ -108,11 +108,11 @@ public class HierarchyDropTarget extends AbstractDropTarget {
         if (!accessory.isCollection() && dragSource.getDraggedObjects().size() > 1) {
             return false;
         }
-        
+
         for (FXOMObject fxomObject:dragSource.getDraggedObjects()) {
             boolean accepted = m.isAcceptingAccessory(accessory, fxomObject)
                     && m.getAccessory(accessory) == null;
-            
+
             if (!accepted){
                 return false;
             }
@@ -190,15 +190,19 @@ public class HierarchyDropTarget extends AbstractDropTarget {
                 final PropertyName alignmentName
                         = new PropertyName("alignment", BorderPane.class); //NOCHECK
                 final EnumerationPropertyMetadata alignmentMeta
-                        = new EnumerationPropertyMetadata(alignmentName, Pos.class,
-                        "UNUSED", true /* readWrite */, InspectorPath.UNUSED); //NOCHECK
+                        = new EnumerationPropertyMetadata.Builder<>(Pos.class)
+                            .withName(alignmentName)
+                            .withReadWrite(true)
+                            .withNullEquivalent("UNUSED")//NOCHECK
+                            .withInspectorPath(InspectorPath.UNUSED).build();
+
                 final Job alignmentJob
                         = new ModifyObjectJob(context, draggedInstance, alignmentMeta,
                                 Pos.CENTER.toString(), editorController).extend();
                 result.addSubJob(alignmentJob);
             }
         }
-        
+
 
         assert result.extend().isExecutable();
 

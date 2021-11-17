@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.TreeTableView;
 import javafx.util.Callback;
@@ -44,11 +44,16 @@ import javafx.util.Callback;
  *
  */
 public class TreeTableViewResizePolicyPropertyMetadata extends CallbackPropertyMetadata {
-    
-    public TreeTableViewResizePolicyPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue, InspectorPath inspectorPath) {
+
+    public TreeTableViewResizePolicyPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue,
+            InspectorPath inspectorPath) {
         super(name, readWrite, defaultValue, inspectorPath);
         assert (defaultValue == TreeTableView.CONSTRAINED_RESIZE_POLICY)
                 || (defaultValue == TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+    }
+
+    protected TreeTableViewResizePolicyPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -56,7 +61,7 @@ public class TreeTableViewResizePolicyPropertyMetadata extends CallbackPropertyM
      */
     @Override
     protected Object castValue(Object value) {
-        assert value instanceof Callback<?,?> : "value=" + value;
+        assert value instanceof Callback<?, ?> : "value=" + value;
         return value;
     }
 
@@ -64,21 +69,44 @@ public class TreeTableViewResizePolicyPropertyMetadata extends CallbackPropertyM
     protected Class<?> getFxConstantClass() {
         return TreeTableView.class;
     }
-    
+
     @Override
     protected void updateFxomInstanceWithValue(FXOMInstance valueInstance, Object value) {
         final String fxConstant;
-        
+
         if (value == TreeTableView.CONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; // NOCHECK
         } else if (value == TreeTableView.UNCONSTRAINED_RESIZE_POLICY) {
-            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; //NOCHECK
+            fxConstant = "UNCONSTRAINED_RESIZE_POLICY"; // NOCHECK
         } else {
             // Emergency code
             assert false;
-            fxConstant = "CONSTRAINED_RESIZE_POLICY"; //NOCHECK
+            fxConstant = "CONSTRAINED_RESIZE_POLICY"; // NOCHECK
         }
-        
+
         valueInstance.setFxConstant(fxConstant);
+    }
+
+    public static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends CallbackPropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+
+        public SELF withConstrainedResizePolicy() {
+            withDefaultValue(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+            return self();
+        }
+
+        public SELF withUnconstrainedResizePolicy() {
+            withDefaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+            return self();
+        }
+
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, TreeTableViewResizePolicyPropertyMetadata> {
+
+        @Override
+        public TreeTableViewResizePolicyPropertyMetadata build() {
+            return new TreeTableViewResizePolicyPropertyMetadata(this);
+        }
     }
 }

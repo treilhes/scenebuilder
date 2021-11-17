@@ -32,11 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
-import java.util.List;
-
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.Color;
 
@@ -45,13 +43,35 @@ import javafx.scene.paint.Color;
  */
 public class ColorListPropertyMetadata extends ListValuePropertyMetadata<Color> {
 
-    private final static ColorPropertyMetadata itemMetadata
-            = new ColorPropertyMetadata(new PropertyName("unused"), //NOCHECK
-                    true, Color.BLACK, InspectorPath.UNUSED);
+    private final static ColorPropertyMetadata itemMetadata = new ColorPropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) // NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(Color.BLACK)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public ColorListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<Color> defaultValue, InspectorPath inspectorPath) {
-        super(name, Color.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    public ColorListPropertyMetadata(PropertyName name, boolean readWrite, List<Color> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Color.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected ColorListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Color> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(Color.class);
+            withItemMetadata(ColorListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ColorListPropertyMetadata> {
+        @Override
+        public ColorListPropertyMetadata build() {
+            return new ColorListPropertyMetadata(this);
+        }
+    }
 }

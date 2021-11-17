@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.ColorAdjust;
 
@@ -47,27 +47,46 @@ import javafx.scene.effect.ColorAdjust;
  */
 public class ColorAdjustPropertyMetadata extends ComplexPropertyMetadata<ColorAdjust> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata brightnessMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("brightness"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata contrastMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("contrast"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata hueMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("hue"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata saturationMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("saturation"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+            
+    private final CoordinateDoublePropertyMetadata brightnessMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("brightness")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata contrastMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("contrast")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata hueMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("hue")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata saturationMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("saturation")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
 
     public ColorAdjustPropertyMetadata(PropertyName name, boolean readWrite, 
             ColorAdjust defaultValue, InspectorPath inspectorPath) {
         super(name, ColorAdjust.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected ColorAdjustPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -83,5 +102,21 @@ public class ColorAdjustPropertyMetadata extends ComplexPropertyMetadata<ColorAd
         saturationMetadata.setValue(result, value.getSaturation());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColorAdjust> {
+
+        public AbstractBuilder() {
+            super();
+            withValueClass(ColorAdjust.class);
+        }
+        
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, ColorAdjustPropertyMetadata> {
+        @Override
+        public ColorAdjustPropertyMetadata build() {
+            return new ColorAdjustPropertyMetadata(this);
+        }
     }
 }

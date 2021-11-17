@@ -32,24 +32,44 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
-import java.util.List;
-
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ObjectPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
  */
 public class TickMarkListPropertyMetadata extends ListValuePropertyMetadata<Object> {
 
-    private final static ObjectPropertyMetadata itemMetadata
-            = new ObjectPropertyMetadata(new PropertyName("unused"), //NOCHECK
-                    true, null, InspectorPath.UNUSED);
+    private final static ObjectPropertyMetadata itemMetadata = new ObjectPropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) // NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public TickMarkListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<Object> defaultValue, InspectorPath inspectorPath) {
-        super(name, Object.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    public TickMarkListPropertyMetadata(PropertyName name, boolean readWrite, List<Object> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Object.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected TickMarkListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(Object.class);
+            withItemMetadata(TickMarkListPropertyMetadata.itemMetadata);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, TickMarkListPropertyMetadata> {
+        @Override
+        public TickMarkListPropertyMetadata build() {
+            return new TickMarkListPropertyMetadata(this);
+        }
+    }
 }

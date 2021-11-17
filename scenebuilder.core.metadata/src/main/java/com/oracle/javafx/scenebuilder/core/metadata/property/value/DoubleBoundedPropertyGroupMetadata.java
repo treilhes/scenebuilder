@@ -34,23 +34,51 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyGroupMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 public class DoubleBoundedPropertyGroupMetadata extends PropertyGroupMetadata {
 
-    public DoubleBoundedPropertyGroupMetadata(PropertyName name, ValuePropertyMetadata min, ValuePropertyMetadata value, ValuePropertyMetadata max) {
-        super(name, min, value, max);
+//    public DoubleBoundedPropertyGroupMetadata(PropertyName name, ValuePropertyMetadata min, ValuePropertyMetadata value, ValuePropertyMetadata max) {
+//        super(name, min, value, max);
+//    }
+
+    protected DoubleBoundedPropertyGroupMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     public ValuePropertyMetadata getMinPropertyMetadata() {
-        return getProperties()[0];
+        return getPropertiesMap().get("min");
     }
-    
+
     public ValuePropertyMetadata getValuePropertyMetadata() {
-        return getProperties()[1];
+        return getPropertiesMap().get("value");
     }
-    
+
     public ValuePropertyMetadata getMaxPropertyMetadata() {
-        return getProperties()[2];
+        return getPropertiesMap().get("max");
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends PropertyGroupMetadata.AbstractBuilder<SELF, TOBUILD> {
+
+        public SELF withMinProperty(ValuePropertyMetadata property) {
+            return withProperty("min", property);
+        }
+
+        public SELF withValueProperty(ValuePropertyMetadata property) {
+            return withProperty("value", property);
+        }
+
+        public SELF withMaxProperty(ValuePropertyMetadata property) {
+            return withProperty("max", property);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, DoubleBoundedPropertyGroupMetadata> {
+
+        @Override
+        public DoubleBoundedPropertyGroupMetadata build() {
+            return new DoubleBoundedPropertyGroupMetadata(this);
+        }
+
     }
 }

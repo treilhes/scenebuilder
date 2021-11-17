@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Light;
 
@@ -49,14 +49,21 @@ public class LightPropertyMetadata extends ComplexPropertyMetadata<Light> {
     private final PointLightPropertyMetadata pointLightMetadata;
     private final SpotLightPropertyMetadata spotLightMetadata;
 
-    public LightPropertyMetadata(PropertyName name, boolean readWrite,
+    protected LightPropertyMetadata(PropertyName name, boolean readWrite,
             Light defaultValue, InspectorPath inspectorPath) {
         super(name, Light.class, readWrite, defaultValue, inspectorPath);
-        distantLightMetadata = new DistantLightPropertyMetadata(name, readWrite, null, inspectorPath);
-        pointLightMetadata = new PointLightPropertyMetadata(name, readWrite, null, inspectorPath);
-        spotLightMetadata = new SpotLightPropertyMetadata(name, readWrite, null, inspectorPath);
+        distantLightMetadata = fillBuilder(this, new DistantLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+        pointLightMetadata = fillBuilder(this, new PointLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+        spotLightMetadata = fillBuilder(this, new SpotLightPropertyMetadata.Builder()).withDefaultValue(null).build();
     }
 
+    protected LightPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+        distantLightMetadata = fillBuilder(this, new DistantLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+        pointLightMetadata = fillBuilder(this, new PointLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+        spotLightMetadata = fillBuilder(this, new SpotLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -79,4 +86,17 @@ public class LightPropertyMetadata extends ComplexPropertyMetadata<Light> {
         return result;
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Light> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Light.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, LightPropertyMetadata> {
+        @Override
+        public LightPropertyMetadata build() {
+            return new LightPropertyMetadata(this);
+        }
+    }
 }

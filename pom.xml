@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -56,11 +57,17 @@
         <module>scenebuilder.ext.about</module>
         <module>scenebuilder.ext.welcome</module>
         <module>scenebuilder.ext.scenicview</module>
-    <module>scenebuilder.core.launcher</module>
-    
-    <module>scenebuilder.core.fxom</module>
-    <module>scenebuilder.core.metadata</module>
-    <module>scenebuilder.core.utils</module>
+        <module>scenebuilder.core.launcher</module>
+
+        <module>scenebuilder.core.fxom</module>
+        <module>scenebuilder.core.metadata</module>
+        <module>scenebuilder.core.utils</module>
+        <module>scenebuilder.metadata.generator</module>
+        <module>scenebuilder.maven.client</module>
+        <module>scenebuilder.metadata-maven-plugin</module>
+        <module>scenebuilder.metadata.javafx</module>
+        <module>scenebuilder.metadata.gluon</module>
+
     </modules>
 
     <properties>
@@ -320,6 +327,18 @@
 
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx15</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.gluon5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.starter.test</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
@@ -360,7 +379,7 @@
                                 <option>--add-exports</option>
                                 <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.css.analyser</option>
                             </additionalOptions>
-                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated 
+                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated
                                 javadoc, see workaround below -->
                             <docfilessubdirs>true</docfilessubdirs>
                             <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
@@ -380,7 +399,7 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory 
+                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory
                             in github_pages -->
                         <groupId>org.codehaus.gmaven</groupId>
                         <artifactId>groovy-maven-plugin</artifactId>
@@ -481,6 +500,31 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <!-- <version>3.3.0</version> -->
                     <version>3.3.1-SNAPSHOT</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.gluonhq.scenebuilder</groupId>
+                                        <artifactId>scenebuilder.metadata-maven-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>metadataSource</goal>
+                                            <goal>metadataResource</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

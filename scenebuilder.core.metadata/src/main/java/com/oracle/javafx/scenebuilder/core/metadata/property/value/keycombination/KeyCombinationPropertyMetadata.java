@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.keycombinati
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCodeCombination;
@@ -50,28 +50,49 @@ public class KeyCombinationPropertyMetadata extends ComplexPropertyMetadata<KeyC
     private final KeyCodeCombinationPropertyMetadata keyCodeCombinationMetadata;
     private final KeyCharacterCombinationPropertyMetadata keyCharacterCombinationMetadata;
 
-    public KeyCombinationPropertyMetadata(PropertyName name, boolean readWrite, 
-            KeyCombination defaultValue, InspectorPath inspectorPath) {
+    protected KeyCombinationPropertyMetadata(PropertyName name, boolean readWrite, KeyCombination defaultValue,
+            InspectorPath inspectorPath) {
         super(name, KeyCombination.class, readWrite, defaultValue, inspectorPath);
-        keyCodeCombinationMetadata = new KeyCodeCombinationPropertyMetadata(name, readWrite, null, inspectorPath);
-        keyCharacterCombinationMetadata = new KeyCharacterCombinationPropertyMetadata(name, readWrite, null, inspectorPath);
+        keyCodeCombinationMetadata = fillBuilder(this, new KeyCodeCombinationPropertyMetadata.Builder()).withDefaultValue(null).build();
+        keyCharacterCombinationMetadata = fillBuilder(this, new KeyCharacterCombinationPropertyMetadata.Builder()).withDefaultValue(null).build();
     }
 
+    protected KeyCombinationPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+        keyCodeCombinationMetadata = fillBuilder(this, new KeyCodeCombinationPropertyMetadata.Builder()).withDefaultValue(null).build();
+        keyCharacterCombinationMetadata = fillBuilder(this, new KeyCharacterCombinationPropertyMetadata.Builder()).withDefaultValue(null).build();
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
     @Override
     public FXOMInstance makeFxomInstanceFromValue(KeyCombination value, FXOMDocument fxomDocument) {
         final FXOMInstance result;
-        
+
         if (value instanceof KeyCodeCombination) {
             result = keyCodeCombinationMetadata.makeFxomInstanceFromValue((KeyCodeCombination) value, fxomDocument);
         } else {
             assert value instanceof KeyCharacterCombination;
-            result = keyCharacterCombinationMetadata.makeFxomInstanceFromValue((KeyCharacterCombination) value, fxomDocument);
+            result = keyCharacterCombinationMetadata.makeFxomInstanceFromValue((KeyCharacterCombination) value,
+                    fxomDocument);
         }
 
         return result;
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, KeyCombination> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(KeyCombination.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, KeyCombinationPropertyMetadata> {
+        @Override
+        public KeyCombinationPropertyMetadata build() {
+            return new KeyCombinationPropertyMetadata(this);
+        }
     }
 
 }

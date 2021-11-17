@@ -34,11 +34,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
@@ -47,36 +47,53 @@ import javafx.scene.paint.Color;
  *
  */
 public class SpotLightPropertyMetadata extends ComplexPropertyMetadata<Light.Spot> {
-    
-    private final ColorPropertyMetadata colorMetadata
-            = new ColorPropertyMetadata(new PropertyName("color"), //NOCHECK
-            true, Color.WHITE, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata pointsAtXMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtX"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata pointsAtYMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtY"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata pointsAtZMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("pointsAtZ"), //NOCHECK
-            true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata specularExponentMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("specularExponent"), //NOCHECK
-            true, 1.0, InspectorPath.UNUSED);
-    
-    public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, 
-            Light.Spot defaultValue, InspectorPath inspectorPath) {
+
+    private final ColorPropertyMetadata colorMetadata = new ColorPropertyMetadata.Builder()
+            .withName(new PropertyName("color"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(Color.WHITE)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata pointsAtXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("pointsAtX"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata pointsAtYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("pointsAtY"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata pointsAtZMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("pointsAtZ"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata specularExponentMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("specularExponent"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(1.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, Light.Spot defaultValue,
+            InspectorPath inspectorPath) {
         super(name, Light.Spot.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected SpotLightPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Light.Spot value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, getValueClass());
-        
+
         colorMetadata.setValue(result, value.getColor());
         pointsAtXMetadata.setValue(result, value.getX());
         pointsAtYMetadata.setValue(result, value.getY());
@@ -85,5 +102,20 @@ public class SpotLightPropertyMetadata extends ComplexPropertyMetadata<Light.Spo
 
         return result;
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Light.Spot> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Light.Spot.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, SpotLightPropertyMetadata> {
+        @Override
+        public SpotLightPropertyMetadata build() {
+            return new SpotLightPropertyMetadata(this);
+        }
+    }
+
 }

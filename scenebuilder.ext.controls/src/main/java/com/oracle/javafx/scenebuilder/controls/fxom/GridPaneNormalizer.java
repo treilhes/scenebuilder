@@ -12,8 +12,8 @@ import javafx.scene.layout.GridPane;
 
 public class GridPaneNormalizer implements FXOMNormalizer {
 
-    private final static ColumnConstraintsListPropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata();
-    private final static RowConstraintsListPropertyMetadata rowConstraintsMeta = new RowConstraintsListPropertyMetadata();
+    private final static ColumnConstraintsListPropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder().build();
+    private final static RowConstraintsListPropertyMetadata rowConstraintsMeta = new RowConstraintsListPropertyMetadata.Builder().build();
 
     @Override
     public int normalize(FXOMDocument fxomDocument) {
@@ -29,7 +29,7 @@ public class GridPaneNormalizer implements FXOMNormalizer {
     private void normalizeGridPane(FXOMObject fxomGridPane) {
         assert fxomGridPane instanceof FXOMInstance;
         assert fxomGridPane.getSceneGraphObject() instanceof GridPane;
-        
+
         final GridPane gridPane = (GridPane) fxomGridPane.getSceneGraphObject();
         final int columnCount = Deprecation.getGridPaneColumnCount(gridPane);
         final int rowCount = Deprecation.getGridPaneRowCount(gridPane);

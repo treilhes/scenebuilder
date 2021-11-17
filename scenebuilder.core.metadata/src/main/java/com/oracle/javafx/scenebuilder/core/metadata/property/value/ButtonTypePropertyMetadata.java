@@ -38,8 +38,8 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.ButtonType;
 
@@ -48,40 +48,43 @@ import javafx.scene.control.ButtonType;
  * 
  */
 public class ButtonTypePropertyMetadata extends ComplexPropertyMetadata<ButtonType> {
-    
+
     private static Map<ButtonType, String> buttonTypeMap;
-    
-    public ButtonTypePropertyMetadata(PropertyName name, boolean readWrite, 
-            ButtonType defaultValue, InspectorPath inspectorPath) {
-        super(name, ButtonType.class, readWrite, defaultValue, inspectorPath);
-    }
 
     public static synchronized Map<ButtonType, String> getButtonTypeMap() {
         if (buttonTypeMap == null) {
             buttonTypeMap = new HashMap<>();
-            buttonTypeMap.put(ButtonType.APPLY,   "APPLY"    ); //NOCHECK
-            buttonTypeMap.put(ButtonType.CANCEL,  "CANCEL"   ); //NOCHECK
-            buttonTypeMap.put(ButtonType.CLOSE,   "CLOSE"    ); //NOCHECK
-            buttonTypeMap.put(ButtonType.FINISH,  "FINISH"   ); //NOCHECK
-            buttonTypeMap.put(ButtonType.NEXT,    "NEXT"     ); //NOCHECK
-            buttonTypeMap.put(ButtonType.NO,      "NO"       ); //NOCHECK
-            buttonTypeMap.put(ButtonType.OK,      "OK"       ); //NOCHECK
-            buttonTypeMap.put(ButtonType.PREVIOUS,"PREVIOUS" ); //NOCHECK
-            buttonTypeMap.put(ButtonType.YES,     "YES"      ); //NOCHECK
+            buttonTypeMap.put(ButtonType.APPLY, "APPLY"); // NOCHECK
+            buttonTypeMap.put(ButtonType.CANCEL, "CANCEL"); // NOCHECK
+            buttonTypeMap.put(ButtonType.CLOSE, "CLOSE"); // NOCHECK
+            buttonTypeMap.put(ButtonType.FINISH, "FINISH"); // NOCHECK
+            buttonTypeMap.put(ButtonType.NEXT, "NEXT"); // NOCHECK
+            buttonTypeMap.put(ButtonType.NO, "NO"); // NOCHECK
+            buttonTypeMap.put(ButtonType.OK, "OK"); // NOCHECK
+            buttonTypeMap.put(ButtonType.PREVIOUS, "PREVIOUS"); // NOCHECK
+            buttonTypeMap.put(ButtonType.YES, "YES"); // NOCHECK
             buttonTypeMap = Collections.unmodifiableMap(buttonTypeMap);
         }
-        
+
         return buttonTypeMap;
     }
-    
-    
+
+    protected ButtonTypePropertyMetadata(PropertyName name, boolean readWrite, ButtonType defaultValue,
+            InspectorPath inspectorPath) {
+        super(name, ButtonType.class, readWrite, defaultValue, inspectorPath);
+    }
+
+    protected ButtonTypePropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+
     /*
      * ComplexPropertyMetadata
      */
     @Override
     public FXOMInstance makeFxomInstanceFromValue(ButtonType value, FXOMDocument fxomDocument) {
         final FXOMInstance result;
-        
+
         final String buttonName = getButtonTypeMap().get(value);
         if (buttonName != null) {
             // It's a standard button type
@@ -93,8 +96,22 @@ public class ButtonTypePropertyMetadata extends ComplexPropertyMetadata<ButtonTy
             result = new FXOMInstance(fxomDocument, ButtonType.class);
             result.setFxConstant(getButtonTypeMap().get(ButtonType.APPLY));
         }
-        
+
         return result;
     }
-}
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD>
+            extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ButtonType> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(ButtonType.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, ButtonTypePropertyMetadata> {
+        @Override
+        public ButtonTypePropertyMetadata build() {
+            return new ButtonTypePropertyMetadata(this);
+        }
+    }
+}

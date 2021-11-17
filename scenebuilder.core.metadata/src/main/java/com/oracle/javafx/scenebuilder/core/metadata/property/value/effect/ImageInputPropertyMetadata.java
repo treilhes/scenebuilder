@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.ImageInput;
 
@@ -49,21 +49,32 @@ import javafx.scene.effect.ImageInput;
  */
 public class ImageInputPropertyMetadata extends ComplexPropertyMetadata<ImageInput> {
     
-    private final ImagePropertyMetadata sourceMetadata
-            = new ImagePropertyMetadata(new PropertyName("source"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata xMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("x"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata yMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("y"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
+    private final ImagePropertyMetadata sourceMetadata = new ImagePropertyMetadata.Builder()
+            .withName(new PropertyName("source"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public ImageInputPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final CoordinateDoublePropertyMetadata xMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("x"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final CoordinateDoublePropertyMetadata yMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("y"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected ImageInputPropertyMetadata(PropertyName name, boolean readWrite, 
             ImageInput defaultValue, InspectorPath inspectorPath) {
         super(name, ImageInput.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected ImageInputPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
@@ -83,5 +94,19 @@ public class ImageInputPropertyMetadata extends ComplexPropertyMetadata<ImageInp
         yMetadata.setValue(result, value.getY());
 
         return result;
+    }
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ImageInput> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(ImageInput.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, ImageInputPropertyMetadata> {
+        @Override
+        public ImageInputPropertyMetadata build() {
+            return new ImageInputPropertyMetadata(this);
+        }
     }
 }

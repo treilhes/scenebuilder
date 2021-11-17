@@ -34,28 +34,27 @@ package com.oracle.javafx.scenebuilder.core.mask;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.PropertyNames;
 
 /**
  *
  */
 public class BorderPaneHierarchyMask extends DesignHierarchyMask {
-    
-    private static final PropertyName TOP = PropertyNames.topName; //NOCHECK
-    private static final PropertyName BOTTOM = PropertyNames.bottomName; //NOCHECK
-    private static final PropertyName CENTER = PropertyNames.centerName; //NOCHECK
-    private static final PropertyName LEFT = PropertyNames.leftName; //NOCHECK
-    private static final PropertyName RIGHT = PropertyNames.rightName; //NOCHECK
-    
+
+    private static final PropertyName TOP = new PropertyName("top"); //NOCHECK
+    private static final PropertyName BOTTOM = new PropertyName("bottom"); //NOCHECK
+    private static final PropertyName CENTER = new PropertyName("center"); //NOCHECK
+    private static final PropertyName LEFT = new PropertyName("left"); //NOCHECK
+    private static final PropertyName RIGHT = new PropertyName("right"); //NOCHECK
+
     private final Accessory topAccessory;
     private final Accessory bottomAccessory;
     private final Accessory leftAccessory;
     private final Accessory rightAccessory;
     private final Accessory centerAccessory;
-    
+
     public BorderPaneHierarchyMask(FXOMObject fxomObject) {
         super(fxomObject);
-        
+
         topAccessory = getAccessoryForPropertyName(TOP);
         bottomAccessory = getAccessoryForPropertyName(BOTTOM);
         leftAccessory = getAccessoryForPropertyName(LEFT);
@@ -88,5 +87,5 @@ public class BorderPaneHierarchyMask extends DesignHierarchyMask {
         return centerAccessory;
     }
 
-    
+
 }

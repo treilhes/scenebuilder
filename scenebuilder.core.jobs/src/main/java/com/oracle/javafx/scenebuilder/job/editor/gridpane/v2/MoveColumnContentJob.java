@@ -56,11 +56,11 @@ import javafx.scene.layout.GridPane;
 public class MoveColumnContentJob extends BatchDocumentJob {
 
     private final IntegerPropertyMetadata columnIndexMeta =
-            new IntegerPropertyMetadata(
-                new PropertyName("columnIndex", GridPane.class), //NOCHECK
-                true, /* readWrite */
-                0, /* defaultValue */
-                InspectorPath.UNUSED);
+            new IntegerPropertyMetadata.Builder()
+                .withName(new PropertyName("columnIndex", GridPane.class)) //NOCHECK
+                .withReadWrite(true)
+                .withDefaultValue(0)
+                .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final FXOMInstance gridPaneObject;
     private final int movingColumnIndex;

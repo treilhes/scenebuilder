@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.AngleDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.MotionBlur;
 
@@ -48,21 +48,34 @@ import javafx.scene.effect.MotionBlur;
  */
 public class MotionBlurPropertyMetadata extends ComplexPropertyMetadata<MotionBlur> {
     
-    private final AngleDoublePropertyMetadata angleMetadata
-            = new AngleDoublePropertyMetadata(new PropertyName("angle"), //NOCHECK
-            true /* readWrite */, 0.0, InspectorPath.UNUSED);
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata radiusMetadata
-            = new SizeDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
-            true /* readWrite */, 10.0, InspectorPath.UNUSED);
+    private final AngleDoublePropertyMetadata angleMetadata = new AngleDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("angle"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public MotionBlurPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    private final SizeDoublePropertyMetadata radiusMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("radius"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(10.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+
+    protected MotionBlurPropertyMetadata(PropertyName name, boolean readWrite, 
             MotionBlur defaultValue, InspectorPath inspectorPath) {
         super(name, MotionBlur.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected MotionBlurPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
+    
     /*
      * ComplexPropertyMetadata
      */
@@ -76,5 +89,19 @@ public class MotionBlurPropertyMetadata extends ComplexPropertyMetadata<MotionBl
         radiusMetadata.setValue(result, value.getRadius());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, MotionBlur> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(MotionBlur.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, MotionBlurPropertyMetadata> {
+        @Override
+        public MotionBlurPropertyMetadata build() {
+            return new MotionBlurPropertyMetadata(this);
+        }
     }
 }

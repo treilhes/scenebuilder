@@ -63,17 +63,17 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPathComparator
  */
 @Component
 public class Metadata implements InitializingBean {
-    
+
     private static Metadata metadata = null;
-    
-    
+
+
     private final Map<Class<?>, ComponentClassMetadata> componentClassMap = new HashMap<>();
     private final Map<Class<?>, ComponentClassMetadata> customComponentClassMap = new WeakHashMap<>();
     private final Set<PropertyName> hiddenProperties = new HashSet<>();
     private final Set<PropertyName> parentRelatedProperties = new HashSet<>();
     private final List<String> sectionNames = new ArrayList<>();
     private final Map<String, List<String>> subSectionMap = new HashMap<>();
-    
+
     public final InspectorPathComparator INSPECTOR_PATH_COMPARATOR
             = new InspectorPathComparator(sectionNames, subSectionMap);
 
@@ -87,15 +87,15 @@ public class Metadata implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         metadata = this;
     }
-    
+
     private Metadata(
             @Autowired List<ComponentClassMetadata<?>> componentClassMetadatas
-            
+
             ) {
 
         // Populate componentClassMap
         componentClassMetadatas.forEach(c -> componentClassMap.put(c.getKlass(), c));
-        
+
         // Populates hiddenProperties
         hiddenProperties.add(new PropertyName("activated")); //NOCHECK
         hiddenProperties.add(new PropertyName("alignWithContentOrigin")); //NOCHECK
@@ -187,16 +187,26 @@ public class Metadata implements InitializingBean {
         hiddenProperties.add(new PropertyName("visibleLeafColumns")); //NOCHECK
 
         // Populates parentRelatedProperties
-        parentRelatedProperties.add(PropertyNames.layoutXName);
-        parentRelatedProperties.add(PropertyNames.layoutYName);
-        parentRelatedProperties.add(PropertyNames.translateXName);
-        parentRelatedProperties.add(PropertyNames.translateYName);
-        parentRelatedProperties.add(PropertyNames.translateZName);
-        parentRelatedProperties.add(PropertyNames.scaleXName);
-        parentRelatedProperties.add(PropertyNames.scaleYName);
-        parentRelatedProperties.add(PropertyNames.scaleZName);
-        parentRelatedProperties.add(PropertyNames.rotationAxisName);
-        parentRelatedProperties.add(PropertyNames.rotateName);
+//        parentRelatedProperties.add(PropertyNames.layoutXName);
+//        parentRelatedProperties.add(PropertyNames.layoutYName);
+//        parentRelatedProperties.add(PropertyNames.translateXName);
+//        parentRelatedProperties.add(PropertyNames.translateYName);
+//        parentRelatedProperties.add(PropertyNames.translateZName);
+//        parentRelatedProperties.add(PropertyNames.scaleXName);
+//        parentRelatedProperties.add(PropertyNames.scaleYName);
+//        parentRelatedProperties.add(PropertyNames.scaleZName);
+//        parentRelatedProperties.add(PropertyNames.rotationAxisName);
+//        parentRelatedProperties.add(PropertyNames.rotateName);
+        parentRelatedProperties.add(new PropertyName("layoutXName"));
+        parentRelatedProperties.add(new PropertyName("layoutYName"));
+        parentRelatedProperties.add(new PropertyName("translateXName"));
+        parentRelatedProperties.add(new PropertyName("translateYName"));
+        parentRelatedProperties.add(new PropertyName("translateZName"));
+        parentRelatedProperties.add(new PropertyName("scaleXName"));
+        parentRelatedProperties.add(new PropertyName("scaleYName"));
+        parentRelatedProperties.add(new PropertyName("scaleZName"));
+        parentRelatedProperties.add(new PropertyName("rotationAxisName"));
+        parentRelatedProperties.add(new PropertyName("rotateName"));
 
         // Populates sectionNames
         sectionNames.add("Properties"); //NOCHECK
@@ -250,11 +260,11 @@ public class Metadata implements InitializingBean {
         ss2.add("Zoom"); //NOCHECK
         subSectionMap.put("Code", ss2); //NOCHECK
     }
-    
+
     public ComponentClassMetadata queryComponentMetadata(Class<?> componentClass) {
         final ComponentClassMetadata result;
-        
-        
+
+
         final ComponentClassMetadata componentMetadata
                 = componentClassMap.get(componentClass);
         if (componentMetadata != null) {
@@ -282,14 +292,14 @@ public class Metadata implements InitializingBean {
                 customComponentClassMap.put(componentClass, result);
             }
         }
-        
+
         return result;
     }
-    
+
     public Set<PropertyMetadata> queryProperties(Class<?> componentClass) {
         final Map<PropertyName, PropertyMetadata> result = new HashMap<>();
         ComponentClassMetadata<?> classMetadata = queryComponentMetadata(componentClass);
-        
+
         while (classMetadata != null) {
             for (PropertyMetadata pm : classMetadata.getProperties()) {
                 if (result.containsKey(pm.getName()) == false) {
@@ -298,13 +308,13 @@ public class Metadata implements InitializingBean {
             }
             classMetadata = classMetadata.getParentMetadata();
         }
-        
+
         return new HashSet<>(result.values());
     }
-    
+
     public Set<PropertyMetadata> queryProperties(Collection<Class<?>> componentClasses) {
         final Set<PropertyMetadata> result = new HashSet<>();
-        
+
         int count = 0;
         for (Class<?> componentClass : componentClasses) {
             final Set<PropertyMetadata> propertyMetadata = queryProperties(componentClass);
@@ -315,13 +325,13 @@ public class Metadata implements InitializingBean {
             }
             count++;
         }
-        
+
         return result;
     }
-    
+
     public Set<ComponentPropertyMetadata> queryComponentProperties(Class<?> componentClass) {
         final Set<ComponentPropertyMetadata> result = new HashSet<>();
-        
+
         for (PropertyMetadata propertyMetadata : queryProperties(Arrays.asList(componentClass))) {
             if (propertyMetadata instanceof ComponentPropertyMetadata) {
                 result.add((ComponentPropertyMetadata) propertyMetadata);
@@ -329,7 +339,7 @@ public class Metadata implements InitializingBean {
         }
         return result;
     }
-    
+
     public ComponentPropertyMetadata queryComponentProperty(Class<?> componentClass, PropertyName name) {
         ComponentClassMetadata<?> classMetadata = queryComponentMetadata(componentClass);
         Optional<ComponentPropertyMetadata> result = classMetadata.getAllSubComponentProperties().stream()
@@ -337,7 +347,7 @@ public class Metadata implements InitializingBean {
             .findFirst();
         return result.isEmpty() ? null : result.get();
     }
-    
+
     public Set<ValuePropertyMetadata> queryValueProperties(Set<Class<?>> componentClasses) {
         final Set<ValuePropertyMetadata> result = new HashSet<>();
         for (PropertyMetadata propertyMetadata : queryProperties(componentClasses)) {
@@ -347,7 +357,7 @@ public class Metadata implements InitializingBean {
         }
         return result;
     }
-    
+
     public PropertyMetadata queryProperty(Class<?> componentClass, PropertyName targetName) {
         final Set<PropertyMetadata> propertyMetadataSet = queryProperties(componentClass);
         final Iterator<PropertyMetadata> iterator = propertyMetadataSet.iterator();
@@ -358,7 +368,7 @@ public class Metadata implements InitializingBean {
             if (propertyMetadata.getName().equals(targetName)) {
                 return propertyMetadata;
             }
-            
+
             if (propertyMetadata.isGroup()) {
                 PropertyGroupMetadata pgm = (PropertyGroupMetadata)propertyMetadata;
                 for (int i=0; i < pgm.getProperties().length; i++) {
@@ -397,8 +407,8 @@ public class Metadata implements InitializingBean {
 
         return result;
     }
-    
-    
+
+
     public Collection<ComponentClassMetadata> getComponentClasses() {
         return componentClassMap.values();
     }
@@ -409,7 +419,7 @@ public class Metadata implements InitializingBean {
 
     public boolean isPropertyTrimmingNeeded(PropertyName name) {
         final boolean result;
-        
+
         if (name.getResidenceClass() != null) {
             // It's a static property eg GridPane.rowIndex
             // All static property are "parent related" and needs trimming
@@ -417,7 +427,7 @@ public class Metadata implements InitializingBean {
         } else {
             result = parentRelatedProperties.contains(name);
         }
-        
+
         return result;
     }
 

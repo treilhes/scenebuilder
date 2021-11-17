@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.OpacityDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.Glow;
 
@@ -47,18 +47,26 @@ import javafx.scene.effect.Glow;
  */
 public class GlowPropertyMetadata extends ComplexPropertyMetadata<Glow> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final OpacityDoublePropertyMetadata levelMetadata
-            = new OpacityDoublePropertyMetadata(new PropertyName("level"), //NOCHECK
-            true /* readWrite */, 0.3, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public GlowPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final OpacityDoublePropertyMetadata levelMetadata = new OpacityDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("level"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.3)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected GlowPropertyMetadata(PropertyName name, boolean readWrite, 
             Glow defaultValue, InspectorPath inspectorPath) {
         super(name, Glow.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected GlowPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
@@ -71,5 +79,19 @@ public class GlowPropertyMetadata extends ComplexPropertyMetadata<Glow> {
         levelMetadata.setValue(result, value.getLevel());
         
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Glow> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Glow.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, GlowPropertyMetadata> {
+        @Override
+        public GlowPropertyMetadata build() {
+            return new GlowPropertyMetadata(this);
+        }
     }
 }

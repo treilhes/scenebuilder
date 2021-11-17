@@ -34,19 +34,21 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
  */
 public abstract class TextEncodablePropertyMetadata<T> extends SingleValuePropertyMetadata<T> {
 
-    public TextEncodablePropertyMetadata(PropertyName name, Class<T> valueClass, 
-            boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
-        super(name, valueClass, readWrite, defaultValue, inspectorPath);
+//    protected TextEncodablePropertyMetadata(PropertyName name, Class<T> valueClass,
+//            boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
+//        super(name, valueClass, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected TextEncodablePropertyMetadata(AbstractBuilder<?,?,T> builder) {
+        super(builder);
     }
-    
+
     public String getValueString(FXOMInstance fxomInstance) {
         return getValue(fxomInstance).toString();
     }
@@ -54,7 +56,7 @@ public abstract class TextEncodablePropertyMetadata<T> extends SingleValueProper
     /*
      * SingleValuePropertyMetadata
      */
-    
+
     @Override
     public T makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
         return getValueClass().cast(valueFxomInstance.getSceneGraphObject());
@@ -77,4 +79,6 @@ public abstract class TextEncodablePropertyMetadata<T> extends SingleValueProper
         // Should never be invoked because canMakeStringFromValue() always return true
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, T> extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, T> {
+    }
  }

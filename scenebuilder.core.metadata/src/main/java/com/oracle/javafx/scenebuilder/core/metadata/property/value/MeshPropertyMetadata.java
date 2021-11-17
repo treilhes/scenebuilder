@@ -34,8 +34,6 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.shape.Mesh;
 
@@ -44,14 +42,31 @@ import javafx.scene.shape.Mesh;
  */
 public class MeshPropertyMetadata extends ComplexPropertyMetadata<Mesh> {
 
-    public MeshPropertyMetadata(PropertyName name, boolean readWrite, 
-            Mesh defaultValue, InspectorPath inspectorPath) {
-        super(name, Mesh.class, readWrite, defaultValue, inspectorPath);
+//    public MeshPropertyMetadata(PropertyName name, boolean readWrite,
+//            Mesh defaultValue, InspectorPath inspectorPath) {
+//        super(name, Mesh.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected MeshPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Mesh value, FXOMDocument fxomDocument) {
         throw new UnsupportedOperationException("Not supported yet."); //NOCHECK
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Mesh> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Mesh.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, MeshPropertyMetadata> {
+        @Override
+        public MeshPropertyMetadata build() {
+            return new MeshPropertyMetadata(this);
+        }
+    }
 }

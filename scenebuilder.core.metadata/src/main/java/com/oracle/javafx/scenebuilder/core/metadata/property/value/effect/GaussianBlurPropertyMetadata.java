@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.effect.GaussianBlur;
 
@@ -47,18 +47,26 @@ import javafx.scene.effect.GaussianBlur;
  */
 public class GaussianBlurPropertyMetadata extends ComplexPropertyMetadata<GaussianBlur> {
     
-    private final EffectPropertyMetadata inputMetadata
-            = new EffectPropertyMetadata(new PropertyName("input"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata radiusMetadata
-            = new CoordinateDoublePropertyMetadata(new PropertyName("radius"), //NOCHECK
-            true /* readWrite */, 10.0, InspectorPath.UNUSED);
+    private final EffectPropertyMetadata inputMetadata = new EffectPropertyMetadata.Builder()
+            .withName(new PropertyName("input"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public GaussianBlurPropertyMetadata(PropertyName name, boolean readWrite, 
+    private final CoordinateDoublePropertyMetadata radiusMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("radius"))//NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(10.0)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+    protected GaussianBlurPropertyMetadata(PropertyName name, boolean readWrite, 
             GaussianBlur defaultValue, InspectorPath inspectorPath) {
         super(name, GaussianBlur.class, readWrite, defaultValue, inspectorPath);
     }
 
+    protected GaussianBlurPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
+    }
     /*
      * ComplexPropertyMetadata
      */
@@ -71,5 +79,19 @@ public class GaussianBlurPropertyMetadata extends ComplexPropertyMetadata<Gaussi
         radiusMetadata.setValue(result, value.getRadius());
 
         return result;
+    }
+    
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, GaussianBlur> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(GaussianBlur.class);
+        }
+    }
+    
+    public static final class Builder extends AbstractBuilder<Builder, GaussianBlurPropertyMetadata> {
+        @Override
+        public GaussianBlurPropertyMetadata build() {
+            return new GaussianBlurPropertyMetadata(this);
+        }
     }
 }

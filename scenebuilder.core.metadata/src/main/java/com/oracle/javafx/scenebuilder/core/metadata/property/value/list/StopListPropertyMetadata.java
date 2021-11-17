@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.StopPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.scene.paint.Stop;
 
@@ -44,14 +44,40 @@ import javafx.scene.paint.Stop;
  *
  */
 public class StopListPropertyMetadata extends ListValuePropertyMetadata<Stop> {
-    
-    private static final StopPropertyMetadata itemMetadata
-            = new StopPropertyMetadata(new PropertyName("unused"), //NOCHECK
-            true /* readWrite */, null, InspectorPath.UNUSED);
-    
-    public StopListPropertyMetadata(PropertyName name, boolean readWrite, 
-            List<Stop> defaultValue, InspectorPath inspectorPath) {
-        super(name, Stop.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+
+    private static final StopPropertyMetadata itemMetadata = new StopPropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+
+//    protected StopListPropertyMetadata(PropertyName name, boolean readWrite,
+//            List<Stop> defaultValue, InspectorPath inspectorPath) {
+//        super(name, Stop.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected StopListPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
-    
+
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Stop> {
+        public AbstractBuilder() {
+            super();
+            withItemClass(Stop.class);
+            withItemMetadata(StopListPropertyMetadata.itemMetadata);
+        }
+
+        @Override
+        public SELF withDefaultValue(List<Stop> defaultValue) {
+            return super.withDefaultValue(defaultValue);
+        }
+
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, StopListPropertyMetadata> {
+        @Override
+        public StopListPropertyMetadata build() {
+            return new StopListPropertyMetadata(this);
+        }
+    }
 }

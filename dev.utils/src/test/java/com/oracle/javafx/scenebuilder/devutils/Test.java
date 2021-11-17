@@ -52,7 +52,8 @@ public class Test extends AppTester {
         //new TableViewBinding().start(stage);
         //new TestContent4().start(stage);
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\panInc2.fxml");
-        new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accordion.fxml");
+        //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accordion.fxml");
+        new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accFocusTravers.fxml");
     }
 
     public static void main(String args[]) {

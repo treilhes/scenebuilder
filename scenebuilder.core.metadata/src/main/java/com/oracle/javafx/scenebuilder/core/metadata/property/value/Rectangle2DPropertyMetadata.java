@@ -34,10 +34,10 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.geometry.Rectangle2D;
 
@@ -46,18 +46,42 @@ import javafx.geometry.Rectangle2D;
  */
 public class Rectangle2DPropertyMetadata extends ComplexPropertyMetadata<Rectangle2D> {
 
-    private final CoordinateDoublePropertyMetadata minXMetadata = new CoordinateDoublePropertyMetadata(
-            new PropertyName("minX"), true, 0.0, InspectorPath.UNUSED);
-    private final CoordinateDoublePropertyMetadata minYMetadata = new CoordinateDoublePropertyMetadata(
-            new PropertyName("minY"), true, 0.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata widthMetadata = new SizeDoublePropertyMetadata(new PropertyName("width"),
-            true, 0.0, InspectorPath.UNUSED);
-    private final SizeDoublePropertyMetadata heightMetadata = new SizeDoublePropertyMetadata(new PropertyName("height"),
-            true, 0.0, InspectorPath.UNUSED);
+    private final CoordinateDoublePropertyMetadata minXMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("minX")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
 
-    public Rectangle2DPropertyMetadata(PropertyName name, boolean readWrite, Rectangle2D defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, Rectangle2D.class, readWrite, defaultValue, inspectorPath);
+    private final CoordinateDoublePropertyMetadata minYMetadata = new CoordinateDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("minY")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final SizeDoublePropertyMetadata widthMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("width")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+    private final SizeDoublePropertyMetadata heightMetadata = new SizeDoublePropertyMetadata.Builder()
+            .withName(new PropertyName("height")) //NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(0.0)
+            .withInspectorPath(InspectorPath.UNUSED)
+            .build();
+
+
+//    public Rectangle2DPropertyMetadata(PropertyName name, boolean readWrite, Rectangle2D defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Rectangle2D.class, readWrite, defaultValue, inspectorPath);
+//    }
+
+    protected Rectangle2DPropertyMetadata(AbstractBuilder<?, ?> builder) {
+        super(builder);
     }
 
     /*
@@ -76,4 +100,17 @@ public class Rectangle2DPropertyMetadata extends ComplexPropertyMetadata<Rectang
         return result;
     }
 
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Rectangle2D> {
+        public AbstractBuilder() {
+            super();
+            withValueClass(Rectangle2D.class);
+        }
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, Rectangle2DPropertyMetadata> {
+        @Override
+        public Rectangle2DPropertyMetadata build() {
+            return new Rectangle2DPropertyMetadata(this);
+        }
+    }
 }

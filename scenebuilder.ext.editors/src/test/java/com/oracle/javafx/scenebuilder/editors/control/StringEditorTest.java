@@ -42,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.MultilineI18nStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)
 public class StringEditorTest {
@@ -49,32 +50,36 @@ public class StringEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static StringPropertyMetadata someMultilineStringProp() {
-        return new MultilineI18nStringPropertyMetadata(new PropertyName("multistring"), true, "", null);
+        return new MultilineI18nStringPropertyMetadata.Builder()
+                .withName(new PropertyName("multistring"))
+                .withReadWrite(true)
+                .withDefaultValue("")
+                .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        
+
         StringEditor o = new StringEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        
+
         StringEditor o = new StringEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        
+
         StringEditor o = new StringEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someMultilineStringProp(), null);
     }
 
