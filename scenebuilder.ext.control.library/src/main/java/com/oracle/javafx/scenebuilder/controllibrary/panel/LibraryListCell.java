@@ -108,7 +108,7 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
                 // If QE were about to test a localized version the ID should
                 // remain unchanged.
                 String qualifier = item.getLibItem().getQualifier().getLabel();
-                if (qualifier != null && !"default".equals(qualifier.toLowerCase())) {
+                if (qualifier != null) {
                     id += String.format(" (%s)", item.getLibItem().getQualifier().getLabel());
                 }
                 graphic.setId(id); // for QE
@@ -207,11 +207,11 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
 
         String output = "";
 
-        if (label != null) {
+        if (label != null && !"default".equals(label.toLowerCase())) {
             output += "(" + I18N.getStringOrDefault(String.format("label.qualifier.%s",label), label) + ")";
         }
 
-        if (description != null) {
+        if (description != null && !description.isBlank()) {
             output += output.length() == 0 ? "" : " ";
             output += "(" + I18N.getStringOrDefault(String.format("description.qualifier.%s",description), description) + ")";
         }
