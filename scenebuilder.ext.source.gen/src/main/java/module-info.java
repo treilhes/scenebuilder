@@ -7,16 +7,17 @@ open module scenebuilder.ext.source.gen {
     exports com.oracle.javafx.scenebuilder.sourcegen.i18n;
     exports com.oracle.javafx.scenebuilder.sourcegen;
 
-    requires io.reactivex.rxjava2;
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires lombok;
+    requires scenebuilder.starter;
+//    requires io.reactivex.rxjava2;
+//    requires javafx.base;
+//    requires javafx.controls;
+//    requires javafx.fxml;
+//    requires javafx.graphics;
+    requires static lombok;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
-    requires spring.beans;
-    requires spring.context;
-    
-    provides Extension with SourceGenExtension; 
+//    requires spring.beans;
+//    requires spring.context;
+
+    provides Extension with SourceGenExtension;
 }

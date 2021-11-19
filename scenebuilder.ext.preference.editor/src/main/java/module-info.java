@@ -10,15 +10,16 @@ open module scenebuilder.ext.preference.editor {
 
     //opens com.oracle.javafx.scenebuilder.prefedit.editor to spring.core;
 
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires javafx.graphics;
+    requires scenebuilder.starter;
+//    requires javafx.base;
+//    requires javafx.controls;
+//    requires javafx.fxml;
+//    requires javafx.graphics;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.ext.editors;
     requires scenebuilder.core.extension.api;
-    requires spring.beans;
-    requires spring.context;
-    
+//    requires spring.beans;
+//    requires spring.context;
+
     provides Extension with PreferenceEditorExtension;
 }

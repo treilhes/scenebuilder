@@ -81,13 +81,13 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected Class<?> newContainerClass;
     protected FXOMInstance oldContainer, newContainer;
     private final FXOMDocument fxomDocument;
-    private final Selection selection;
+    //private final Selection selection;
 
     public AbstractWrapInJob(ApplicationContext context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.selection = documentManager.selectionDidChange().get().getSelection();
+        //this.selection = documentManager.selectionDidChange().get().getSelection();
     }
 
     //TODO find who use this method and make them extend the result
@@ -468,7 +468,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         }
         return result;
     }
-    
+
     private static List<Class<?>> classesSupportingWrapping;
 
     //TODO reactivate {link EditorController#performWrap(java.lang.Class)} after refactoring wrapping feature

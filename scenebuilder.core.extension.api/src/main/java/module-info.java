@@ -6,7 +6,7 @@ open module scenebuilder.core.extension.api {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires java.instrument;
-    requires lombok;
-    
+    requires static lombok;
+
     uses Extension;
 }

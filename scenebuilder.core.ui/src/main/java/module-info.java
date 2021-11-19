@@ -11,21 +11,22 @@ open module scenebuilder.core.layout {
     exports com.oracle.javafx.scenebuilder.ui.message;
     exports com.oracle.javafx.scenebuilder.ui.selectionbar;
 
-    requires io.reactivex.rxjava2;
-    requires java.logging;
-    requires java.prefs;
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires lombok;
-    requires org.slf4j;
+    requires scenebuilder.starter;
+//    requires io.reactivex.rxjava2;
+//    requires java.logging;
+//    requires java.prefs;
+//    requires javafx.base;
+//    requires javafx.controls;
+//    requires javafx.fxml;
+//    requires javafx.graphics;
+//    requires lombok;
+//    requires org.slf4j;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.filesystem;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
-    
+//    requires spring.beans;
+//    requires spring.context;
+//    requires spring.core;
+    requires static lombok;
     provides Extension with BaseUiExtension;
 }

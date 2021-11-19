@@ -10,7 +10,7 @@
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>scenebuilder.core.launcher</artifactId>
     <version>17.0.0-SNAPSHOT</version>
-    
+
     <properties>
         <scenebuilder.version>17.0.0-SNAPSHOT</scenebuilder.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,6 +27,10 @@
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.filesystem</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>

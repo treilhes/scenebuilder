@@ -463,7 +463,7 @@ public class JobUtils {
     private static PropertyMetadata getPropertyMetadata(
             final Class<?> componentClass, final String name) {
 
-        final ComponentClassMetadata componentClassMetadata
+        final ComponentClassMetadata<?> componentClassMetadata
                 = Metadata.getMetadata().queryComponentMetadata(componentClass);
         final PropertyName propertyName = new PropertyName(name);
         return componentClassMetadata.lookupProperty(propertyName);

@@ -47,36 +47,36 @@ public class ClassLoaderUtils {
             classLoader = null;
         } else {
             classLoader = new URLClassLoader("customLLLOadeeer", makeURLArrayFromPaths(jarsOrFolders), ClassLoaderUtils.class.getClassLoader());
-            
+
             classLoader.getUnnamedModule().addReads(ClassLoaderUtils.class.getClassLoader().getUnnamedModule());
             ClassLoaderUtils.class.getClassLoader().getUnnamedModule().addReads(classLoader.getUnnamedModule());
         }
         return classLoader;
     }
-    
+
     public static ClassLoader createClassLoader(List<URL> jarsOrFolders) {
         final ClassLoader classLoader;
         if (jarsOrFolders.isEmpty()) {
             classLoader = null;
         } else {
-            ClassLoader o = ClassLoaderUtils.class.getClassLoader();
+            //ClassLoader o = ClassLoaderUtils.class.getClassLoader();
             classLoader = new URLClassLoader("customLLLOadr", makeURLArrayFromPaths(jarsOrFolders), ClassLoaderUtils.class.getClassLoader());
-            
+
             //classLoader.getUnnamedModule().addReads(ClassLoaderUtils.class.getClassLoader().getUnnamedModule());
             //ClassLoaderUtils.class.getClassLoader().getUnnamedModule().addReads(classLoader.getUnnamedModule());
             //System.out.println();
         }
         return classLoader;
     }
-    
+
     public static class URLClassLoaderBis extends URLClassLoader {
 
         public URLClassLoaderBis(String name, URL[] urls, ClassLoader parent) {
             super(name, urls, parent);
         }
- 
+
     }
-    
+
     private static URL[] makeURLArrayFromPaths(Collection<Path> paths) {
         final URL[] result = new URL[paths.size()];
         int i = 0;
@@ -95,7 +95,7 @@ public class ClassLoaderUtils {
 
         return result;
     }
-    
+
     private static URL[] makeURLArrayFromPaths(List<URL> urls) {
         final URL[] result = new URL[urls.size()];
         int i = 0;

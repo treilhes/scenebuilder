@@ -43,19 +43,20 @@ open module scenebuilder.ext.controls.tooling {
     exports com.oracle.javafx.scenebuilder.drivers.node;
     exports com.oracle.javafx.scenebuilder.drivers.canvas;
 
+    requires scenebuilder.starter;
     requires scenebuilder.core.drag.and.drop;
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.graphics;
-    requires javafx.web;
+//    requires javafx.base;
+//    requires javafx.controls;
+//    requires javafx.graphics;
+//    requires javafx.web;
     requires scenebuilder.core.jobs;
-    requires org.slf4j;
+//    requires org.slf4j;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
+//    requires spring.beans;
+//    requires spring.context;
+//    requires spring.core;
     requires scenebuilder.core.utils;
-    
+
     provides Extension with BaseToolingExtension;
 }

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -24,24 +23,24 @@ import javafx.scene.input.Clipboard;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class ClipboardController implements com.oracle.javafx.scenebuilder.api.clipboard.Clipboard {
-    
+
     private final DocumentWindow documentWindow;
-    private final Editor editorController;
+    //private final Editor editorController;
     private final Content contentPanelController;
     private final InlineEdit inlineEdit;
     private final DocumentManager documentManager;
     private final ActionFactory actionFactory;
-    
+
     public ClipboardController(
-            @Autowired DocumentWindow documentWindow, 
-            @Autowired Editor editorController,
+            @Autowired DocumentWindow documentWindow,
+            //@Autowired Editor editorController,
             @Autowired InlineEdit inlineEdit,
             @Autowired Content contentPanelController,
             @Autowired DocumentManager documentManager,
             @Autowired ActionFactory actionFactory) {
         super();
         this.documentWindow = documentWindow;
-        this.editorController = editorController;
+        //this.editorController = editorController;
         this.contentPanelController = contentPanelController;
         this.inlineEdit = inlineEdit;
         this.documentManager = documentManager;
@@ -162,6 +161,6 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
             tic.paste();
         }
     }
-    
+
 
 }

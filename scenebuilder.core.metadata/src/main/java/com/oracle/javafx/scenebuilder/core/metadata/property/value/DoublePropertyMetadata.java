@@ -52,21 +52,27 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
         this.setMin(builder.min == null ? -Double.MAX_VALUE : builder.min);
         this.setMax(builder.max == null ? Double.MAX_VALUE : builder.max);
     }
-    
+
     public boolean isValidValue(Double value) {
         return true;
     }
-    
+
     public Double getCanonicalValue(Double value) {
         return value;
     }
-    
+
     @Override
     public Double makeValueFromString(String string) {
         return Double.valueOf(string);
     }
-    
+
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends NumberPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Double> {
+
+        public AbstractBuilder() {
+            super();
+            withValueClass(Double.class);
+        }
+
     }
     /**
      * Accept any double and null (Equivalent to old DoubleKind.NULLABLE_COORDINATE)
@@ -76,23 +82,23 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //            super(name, readWrite, defaultValue, inspectorPath);
 //            constants.put("NULL", null);
 //        }
-        
+
         protected NullableCoordinateDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return value != null;
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends DoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
                 withConstant("NULL", null);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, NullableCoordinateDoublePropertyMetadata> {
             @Override
             public NullableCoordinateDoublePropertyMetadata build() {
@@ -108,16 +114,16 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //        public CoordinateDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
 //            super(name, readWrite, defaultValue, inspectorPath);
 //        }
-        
+
         protected CoordinateDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return value != null;
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, CoordinateDoublePropertyMetadata> {
             @Override
             public CoordinateDoublePropertyMetadata build() {
@@ -125,7 +131,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with x >= 0.0 (Equivalent to old DoubleKind.SIZE)
      */
@@ -136,16 +142,16 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
         protected SizeDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && 0 <= value;
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
-            
+
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, SizeDoublePropertyMetadata> {
             @Override
             public SizeDoublePropertyMetadata build() {
@@ -153,7 +159,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with x >= 0 or x == Region.USE_COMPUTED_SIZE (Equivalent to old DoubleKind.USE_COMPUTED_SIZE)
      */
@@ -162,23 +168,23 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //            super(name, readWrite, defaultValue, inspectorPath);
 //            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
 //        }
-        
+
         protected ComputedSizeDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && ((0 <= value) || (value == Region.USE_COMPUTED_SIZE));
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
                 withConstant("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, ComputedSizeDoublePropertyMetadata> {
             @Override
             public ComputedSizeDoublePropertyMetadata build() {
@@ -199,12 +205,12 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
         protected ComputedAndPrefSizeDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && ((0 <= value) || (value == Region.USE_COMPUTED_SIZE) || (value == Region.USE_PREF_SIZE));
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
@@ -212,7 +218,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
                 withConstant("USE_PREF_SIZE", Region.USE_PREF_SIZE);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, ComputedAndPrefSizeDoublePropertyMetadata> {
             @Override
             public ComputedAndPrefSizeDoublePropertyMetadata build() {
@@ -220,7 +226,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with 0 &lt;= x &lt;= 255.0 (Equivalent to old DoubleKind.EFFECT_SIZE)
      */
@@ -230,29 +236,29 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //            setMin(0.0);
 //            setMax(255.0);
 //        }
-        
+
         protected EffectSizeDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && (0 <= value) && (value <= 255.0);
         }
-        
+
         @Override
         public Double getCanonicalValue(Double value) {
             final Double result;
-            
+
             if (value == null) {
                 result = null;
             } else {
                 result = Math.min(255.0, Math.max(0, value));
             }
-            
+
             return result;
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
@@ -260,7 +266,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
                 withMax(255.0);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, EffectSizeDoublePropertyMetadata> {
             @Override
             public EffectSizeDoublePropertyMetadata build() {
@@ -268,7 +274,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with 0 &lt;= x &lt;= 360.0 (Equivalent to old DoubleKind.ANGLE)
      */
@@ -276,32 +282,32 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //        public AngleDoublePropertyMetadata(PropertyName name, boolean readWrite, Double defaultValue, InspectorPath inspectorPath) {
 //            super(name, readWrite, defaultValue, inspectorPath);
 //        }
-        
+
         protected AngleDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && (0 <= value) && (value <= 360.0);
         }
-        
+
         @Override
         public Double getCanonicalValue(Double value) {
             final Double result;
-            
+
             if (value == null) {
                 result = null;
             } else {
                 result = Math.IEEEremainder(value, 360.0);
             }
-            
+
             return result;
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, AngleDoublePropertyMetadata> {
             @Override
             public AngleDoublePropertyMetadata build() {
@@ -309,7 +315,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with 0 &lt;= x &lt;= 1.0 (Equivalent to old DoubleKind.OPACITY)
      */
@@ -319,29 +325,29 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //            setMin(0.0);
 //            setMax(1.0);
 //        }
-        
+
         protected OpacityDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && (0 <= value) && (value <= 1.0);
         }
-        
+
         @Override
         public Double getCanonicalValue(Double value) {
             final Double result;
-            
+
             if (value == null) {
                 result = null;
             } else {
                 result = Math.min(1, Math.max(0, value));
             }
-            
+
             return result;
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
@@ -349,7 +355,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
                 withMax(1.0);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, OpacityDoublePropertyMetadata> {
             @Override
             public OpacityDoublePropertyMetadata build() {
@@ -357,7 +363,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with 0 &lt;= x &lt;= 1.0 (Equivalent to old DoubleKind.PROGRESS)
      */
@@ -368,29 +374,29 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //            setMin(0.0);
 //            setMax(1.0);
 //        }
-        
+
         protected ProgressDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && (0 <= value) && (value <= 1.0);
         }
-        
+
         @Override
         public Double getCanonicalValue(Double value) {
             final Double result;
-            
+
             if (value == null) {
                 result = null;
             } else {
                 result = Math.min(1, Math.max(0, value));
             }
-            
+
             return result;
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
@@ -399,7 +405,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
                 withMax(1.0);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, ProgressDoublePropertyMetadata> {
             @Override
             public ProgressDoublePropertyMetadata build() {
@@ -407,7 +413,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
             }
         }
     }
-    
+
     /**
      * Accept any double x with x == -1 or 0 &lt;= x &lt;= 100.0 (Equivalent to old DoubleKind.PERCENTAGE)
      */
@@ -417,16 +423,16 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 //            setMin(0.0);
 //            setMax(100.0);
 //        }
-        
+
         protected PercentageDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
             super(builder);
         }
-        
+
         @Override
         public boolean isValidValue(Double value) {
             return super.isValidValue(value) && ((value == -1) || (0 <= value) && (value <= 100.0));
         }
-        
+
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
             public AbstractBuilder() {
                 super();
@@ -434,7 +440,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
                 withMax(100.0);
             }
         }
-        
+
         public static final class Builder extends AbstractBuilder<Builder, PercentageDoublePropertyMetadata> {
             @Override
             public PercentageDoublePropertyMetadata build() {

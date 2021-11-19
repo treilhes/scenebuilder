@@ -12,19 +12,20 @@ open module scenebuilder.core.jobs {
     exports com.oracle.javafx.scenebuilder.job.editor.wrap;
     exports com.oracle.javafx.scenebuilder.job.preferences.global;
 
-    requires io.reactivex.rxjava2;
-    requires java.prefs;
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.graphics;
-    requires javafx.web;
-    requires org.slf4j;
+//    requires io.reactivex.rxjava2;
+//    requires java.prefs;
+//    requires javafx.base;
+//    requires javafx.controls;
+//    requires javafx.graphics;
+//    requires javafx.web;
+//    requires org.slf4j;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
+//    requires spring.beans;
+//    requires spring.context;
+//    requires spring.core;
     requires scenebuilder.core.utils;
-    
+    requires scenebuilder.starter;
+
     provides Extension with JobsExtension;
 }

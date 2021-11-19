@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>scenebuilder.core.jobs</artifactId>
-    
+
     <parent>
         <groupId>com.gluonhq.scenebuilder</groupId>
         <artifactId>parent</artifactId>
@@ -15,5 +15,5 @@
             <artifactId>scenebuilder.core.api</artifactId>
         </dependency>
     </dependencies>
-    
+
 </project>

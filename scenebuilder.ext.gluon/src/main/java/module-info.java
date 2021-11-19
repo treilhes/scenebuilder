@@ -16,29 +16,30 @@ open module scenebuilder.ext.gluon {
     exports com.oracle.javafx.scenebuilder.gluon.metadata;
     exports com.oracle.javafx.scenebuilder.gluon.preferences.global;
     exports com.oracle.javafx.scenebuilder.gluon.controller;
-    
+
     //opens com.oracle.javafx.scenebuilder.gluon.metadata to spring.core;
     //opens com.oracle.javafx.scenebuilder.gluon.theme to spring.core;
 
+    requires scenebuilder.starter;
     requires charm.glisten;
-    requires io.reactivex.rxjava2;
-    requires java.prefs;
-    requires javafx.base;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires javax.json.api;
+//    requires io.reactivex.rxjava2;
+//    requires java.prefs;
+//    requires javafx.base;
+//    requires javafx.controls;
+//    requires javafx.fxml;
+//    requires javafx.graphics;
+//    requires javax.json.api;
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.library;
-    requires org.slf4j;
+//    requires org.slf4j;
     requires scenebuilder.ext.control.library;
     requires scenebuilder.ext.controls;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.ext.defaultx;
     requires scenebuilder.core.extension.api;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
-    
+//    requires spring.beans;
+//    requires spring.context;
+//    requires spring.core;
+
     provides Extension with GluonExtension;
 }
