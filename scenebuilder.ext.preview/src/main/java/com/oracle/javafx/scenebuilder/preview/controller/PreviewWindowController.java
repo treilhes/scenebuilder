@@ -59,7 +59,6 @@ import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
-import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController.CameraType;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -130,9 +129,9 @@ public class PreviewWindowController extends AbstractWindowController implements
         super(api, document);
         this.editorController = editorController;
         this.documentManager = api.getApiDoc().getDocumentManager();
-        
+
     }
-    
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -344,7 +343,7 @@ public class PreviewWindowController extends AbstractWindowController implements
                     getScene().getStylesheets().addAll(newStylesheets);
                     getScene().getStylesheets().addAll(stylesheetConfig.getStylesheets());
                 }
-                
+
 //                PerspectiveCamera pc = new PerspectiveCamera(false);
 //                pc.setLayoutX(50);
 //                pc.setCLayoutY(50);
@@ -574,4 +573,12 @@ public class PreviewWindowController extends AbstractWindowController implements
 
         return res;
     }
+
+
+    @Override
+    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
+        // disable tool stylesheet to prevent side effects on preview
+    }
+
+
 }
