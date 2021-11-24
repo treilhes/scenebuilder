@@ -25,7 +25,7 @@ open module scenebuilder.ext.content.editor {
 //    requires javafx.graphics;
     requires scenebuilder.core.jobs;
     //requires org.slf4j;
-    requires scenebuilder.ext.sb;
+    //requires scenebuilder.ext.sb;
 
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;

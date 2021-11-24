@@ -41,7 +41,6 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeViewController;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 /**
  * Concrete class to create and control the Hierarchy Panel of Scene Builder
@@ -57,8 +56,8 @@ public class HierarchyPanelController extends HierarchyTreeViewController {
 
     public HierarchyPanelController(
     		@Autowired Api api,
-    		@Autowired Editor editorController,
-    		@Autowired ParentRingColorPreference parentRingColorPreference) {
-        super(api, editorController, parentRingColorPreference);
+    		//@Autowired ParentRingColorPreference parentRingColorPreference,
+    		@Autowired Editor editorController) {
+        super(api, editorController);//, parentRingColorPreference);
     }
 }

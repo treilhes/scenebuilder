@@ -73,6 +73,9 @@
     -sb-warning-panel-text: derive(-sb-base, -50%);
     -sb-warning-panel-text-dimmed: derive(-sb-base, -20%);
     -sb-message-panel: rgb(185, 220, 240);
+
+    -sb-parent-color: rgb(238, 168, 47);
+    -sb-drop-target-color: rgb(238, 168, 47);
 }
 
 /*******************************************************************************
@@ -377,6 +380,10 @@
     -fx-background-color: transparent;
     -fx-padding: 2 0 2 0;
     -fx-background-insets: 0 0 0 0;
+    -fx-border-insets: -2 0 -2 0;
+    -fx-border-width: 2;
+    -fx-border-style: solid;
+    -fx-border-radius: 0;
 }
 .theme-presets.SBKIT-hierarchy-panel .tree-cell .label {
     -fx-text-fill: -sb-content-text;
@@ -384,6 +391,7 @@
 .theme-presets.SBKIT-hierarchy-panel .hierarchy-first-cell {
     -fx-padding: 4 0 0 1;
     -fx-background-insets: 4 0 0 0;
+    -fx-border-insets: 0 0 -2 0;
 }
 
 /* Selected rows */
@@ -486,6 +494,33 @@
 }
 
 /*******************************************************************************
+ * Hierarchy Panel - Parent selection and indicator                            *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-hierarchy-panel .cell-no-selection {
+    -fx-border-color: transparent;
+}
+.theme-presets.SBKIT-hierarchy-panel .parent-cell-selection-start {
+    -fx-border-color: -sb-parent-color -sb-parent-color transparent -sb-parent-color;
+}
+.theme-presets.SBKIT-hierarchy-panel .parent-cell-selection-middle {
+    -fx-border-color: transparent -sb-parent-color transparent -sb-parent-color;
+}
+.theme-presets.SBKIT-hierarchy-panel .parent-cell-selection-end {
+    -fx-border-color: transparent -sb-parent-color -sb-parent-color -sb-parent-color;
+}
+.theme-presets.SBKIT-hierarchy-panel .cell-selection-single {
+    -fx-border-color: -sb-parent-color;
+}
+.theme-presets.SBKIT-hierarchy-panel .cell-insert-here {
+    -fx-border-color: transparent transparent -sb-drop-target-color transparent;
+}
+.theme-presets.SBKIT-hierarchy-panel .cell-parent-indicator-line {
+    -fx-stroke: -sb-drop-target-color;
+}
+
+
+/*******************************************************************************
  *                                                                             *
  * Content Panel                                                               *
  *                                                                             *
@@ -529,6 +564,7 @@
 }
 
 .theme-presets.SBKIT-content-panel .parent-ring {
+	-fx-stroke: -sb-parent-color;
     /* -fx-stroke is setup from user preferences */
     -fx-stroke-width: 7;
     -fx-stroke-type: outside;
@@ -537,6 +573,7 @@
 }
 
 .theme-presets.SBKIT-content-panel .target-ring {
+	-fx-stroke: -sb-drop-target-color;
     /* -fx-stroke is setup from user preferences */
     -fx-stroke-width: 7;
     -fx-stroke-type: inside;

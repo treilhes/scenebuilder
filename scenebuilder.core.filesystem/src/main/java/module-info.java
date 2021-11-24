@@ -11,7 +11,7 @@ open module scenebuilder.core.filesystem {
 
     //opens com.oracle.javafx.scenebuilder.fs.preference.global to spring.core;
 
-    requires scenebuilder.starter;
+//    requires scenebuilder.starter;
 //    requires io.reactivex.rxjava2;
 //    requires java.logging;
 //    requires java.prefs;

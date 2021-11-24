@@ -43,7 +43,6 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -63,8 +62,6 @@ import javafx.scene.control.TreeView;
  */
 public class HierarchyTreeViewController extends AbstractHierarchyPanelController {
 
-	private final ParentRingColorPreference parentRingColorPreference;
-
     @FXML
     protected TreeView<HierarchyItem> treeView;
 
@@ -73,18 +70,16 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
 
     public HierarchyTreeViewController(
     		Api api,
-    		Editor editorController,
-    		ParentRingColorPreference parentRingColorPreference) {
+    		Editor editorController) {
         super(api, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController);
         this.context = api.getContext();
-        this.parentRingColorPreference = parentRingColorPreference;
     }
 
     @FXML
     public void initialize() {
-    	setParentRingColor(parentRingColorPreference.getValue());
-
-    	parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setParentRingColor(n));
+//    	setParentRingColor(parentRingColorPreference.getValue());
+//
+//    	parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setParentRingColor(n));
     }
 
     @Override

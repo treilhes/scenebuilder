@@ -32,9 +32,13 @@
  */
 package com.oracle.javafx.scenebuilder.sb.preferences.global;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.css.CssVariable;
+import com.oracle.javafx.scenebuilder.api.preferences.CssPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
@@ -47,7 +51,7 @@ import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
 @Component
-public class ParentRingColorPreference extends ColorPreference implements ManagedGlobalPreference, UserPreference<Color> {
+public class ParentRingColorPreference extends ColorPreference implements ManagedGlobalPreference, UserPreference<Color>, CssPreference<Color> {
 
 	public static final String PREFERENCE_KEY = "PARENT_RING_COLOR"; //NOCHECK
 	public static final Color PREFERENCE_DEFAULT_VALUE = Color.rgb(238, 168, 47); //NOCHECK
@@ -81,4 +85,24 @@ public class ParentRingColorPreference extends ColorPreference implements Manage
 	public String getOrderKey() {
 		return getGroup().getOrderKey() + "_C";
 	}
+
+    @Override
+    public List<CssClass> getClasses() {
+        CssClass allClass = new CssClass(CssVariable.ALL_CLASS);
+        allClass.add(new CssProperty(CssVariable.PARENT_COLOR, toHexString(getValue())));
+        allClass.add(new CssProperty(CssVariable.DROP_TARGET_COLOR, toHexString(getValue())));
+        return List.of(allClass);
+    }
+
+    //TODO move below functions to some util package/function
+    // Helper method
+    private String format(double val) {
+        String in = Integer.toHexString((int) Math.round(val * 255));
+        return in.length() == 1 ? "0" + in : in;
+    }
+
+    public String toHexString(Color value) {
+        return "#" + (format(value.getRed()) + format(value.getGreen()) + format(value.getBlue()) + format(value.getOpacity()))
+                .toUpperCase();
+    }
 }

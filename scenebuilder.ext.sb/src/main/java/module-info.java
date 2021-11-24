@@ -1,5 +1,8 @@
+import java.net.spi.URLStreamHandlerProvider;
+
 import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.sb.ScenebuilderContainerExtension;
+import com.oracle.javafx.scenebuilder.sb.spi.InMemoryFileURLStreamHandlerProvider;
 
 open module scenebuilder.ext.sb {
     exports com.oracle.javafx.scenebuilder.sb.menu;
@@ -28,4 +31,5 @@ open module scenebuilder.ext.sb {
     requires static lombok;
 
     provides Extension with ScenebuilderContainerExtension;
+    provides URLStreamHandlerProvider with InMemoryFileURLStreamHandlerProvider;
 }

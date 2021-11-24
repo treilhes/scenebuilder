@@ -95,7 +95,6 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.LibraryItemNa
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -129,13 +128,13 @@ import javafx.util.Callback;
 @Lazy
 @ViewDescriptor(name = ImageLibraryPanelController.VIEW_NAME, id = ImageLibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true)
 public class ImageLibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
-    
+
     public final static String VIEW_ID = "453fc4cf-eb86-4115-b744-f61103a14d51";
     public final static String VIEW_NAME = "imglibrary";
 
     private String searchPattern;
     ArrayList<LibraryItemImpl> searchData = new ArrayList<>();
-    
+
     // The name of the library section to keep opened. This is used when e.g.
     // a user jar file is imported to the library directory.
     // If the user was doing a search then we let the library layout unchanged.
@@ -179,7 +178,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 	private final MavenArtifactsPreferences mavenPreferences;
     private final ImageDisplayModePreference displayModePreference;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
-    private final AccordionAnimationPreference accordionAnimationPreference;
+    //private final AccordionAnimationPreference accordionAnimationPreference;
 	private final FileSystem fileSystem;
     private final Dialog dialog;
     private final ApplicationContext context;
@@ -187,7 +186,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     private DocumentManager documentManager;
     private FXOMDocument fxomDocument;
     private final Editor editorController;
-    
+
     private final ViewSearch viewSearch;
 
     private List<MenuItem> menuItems;
@@ -209,7 +208,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             @Autowired MavenArtifactsPreferences mavenPreferences,
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired ImageDisplayModePreference displayModePreference,
-            @Autowired AccordionAnimationPreference accordionAnimationPreference,
+            //@Autowired AccordionAnimationPreference accordionAnimationPreference,
             @Autowired ImageLibraryController libraryController,
             @Autowired ViewAsListAction viewAsListAction,
             @Autowired ViewAsSectionsAction viewAsSectionsAction,
@@ -219,7 +218,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             @Autowired ShowJarAnalysisReportAction showJarAnalysisReportAction,
             @Autowired ViewSearch viewSearch,
             @Autowired ImageLibrary imageLibrary,
-            @Autowired ThumbnailServiceController thumbnailServiceController 
+            @Autowired ThumbnailServiceController thumbnailServiceController
             ) { //, UserLibrary library) {
         super(api, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"), I18N.getBundle());
         this.context = api.getContext();
@@ -232,7 +231,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         this.fileSystem = api.getFileSystem();
         this.mavenPreferences = mavenPreferences;
         this.displayModePreference = displayModePreference;
-        this.accordionAnimationPreference = accordionAnimationPreference;
+        //this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.viewAsListAction = viewAsListAction;
         this.viewAsSectionsAction = viewAsSectionsAction;
@@ -242,19 +241,19 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         this.showJarAnalysisReportAction = showJarAnalysisReportAction;
         this.viewSearch = viewSearch;
         this.thumbnailServiceController = thumbnailServiceController;
-        
+
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
 
     }
-    
+
     @FXML
     public void initialize() {
     	createLibraryMenu();
-    	animateAccordion(accordionAnimationPreference.getValue());
+    	//animateAccordion(accordionAnimationPreference.getValue());
     	refreshLibraryDisplayOption(displayModePreference.getValue());
 
-    	accordionAnimationPreference.getObservableValue().addListener(
-    			(ob, o, n) -> animateAccordion(n));
+//    	accordionAnimationPreference.getObservableValue().addListener(
+//    			(ob, o, n) -> animateAccordion(n));
     	displayModePreference.getObservableValue().addListener(
     			(ob, o, n) -> refreshLibraryDisplayOption(n));
     }
@@ -310,10 +309,10 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
 		userLibrary.getItems().addListener(libraryItemListener);
-		
+
         startListeningToDrop();
         populateLibraryPanel();
-        
+
         getName().bind(Bindings.createStringBinding(() -> {
 
             return userLibrary.exploringProperty().get() ? I18N.getString("library.exploring") : I18N.getString("library");
@@ -442,7 +441,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     private void populateLibraryPanel() {
         final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb
             = param -> new LibraryListCell(this.libraryController, thumbnailServiceController);
-        
+
         // libData is backend structure for all that we put in the Accordion.
         LinkedHashMap<String, ArrayList<LibraryItemImpl>> libData = new LinkedHashMap<>();
         TreeSet<String> sectionNames = new TreeSet<>(new BuiltinSectionComparator());
@@ -591,7 +590,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     }
 
     private void startListeningToDrop() {
-        
+
         final Drag drag = getApi().getApiDoc().getDrag();
         libPane.setOnDragDropped(t -> {
 //                System.out.println("libPane onDragDropped");
@@ -778,12 +777,12 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 
     private void userLibraryUpdateRejected() {
         dialog.showAlertAndWait(
-                I18N.getString("alert.import.reject.dependencies.title"), 
-                I18N.getString("alert.import.reject.dependencies.message"), 
+                I18N.getString("alert.import.reject.dependencies.title"),
+                I18N.getString("alert.import.reject.dependencies.message"),
                 I18N.getString("alert.import.reject.dependencies.details"));
     }
 
-    
+
 
     private boolean hasDependencies(List<File> fxmlFiles) {
         boolean hasDependencies = false;
@@ -859,10 +858,10 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         libraryReport.setOnAction((e) -> showJarAnalysisReportAction.checkAndPerform());
 
         customLibraryMenu.getItems().addAll(libraryReveal, libraryReport);
-        
-        items.addAll(Arrays.asList(viewAsList, viewAsSections, separator1, manageJarFxml, 
+
+        items.addAll(Arrays.asList(viewAsList, viewAsSections, separator1, manageJarFxml,
                 libraryImportSelection, separator2, customLibraryMenu));
-        
+
         return items;
 	}
 
@@ -890,7 +889,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 
             AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
             libraryImportSelection.setDisable(true);
-            
+
             if (asg instanceof ObjectSelectionGroup) {
                 if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
                     libraryImportSelection.setDisable(false);
@@ -900,7 +899,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             // DTL-6439. The custom library menu shall be enabled only
             // in the case there is a user library directory on disk.
             customLibraryMenu.setDisable(!userLibrary.getStore().isReady());
-        
+
         });
 
 	}
@@ -916,7 +915,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     public Editor getEditorController() {
         return editorController;
     }
-   
+
     @Override
     public ViewSearch getSearchController() {
         return viewSearch;
@@ -933,13 +932,13 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     @Override
     public void onShow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

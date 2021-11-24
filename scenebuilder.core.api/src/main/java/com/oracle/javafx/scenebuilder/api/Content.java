@@ -77,7 +77,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	void setScaling(double min);
 
-	Paint getPringColor();
+	//Paint getPringColor();
 
 	boolean isContentDisplayable();
 
@@ -85,7 +85,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	//Group getPringLayer();
 
-	void scrollToSelection();// TODO not working, need to investigate 
+	void scrollToSelection();// TODO not working, need to investigate
 
 	void reveal(FXOMObject fxomObject);
 

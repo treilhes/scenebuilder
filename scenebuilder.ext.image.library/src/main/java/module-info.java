@@ -28,7 +28,7 @@ open module scenebuilder.ext.image.library {
     requires static lombok;
     requires org.apache.fontbox;
 //    requires org.slf4j;
-    requires scenebuilder.ext.sb;
+    //requires scenebuilder.ext.sb;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.extension.store;

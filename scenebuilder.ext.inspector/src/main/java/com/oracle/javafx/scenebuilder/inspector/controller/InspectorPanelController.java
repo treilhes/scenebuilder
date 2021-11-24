@@ -109,7 +109,6 @@ import com.oracle.javafx.scenebuilder.job.editor.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.job.editor.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.job.editor.togglegroup.ModifySelectionToggleGroupJob;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.property.ObjectProperty;
@@ -246,7 +245,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final Editor editorController;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
-    private final AccordionAnimationPreference accordionAnimationPreference;
+    //private final AccordionAnimationPreference accordionAnimationPreference;
     private final ApplicationContext context;
     private final DocumentManager documentManager;
     private final FileSystem fileSystem;
@@ -264,7 +263,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             @Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired PropertyEditorFactory propertyEditorFactory,
-            @Autowired AccordionAnimationPreference accordionAnimationPreference,
+            //@Autowired AccordionAnimationPreference accordionAnimationPreference,
             @Autowired ShowAllAction showAllAction,
             @Autowired ShowEditedAction showEditedAction,
             @Autowired ViewBySectionsAction viewBySectionsAction,
@@ -282,7 +281,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
-        this.accordionAnimationPreference = accordionAnimationPreference;
+        //this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.showAllAction = showAllAction;
         this.showEditedAction = showEditedAction;
@@ -314,8 +313,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         createLibraryMenu();
 
         // init preferences
-        animateAccordion(accordionAnimationPreference.getValue());
-        accordionAnimationPreference.getObservableValue().addListener((ob, o, n) -> animateAccordion(n));
+//        animateAccordion(accordionAnimationPreference.getValue());
+//        accordionAnimationPreference.getObservableValue().addListener((ob, o, n) -> animateAccordion(n));
 
         // Add inspector accordion expanded pane listener
         setExpandedSection(inspectorSectionIdPreference.getValue());
@@ -1468,7 +1467,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //    private Map<String, Object> getConstants(DoublePropertyMetadata doublePropMeta) {
 //        Map<String, Object> constants = new TreeMap<>();
 //        String propNameStr = doublePropMeta.getName().getName();
-//        
+//
 //        // TODO this kind of details must be part of metadata
 //        if (propNameStr.contains("maxWidth") || propNameStr.contains("maxHeight")) { //NOCHECK
 //            constants.put("MAX_VALUE", Double.MAX_VALUE); //NOCHECK
@@ -2210,12 +2209,12 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     @Override
     public void onShow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
-        
+
     }
 }

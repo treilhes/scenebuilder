@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssPreferencesExtension;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssAction;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssThemeExtension;
 import com.oracle.javafx.scenebuilder.sb.menu.SceneBuilderMenuProvider;
@@ -59,6 +60,7 @@ public class ScenebuilderContainerExtension extends AbstractExtension {
         return Arrays.asList(
                 ApplyToolCssAction.class,
                 ApplyToolCssThemeExtension.class,
+                ApplyToolCssPreferencesExtension.class,
                 SceneBuilderMenuController.class,
                 SceneBuilderMenuProvider.class,
                 AccordionAnimationPreference.class,

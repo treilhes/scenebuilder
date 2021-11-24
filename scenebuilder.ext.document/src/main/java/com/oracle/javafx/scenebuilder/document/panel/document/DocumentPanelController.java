@@ -57,7 +57,6 @@ import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchy
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
@@ -85,7 +84,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 	private final InfoPanelController infoPanelController;
 	private final DisplayOptionPreference displayOptionPreference;
 	private final SceneBuilderBeanFactory sceneBuilderFactory;
-	private final AccordionAnimationPreference accordionAnimationPreference;
+	//private final AccordionAnimationPreference accordionAnimationPreference;
 
 	private final Action showInfoAction;
     private final Action showFxIdAction;
@@ -125,7 +124,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		@Autowired HierarchyPanelController hierarchyPanelController,
     		@Autowired InfoPanelController infoPanelController,
     		@Autowired DisplayOptionPreference displayOptionPreference,
-    		@Autowired AccordionAnimationPreference accordionAnimationPreference,
+    		//@Autowired AccordionAnimationPreference accordionAnimationPreference,
     		@Autowired ShowInfoAction showInfoAction,
     		@Autowired ShowFxIdAction showFxIdAction,
     		@Autowired ShowNodeIdAction showNodeIdAction
@@ -135,21 +134,21 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
         this.displayOptionPreference = displayOptionPreference;
-        this.accordionAnimationPreference = accordionAnimationPreference;
+        //this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.showInfoAction = showInfoAction;
         this.showFxIdAction = showFxIdAction;
         this.showNodeIdAction = showNodeIdAction;
-        
+
     }
 
     @FXML
     public void initialize() {
     	createLibraryMenu();
 
-    	getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(accordionAnimationPreference.getValue()));
-    	accordionAnimationPreference.getObservableValue().addListener(
-    			(ob, o, n) -> getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(n)));
+//    	getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(accordionAnimationPreference.getValue()));
+//    	accordionAnimationPreference.getObservableValue().addListener(
+//    			(ob, o, n) -> getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(n)));
 
     	refreshHierarchyDisplayOption(displayOptionPreference.getValue());
     	displayOptionPreference.getObservableValue().addListener(
@@ -176,7 +175,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
     private List<MenuItem> createLibraryMenu() {
         List<MenuItem> items = new ArrayList<>();
-        
+
         ToggleGroup hierarchyDisplayOptionTG = new ToggleGroup();
 
         hierarchyMenu = sceneBuilderFactory.createViewMenu(
@@ -194,7 +193,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
         hierarchyMenu.getItems().addAll(showInfoMenuItem, showFxIdMenuItem, showNodeIdMenuItem);
         items.add(hierarchyMenu);
-        
+
         return items;
 	}
 
@@ -245,12 +244,12 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     @Override
     public void onShow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
-        
+
     }
 }

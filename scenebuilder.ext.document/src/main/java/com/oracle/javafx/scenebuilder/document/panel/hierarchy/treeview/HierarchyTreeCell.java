@@ -97,16 +97,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.util.Callback;
 
@@ -169,7 +163,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     private final JobManager jobManager;
 
     private final MessageLogger messageLogger;
-    
+
     private final Drag drag;
 
     public HierarchyTreeCell(
@@ -280,8 +274,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
             panelController.clearBorderColor();
             // Update vertical insert line indicator stroke color
-            final Paint paint = panelController.getParentRingColor();
-            insertLineIndicator.setStroke(paint);
+//            final Paint paint = panelController.getParentRingColor();
+//            insertLineIndicator.setStroke(paint);
             // Remove insert line indicator
             panelController.removeFromPanelControlSkin(insertLineIndicator);
 
@@ -311,9 +305,9 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 // Border is set either on the accessory place holder cell
                 // or on the accessory owner cell.
                 //==========================================================
-                
+
                 Accessory targetAccessory = dropTarget instanceof AccessoryDropTarget ? ((AccessoryDropTarget) dropTarget).findTargetAccessory(drag.getDragSource().getDraggedObjects()) : null;
-                
+
                 if (dropTarget instanceof AccessoryDropTarget && targetAccessory != null && !targetAccessory.isCollection()) {
 
                     final AccessoryDropTarget accessoryDropTarget = (AccessoryDropTarget) dropTarget;
@@ -329,7 +323,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
                         if (item.isPlaceHolder()) {
                             cell = HierarchyTreeCell.this;
-                            
+
                             //TODO nothing to do like below
 //                        } else if (accessoryDropTarget.getAccessory() == Accessory.GRAPHIC) {
 //                            // Check if an empty graphic TreeItem has been added
@@ -502,13 +496,13 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     }
 
     public final void updatePlaceHolder() {
-        final Paint paint = panelController.getParentRingColor();
-        placeHolderLabel.setTextFill(paint);
-        final BorderWidths bw = new BorderWidths(1);
-        final BorderStroke bs = new BorderStroke(paint, BorderStrokeStyle.SOLID,
-                CornerRadii.EMPTY, bw);
-        final Border b = new Border(bs);
-        placeHolderLabel.setBorder(b);
+//        final Paint paint = panelController.getParentRingColor();
+//        placeHolderLabel.setTextFill(paint);
+//        final BorderWidths bw = new BorderWidths(1);
+//        final BorderStroke bs = new BorderStroke(paint, BorderStrokeStyle.SOLID,
+//                CornerRadii.EMPTY, bw);
+//        final Border b = new Border(bs);
+//        placeHolderLabel.setBorder(b);
     }
 
     private void filterKeyEvent(final KeyEvent ke) {
@@ -692,7 +686,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                                 final URL location = editorController.getFxmlLocation();
                                 final Class<?> clazz = fxomObject.getSceneGraphObject() == null ? null
                                         : fxomObject.getSceneGraphObject().getClass();
-                                
+
                                 final List<String> fxIds1 = glossary.queryFxIds(location, controllerClass, clazz);
                                 if (fxIds1.contains(fxId) == false) {
                                     messageLogger.logWarningMessage("log.warning.no.injectable.fxid", fxId);

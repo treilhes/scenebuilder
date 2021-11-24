@@ -20,7 +20,7 @@ open module scenebuilder.ext.document {
 //    requires javafx.graphics;
     requires scenebuilder.core.jobs;
 //    requires org.slf4j;
-    requires scenebuilder.ext.sb;
+    //requires scenebuilder.ext.sb;
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;

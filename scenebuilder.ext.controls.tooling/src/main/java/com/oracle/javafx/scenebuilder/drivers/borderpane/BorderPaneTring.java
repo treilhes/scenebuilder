@@ -60,9 +60,9 @@ import javafx.scene.layout.Region;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(BorderPaneTring.class);
-    
+
     public enum BorderPanePosition {
         TOP,
         BOTTOM,
@@ -84,34 +84,34 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
     public BorderPaneTring(Content contentPanelController) {
         super(contentPanelController, BorderPane.class);
     }
-    
+
     private BorderPaneHierarchyMask getMask() {
         if (borderPaneHierarchyMask == null || borderPaneHierarchyMask.getFxomObject() != getFxomObject()) {
             borderPaneHierarchyMask = new BorderPaneHierarchyMask(getFxomInstance());
         }
         return borderPaneHierarchyMask;
     }
-    
+
     @Override
     public void defineDropTarget(DropTarget dropTarget) {
         assert dropTarget instanceof AccessoryDropTarget;
-        
+
         final AccessoryDropTarget accessoryDropTarget = (AccessoryDropTarget) dropTarget;
         this.targetAccessory = accessoryDropTarget.getAccessory();
-        
+
         logger.info("target accessory > {}", targetAccessory == null ? "null" : targetAccessory.getName().getName());
-        
+
         assert (getMask().getTopAccessory().equals(targetAccessory)
                 || getMask().getBottomAccessory().equals(targetAccessory)
                 || getMask().getLeftAccessory().equals(targetAccessory)
                 || getMask().getRightAccessory().equals(targetAccessory)
                 || getMask().getCenterAccessory().equals(targetAccessory));
     }
-    
+
     @Override
     public void initialize() {
         assert this.targetAccessory != null;
-        
+
         topLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         topLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         bottomLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -140,7 +140,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         centerLabel.getStyleClass().add(TARGET_RING_CLASS);
         centerLabel.getStyleClass().add(BorderPane.class.getSimpleName());
 
-        
+
         topLabel.setVisible(getMask().getAccessory(getMask().getTopAccessory()) == null);
         bottomLabel.setVisible(getMask().getAccessory(getMask().getBottomAccessory()) == null);
         leftLabel.setVisible(getMask().getAccessory(getMask().getLeftAccessory()) == null);

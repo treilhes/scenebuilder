@@ -32,9 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.sb.preferences.global;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.preferences.CssPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
@@ -46,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
 import javafx.scene.Parent;
 
 @Component
-public class AccordionAnimationPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean> {
+public class AccordionAnimationPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean>, CssPreference<Boolean> {
 
     /***************************************************************************
      *                                                                         *
@@ -85,4 +88,11 @@ public class AccordionAnimationPreference extends BooleanPreference implements M
 	public String getOrderKey() {
 		return getGroup().getOrderKey() + "_A";
 	}
+
+    @Override
+    public List<CssClass> getClasses() {
+        CssClass css = new CssClass(".titled-pane");
+        css.add(new CssProperty("-fx-animated", Boolean.toString(getValue())));
+        return List.of(css);
+    }
 }

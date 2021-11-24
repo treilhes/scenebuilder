@@ -26,6 +26,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.control.tring;
     exports com.oracle.javafx.scenebuilder.api.control;
     exports com.oracle.javafx.scenebuilder.api.controls;
+    exports com.oracle.javafx.scenebuilder.api.css;
     exports com.oracle.javafx.scenebuilder.api.dock;
     exports com.oracle.javafx.scenebuilder.api.editor.job;
     exports com.oracle.javafx.scenebuilder.api.i18n;
@@ -65,11 +66,12 @@ open module scenebuilder.core.api {
     //opens com.oracle.javafx.scenebuilder.api to spring.core;
 
     requires transitive scenebuilder.starter;
-    requires static lombok;
     requires transitive scenebuilder.core.extension.api;
     requires transitive scenebuilder.core.fxom;
     requires transitive scenebuilder.core.metadata;
     requires transitive scenebuilder.core.utils;
+
+    requires static lombok;
 
     provides Extension with CoreExtension, ApiExtension;
 

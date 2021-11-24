@@ -113,14 +113,14 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class EditModeController extends AbstractModeController implements Gesture.Observer {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(EditModeController.class);
-    
+
     public final static Object ID = EditModeController.class;
 
 	private final ApplicationContext context;
 	private final Driver driver;
-	
+
     private SelectWithMarqueeGesture selectWithMarqueeGesture;
     private SelectAndMoveGesture selectAndMoveGesture;
     private ZoomGesture zoomGesture;
@@ -148,63 +148,63 @@ public class EditModeController extends AbstractModeController implements Gestur
         this.driver = driver;
         this.drag = drag;
         this.editorController = editor;
-        
+
         Selection selection = api.getApiDoc().getSelection();
-        
-        newLayer(Outline.class, true, selection, 
+
+        newLayer(Outline.class, true, selection,
                 // object selection
                 s -> collectNodes(),
                 // Handles creation
                 fxomObject -> driver.makeOutline(fxomObject));
 
-        newLayer(Shadow.class, true, selection, 
+        newLayer(Shadow.class, true, selection,
                 // object selection
                 s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
                 // Handles creation
                 fxomObject -> driver.makeShadow(fxomObject));
 
-        
-        newLayer(Rudder.class, false, selection, 
+
+        newLayer(Rudder.class, false, selection,
                 // object selection
                 s -> s.getAncestor() == null ? new HashSet<>() : new HashSet<>(Arrays.asList(s.getAncestor())),
                 // Handles creation
                 fxomObject -> driver.makeRudder(fxomObject));
-        
-        newLayer(ResizeGuide.class, true, selection, 
+
+        newLayer(ResizeGuide.class, true, selection,
                 // object selection
                 s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
                 // Handles creation
                 fxomObject -> driver.makeResizeGuide(fxomObject));
-        
+
         newLayer(Pring.class, false, selection,
                 // object selection
                 s -> s.getAncestor() == null ? new HashSet<>() : new HashSet<>(Arrays.asList(s.getAncestor())),
                 // pring creation
                 fxomObject -> {
                     Pring<?> pring = driver.makePring(fxomObject);
-                    if (pring != null) {
-                        pring.changeStroke(contentPanelController.getPringColor());
-                    }
+//                    if (pring != null) {
+//                        pring.changeStroke(contentPanelController.getPringColor());
+//                    }
                     return pring;
                 });
-        
-        newLayer(Handles.class, false, selection, 
+
+        newLayer(Handles.class, false, selection,
                 // object selection
                 s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
                 // Handles creation
                 fxomObject -> driver.makeHandles(fxomObject));
-        
-        newLayer(Tring.class, true, selection, 
+
+        newLayer(Tring.class, true, selection,
                 s -> drag.isDropAccepted() && !(drag.getDropTarget() instanceof RootDropTarget) ? new HashSet<>(Arrays.asList(drag.getDropTarget().getTargetObject())) : null,
                 fxomObject -> {
                     Tring<?> tring = driver.makeTring(drag.getDropTarget());
-                    if (tring != null) {
-                        tring.changeStroke(contentPanelController.getPringColor());
-                    }
+//                    if (tring != null) {
+//                        tring.changeStroke(contentPanelController.getPringColor());
+//                    }
                     return tring;
                 });
-        
-        
+
+
     }
 
     @Override
@@ -241,13 +241,13 @@ public class EditModeController extends AbstractModeController implements Gestur
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
         assert contentPanelController.getGlassLayer() != null;
-        
+
         if (this.selectWithMarqueeGesture == null) {
             this.selectWithMarqueeGesture = context.getBean(SelectWithMarqueeGesture.class);
             this.selectAndMoveGesture = context.getBean(SelectAndMoveGesture.class);
             this.zoomGesture = context.getBean(ZoomGesture.class);
         }
-        
+
         getLayers().forEach(l -> l.enable());
 
         editorSelectionDidChange();
@@ -271,7 +271,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     public void fxomDocumentDidRefreshSceneGraph() {
         getLayer(Pring.class).update();
         getLayer(Handles.class).update();
-        
+
         // Object below the mouse may have changed : current glass gesture
         // must searched again.
         this.glassGesture = null;
@@ -366,11 +366,11 @@ public class EditModeController extends AbstractModeController implements Gestur
         final FXOMObject hitObject
                 = contentPanelController.pick(e.getSceneX(), e.getSceneY());
         final FXOMObject selectionAncestor = selection.getAncestor();
-        
+
         // The code below handles selction of detached graph objects
         if (!selection.isEmpty() && selection.getGroup() instanceof ObjectSelectionGroup) {
             ObjectSelectionGroup selGroup = (ObjectSelectionGroup)selection.getGroup();
-            
+
             if (selGroup.getItems().size() == 1
                     && selGroup.getHitItem().isViewable()
                     && selGroup.getHitItem().isDescendantOf(hitObject)
@@ -381,7 +381,7 @@ public class EditModeController extends AbstractModeController implements Gestur
                 glassGesture = selectAndMoveGesture;
                 return;
             }
-            
+
         }
 
         /*
@@ -403,7 +403,7 @@ public class EditModeController extends AbstractModeController implements Gestur
          *                  => mouse press+drag should "select and move"
          *
          */
-        
+
         if (hitObject == null) {
             // Case #1
             selectWithMarqueeGesture.setup(null, selectionAncestor);
@@ -677,7 +677,7 @@ public class EditModeController extends AbstractModeController implements Gestur
          *   - if a text session is on-going and can be completed cleanly.
          * If not, we do not activate the gesture.
          */
-        
+
         if (contentPanelController.isContentDisplayable() && editorController.canGetFxmlText()) {
 
             contentPanelController.beginInteraction();
@@ -697,7 +697,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
         final List<FXOMObject> candidates = new ArrayList<>();
         final FXOMDocument fxomDocument = api.getApiDoc().getDocumentManager().fxomDocument().get();
-        
+
         if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
             candidates.add(fxomDocument.getFxomRoot());
         }

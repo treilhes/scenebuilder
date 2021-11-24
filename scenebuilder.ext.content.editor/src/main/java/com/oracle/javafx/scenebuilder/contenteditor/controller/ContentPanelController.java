@@ -69,7 +69,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -109,7 +108,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
                                     implements Content, FXOMDocument.SceneGraphHolder {
 
     private static Logger logger = LoggerFactory.getLogger(ContentPanelController.class);
-    
+
     @FXML private ScrollPane scrollPane;
     @FXML private Pane workspacePane;
     @FXML private Rectangle extensionRect;
@@ -139,7 +138,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     private final Picker picker = new Picker();
 	private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
 	private final BackgroundImagePreference backgroundImagePreference;
-	private final ParentRingColorPreference parentRingColorPreference;
+	//private final ParentRingColorPreference parentRingColorPreference;
 	private final Editor editorController;
 	private final ApplicationContext context;
     private FXOMDocument oldDocument;
@@ -162,7 +161,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     		@Autowired Driver driver,
     		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
     		@Autowired BackgroundImagePreference backgroundImagePreference,
-    		@Autowired ParentRingColorPreference parentRingColorPreference,
+//    		@Autowired ParentRingColorPreference parentRingColorPreference,
     		@Autowired DocumentManager documentManager,
     		@Autowired @Lazy HudWindowController hudWindowController,
     		@Autowired @Lazy ModeManager modeManager
@@ -179,7 +178,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         this.drag = api.getApiDoc().getDrag();
         //TODO try to use getBean without parameters
         this.workspaceController = context.getBean(WorkspaceController.class, editorController, documentManager);
-        
+
         this.hudWindowController = hudWindowController;
 //        this.editModeController = editModeController;
 //        this.pickModeController = pickModeController;
@@ -187,12 +186,12 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
         this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
         this.backgroundImagePreference = backgroundImagePreference;
-        this.parentRingColorPreference = parentRingColorPreference;
+//        this.parentRingColorPreference = parentRingColorPreference;
 
         api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
         api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(s -> editorSelectionDidChange());
         api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
-        
+
         if (logger.isDebugEnabled()) {
             tracingEvents = false;
             setupEventTracingFilter();
@@ -208,18 +207,19 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
     	setGuidesColor(alignmentGuidesColorPreference.getValue());
     	setWorkspaceBackground(backgroundImagePreference.getBackgroundImageImage());
-    	setPringColor(parentRingColorPreference.getValue());
+    	//setPringColor(parentRingColorPreference.getValue());
 
     	alignmentGuidesColorPreference.getObservableValue().addListener((ob,o,n) -> setGuidesColor(n));
     	backgroundImagePreference.getObservableValue().addListener(
     			(ob,o,n) -> setWorkspaceBackground(BackgroundImagePreference.getImage(n)));
-    	parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setPringColor(n));
+    	//parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setPringColor(n));
     }
     /**
      * Returns true if this content panel displays outlines.
      *
      * @return true if this content panel displays outlines.
      */
+    @Override
     public boolean isOutlinesVisible() {
         return (contentGroup != null) && (contentGroup.isVisible() == false);
     }
@@ -257,24 +257,24 @@ public class ContentPanelController extends AbstractFxmlPanelController
         this.guidesVisible = guidesVisible;
     }
 
-    /**
-     * Returns the color used by this content panel to draw parent rings.
-     *
-     * @return the color used by this content panel to draw parent rings.
-     */
-    @Override
-    public Paint getPringColor() {
-        return pringColor;
-    }
-
-    /**
-     * Sets the color used by this content panel to draw parent rings.
-     *
-     * @param pringColor the color used by this content panel to draw parent rings.
-     */
-    public void setPringColor(Paint pringColor) {
-        this.pringColor = pringColor;
-    }
+//    /**
+//     * Returns the color used by this content panel to draw parent rings.
+//     *
+//     * @return the color used by this content panel to draw parent rings.
+//     */
+//    @Override
+//    public Paint getPringColor() {
+//        return pringColor;
+//    }
+//
+//    /**
+//     * Sets the color used by this content panel to draw parent rings.
+//     *
+//     * @param pringColor the color used by this content panel to draw parent rings.
+//     */
+//    public void setPringColor(Paint pringColor) {
+//        this.pringColor = pringColor;
+//    }
 
     /**
      * Returns the color used by this content panel to draw alignment guides.
@@ -681,7 +681,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
 
-    
+
 
     /**
      * @treatAsPrivate Returns the hud window controller.
@@ -748,14 +748,14 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param fxomDocument the new fxom document
      */
     protected void fxomDocumentDidChange(FXOMDocument fxomDocument) {
-        
+
         // Setup the mode controller
         if (!this.modeManager.hasModeEnabled()) {
             getApi().getApiDoc().getDocumentManager().selectionDidChange()
                 .set(new SelectionState(getApi().getApiDoc().getSelection()));
             this.modeManager.enableMode(EditModeController.ID);
         }
-        
+
         if (oldDocument != null) {
             assert oldDocument.getSceneGraphHolder() == this;
             oldDocument.endHoldingSceneGraph();
@@ -934,7 +934,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
             sb.append(", keyCode="); //NOCHECK
             sb.append(ke.getCode());
         }
-        
+
         logger.info(sb.toString());
     }
 
@@ -969,7 +969,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         modeManager.getEnabledMode().getLayer(Outline.class).disable();
         contentGroup.setVisible(true);
     }
-    
+
     @Override
     public Editor getEditorController() {
         return editorController;
@@ -980,5 +980,5 @@ public class ContentPanelController extends AbstractFxmlPanelController
         return modeManager;
     }
 
-    
+
 }

@@ -95,7 +95,6 @@ import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
-import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -129,13 +128,13 @@ import javafx.util.Callback;
 @Lazy
 @ViewDescriptor(name = LibraryPanelController.VIEW_NAME, id = LibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true)
 public class LibraryPanelController extends AbstractFxmlViewController implements LibraryPanel, InitWithDocument {
-    
+
     public final static String VIEW_ID = "30acd1e6-a848-4ac6-95b2-0effa0b76932";
     public final static String VIEW_NAME = "library";
 
     private String searchPattern;
     ArrayList<LibraryItemImpl> searchData = new ArrayList<>();
-    
+
     // The name of the library section to keep opened. This is used when e.g.
     // a user jar file is imported to the library directory.
     // If the user was doing a search then we let the library layout unchanged.
@@ -179,7 +178,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 	private final MavenArtifactsPreferences mavenPreferences;
     private final DisplayModePreference displayModePreference;
     private final SceneBuilderBeanFactory sceneBuilderFactory;
-    private final AccordionAnimationPreference accordionAnimationPreference;
+    //private final AccordionAnimationPreference accordionAnimationPreference;
 	private final FileSystem fileSystem;
     private final Dialog dialog;
     private final ApplicationContext context;
@@ -187,11 +186,11 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private DocumentManager documentManager;
     private FXOMDocument fxomDocument;
     private final Editor editorController;
-    
+
     private final ViewSearch viewSearch;
 
     private List<MenuItem> menuItems;
-    
+
     /*
      * Public
      */
@@ -208,7 +207,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             @Autowired MavenArtifactsPreferences mavenPreferences,
             @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
             @Autowired DisplayModePreference displayModePreference,
-            @Autowired AccordionAnimationPreference accordionAnimationPreference,
+            //@Autowired AccordionAnimationPreference accordionAnimationPreference,
             @Autowired LibraryController libraryController,
             @Autowired ViewAsListAction viewAsListAction, //NOCHECK
             @Autowired ViewAsSectionsAction viewAsSectionsAction, //NOCHECK
@@ -230,7 +229,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         this.fileSystem = api.getFileSystem();
         this.mavenPreferences = mavenPreferences;
         this.displayModePreference = displayModePreference;
-        this.accordionAnimationPreference = accordionAnimationPreference;
+        //this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.viewAsListAction = viewAsListAction;
         this.viewAsSectionsAction = viewAsSectionsAction;
@@ -239,19 +238,19 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         this.revealCustomFolderAction = revealCustomFolderAction;
         this.showJarAnalysisReportAction = showJarAnalysisReportAction;
         this.viewSearch = viewSearch;
-        
+
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
 
     }
-    
+
     @FXML
     public void initialize() {
     	createLibraryMenu();
-    	animateAccordion(accordionAnimationPreference.getValue());
+    	//animateAccordion(accordionAnimationPreference.getValue());
     	refreshLibraryDisplayOption(displayModePreference.getValue());
 
-    	accordionAnimationPreference.getObservableValue().addListener(
-    			(ob, o, n) -> animateAccordion(n));
+//    	accordionAnimationPreference.getObservableValue().addListener(
+//    			(ob, o, n) -> animateAccordion(n));
     	displayModePreference.getObservableValue().addListener(
     			(ob, o, n) -> refreshLibraryDisplayOption(n));
     }
@@ -307,10 +306,10 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
 		getSearchController().textProperty().addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
 		userLibrary.getItems().addListener(libraryItemListener);
-		
+
         startListeningToDrop();
         populateLibraryPanel();
-        
+
         getName().bind(Bindings.createStringBinding(() -> {
 
             return userLibrary.exploringProperty().get() ? I18N.getString("library.exploring") : I18N.getString("library");
@@ -439,7 +438,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private void populateLibraryPanel() {
         final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb
             = param -> new LibraryListCell(this.libraryController);
-        
+
         // libData is backend structure for all that we put in the Accordion.
         LinkedHashMap<String, ArrayList<LibraryItemImpl>> libData = new LinkedHashMap<>();
         TreeSet<String> sectionNames = new TreeSet<>(new BuiltinSectionComparator());
@@ -588,7 +587,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     }
 
     private void startListeningToDrop() {
-        
+
         final Drag drag = getApi().getApiDoc().getDrag();
         libPane.setOnDragDropped(t -> {
 //                System.out.println("libPane onDragDropped");
@@ -759,24 +758,24 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private void processImportJarFxml(List<File> importedFiles) {
         if (importedFiles != null && !importedFiles.isEmpty()) {
             sectionNameToKeepOpened = getExpandedSectionName();
-            
+
             if (hasDependencies(importedFiles)) {
                 return;
             }
-            
+
             List<Path> files = importedFiles.stream().map(f -> f.toPath()).collect(Collectors.toList());
             userLibrary.performAddFilesOrFolders(files);
-            
+
             if (currentDisplayMode.equals(DISPLAY_MODE.SECTIONS)) {
                 sectionNameToKeepOpened = DefaultSectionNames.TAG_USER_DEFINED;
             }
         }
     }
-    
+
     private void userLibraryUpdateRejected() {
         dialog.showAlertAndWait(
-                I18N.getString("alert.import.reject.dependencies.title"), 
-                I18N.getString("alert.import.reject.dependencies.message"), 
+                I18N.getString("alert.import.reject.dependencies.title"),
+                I18N.getString("alert.import.reject.dependencies.message"),
                 I18N.getString("alert.import.reject.dependencies.details"));
     }
 
@@ -788,7 +787,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             if (!LibraryUtil.isFxmlPath(fxmlFile.toPath())) {
                 continue;
             }
-                
+
             try {
                 if (FXMLUtils.fxmlHasDependencies(fxmlFile, fxomDocument.getClassLoader(), fxomDocument.getResources())) {
                     hasDependencies = true;
@@ -855,10 +854,10 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         libraryReport.setOnAction((e) -> showJarAnalysisReportAction.checkAndPerform());
 
         customLibraryMenu.getItems().addAll(libraryReveal, libraryReport);
-        
-        items.addAll(Arrays.asList(viewAsList, viewAsSections, separator1, manageJarFxml, 
+
+        items.addAll(Arrays.asList(viewAsList, viewAsSections, separator1, manageJarFxml,
                 libraryImportSelection, separator2, customLibraryMenu));
-        
+
         return items;
 	}
 
@@ -886,7 +885,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
             AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
             libraryImportSelection.setDisable(true);
-            
+
             if (asg instanceof ObjectSelectionGroup) {
                 if (((ObjectSelectionGroup)asg).getItems().size() >= 1) {
                     libraryImportSelection.setDisable(false);
@@ -896,7 +895,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             // DTL-6439. The custom library menu shall be enabled only
             // in the case there is a user library directory on disk.
             customLibraryMenu.setDisable(!userLibrary.getStore().isReady());
-        
+
         });
 
 	}
@@ -912,7 +911,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     public Editor getEditorController() {
         return editorController;
     }
-   
+
     @Override
     public ViewSearch getSearchController() {
         return viewSearch;
@@ -929,13 +928,13 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     @Override
     public void onShow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
