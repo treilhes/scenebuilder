@@ -30,34 +30,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.devutils;
+package com.oracle.javafx.scenebuilder.devutils.tbview;
 
-import com.oracle.javafx.scenebuilder.devutils.tbview.TestAnim;
-import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
+import java.io.IOException;
 
-import javafx.beans.property.DoubleProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class Test extends AppTester {
+public class TestAnim {
 
-    public DoubleProperty xCordinate;
-    public DoubleProperty yCordinate;
-
-    @Override
     public void start(Stage stage) {
-        new TestAnim().start(stage);
-        //new TestContent().start(primaryStage);
-        //new TestContent2().start(primaryStage);
-        //new TestContent3().start(stage);
-        //new TitlePaneBinding().start(stage);
-        //new TableViewBinding().start(stage);
-        //new TestContent4().start(stage);
-        //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\panInc2.fxml");
-        //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accordion.fxml");
-        //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accFocusTravers.fxml");
+        // Creating nodes
+
+        try {
+            Pane gp = (Pane) FXMLLoader.load(TestAnim.class.getResource("testanim.fxml"));
+//Circle c;
+//c.layoutXProperty()
+            // Setting the stage
+            Scene scene = new Scene(gp, 1024, 768, Color.BEIGE);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
-    public static void main(String args[]) {
-        launch(args);
-    }
 }
