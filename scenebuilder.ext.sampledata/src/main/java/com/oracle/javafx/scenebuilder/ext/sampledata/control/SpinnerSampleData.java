@@ -30,49 +30,74 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package com.oracle.javafx.scenebuilder.core.fxom.sampledata;
+package com.oracle.javafx.scenebuilder.ext.sampledata.control;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 
 /**
  *
  */
-class ComboBoxSampleData extends AbstractSampleData {
-    
-    private final List<String> samples = new ArrayList<>();
+class SpinnerSampleData extends AbstractSampleData {
 
-    public ComboBoxSampleData() {
-        for (int i = 0; i < 20; i++) {
-            samples.add(lorem(i));
+    private final List<String> samples = new ArrayList<>();
+    private SpinnerValueFactory<String> valueFactory;
+    private int index = 0;
+    private static final int ALPHABET_SIZE = 26;
+
+    public SpinnerSampleData() {
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            samples.add(alphabet(i));
         }
     }
 
     /*
      * AbstractSampleData
      */
-    
     @Override
     public void applyTo(Object sceneGraphObject) {
         assert sceneGraphObject != null;
-        
-        @SuppressWarnings("unchecked")        
-        final ComboBox<String> comboBox = (ComboBox<String>) sceneGraphObject;
-        comboBox.getItems().clear();
-        comboBox.getItems().addAll(samples);
-        comboBox.getSelectionModel().select(samples.get(0));
+
+        @SuppressWarnings("unchecked")
+        final Spinner<String> spinner = (Spinner<String>) sceneGraphObject;
+        valueFactory = spinner.getValueFactory();
+        spinner.setValueFactory(new SpinnerValueFactory<String>() {
+
+            @Override
+            public void decrement(int steps) {
+                index = Math.max((index - 1), 0);
+                setValue(samples.get(index));
+            }
+
+            @Override
+            public void increment(int steps) {
+                index = Math.min((index + 1), ALPHABET_SIZE - 1);
+                setValue(samples.get(index));
+            }
+        });
+        assert index == 0;
+        spinner.getValueFactory().setValue(samples.get(index));
     }
-    
+
     @Override
     public void removeFrom(Object sceneGraphObject) {
         assert sceneGraphObject != null;
-        
-        @SuppressWarnings("unchecked")        
-        final ComboBox<String> comboBox = (ComboBox<String>) sceneGraphObject;
-        comboBox.getItems().clear();
+
+        @SuppressWarnings("unchecked")
+        final Spinner<String> spinner = (Spinner<String>) sceneGraphObject;
+        spinner.setValueFactory(valueFactory);
     }
-    
+
+    @Override
+    public List<Class<?>> getApplicableClass() {
+        return List.of(Spinner.class);
+    }
+
+    @Override
+    public boolean canApply(Object sceneGraphObject) {
+        return ((Spinner<?>) sceneGraphObject).getValue() == null;
+    }
 }

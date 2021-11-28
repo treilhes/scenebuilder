@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.fxom.sampledata;
+package com.oracle.javafx.scenebuilder.ext.sampledata.control;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import javafx.scene.control.ListView;
  *
  */
 class ListViewSampleData extends AbstractSampleData {
-    
+
     private final List<String> samples = new ArrayList<>();
 
     public ListViewSampleData() {
@@ -54,24 +54,33 @@ class ListViewSampleData extends AbstractSampleData {
     /*
      * AbstractSampleData
      */
-    
+
     @Override
     public void applyTo(Object sceneGraphObject) {
         assert sceneGraphObject != null;
-        
-        @SuppressWarnings("unchecked")        
+
+        @SuppressWarnings("unchecked")
         final ListView<String> listView = (ListView<String>) sceneGraphObject;
         listView.getItems().clear();
         listView.getItems().addAll(samples);
     }
-    
+
     @Override
     public void removeFrom(Object sceneGraphObject) {
         assert sceneGraphObject != null;
-        
-        @SuppressWarnings("unchecked")        
+
+        @SuppressWarnings("unchecked")
         final ListView<String> listView = (ListView<String>) sceneGraphObject;
         listView.getItems().clear();
     }
-    
+
+    @Override
+    public List<Class<?>> getApplicableClass() {
+        return List.of(ListView.class);
+    }
+
+    @Override
+    public boolean canApply(Object sceneGraphObject) {
+        return ((ListView<?>) sceneGraphObject).getItems().isEmpty();
+    }
 }

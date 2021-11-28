@@ -31,15 +31,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.fxom.sampledata;
+package com.oracle.javafx.scenebuilder.ext.sampledata.control;
+
+import com.oracle.javafx.scenebuilder.api.sample.SampleDataProvider;
 
 import javafx.scene.paint.Color;
 
 /**
  *
  */
-abstract class AbstractSampleData {
-    
+abstract class AbstractSampleData implements SampleDataProvider {
+
     private static final String[] lorem = {
         "Lorem ipsum ", //NOCHECK
         "dolor sit amet, ", //NOCHECK
@@ -76,28 +78,24 @@ abstract class AbstractSampleData {
         "ut tristique sem. ", //NOCHECK
         "Nunc in neque nulla. " //NOCHECK
     };
-    
+
     private final static Color[] colors = {
         Color.AZURE, Color.CHARTREUSE, Color.CRIMSON, Color.DARKCYAN
     };
-    
+
     private static final String[] alphabet = {
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", //NOCHECK
         "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" //NOCHECK
     };
-    
-    public abstract void applyTo(Object sceneGraphObject);
-    public abstract void removeFrom(Object sceneGraphObject);
-    
-    
+
     /*
      * Utilites for subclasses
      */
-    
+
     protected static String lorem(int index) {
         return lorem[index % lorem.length];
     }
-    
+
     protected static Color color(int index) {
         return colors[index % colors.length];
     }

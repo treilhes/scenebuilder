@@ -31,48 +31,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.fxom.sampledata;
+package com.oracle.javafx.scenebuilder.ext.sampledata.control;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.chart.PieChart;
 
 /**
  *
  */
-class ChoiceBoxSampleData extends AbstractSampleData {
-    
-    private final List<String> samples = new ArrayList<>();
+class PieChartSampleData extends AbstractSampleData {
 
-    public ChoiceBoxSampleData() {
+    private final List<PieChart.Data> samples = new ArrayList<>();
+
+    public PieChartSampleData() {
         for (int i = 0; i < 20; i++) {
-            samples.add(lorem(i));
+            samples.add(new PieChart.Data(lorem(i), Math.random() * 100.0));
         }
     }
 
     /*
      * AbstractSampleData
      */
-    
+
     @Override
     public void applyTo(Object sceneGraphObject) {
-        assert sceneGraphObject != null;
-        
-        @SuppressWarnings("unchecked")        
-        final ChoiceBox<String> choiceBox = (ChoiceBox<String>) sceneGraphObject;
-        choiceBox.getItems().clear();
-        choiceBox.getItems().addAll(samples);
-        choiceBox.getSelectionModel().select(samples.get(0));
+        assert sceneGraphObject instanceof PieChart;
+
+        final PieChart pieChart = (PieChart) sceneGraphObject;
+        pieChart.getData().clear();
+        pieChart.getData().addAll(samples);
     }
-    
+
     @Override
     public void removeFrom(Object sceneGraphObject) {
-        assert sceneGraphObject != null;
-        
-        @SuppressWarnings("unchecked")        
-        final ChoiceBox<String> choiceBox = (ChoiceBox<String>) sceneGraphObject;
-        choiceBox.getItems().clear();
+        assert sceneGraphObject instanceof PieChart;
+
+        final PieChart pieChart = (PieChart) sceneGraphObject;
+        pieChart.getData().clear();
     }
-    
+
+    @Override
+    public List<Class<?>> getApplicableClass() {
+        return List.of(PieChart.class);
+    }
+
+    @Override
+    public boolean canApply(Object sceneGraphObject) {
+        return ((PieChart) sceneGraphObject).getData().isEmpty();
+    }
 }

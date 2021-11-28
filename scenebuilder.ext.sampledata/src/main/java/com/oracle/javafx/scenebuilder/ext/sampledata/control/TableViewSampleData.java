@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.fxom.sampledata;
+package com.oracle.javafx.scenebuilder.ext.sampledata.control;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  */
 class TableViewSampleData extends AbstractSampleData {
-    
+
     private final List<SampleDataItem> sampleItems = new ArrayList<>();
 
     public TableViewSampleData() {
@@ -55,13 +55,13 @@ class TableViewSampleData extends AbstractSampleData {
 
     public static boolean canApplyTo(TableView<?> tableView) {
         final boolean result;
-        
+
         /*
          * We can insert sample data if:
          * 1) TableView.items() is empty
          * 2) TableView columns have no cell factory set
          */
-        
+
         if (tableView.getItems().isEmpty() == false) {
             result = false;
         } else {
@@ -76,33 +76,33 @@ class TableViewSampleData extends AbstractSampleData {
                     break;
                 }
             }
-            
+
             result = columns.isEmpty();
         }
-        
+
         return result;
     }
-    
-    
+
+
     /*
      * AbstractSampleData
      */
-    
-    
+
+
     @Override
     public void applyTo(Object sceneGraphObject) {
         assert sceneGraphObject instanceof TableView;
-        
-        @SuppressWarnings("unchecked")        
+
+        @SuppressWarnings("unchecked")
         final TableView<SampleDataItem> tableView = (TableView<SampleDataItem>) sceneGraphObject;
-        
+
         tableView.getItems().clear();
         tableView.getItems().addAll(sampleItems);
-        
+
         final List<TableColumn<SampleDataItem, ?>> columns = new ArrayList<>(tableView.getColumns());
         while (columns.isEmpty() == false) {
-            @SuppressWarnings("unchecked")        
-            final TableColumn<SampleDataItem,String> tc 
+            @SuppressWarnings("unchecked")
+            final TableColumn<SampleDataItem,String> tc
                     = (TableColumn<SampleDataItem,String>)columns.get(0);
             tc.setCellValueFactory(SampleDataItem.FACTORY);
             columns.remove(0);
@@ -113,39 +113,47 @@ class TableViewSampleData extends AbstractSampleData {
     @Override
     public void removeFrom(Object sceneGraphObject) {
         assert sceneGraphObject instanceof TableView;
-        
-        @SuppressWarnings("unchecked")        
+
+        @SuppressWarnings("unchecked")
         final TableView<SampleDataItem> tableView = TableView.class.cast(sceneGraphObject);
         tableView.getItems().clear();
-        
+
         final List<TableColumn<SampleDataItem, ?>> columns = new ArrayList<>();
         columns.addAll(tableView.getColumns());
         while (columns.isEmpty() == false) {
-            @SuppressWarnings("unchecked")        
-            final TableColumn<SampleDataItem,String> tc 
+            @SuppressWarnings("unchecked")
+            final TableColumn<SampleDataItem,String> tc
                     = (TableColumn<SampleDataItem,String>)columns.get(0);
             tc.setCellValueFactory(null);
             columns.remove(0);
             columns.addAll(tc.getColumns());
         }
     }
-  
-    
+
+    @Override
+    public List<Class<?>> getApplicableClass() {
+        return List.of(TableView.class);
+    }
+
+    @Override
+    public boolean canApply(Object sceneGraphObject) {
+        return TableViewSampleData.canApplyTo((TableView<?>)sceneGraphObject);
+    }
     /*
      * Private
      */
-    
-    
+
+
     public static class SampleDataItem {
         int index;
-        
+
         public final static PropertyValueFactory<SampleDataItem, String> FACTORY
                 = new PropertyValueFactory<>("prop"); //NOCHECK
-        
+
         public SampleDataItem(int index) {
             this.index = index;
         }
-        
+
         public String getProp() {
             return AbstractSampleData.lorem(index);
         }

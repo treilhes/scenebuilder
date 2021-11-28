@@ -64,6 +64,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
+import com.oracle.javafx.scenebuilder.api.sample.SampleDataHandler;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
@@ -166,15 +167,16 @@ public class EditorController implements Editor {
 //    private Library builtinLibrary;
     //private final Api api;
     private final SceneBuilderManager sceneBuilderManager;
-    
+    private final SampleDataHandler sampleDataHandler;
+
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
     public EditorController(
             @Autowired Api api,
     	    @Lazy @Autowired InlineEdit inlineEditController,
-    		@Lazy @Autowired ContextMenuController contextMenuController
-
+    		@Lazy @Autowired ContextMenuController contextMenuController,
+    		@Autowired SampleDataHandler sampleDataHandler
     		) {
         //this.api = api;
     	this.context = api.getContext();
@@ -189,7 +191,7 @@ public class EditorController implements Editor {
     	this.errorReport = api.getApiDoc().getErrorReport();
     	this.inlineEditController = inlineEditController;
     	this.contextMenuController = contextMenuController;
-    	//this.watchingController = watchingController;
+    	this.sampleDataHandler = sampleDataHandler;
 
 
     	//libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
@@ -197,7 +199,7 @@ public class EditorController implements Editor {
 
     	//TODO remove below
     	//libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
-    	
+
     	api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
 
@@ -213,7 +215,7 @@ public class EditorController implements Editor {
             resourceConfig = s;
             resourcesDidChange();
         });
-        
+
         documentManager.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
         sceneBuilderManager.classloader().subscribe(cl -> libraryClassLoaderDidChange(cl));
     }
@@ -243,13 +245,12 @@ public class EditorController implements Editor {
         if (fxomDocument == null) {
             result = null;
         } else {
-            final boolean sampleDataEnabled = fxomDocument.isSampleDataEnabled();
-            if (sampleDataEnabled) {
-                fxomDocument.setSampleDataEnabled(false);
+            if (isSampleDataEnabled()) {
+                sampleDataHandler.removeSampleData(getFxomDocument().getFxomRoot());
             }
             result = fxomDocument.getFxmlText(wildcardImports);
-            if (sampleDataEnabled) {
-                fxomDocument.setSampleDataEnabled(true);
+            if (isSampleDataEnabled()) {
+                sampleDataHandler.assignSampleData(getFxomDocument().getFxomRoot());
             }
         }
 
@@ -264,7 +265,7 @@ public class EditorController implements Editor {
      */
     @Override
     public boolean canGetFxmlText() {
-//        
+//
 //        final boolean result;
 //
 //        if (requestTextEditingSessionEnd == null) {
@@ -492,8 +493,15 @@ public class EditorController implements Editor {
     public void setSampleDataEnabled(boolean sampleDataEnabled) {
         setPickModeEnabled(false);
         sampleDataEnabledProperty.setValue(sampleDataEnabled);
-        if (getFxomDocument() != null) {
-            getFxomDocument().setSampleDataEnabled(isSampleDataEnabled());
+
+        if (getFxomDocument() == null) {
+            return;
+        }
+
+        if (isSampleDataEnabled()) {
+            sampleDataHandler.assignSampleData(getFxomDocument().getFxomRoot());
+        } else {
+            sampleDataHandler.removeSampleData(getFxomDocument().getFxomRoot());
         }
     }
 
@@ -544,8 +552,8 @@ public class EditorController implements Editor {
      */
     @Override
     public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
-        updateFxomDocument(fxmlText, fxmlLocation, 
-                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()), 
+        updateFxomDocument(fxmlText, fxmlLocation,
+                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()),
                 checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
@@ -1362,7 +1370,7 @@ public class EditorController implements Editor {
                 performCopy();
                 break;
             }
-            
+
             case SELECT_ALL: {
                 performSelectAll();
                 break;
@@ -1655,7 +1663,7 @@ public class EditorController implements Editor {
         return job.extend().isExecutable();
     }
 
-    
+
     /**
      * Performs the copy control action.
      */
@@ -2151,7 +2159,7 @@ public class EditorController implements Editor {
         getJobManager().push(addTooltipJob);
    }
 
-    
+
     private void updateFxomDocument(String fxmlText, URL fxmlLocation, ResourceBundle resources, boolean checkTheme) throws IOException {
         final FXOMDocument newFxomDocument;
 
@@ -2162,7 +2170,7 @@ public class EditorController implements Editor {
         }
 
         documentManager.fxomDocument().set(newFxomDocument);
-        
+
         updateFileWatcher(newFxomDocument);
 
 
@@ -2226,7 +2234,7 @@ public class EditorController implements Editor {
     private void fxomDocumentDidChange(FXOMDocument fxomDocument) {
         this.fxomDocument = fxomDocument;
     }
-    
+
     private void libraryClassLoaderDidChange(ClassLoader classLoader) {
         if (fxomDocument != null) {
             errorReport.forget();

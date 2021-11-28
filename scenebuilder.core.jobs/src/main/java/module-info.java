@@ -20,12 +20,11 @@ open module scenebuilder.core.jobs {
 //    requires javafx.web;
 //    requires org.slf4j;
     requires transitive scenebuilder.core.api;
-    requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;
-    requires scenebuilder.core.utils;
-    requires scenebuilder.starter;
+//    requires scenebuilder.core.utils;
+//    requires scenebuilder.starter;
 
     provides Extension with JobsExtension;
 }

@@ -31,45 +31,72 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.fxom.sampledata;
+package com.oracle.javafx.scenebuilder.ext.sampledata.control;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.chart.PieChart;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
  */
-class PieChartSampleData extends AbstractSampleData {
-    
-    private final List<PieChart.Data> samples = new ArrayList<>();
+class TreeViewSampleData extends AbstractSampleData {
 
-    public PieChartSampleData() {
-        for (int i = 0; i < 20; i++) {
-            samples.add(new PieChart.Data(lorem(i), Math.random() * 100.0));
+    private final TreeItem<String> sampleRoot;
+
+    public TreeViewSampleData() {
+        int i = 0;
+        sampleRoot = new TreeItem<>(lorem(i++));
+        sampleRoot.setExpanded(true);
+        for (int j = 0; j<10; j++) {
+            final Rectangle r = new Rectangle(10, 10);
+            r.setFill(color(i));
+            TreeItem<String> child = new TreeItem<>(lorem(i++));
+            child.setExpanded(true);
+            child.setGraphic(r);
+            for (int k=0; k<3; k++) {
+                final TreeItem<String> child2 = new TreeItem<>(lorem(i++));
+                child2.setExpanded(true);
+                final Circle c = new Circle(5);
+                c.setFill(color(i));
+                child2.setGraphic(c);
+                child.getChildren().add(child2);
+            }
+            sampleRoot.getChildren().add(child);
         }
     }
 
     /*
      * AbstractSampleData
      */
-    
+
+
     @Override
     public void applyTo(Object sceneGraphObject) {
-        assert sceneGraphObject instanceof PieChart;
-        
-        final PieChart pieChart = (PieChart) sceneGraphObject;
-        pieChart.getData().clear();
-        pieChart.getData().addAll(samples);
+        assert sceneGraphObject instanceof TreeView;
+        @SuppressWarnings("unchecked")
+        final TreeView<String> treeView = (TreeView<String>) sceneGraphObject;
+        treeView.setRoot(sampleRoot);
     }
-    
+
     @Override
     public void removeFrom(Object sceneGraphObject) {
-        assert sceneGraphObject instanceof PieChart;
-        
-        final PieChart pieChart = (PieChart) sceneGraphObject;
-        pieChart.getData().clear();
+        assert sceneGraphObject instanceof TreeView;
+        @SuppressWarnings("unchecked")
+        final TreeView<String> treeView = (TreeView<String>) sceneGraphObject;
+        treeView.setRoot(null);
     }
-    
+
+    @Override
+    public List<Class<?>> getApplicableClass() {
+        return List.of(TreeView.class);
+    }
+
+    @Override
+    public boolean canApply(Object sceneGraphObject) {
+        return ((TreeView<?>) sceneGraphObject).getRoot() == null;
+    }
 }
