@@ -28,11 +28,11 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 	<#if property.custom["defaultValue"]??>
 				.withDefaultValue(${property.custom["defaultValue"]})
 	</#if>
-                .withInspectorPath(new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.subSectionIndex}))
+                .withInspectorPath(new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.order?c}))
                 .build();
 </#if>
 <#if property.type == "COMPONENT">
-    private final ComponentPropertyMetadata ${property.raw.name}PropertyMetadata;
+    private final ${property.raw.metadataClass.name?replace("$", ".")} ${property.raw.name}PropertyMetadata;
 </#if>
 </#list>
 
@@ -46,14 +46,14 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 
         <#list properties as property>
 		<#if property.type == "COMPONENT">
-		    ${property.raw.name}PropertyMetadata = new ComponentPropertyMetadata(
+		    ${property.raw.name}PropertyMetadata = new ${property.raw.metadataClass.name?replace("$", ".")}(
 	                PropertyNames.${property.custom["memberName"]}Name,
 	                <#if property.raw.collection == true>${property.raw.collectionType.simpleName?uncap_first}<#else>${property.raw.type.simpleName?uncap_first}</#if>Metadata,
 	                ${property.raw.collection}, /* collection */
 	                <#if property.raw.image??>getClass().getResource("${property.raw.image}")<#else>null</#if>,
 	                <#if property.raw.imageX2??>getClass().getResource("${property.raw.imageX2}")<#else>null</#if>,
 	                <#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>,
-	                ${property.raw.subSectionIndex}
+	                ${property.raw.order?c}
 	                );
 		</#if>
 		</#list>

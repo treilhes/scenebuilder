@@ -12,10 +12,14 @@ public interface BundleValues {
 	//property level
 	final String INSPECTOR_SECTION = "section";
 	final String INSPECTOR_SUBSECTION = "subsection";
-	final String INSPECTOR_INDEX = "subsectionindex";
+	final String ORDER = "order";
 	final String METACLASS = "class";
 	final String TMP_METACLASS_KIND = "classKind";
-	final String DEFAULT = "default";
+	final String HIDDEN = "hidden";
+	final String IS_COMPONENT = "component";
+	final String IS_COLLECTION = "collection";
+	final String COLLECTION_TYPE = "collectionType";
+	final String CONTENT_TYPE = "type";
 
 	//both
 	final String IMAGE = "image";

@@ -140,7 +140,6 @@ public class MetadataSourceMojo extends AbstractMojo {
                 returnValue.complete(crawler.getClasses());
             };
 
-            // process.execute(javafxVersion, runnable);
             Platform.runLater(runnable);
 
             Map<Class<?>, BeanMetaData<?>> found = returnValue.get();

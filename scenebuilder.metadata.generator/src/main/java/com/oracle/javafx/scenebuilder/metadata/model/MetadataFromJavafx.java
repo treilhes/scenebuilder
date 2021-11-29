@@ -70,9 +70,12 @@ public class MetadataFromJavafx {
 
             for (PropertyMetaData propertyMetadata : properties) {
 
-                boolean isComponentProperty = classes.containsKey(propertyMetadata.getGetterMethod().getReturnType())
-                        || (propertyMetadata.isCollection()
-                                && classes.containsKey(propertyMetadata.getCollectionType()));
+                boolean isComponentProperty = classes.containsKey(propertyMetadata.getContentType())
+                        || descriptorComponents.containsKey(propertyMetadata.getContentType());
+
+                if (propertyMetadata.isComponent().isPresent()) {
+                    isComponentProperty = propertyMetadata.isComponent().get();
+                }
 
                 if (!propertyMetadata.isStatic() && !isComponentProperty) {
 
@@ -85,6 +88,10 @@ public class MetadataFromJavafx {
 
                     addComponentProperty(component, pMeta);
                 } else if (!propertyMetadata.isStatic() && isComponentProperty) {
+
+                    if (propertyMetadata.getMetadataClass() == null) {
+                        continue;
+                    }
 
                     Property pMeta = new Property(propertyMetadata,
                             com.oracle.javafx.scenebuilder.metadata.model.Property.Type.COMPONENT);
@@ -183,10 +190,11 @@ public class MetadataFromJavafx {
 
                     try {
 
-                        boolean isComponentProperty = classToComponents
-                                .containsKey(propertyMetadata.getGetterMethod().getReturnType())
-                                || (propertyMetadata.isCollection()
-                                        && classToComponents.containsKey(propertyMetadata.getCollectionType()));
+                        boolean isComponentProperty = classToComponents.containsKey(propertyMetadata.getContentType());
+
+                        if (propertyMetadata.isComponent().isPresent()) {
+                            isComponentProperty = propertyMetadata.isComponent().get();
+                        }
 
                         PropertyMetaData relocalized = PropertyMetaData.relocalizeStatic(propertyMetadata,
                                 component.getRaw());
@@ -197,11 +205,14 @@ public class MetadataFromJavafx {
                                 continue;
                             }
 
-
                             Property pMeta = new Property(relocalized, Type.VALUE);
 
                             addComponentProperty(component, pMeta);
                         } else if (isComponentProperty) {
+
+                            if (propertyMetadata.getMetadataClass() == null) {
+                                continue;
+                            }
 
                             Property pMeta = new Property(relocalized, Type.COMPONENT);
 

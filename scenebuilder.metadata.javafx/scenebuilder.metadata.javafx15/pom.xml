@@ -78,6 +78,12 @@
                         <rootClass>javafx.scene.layout.ColumnConstraints</rootClass>
                         <rootClass>javafx.scene.shape.PathElement</rootClass>
                         <rootClass>javafx.stage.Window</rootClass>
+
+                        <rootClass>javafx.animation.Animation</rootClass>
+                        <rootClass>javafx.animation.KeyFrame</rootClass>
+                        <rootClass>javafx.animation.KeyValue</rootClass>
+                        <rootClass>javafx.animation.Transition</rootClass>
+
                     </rootClasses>
                     <excludeClasses>
                         <excludeClass>javafx.scene.control.Cell</excludeClass>

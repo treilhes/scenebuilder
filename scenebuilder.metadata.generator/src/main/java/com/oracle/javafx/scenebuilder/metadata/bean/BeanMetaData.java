@@ -26,6 +26,7 @@
 package com.oracle.javafx.scenebuilder.metadata.bean;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -552,6 +553,8 @@ public final class BeanMetaData<T> extends AbstractMetaData {
 
         if (c.isPrimitive()) {
             return ReflectionUtils.getPrimitiveDefaultValue(c);
+        } else if (c.isArray()) {
+            return Array.newInstance(c.getComponentType(), 0);
         } else if (c.isInterface()) {
             // if interface a simple null implementation of methods is sufficient
             return Enhancer.create(c, new MethodInterceptor() {

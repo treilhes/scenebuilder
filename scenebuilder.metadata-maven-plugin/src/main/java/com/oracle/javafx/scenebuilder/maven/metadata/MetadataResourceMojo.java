@@ -21,6 +21,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import com.oracle.javafx.scenebuilder.maven.metadata.data.ConstructorOverride;
 import com.oracle.javafx.scenebuilder.metadata.bean.BeanMetaData;
+import com.oracle.javafx.scenebuilder.metadata.bean.BundleValues;
+import com.oracle.javafx.scenebuilder.metadata.bean.PropertyMetaData;
 import com.oracle.javafx.scenebuilder.metadata.finder.ClassCrawler;
 import com.oracle.javafx.scenebuilder.metadata.finder.JarFinder;
 import com.oracle.javafx.scenebuilder.metadata.finder.SearchContext;
@@ -37,19 +39,16 @@ import javafx.stage.Stage;
 public class MetadataResourceMojo extends AbstractMojo {
 
     /** The input root classes. */
-    @Parameter(property = "rootClassesString", required = true, alias="rootClasses")
-    List<String> rootClassesString;
-    List<Class<?>> rootClasses = new ArrayList<>();
+    @Parameter(property = "rootClasses", required = true, alias = "rootClasses")
+    List<String> rootClasses;
 
     /** The input file. */
-    @Parameter(property = "excludeClassesString", required = false, alias = "excludeClasses")
-    List<String> excludeClassesString;
-    List<Class<?>> excludeClasses = new ArrayList<>();
+    @Parameter(property = "excludeClasses", required = false, alias = "excludeClasses")
+    List<String> excludeClasses;
 
     /** The input file. */
-    @Parameter(property = "jarFilterPatternsString", required = false, alias = "jarFilterPatterns")
-    List<String> jarFilterPatternsString;
-    List<Pattern> jarFilterPatterns = new ArrayList<>();
+    @Parameter(property = "jarFilterPatterns", required = false, alias = "jarFilterPatterns")
+    List<String> jarFilterPatterns;
 
     /** The input root classes. */
     @Parameter(property = "includePackages", required = false)
@@ -60,18 +59,17 @@ public class MetadataResourceMojo extends AbstractMojo {
     List<String> excludePackages;
 
     /** The backup file. */
-    @Parameter(property = "output", required = false, defaultValue = "${project.build.directory}/generated-resources")
-    File output;
-
-    /** The backup file. */
-    @Parameter(property = "input", required = false, defaultValue = "${basedir}/src/main/resources")
-    File input;
-
-//    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-//    private MavenProject project;
+    @Parameter(property = "resourceFolder", required = false, defaultValue = "${project.build.directory}/generated-resources/scenebuilder")
+    File resourceFolder;
 
     @Parameter(property = "constructorOverrides", required = false)
     List<ConstructorOverride> constructorOverrides;
+
+    @Parameter(property = "failOnError", required = false, defaultValue = "true")
+    boolean failOnError = true;
+
+    @Parameter(property = "javafxVersion", required = true)
+    String javafxVersion;
 
     /**
      * Default constructor.
@@ -85,32 +83,44 @@ public class MetadataResourceMojo extends AbstractMojo {
      */
     @Override
     public void execute() throws MojoExecutionException {
-        initJFX();
-        SearchContext searchContext = prepareParameters();
+        initJFX(javafxVersion);
 
         PluginDescriptor pluginDescriptor = (PluginDescriptor)getPluginContext().get("pluginDescriptor");
-        List<File> cp = pluginDescriptor.getArtifacts().stream()
-            .map(a -> a.getFile())
-            .collect(Collectors.toList());
+        List<File> cp = pluginDescriptor.getArtifacts().stream().map(a -> a.getFile()).collect(Collectors.toList());
 
         try {
+
+            final SearchContext searchContext = new SearchContext();
+            prepareParameters(searchContext);
+
             List<Descriptor> descriptors = new ArrayList<>();
-            Set<Path> jars = JarFinder.listJarsInClasspath(cp, jarFilterPatterns, descriptors);
+            Set<Path> jars = JarFinder.listJarsInClasspath(cp, searchContext.getJarFilterPatterns(), descriptors);
             ClassCrawler crawler = new ClassCrawler();
 
             final CompletableFuture<Map<Class<?>, BeanMetaData<?>>> returnValue = new CompletableFuture<>();
 
-            Platform.runLater(() -> {
+            Runnable runnable = () -> {
                 crawler.crawl(jars, searchContext);
                 returnValue.complete(crawler.getClasses());
-            });
+            };
+
+            Platform.runLater(runnable);
 
             Map<Class<?>, BeanMetaData<?>> found = returnValue.get();
 
-            Resources.save(output);
+            for (BeanMetaData<?> bm:found.values()) {
+                for (PropertyMetaData pm:bm.getProperties()) {
+                    if (!pm.isHidden() && pm.isLocal()) {
+                        defaultValueTo(bm, pm, BundleValues.METACLASS, "TOBEDEFINED");
+                        defaultValueTo(bm, pm, BundleValues.ORDER, "TOBEDEFINED");
+                    }
+                }
+            }
+            Resources.save(resourceFolder);
 
-            if (Report.flush(getLog().isDebugEnabled())) {
-                throw new MojoExecutionException("Some errors occured during the generation process, please see the logs!");
+            if (Report.flush(getLog().isDebugEnabled()) && failOnError) {
+                throw new MojoExecutionException(
+                        "Some errors occured during the generation process, please see the logs!");
             }
         } catch (Exception e) {
             getLog().error("Failed to complete the generating process! " + e.getMessage(), e);
@@ -119,34 +129,35 @@ public class MetadataResourceMojo extends AbstractMojo {
 
     }
 
-    private SearchContext prepareParameters() throws MojoExecutionException {
+    private void defaultValueTo(BeanMetaData<?> bm, PropertyMetaData pm, String property, String defaultValue) {
+        if (pm.getBundleValue(bm.getType(), property, null) == null) {
+            pm.setBundleValue(bm.getType(), property, defaultValue);
+        }
+    }
 
-        SearchContext searchContext = new SearchContext();
+    private SearchContext prepareParameters(SearchContext searchContext) throws MojoExecutionException {
 
-        for (String s:rootClassesString) {
+        for (String s : rootClasses) {
             try {
                 Class<?> cls = Class.forName(s);
-                rootClasses.add(cls);
                 searchContext.addRootClass(cls);
             } catch (Exception e) {
                 throw new MojoExecutionException("Unable to load root class : " + s, e);
             }
         }
 
-        for (String s:excludeClassesString) {
+        for (String s : excludeClasses) {
             try {
                 Class<?> cls = Class.forName(s);
-                excludeClasses.add(cls);
                 searchContext.addExcludeClass(cls);
             } catch (Exception e) {
                 throw new MojoExecutionException("Unable to load excluded class : " + s, e);
             }
         }
 
-        for (String s:jarFilterPatternsString) {
+        for (String s : jarFilterPatterns) {
             try {
                 Pattern pattern = Pattern.compile(s);
-                jarFilterPatterns.add(pattern);
                 searchContext.addJarFilterPattern(pattern);
             } catch (Exception e) {
                 throw new MojoExecutionException("Unable to compile jar filter pattern : " + s, e);
@@ -190,9 +201,31 @@ public class MetadataResourceMojo extends AbstractMojo {
             throw new MojoExecutionException("Unable to override constructors", e);
         }
 
-        //searchContext.setInputFolder(input);
+        if (resourceFolder != null && !resourceFolder.exists()) {
+            resourceFolder.mkdirs();
+        }
+        searchContext.setResourceFolder(resourceFolder);
 
         return searchContext;
+    }
+
+    public static void initJFX(String javafxVersion) {
+        try {
+            System.out.println("Initializing JavaFX thread");
+            String fxv = System.getProperty("javafx.version", "versionless");
+            System.out.println("JavaFX version : " + fxv);
+            // System.setProperty("javafx.version", javafxVersion);
+            System.setProperty("javafx.version", "versionless");
+            fxv = System.getProperty("javafx.version", "versionless");
+            System.out.println("JavaFX version : " + fxv);
+
+            Thread t = newJfxThread();
+            t.setDaemon(true);
+            t.start();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public static class DummyApp extends Application {
@@ -202,15 +235,13 @@ public class MetadataResourceMojo extends AbstractMojo {
         }
     }
 
-    public static void initJFX() {
-        Thread t = new Thread("JavaFX Init Thread") {
+    private static Thread newJfxThread() {
+        return new Thread("JavaFX Init Thread") {
             @Override
             public void run() {
                 Application.launch(DummyApp.class, new String[0]);
             }
         };
-        t.setDaemon(true);
-        t.start();
     }
 
 }
