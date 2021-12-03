@@ -8,7 +8,7 @@ It may contains the following data:
 --- Control definition : Abstract class or control hidden to Scenebuilder can omit this part ---
 SomeControl.category= [String] Category name or localized key
 SomeControl.resizeWhenTop= [Boolean] When a child control is changed a resize may occur on this element
-SomeControl.freepositioning= [Boolean] The control does not force the position of child elements
+SomeControl.freeChildPositioning= [Boolean] The control does not force the position of child elements
 
 ------ Control qualifiers : Abstract class or control hidden to Scenebuilder can omit this part ---
 SomeControl.qualifiers=default
@@ -25,7 +25,7 @@ package com.oracle.javafx.scenebuilder.metadata.bean;
 public interface BundleValues {
 
 	//class level
-	final String FREE_POSITIONING = "freepositioning";
+	final String FREE_POSITIONING = "freeChildPositioning";
 	final String RESIZE_WHEN_TOP_ELEMENT = "resizeWhenTop";
 	final String VERSION = "version";
 	final String QUALIFIERS = "qualifiers";
@@ -33,7 +33,7 @@ public interface BundleValues {
 
 	//property level
 	final String INSPECTOR_SECTION = "section";
-	final String INSPECTOR_SUBSECTION = "subsection";
+	final String INSPECTOR_SUBSECTION = "subSection";
 	final String ORDER = "order";
 	final String METACLASS = "class";
 	final String TMP_METACLASS_KIND = "classKind";
