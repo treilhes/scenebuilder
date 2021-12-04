@@ -812,6 +812,10 @@
 .theme-presets.property-sheet .toggle-button {
     -fx-padding: 4 6 3 6;
     -fx-background-radius: 0;
+	-fx-min-height: 10;
+}
+.theme-presets.property-sheet .combo-box{
+	-fx-min-height: 10;
 }
 
 .theme-presets.property-sheet .text-field {
@@ -1002,11 +1006,13 @@
     -fx-text-fill: -sb-content-detail;
     -fx-padding: 4 3 3 4;
     -fx-min-width: 17;
+	-fx-min-height: 10;
 }
 
 .theme-presets.property-sheet .multi-row-menubutton {
     -fx-padding: 4 5 3 1;
     -fx-min-width: 17;
+	-fx-min-height: 10;
 }
 
 /*******************************************************************************

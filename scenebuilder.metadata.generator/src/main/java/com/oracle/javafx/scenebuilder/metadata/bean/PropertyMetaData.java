@@ -457,8 +457,8 @@ public class PropertyMetaData extends AbstractMetaData {
         return getBundleValue(beanClass, BundleValues.DISPLAY_NAME, toDisplayName(getName()));
     }
 
-    public String getDescription() {
-        return getBundleValue(beanClass, BundleValues.DESCRIPTION, null);
+    public String getChildLabelMutation() {
+        return getBundleValue(beanClass, BundleValues.CHILD_LABEL_MUTATION_LAMBDA, null);
     }
 
     public String getCategory() {

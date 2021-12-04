@@ -19,10 +19,6 @@ public class QualifierMetaData extends AbstractMetaData {
         return getBundleValue(beanClass, BundleValues.DISPLAY_NAME, null);
     }
 
-    public String getDescription() {
-        return getBundleValue(beanClass, BundleValues.DESCRIPTION, null);
-    }
-
     public String getImage() {
         return getBundleValue(beanClass, BundleValues.IMAGE, null);
     }
@@ -33,6 +29,10 @@ public class QualifierMetaData extends AbstractMetaData {
 
     public String getLambdaCheck() {
         return getBundleValue(beanClass, BundleValues.LAMBDA_CHECK, null);
+    }
+
+    public String getLabel() {
+        return getBundleValue(beanClass, BundleValues.LABEL, null);
     }
 
     @Override

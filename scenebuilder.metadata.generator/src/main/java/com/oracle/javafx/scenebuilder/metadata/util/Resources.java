@@ -39,7 +39,7 @@ public final class Resources {
 
     private static final Map<Object, PropertiesConfiguration> cache = new HashMap<>();
 
-    public static void save(File outputFolder) {
+    public static void save(Set<Class<?>> set, File outputFolder) {
         cache.entrySet().forEach(e -> {
             Object key = e.getKey();
             PropertiesConfiguration p = e.getValue();
@@ -51,6 +51,10 @@ public final class Resources {
                 }
             } else {
                 Class<?> clsKey = (Class<?>) key;
+
+                if (!set.contains(clsKey)) {
+                    return;
+                }
                 File packageFolder = new File(outputFolder, toPath(clsKey));
                 target = new File(packageFolder, ((Class<?>) key).getSimpleName() + ".properties");
             }
@@ -58,7 +62,7 @@ public final class Resources {
             if ((p == null || p.isEmpty()) && target.exists()) {
                 target.delete();
             }
-            if (p != null && !p.isEmpty()) {
+            if (p != null) {
                 if (!target.getParentFile().exists()) {
                     target.getParentFile().mkdirs();
                 }
@@ -100,7 +104,7 @@ public final class Resources {
     }
 
     private static String toPath(Class<?> cls) {
-        return cls.getPackage().getName().replace('.', '/') + '/' + cls.getSimpleName().toLowerCase();
+        return cls.getName().replace('$', '/').replace('.', '/').toLowerCase();
     }
 
     private PropertiesConfiguration loadProperties(String resourceName) {

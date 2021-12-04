@@ -116,7 +116,7 @@ public class MetadataResourceMojo extends AbstractMojo {
                     }
                 }
             }
-            Resources.save(resourceFolder);
+            Resources.save(found.keySet(), resourceFolder);
 
             if (Report.flush(getLog().isDebugEnabled()) && failOnError) {
                 throw new MojoExecutionException(

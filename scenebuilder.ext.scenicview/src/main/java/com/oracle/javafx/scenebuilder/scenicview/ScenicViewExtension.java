@@ -39,6 +39,7 @@ import java.util.UUID;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.scenicview.actions.ShowScenicViewAction;
 import com.oracle.javafx.scenebuilder.scenicview.i18n.I18NScenicView;
+import com.oracle.javafx.scenebuilder.scenicview.menu.ScenicViewMenuProvider;
 
 public class ScenicViewExtension extends AbstractExtension {
     @Override
@@ -51,7 +52,8 @@ public class ScenicViewExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 I18NScenicView.class,
-                ShowScenicViewAction.class
+                ShowScenicViewAction.class,
+                ScenicViewMenuProvider.class
             );
      // @formatter:on
     }

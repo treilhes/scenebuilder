@@ -522,8 +522,12 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         return getBundleValue(this.type, BundleValues.DISPLAY_NAME, toDisplayName(getName()));
     }
 
-    public String getDescription() {
-        return getBundleValue(this.type, BundleValues.DESCRIPTION, null);
+    public String getDescriptionProperty() {
+        return getBundleValue(this.type, BundleValues.DESCRIPTION_PROPERTY, null);
+    }
+
+    public String getLabelMutation() {
+        return getBundleValue(this.type, BundleValues.LABEL_MUTATION_LAMBDA, null);
     }
 
     public String getCategory() {
