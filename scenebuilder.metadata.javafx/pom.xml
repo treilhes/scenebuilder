@@ -7,12 +7,108 @@
         <version>17.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>scenebuilder.metadata.javafx</artifactId>
-	<packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-	<modules>
-		<module>scenebuilder.metadata.javafxdata</module>
-		<!-- <module>scenebuilder.metadata.javafx11</module> -->
-		<!-- <module>scenebuilder.metadata.javafx15</module> -->
-		<!--<module>scenebuilder.metadata.javafx11legacy</module>-->
-	</modules>
+    <modules>
+        <module>scenebuilder.metadata.javafxdata</module>
+        <!-- <module>scenebuilder.metadata.javafx11</module> -->
+        <!-- <module>scenebuilder.metadata.javafx15</module> -->
+        <!--<module>scenebuilder.metadata.javafx11legacy</module> -->
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata-maven-plugin</artifactId>
+                <version>17.0.0-SNAPSHOT</version>
+                <configuration>
+                    <jarFilterPatterns>
+                        <jarFilterPatterns>.*[/\\](javafx-(.*?))[/\\].*</jarFilterPatterns>
+                    </jarFilterPatterns>
+                    <rootClasses>
+                        <rootClass>javafx.scene.Node</rootClass>
+                        <rootClass>javafx.scene.Scene</rootClass>
+                        <rootClass>javafx.scene.control.MenuItem</rootClass>
+                        <rootClass>javafx.scene.control.Tab</rootClass>
+                        <rootClass>javafx.scene.control.TableColumnBase</rootClass>
+                        <rootClass>javafx.scene.control.TextFormatter</rootClass>
+                        <rootClass>javafx.scene.layout.RowConstraints</rootClass>
+                        <rootClass>javafx.scene.layout.ColumnConstraints</rootClass>
+                        <rootClass>javafx.scene.shape.PathElement</rootClass>
+                        <rootClass>javafx.stage.Window</rootClass>
+
+                        <!-- <rootClass>javafx.animation.Animation</rootClass>
+                        <rootClass>javafx.animation.KeyFrame</rootClass>
+                        <rootClass>javafx.animation.KeyValue</rootClass>
+                        <rootClass>javafx.animation.Transition</rootClass> -->
+
+                    </rootClasses>
+                    <excludeClasses>
+                        <excludeClass>javafx.scene.control.Cell</excludeClass>
+                    </excludeClasses>
+                    <includePackages>
+                        <includePackage>javafx</includePackage>
+                    </includePackages>
+                    <excludePackages>
+                        <excludePackage>javafx.scene.control.skin</excludePackage>
+                    </excludePackages>
+                    <constructorOverrides>
+                        <constructorOverride>
+                            <cls>javafx.scene.chart.BubbleChart</cls>
+                            <parameterOverrides>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.NumberAxis</overridedBy>
+                                </parameterOverride>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.NumberAxis</overridedBy>
+                                </parameterOverride>
+                            </parameterOverrides>
+                        </constructorOverride>
+                        <constructorOverride>
+                            <cls>javafx.scene.chart.StackedBarChart</cls>
+                            <parameterOverrides>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.CategoryAxis</overridedBy>
+                                </parameterOverride>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.NumberAxis</overridedBy>
+                                </parameterOverride>
+                            </parameterOverrides>
+                        </constructorOverride>
+                        <constructorOverride>
+                            <cls>javafx.scene.chart.StackedAreaChart</cls>
+                            <parameterOverrides>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.Axis</overridedBy>
+                                </parameterOverride>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.ValueAxis</overridedBy>
+                                </parameterOverride>
+                            </parameterOverrides>
+                        </constructorOverride>
+                        <constructorOverride>
+                            <cls>javafx.scene.chart.BarChart</cls>
+                            <parameterOverrides>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.CategoryAxis</overridedBy>
+                                </parameterOverride>
+                                <parameterOverride>
+                                    <cls>javafx.scene.chart.Axis</cls>
+                                    <overridedBy>javafx.scene.chart.NumberAxis</overridedBy>
+                                </parameterOverride>
+                            </parameterOverrides>
+                        </constructorOverride>
+                    </constructorOverrides>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

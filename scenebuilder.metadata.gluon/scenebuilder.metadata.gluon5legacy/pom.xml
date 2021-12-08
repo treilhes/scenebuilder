@@ -70,15 +70,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jarFilterPatterns>
-                        <jarFilterPatterns>.*[/\\](charm-(.*?))[/\\].*</jarFilterPatterns>
-                    </jarFilterPatterns>
-                    <rootClasses>
-                        <rootClass>javafx.scene.Node</rootClass>
-                    </rootClasses>
-                    <includePackages>
-                        <includePackage>com.gluonhq.charm.glisten.control</includePackage>
-                    </includePackages>
                     <targetPackage>com.oracle.javafx.scenebuilder.kit.metadata</targetPackage>
                     <executorClass>com.oracle.javafx.scenebuilder.metadata.template.legacy.LegacyExecutor</executorClass>
                 </configuration>
