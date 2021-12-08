@@ -22,10 +22,10 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
             new ${property.raw.metadataClass.name?replace("$", ".")}.Builder<#if property.raw.type.enum == true><>(${property.raw.type.name?replace("$", ".")}.class)<#else>()</#if>
                 .withName(PropertyNames.${property.custom["memberName"]}Name)
                 .withReadWrite(${property.raw.readWrite})
-    <#if property.custom["nullEquivalent"]??>
-                .withNullEquivalent("${property.custom["nullEquivalent"]}")
+    <#if property.custom["defaultValue"] == "null" && property.raw.nullEquivalent??>
+                .withNullEquivalent("${property.raw.nullEquivalent}")
 	</#if>
-	<#if property.custom["defaultValue"]??>
+	<#if !property.raw.nullEquivalent?? && property.custom["defaultValue"]??>
 				.withDefaultValue(${property.custom["defaultValue"]})
 	</#if>
                 .withInspectorPath(new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.order?c}))

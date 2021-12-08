@@ -194,6 +194,10 @@
             <artifactId>scenebuilder.metadata.gluon5</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.javafx.customization</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

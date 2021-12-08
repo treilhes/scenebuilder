@@ -31,5 +31,11 @@
             <artifactId>scenebuilder.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>charm-glisten</artifactId>
+            <version>5.0.0-jdk9</version>
+        </dependency>
     </dependencies>
 </project>

@@ -80,9 +80,12 @@
                     </jarFilterPatterns>
                     <rootClasses>
                         <rootClass>javafx.scene.Node</rootClass>
+                                <rootClass>com.gluonhq.charm.glisten.control.settings.Option</rootClass>
                     </rootClasses>
                     <includePackages>
                         <includePackage>com.gluonhq.charm.glisten.control</includePackage>
+                                <includePackage>com.gluonhq.charm.glisten.mvc</includePackage>
+                                <includePackage>com.gluonhq.charm.glisten.layout</includePackage>
                     </includePackages>
                     <constructorOverrides>
                         <constructorOverride>

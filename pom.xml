@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -67,8 +66,8 @@
         <module>scenebuilder.metadata-maven-plugin</module>
         <module>scenebuilder.metadata.javafx</module>
         <module>scenebuilder.metadata.gluon</module>
-
-    </modules>
+    <module>scenebuilder.ext.javafx.customization</module>
+  </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -344,6 +343,12 @@
 
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.javafx.customization</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.starter.test</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
@@ -524,7 +529,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

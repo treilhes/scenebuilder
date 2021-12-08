@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -194,6 +195,11 @@ public class MetadataSourceMojo extends AbstractMojo {
     private void updateProject() {
         project.addCompileSourceRoot(sourceFolder.getPath());
         project.addCompileSourceRoot(resourceFolder.getPath());
+
+        Resource r = new Resource();
+        r.setDirectory(resourceFolder.getAbsolutePath());
+        r.setTargetPath("");
+        project.addResource(r);
     }
 
     private SearchContext prepareParameters(SearchContext searchContext) throws MojoExecutionException {

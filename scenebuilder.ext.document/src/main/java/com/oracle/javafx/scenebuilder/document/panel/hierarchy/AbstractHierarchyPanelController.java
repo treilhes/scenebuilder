@@ -773,15 +773,15 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         List<Accessory> accessories = mask.getAccessories();
 
         accessories.forEach(accessory -> {
-            if (accessory.isCollection()) {
-                for (int i = 0, count = mask.getSubComponentCount(accessory); i < count; i++) {
-                    final FXOMObject value = mask.getSubComponentAtIndex(accessory, i);
-                    treeItem.getChildren().add(makeTreeItem(value));
-                }
-            } else {
+//            if (accessory.isCollection()) {
+//                for (int i = 0, count = mask.getSubComponentCount(accessory); i < count; i++) {
+//                    final FXOMObject value = mask.getSubComponentAtIndex(accessory, i);
+//                    treeItem.getChildren().add(makeTreeItem(value));
+//                }
+//            } else {
                 final FXOMObject value = mask.getAccessory(accessory);
                 treeItem.getChildren().add(makeTreeItemAccessory(mask, value, accessory));
-            }
+//            }
         });
         // Sub components
         //---------------------------------

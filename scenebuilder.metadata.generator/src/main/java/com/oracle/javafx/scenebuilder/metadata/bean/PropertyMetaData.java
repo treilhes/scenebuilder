@@ -485,6 +485,9 @@ public class PropertyMetaData extends AbstractMetaData {
         return getBundleValue(beanClass, BundleValues.IMAGE_X2, null);
     }
 
+    public String getNullEquivalent() {
+        return getBundleValue(beanClass, BundleValues.NULL_EQUIVALENT, null);
+    }
     public Class<?> getMetadataClass() {
         String cls = getBundleValue(beanClass, BundleValues.METACLASS, null);
         try {

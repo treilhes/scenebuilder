@@ -81,7 +81,7 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
     public EnumerationPropertyMetadata(AbstractBuilder<?, ?, ?> builder) {
         super(builder);
         assert builder.enumClass.isEnum();
-        assert builder.nullEquivalent != null || builder.defaultValue != null;
+        assert (this.isReadWrite() == false) || (builder.nullEquivalent != null || builder.defaultValue != null);
         this.enumClass = builder.enumClass;
         this.defaultValue = builder.defaultValue;
         this.nullEquivalent = builder.nullEquivalent;

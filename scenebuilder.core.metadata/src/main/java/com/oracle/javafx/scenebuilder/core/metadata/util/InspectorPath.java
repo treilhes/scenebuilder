@@ -38,21 +38,23 @@ import java.util.Objects;
  *
  */
 public class InspectorPath implements Comparable<InspectorPath> {
-    
+    protected static int indexCount = 0;
+    protected int index = indexCount++;
+
     private final String sectionTag;
     private final String subSectionTag;
     private final int subSectionIndex;
 
     public static final String CUSTOM_SECTION = "Properties";
     public static final String CUSTOM_SUB_SECTION = "Custom";
-    
+
     public static final InspectorPath UNUSED = new InspectorPath("", "", 0);
-    
+
     public InspectorPath(String sectionTag, String subSectionTag, int subSectionIndex) {
         assert sectionTag != null;
         assert subSectionTag != null;
         assert subSectionIndex >= 0;
-        
+
         this.sectionTag = sectionTag;
         this.subSectionTag = subSectionTag;
         this.subSectionIndex = subSectionIndex;
@@ -69,8 +71,8 @@ public class InspectorPath implements Comparable<InspectorPath> {
     public int getSubSectionIndex() {
         return subSectionIndex;
     }
-    
-    
+
+
     /*
      * Object
      */
@@ -104,21 +106,21 @@ public class InspectorPath implements Comparable<InspectorPath> {
         }
         return true;
     }
-    
-    
+
+
     /*
      * Comparable
      */
     @Override
     public int compareTo(InspectorPath o) {
         int result;
-        
+
         result = this.sectionTag.compareTo(o.sectionTag);
-        
+
         if (result == 0) {
             result = this.subSectionTag.compareTo(o.subSectionTag);
         }
-        
+
         if (result == 0) {
             if (this.subSectionIndex < o.subSectionIndex) {
                 result = -1;
@@ -129,7 +131,7 @@ public class InspectorPath implements Comparable<InspectorPath> {
                 assert result == 0;
             }
         }
-        
+
         return result;
     }
 }

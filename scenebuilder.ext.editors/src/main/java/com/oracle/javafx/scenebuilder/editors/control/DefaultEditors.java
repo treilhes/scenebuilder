@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.core.editors.EditorMapProvider;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.AnchorPropertyGroupMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BoundsPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.CursorPropertyMetadata;
@@ -88,17 +87,17 @@ import com.oracle.javafx.scenebuilder.editors.popupeditors.Rectangle2DPopupEdito
 
 @Component
 public class DefaultEditors implements EditorMapProvider {
-    
+
     Map<Class<? extends PropertyMetadata>, Class<? extends PropertyEditor>> editorsMap;
 
-    
+
     public DefaultEditors() {
         super();
         editorsMap = new HashMap<>();
         editorsMap.put(StyleStringPropertyMetadata.class, StyleEditor.class);
-        
+
         editorsMap.put(IdStringPropertyMetadata.class, StringEditor.class);
-        
+
         editorsMap.put(CharsetStringPropertyMetadata.class, CharsetEditor.class);
         editorsMap.put(I18nStringPropertyMetadata.class, I18nStringEditor.class);
         editorsMap.put(ButtonTypeListPropertyMetadata.class, ButtonTypeEditor.class);
@@ -106,31 +105,32 @@ public class DefaultEditors implements EditorMapProvider {
         editorsMap.put(StylesheetsStringListPropertyMetadata.class, StylesheetEditor.class);
         editorsMap.put(SourceStringListPropertyMetadata.class, IncludeFxmlEditor.class);
         editorsMap.put(DividerPositionsDoubleArrayPropertyMetadata.class, DividerPositionsEditor.class);
-        
+
         editorsMap.put(StringListPropertyMetadata.class, StringListEditor.class);
         editorsMap.put(ListValuePropertyMetadata.class, GenericEditor.class);
-        
+
         editorsMap.put(ProgressDoublePropertyMetadata.class, BoundedDoubleEditor.class);
         editorsMap.put(OpacityDoublePropertyMetadata.class, BoundedDoubleEditor.class);
-        
+
 //    } else if (propMeta instanceof  || propMeta instanceof  || isBoundedByProperties(propMeta)) {
 //        propertyEditor = makePropertyEditor(BoundedDoubleEditor.class, propMeta);
-//        
-        
+//
+
         editorsMap.put(AngleDoublePropertyMetadata.class, RotateEditor.class);
         editorsMap.put(DoublePropertyMetadata.class, DoubleEditor.class);
+        editorsMap.put(DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata.class, NullableDoubleEditor.class);
         editorsMap.put(IntegerPropertyMetadata.class, IntegerEditor.class);
-        
+
         editorsMap.put(BooleanPropertyMetadata.class, BooleanEditor.class);
         editorsMap.put(TextAlignmentEnumerationPropertyMetadata.class, TextAlignmentEditor.class);
         editorsMap.put(EnumerationPropertyMetadata.class, GenericEnumEditor.class);
         editorsMap.put(InsetsPropertyMetadata.class, InsetsEditor.class);
         editorsMap.put(CursorPropertyMetadata.class, CursorEditor.class);
         editorsMap.put(EventHandlerPropertyMetadata.class, EventHandlerEditor.class);
-        
+
         editorsMap.put(FunctionalInterfacePropertyMetadata.class, FunctionalInterfaceEditor.class);
         editorsMap.put(EffectPropertyMetadata.class, EffectPopupEditor.class);
-        
+
         editorsMap.put(FontPropertyMetadata.class, FontPopupEditor.class);
         editorsMap.put(PaintPropertyMetadata.class, GenericPaintPopupEditor.class);
         editorsMap.put(ImagePropertyMetadata.class, ImageEditor.class);
@@ -144,12 +144,11 @@ public class DefaultEditors implements EditorMapProvider {
         editorsMap.put(DurationPropertyMetadata.class, DurationEditor.class);
         editorsMap.put(ColorPropertyMetadata.class, ColorPopupEditor.class);
         editorsMap.put(PropertyMetadata.class, GenericEditor.class);
-        
+
         //groups
-        editorsMap.put(AnchorPropertyGroupMetadata.class, AnchorPaneConstraintsEditor.class);
         editorsMap.put(DoubleBoundedPropertyGroupMetadata.class, BoundedDoubleEditor.class);
-        
-    
+
+
     }
 
 
