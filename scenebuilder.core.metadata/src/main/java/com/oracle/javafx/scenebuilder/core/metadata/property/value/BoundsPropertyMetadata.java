@@ -43,7 +43,7 @@ import javafx.geometry.Bounds;
 
 /**
  *
- * 
+ *
  */
 public class BoundsPropertyMetadata extends ComplexPropertyMetadata<Bounds> {
 
@@ -83,13 +83,13 @@ public class BoundsPropertyMetadata extends ComplexPropertyMetadata<Bounds> {
             .withDefaultValue(0.0)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    
-    
-    protected BoundsPropertyMetadata(PropertyName name, boolean readWrite, 
-            Bounds defaultValue, InspectorPath inspectorPath) {
-        super(name, Bounds.class, readWrite, defaultValue, inspectorPath);
-    }
-    
+
+
+//    protected BoundsPropertyMetadata(PropertyName name, boolean readWrite,
+//            Bounds defaultValue, InspectorPath inspectorPath) {
+//        super(name, Bounds.class, readWrite, defaultValue, inspectorPath);
+//    }
+
     protected BoundsPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);
     }
@@ -97,11 +97,11 @@ public class BoundsPropertyMetadata extends ComplexPropertyMetadata<Bounds> {
     /*
      * ComplexPropertyMetadata
      */
-    
+
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Bounds value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, value.getClass());
-        
+
         minXMetadata.setValue(result, value.getMinX());
         minYMetadata.setValue(result, value.getMinY());
         minZMetadata.setValue(result, value.getMinZ());
@@ -111,10 +111,16 @@ public class BoundsPropertyMetadata extends ComplexPropertyMetadata<Bounds> {
 
         return result;
     }
-    
+
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Bounds> {
+
+        public AbstractBuilder() {
+            super();
+            withValueClass(Bounds.class);
+        }
+
     }
-    
+
     public static final class Builder extends AbstractBuilder<Builder, BoundsPropertyMetadata> {
         @Override
         public BoundsPropertyMetadata build() {

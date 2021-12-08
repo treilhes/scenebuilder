@@ -1,21 +1,21 @@
 package com.oracle.javafx.scenebuilder.metadata.util;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 
 /**
  * A utility class which makes it nicer to interact with ResourceBundles. This
@@ -37,12 +37,12 @@ public final class Resources {
 
     private static final String ROOT_KEY = "ROOT";
 
-    private static final Map<Object, Properties> cache = new HashMap<>();
+    private static final Map<Object, PropertiesConfiguration> cache = new HashMap<>();
 
-    public static void save(File outputFolder) {
+    public static void save(Set<Class<?>> set, File outputFolder) {
         cache.entrySet().forEach(e -> {
             Object key = e.getKey();
-            Properties p = e.getValue();
+            PropertiesConfiguration p = e.getValue();
             File target = null;
 
             if (String.class.isAssignableFrom(key.getClass())) {
@@ -51,6 +51,10 @@ public final class Resources {
                 }
             } else {
                 Class<?> clsKey = (Class<?>) key;
+
+                if (!set.contains(clsKey)) {
+                    return;
+                }
                 File packageFolder = new File(outputFolder, toPath(clsKey));
                 target = new File(packageFolder, ((Class<?>) key).getSimpleName() + ".properties");
             }
@@ -58,12 +62,19 @@ public final class Resources {
             if ((p == null || p.isEmpty()) && target.exists()) {
                 target.delete();
             }
-            if (p != null && !p.isEmpty()) {
+            if (p != null) {
                 if (!target.getParentFile().exists()) {
                     target.getParentFile().mkdirs();
                 }
-                try (FileOutputStream fis = new FileOutputStream(target)) {
-                    p.store(fis, null);
+                try (FileWriter fw = new FileWriter(target)) {
+                    PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout(p.getLayout()) {
+                        @Override
+                        public Set<String> getKeys() {
+                            return super.getKeys().stream().sorted()
+                                    .collect(Collectors.toCollection(LinkedHashSet::new));
+                        }
+                    };
+                    layout.save(p, fw);
                 } catch (Exception e1) {
                     System.out.println("Unable to save properties to " + target.getAbsolutePath());
                 }
@@ -72,7 +83,7 @@ public final class Resources {
         });
     }
 
-    private final List<Properties> properties = new ArrayList<>();
+    private final List<PropertiesConfiguration> properties = new ArrayList<>();
     private final Class<?> ownerClass;
 
     public Resources(final Class<?> beanClass) {
@@ -93,29 +104,23 @@ public final class Resources {
     }
 
     private static String toPath(Class<?> cls) {
-        return cls.getPackage().getName().replace('.', '/') + '/' + cls.getSimpleName().toLowerCase();
+        return cls.getName().replace('$', '/').replace('.', '/').toLowerCase();
     }
 
-    private Properties loadProperties(String resourceName) {
-        try (InputStream fis = Resources.class.getClassLoader().getResourceAsStream(resourceName)) {
-            Properties p = newOrderedProperties();
-            p.load(fis);
+    private PropertiesConfiguration loadProperties(String resourceName) {
+        try (InputStreamReader isr = new InputStreamReader(
+                Resources.class.getClassLoader().getResourceAsStream(resourceName))) {
+            PropertiesConfiguration p = newOrderedProperties();
+            p.read(isr);
             return p;
         } catch (Exception e) {
-            return new Properties();
+            return newOrderedProperties();
         }
     }
 
-    @SuppressWarnings("serial")
-    private static Properties newOrderedProperties() {
-        return new Properties() {
-            @Override
-            public synchronized Set<Map.Entry<Object, Object>> entrySet() {
-                return Collections.synchronizedSet(
-                        super.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().toString()))
-                                .collect(Collectors.toCollection(LinkedHashSet::new)));
-            }
-        };
+    // @SuppressWarnings("serial")
+    private static PropertiesConfiguration newOrderedProperties() {
+        return new PropertiesConfiguration();
     }
 
     public String get(Class<?> beanClass, String key, String defaultValue) {
@@ -126,7 +131,7 @@ public final class Resources {
             String className = cls.getSimpleName();
             String resourceName = String.format("%s/%s.properties", packageFolderName, className);
 
-            Properties p = cache.computeIfAbsent(cls, k -> loadProperties(resourceName));
+            PropertiesConfiguration p = cache.computeIfAbsent(cls, k -> loadProperties(resourceName));
 
             if (p.containsKey(key)) {
                 return checkTransform(key, p.getProperty(key));
@@ -135,7 +140,7 @@ public final class Resources {
             cls = cls.getSuperclass();
         }
 
-        for (Properties p : properties) {
+        for (PropertiesConfiguration p : properties) {
             if (p.containsKey(key)) {
                 return checkTransform(key, p.getProperty(key));
             }
@@ -144,17 +149,20 @@ public final class Resources {
     }
 
     public void set(Class<?> beanClass, String key, String value) {
-        properties.get(0).put(key, value);
+        properties.get(0).addProperty(key, value);
     }
 
-    private static String checkTransform(String key, String value) {
+    private static String checkTransform(String key, Object value) {
+        if (value == null) {
+            value = "";
+        }
         if (!rawTransforms.isEmpty()) {
             for (Entry<Predicate<String>, Function<String, String>> entry : rawTransforms.entrySet()) {
                 if (entry.getKey().test(key)) {
-                    return entry.getValue().apply(value);
+                    return entry.getValue().apply(value.toString());
                 }
             }
         }
-        return value;
+        return value.toString();
     }
 }

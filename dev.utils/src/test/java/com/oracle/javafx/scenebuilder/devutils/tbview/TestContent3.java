@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.devutils.tbview;
 import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -46,11 +47,15 @@ public class TestContent3 {
         // Creating nodes
 
         try {
-            Pane gp = (Pane) FXMLLoader.load(TestContent3.class.getResource("test.fxml"));
+//            Pane gp = (Pane) FXMLLoader.load(TestContent3.class.getResource("test.fxml"));
+            Pane gp = (Pane) FXMLLoader.load(TestContent3.class.getResource("gluonappbar.fxml"));
 
             // Setting the stage
             Scene scene = new Scene(gp, 595, 150, Color.BEIGE);
-            stage.setTitle("Check Box Example");
+
+            PerspectiveCamera pCam = new PerspectiveCamera();
+            scene.setCamera(pCam);
+            //stage.setTitle("Check Box Example");
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.editors.actions.SetEffectAction;
-import com.oracle.javafx.scenebuilder.editors.control.AnchorPaneConstraintsEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ButtonTypeEditor;
@@ -58,6 +57,7 @@ import com.oracle.javafx.scenebuilder.editors.control.ImageEditor;
 import com.oracle.javafx.scenebuilder.editors.control.IncludeFxmlEditor;
 import com.oracle.javafx.scenebuilder.editors.control.InsetsEditor;
 import com.oracle.javafx.scenebuilder.editors.control.IntegerEditor;
+import com.oracle.javafx.scenebuilder.editors.control.NullableDoubleEditor;
 import com.oracle.javafx.scenebuilder.editors.control.Point3DEditor;
 import com.oracle.javafx.scenebuilder.editors.control.RotateEditor;
 import com.oracle.javafx.scenebuilder.editors.control.StringEditor;
@@ -91,7 +91,6 @@ public class DefaultEditorsExtension extends AbstractExtension {
         return Arrays.asList(
             SetEffectAction.class,
             SetEffectsMenuProvider.class,
-            AnchorPaneConstraintsEditor.class,
             BooleanEditor.class,
             BoundedDoubleEditor.class,
             ButtonTypeEditor.class,
@@ -112,6 +111,7 @@ public class DefaultEditorsExtension extends AbstractExtension {
             IncludeFxmlEditor.class,
             InsetsEditor.class,
             IntegerEditor.class,
+            NullableDoubleEditor.class,
             Point3DEditor.class,
             RotateEditor.class,
             StringEditor.class,
@@ -121,7 +121,7 @@ public class DefaultEditorsExtension extends AbstractExtension {
             StylesheetEditor.class,
             TextAlignmentEditor.class,
             ToggleGroupEditor.class,
-            
+
             BoundsPopupEditor.class,
             EffectPopupEditor.class,
             FontPopupEditor.class,

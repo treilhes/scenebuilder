@@ -89,7 +89,7 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 
         @Override
         public boolean isValidValue(Double value) {
-            return value != null;
+            return true;
         }
 
         protected static abstract class AbstractBuilder<SELF, TOBUILD> extends DoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
@@ -381,7 +381,8 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
 
         @Override
         public boolean isValidValue(Double value) {
-            return super.isValidValue(value) && (0 <= value) && (value <= 1.0);
+            return super.isValidValue(value)
+                    && (((0 <= value) && (value <= 1.0)) || (value == ProgressIndicator.INDETERMINATE_PROGRESS));
         }
 
         @Override

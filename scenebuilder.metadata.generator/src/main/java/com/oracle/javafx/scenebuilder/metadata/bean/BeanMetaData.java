@@ -26,6 +26,7 @@
 package com.oracle.javafx.scenebuilder.metadata.bean;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -521,8 +522,12 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         return getBundleValue(this.type, BundleValues.DISPLAY_NAME, toDisplayName(getName()));
     }
 
-    public String getDescription() {
-        return getBundleValue(this.type, BundleValues.DESCRIPTION, null);
+    public String getDescriptionProperty() {
+        return getBundleValue(this.type, BundleValues.DESCRIPTION_PROPERTY, null);
+    }
+
+    public String getLabelMutation() {
+        return getBundleValue(this.type, BundleValues.LABEL_MUTATION_LAMBDA, null);
     }
 
     public String getCategory() {
@@ -552,6 +557,8 @@ public final class BeanMetaData<T> extends AbstractMetaData {
 
         if (c.isPrimitive()) {
             return ReflectionUtils.getPrimitiveDefaultValue(c);
+        } else if (c.isArray()) {
+            return Array.newInstance(c.getComponentType(), 0);
         } else if (c.isInterface()) {
             // if interface a simple null implementation of methods is sufficient
             return Enhancer.create(c, new MethodInterceptor() {

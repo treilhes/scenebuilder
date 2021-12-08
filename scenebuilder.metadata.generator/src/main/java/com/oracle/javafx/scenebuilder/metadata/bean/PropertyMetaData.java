@@ -28,6 +28,7 @@ package com.oracle.javafx.scenebuilder.metadata.bean;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Optional;
 
 import com.oracle.javafx.scenebuilder.metadata.util.ReflectionUtils;
 import com.oracle.javafx.scenebuilder.metadata.util.Report;
@@ -329,6 +330,19 @@ public class PropertyMetaData extends AbstractMetaData {
      * @return the data type for this property
      */
     public final Class<?> getType() {
+        String btype = getBundleValue(beanClass, BundleValues.COLLECTION_TYPE, null);
+
+        if (btype == null) {
+            return type;
+        }
+
+        try {
+            type = Class.forName(btype);
+        } catch (ClassNotFoundException e) {
+            Report.error(beanClass,
+                    String.format("Unable to load type for property '%s' the metadata class : %s", getName(), btype));
+        }
+
         return type;
     }
 
@@ -387,6 +401,14 @@ public class PropertyMetaData extends AbstractMetaData {
     }
 
     public boolean isCollection() {
+        String isCollection = getBundleValue(beanClass, BundleValues.IS_COLLECTION, null);
+
+        if (isCollection == null) {
+            return collection;
+        }
+
+        collection = Boolean.parseBoolean(isCollection);
+
         return collection;
     }
 
@@ -395,6 +417,18 @@ public class PropertyMetaData extends AbstractMetaData {
     }
 
     public Class<?> getCollectionType() {
+        String type = getBundleValue(beanClass, BundleValues.COLLECTION_TYPE, null);
+
+        if (type == null) {
+            return collectionType;
+        }
+
+        try {
+            collectionType = Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            Report.error(beanClass,
+                    String.format("Unable to load collectionType for property '%s' the metadata class : %s", getName(), type));
+        }
         return collectionType;
     }
 
@@ -423,8 +457,8 @@ public class PropertyMetaData extends AbstractMetaData {
         return getBundleValue(beanClass, BundleValues.DISPLAY_NAME, toDisplayName(getName()));
     }
 
-    public String getDescription() {
-        return getBundleValue(beanClass, BundleValues.DESCRIPTION, null);
+    public String getChildLabelMutation() {
+        return getBundleValue(beanClass, BundleValues.CHILD_LABEL_MUTATION_LAMBDA, null);
     }
 
     public String getCategory() {
@@ -439,8 +473,8 @@ public class PropertyMetaData extends AbstractMetaData {
         return getBundleValue(beanClass, BundleValues.INSPECTOR_SUBSECTION, null);
     }
 
-    public int getSubSectionIndex() {
-        return Integer.parseInt(getBundleValue(beanClass, BundleValues.INSPECTOR_INDEX, "-1"));
+    public int getOrder() {
+        return Integer.parseInt(getBundleValue(beanClass, BundleValues.ORDER, "-1"));
     }
 
     public String getImage() {
@@ -451,6 +485,9 @@ public class PropertyMetaData extends AbstractMetaData {
         return getBundleValue(beanClass, BundleValues.IMAGE_X2, null);
     }
 
+    public String getNullEquivalent() {
+        return getBundleValue(beanClass, BundleValues.NULL_EQUIVALENT, null);
+    }
     public Class<?> getMetadataClass() {
         String cls = getBundleValue(beanClass, BundleValues.METACLASS, null);
         try {
@@ -469,6 +506,18 @@ public class PropertyMetaData extends AbstractMetaData {
 
     public boolean isFreeChildPositioning() {
         return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.FREE_POSITIONING, "false"));
+    }
+
+    public boolean isHidden() {
+        return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.HIDDEN, "false"));
+    }
+
+    public Optional<Boolean> isComponent() {
+        String isComponent = getBundleValue(beanClass, BundleValues.IS_COMPONENT, null);
+        if (isComponent == null) {
+            return Optional.empty();
+        }
+        return Optional.of(Boolean.parseBoolean(isComponent));
     }
 
     @Override

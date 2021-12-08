@@ -301,7 +301,7 @@ public class Metadata {
 	<#if property.custom["defaultValue"]??>
                 ${property.custom["defaultValue"]}, <#if property.raw.readWrite == true>/* defaultValue */</#if><#if property.raw.readWrite == false>/* No defaultValue for R/O property */</#if>
 	</#if>
-                new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.subSectionIndex}));
+                new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.order}));
 </#if>
 <#if property.type == "COMPONENT">
     private final ComponentPropertyMetadata ${property.custom["metadataMemberName"]}PropertyMetadata =
@@ -543,11 +543,11 @@ public class Metadata {
 
     // The following properties have been rejected:
     //     javafx.embed.swing.SwingNode -> content : Property type (JComponent) is not certified
-    //     javafx.scene.control.ChoiceBox -> items : Property items has no section/subsection assigned
-    //     javafx.scene.control.ComboBox -> items : Property items has no section/subsection assigned
-    //     javafx.scene.control.ListView -> items : Property items has no section/subsection assigned
+    //     javafx.scene.control.ChoiceBox -> items : Property items has no section/subSection assigned
+    //     javafx.scene.control.ComboBox -> items : Property items has no section/subSection assigned
+    //     javafx.scene.control.ListView -> items : Property items has no section/subSection assigned
     //     javafx.scene.control.TableColumnBase -> columns : Property is a collection but type of its items is unknown
-    //     javafx.scene.control.TableView -> items : Property items has no section/subsection assigned
+    //     javafx.scene.control.TableView -> items : Property items has no section/subSection assigned
 
 
     // No uncertified properties have been found

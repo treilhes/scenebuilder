@@ -146,7 +146,7 @@ public class ScenebuilderxExecutor implements Executor {
             return;
         }
 
-        String resource = cmp.getRaw().getType().getName().toLowerCase().replace(".", "/") + "/" + value;
+        String resource = cmp.getRaw().getType().getName().toLowerCase().replace("$", "/").replace(".", "/") + "/" + value;
         String targetResource = cmp.getCustom().get("package").toString().replace(".", "/") + "/" + value;
 
         try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(resource)){
@@ -172,7 +172,7 @@ public class ScenebuilderxExecutor implements Executor {
             return;
         }
 
-        String resource = cmp.getRaw().getType().getName().toLowerCase().replace(".", "/") + "/" + value;
+        String resource = cmp.getRaw().getType().getName().toLowerCase().replace("$", "/").replace(".", "/") + "/" + value;
         String targetResource = cmp.getCustom().get("package").toString().replace(".", "/") + "/" + value;
 
         try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(resource)){

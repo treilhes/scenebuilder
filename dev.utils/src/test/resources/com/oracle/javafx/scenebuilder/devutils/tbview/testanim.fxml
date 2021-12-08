@@ -30,10 +30,10 @@
         <Double fx:id="somevalue" fx:value="1000"/>
         <Timeline fx:id="timeline" autoReverse="true" cycleCount="$indef">
             <keyFrames>
-                <KeyFrame>
-                    <time>
+                <KeyFrame time="1000ms">
+                    <!-- <time>
                         <Duration millis="1000" />
-                    </time>
+                    </time> -->
                     <values>
                         <KeyValue target="$circleId.layoutXProperty" endValue="$somevalue"/>
                     </values>

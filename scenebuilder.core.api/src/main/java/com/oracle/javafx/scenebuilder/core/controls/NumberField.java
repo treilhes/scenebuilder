@@ -46,7 +46,7 @@ import javafx.scene.control.TextField;
 public abstract class NumberField extends TextField {
     // Constants allowed for this editor
     List<String> constants = new ArrayList<>();
-    
+
     public NumberField() {
         // Select all text when this editor is selected
         setOnMousePressed(event -> selectAll());
@@ -61,9 +61,13 @@ public abstract class NumberField extends TextField {
         this.constants.clear();
         this.constants.addAll(constants);
     }
-    
+
     public String getNewText(int start, int end, String text) {
         String oldText = getText();
+
+        if (oldText == null) {
+            oldText = "";
+        }
         String toReplace = oldText.substring(start, end);
         String newText;
         if (toReplace.isEmpty()) {

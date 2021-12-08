@@ -156,6 +156,11 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String> {
         protected boolean detectFileURL;
 
+        public AbstractBuilder() {
+            super();
+            withValueClass(String.class);
+        }
+
         public SELF withFileUrlDetection(boolean fileUrlDetection) {
             this.detectFileURL = fileUrlDetection;
             return self();

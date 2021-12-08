@@ -40,14 +40,14 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
- * This class describes a single valued property 
- * 
+ * This class describes a single valued property
+ *
  */
 public abstract class ValuePropertyMetadata extends PropertyMetadata {
 
     /** Is property writable. */
     private final boolean readWrite;
-    
+
     //TODO this property must be extracted elsewhere in the future "Inspector extension" or better if possible
     /** The inspector path. */
     private final InspectorPath inspectorPath;
@@ -65,7 +65,7 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
     public ValuePropertyMetadata(PropertyName name, boolean readWrite, InspectorPath inspectorPath) {
         this(name, false, readWrite, inspectorPath);
     }
-    
+
     /**
      * Instantiates a new value property metadata.
      *
@@ -78,7 +78,7 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
         this.readWrite = readWrite;
         this.inspectorPath = inspectorPath;
     }
-    
+
     protected ValuePropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);
         this.readWrite = builder.readWrite;
@@ -111,14 +111,14 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
      * @return the value class
      */
     public abstract Class<?> getValueClass();
-    
+
     /**
      * Gets the default value object.
      *
      * @return the default value object
      */
     public abstract Object getDefaultValueObject();
-    
+
     /**
      * Gets the current value object from the given fxom instance.
      *
@@ -126,7 +126,7 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
      * @return the value object
      */
     public abstract Object getValueObject(FXOMInstance fxomInstance);
-    
+
     /**
      * Sets the current value object from the given fxom instance
      *
@@ -208,29 +208,29 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends PropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
         /** Is property writable. */
         private boolean readWrite;
-        
+
         //TODO this property must be extracted elsewhere in the future "Inspector extension" or better if possible
         /** The inspector path. */
         private InspectorPath inspectorPath;
 
         /** The default value alternatives. */
         private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
-        
+
         @Override
         protected SELF withConstant(String constantName, Object constantValue) {
             return super.withConstant(constantName, constantValue);
         }
-        
+
         public SELF withReadWrite(boolean readWrite) {
             this.readWrite = readWrite;
             return self();
         }
-        
+
         public SELF withInspectorPath(InspectorPath inspectorPath) {
             this.inspectorPath = inspectorPath;
             return self();
         }
-        
+
         protected SELF withDefaultAlternativeValue(Class<?> cls, Object value) {
             this.defaultValueAlternatives.put(cls, value);
             return self();

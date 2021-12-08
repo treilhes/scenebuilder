@@ -103,7 +103,8 @@
                             </parameterOverrides>
                         </constructorOverride>
                     </constructorOverrides>
-                    <output>./target/generated-resourcesxxx</output>
+                    <javafxVersion>16</javafxVersion>
+                    <resourceFolder>./target/generated-resourcesxxx</resourceFolder>
                 </configuration>
                 <dependencies>
                     <dependency>

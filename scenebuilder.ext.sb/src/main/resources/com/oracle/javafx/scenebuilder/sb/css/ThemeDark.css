@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2017 Gluon and/or its affiliates.
  * Copyright (c) 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -849,6 +850,10 @@
     -fx-background-insets: 0, 1;
     -fx-padding: 4 6 3 6;
     -fx-background-radius: 0;
+	-fx-min-height: 10;
+}
+.theme-presets.property-sheet .combo-box{
+	-fx-min-height: 10;
 }
 
 .theme-presets.property-sheet .text-field {
@@ -1078,11 +1083,13 @@
     -fx-text-fill: -sb-content-detail;
     -fx-padding: 4 3 3 4;
     -fx-min-width: 17;
+	-fx-min-height: 10;
 }
 
 .theme-presets.property-sheet .multi-row-menubutton {
     -fx-padding: 4 5 3 1;
     -fx-min-width: 17;
+	-fx-min-height: 10;
 }
 
 /*******************************************************************************
