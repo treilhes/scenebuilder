@@ -68,17 +68,21 @@ public class FXOMSaver {
         this.wildcardImports = wildcardImports;
     }
 
-    public String save(FXOMDocument fxomDocument) {
+    public String save(FXOMDocument fxomDocument, String javafxVersion) {
 
         assert fxomDocument != null;
         assert fxomDocument.getGlue() != null;
 
         if (fxomDocument.getFxomRoot() != null) {
-            updateNameSpace(fxomDocument);
+            updateNameSpace(fxomDocument, javafxVersion);
             updateImportInstructions(fxomDocument);
         }
 
         return fxomDocument.getGlue().toString();
+    }
+
+    public String save(FXOMDocument fxomDocument) {
+        return save(fxomDocument, FXMLLoader.JAVAFX_VERSION);
     }
 
 
@@ -86,19 +90,20 @@ public class FXOMSaver {
      * Private
      */
 
-    private static final String NAME_SPACE_FX = "http://javafx.com/javafx/" + FXMLLoader.JAVAFX_VERSION;  // NOI18N
+    private static final String NAME_SPACE_FX_FORMAT= "http://javafx.com/javafx/%s";  // NOI18N
     private static final String NAME_SPACE_FXML = "http://javafx.com/fxml/1"; // NOI18N
 
-    private void updateNameSpace(FXOMDocument fxomDocument) {
+    private void updateNameSpace(FXOMDocument fxomDocument, String javafxVersion) {
         assert fxomDocument.getFxomRoot() != null;
 
         final FXOMObject fxomRoot = fxomDocument.getFxomRoot();
         final String currentNameSpaceFX = fxomRoot.getNameSpaceFX();
         final String currentNameSpaceFXML = fxomRoot.getNameSpaceFXML();
 
+        String nameSpaceFx = String.format(NAME_SPACE_FX_FORMAT, javafxVersion);
         if ((currentNameSpaceFX == null)
-                || (!currentNameSpaceFX.equals(NAME_SPACE_FX))) {
-            fxomRoot.setNameSpaceFX(NAME_SPACE_FX);
+                || (!currentNameSpaceFX.equals(nameSpaceFx))) {
+            fxomRoot.setNameSpaceFX(nameSpaceFx);
         }
 
         if ((currentNameSpaceFXML == null)
@@ -152,7 +157,7 @@ public class FXOMSaver {
     private List<GlueInstruction> createGlueInstructionsForImports(FXOMDocument fxomDocument, Set<String> imports) {
         List<GlueInstruction> importsList = new ArrayList<>();
         imports.forEach(name -> {
-            final GlueInstruction instruction = new GlueInstruction(fxomDocument.getGlue(), IMPORT, name); 
+            final GlueInstruction instruction = new GlueInstruction(fxomDocument.getGlue(), IMPORT, name);
             importsList.add(instruction);
         });
         return importsList;
@@ -167,17 +172,17 @@ public class FXOMSaver {
                 firstImportIndex = 0;
             } else {
                 GlueInstruction firstImport = existingImports.get(0);
-                firstImportIndex = glue.getHeader().indexOf(firstImport);
+                firstImportIndex = glue.getContent().indexOf(firstImport);
             }
 
             // remove previously defined imports and leave all other things (like comments and such) intact
-            glue.getHeader().removeIf(glueAuxiliary ->
+            glue.getContent().removeIf(glueAuxiliary ->
                     glueAuxiliary instanceof GlueInstruction &&
                     IMPORT.equals(((GlueInstruction) glueAuxiliary).getTarget())
             );
 
             // insert the import instructions at the first import index
-            glue.getHeader().addAll(firstImportIndex, importList);
+            glue.getContent().addAll(firstImportIndex, importList);
         }
     }
 }

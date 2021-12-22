@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Boolean?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/xxx" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <fx:define>
+            <Boolean fx:value="false" />
+        </fx:define>
+    </children>
+</Pane>

@@ -39,26 +39,25 @@ import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 
 /**
  *
- * 
+ *
  */
 class TransientIntrinsic extends TransientNode {
-    
+
     private final FXOMIntrinsic.Type type;
-    private final GlueElement glueElement;
     private final List<FXOMProperty> properties = new ArrayList<>();
+    private final List<FXOMObject> collectedItems = new ArrayList<>();
 
     public TransientIntrinsic(
             TransientNode parentNode,
             FXOMIntrinsic.Type type,
             GlueElement glueElement) {
-        super(parentNode);
+        super(parentNode, glueElement);
         this.type = type;
-        this.glueElement = glueElement;
     }
 
     public FXOMIntrinsic makeFxomIntrinsic(FXOMDocument fxomDocument) {
         final FXOMIntrinsic result
-                = new FXOMIntrinsic(fxomDocument, glueElement, getSceneGraphObject(), properties);
+                = new FXOMIntrinsic(fxomDocument, getGlueElement(), getSceneGraphObject(), properties);
         assert result.getType() == type;
         // need to deal with a charset property here
         result.addIntrinsicProperty(fxomDocument);
@@ -67,5 +66,9 @@ class TransientIntrinsic extends TransientNode {
 
     public List<FXOMProperty> getProperties() {
         return properties;
+    }
+
+    public List<FXOMObject> getCollectedItems() {
+        return collectedItems;
     }
 }

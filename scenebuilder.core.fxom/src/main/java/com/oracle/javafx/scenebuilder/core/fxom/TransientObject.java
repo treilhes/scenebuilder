@@ -42,59 +42,55 @@ import javafx.beans.DefaultProperty;
 
 /**
  *
- * 
+ *
  */
 class TransientObject extends TransientNode {
-    
+
     private final Class<?> declaredClass;
     private final String unknownClassName;
-    private final GlueElement glueElement;
     private final List<FXOMProperty> properties = new ArrayList<>();
     private final List<FXOMObject> collectedItems = new ArrayList<>();
     private String fxRootType;
-    
+
     public TransientObject(
-            TransientNode parentNode, 
-            Class<?> declaredClass, 
+            TransientNode parentNode,
+            Class<?> declaredClass,
             GlueElement glueElement) {
-        super(parentNode);
-        
+        super(parentNode, glueElement);
+
         assert declaredClass != null;
         assert glueElement != null;
         assert glueElement.getTagName().equals(PropertyName.makeClassFullName(declaredClass)) ||
                 glueElement.getTagName().equals(declaredClass.getCanonicalName());
-        
+
         this.declaredClass = declaredClass;
         this.unknownClassName = null;
-        this.glueElement = glueElement;
     }
 
     public TransientObject(
-            TransientNode parentNode, 
-            String unknownClassName, 
+            TransientNode parentNode,
+            String unknownClassName,
             GlueElement glueElement) {
-        super(parentNode);
-        
+        super(parentNode, glueElement);
+
         assert unknownClassName != null;
         assert glueElement != null;
         assert glueElement.getTagName().equals(unknownClassName);
-        
+
         this.declaredClass = null;
         this.unknownClassName = unknownClassName;
-        this.glueElement = glueElement;
     }
 
     public TransientObject(
-            TransientNode parentNode, 
+            TransientNode parentNode,
             GlueElement glueElement) {
-        super(parentNode);
-        
+        super(parentNode, glueElement);
+
         assert glueElement != null;
-        assert glueElement.getTagName().equals("fx:root");
-        
+        assert glueElement.getTagName().startsWith("fx:");
+
         this.declaredClass = null;
         this.unknownClassName = null;
-        this.glueElement = glueElement;
     }
 
     public List<FXOMProperty> getProperties() {
@@ -108,62 +104,62 @@ class TransientObject extends TransientNode {
     public void setFxRootType(String fxRootType) {
         this.fxRootType = fxRootType;
     }
-    
-    
+
+
     public FXOMObject makeFxomObject(FXOMDocument fxomDocument) {
         final FXOMObject result;
-        
+
         if (declaredClass != null) {
             assert getSceneGraphObject() != null;
-            
+
             if (getSceneGraphObject() instanceof List) {
                 assert properties.isEmpty();
-                
-                result = new FXOMCollection(fxomDocument, glueElement,
-                                          declaredClass, getSceneGraphObject(), 
+
+                result = new FXOMCollection(fxomDocument, getGlueElement(),
+                                          declaredClass, getSceneGraphObject(),
                                           collectedItems);
             } else {
                 assert fxRootType == null;
-                
+
                 addDefaultProperty(fxomDocument, declaredClass);
-                result = new FXOMInstance(fxomDocument, glueElement, 
+                result = new FXOMInstance(fxomDocument, getGlueElement(),
                                           declaredClass, getSceneGraphObject(),
                                           properties);
             }
         } else if (unknownClassName != null) {
             // This is an unresolved instance
-            assert glueElement.getTagName().equals(unknownClassName);
+            assert getGlueElement().getTagName().equals(unknownClassName);
             assert fxRootType == null;
-            result = new FXOMInstance(fxomDocument, glueElement, properties);
+            result = new FXOMInstance(fxomDocument, getGlueElement(), properties);
         } else {
             // This is an fx:root'ed instance
-            assert glueElement.getTagName().equals("fx:root");
+            assert getGlueElement().getTagName().equals("fx:root");
             assert fxRootType != null;
 
             final Class<?> rootClass = getSceneGraphObject().getClass();
             assert fxRootType.equals(rootClass.getName())
                     || fxRootType.equals(rootClass.getSimpleName());
             addDefaultProperty(fxomDocument, rootClass);
-            result = new FXOMInstance(fxomDocument, glueElement, 
+            result = new FXOMInstance(fxomDocument, getGlueElement(),
                                       rootClass, getSceneGraphObject(),
                                       properties);
         }
 
         if (result instanceof FXOMInstance) {
             final Class<?> declaredClassFromResult = ((FXOMInstance) result).getDeclaredClass();
-            if (fxomDocument.getInitialDeclaredClasses() != null && 
+            if (fxomDocument.getInitialDeclaredClasses() != null &&
                     ! fxomDocument.getInitialDeclaredClasses().contains(declaredClassFromResult)) {
                 fxomDocument.getInitialDeclaredClasses().add(declaredClassFromResult);
             }
         }
         return result;
     }
-    
-    
+
+
     /*
      * Private
      */
-    
+
     private void addDefaultProperty(FXOMDocument fxomDocument, Class<?> klass) {
         final DefaultProperty annotation = klass.getAnnotation(DefaultProperty.class);
         if ((annotation != null) && (collectedItems.size() >= 1)) {
@@ -172,11 +168,11 @@ class TransientObject extends TransientNode {
             createDefaultProperty(defaultPropertyName, fxomDocument);
         }
     }
-    
+
     private void createDefaultProperty(PropertyName defaultName, FXOMDocument fxomDocument) {
         /*
          * From :
-         * 
+         *
          *  <Pane>                          this.glueElement
          *      ...
          *      <Button text="B1" />        this.collectedItems.get(0).glueElement   //NOCHECK
@@ -184,9 +180,9 @@ class TransientObject extends TransientNode {
          *      <Label text="Label" />      this.collectedItems.get(2).glueElement   //NOCHECK
          *      ...
          *  </Pane>
-         * 
+         *
          * go to:
-         * 
+         *
          *  <Pane>                          this.glueElement
          *      ...
          *      <children>                  syntheticElement
@@ -198,21 +194,21 @@ class TransientObject extends TransientNode {
          *  </Pane>
          *
          */
-        
+
         final GlueElement propertyElement
-                = new GlueElement(glueElement.getDocument(), 
-                        defaultName.toString(),  glueElement);
+                = new GlueElement(getGlueElement().getDocument(),
+                        defaultName.toString(),  getGlueElement());
         propertyElement.setSynthetic(true);
         propertyElement.addBefore(collectedItems.get(0).getGlueElement());
-        
+
         for (FXOMObject item : collectedItems) {
             item.getGlueElement().addToParent(propertyElement);
         }
-        
-        final TransientProperty transientProperty 
+
+        final TransientProperty transientProperty
                 = new TransientProperty(this, defaultName, propertyElement);
         transientProperty.getValues().addAll(collectedItems);
-        
+
         properties.add(transientProperty.makeFxomProperty(fxomDocument));
     }
 }

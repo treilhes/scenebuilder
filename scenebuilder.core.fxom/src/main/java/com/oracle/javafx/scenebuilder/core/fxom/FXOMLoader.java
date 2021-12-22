@@ -37,9 +37,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oracle.javafx.scenebuilder.core.fxom.ext.LoaderCapabilitiesManager;
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueCursor;
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.sun.javafx.fxml.FXMLLoaderHelper;
 
@@ -49,12 +58,20 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 
-
 /**
  *
  *
  */
 class FXOMLoader implements LoadListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(FXOMLoader.class);
+
+    private static final Set<LoaderCapabilitiesManager> loaderCapabilitiesManagers;
+    static {
+        ServiceLoader<LoaderCapabilitiesManager> loaderCapabilitiesManagerLoader = ServiceLoader.load(LoaderCapabilitiesManager.class);
+        loaderCapabilitiesManagers = new HashSet<>();
+        loaderCapabilitiesManagerLoader.forEach(lcm -> loaderCapabilitiesManagers.add(lcm));
+    }
 
     private final FXOMDocument document;
     private TransientNode currentTransientNode;
@@ -66,7 +83,7 @@ class FXOMLoader implements LoadListener {
 
     public FXOMLoader(FXOMDocument document) {
         assert document != null;
-        assert document.getGlue().getRootElement() != null;
+        assert document.getGlue().getMainElement() != null;
         this.document = document;
     }
 
@@ -85,20 +102,28 @@ class FXOMLoader implements LoadListener {
         fxmlLoader.setResources(new ResourceKeyCollector(document.getResources()));
         fxmlLoader.setClassLoader(new TransientClassLoader(classLoader));
         fxmlLoader.setLoadListener(this);
-        FXOMLoader.setStaticLoad(fxmlLoader, true);
 
-        final Charset utf8 = Charset.forName("UTF-8");//NOCHECK
+        if (loaderCapabilitiesManagers.size() == 0
+                || loaderCapabilitiesManagers.stream().anyMatch(l -> l.isStaticLoadingEnabled())) {
+            logger.info("Loading document with scripts/bindings/eventHandlers disabled");
+            FXOMLoader.setStaticLoad(fxmlLoader, true);
+        } else {
+            logger.info("Loading document with scripts/bindings/eventHandlers enabled");
+        }
+
+        final Charset utf8 = Charset.forName("UTF-8");// NOCHECK
         try (final InputStream is = new ByteArrayInputStream(fxmlText.getBytes(utf8))) {
-            glueCursor = new GlueCursor(document.getGlue());
+            glueCursor = document.getGlue().cursor();
             currentTransientNode = null;
             assert is.markSupported();
             is.reset();
             setSceneGraphRoot(fxmlLoader.load(is));
         } catch (RuntimeException | IOException x) {
             if (x.getCause() != null && x.getCause().getClass() == XMLStreamException.class) {
-            	// TODO this exception was previously bubbled to the user
-            	// TODO present this exception to the user but without compromising the black boxing of core
-            	throw new IOException("Unsupported charset", x); //NOCHECK
+                // TODO this exception was previously bubbled to the user
+                // TODO present this exception to the user but without compromising the black
+                // boxing of core
+                throw new IOException("Unsupported charset", x); // NOCHECK
             } else
                 throw new IOException(x);
         }
@@ -128,32 +153,54 @@ class FXOMLoader implements LoadListener {
         return document;
     }
 
-
     /*
      * LoadListener
      */
 
     @Override
     public void readImportProcessingInstruction(String data) {
+        System.out.println();
     }
 
     @Override
     public void readLanguageProcessingInstruction(String data) {
+        document.setScriptingLanguage(data);
     }
 
     @Override
     public void readComment(String string) {
+
+        if (currentTransientNode == null) { //header
+            //FIXME find a way to keep header comments
+            //glueCursor.moveToNextElement();
+            return;
+        }
+
+        final GlueDocument glueDocument = currentTransientNode.getGlueElement().getDocument();
+        final TransientComment transientComment = new TransientComment(currentTransientNode, glueDocument, glueCursor.getCurrentElement(), string);
+
+        if (currentTransientNode instanceof TransientProperty) {
+            final TransientProperty parentProperty = (TransientProperty) currentTransientNode;
+            parentProperty.getValues().add(transientComment.makeFxomObject(document));
+        } else if (currentTransientNode instanceof TransientObject) {
+            final TransientObject parentObject = (TransientObject) currentTransientNode;
+            parentObject.getProperties().add(transientComment.makeFxomProperty(document));
+        } else if (currentTransientNode instanceof TransientIntrinsic) {
+            final TransientIntrinsic transientIntrinsic = (TransientIntrinsic) currentTransientNode;
+            transientIntrinsic.getProperties().add(transientComment.makeFxomProperty(document));
+        }
+
+        glueCursor.moveToNextElement();
     }
 
     @Override
     public void beginInstanceDeclarationElement(Class<?> declaredClass) {
         assert declaredClass != null;
-        assert glueCursor.getCurrentElement().getTagName().equals(PropertyName.makeClassFullName(declaredClass)) ||
-               glueCursor.getCurrentElement().getTagName().equals(declaredClass.getCanonicalName());
+        assert glueCursor.getCurrentElement().getTagName().equals(PropertyName.makeClassFullName(declaredClass))
+                || glueCursor.getCurrentElement().getTagName().equals(declaredClass.getCanonicalName());
 
-        final TransientObject transientInstance
-                = new TransientObject(currentTransientNode,
-                declaredClass, glueCursor.getCurrentElement());
+        final TransientObject transientInstance = new TransientObject(currentTransientNode, declaredClass,
+                glueCursor.getCurrentElement());
 
         currentTransientNode = transientInstance;
         glueCursor.moveToNextElement();
@@ -164,9 +211,8 @@ class FXOMLoader implements LoadListener {
         assert unknownClassName != null;
         assert glueCursor.getCurrentElement().getTagName().equals(unknownClassName);
 
-        final TransientObject transientInstance
-                = new TransientObject(currentTransientNode,
-                unknownClassName, glueCursor.getCurrentElement());
+        final TransientObject transientInstance = new TransientObject(currentTransientNode, unknownClassName,
+                glueCursor.getCurrentElement());
 
         currentTransientNode = transientInstance;
         glueCursor.moveToNextElement();
@@ -174,10 +220,9 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void beginIncludeElement() {
-        assert glueCursor.getCurrentElement().getTagName().equals("fx:include"); //NOCHECK
+        assert glueCursor.getCurrentElement().getTagName().equals("fx:include"); // NOCHECK
 
-        final TransientIntrinsic transientIntrinsic
-                = new TransientIntrinsic(currentTransientNode,
+        final TransientIntrinsic transientIntrinsic = new TransientIntrinsic(currentTransientNode,
                 FXOMIntrinsic.Type.FX_INCLUDE, glueCursor.getCurrentElement());
 
         currentTransientNode = transientIntrinsic;
@@ -186,10 +231,9 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void beginReferenceElement() {
-        assert glueCursor.getCurrentElement().getTagName().equals("fx:reference"); //NOCHECK
+        assert glueCursor.getCurrentElement().getTagName().equals("fx:reference"); // NOCHECK
 
-        final TransientIntrinsic transientIntrinsic
-                = new TransientIntrinsic(currentTransientNode,
+        final TransientIntrinsic transientIntrinsic = new TransientIntrinsic(currentTransientNode,
                 FXOMIntrinsic.Type.FX_REFERENCE, glueCursor.getCurrentElement());
 
         currentTransientNode = transientIntrinsic;
@@ -198,10 +242,9 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void beginCopyElement() {
-        assert glueCursor.getCurrentElement().getTagName().equals("fx:copy"); //NOCHECK
+        assert glueCursor.getCurrentElement().getTagName().equals("fx:copy"); // NOCHECK
 
-        final TransientIntrinsic transientIntrinsic
-                = new TransientIntrinsic(currentTransientNode,
+        final TransientIntrinsic transientIntrinsic = new TransientIntrinsic(currentTransientNode,
                 FXOMIntrinsic.Type.FX_COPY, glueCursor.getCurrentElement());
 
         currentTransientNode = transientIntrinsic;
@@ -210,10 +253,9 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void beginRootElement() {
-        assert glueCursor.getCurrentElement().getTagName().equals("fx:root"); //NOCHECK
+        assert glueCursor.getCurrentElement().getTagName().equals("fx:root"); // NOCHECK
 
-        final TransientObject transientInstance
-                = new TransientObject(currentTransientNode,
+        final TransientObject transientInstance = new TransientObject(currentTransientNode,
                 glueCursor.getCurrentElement());
 
         currentTransientNode = transientInstance;
@@ -224,10 +266,8 @@ class FXOMLoader implements LoadListener {
     public void beginPropertyElement(String name, Class<?> staticClass) {
         assert name != null;
 
-        final TransientProperty transientProperty
-                = new TransientProperty(currentTransientNode,
-                    new PropertyName(name, staticClass),
-                    glueCursor.getCurrentElement());
+        final TransientProperty transientProperty = new TransientProperty(currentTransientNode,
+                new PropertyName(name, staticClass), glueCursor.getCurrentElement());
 
         currentTransientNode = transientProperty;
         glueCursor.moveToNextElement();
@@ -241,20 +281,31 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void beginScriptElement() {
-        currentTransientNode = new TransientIgnored(currentTransientNode);
+//        currentTransientNode = new TransientIgnored(currentTransientNode);
+//        glueCursor.moveToNextElement();
+        assert glueCursor.getCurrentElement().getTagName().equals("fx:script"); // NOCHECK
+
+        final TransientScript transientScript = new TransientScript(currentTransientNode,
+                glueCursor.getCurrentElement());
+
+        currentTransientNode = transientScript;
         glueCursor.moveToNextElement();
     }
 
     @Override
     public void beginDefineElement() {
-        currentTransientNode = new TransientIgnored(currentTransientNode);
+        assert glueCursor.getCurrentElement().getTagName().equals("fx:define"); // NOCHECK
+
+        final TransientDefine transientDefine = new TransientDefine(currentTransientNode,
+                glueCursor.getCurrentElement());
+
+        currentTransientNode = transientDefine;
         glueCursor.moveToNextElement();
     }
 
     @Override
     public void readInternalAttribute(String attrName, String attrValue) {
-        assert currentTransientNode instanceof TransientObject ||
-               currentTransientNode instanceof TransientIntrinsic;
+        assert currentTransientNode instanceof TransientObject || currentTransientNode instanceof TransientIntrinsic;
 
         if (attrName.equals("type")) {
             assert currentTransientNode instanceof TransientObject;
@@ -265,8 +316,7 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void readPropertyAttribute(String name, Class<?> staticClass, String fxmlValue) {
-        assert currentTransientNode instanceof TransientObject
-                || currentTransientNode instanceof TransientIntrinsic
+        assert currentTransientNode instanceof TransientObject || currentTransientNode instanceof TransientIntrinsic
                 || currentTransientNode instanceof TransientProperty;
 
         assert name != null;
@@ -280,7 +330,7 @@ class FXOMLoader implements LoadListener {
         } else if (currentTransientNode instanceof TransientProperty) {
             final TransientProperty transientProperty = (TransientProperty) currentTransientNode;
             transientProperty.getCollectedProperties().add(fxomProperty);
-        } else if(currentTransientNode instanceof  TransientIntrinsic) {
+        } else if (currentTransientNode instanceof TransientIntrinsic) {
             final TransientIntrinsic transientIntrinsic = (TransientIntrinsic) currentTransientNode;
             transientIntrinsic.getProperties().add(fxomProperty);
         }
@@ -289,6 +339,7 @@ class FXOMLoader implements LoadListener {
     @Override
     public void readUnknownStaticPropertyAttribute(String string, String string1) {
         // TODO(elp) : implement FXOMLoader.readUnknownStaticPropertyAttribute.
+        System.out.println();
     }
 
     @Override
@@ -302,7 +353,29 @@ class FXOMLoader implements LoadListener {
 
         currentTransientNode.setSceneGraphObject(sceneGraphObject);
 
-        if (currentTransientNode instanceof TransientObject) {
+        if (currentTransientNode instanceof TransientVirtual) {
+            final TransientVirtual currentProperty = (TransientVirtual) currentTransientNode;
+            final TransientNode currentParent = currentProperty.getParentNode();
+
+            if (currentParent instanceof TransientProperty) {
+                final TransientProperty parentProperty = (TransientProperty) currentParent;
+                parentProperty.getValues().add(currentProperty.makeFxomObject(document));
+            } else if (currentParent instanceof TransientObject) {
+                final TransientObject parentObject = (TransientObject) currentParent;
+                parentObject.getProperties().add(currentProperty.makeFxomProperty(document));
+            } else if (currentParent instanceof TransientIntrinsic) {
+                final TransientIntrinsic transientIntrinsic = (TransientIntrinsic) currentParent;
+                transientIntrinsic.getProperties().add(currentProperty.makeFxomProperty(document));
+            } else if (currentParent instanceof TransientIgnored) {
+                // currentObject is an object inside an ignored object
+                // Nothing to do for now
+            } else {
+                assert currentParent == null;
+                final FXOMObject currentFxomObject = currentProperty.makeFxomObject(document);
+                document.updateRoots(currentFxomObject, currentFxomObject.getSceneGraphObject());
+            }
+
+        } else if (currentTransientNode instanceof TransientObject) {
             final TransientObject currentInstance = (TransientObject) currentTransientNode;
             final FXOMObject currentFxomObject = currentInstance.makeFxomObject(document);
             final TransientNode currentParent = currentInstance.getParentNode();
@@ -343,30 +416,29 @@ class FXOMLoader implements LoadListener {
             final TransientNode currentParent = currentProperty.getParentNode();
             final FXOMProperty currentFxomProperty = currentProperty.makeFxomProperty(document);
             assert currentParent instanceof TransientObject;
-            if (currentParent instanceof TransientObject){
-            final TransientObject parentObject = (TransientObject) currentParent;
-            parentObject.getProperties().add(currentFxomProperty);
-        }
-        else if(currentParent instanceof TransientIntrinsic) {
+            if (currentParent instanceof TransientObject) {
+                final TransientObject parentObject = (TransientObject) currentParent;
+                parentObject.getProperties().add(currentFxomProperty);
+            } else if (currentParent instanceof TransientIntrinsic) {
                 final TransientIntrinsic transientIntrinsic = (TransientIntrinsic) currentParent;
                 transientIntrinsic.getProperties().add(currentFxomProperty);
             }
 
             // We ignore sceneGraphObject
         } else {
-                assert currentTransientNode instanceof TransientIgnored;
-                // Nothing to do in this case
+            assert currentTransientNode instanceof TransientIgnored;
+            // Nothing to do in this case
         }
 
         currentTransientNode = currentTransientNode.getParentNode();
     }
-    
- // Deprecated stuff in FXMLLoader
+
+    // Deprecated stuff in FXMLLoader
     // RT-21226 : Promote setStaticLoad to public API
     private static void setStaticLoad(FXMLLoader loader, boolean staticLoad) {
         // See SB-266 and JDK-8186429
-        //ReflectionUtils.setStaticLoad(loader, staticLoad);
-        
+        // ReflectionUtils.setStaticLoad(loader, staticLoad);
+
         FXMLLoaderHelper.setStaticLoad(loader, staticLoad);
     }
 }

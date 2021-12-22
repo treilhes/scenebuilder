@@ -65,7 +65,7 @@ public class FXOMNodes {
 
     private static final Set<WeakProperty> weakProperties;
     private static final Set<FileLoader> fileLoaders;
-    
+
     static {
         ServiceLoader<WeakProperty> weakPropertyLoaders = ServiceLoader.load(WeakProperty.class);
         ServiceLoader<FileLoader> fileLoaderLoaders = ServiceLoader.load(FileLoader.class);
@@ -75,7 +75,7 @@ public class FXOMNodes {
         fileLoaderLoaders.forEach(fl -> fileLoaders.add(fl));
     }
 
-    
+
 
     //TODO the content is set in stone, how to expand it? Who may want to expand it?
     // anyway this is not the right place for this method
@@ -179,12 +179,12 @@ public class FXOMNodes {
                 result.moveToFxomDocument(targetDocument);
             }
         } else {
-            
+
             Optional<FileLoader> fileLoader = fileLoaders.stream().filter(fl -> fl.canLoad(file)).findFirst();
             if (fileLoader.isPresent()) {
                 result = fileLoader.get().loadInto(targetDocument, file);
             }
-            
+
         }
 
         return result;
@@ -240,7 +240,7 @@ public class FXOMNodes {
             final GlueDocument resultGlue = result.getGlue();
             for (GlueInstruction i : sourceGlue.collectInstructions("import")) {
                 final GlueInstruction ci = new GlueInstruction(resultGlue, i.getTarget(), i.getData());
-                resultGlue.getHeader().add(ci);
+                resultGlue.addHeader(ci);
             }
         }
 
@@ -596,7 +596,7 @@ public class FXOMNodes {
                     if (intrinsic.getParentProperty() != null) {
                         final PropertyName propertyName = intrinsic.getParentProperty().getName();
                         if (propertyName.getResidenceClass() == null) {
-                            //TODO test me 
+                            //TODO test me
                             FXOMInstance parent = intrinsic.getParentProperty().getParentInstance();
                             if (parent.getSceneGraphObject() != null) {
                                 Class<?> parentClass = parent.getSceneGraphObject().getClass();
@@ -625,8 +625,8 @@ public class FXOMNodes {
                 if (propertyName.getResidenceClass() == null) {
                     //Before
                     //result = getWeakPropertyNames().contains(propertyName.getName());
-                    
-                    //TODO test me 
+
+                    //TODO test me
                     FXOMInstance parent = property.getParentInstance();
                     if (parent.getSceneGraphObject() != null) {
                         Class<?> parentClass = parent.getSceneGraphObject().getClass();
@@ -651,7 +651,7 @@ public class FXOMNodes {
     }
 
 
-    
+
 
 
     /*

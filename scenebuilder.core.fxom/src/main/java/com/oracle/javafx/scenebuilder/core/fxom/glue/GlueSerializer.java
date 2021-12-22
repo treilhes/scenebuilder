@@ -40,57 +40,58 @@ import java.util.Map;
 
 /**
  *
- * 
+ *
  */
 class GlueSerializer {
-    
-    private static final XMLAttrComparator attrComparator
-            = new XMLAttrComparator();
 
-    private static final XMLAttrComparator colorAttrComparator =
-            new XMLColorAttrComparator();
-    
+    private static final XMLAttrComparator attrComparator = new XMLAttrComparator();
+
+    private static final XMLAttrComparator colorAttrComparator = new XMLColorAttrComparator();
+
     private final GlueDocument document;
-    
+
     public GlueSerializer(GlueDocument document) {
-        assert document.getRootElement() != null;
+        assert document.getMainElement() != null;
         this.document = document;
     }
-    
-    
+
     /*
      * Object
      */
-    
+
     @Override
     public String toString() {
         final XMLBuffer result = new XMLBuffer();
-        
+
         result.addLineSeparator();
         result.addLineSeparator();
-        
-        Class<? extends GlueAuxiliary> lastAuxiliaryClass = null;
-        for (GlueAuxiliary auxiliary : document.getHeader()) {
-            if ((lastAuxiliaryClass != null) && (lastAuxiliaryClass != auxiliary.getClass())) {
+
+        Class<? extends GlueNode> lastNodeClass = null;
+        for (GlueNode node : document.getContent()) {
+
+            if ((lastNodeClass != null)) {// && (lastAuxiliaryClass != auxiliary.getClass())) {
                 // We insert an extra empty line to separate
                 // sequences of processing instructions, comments ...
                 result.addLineSeparator();
             }
-            serializeAuxiliary(auxiliary, result);
+
+            if (node instanceof GlueAuxiliary) {
+                serializeAuxiliary((GlueAuxiliary) node, result);
+            } else if (node instanceof GlueElement) {
+
+                if (node == document.getMainElement()) {
+                    result.addLineSeparator();
+                }
+                serializeElement((GlueElement)node, result);
+            }
+
             result.addLineSeparator();
-            lastAuxiliaryClass = auxiliary.getClass();
+
         }
-        
-        if (lastAuxiliaryClass != null) {
-            result.addLineSeparator();
-        }
-        
-        serializeElement(document.getRootElement(), result);
-        result.addLineSeparator();
-        
+
         return result.toString();
     }
-    
+
     private void serializeElement(GlueElement element, XMLBuffer xmlBuffer) {
         if (element.isSynthetic()) {
             for (GlueElement child : element.getChildren()) {
@@ -100,50 +101,45 @@ class GlueSerializer {
             for (GlueAuxiliary auxiliary : element.getFront()) {
                 serializeAuxiliary(auxiliary, xmlBuffer);
             }
-            xmlBuffer.beginElement(element.getTagName());
-            serializeAttributes(element, xmlBuffer);
-            if (element.getChildren().isEmpty()) {
-                for (GlueAuxiliary auxiliary : element.getContent()) {
-                    serializeAuxiliary(auxiliary, xmlBuffer);
-                }
+
+            if (element instanceof GlueComment) {
+                xmlBuffer.addComment(element.getContentText());
             } else {
-                for (GlueElement child : element.getChildren()) {
-                    serializeElement(child, xmlBuffer);
+                xmlBuffer.beginElement(element.getTagName());
+                serializeAttributes(element, xmlBuffer);
+                if (element.getChildren().isEmpty()) {
+                    for (GlueAuxiliary auxiliary : element.getContent()) {
+                        serializeAuxiliary(auxiliary, xmlBuffer);
+                    }
+                } else {
+                    for (GlueElement child : element.getChildren()) {
+                        serializeElement(child, xmlBuffer);
+                    }
+                    for (GlueAuxiliary auxiliary : element.getTail()) {
+                        serializeAuxiliary(auxiliary, xmlBuffer);
+                    }
                 }
-                for (GlueAuxiliary auxiliary : element.getTail()) {
-                    serializeAuxiliary(auxiliary, xmlBuffer);
-                }
+                xmlBuffer.endElement();
             }
-            xmlBuffer.endElement();
+
         }
     }
-    
+
     private void serializeAuxiliary(GlueAuxiliary auxiliary, XMLBuffer xmlBuffer) {
         if (auxiliary instanceof GlueCharacters) {
             final GlueCharacters characters = (GlueCharacters) auxiliary;
-            switch(characters.getType()) {
-                case TEXT:
-                    xmlBuffer.addText(characters.getData());
-                    break;
-                case COMMENT:
-                    xmlBuffer.addComment(characters.getData());
-                    break;
-                default:
-                    assert false;
-                    break;
-            }
+            xmlBuffer.addText(characters.getData());
         } else {
             assert auxiliary instanceof GlueInstruction;
             final GlueInstruction instruction = (GlueInstruction) auxiliary;
             xmlBuffer.addProcessingInstruction(instruction.getTarget(), instruction.getData());
         }
     }
-    
-    
+
     private void serializeAttributes(GlueElement element, XMLBuffer xmlBuffer) {
-        
+
         final Map<String, String> attributes = element.getAttributes();
-        final List<Map.Entry<String,String>> attrNames = new ArrayList<>();
+        final List<Map.Entry<String, String>> attrNames = new ArrayList<>();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             attrNames.add(new SimpleEntry<>(entry.getKey(), entry.getValue()));
         }
@@ -153,7 +149,7 @@ class GlueSerializer {
             Collections.sort(attrNames, attrComparator);
         }
 
-        for (Map.Entry<String,String> e : attrNames) {
+        for (Map.Entry<String, String> e : attrNames) {
             xmlBuffer.addAttribute(e.getKey(), e.getValue());
         }
     }

@@ -53,7 +53,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueCharacters;
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueComment;
 
 import javafx.stage.Stage;
 
@@ -76,9 +76,9 @@ public class FXOMSaverUpdateImportInstructionsTest {
 
     @Start
     private void start(Stage stage) {
-        
+
     }
-    
+
     @Test
     public void testEmptyFXML() throws IOException {
         setupTestCase(FxmlTestInfo.EMPTY);
@@ -221,10 +221,10 @@ public class FXOMSaverUpdateImportInstructionsTest {
             imports.add(dc.getName());
         });
 
-        assertEquals("comment line should not be removed", 5, fxomDocument.getGlue().getHeader().size());
+        assertEquals("comment line should not be removed", 6, fxomDocument.getGlue().getContent().size());
 
-        assertTrue("second glue node should be a comment", fxomDocument.getGlue().getHeader().get(1) instanceof GlueCharacters);
-        assertTrue("fifth glue node should be a comment", fxomDocument.getGlue().getHeader().get(4) instanceof GlueCharacters);
+        assertTrue("second glue node should be a comment", fxomDocument.getGlue().getContent().get(1) instanceof GlueComment);
+        assertTrue("fifth glue node should be a comment", fxomDocument.getGlue().getContent().get(4) instanceof GlueComment);
 
         assertTrue("fxml does not contain javafx.scene.control.ComboBox",
                 imports.contains("javafx.scene.control.ComboBox"));

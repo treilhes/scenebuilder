@@ -36,46 +36,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * 
+ *
+ *
  */
 class XMLBuffer {
-    
+
     private final StringBuffer buffer = new StringBuffer();
     private final List<String> elementStack = new ArrayList<>();
     private boolean tagOpened;
-    
+
     /*
      * XMLBuffer
      */
-    
+
     public XMLBuffer() {
         clear();
     }
-    
+
     public final void clear() {
         elementStack.clear();
         tagOpened = false;
         buffer.delete(0, buffer.length());
         buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //NOCHECK
     }
-    
+
     public void addProcessingInstruction(String target, String content) {
         assert target != null;
         assert content != null;
         assert elementStack.isEmpty();
         assert tagOpened == false;
-        
+
         buffer.append("<?"); //NOCHECK
         buffer.append(target);
         buffer.append(' ');
         buffer.append(content);
         buffer.append("?>"); //NOCHECK
     }
-    
+
     public void beginElement(String elementName) {
         assert elementName != null;
-        
+
         if (tagOpened) {
             buffer.append(">"); //NOCHECK
         }
@@ -84,24 +84,25 @@ class XMLBuffer {
         elementStack.add(elementName);
         tagOpened = true;
     }
-    
+
     public void addAttribute(String attributeName, String attributeValue) {
         assert attributeName != null;
         assert attributeValue != null;
         assert tagOpened;
-        
+
         buffer.append(' ');
         buffer.append(attributeName);
         buffer.append("=\""); //NOCHECK
         buffer.append(encodeToAttributeValue(attributeValue));
         buffer.append('"');
     }
-    
+
     public void endElement() {
         assert elementStack.isEmpty() == false;
-        
+
         final String elementName = elementStack.get(elementStack.size()-1);
         elementStack.remove(elementStack.size()-1);
+
         if (tagOpened) {
             buffer.append(" />"); //NOCHECK
             tagOpened = false;
@@ -111,8 +112,8 @@ class XMLBuffer {
             buffer.append(">"); //NOCHECK
         }
     }
-    
-    
+
+
     public void addText(String text) {
         if (tagOpened) {
             buffer.append(">"); //NOCHECK
@@ -120,15 +121,20 @@ class XMLBuffer {
         }
         buffer.append(text);
     }
-    
-    
+
+
     public void addComment(String comment) {
-        assert tagOpened == false;
+
+        if (tagOpened) {
+            buffer.append(">"); //NOCHECK
+            tagOpened = false;
+        }
+
         buffer.append("<!--"); //NOCHECK
         buffer.append(comment);
         buffer.append("-->"); //NOCHECK
     }
-    
+
     public void addLineSeparator() {
         if (tagOpened) {
             buffer.append(">"); //NOCHECK
@@ -136,29 +142,29 @@ class XMLBuffer {
         }
         buffer.append('\n');
     }
-    
+
     /*
      * Object
      */
-    
+
     @Override
     public String toString() {
         assert elementStack.isEmpty();
         return buffer.toString();
     }
-    
+
     /*
      * Private
-     */    
-    
-    
+     */
+
+
     private String encodeToAttributeValue(String s) {
         final StringBuffer result = new StringBuffer();
-        
+
         for (int i = 0; i < s.length(); i++) {
             final char c = s.charAt(i);
             switch (c) {
-                case '&': 
+                case '&':
                     result.append("&amp;");  //NOCHECK
                     break;
                 case '<':
@@ -167,7 +173,7 @@ class XMLBuffer {
                 case '>':
                     result.append("&gt;"); //NOCHECK
                     break;
-                case '"': 
+                case '"':
                     result.append("&quot;"); //NOCHECK
                     break;
                 default :
@@ -181,7 +187,7 @@ class XMLBuffer {
                     break;
             }
         }
-        
+
         return result.toString();
     }
 

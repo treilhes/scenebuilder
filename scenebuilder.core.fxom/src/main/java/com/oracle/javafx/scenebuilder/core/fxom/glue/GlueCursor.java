@@ -30,12 +30,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.fxom;
+package com.oracle.javafx.scenebuilder.core.fxom.glue;
 
-class TransientIgnored extends TransientNode {
+/**
+ *
+ *
+ */
+public class GlueCursor {
 
-        public TransientIgnored(TransientNode parentNode) {
-            super(parentNode, null);
+    private final GlueDocument glueDocument;
+    private GlueElement currentElement;
+
+    public GlueCursor(GlueDocument glueDocument) {
+        this.glueDocument = glueDocument;
+        gotoFirstElement();
+    }
+
+    public GlueElement getCurrentElement() {
+        return currentElement;
+    }
+
+    public final void gotoFirstElement() {
+        currentElement = glueDocument.getMainElement();
+    }
+
+    public void moveToNextElement() {
+        assert currentElement != null;
+
+        if (currentElement.getChildren().isEmpty()) {
+            GlueElement nextElement = currentElement.getNextSibling();
+            while ((nextElement == null) && (currentElement.getParent()!= null)) {
+                currentElement = currentElement.getParent();
+                nextElement = currentElement.getNextSibling();
+            }
+            currentElement = nextElement;
+        } else {
+            currentElement = currentElement.getChildren().get(0);
         }
-
+    }
 }

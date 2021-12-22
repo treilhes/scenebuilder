@@ -38,81 +38,100 @@ import java.util.List;
 
 /**
  *
- * 
+ *
  */
 public class GlueDocument extends GlueNode {
-    
-    private GlueElement rootElement;
-    private final List<GlueAuxiliary> header = new ArrayList<>();
-    
+
+    private final List<GlueNode> content = new ArrayList<>();
+    private GlueElement mainElement;
+    //private final List<GlueAuxiliary> header = new ArrayList<>();
+
     public GlueDocument() {
     }
-    
+
     public GlueDocument(String xmlText) throws IOException {
         assert xmlText != null;
         if (isEmptyXmlText(xmlText) == false) {
             final GlueLoader loader = new GlueLoader(this);
             loader.load(xmlText);
-            adjustRootElementIndentation();
+            adjustMainElementIndentation();
         }
     }
-    
-    public GlueElement getRootElement() {
-        return rootElement;
+
+    public GlueElement getMainElement() {
+        return mainElement;
     }
 
-    public void setRootElement(GlueElement newRootElement) {
-        if ((newRootElement != null) && (newRootElement.getParent() != null)) {
-            newRootElement.removeFromParent();
+    public void setMainElement(GlueElement newMainElement) {
+        if ((newMainElement != null) && (newMainElement.getParent() != null)) {
+            newMainElement.removeFromParent();
         }
-        this.rootElement = newRootElement;
+
+        if (content.contains(this.mainElement)) {
+            int index = content.indexOf(this.mainElement);
+            content.remove(index);
+            content.add(index, newMainElement);
+        } else {
+            content.add(newMainElement);
+        }
+
+        this.mainElement = newMainElement;
     }
 
-    public List<GlueAuxiliary> getHeader() {
-        return header;
+    public List<GlueNode> getContent() {
+        return content;
     }
-    
+
     public void updateIndent() {
-        if (rootElement != null) {
-            rootElement.updateIndent(0);
+        if (mainElement != null) {
+            mainElement.updateIndent(0);
         }
     }
-    
-    
+
+
+    public void addHeader(GlueNode node) {
+        if (mainElement != null) {
+            assert content.indexOf(mainElement) != -1;
+            content.add(content.indexOf(mainElement), node);
+        } else {
+            content.add(node);
+        }
+    }
+
     /*
      * Utilities
      */
 
     public List<GlueInstruction> collectInstructions(String target) {
         final List<GlueInstruction> result = new ArrayList<>();
-        
+
         assert target != null;
-        
-        for (GlueAuxiliary auxiliary : header) {
-            if (auxiliary instanceof GlueInstruction) {
-                final GlueInstruction i = (GlueInstruction) auxiliary;
+
+        for (GlueNode node : content) {
+            if (node instanceof GlueInstruction) {
+                final GlueInstruction i = (GlueInstruction) node;
                 if (target.equals(i.getTarget())) {
                     result.add(i);
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     public static boolean isEmptyXmlText(String xmlText) {
         assert xmlText != null;
         return xmlText.trim().isEmpty();
     }
-    
+
     /*
      * Object
      */
-    
+
     @Override
     public String toString() {
         final String result;
-        if (rootElement == null) {
+        if (mainElement == null) {
             result = ""; //NOCHECK
         } else {
             final GlueSerializer serializer = new GlueSerializer(this);
@@ -120,34 +139,38 @@ public class GlueDocument extends GlueNode {
         }
         return result;
     }
-    
-    
+
+
     /*
      * Private
      */
-    
-    private void adjustRootElementIndentation() {
+
+    private void adjustMainElementIndentation() {
         /*
          * By default, if a root element is empty and expressed like this:
          *     <AnchorPane />
          * indentation logic would keep the upcoming children on the same line:
          *     <AnchorPane> <children> <Button/> </children> </AnchorPane>.
-         * 
+         *
          * With the adjustment below, indentation logic will produce:
-         *     <AnchorPane> 
+         *     <AnchorPane>
          *        <children>
          *           <Button />
          *        </children>
          *     </AnchorPane>
          */
-        
-        if ((rootElement != null) && rootElement.getChildren().isEmpty()) {
-            if (rootElement.getFront().isEmpty()) {
-                rootElement.getFront().add(new GlueCharacters(this, GlueCharacters.Type.TEXT, "\n")); //NOCHECK
+
+        if ((mainElement != null) && mainElement.getChildren().isEmpty()) {
+            if (mainElement.getFront().isEmpty()) {
+                mainElement.getFront().add(new GlueCharacters(this, "\n")); //NOCHECK
             }
-            if (rootElement.getTail().isEmpty()) {
-                rootElement.getTail().add(new GlueCharacters(this, GlueCharacters.Type.TEXT, "\n")); //NOCHECK
+            if (mainElement.getTail().isEmpty()) {
+                mainElement.getTail().add(new GlueCharacters(this, "\n")); //NOCHECK
             }
         }
+    }
+
+    public GlueCursor cursor() {
+        return new GlueCursor(this);
     }
 }

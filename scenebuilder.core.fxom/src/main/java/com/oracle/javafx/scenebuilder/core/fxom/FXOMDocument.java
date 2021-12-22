@@ -76,6 +76,7 @@ public class FXOMDocument {
     private SceneGraphHolder sceneGraphHolder;
     private int updateDepth;
 
+    private String scriptingLanguage;
     //private boolean hasGluonControls;
 
     private List<Class<?>> initialDeclaredClasses;
@@ -86,7 +87,7 @@ public class FXOMDocument {
         this.classLoader = classLoader;
         this.resources = resources;
         initialDeclaredClasses = new ArrayList<>();
-        if (this.glue.getRootElement() != null) {
+        if (this.glue.getMainElement() != null) {
             final FXOMLoader loader = new FXOMLoader(this);
             loader.load(fxmlText);
             if (normalize) {
@@ -198,9 +199,9 @@ public class FXOMDocument {
 
         this.fxomRoot = fxomRoot;
         if (this.fxomRoot == null) {
-            this.glue.setRootElement(null);
+            this.glue.setMainElement(null);
         } else {
-            this.glue.setRootElement(this.fxomRoot.getGlueElement());
+            this.glue.setMainElement(this.fxomRoot.getGlueElement());
         }
         this.sceneGraphRoot = sceneGraphRoot;
         this.displayNode = null;
@@ -253,11 +254,11 @@ public class FXOMDocument {
     public String getFxmlText(boolean wildcardImports) {
         final String result;
         if (fxomRoot == null) {
-            assert glue.getRootElement() == null;
+            assert glue.getMainElement() == null;
             assert sceneGraphRoot == null;
             result = "";
         } else {
-            assert glue.getRootElement() != null;
+            assert glue.getMainElement() != null;
             // Note that sceneGraphRoot might be null if fxomRoot is unresolved
             glue.updateIndent();
             final FXOMSaver saver = new FXOMSaver(wildcardImports);
@@ -437,9 +438,9 @@ public class FXOMDocument {
         public void fxomDocumentWillRefreshSceneGraph(FXOMDocument fxomDocument);
         public void fxomDocumentDidRefreshSceneGraph(FXOMDocument fxomDocument);
     }
-    
+
     /**
-     * 
+     *
      * @return true if the current FXOM document represents a 3D layout, false
      *         otherwise.
      */
@@ -469,4 +470,16 @@ public class FXOMDocument {
         }
         return res;
     }
+
+
+    public String getScriptingLanguage() {
+        return scriptingLanguage;
+    }
+
+
+    protected void setScriptingLanguage(String scriptingLanguage) {
+        this.scriptingLanguage = scriptingLanguage;
+    }
+
+
 }

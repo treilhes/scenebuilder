@@ -32,43 +32,34 @@
  */
 package com.oracle.javafx.scenebuilder.core.fxom;
 
-import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
+import java.util.List;
 
-/**
- *
- * 
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+
+/*
+
  */
-class GlueCursor {
-    
-    private final GlueDocument glueDocument;
-    private GlueElement currentElement;
-    
-    public GlueCursor(GlueDocument glueDocument) {
-        this.glueDocument = glueDocument;
-        gotoFirstElement();
+/**
+ * A FXOMPropertyV represents a virtual property not involved in the scenegraph<br/>
+ * <br/>
+ * There are mainly fx tags like <br/>
+ * &lt;fx:include><br/>
+ * &lt;fx:constant><br/>
+ * &lt;fx:reference><br/>
+ * &lt;fx:copy><br/>
+ * &lt;fx:script><br/>
+ * &lt;fx:define><br/>
+ *
+ * and also comments
+ *
+ * @author ptreilhes
+ *
+ */
+public class FXOMPropertyV extends FXOMPropertyC {
+
+    public FXOMPropertyV(FXOMDocument document, PropertyName name, List<FXOMObject> values, GlueElement glueElement) {
+        super(document, name, values, glueElement);
     }
-    
-    public GlueElement getCurrentElement() {
-        return currentElement;
-    }
-    
-    public final void gotoFirstElement() {
-        currentElement = glueDocument.getRootElement();
-    }
-    
-    public void moveToNextElement() {
-        assert currentElement != null;
-        
-        if (currentElement.getChildren().isEmpty()) {
-            GlueElement nextElement = currentElement.getNextSibling();
-            while ((nextElement == null) && (currentElement.getParent()!= null)) {
-                currentElement = currentElement.getParent();
-                nextElement = currentElement.getNextSibling();
-            }
-            currentElement = nextElement;
-        } else {
-            currentElement = currentElement.getChildren().get(0);
-        }
-    }
+
 }

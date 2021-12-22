@@ -32,17 +32,21 @@
  */
 package com.oracle.javafx.scenebuilder.core.fxom;
 
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
+
 /**
  *
- * 
+ *
  */
 class TransientNode {
-    
+
     private final TransientNode parentNode;
+    private final GlueElement glueElement;
     private Object sceneGraphObject;
-    
-    public TransientNode(TransientNode parentNode) {
+
+    public TransientNode(TransientNode parentNode, GlueElement glueElement) {
         this.parentNode = parentNode;
+        this.glueElement = glueElement;
     }
 
     public TransientNode getParentNode() {
@@ -56,5 +60,9 @@ class TransientNode {
     public void setSceneGraphObject(Object sceneGraphObject) {
         this.sceneGraphObject = sceneGraphObject;
     }
-    
+
+    protected GlueElement getGlueElement() {
+        return glueElement;
+    }
+
 }

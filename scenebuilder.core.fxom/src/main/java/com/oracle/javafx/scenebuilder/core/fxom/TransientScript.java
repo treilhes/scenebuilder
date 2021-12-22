@@ -32,10 +32,33 @@
  */
 package com.oracle.javafx.scenebuilder.core.fxom;
 
-class TransientIgnored extends TransientNode {
+import java.util.List;
 
-        public TransientIgnored(TransientNode parentNode) {
-            super(parentNode, null);
-        }
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
+/**
+ *
+ *
+ */
+class TransientScript extends TransientVirtual {
+
+    private static final PropertyName name = new PropertyName("fx:script");
+
+    public TransientScript(
+            TransientNode parentNode,
+            GlueElement propertyElement) {
+        super(parentNode, propertyElement);
+        assert propertyElement != null;
+        assert propertyElement.getTagName().equals(name.toString());
+    }
+
+    @Override
+    public FXOMObject makeFxomObject(FXOMDocument fxomDocument) {
+        return new FXOMScript(fxomDocument, getGlueElement(), null);
+    }
+
+    public FXOMProperty makeFxomProperty(FXOMDocument fxomDocument) {
+        return new FXOMPropertyV(fxomDocument, name, List.of(makeFxomObject(fxomDocument)), getGlueElement());
+    }
 }

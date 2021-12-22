@@ -52,27 +52,28 @@ import javafx.scene.SubScene;
 
 /**
  *
- * 
+ *
  */
 public abstract class FXOMObject extends FXOMNode {
-    
+
     private final GlueElement glueElement;
     private FXOMPropertyC parentProperty;
     private FXOMCollection parentCollection;
+    private FXOMDefine parentDefine;
     private Object sceneGraphObject;
 
     FXOMObject(FXOMDocument fxomDocument, GlueElement glueElement, Object sceneGraphObject) {
         super(fxomDocument);
-        
+
         assert glueElement != null;
         assert glueElement.getDocument() == fxomDocument.getGlue();
-        
+
         this.glueElement = glueElement;
         this.sceneGraphObject = sceneGraphObject;
     }
 
     FXOMObject(FXOMDocument fxomDocument, String tagName) {
-        super(fxomDocument);        
+        super(fxomDocument);
         this.glueElement = new GlueElement(fxomDocument.getGlue(), tagName);
     }
 
@@ -87,9 +88,13 @@ public abstract class FXOMObject extends FXOMNode {
     public FXOMCollection getParentCollection() {
         return parentCollection;
     }
-    
+
+    public FXOMDefine getParentDefine() {
+        return parentDefine;
+    }
+
     public void addToParentProperty(int index, FXOMPropertyC newParentProperty) {
- 
+
         assert newParentProperty != null;
         assert -1 <= index;
         assert index <= newParentProperty.getValues().size();
@@ -105,48 +110,50 @@ public abstract class FXOMObject extends FXOMNode {
             }
         } else if (parentCollection != null) {
             removeFromParentCollection();
+        } else if (parentDefine != null) {
+            removeFromParentDefine();
         }
-        
+
         parentProperty = newParentProperty;
         newParentProperty.addValue(index, this);
-        
+
         final GlueElement newParentElement = parentProperty.getGlueElement();
         glueElement.addToParent(index, newParentElement);
-        
+
         // May be this object was a root : properties like fx:controller must
         // be reset to preserve FXML validity.
         resetRootProperties();
     }
-    
+
     public void removeFromParentProperty() {
         assert parentProperty != null;
         assert parentProperty.getParentInstance() == null
                 || parentProperty.getValues().size() >= 2;
-        
+
         assert glueElement.getParent() == parentProperty.getGlueElement();
         glueElement.removeFromParent();
-        
+
         final FXOMPropertyC keepParentProperty = parentProperty;
         parentProperty = null;
         keepParentProperty.removeValue(this);
     }
-    
+
     public int getIndexInParentProperty() {
         final int result;
-        
+
         if (parentProperty == null) {
             result = -1;
         } else {
             result = parentProperty.getValues().indexOf(this);
             assert result != -1;
         }
-        
+
         return result;
     }
-    
-    
+
+
     public void addToParentCollection(int index, FXOMCollection newParentCollection) {
- 
+
         assert newParentCollection != null;
         assert -1 <= index;
         assert index <= newParentCollection.getItems().size();
@@ -155,43 +162,94 @@ public abstract class FXOMObject extends FXOMNode {
             removeFromParentProperty();
         } else if (parentCollection != null) {
             removeFromParentCollection();
+        } else if (parentDefine != null) {
+            removeFromParentDefine();
         }
-        
+
         parentCollection = newParentCollection;
         newParentCollection.addValue(index, this);
-        
+
         final GlueElement newParentElement = parentCollection.getGlueElement();
         glueElement.addToParent(index, newParentElement);
-        
+
         // May be this object was a root : properties like fx:controller must
         // be reset to preserve FXML validity.
         resetRootProperties();
     }
-    
+
     public void removeFromParentCollection() {
         assert parentCollection != null;
-        
+
         assert glueElement.getParent() == parentCollection.getGlueElement();
         glueElement.removeFromParent();
-        
+
         final FXOMCollection keepParentCollection = parentCollection;
         parentCollection = null;
         keepParentCollection.removeValue(this);
     }
-    
+
     public int getIndexInParentCollection() {
         final int result;
-        
+
         if (parentCollection == null) {
             result = -1;
         } else {
             result = parentCollection.getItems().indexOf(this);
             assert result != -1;
         }
-        
+
         return result;
     }
-    
+
+    public void addToParentDefine(int index, FXOMDefine newParentDefine) {
+
+        assert newParentDefine != null;
+        assert -1 <= index;
+        assert index <= newParentDefine.getItems().size();
+
+        if (parentProperty != null) {
+            removeFromParentProperty();
+        } else if (parentCollection != null) {
+            removeFromParentCollection();
+        } else if (parentDefine != null) {
+            removeFromParentDefine();
+        }
+
+        parentDefine = newParentDefine;
+        newParentDefine.addValue(index, this);
+
+        final GlueElement newParentElement = parentDefine.getGlueElement();
+        glueElement.addToParent(index, newParentElement);
+
+        // May be this object was a root : properties like fx:controller must
+        // be reset to preserve FXML validity.
+        resetRootProperties();
+    }
+
+    public void removeFromParentDefine() {
+        assert parentDefine != null;
+
+        assert glueElement.getParent() == parentDefine.getGlueElement();
+        glueElement.removeFromParent();
+
+        final FXOMDefine keepParentDefine = parentDefine;
+        parentDefine = null;
+        keepParentDefine.removeValue(this);
+    }
+
+    public int getIndexInParentDefine() {
+        final int result;
+
+        if (parentDefine == null) {
+            result = -1;
+        } else {
+            result = parentDefine.getItems().indexOf(this);
+            assert result != -1;
+        }
+
+        return result;
+    }
+
     public Object getSceneGraphObject() {
         return sceneGraphObject;
     }
@@ -199,10 +257,10 @@ public abstract class FXOMObject extends FXOMNode {
     public void setSceneGraphObject(Object sceneGraphObject) {
         this.sceneGraphObject = sceneGraphObject;
     }
-    
+
     public FXOMObject getNextSlibing() {
         final FXOMObject result;
-        
+
         if (parentProperty != null) {
             final int index = getIndexInParentProperty();
             assert index != -1;
@@ -222,13 +280,13 @@ public abstract class FXOMObject extends FXOMNode {
         } else {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public FXOMObject getPreviousSlibing() {
         final FXOMObject result;
-        
+
         if (parentProperty != null) {
             final int index = getIndexInParentProperty();
             assert index != -1;
@@ -248,21 +306,21 @@ public abstract class FXOMObject extends FXOMNode {
         } else {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public void moveBeforeSibling(FXOMObject sibling) {
         assert sibling != this;
         assert (parentProperty != null) || (parentCollection != null);
 
         if (parentProperty != null) {
             assert (sibling == null) || (sibling.getParentProperty() == parentProperty);
-            
+
             final FXOMPropertyC oldParentProperty = parentProperty;
             removeFromParentProperty();
             assert parentProperty == null;
-            
+
             final int index;
             if (sibling == null) {
                 index = -1;
@@ -277,7 +335,7 @@ public abstract class FXOMObject extends FXOMNode {
             final FXOMCollection oldParentCollection = parentCollection;
             removeFromParentCollection();
             assert parentCollection == null;
-            
+
             final int index;
             if (sibling == null) {
                 index = -1;
@@ -289,166 +347,186 @@ public abstract class FXOMObject extends FXOMNode {
             assert false;
         }
     }
-    
+
     public Scene getScene() {
         final Scene result;
-        
+
         if (sceneGraphObject instanceof Node) {
             final Node sceneGraphNode = (Node) sceneGraphObject;
             result = sceneGraphNode.getScene();
         } else  {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public FXOMObject getFirstAncestorWithNonNullScene() {
         FXOMObject result = this;
-        
+
         while ((result != null) && (result.getScene() == null)) {
             result = result.getParentObject();
         }
-        
+
         return result;
     }
-    
+
     /*
      * Utilities
      */
-    
+
     public FXOMObject searchWithSceneGraphObject(Object sceneGraphObject) {
         final FXOMObject result;
-        
+
         if (this.sceneGraphObject == sceneGraphObject) {
             result = this;
         } else {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public FXOMObject searchWithFxId(String fxId) {
         final FXOMObject result;
-        
+
         assert fxId != null;
-        
+
         if (fxId.equals(getFxId())) {
             result = this;
         } else {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public Set<Class<?>> collectDeclaredClasses() {
         final Set<Class<?>> result = new HashSet<>();
-        
+
         collectDeclaredClasses(result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectDeclaredClasses(Set<Class<?>> result);
-    
-    
+
+
     public List<FXOMProperty> collectProperties(PropertyName propertyName) {
         final List<FXOMProperty> result = new ArrayList<>();
-        
+
         collectProperties(propertyName, result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectProperties(PropertyName propertyName, List<FXOMProperty> result);
-    
-    
+
+
     public List<FXOMPropertyT> collectNullProperties() {
         final List<FXOMPropertyT> result = new ArrayList<>();
-        
+
         collectNullProperties(result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectNullProperties(List<FXOMPropertyT> result);
-    
-    
+
+
     public List<FXOMPropertyT> collectPropertiesT() {
         final List<FXOMPropertyT> result = new ArrayList<>();
-        
+
         collectPropertiesT(result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectPropertiesT(List<FXOMPropertyT> result);
-    
-    
+
+
     public List<FXOMIntrinsic> collectReferences(String source) {
         final List<FXOMIntrinsic> result = new ArrayList<>();
-        
+
         collectReferences(source, result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectReferences(String source, List<FXOMIntrinsic> result);
-    
+
     public List<FXOMNode> collectReferences(String source, FXOMObject scope) {
         assert source != null;
-        
+
         final List<FXOMNode> result = new ArrayList<>();
-        
+
         collectReferences(source, scope, result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectReferences(String source, FXOMObject scope, List<FXOMNode> result);
-    
+
     public List<FXOMIntrinsic> collectIncludes(String source) {
         final List<FXOMIntrinsic> result = new ArrayList<>();
-        
+
         collectIncludes(source, result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectIncludes(String source, List<FXOMIntrinsic> result);
+
+    public List<FXOMScript> collectScripts(String source) {
+        final List<FXOMScript> result = new ArrayList<>();
+
+        collectScripts(source, result);
+
+        return result;
+    }
+
+    protected abstract void collectScripts(String source, List<FXOMScript> result);
 
     public Map<String, FXOMObject> collectFxIds() {
         final Map<String, FXOMObject> result = new LinkedHashMap<>();
-        
+
         collectFxIds(result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectFxIds(Map<String, FXOMObject> result);
-    
+
+    public List<FXOMComment> collectComments() {
+        final List<FXOMComment> result = new ArrayList<>();
+
+        collectComments(result);
+
+        return result;
+    }
+
+    protected abstract void collectComments(List<FXOMComment> result);
+
     public List<FXOMObject> collectObjectWithSceneGraphObjectClass(Class<?> sceneGraphObjectClass) {
         final List<FXOMObject> result = new ArrayList<>();
-        
+
         collectObjectWithSceneGraphObjectClass(sceneGraphObjectClass, result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectObjectWithSceneGraphObjectClass(Class<?> sceneGraphObjectClass, List<FXOMObject> result);
-    
+
     public List<FXOMPropertyT> collectEventHandlers() {
         final List<FXOMPropertyT> result = new ArrayList<>();
-        
+
         collectEventHandlers(result);
-        
+
         return result;
     }
-    
+
     protected abstract void collectEventHandlers(List<FXOMPropertyT> result);
-    
+
     /*
      * Utilities
      */
@@ -465,7 +543,7 @@ public abstract class FXOMObject extends FXOMNode {
         }
         return result;
     }
-    
+
     public void removeFromParentObject() {
         if (parentProperty != null) {
             if (parentProperty.getValues().size() == 1) {
@@ -481,12 +559,12 @@ public abstract class FXOMObject extends FXOMNode {
             removeFromParentCollection();
        }
     }
-    
+
     public abstract List<FXOMObject> getChildObjects();
-    
+
     public boolean isDescendantOf(FXOMObject other) {
         final boolean result;
-        
+
         if (other == null) {
             result = true;
         } else {
@@ -496,38 +574,38 @@ public abstract class FXOMObject extends FXOMNode {
             }
             result = (ancestor != null);
         }
-        
+
         return result;
     }
-    
+
     public boolean isNode() {
         return sceneGraphObject instanceof Node;
     }
-    
+
     public boolean isParent() {
         return sceneGraphObject instanceof Parent;
     }
-    
+
     public boolean hasParent() {
         return isNode() && ((Node)sceneGraphObject).getParent() != null;
     }
-    
+
     /**
      * Check if the object is in a detached graph
      * It is in a detached graph if the parent is a node but sceneGraphObject parent is null
      * It is the case for node added to clip, shape, ...
-     * 
+     *
      * @return true if in detached graph/ false if is in the main graph
      */
     public boolean isDetachedGraph() {
-        return isNode() && ((Node)sceneGraphObject).getParent() == null 
+        return isNode() && ((Node)sceneGraphObject).getParent() == null
                 && getParentObject() != null && getParentObject().isNode();
     }
-    
+
     /**
      * Check if the object is viewable.
      * A node is viewable if all the parents are instance of node
-     * 
+     *
      * @return true if viewable
      */
     public boolean isViewable() {
@@ -543,42 +621,42 @@ public abstract class FXOMObject extends FXOMNode {
         }
         return true;
     }
-    
+
     public FXOMObject getClosestNode() {
         FXOMObject result;
-        
+
         result = this;
         while ((result.isNode() == false) && (result.getParentObject() != null)) {
             result = result.getParentObject();
         }
-        
+
         return result.isNode() ? result : null;
     }
-    
+
     public FXOMObject getClosestMainGraphNode() {
         FXOMObject result;
         FXOMObject current;
-        
+
         result = this;
         current = this;
         while (current.getParentObject() != null) {
             boolean isNode = current.isNode();
-            
+
             if (isNode) {
                 Node node = (Node)current.getSceneGraphObject();
                 boolean hasParent = node.getParent() != null;
-                boolean hasParentSubScene = current.getParentObject() != null 
-                        && current.getParentObject().getSceneGraphObject() instanceof SubScene; 
+                boolean hasParentSubScene = current.getParentObject() != null
+                        && current.getParentObject().getSceneGraphObject() instanceof SubScene;
                 if (result == null && hasParent) {
                     result = current;
                 } else if (result != null && !hasParent && !hasParentSubScene) {
                     result = null;
                 }
             }
-            
+
             current = current.getParentObject();
         }
-        
+
         if (result != null) {
             return result;
         } else if (current.isNode()) {
@@ -587,23 +665,23 @@ public abstract class FXOMObject extends FXOMNode {
             return null;
         }
     }
-    
+
     public FXOMObject getClosestParent() {
         FXOMObject result;
-        
+
         result = this;
         while ((result.isParent() == false) && (result.getParentObject() != null)) {
             result = result.getParentObject();
         }
-        
+
         return result.isParent() ? result : null;
     }
-    
+
     public String getFxId() {
         return glueElement.getAttributes().get("fx:id");
     }
-    
-    
+
+
     public void setFxId(String fxId) {
         assert (fxId == null) || JavaLanguage.isIdentifier(fxId);
         if (fxId == null) {
@@ -612,12 +690,12 @@ public abstract class FXOMObject extends FXOMNode {
             glueElement.getAttributes().put("fx:id", fxId);
         }
     }
-        
-    
+
+
     public String getFxValue() {
         return glueElement.getAttributes().get("fx:value");
     }
-    
+
     public void setFxValue(String fxValue) {
         if (fxValue == null) {
             glueElement.getAttributes().remove("fx:value");
@@ -625,12 +703,12 @@ public abstract class FXOMObject extends FXOMNode {
             glueElement.getAttributes().put("fx:value", fxValue);
         }
     }
-    
-    
+
+
     public String getFxConstant() {
         return glueElement.getAttributes().get("fx:constant");
     }
-    
+
     public void setFxConstant(String fxConstant) {
         if (fxConstant == null) {
             glueElement.getAttributes().remove("fx:constant");
@@ -638,11 +716,11 @@ public abstract class FXOMObject extends FXOMNode {
             glueElement.getAttributes().put("fx:constant", fxConstant);
         }
     }
-    
+
     public String getFxController() {
         return glueElement.getAttributes().get("fx:controller");
     }
-    
+
     public void setFxController(String fxController) {
         if (fxController == null) {
             glueElement.getAttributes().remove("fx:controller");
@@ -650,11 +728,11 @@ public abstract class FXOMObject extends FXOMNode {
             glueElement.getAttributes().put("fx:controller", fxController);
         }
     }
-    
+
     public String getFxFactory() {
         return glueElement.getAttributes().get("fx:factory");
     }
-    
+
     public void setFxFactory(String fxFactory) {
         if (fxFactory == null) {
             glueElement.getAttributes().remove("fx:factory");
@@ -662,11 +740,11 @@ public abstract class FXOMObject extends FXOMNode {
             glueElement.getAttributes().put("fx:factory", fxFactory);
         }
     }
-    
+
     public String getNameSpaceFX() {
         return glueElement.getAttributes().get("xmlns");
     }
-    
+
     public void setNameSpaceFX(String nameSpace) {
         if (nameSpace == null) {
             glueElement.getAttributes().remove("xmlns");
@@ -674,11 +752,11 @@ public abstract class FXOMObject extends FXOMNode {
             glueElement.getAttributes().put("xmlns", nameSpace);
         }
     }
-    
+
     public String getNameSpaceFXML() {
         return glueElement.getAttributes().get("xmlns:fx");
     }
-    
+
     public void setNameSpaceFXML(String nameSpace) {
         if (nameSpace == null) {
             glueElement.getAttributes().remove("xmlns:fx");
@@ -690,19 +768,19 @@ public abstract class FXOMObject extends FXOMNode {
     /*
      * FXOMNode
      */
-    
+
     @Override
     public void moveToFxomDocument(FXOMDocument destination) {
         assert destination != null;
         assert destination != getFxomDocument();
-        assert (parentProperty == null) 
+        assert (parentProperty == null)
                 || (parentProperty.getParentInstance() == null)
                 || (parentProperty.getValues().size() >= 2);
-        
+
         if (URLUtils.equals(getFxomDocument().getLocation(), destination.getLocation()) == false) {
             documentLocationWillChange(destination.getLocation());
         }
-        
+
         final Map<String, FXOMObject> destinationFxIds = destination.collectFxIds();
         final Map<String, FXOMObject> importedFxIds = collectFxIds();
         final FXOMFxIdMerger merger = new FXOMFxIdMerger(destinationFxIds.keySet(), importedFxIds.keySet());
@@ -712,11 +790,11 @@ public abstract class FXOMObject extends FXOMNode {
             assert originalFxId.equals(fxomObject.getFxId());
             final String renamedFxId = merger.getRenamedFxId(originalFxId);
             assert renamedFxId != null;
-            
+
             if (renamedFxId.equals(originalFxId) == false) {
                 /*
                  * Apply the renaming:
-                 * 1) the declaration 
+                 * 1) the declaration
                  *      <Button fx:id="toto" .../>
                  * 2) expressions that reference the fx:id
                  *      ... labelFor="$toto" ...
@@ -751,7 +829,7 @@ public abstract class FXOMObject extends FXOMNode {
                 }
             }
         }
-        
+
         if (parentProperty != null) {
             assert parentProperty.getFxomDocument() == getFxomDocument();
             removeFromParentProperty();
@@ -761,11 +839,11 @@ public abstract class FXOMObject extends FXOMNode {
         } else if (getFxomDocument().getFxomRoot() == this) {
             getFxomDocument().setFxomRoot(null);
         }
-        
+
         assert parentProperty == null;
         assert parentCollection == null;
         assert glueElement.getParent() == null;
-        
+
         glueElement.moveToDocument(destination.getGlue());
         changeFxomDocument(destination);
     }
@@ -777,19 +855,19 @@ public abstract class FXOMObject extends FXOMNode {
         assert destination.getGlue() == glueElement.getDocument();
         assert (parentProperty   == null) || (destination == parentProperty.getFxomDocument());
         assert (parentCollection == null) || (destination == parentCollection.getFxomDocument());
-        
+
         super.changeFxomDocument(destination);
     }
 
-    
+
     /*
      * Object
      */
-    
+
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
-        
+
         result.append(getClass().getSimpleName());
         result.append("[tagName=");
         result.append(glueElement.getTagName());
@@ -798,14 +876,14 @@ public abstract class FXOMObject extends FXOMNode {
             result.append(getFxId());
         }
         result.append(']');
-        
+
         return result.toString();
     }
-    
+
     /*
      * Package
      */
-    
+
     /* For FXOMPropertyC constructor private use */
     void setParentProperty(FXOMPropertyC newParentProperty) {
         assert parentProperty == null;
@@ -813,7 +891,7 @@ public abstract class FXOMObject extends FXOMNode {
         assert newParentProperty.getValues().contains(this);
         parentProperty = newParentProperty;
     }
-    
+
     /* For FXOMCollection constructor private use */
     void setParentCollection(FXOMCollection newParentCollection) {
         assert parentProperty == null;
@@ -822,15 +900,15 @@ public abstract class FXOMObject extends FXOMNode {
         parentCollection = newParentCollection;
     }
 
-    
+
     /*
      * Private
      */
-    
+
     private void resetRootProperties() {
         setFxController(null);
         setNameSpaceFX(null);
         setNameSpaceFXML(null);
     }
-    
+
 }

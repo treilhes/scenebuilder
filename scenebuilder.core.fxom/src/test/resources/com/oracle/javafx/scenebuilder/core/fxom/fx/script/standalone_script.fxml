@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+
+
+<fx:script xmlns="http://javafx.com/javafx/xxx" xmlns:fx="http://javafx.com/fxml/1">
+    var pane = new javafx.scene.layout.Pane();
+    var txt = 'You clicked me!';
+    function testClick2(event) {
+    java.lang.System.out.println(txt);
+    }
+</fx:script>
