@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.treetablecolumn;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -83,17 +82,17 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> {
             = new TreeTableViewDesignInfoX();
     private TreeTableView<?> treeTableView;
     private Node columnHeaderNode;
-	private ApplicationContext context;
+	private SceneBuilderBeanFactory context;
 
     public TreeTableColumnHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Object.class);
         this.context = context;
 
         getRootNode().getChildren().add(grips); // Above handles
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof TreeTableColumn;

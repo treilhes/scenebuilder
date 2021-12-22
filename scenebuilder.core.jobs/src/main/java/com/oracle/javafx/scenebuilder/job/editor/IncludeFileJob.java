@@ -38,13 +38,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -65,7 +64,7 @@ public class IncludeFileJob extends BatchSelectionJob {
     private FXOMIntrinsic newInclude;
     private final FXOMDocument fxomDocument;
 
-    public IncludeFileJob(ApplicationContext context, File file, Editor editor) {
+    public IncludeFileJob(SceneBuilderBeanFactory context, File file, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

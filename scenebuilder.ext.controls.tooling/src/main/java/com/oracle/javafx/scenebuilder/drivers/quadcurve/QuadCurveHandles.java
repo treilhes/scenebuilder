@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.quadcurve;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +55,7 @@ import javafx.scene.shape.QuadCurve;
 /**
 *
 * QuadCurve handles: <br><img src="doc-files/quad-curve-handles.png" alt="quad curve handles"><br>
-* Appears when resizing a 
+* Appears when resizing a
 * <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/QuadCurve.html">javafx.scene.shape.QuadCurve</a>
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
@@ -70,16 +69,16 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     private final Circle endHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);
     private final Line leftHandle = new Line();
     private final Line rightHandle = new Line();
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 
     public QuadCurveHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(contentPanelController, QuadCurve.class);
         this.context = context;
     }
-    
+
     @Override
     public void initialize() {
         setupHandleState(startHandle);

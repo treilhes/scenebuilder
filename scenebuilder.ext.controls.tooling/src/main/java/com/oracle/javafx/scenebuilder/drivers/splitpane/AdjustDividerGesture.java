@@ -35,8 +35,6 @@ package com.oracle.javafx.scenebuilder.drivers.splitpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
@@ -46,6 +44,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
@@ -66,14 +65,14 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     private final int dividerIndex;
     private final SplitPaneDesignInfoX di = new SplitPaneDesignInfoX();
     private double[] originalDividerPositions;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private Layer<Handles> handleLayer;
 
     private static final PropertyName dividerPositionsName
             = new PropertyName("dividerPositions"); //NOCHECK
 
     public AdjustDividerGesture(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content content,
             FXOMInstance splitPaneInstance, int dividerIndex) {
         super(content);
@@ -82,7 +81,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
         this.splitPaneInstance = splitPaneInstance;
         this.dividerIndex = dividerIndex;
-        
+
         ModeManager modeManager = context.getBean(ModeManager.class);
         if (modeManager.hasModeEnabled()) {
             handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);

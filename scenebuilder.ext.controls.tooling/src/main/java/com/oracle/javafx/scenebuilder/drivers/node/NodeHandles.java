@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.node;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,7 @@ import javafx.scene.Node;
 /**
 *
 * Node handles: <br><img src="doc-files/node-handles.png" alt="node handles"><br>
-* Appears when resizing a 
+* Appears when resizing a
 * <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/Node.html">javafx.scene.Node</a>
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
@@ -55,13 +54,13 @@ import javafx.scene.Node;
 public class NodeHandles extends AbstractNodeHandles<Node> {
 
     public NodeHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Node.class);
     }
-    
+
     @Override
     public void initialize() {
-        
+
     }
 }

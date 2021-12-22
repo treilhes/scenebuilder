@@ -33,13 +33,13 @@
 package com.oracle.javafx.scenebuilder.gluon;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
@@ -49,15 +49,15 @@ import javafx.application.Platform;
 
 @Component
 public class GluonInitializer implements InitWithSceneBuilder {
-    
+
     private final GluonJarImportController gluonJarImportController;
     private final RegistrationController registrationController;
     private final TrackingController trackingController;
     private final UpdateController updateController;
-    private ApplicationContext context;
-    
+    private SceneBuilderBeanFactory context;
+
     public GluonInitializer(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired GluonJarImportController gluonJarImportController,
             @Autowired RegistrationController registrationController,
             @Autowired TrackingController trackingController,
@@ -75,7 +75,7 @@ public class GluonInitializer implements InitWithSceneBuilder {
     public void init() {
         gluonJarImportController.startListeningLibrary();
         trackingController.sendTrackingStartupInfo();
-        
+
         SbPlatform.runLater(() -> {
             context.getBean(WelcomeDialog.class).getStage().setOnHidden(event -> {
                 updateController.showUpdateDialogIfRequired(context.getBean(DocumentWindow.class), () -> {

@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.library.maven.repository;
 
 import java.util.stream.Collectors;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -76,7 +75,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final MavenSetting mavenSetting;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     //private final SceneBuilderManager sceneBuilderManager;
 

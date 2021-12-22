@@ -36,11 +36,10 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -62,7 +61,7 @@ public class ExpandExpressionReferenceJob extends InlineDocumentJob {
     private final FXOMCloner cloner;
     private final FXOMDocument fxomDocument;
 
-    public ExpandExpressionReferenceJob(ApplicationContext context, 
+    public ExpandExpressionReferenceJob(SceneBuilderBeanFactory context,
             FXOMPropertyT reference,
             FXOMCloner cloner,
             Editor editor) {

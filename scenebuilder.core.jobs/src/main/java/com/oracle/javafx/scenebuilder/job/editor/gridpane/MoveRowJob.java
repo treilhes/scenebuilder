@@ -37,12 +37,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -69,7 +68,7 @@ public class MoveRowJob extends BatchSelectionJob {
     private final Position position;
     private FXOMDocument fxomDocument;
 
-    public MoveRowJob(ApplicationContext context, final Editor editor, final Position position) {
+    public MoveRowJob(SceneBuilderBeanFactory context, final Editor editor, final Position position) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

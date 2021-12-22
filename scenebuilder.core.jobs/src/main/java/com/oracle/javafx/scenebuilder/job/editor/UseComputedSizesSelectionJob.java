@@ -37,11 +37,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -54,7 +53,7 @@ import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
  */
 public class UseComputedSizesSelectionJob extends BatchDocumentJob {
 
-    public UseComputedSizesSelectionJob(ApplicationContext context, Editor editor) {
+    public UseComputedSizesSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 

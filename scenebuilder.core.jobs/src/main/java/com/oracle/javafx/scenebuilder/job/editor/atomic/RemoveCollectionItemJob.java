@@ -32,11 +32,10 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -53,7 +52,7 @@ public class RemoveCollectionItemJob extends Job {
 
     private FXOMDocument fxomDocument;
 
-    public RemoveCollectionItemJob(ApplicationContext context, FXOMObject value, Editor editor) {
+    public RemoveCollectionItemJob(SceneBuilderBeanFactory context, FXOMObject value, Editor editor) {
         super(context, editor);
         this.targetValue = value;
         DocumentManager documentManager = context.getBean(DocumentManager.class);

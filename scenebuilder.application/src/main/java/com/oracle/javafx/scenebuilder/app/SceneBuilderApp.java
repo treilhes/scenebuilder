@@ -43,6 +43,7 @@ public class SceneBuilderApp {
      * But on Mac OS, this method seems to be called by the javafx launcher.
      */
 	public static void main(String[] args) {
+	    System.setProperty("polyglot.js.nashorn-compat", "true");
         SceneBuilderBootstrap.start(args);
 	}
 

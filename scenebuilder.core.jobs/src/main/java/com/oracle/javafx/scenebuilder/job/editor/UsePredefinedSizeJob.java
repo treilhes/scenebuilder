@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Size;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
@@ -49,15 +48,15 @@ import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthP
  */
 public class UsePredefinedSizeJob extends UseSizeJob {
 
-    public UsePredefinedSizeJob(ApplicationContext context, Editor editor, Size size, FXOMObject fxomObject) {
+    public UsePredefinedSizeJob(SceneBuilderBeanFactory context, Editor editor, Size size, FXOMObject fxomObject) {
         super(context, editor, getWidthFromSize(context, size), getHeightFromSize(context, size), fxomObject);
     }
 
-    public UsePredefinedSizeJob(ApplicationContext context, Editor editor, Size size) {
+    public UsePredefinedSizeJob(SceneBuilderBeanFactory context, Editor editor, Size size) {
         super(context, editor, getWidthFromSize(context, size), getHeightFromSize(context, size));
     }
 
-    private static int getWidthFromSize(ApplicationContext context, Size size) {
+    private static int getWidthFromSize(SceneBuilderBeanFactory context, Size size) {
         assert size != Size.SIZE_PREFERRED;
 
         if (size == Size.SIZE_DEFAULT) {
@@ -66,7 +65,7 @@ public class UsePredefinedSizeJob extends UseSizeJob {
         return size.getWidth();
     }
 
-    private static int getHeightFromSize(ApplicationContext context, Size size) {
+    private static int getHeightFromSize(SceneBuilderBeanFactory context, Size size) {
         assert size != Size.SIZE_PREFERRED;
 
         if (size == Size.SIZE_DEFAULT) {

@@ -34,12 +34,11 @@ package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
 import javafx.geometry.Orientation;
@@ -52,11 +51,11 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
 
     private final static String VIEW_SOURCE = "View.fxml";
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     private final Orientation orientation;
 
-    public AbstractDockTypeSplit(ApplicationContext context, Orientation orientation) {
+    public AbstractDockTypeSplit(SceneBuilderBeanFactory context, Orientation orientation) {
         this.context = context;
         this.orientation = orientation;
     }
@@ -101,7 +100,7 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
     public Node computeRoot(List<DockContext<Node>> views, DockContext<Node> focused) {
         SplitPane sPane = new SplitPane();
         sPane.setOrientation(orientation);
-        
+
         double coef = 1.0 / views.size();
 
         for (int i = 0; i < views.size(); i++) {

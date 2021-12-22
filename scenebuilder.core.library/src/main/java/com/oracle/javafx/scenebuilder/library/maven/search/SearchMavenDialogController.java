@@ -44,7 +44,6 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.version.Version;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -116,7 +115,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     private DefaultArtifact artifact;
     private final SceneBuilderWindow owner;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
 
     protected SearchMavenDialogController(
@@ -175,12 +174,12 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
                                     .map(File::new)
                                     .collect(Collectors.toList()));
                         }
-                        
+
                         if (userLibrary.performAddArtifact(mavenArtifact)) {//, files)) {
                             updatePreferences(mavenArtifact);
                             logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
                         }
-                        
+
                         this.onCloseRequest();
                     }
                 } else if (nv.equals(Worker.State.CANCELLED) || nv.equals(Worker.State.FAILED)) {

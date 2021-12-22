@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -70,13 +69,13 @@ public class WrapJobUtils {
     static PropertyName getContainerPropertyName(
         final FXOMInstance container, final List<FXOMObject> children) {
         final DesignHierarchyMask mask = new DesignHierarchyMask(container);
-        
+
         List<Accessory> allAccessories = new ArrayList<>();
         if (mask.getMainAccessory() != null) {
             allAccessories.add(mask.getMainAccessory());
         }
         allAccessories.addAll(mask.getAccessories());
-        
+
         for (Accessory accessory:allAccessories) {
 
             final FXOMObject child = children.iterator().next();
@@ -105,7 +104,7 @@ public class WrapJobUtils {
     }
 
     static Job modifyObjectJob(
-    		final ApplicationContext context,
+    		final SceneBuilderBeanFactory context,
             final FXOMInstance instance,
             final Class<?> clazz,
             final String name,
@@ -120,7 +119,7 @@ public class WrapJobUtils {
     }
 
     static Job modifyObjectJob(
-    		final ApplicationContext context,
+    		final SceneBuilderBeanFactory context,
             final FXOMInstance instance,
             final String name,
             final Object value,

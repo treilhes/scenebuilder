@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.core.editors;
 import java.io.File;
 
 import org.mockito.Mockito;
-import org.springframework.context.support.GenericApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ApiDoc;
@@ -43,20 +42,21 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 public class MockObjects {
     public static Api buildApiMock() {
-        
+
         try {
             Api api = Mockito.mock(Api.class);
             ApiDoc apiDoc = Mockito.mock(ApiDoc.class);
             Dialog dialog = Mockito.mock(Dialog.class);
             FileSystem fs = Mockito.mock(FileSystem.class);
-            GenericApplicationContext ctx = Mockito.mock(GenericApplicationContext.class);
+            SceneBuilderBeanFactory ctx = Mockito.mock(SceneBuilderBeanFactory.class);
             Editor editor = Mockito.mock(Editor.class);
-            
+
             DocumentManager dm = new DocumentManager.DocumentManagerImpl();
-            
+
             Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
             Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
             Mockito.when(api.getApiDoc()).thenReturn(apiDoc);

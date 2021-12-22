@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -71,11 +70,11 @@ public class ApplyToolCssPreferencesExtension extends AbstractActionExtension<Ap
     private final static String cssClassFormat = "%s {%s\n}\n\n";
     private final static String cssPropertyFormat = "\n   %s: %s;";
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final List<CssPreference<?>> cssPreferences;
     private final Subject<Boolean> throttledUpdate = PublishSubject.create();
 
-    public ApplyToolCssPreferencesExtension(@Autowired ApplicationContext context,
+    public ApplyToolCssPreferencesExtension(@Autowired SceneBuilderBeanFactory context,
             @Autowired @Lazy List<CssPreference<?>> cssPreferences) {
         super();
         this.context = context;

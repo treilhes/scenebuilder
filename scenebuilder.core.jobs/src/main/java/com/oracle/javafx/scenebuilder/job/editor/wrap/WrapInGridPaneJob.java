@@ -40,11 +40,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -71,7 +70,7 @@ public class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
     private final Map<FXOMObject, int[]> indices = new HashMap<>();
     private final FXOMDocument fxomDocument;
 
-    public WrapInGridPaneJob(ApplicationContext context, Editor editor) {
+    public WrapInGridPaneJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -68,19 +67,19 @@ public class JobManagerImpl implements JobManager {
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
     private boolean lock;
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 
     public JobManagerImpl(
-    		@Autowired ApplicationContext context,
+    		@Autowired SceneBuilderBeanFactory context,
     		@Autowired DocumentManager documentManager,
     		@Autowired @Lazy Editor editor) {
         assert editor != null;
         this.context = context;
         this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
-        
+
         revision.addListener((ob,o,n) -> documentManager.dirty().set(true));
-        
+
         documentManager.fxomDocument().subscribe(fxom -> clear());
     }
 

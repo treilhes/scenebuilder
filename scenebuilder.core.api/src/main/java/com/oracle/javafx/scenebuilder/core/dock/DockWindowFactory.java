@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,16 +43,16 @@ import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DockWindowFactory {
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final DockManager dockManager;
 
     protected DockWindowFactory(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired DockManager dockManager) {
         this.context = context;
         this.dockManager = dockManager;
     }
-    
+
     public DockWindowController newDockWindow() {
         DockWindowController dwc = context.getBean(DockWindowController.class);
         return dwc;

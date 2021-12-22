@@ -50,7 +50,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -181,7 +180,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     //private final AccordionAnimationPreference accordionAnimationPreference;
 	private final FileSystem fileSystem;
     private final Dialog dialog;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final ImageLibraryController libraryController;
     private DocumentManager documentManager;
     private FXOMDocument fxomDocument;

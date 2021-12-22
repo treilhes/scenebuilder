@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
@@ -53,7 +52,7 @@ public class RemoveRowContentJob extends BatchDocumentJob {
     private final FXOMObject targetGridPane;
     private final List<Integer> targetIndexes;
 
-    public RemoveRowContentJob(ApplicationContext context, 
+    public RemoveRowContentJob(SceneBuilderBeanFactory context,
             final Editor editor,
             final FXOMObject targetGridPane,
             final List<Integer> targetIndexes) {
@@ -79,7 +78,7 @@ public class RemoveRowContentJob extends BatchDocumentJob {
             final List<FXOMObject> children
                     = targetGridPaneMask.getRowContentAtIndex(targetIndex);
             for (FXOMObject child : children) {
-                final Job removeChildJob = new DeleteObjectJob(getContext(), 
+                final Job removeChildJob = new DeleteObjectJob(getContext(),
                         child,
                         getEditorController()).extend();
                 result.add(removeChildJob);

@@ -37,9 +37,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
@@ -56,7 +55,7 @@ import javafx.scene.control.SplitPane;
  */
 public class WrapInSplitPaneJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInSplitPaneJob(ApplicationContext context, Editor editor) {
+    public WrapInSplitPaneJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         newContainerClass = SplitPane.class;
     }

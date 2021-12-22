@@ -54,7 +54,6 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.library.Library;
@@ -64,6 +63,7 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialogController;
@@ -112,7 +112,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
 
     private final ClassLoaderController classLoaderController;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     private final LibraryStoreConfiguration dialogConfiguration;
 
@@ -120,7 +120,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
      * Public
      */
 
-    public AbstractLibrary(ApplicationContext context, SceneBuilderManager sceneBuilderManager,
+    public AbstractLibrary(SceneBuilderBeanFactory context, SceneBuilderManager sceneBuilderManager,
             ClassLoaderController classLoaderController, LibraryStore store,
             LibraryStoreConfiguration dialogConfiguration) {
         this.context = context;

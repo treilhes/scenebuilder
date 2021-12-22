@@ -38,12 +38,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -74,7 +73,7 @@ public class AddColumnConstraintsJob extends BatchDocumentJob {
     private static final double defaultMinWidth = 10.0;
     private static final double defaultPrefWidth = 100.0;
 
-    public AddColumnConstraintsJob(ApplicationContext context,
+    public AddColumnConstraintsJob(SceneBuilderBeanFactory context,
             final Editor editor,
             final Position position,
             final Map<FXOMObject, Set<Integer>> targetGridPanes) {
@@ -142,7 +141,7 @@ public class AddColumnConstraintsJob extends BatchDocumentJob {
                 final FXOMInstance addedConstraints = makeColumnConstraintsInstance(
                         (FXOMInstance) targetConstraints);
 
-                final Job addValueJob = new AddPropertyValueJob(getContext(), 
+                final Job addValueJob = new AddPropertyValueJob(getContext(),
                         addedConstraints,
                         (FXOMPropertyC) constraintsProperty,
                         addedIndex, getEditorController()).extend();
@@ -155,7 +154,7 @@ public class AddColumnConstraintsJob extends BatchDocumentJob {
                 for (int index = constraintsSize; index < addedIndex; index++) {
                     // Create new empty constraints for the exisiting columns
                     final FXOMInstance addedConstraints = makeColumnConstraintsInstance();
-                    final Job addValueJob = new AddPropertyValueJob(getContext(), 
+                    final Job addValueJob = new AddPropertyValueJob(getContext(),
                             addedConstraints,
                             (FXOMPropertyC) constraintsProperty,
                             index, getEditorController()).extend();
@@ -165,7 +164,7 @@ public class AddColumnConstraintsJob extends BatchDocumentJob {
                 final FXOMInstance addedConstraints = makeColumnConstraintsInstance();
                 JobUtils.setMinWidth(addedConstraints, ColumnConstraints.class, defaultMinWidth);
                 JobUtils.setPrefWidth(addedConstraints, ColumnConstraints.class, defaultPrefWidth);
-                final Job addValueJob = new AddPropertyValueJob(getContext(), 
+                final Job addValueJob = new AddPropertyValueJob(getContext(),
                         addedConstraints,
                         (FXOMPropertyC) constraintsProperty,
                         addedIndex, getEditorController()).extend();
@@ -179,7 +178,7 @@ public class AddColumnConstraintsJob extends BatchDocumentJob {
         // IMPORTANT :
         // Note that the AddPropertyJob must be called after the AddPropertyValueJob.
         if (constraintsProperty.getParentInstance() == null) {
-            final Job addPropertyJob = new AddPropertyJob(getContext(), 
+            final Job addPropertyJob = new AddPropertyJob(getContext(),
                     constraintsProperty,
                     targetGridPane,
                     -1, getEditorController()).extend();

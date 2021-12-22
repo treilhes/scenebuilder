@@ -33,20 +33,19 @@
 
 package com.oracle.javafx.scenebuilder.scenicview.controller;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 /**
  * @treatAsPrivate
  */
 public class ScenicViewStarter implements Runnable {
-        private final ApplicationContext context;
-        
-        public ScenicViewStarter(ApplicationContext context) {
+        private final SceneBuilderBeanFactory context;
+
+        public ScenicViewStarter(SceneBuilderBeanFactory context) {
             this.context = context;
         }
-        
+
         @Override
         public void run() {
                 org.scenicview.ScenicView.show(context.getBean(DocumentWindow.class).getScene());

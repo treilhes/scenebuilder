@@ -48,7 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -84,18 +83,18 @@ import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @DependsOn("metadata")
 public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
-    
+
     public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
     public final static List<String> HANDLED_CONTROLFILE_EXTENSIONS = List.of("fxml");
     public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "fxml");
-    
+
     private final static Logger logger = LoggerFactory.getLogger(ControlLibrary.class);
 
     private final static String LIBRARY_ID = "Control";
-    
+
     private final BuiltinLibrary builtinLibrary;
- 
-    
+
+
 
     //private LibraryStoreWatcher watcher;
 
@@ -113,7 +112,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
 
     private final List<LibraryFilter> filters;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     private final ControlFileExplorer controlFileExplorer;
 
@@ -132,7 +131,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
      * Public
      */
     protected ControlLibrary(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired BuiltinLibrary builtinLibrary,
             @Autowired ControlLibraryDialogConfiguration libraryDialogConfiguration,
             @Autowired ExtensionFileSystemFactory extFactory,
@@ -155,12 +154,12 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
         this.uiLogger = logger;
         this.builtinLibrary = builtinLibrary;
         this.filters = filters;
-        
+
         this.controlFileExplorer = controlFileExplorer;
         this.controlFolderExplorer = controlFolderExplorer;
         this.controlMavenArtifactExplorer = controlMavenArtifactExplorer;
     }
-    
+
     @Override
     public String getLibraryId() {
         return LIBRARY_ID;
@@ -170,9 +169,9 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
 	public void afterPropertiesSet() throws Exception {
 
         getItems().addAll(builtinLibrary.getItems());
-        
+
 	}
-    
+
     @Override
     public Explorer<MavenArtifact, ControlReportImpl> newArtifactExplorer(){
         return controlMavenArtifactExplorer;
@@ -185,12 +184,12 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
     public Explorer<Path, ControlReportImpl> newFileExplorer(){
         return controlFileExplorer;
     }
-    
+
     @Override
     public List<ControlReportImpl> createApplyAndSaveFilter(List<ControlReportImpl> reports){
-        
+
         ImportWindowController importWindow = context.getBean(ImportWindowController.class);
-        
+
         try {
             if (getFilterFile().exists()) {
                 controlFilter = Transform.read(getFilterFile());
@@ -201,20 +200,20 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
         if (controlFilter == null) {
             controlFilter = new ControlFilterTransform();
         }
-        
+
         List<Path> sources = reports.stream().map(r -> r.getSource()).collect(Collectors.toList());
-        
+
         try(URLClassLoader classLoader = classLoaderController.copyClassLoader(sources)){
             controlFilter = importWindow.editTransform(reports, controlFilter, classLoader);
         } catch(IOException e) {
             logger.error("Unable to create a copy of classloader", e);
         }
-        
-        
+
+
         if (controlFilter == null) { // import canceled
             return null;
         }
-                
+
         if (controlFilter == null && getFilterFile().exists()) {
             getFilterFile().delete();
         } else {
@@ -224,13 +223,13 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
                 logger.error("Unable to save the control library filter!", e);
             }
         }
-        
+
         return applySavedFilter(reports);
     }
-    
+
     @Override
     public List<ControlReportImpl> applySavedFilter(List<ControlReportImpl> reports){
-        
+
         try {
             if (controlFilter == null) {
                 if (getFilterFile().exists()) {
@@ -245,14 +244,14 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
         }
         return reports;
     }
-    
+
     @Override
     protected void updateItems(Collection<LibraryItemImpl> items) {
-        
+
         Collection<LibraryItemImpl> newItems = new ArrayList<>(items);
         newItems.addAll(builtinLibrary.getItems());
         setItems(newItems);
-        
+
     }
 
     @Override
@@ -281,7 +280,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
 //                    }
                 }
             }
-            
+
         }
 
         return result;
@@ -299,23 +298,23 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
 
     @Override
     protected void userLibraryExplorationDidChange(Exploration<ControlReportImpl> previous, Exploration<ControlReportImpl> current) {
-        
+
         Map<Boolean, List<ControlReportImpl>> partitioned = current.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
         List<ControlReportImpl> currentFxmlReports = partitioned.get(true);
         List<ControlReportImpl> currentJarReports = partitioned.get(false);
-        
-        
+
+
         // We can have 0, 1 or N FXML file, same for JAR one.
         final int numOfFxmlFiles = currentFxmlReports.size();
         final int numOfJarFiles = currentJarReports.size();
 
         switch (numOfFxmlFiles + numOfJarFiles) {
             case 0: // Case 0-0
-                
+
                 Map<Boolean, List<ControlReportImpl>> previousPartitioned = previous.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
                 List<ControlReportImpl> previousFxmlReports = previousPartitioned.get(true);
                 List<ControlReportImpl> previousJarReports = previousPartitioned.get(false);
-                
+
                 final int previousNumOfJarFiles = previousJarReports.size();
                 final int previousNumOfFxmlFiles = previousFxmlReports.size();
                 if (previousNumOfFxmlFiles > 0 || previousNumOfJarFiles > 0) {
@@ -363,7 +362,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
                 break;
         }
     }
-    
+
 
     @Override
     public void unlock(List<Path> pathes) {

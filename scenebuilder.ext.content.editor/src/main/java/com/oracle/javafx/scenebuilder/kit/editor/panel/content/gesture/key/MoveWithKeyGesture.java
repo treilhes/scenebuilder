@@ -36,14 +36,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractKeyGesture;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -61,10 +60,10 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
 
     private double vectorX;
     private double vectorY;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
     public MoveWithKeyGesture(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(contentPanelController);
         this.context = context;

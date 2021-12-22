@@ -32,11 +32,10 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
@@ -51,7 +50,7 @@ public class AddPropertyJob extends Job {
     private final int targetIndex;
     private final FXOMDocument fxomDocument;
 
-    public AddPropertyJob(ApplicationContext context, FXOMProperty property,
+    public AddPropertyJob(SceneBuilderBeanFactory context, FXOMProperty property,
             FXOMInstance targetInstance,
             int targetIndex,
             Editor editor) {

@@ -36,12 +36,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStore;
@@ -53,21 +53,21 @@ import javafx.stage.FileChooser.ExtensionFilter;
 @Component
 public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfiguration { // extends AbstractLibrary
 
-    
+
 
     private final ClassLoaderController classLoaderController;
     private LibraryStore store;
-    private ApplicationContext context;
+    private SceneBuilderBeanFactory context;
 
     private final Api api;
 
     // @formatter:off
     public ExtensionLibraryDialogConfiguration(
-            @Autowired ApplicationContext context, 
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired Api api,
-            @Autowired LibraryStoreFactory libraryStoreFactory, 
+            @Autowired LibraryStoreFactory libraryStoreFactory,
             @Autowired ClassLoaderController classLoaderController,
-            @Autowired FileSystem fileSystem, 
+            @Autowired FileSystem fileSystem,
             @Autowired ExtensionFileSystemFactory extFactory,
             @Autowired Dialog dialog) {
      // @formatter:on
@@ -126,7 +126,7 @@ public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfigur
 //                        // This is why we put application window on the front.
 //                        // From there the import dialog window, which is application modal,
 //                        // should come on top of it.
-//                        
+//
 ////                        final Window window = store.getDialog().getStage().getScene().getWindow();
 ////                        if (window instanceof Stage) {
 ////                            final Stage stage = (Stage) window;
@@ -162,7 +162,7 @@ public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfigur
 //                // TODO Auto-generated method stub
 //                return false;
 //            }
-//            
+//
 //        };
 //    }
 //
@@ -197,7 +197,7 @@ public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfigur
 //                // TODO Auto-generated method stub
 //                return false;
 //            }
-//            
+//
 //        };
 //    }
 //
@@ -216,12 +216,12 @@ public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfigur
 ////                        = context.getBean(ImportWindowController.class, api, libraryPanelController,files, mavenPreferences,
 ////                        (Stage)installButton.getScene().getWindow(), false,mavenPreferences.getArtifactsFilter());
 ////                //iwc.setToolStylesheet(editorController.getToolStylesheet());
-////                
+////
 ////                ButtonID userChoice = iwc.showAndWait();
 ////                if (userChoice == ButtonID.OK) {
 ////                    mavenArtifact.setFilter(iwc.getNewExcludedItems());
 ////                }
-////                
+////
 ////                return userChoice == ButtonID.OK;
 //                return true;
 //            }

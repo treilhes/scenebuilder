@@ -33,11 +33,10 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.gridpane.v2;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -73,7 +72,7 @@ public class MoveCellContentJob extends Job {
     private int oldRowIndex = -1;
     private final FXOMDocument fxomDocument;
 
-    public MoveCellContentJob(ApplicationContext context, FXOMInstance fxomObject,
+    public MoveCellContentJob(SceneBuilderBeanFactory context, FXOMInstance fxomObject,
             int columnIndexDelta, int rowIndexDelta,
             Editor editor) {
         super(context, editor);

@@ -40,14 +40,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -68,7 +67,7 @@ public class RelocateSelectionJob extends BatchDocumentJob {
     private final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
     private long time = System.currentTimeMillis();
 
-    public RelocateSelectionJob(ApplicationContext context, Map<FXOMObject, Point2D> locationMap,
+    public RelocateSelectionJob(SceneBuilderBeanFactory context, Map<FXOMObject, Point2D> locationMap,
             Editor editor) {
         super(context, editor);
         this.locationMap.putAll(locationMap);

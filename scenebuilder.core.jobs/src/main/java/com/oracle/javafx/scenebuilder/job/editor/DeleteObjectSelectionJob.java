@@ -35,12 +35,11 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -51,7 +50,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
  */
 public class DeleteObjectSelectionJob extends BatchSelectionJob {
 
-    public DeleteObjectSelectionJob(ApplicationContext context, Editor editor) {
+    public DeleteObjectSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 

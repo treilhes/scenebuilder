@@ -36,19 +36,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.util.InheritanceMap;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 @Component
 public class DriverExtensionRegistry {
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final Map<Class<?>, InheritanceMap<?>> extensions = new HashMap<>();
-    
+
     public DriverExtensionRegistry(
-            @Autowired ApplicationContext context) {
+            @Autowired SceneBuilderBeanFactory context) {
         super();
         this.context = context;
     }
@@ -58,33 +58,33 @@ public class DriverExtensionRegistry {
             extensions.put(extensionInterface, new InheritanceMap<U>());
         }
     }
-    
+
     public <T, U extends T> void registerImplementationClass(Class<T> extensionInterface, Class<?> itemClass,
             Class<U> implementation) {
         assert extensions.containsKey(extensionInterface);
-        
+
         @SuppressWarnings("unchecked")
         InheritanceMap<T> ef = (InheritanceMap<T>)extensions.get(extensionInterface);
-        
+
         ef.put(itemClass, implementation);
     }
-    
+
     @SuppressWarnings("unchecked")
     public <T, U extends T> Class<U> getImplementationClass(Class<T> extensionInterface, Class<?> itemClass) {
         assert extensions.containsKey(extensionInterface);
-        
+
         InheritanceMap<T> ef = (InheritanceMap<T>)extensions.get(extensionInterface);
 
         return (Class<U>)ef.getFirstInherited(itemClass);
     }
-    
+
     public <T, U extends T> U getImplementationInstance(Class<T> extensionInterface, Class<?> itemClass) {
         Class<U> uClass = getImplementationClass(extensionInterface, itemClass);
-        
+
         if (uClass == null) {
             return null;
         }
-        
+
         return context.getBean(uClass);
     }
 }

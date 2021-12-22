@@ -36,7 +36,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
 import javafx.scene.Node;
@@ -58,9 +58,9 @@ public class DockTypeAccordion implements DockType<TitledPane> {
 
     private final static String VIEW_SOURCE = "TitledPane.fxml";
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
-    public DockTypeAccordion(@Autowired ApplicationContext context) {
+    public DockTypeAccordion(@Autowired SceneBuilderBeanFactory context) {
         this.context = context;
     }
 
@@ -107,20 +107,20 @@ public class DockTypeAccordion implements DockType<TitledPane> {
     @Override
     public Node computeRoot(List<DockContext<TitledPane>> views, DockContext<TitledPane> focused) {
         TitledPane[] panes = views.stream().map(v -> v.getDockContent()).toArray(TitledPane[]::new);
-        
+
         if (panes != null && panes.length == 1) {
             panes[0].setCollapsible(false);
         } else {
             Arrays.stream(panes).forEach(tp -> tp.setCollapsible(true));
         }
         var accordion = new Accordion(panes);
-        
+
         if (focused == null && !accordion.getPanes().isEmpty()) {
             accordion.setExpandedPane(accordion.getPanes().get(0));
         } else if (focused != null) {
             accordion.setExpandedPane(focused.getDockContent());
         }
-        
+
         return accordion;
     }
 }

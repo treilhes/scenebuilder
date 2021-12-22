@@ -35,12 +35,11 @@ package com.oracle.javafx.scenebuilder.job.editor.gridpane.v2;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -59,7 +58,7 @@ import javafx.scene.layout.GridPane;
  * selection if and only if required conditions are met by all of them.
  */
 public class SpanJob extends BatchDocumentJob {
-    
+
     public enum SpanAction {
         DECREASE_COLUMN_SPAN,
         INCREASE_COLUMN_SPAN,
@@ -69,7 +68,7 @@ public class SpanJob extends BatchDocumentJob {
 
     private final SpanAction spanAction;
 
-    public SpanJob(ApplicationContext context, Editor editor, SpanAction spanAction) {
+    public SpanJob(SceneBuilderBeanFactory context, Editor editor, SpanAction spanAction) {
         super(context, editor);
         this.spanAction = spanAction;
     }

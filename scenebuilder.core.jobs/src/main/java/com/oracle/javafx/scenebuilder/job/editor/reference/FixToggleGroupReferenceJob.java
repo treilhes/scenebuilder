@@ -33,10 +33,9 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.reference;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
@@ -48,7 +47,7 @@ public class FixToggleGroupReferenceJob  extends Job {
 
     private final Job subJob;
 
-    public FixToggleGroupReferenceJob(ApplicationContext context, FXOMNode reference, Editor editor) {
+    public FixToggleGroupReferenceJob(SceneBuilderBeanFactory context, FXOMNode reference, Editor editor) {
         super(context, editor);
         if (reference instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) reference;

@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.tablecolumn;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -83,15 +82,15 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
             = new TableViewDesignInfoX();
     private TableView<?> tableView;
     private Node columnHeaderNode;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
     public TableColumnHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Object.class);
         this.context = context;
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof TableColumn;

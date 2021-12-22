@@ -36,7 +36,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -68,12 +67,12 @@ public class GluonMenuProvider implements MenuItemProvider {
     private final static String ABOUT_MENU_ID = "aboutMenuItem";
     private final GluonSwatchPreference gluonSwatchPreference;
     private final ThemePreference themePreference;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final UpdateController updateController;
 
     public GluonMenuProvider(
-            @Autowired ApplicationContext context,
-            @Autowired UpdateController updateController, 
+            @Autowired SceneBuilderBeanFactory context,
+            @Autowired UpdateController updateController,
             @Autowired @Lazy ThemePreference themePreference,
             @Autowired @Lazy GluonSwatchPreference gluonSwatchPreference) {
         this.context = context;

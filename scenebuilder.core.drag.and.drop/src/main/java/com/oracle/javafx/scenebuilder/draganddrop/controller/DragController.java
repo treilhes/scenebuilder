@@ -39,7 +39,6 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -73,7 +72,7 @@ import javafx.scene.input.TransferMode;
 public class DragController implements Drag{
 
     private static final Logger logger = LoggerFactory.getLogger(DragController.class);
-            
+
     private final Editor editorController;
     private final ObjectProperty<DragSource> dragSourceProperty
             = new SimpleObjectProperty<>(null);
@@ -85,10 +84,10 @@ public class DragController implements Drag{
     private boolean dropAccepted;
     private DropTarget committedDropTarget;
     private Timer mouseTimer;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
     public DragController(
-    		@Autowired ApplicationContext context,
+    		@Autowired SceneBuilderBeanFactory context,
     		@Autowired @Lazy Editor editorController) {
     	this.context = context;
         this.editorController = editorController;
@@ -113,7 +112,7 @@ public class DragController implements Drag{
         // Backup and clear the selection
         backupSelectionJob = new BackupSelectionJob(context, editorController).extend();
         editorController.getSelection().clear();
-        
+
         logger.info("Drop session started for {} objects", dragSource.getDraggedObjects().size());
     }
 
@@ -155,15 +154,15 @@ public class DragController implements Drag{
             mouseTimer.cancel();
             mouseTimer = null;
         }
-        
+
         logger.info("Drop session ended for {} objects", getDragSource().getDraggedObjects().size());
-        
+
         liveUpdater = null;
         backupSelectionJob = null;
         committedDropTarget = null;
         dragSourceProperty.set(null);
 
-        
+
     }
 
     @Override
@@ -206,11 +205,11 @@ public class DragController implements Drag{
             final FXOMObject currentParent = firstObject.getParentObject();
             final FXOMObject nextParent = getDropTarget().getTargetObject();
 
-            logger.info("Drop accepted from {} to {} for {} objects", 
+            logger.info("Drop accepted from {} to {} for {} objects",
                     currentParent == null ? "null" : currentParent.getClass().getName(),
                     nextParent == null ? "null" : nextParent.getClass().getName(),
                     getDragSource().getDraggedObjects().size());
-            
+
             if ((currentParent == nextParent) && liveUpdateEnabled) {
                 liveUpdater.setDropTarget(newDropTarget);
             }

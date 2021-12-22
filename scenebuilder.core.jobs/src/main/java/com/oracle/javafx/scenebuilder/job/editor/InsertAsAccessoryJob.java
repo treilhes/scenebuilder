@@ -37,13 +37,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
@@ -71,14 +70,14 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
     private final int targetIndex;
     private final FXOMDocument fxomDocument;
 
-    public InsertAsAccessoryJob(ApplicationContext context, 
+    public InsertAsAccessoryJob(SceneBuilderBeanFactory context,
             FXOMObject newObject,
             FXOMObject targetObject,
             Accessory accessory,
             Editor editor) {
         this(context, newObject, targetObject, accessory, -1, editor);
     }
-    public InsertAsAccessoryJob(ApplicationContext context, 
+    public InsertAsAccessoryJob(SceneBuilderBeanFactory context,
             FXOMObject newObject,
             FXOMObject targetObject,
             Accessory accessory,
@@ -87,7 +86,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
-        
+
         assert newObject != null;
         assert targetObject != null;
         assert accessory != null;
@@ -105,25 +104,25 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
     @Override
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
-        
+
         if (accessory == null) {
             return result;
         }
-            
+
         if (targetObject instanceof FXOMInstance) {
-            
+
             final DesignHierarchyMask mask = new DesignHierarchyMask(targetObject);
-            
+
             if (!mask.isAcceptingAccessory(accessory, newObject)) {
                 return result;
             }
-            
+
             final FXOMInstance targetInstance = (FXOMInstance) targetObject;
             final PropertyName accessoryName = mask.getPropertyNameForAccessory(accessory);
             assert accessoryName != null;
 
             // Property has no value yet because of (1) or is a collection
-            
+
             if (accessory.isCollection()) {
                 /*
                  * If accessory is a collection
@@ -138,8 +137,8 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                  *      2.2) property is an empty FXOMPropertyT (see DTL-6206)
                  *          => property must be replaced by an FXOMPropertyC
                  *          => newObject must be inserted in the FXOMPropertyC
-                 */ 
-                
+                 */
+
                 final FXOMProperty currentProperty
                     = targetInstance.getProperties().get(accessoryName);
 
@@ -156,7 +155,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                 if (currentProperty instanceof FXOMPropertyT) {
                     result.add(new RemovePropertyJob(getContext(), currentProperty, getEditorController()).extend());
                 }
-        
+
                 /*
                  * AddPropertyValueJob
                  */
@@ -166,7 +165,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                                 targetIndex,
                                 getEditorController()).extend();
                 result.add(addValueJob);
-        
+
                 /*
                  * AddPropertyJob
                  */
@@ -177,7 +176,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                             -1, getEditorController()).extend();
                     result.add(addPropertyJob);
                 }
-        
+
                 /*
                  * PrunePropertiesJob
                  */
@@ -186,7 +185,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                 if (pruneJob.isExecutable()) {
                     result.add(0, pruneJob);
                 }
-               
+
             } else {
                 /*
                  * If accessory is not a collection
@@ -217,7 +216,7 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
                     result.add(0, pruneJob);
                 }
             }
-        
+
         }
         return result;
     }

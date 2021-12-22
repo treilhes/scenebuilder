@@ -35,12 +35,11 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -122,7 +121,7 @@ public class HierarchyDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController) {
+    public Job makeDropJob(SceneBuilderBeanFactory context, DragSource dragSource, Editor editorController) {
         assert acceptDragSource(dragSource);
         assert editorController != null;
 

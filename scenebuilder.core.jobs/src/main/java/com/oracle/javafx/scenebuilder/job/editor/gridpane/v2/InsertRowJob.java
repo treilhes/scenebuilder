@@ -37,11 +37,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -68,7 +67,7 @@ public class InsertRowJob extends BatchSelectionJob {
     private final int rowIndex;
     private final int insertCount;
 
-    public InsertRowJob(ApplicationContext context, FXOMObject gridPaneObject,
+    public InsertRowJob(SceneBuilderBeanFactory context, FXOMObject gridPaneObject,
             int rowIndex, int insertCount, Editor editor) {
         super(context, editor);
 

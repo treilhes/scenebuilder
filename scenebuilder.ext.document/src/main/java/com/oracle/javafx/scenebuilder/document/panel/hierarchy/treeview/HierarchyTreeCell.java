@@ -36,8 +36,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
@@ -54,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -156,7 +155,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         }
     };
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
     private final Glossary glossary;
 
@@ -167,7 +166,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     private final Drag drag;
 
     public HierarchyTreeCell(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		final AbstractHierarchyPanelController c) {
         super();
         this.context = context;

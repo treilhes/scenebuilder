@@ -35,10 +35,9 @@ package com.oracle.javafx.scenebuilder.job.editor.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -57,7 +56,7 @@ import javafx.scene.control.TabPane;
  */
 public class WrapInTabPaneJob extends AbstractWrapInJob {
 
-    public WrapInTabPaneJob(ApplicationContext context, Editor editor) {
+    public WrapInTabPaneJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         newContainerClass = TabPane.class;
     }
@@ -107,7 +106,7 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
                 tabContainer.getFxomDocument(), tabContainerPropertyName);
 
         // Add the Tab sub container to the new container
-        final Job addTabValueJob = new AddPropertyValueJob(getContext(), 
+        final Job addTabValueJob = new AddPropertyValueJob(getContext(),
                 tabContainer,
                 newContainerProperty,
                 -1,
@@ -125,7 +124,7 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
 
         // Add the Tab sub container property to the tab container instance
         assert tabContainerProperty.getParentInstance() == null;
-        final Job addTabContainerPropertyJob = new AddPropertyJob(getContext(), 
+        final Job addTabContainerPropertyJob = new AddPropertyJob(getContext(),
                 tabContainerProperty,
                 tabContainer,
                 -1, getEditorController()).extend();
@@ -133,7 +132,7 @@ public class WrapInTabPaneJob extends AbstractWrapInJob {
 
         // Add the new container property to the new container instance
         assert newContainerProperty.getParentInstance() == null;
-        final Job addNewContainerPropertyJob = new AddPropertyJob(getContext(), 
+        final Job addNewContainerPropertyJob = new AddPropertyJob(getContext(),
                 newContainerProperty,
                 newContainer,
                 -1, getEditorController()).extend();

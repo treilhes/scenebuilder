@@ -31,9 +31,6 @@
         <Timeline fx:id="timeline" autoReverse="true" cycleCount="$indef">
             <keyFrames>
                 <KeyFrame time="1000ms">
-                    <!-- <time>
-                        <Duration millis="1000" />
-                    </time> -->
                     <values>
                         <KeyValue target="$circleId.layoutXProperty" endValue="$somevalue"/>
                     </values>
@@ -41,5 +38,4 @@
             </keyFrames>
         </Timeline>
     </fx:define>
-
 </Pane>

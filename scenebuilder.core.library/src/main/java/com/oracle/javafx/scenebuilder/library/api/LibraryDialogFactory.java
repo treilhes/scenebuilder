@@ -32,15 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.library.api;
 
-import org.springframework.context.ApplicationContext;
-
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialog;
 
 public class LibraryDialogFactory {
-    
-    private final ApplicationContext context;
 
-    public LibraryDialogFactory(ApplicationContext context) {
+    private final SceneBuilderBeanFactory context;
+
+    public LibraryDialogFactory(SceneBuilderBeanFactory context) {
         super();
         this.context = context;
     }

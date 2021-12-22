@@ -36,11 +36,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -55,9 +54,9 @@ public class BatchJob extends Job {
     private final String description;
     private final FXOMDocument fxomDocument;
     private final Selection selection;
-    
 
-    public BatchJob(ApplicationContext context, Editor editor,
+
+    public BatchJob(SceneBuilderBeanFactory context, Editor editor,
             boolean shouldRefreshSceneGraph,
             boolean shouldUpdateSelection,
             String description) {
@@ -70,7 +69,7 @@ public class BatchJob extends Job {
         this.shouldUpdateSelection = shouldUpdateSelection;
     }
 
-    public BatchJob(ApplicationContext context, Editor editor,
+    public BatchJob(SceneBuilderBeanFactory context, Editor editor,
             boolean shouldRefreshSceneGraph, String description) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
@@ -81,7 +80,7 @@ public class BatchJob extends Job {
         this.shouldUpdateSelection = true;
     }
 
-     public BatchJob(ApplicationContext context, Editor editor, String description) {
+     public BatchJob(SceneBuilderBeanFactory context, Editor editor, String description) {
          super(context, editor);
          DocumentManager documentManager = context.getBean(DocumentManager.class);
          this.fxomDocument = documentManager.fxomDocument().get();
@@ -91,7 +90,7 @@ public class BatchJob extends Job {
          this.shouldUpdateSelection = true;
     }
 
-   public BatchJob(ApplicationContext context, Editor editor) {
+   public BatchJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

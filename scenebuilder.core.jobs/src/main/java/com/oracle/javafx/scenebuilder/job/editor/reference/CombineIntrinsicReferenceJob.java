@@ -36,11 +36,10 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -57,7 +56,7 @@ public class CombineIntrinsicReferenceJob extends InlineDocumentJob {
     private final FXOMIntrinsic reference;
     private final FXOMDocument fxomDocument;
 
-    public CombineIntrinsicReferenceJob(ApplicationContext context, 
+    public CombineIntrinsicReferenceJob(SceneBuilderBeanFactory context,
             FXOMIntrinsic reference,
             Editor editor) {
         super(context, editor);

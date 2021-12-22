@@ -37,12 +37,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -76,11 +75,11 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
     private final int columnIndex;
     private final GridPane gridPane;
     private GridPaneColumnResizer resizer;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 
     public ResizeColumnGesture(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		GridPaneHandles gridPaneHandles,
     		int columnIndex) {
         super(gridPaneHandles.getContentPanelController());

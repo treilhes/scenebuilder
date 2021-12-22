@@ -33,11 +33,11 @@
 package com.oracle.javafx.scenebuilder.gluon.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowController;
@@ -46,24 +46,24 @@ import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowContr
 @Lazy
 public class RegistrationController {
 
-    private ApplicationContext context;
+    private SceneBuilderBeanFactory context;
     private final RegistrationEmailPreference registrationEmailPreference;
     private final RegistrationHashPreference registrationHashPreference;
-    
+
     public RegistrationController(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired RegistrationEmailPreference registrationEmailPreference,
             @Autowired RegistrationHashPreference registrationHashPreference
             ) {
         this.context = context;
         this.registrationEmailPreference = registrationEmailPreference;
         this.registrationHashPreference = registrationHashPreference;
-        
+
     }
 
     public void showRegistrationDialogIfRequired(DocumentWindow dwc) {
         String registrationHash = getRegistrationHash();
-        
+
         if (registrationHash == null) {
             context.getBean(RegistrationWindowController.class).openWindow();
         } else {
@@ -73,7 +73,7 @@ public class RegistrationController {
             }
         }
     }
-    
+
     public String getRegistrationHash() {
         return registrationHashPreference.getValue();
     }

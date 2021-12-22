@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.template.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
@@ -43,13 +42,14 @@ import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.template.Template;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
 import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
 
 
 /**
- * Allow control of {@link Template} selection and loading into a document window 
+ * Allow control of {@link Template} selection and loading into a document window
  * @author ptreilhes
  *
  */
@@ -57,8 +57,8 @@ import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
 public class TemplateController {
 
     private final Main main;
-    private final ApplicationContext context;
-    
+    private final SceneBuilderBeanFactory context;
+
     /**
      * Instantiates a new template controller.
      *
@@ -66,7 +66,7 @@ public class TemplateController {
      * @param main the main controller instance
      */
     public TemplateController(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
     		@Autowired Main main) {
         this.context = context;
     	this.main = main;
@@ -96,7 +96,7 @@ public class TemplateController {
         final Document newTemplateWindow = main.makeNewWindow();
         loadTemplateInWindow(template, newTemplateWindow);
     }
-    
+
     /**
      * Load template in current document window.
      *
@@ -126,13 +126,13 @@ public class TemplateController {
             ExtendedAction<?> extendedJob = context.getBean(ApplyCssContentAction.class).extend();
             extendedJob.checkAndPerform();
         }
-        
+
         if (template != null && (template.getWidth() != 0 || template.getHeight() != 0)) {
             final Job job = new UseSizeJob(context, context.getBean(Editor.class), template.getWidth(), template.getHeight()).extend();
             if (job.isExecutable()) {
                 context.getBean(JobManager.class).push(job);
             }
         }
-        
+
     }
 }

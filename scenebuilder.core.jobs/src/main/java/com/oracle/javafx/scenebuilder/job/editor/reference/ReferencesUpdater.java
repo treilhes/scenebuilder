@@ -39,11 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -65,17 +64,17 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveNodeJob;
  */
 public class ReferencesUpdater {
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final Editor editor;
     private final FXOMDocument fxomDocument;
     private final List<Job> executedJobs = new LinkedList<>();
     private final Set<String> declaredFxIds = new HashSet<>();
     private final FXOMCloner cloner;
 
-    public ReferencesUpdater(ApplicationContext context, Editor editor) {
+    public ReferencesUpdater(SceneBuilderBeanFactory context, Editor editor) {
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
-        
+
         assert editor != null;
         assert fxomDocument != null;
         this.context = context;

@@ -33,9 +33,8 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.geometry.Point2D;
 import javafx.scene.transform.Transform;
@@ -48,7 +47,7 @@ public abstract class AbstractResilientHandles<T> extends AbstractGenericHandles
     private boolean ready;
 
     public AbstractResilientHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController,
             Class<T> sceneGraphClass) {
         super(context, contentPanelController, sceneGraphClass);

@@ -35,6 +35,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.menubar;
     exports com.oracle.javafx.scenebuilder.api.preferences.type;
     exports com.oracle.javafx.scenebuilder.api.preferences;
+    exports com.oracle.javafx.scenebuilder.api.script;
     exports com.oracle.javafx.scenebuilder.api.settings;
     exports com.oracle.javafx.scenebuilder.api.subjects;
     exports com.oracle.javafx.scenebuilder.api.template;

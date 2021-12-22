@@ -32,9 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.wrap;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.scene.layout.TilePane;
 
@@ -43,7 +42,7 @@ import javafx.scene.layout.TilePane;
  */
 public class WrapInTilePaneJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInTilePaneJob(ApplicationContext context, Editor editor) {
+    public WrapInTilePaneJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         newContainerClass = TilePane.class;
     }

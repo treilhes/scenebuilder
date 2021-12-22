@@ -42,7 +42,6 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.version.Version;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -118,7 +117,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
 
 	private final MavenArtifactsPreferences mavenPreferences;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     public MavenDialogController(
             Api api,
@@ -134,7 +133,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
         this.owner = owner;
         this.editorController = editorController;
         this.mavenPreferences = mavenPreferences;
-        
+
         maven = new MavenRepositorySystem(false, mavenSetting, repositoryPreferences);
 
         versionsService = new Service<ObservableList<Version>>() {
@@ -205,7 +204,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
                         updatePreferences(mavenArtifact);
                         logInfoMessage("log.user.maven.installed", getArtifactCoordinates());
                     }
-                    
+
                     this.onCloseRequest();
                 }
             } else if (nv.equals(Worker.State.CANCELLED) || nv.equals(Worker.State.FAILED)) {

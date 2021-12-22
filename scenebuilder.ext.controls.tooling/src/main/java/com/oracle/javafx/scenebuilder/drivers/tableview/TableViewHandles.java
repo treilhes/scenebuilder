@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.tableview;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -66,17 +65,17 @@ import javafx.scene.shape.Line;
 public class TableViewHandles extends AbstractNodeHandles<Node> {
 
     private final Group grips = new Group();
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
     public TableViewHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Node.class);
         this.context = context;
 
         getRootNode().getChildren().add(grips); // Above handles
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof TableView;

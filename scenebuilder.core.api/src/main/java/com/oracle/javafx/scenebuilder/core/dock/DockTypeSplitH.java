@@ -33,9 +33,10 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.geometry.Orientation;
 
@@ -43,7 +44,7 @@ import javafx.geometry.Orientation;
 @Lazy
 public class DockTypeSplitH extends AbstractDockTypeSplit {
 
-    public DockTypeSplitH(@Autowired ApplicationContext context) {
+    public DockTypeSplitH(@Autowired SceneBuilderBeanFactory context) {
         super(context, Orientation.HORIZONTAL);
     }
 

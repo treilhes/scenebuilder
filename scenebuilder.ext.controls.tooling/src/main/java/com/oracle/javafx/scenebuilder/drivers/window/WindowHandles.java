@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.window;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -55,14 +54,14 @@ public class WindowHandles extends AbstractGenericHandles<Window> {
     private Node sceneGraphObject;
 
     public WindowHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Window.class);
     }
-    
+
     @Override
     public void initialize() {
-     
+
         final DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(getFxomObject());
         FXOMObject scene = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         if (scene == null) {

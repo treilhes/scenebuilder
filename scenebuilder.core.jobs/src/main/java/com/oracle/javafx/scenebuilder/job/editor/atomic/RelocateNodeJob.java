@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
@@ -74,7 +73,7 @@ public class RelocateNodeJob extends Job {
     private final DoublePropertyMetadata topAnchorMeta;
     private final DoublePropertyMetadata bottomAnchorMeta;
 
-    public RelocateNodeJob(ApplicationContext context, FXOMInstance fxomInstance, double newLayoutX, double newLayoutY, Editor editor) {
+    public RelocateNodeJob(SceneBuilderBeanFactory context, FXOMInstance fxomInstance, double newLayoutX, double newLayoutY, Editor editor) {
         super(context, editor);
 
         assert fxomInstance != null;

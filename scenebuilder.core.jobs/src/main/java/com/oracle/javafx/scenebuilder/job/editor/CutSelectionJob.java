@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 
 /**
@@ -49,7 +48,7 @@ public class CutSelectionJob extends InlineSelectionJob {
 
     private Job deleteSelectionSubJob;
 
-    public CutSelectionJob(ApplicationContext context, Editor editor) {
+    public CutSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 

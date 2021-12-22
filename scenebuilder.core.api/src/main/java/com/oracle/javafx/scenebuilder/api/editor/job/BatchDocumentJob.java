@@ -35,10 +35,9 @@ package com.oracle.javafx.scenebuilder.api.editor.job;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
@@ -52,7 +51,7 @@ public abstract class BatchDocumentJob extends CompositeJob {
     private List<Job> subJobs;
     private FXOMDocument fxomDocument;
 
-    public BatchDocumentJob(ApplicationContext context, Editor editor) {
+    public BatchDocumentJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         fxomDocument = documentManager.fxomDocument().get();

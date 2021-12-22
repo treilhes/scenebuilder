@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -72,10 +71,10 @@ public class ThemeMenuProvider implements MenuItemProvider {
 
 	private final ThemePreference themePreference;
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 	public ThemeMenuProvider(
-			@Autowired ApplicationContext context,
+			@Autowired SceneBuilderBeanFactory context,
 			@Autowired @Lazy ThemePreference themePreference,
 			@Autowired @Lazy List<ThemeProvider> themeProviders
 

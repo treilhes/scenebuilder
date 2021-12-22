@@ -44,7 +44,6 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -81,7 +80,7 @@ public class MainController implements UILogger, Main {
     private static MainController singleton;
 
     @Autowired
-    ApplicationContext context;
+    SceneBuilderBeanFactory context;
 
     @Autowired
     HostServices hostServices;
@@ -116,7 +115,7 @@ public class MainController implements UILogger, Main {
     private final List<DisposeWithSceneBuilder> finalizations;
 
     public MainController(
-            @Autowired FileSystem fileSystem, 
+            @Autowired FileSystem fileSystem,
             @Autowired @Lazy Dialog dialog,
             @Lazy @Autowired(required = false) List<InitWithSceneBuilder> initializations,
             @Lazy @Autowired(required = false) List<DisposeWithSceneBuilder> finalizations) {
@@ -352,9 +351,9 @@ public class MainController implements UILogger, Main {
 //
 //        } catch (IOException x) {
 //            dialog.showErrorAndWait(
-//                    I18N.getString("alert.title.start"), 
-//                    I18N.getString("alert.start.failure.message"), 
-//                    I18N.getString("alert.start.failure.details"), 
+//                    I18N.getString("alert.title.start"),
+//                    I18N.getString("alert.start.failure.message"),
+//                    I18N.getString("alert.start.failure.details"),
 //                    x);
 //            Platform.exit();
 //        }
@@ -366,14 +365,14 @@ public class MainController implements UILogger, Main {
 //    @Override
 //    //TODO there are some Gluon adherence here
 //    public void handleLaunch(List<String> files) {
-//        
+//
 //        // defer dependency injection framework loading outside javafx thread
 //        Task task = new Task(() -> {
 //        initializations.forEach(a -> a.init());
-//        
+//
 //        boolean showWelcomeDialog = files.isEmpty();
 //
-//        
+//
 ////        userLibrary.explorationCountProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> userLibraryExplorationCountDidChange());
 ////
 ////        userLibrary.startWatching();
@@ -382,37 +381,37 @@ public class MainController implements UILogger, Main {
 //        if (showWelcomeDialog) {
 //            // Creates an empty document
 //            final Document newWindow = makeNewWindow();
-//            
+//
 //
 //            WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
 //
 //            // Unless we're on a Mac we're starting SB directly (fresh start)
 //            // so we're not opening any file and as such we should show the Welcome Dialog
-//            
+//
 //            SbPlatform.runLater(() -> {
 //                newWindow.updateWithDefaultContent();
 //                newWindow.openWindow();
 //                wdwc.getStage().show();
 //                SceneBuilderLoadingProgress.get().end();
 //            });
-//            
-//            
+//
+//
 //
 //        } else {
 //            // Open files passed as arguments by the platform
 //            handleOpenFilesAction(files);
 //        }
 //
-//        
+//
 //        });
-//        
+//
 //        Thread th = new Thread(task.getRunnable());
 //        th.setDaemon(true);
 //        th.start();
 //
 //    }
 //
-//    
+//
 //
 //    @Override
 //    public void handleOpenFilesAction(List<String> files) {
@@ -447,9 +446,9 @@ public class MainController implements UILogger, Main {
 //    @Override
 //    public void handleMessageBoxFailure(Exception x) {
 //        dialog.showErrorAndWait(
-//                I18N.getString("alert.title.messagebox"), 
-//                I18N.getString("alert.messagebox.failure.message"), 
-//                I18N.getString("alert.messagebox.failure.details"), 
+//                I18N.getString("alert.title.messagebox"),
+//                I18N.getString("alert.messagebox.failure.message"),
+//                I18N.getString("alert.messagebox.failure.details"),
 //                x);
 //    }
 //
@@ -483,9 +482,9 @@ public class MainController implements UILogger, Main {
     public Document makeNewWindow() {
         DocumentScope.setCurrentScope(null);
 
-        final Document result = sceneBuilderFactory.get(Document.class);
+        final Document result = sceneBuilderFactory.getBean(Document.class);
 
-        sceneBuilderFactory.get(DocumentManager.class).dependenciesLoaded().set(true);
+        sceneBuilderFactory.getBean(DocumentManager.class).dependenciesLoaded().set(true);
 
         SbPlatform.runForDocumentLater(() -> windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
 

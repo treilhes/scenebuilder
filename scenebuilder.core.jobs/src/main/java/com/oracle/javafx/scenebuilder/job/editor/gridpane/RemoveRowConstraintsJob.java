@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
@@ -53,7 +52,7 @@ public class RemoveRowConstraintsJob extends BatchDocumentJob {
     private final FXOMObject targetGridPane;
     private final List<Integer> targetIndexes;
 
-    public RemoveRowConstraintsJob(ApplicationContext context, 
+    public RemoveRowConstraintsJob(SceneBuilderBeanFactory context,
             final Editor editor,
             final FXOMObject targetGridPane,
             final List<Integer> targetIndexes) {
@@ -81,7 +80,7 @@ public class RemoveRowConstraintsJob extends BatchDocumentJob {
             // The target index is associated to an existing constraints value :
             // => we remove the constraints value
             if (targetConstraints != null) {
-                final Job removeValueJob = new DeleteObjectJob(getContext(), 
+                final Job removeValueJob = new DeleteObjectJob(getContext(),
                         targetConstraints,
                         getEditorController()).extend();
                 result.add(removeValueJob);

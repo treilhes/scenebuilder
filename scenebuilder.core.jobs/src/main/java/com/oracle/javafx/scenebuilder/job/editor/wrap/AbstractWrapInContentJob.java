@@ -35,10 +35,9 @@ package com.oracle.javafx.scenebuilder.job.editor.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -52,7 +51,7 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
  */
 public abstract class AbstractWrapInContentJob extends AbstractWrapInJob {
 
-    public AbstractWrapInContentJob(ApplicationContext context, Editor editor) {
+    public AbstractWrapInContentJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 
@@ -96,7 +95,7 @@ public abstract class AbstractWrapInContentJob extends AbstractWrapInJob {
 
         // Add the new container property to the new container instance
         assert newContainerProperty.getParentInstance() == null;
-        final Job addPropertyJob = new AddPropertyJob(getContext(), 
+        final Job addPropertyJob = new AddPropertyJob(getContext(),
                 newContainerProperty,
                 newContainer,
                 -1, getEditorController()).extend();

@@ -38,13 +38,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
@@ -66,10 +65,10 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
 
     private final FXOMInstance columnInstance;
     private TreeTableColumnResizer resizer;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 
-    public ResizeTreeTableColumnGesture(ApplicationContext context, Content content,
+    public ResizeTreeTableColumnGesture(SceneBuilderBeanFactory context, Content content,
             FXOMInstance fxomInstance) {
         super(content);
         this.context = context;

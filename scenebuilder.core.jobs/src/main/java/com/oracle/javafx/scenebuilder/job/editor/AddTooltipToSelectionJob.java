@@ -41,8 +41,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
@@ -50,6 +48,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -65,12 +64,12 @@ import javafx.scene.control.Tooltip;
  *
  */
 public class AddTooltipToSelectionJob extends BatchSelectionJob {
-        
+
     private Map<FXOMObject, FXOMObject> tooltipMap; // Initialized lazily
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final SceneBuilderManager sceneBuilderManager;
 
-    public AddTooltipToSelectionJob(ApplicationContext context, Editor editor) {
+    public AddTooltipToSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         this.context = context;
         this.sceneBuilderManager = context.getBean(SceneBuilderManager.class);
@@ -96,7 +95,7 @@ public class AddTooltipToSelectionJob extends BatchSelectionJob {
             DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
             Accessory tooltipAccessory = designHierarchyMask
                     .getAccessoryForPropertyName(DesignHierarchyMask.AccessoryProperty.TOOLTIP);
-            
+
             if (tooltipAccessory == null) {
                 continue;
             }

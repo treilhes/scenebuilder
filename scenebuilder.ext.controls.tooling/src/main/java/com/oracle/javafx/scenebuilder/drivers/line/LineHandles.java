@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.line;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +54,7 @@ import javafx.scene.shape.Line;
 /**
 *
 * Line handles: <br><img src="doc-files/line-handles.png" alt="line handles"><br>
-* Appears when resizing a 
+* Appears when resizing a
 * <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Line.html">javafx.scene.shape.Line</a>
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
@@ -66,16 +65,16 @@ public class LineHandles extends AbstractCurveHandles<Line> {
 
     private final Circle startHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);
     private final Circle endHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 
     public LineHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(contentPanelController, Line.class);
         this.context = context;
     }
-    
+
     @Override
     public void initialize() {
         setupHandleState(startHandle);

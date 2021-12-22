@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -64,7 +63,7 @@ public class ReIndexRowContentJob extends Job {
     private final List<Integer> targetIndexes;
     private FXOMDocument fxomDocument;
 
-    public ReIndexRowContentJob(ApplicationContext context,
+    public ReIndexRowContentJob(SceneBuilderBeanFactory context,
             final Editor editor,
             final int offset,
             final FXOMObject targetGridPane,
@@ -78,7 +77,7 @@ public class ReIndexRowContentJob extends Job {
         buildSubJobs();
     }
 
-    public ReIndexRowContentJob(ApplicationContext context,
+    public ReIndexRowContentJob(SceneBuilderBeanFactory context,
             final Editor editor,
             final int offset,
             final FXOMObject targetGridPane,

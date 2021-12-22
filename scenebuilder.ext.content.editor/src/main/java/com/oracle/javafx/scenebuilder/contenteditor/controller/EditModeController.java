@@ -41,7 +41,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -118,7 +117,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     public final static Object ID = EditModeController.class;
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 	private final Driver driver;
 
     private SelectWithMarqueeGesture selectWithMarqueeGesture;
@@ -136,7 +135,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     public EditModeController(
             @Autowired Api api,
-    		@Autowired ApplicationContext context,
+    		@Autowired SceneBuilderBeanFactory context,
     		@Autowired Driver driver,
     		@Autowired Drag drag,
     		@Autowired @Lazy Content contentPanelController,

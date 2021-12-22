@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.scene;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,11 +52,11 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
     private Node sceneGraphObject;
 
     public SceneHandles(
-            ApplicationContext context,
+            SceneBuilderBeanFactory context,
             Content contentPanelController) {
         super(context, contentPanelController, Scene.class);
     }
-    
+
     @Override
     public void initialize() {
         final DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(getFxomObject());

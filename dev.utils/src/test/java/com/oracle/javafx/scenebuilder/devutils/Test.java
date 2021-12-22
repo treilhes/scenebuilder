@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.devutils;
 
-import com.oracle.javafx.scenebuilder.devutils.tbview.TestContent5;
+import com.oracle.javafx.scenebuilder.devutils.tbview.TestExternalFile;
 import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
 
 import javafx.beans.property.DoubleProperty;
@@ -48,13 +48,16 @@ public class Test extends AppTester {
         //new TestAnim().start(stage);
         //new TestContent().start(primaryStage);
         //new TestContent2().start(primaryStage);
-        new TestContent5().start(stage);
+        //new TestContent5().start(stage);
         //new TitlePaneBinding().start(stage);
         //new TableViewBinding().start(stage);
         //new TestContent4().start(stage);
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\panInc2.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accordion.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accFocusTravers.fxml");
+        //new TestExternalFile().start(stage, "C:\\SSDDrive\\git\\scenebuilder\\scenebuilder.core.fxom\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\core\\fxom\\fx\\comments.fxml");
+        new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\script.fxml");
+
     }
 
     public static void main(String args[]) {

@@ -49,7 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -91,20 +90,20 @@ import javafx.scene.text.Text;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @DependsOn("metadata") //NOCHECK
 public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
-    
+
     public final static String TTF_EXTENSION = "ttf"; //NOCHECK
     //public final static String OTF_EXTENSION = "otf"; //NOCHECK
     public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar"); //NOCHECK
     public final static List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
     public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
-    
+
     private final static Logger logger = LoggerFactory.getLogger(ImageLibrary.class);
 
     private final static String LIBRARY_ID = "Images"; //NOCHECK
-    
+
     private final ImageBuiltinLibrary builtinLibrary;
- 
-    
+
+
 
     //private LibraryStoreWatcher watcher;
 
@@ -122,7 +121,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 
     private final List<LibraryFilter> filters;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     private final ImageFileExplorer controlFileExplorer;
 
@@ -143,7 +142,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
      * Public
      */
     protected ImageLibrary(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired ImageBuiltinLibrary builtinLibrary,
             @Autowired ImageLibraryDialogConfiguration libraryDialogConfiguration,
             @Autowired ExtensionFileSystemFactory extFactory,
@@ -167,12 +166,12 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
         this.builtinLibrary = builtinLibrary;
         this.filters = filters;
         this.sceneBuilderManager = sceneBuilderManager;
-        
+
         this.controlFileExplorer = controlFileExplorer;
         this.controlFolderExplorer = controlFolderExplorer;
         this.controlMavenArtifactExplorer = controlMavenArtifactExplorer;
     }
-    
+
     @Override
     public String getLibraryId() {
         return LIBRARY_ID;
@@ -182,9 +181,9 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 	public void afterPropertiesSet() throws Exception {
 
         getItems().addAll(builtinLibrary.getItems());
-        
+
 	}
-    
+
     @Override
     public Explorer<MavenArtifact, ImageReport> newArtifactExplorer(){
         return controlMavenArtifactExplorer;
@@ -197,12 +196,12 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
     public Explorer<Path, ImageReport> newFileExplorer(){
         return controlFileExplorer;
     }
-    
+
     @Override
     public List<ImageReport> createApplyAndSaveFilter(List<ImageReport> reports){
-        
+
         ImageImportWindowController importWindow = context.getBean(ImageImportWindowController.class);
-        
+
         try {
             if (getFilterFile().exists()) {
                 controlFilter = Transform.read(getFilterFile());
@@ -213,20 +212,20 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
         if (controlFilter == null) {
             controlFilter = new ImageFilterTransform();
         }
-        
+
         List<Path> sources = reports.stream().map(r -> r.getSource()).collect(Collectors.toList());
-        
+
         try(URLClassLoader classLoader = classLoaderController.copyClassLoader(sources)){
             controlFilter = importWindow.editTransform(reports, controlFilter, classLoader);
         } catch(IOException e) {
             logger.error("Unable to create a copy of classloader", e);
         }
-        
-        
+
+
         if (controlFilter == null) { // import canceled
             return null;
         }
-                
+
         if (controlFilter == null && getFilterFile().exists()) {
             getFilterFile().delete();
         } else {
@@ -236,13 +235,13 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                 logger.error("Unable to save the control library filter!", e);
             }
         }
-        
+
         return applySavedFilter(reports);
     }
-    
+
     @Override
     public List<ImageReport> applySavedFilter(List<ImageReport> reports){
-        
+
         try {
             if (controlFilter == null) {
                 if (getFilterFile().exists()) {
@@ -257,12 +256,12 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
         }
         return reports;
     }
-    
+
     @Override
     protected void resetBeforeUpdate() {
         loadedFonts.clear();
     }
-    
+
     @Override
     protected Collection<LibraryItemImpl> makeLibraryItems(ImageReport reports) throws IOException {
         final List<LibraryItemImpl> result = new ArrayList<>();
@@ -271,10 +270,10 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
         //final List<String> artifactsFilter = getAdditionalFilter() != null ? getAdditionalFilter().get() : Collections.emptyList();
 
         for (ImageReportEntry e : reports.getEntries()) {
-            
+
             if ((e.getStatus() == ImageReportEntry.Status.OK)) {
                 if (e.getType() == Type.FONT_ICONS && e.getUnicodePoints().size() == 1) {
-                    
+
                     // we need to load the font
                     if (e.getResourceName() != null) {// the font is in the classpath
                         if (!loadedFonts.contains(e.getResourceName())) {
@@ -283,7 +282,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                                 loadedFonts.add(e.getResourceName());
                             }
                         }
-                        
+
                     } else {
                         if (!loadedFonts.contains(reports.getSource().toString())) {
                             try(InputStream is = new FileInputStream(reports.getSource().toFile());){
@@ -292,7 +291,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                             }
                         }
                     }
-                    
+
                     String xmlEntity = ImageExplorerUtil.unicodePointToXmlEntity(e.getUnicodePoints().get(0));
                     //&#x0644;
                     //String fxmlText = makeTextText(e.getFontName(), Character.toString(e.getUnicodePoints().get(0)));
@@ -300,16 +299,16 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                     result.add(new LibraryItemImpl(xmlEntity, e.getFontName(), fxmlText));
                 } else {
                     final String fxmlText = makeImageViewText(e.getResourceName());
-                    
+
                     String section = "Miscellaneous";
-                    
+
                     if (LibraryUtil.isJarPath(reports.getSource()) || !reports.getSource().startsWith(getStore().getFilesFolder())) {
                         section = reports.getSource().getFileName().toString();
                     }
                     result.add(new LibraryItemImpl(e.getName(), section, fxmlText));
                 }
             }
-            
+
         }
         getStore().getConfiguration().put("fonts", String.join(",", loadedFonts.toArray(new String[0])));
         return result;
@@ -317,11 +316,11 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 
     @Override
     protected void updateItems(Collection<LibraryItemImpl> items) {
-        
+
         Collection<LibraryItemImpl> newItems = new ArrayList<>(items);
         newItems.addAll(builtinLibrary.getItems());
         setItems(newItems);
-        
+
     }
 
 
@@ -336,23 +335,23 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 
     @Override
     protected void userLibraryExplorationDidChange(Exploration<ImageReport> previous, Exploration<ImageReport> current) {
-        
+
         Map<Boolean, List<ImageReport>> partitioned = current.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
         List<ImageReport> currentFxmlReports = partitioned.get(true);
         List<ImageReport> currentJarReports = partitioned.get(false);
-        
-        
+
+
         // We can have 0, 1 or N FXML file, same for JAR one.
         final int numOfFxmlFiles = currentFxmlReports.size();
         final int numOfJarFiles = currentJarReports.size();
 
         switch (numOfFxmlFiles + numOfJarFiles) {
             case 0: // Case 0-0
-                
+
                 Map<Boolean, List<ImageReport>> previousPartitioned = previous.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
                 List<ImageReport> previousFxmlReports = previousPartitioned.get(true);
                 List<ImageReport> previousJarReports = previousPartitioned.get(false);
-                
+
                 final int previousNumOfJarFiles = previousJarReports.size();
                 final int previousNumOfFxmlFiles = previousFxmlReports.size();
                 if (previousNumOfFxmlFiles > 0 || previousNumOfJarFiles > 0) {
@@ -400,7 +399,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                 break;
         }
     }
-    
+
 
     @Override
     public void unlock(List<Path> pathes) {
@@ -431,7 +430,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
     public void dispose() {
         stopWatching();
     }
-    
+
     public static String makeImageViewText(String resourceName) {
         final StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
@@ -447,13 +446,13 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
         sb.append("<"); // NOI18N
         sb.append(Image.class.getSimpleName().toLowerCase());
         sb.append(">"); // NOI18N
-        
+
         sb.append("<"); // NOI18N
         sb.append(Image.class.getSimpleName());
         sb.append(" url=\"@/");
         sb.append(resourceName);
         sb.append("\" />");
-        
+
         sb.append("</"); // NOI18N
         sb.append(Image.class.getSimpleName().toLowerCase());
         sb.append(">"); // NOI18N
@@ -463,7 +462,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 
         return sb.toString();
     }
-    
+
     public static String makeTextText(String fontName, String content) {
         final StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
@@ -481,13 +480,13 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
         sb.append("<"); // NOI18N
         sb.append(Font.class.getSimpleName().toLowerCase());
         sb.append(">"); // NOI18N
-        
+
         sb.append("<"); // NOI18N
         sb.append(Font.class.getSimpleName());
         sb.append(" name=\"");
         sb.append(fontName);
         sb.append("\" size=\"36.0\" />");
-        
+
         sb.append("</"); // NOI18N
         sb.append(Font.class.getSimpleName().toLowerCase());
         sb.append(">"); // NOI18N
@@ -502,7 +501,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
     public void init() {
         super.init();
         Properties props = getStore().getConfiguration();
-        
+
         if (props != null && props.containsKey("fonts")) {
             String fonts = props.getProperty("fonts");
             if (fonts != null && !fonts.isEmpty()) {
@@ -519,11 +518,11 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
                     }
                 }
             }
-            
+
         }
-        
-        
+
+
     }
-    
-    
+
+
 }

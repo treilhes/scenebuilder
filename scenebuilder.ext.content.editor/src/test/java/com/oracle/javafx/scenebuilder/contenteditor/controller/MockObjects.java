@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.contenteditor.controller;
 
 import org.mockito.Mockito;
-import org.springframework.context.support.GenericApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ApiDoc;
@@ -44,18 +43,19 @@ import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class MockObjects {
     public static Api buildApiMock() {
-        
+
         try {
             Api api = Mockito.mock(Api.class);
             ApiDoc apiDoc = Mockito.mock(ApiDoc.class);
-            
+
             FileSystem fs = Mockito.mock(FileSystem.class);
-            GenericApplicationContext ctx = Mockito.mock(GenericApplicationContext.class);
+            SceneBuilderBeanFactory ctx = Mockito.mock(SceneBuilderBeanFactory.class);
             Editor editor = Mockito.mock(Editor.class);
             Dialog dialog = Mockito.mock(Dialog.class);
             //Library library = Mockito.mock(Library.class);
@@ -63,7 +63,7 @@ public class MockObjects {
             MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
             DocumentManager dm = new DocumentManager.DocumentManagerImpl();
             SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
-            
+
             Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
             Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
             Mockito.when(apiDoc.getMessageLogger()).thenReturn(messageLogger);
@@ -74,7 +74,7 @@ public class MockObjects {
             Mockito.when(api.getFileSystem()).thenReturn(fs);
             Mockito.when(api.getContext()).thenReturn(ctx);
             Mockito.when(api.getSceneBuilderManager()).thenReturn(sbm);
-            
+
 //            Mockito.when(ctx.getBean(Editor.class)).thenReturn(editor);
             Mockito.when(jobManager.revisionProperty()).thenReturn(new SimpleIntegerProperty());
             //Mockito.when(library.getClassLoader()).thenReturn(MockObjects.class.getClassLoader());

@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.DockRequest;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.dock.DockViewController.ViewItem;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
 
@@ -67,22 +67,22 @@ import lombok.Getter;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DockViewController implements InitWithDocument {
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final DockManager dockManager;
     private final ViewManager viewManager;
     private final LastDockUuidPreference lastDockUuidPreference;
     private final DockWindowFactory dockWindowFactory;
     private final DockNameHelper dockNameHelper;
-    
-    
+
+
     private final Map<Class<? extends View>, ViewItem> viewItems = new HashMap<>();
     private final Map<UUID, Dock> activeDocks = new HashMap<>();
     private final Map<UUID, Dock> createdDocks = new HashMap<>();
     private final Map<SceneBuilderWindow, Boolean> activeWindows = new HashMap<>();
     private final LastViewVisibilityPreference lastViewVisibilityPreference;
-    
+
     public DockViewController(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired DockManager dockManager,
             @Autowired ViewManager viewManager,
             @Autowired DockWindowFactory dockWindowFactory,
@@ -102,17 +102,17 @@ public class DockViewController implements InitWithDocument {
                 .map(name -> context.getType(name))
                 .map(cls -> new ViewItem((Class<? extends View>)cls))
                 .forEach(vi -> viewItems.put(vi.getViewClass(), vi));
-        
+
         dockManager.dockCreated().subscribe(d -> {
             activeDocks.put(d.getId(), d);
             createdDocks.put(d.getId(), d);
-            
+
             if (d.isWindow()) {
                 activeWindows.put(d.getParentWindow(), true);
             }
             dockManager.availableDocks().onNext(Collections.unmodifiableCollection(activeDocks.values()));
         });
-        
+
         dockManager.dockHide().subscribe(d -> {
             activeDocks.remove(d.getId());
             d.getViews().forEach(v -> performCloseView(v));
@@ -121,7 +121,7 @@ public class DockViewController implements InitWithDocument {
             }
             dockManager.availableDocks().onNext(Collections.unmodifiableCollection(activeDocks.values()));
         });
-        
+
         dockManager.dockShow().subscribe(d -> {
             activeDocks.put(d.getId(), d);
             if (d.isWindow()) {
@@ -130,12 +130,12 @@ public class DockViewController implements InitWithDocument {
             dockManager.availableDocks().onNext(Collections.unmodifiableCollection(activeDocks.values()));
         });
     }
-    
+
     @Override
     public void initWithDocument() {
         performResetDockAndViews();
     }
-    
+
     public void performResetDockAndViews() {
         activeDocks.values().forEach(d -> d.getViews().forEach(v -> performCloseView(v)));
         viewItems.values().stream().sorted(Comparator.comparing(ViewItem::getOrder)).forEach( vi -> {
@@ -144,7 +144,7 @@ public class DockViewController implements InitWithDocument {
             }
         });
     }
-    
+
     public void performLoadDockAndViewsPreferences() {
         var pref = new HashMap<>(lastViewVisibilityPreference.getValue());
         activeDocks.values().forEach(d -> d.getViews().forEach(v -> performCloseView(v)));
@@ -171,40 +171,40 @@ public class DockViewController implements InitWithDocument {
         performOpenView(vi, true);
     }
     private void performOpenView(ViewItem vi, boolean selectView) {
-        
+
         View view = context.getBean(vi.getViewClass());
-        
+
         performCloseView(view);
 
         view.shown();
-        
+
         // get last saved dock target
         UUID targetDock = lastDockUuidPreference.get(view.getId());
-        
+
         if (targetDock == null) {// no preference so use the default for view
             targetDock = vi.getPrefDockId();
         }
-        
+
         if (targetDock == null) {// still nothing so target a new window
             performUndock(view);
             return;
         }
-        
+
         Dock dock = createdDocks.get(targetDock);
         final UUID checkTargetDock = targetDock;
-        
-        if (dock == null) { 
+
+        if (dock == null) {
             // the dock is not a default one, so we create a window and update
             // all other views using the same dockid to the new dockid
             DockWindowController dwc = dockWindowFactory.newDockWindow();
             lastDockUuidPreference.getValue().replaceAll((k,v) -> v.equals(checkTargetDock) ? dwc.getDock().getId() : v);
-            
+
             viewManager.dock().onNext(new DockRequest(view, dwc.getDock().getId(), selectView));
-            
+
             dwc.openWindow();
         } else {
             viewManager.dock().onNext(new DockRequest(view, targetDock, selectView));
-            
+
             if (dock.isWindow() && !activeWindows.get(dock.getParentWindow())) {
                 // if the target is a inactive window, activate it if needed
                 dockManager.dockShow().onNext(dock);
@@ -213,21 +213,21 @@ public class DockViewController implements InitWithDocument {
         }
         lastViewVisibilityPreference.put(view.getId(), Boolean.TRUE);
     }
-    
+
     public void performCloseView(View view) {
         viewManager.undock().onNext(view);
         lastViewVisibilityPreference.put(view.getId(), Boolean.FALSE);
         view.hidden();
     }
-    
+
     public void performUndock(View view) {
         viewManager.undock().onNext(view);
-        
+
         DockWindowController dwc = dockWindowFactory.newDockWindow();
         activeWindows.put(dwc, true);
-        
+
         viewManager.dock().onNext(new DockRequest(view, dwc.getDock().getId(), true));
-        
+
         dwc.openWindow();
     }
 
@@ -242,9 +242,9 @@ public class DockViewController implements InitWithDocument {
             moveMenu.getItems().add(mvi);
         });
     }
-    
+
     public static class ViewItem {
-        
+
         private final @Getter Class<? extends View> viewClass;
         private final @Getter String viewName;
         private final @Getter UUID viewId;
@@ -252,7 +252,7 @@ public class DockViewController implements InitWithDocument {
         private final @Getter boolean openOnStart;
         private final @Getter boolean selectOnStart;
         private final @Getter int order;
-        
+
         public ViewItem(Class<? extends View> viewClass) {
             super();
             this.viewClass = viewClass;
@@ -263,8 +263,8 @@ public class DockViewController implements InitWithDocument {
             this.openOnStart = View.isOpenOnStart(viewClass);
             this.order = View.getOrder(viewClass);
         }
-        
-        
+
+
     }
 
 }

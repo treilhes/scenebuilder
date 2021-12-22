@@ -37,9 +37,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.job.editor.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
 
@@ -51,7 +50,7 @@ import javafx.scene.layout.VBox;
  */
 public class WrapInVBoxJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInVBoxJob(ApplicationContext context, Editor editor) {
+    public WrapInVBoxJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         newContainerClass = VBox.class;
     }

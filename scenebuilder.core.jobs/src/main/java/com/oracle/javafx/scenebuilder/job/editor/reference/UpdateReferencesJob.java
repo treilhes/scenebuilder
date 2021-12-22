@@ -37,10 +37,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
@@ -52,7 +51,7 @@ public class UpdateReferencesJob extends Job {
     private final List<Job> fixJobs = new ArrayList<>();
     private final FXOMDocument fxomDocument;
 
-    public UpdateReferencesJob(ApplicationContext context, Job subJob) {
+    public UpdateReferencesJob(SceneBuilderBeanFactory context, Job subJob) {
         super(context, subJob.getEditorController());
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

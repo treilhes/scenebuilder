@@ -33,10 +33,9 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
@@ -53,7 +52,7 @@ public class ReplacePropertyValueJobT extends Job {
     private FXOMInstance hostInstance;
     private FXOMPropertyC newProperty;
 
-    public ReplacePropertyValueJobT(ApplicationContext context, FXOMPropertyT hostProperty, FXOMObject newValue, Editor editor) {
+    public ReplacePropertyValueJobT(SceneBuilderBeanFactory context, FXOMPropertyT hostProperty, FXOMObject newValue, Editor editor) {
         super(context, editor);
 
         assert hostProperty != null;

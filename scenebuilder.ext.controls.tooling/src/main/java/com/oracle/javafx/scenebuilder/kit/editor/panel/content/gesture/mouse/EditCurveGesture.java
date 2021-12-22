@@ -41,8 +41,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
@@ -54,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -91,10 +90,10 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
     private final EnumMap<Tunable, Integer> tunableMap = new EnumMap<>(Tunable.class);
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 	private final Parent closestParent;
-	
-    public EditCurveGesture(ApplicationContext context, Content contentPanelController, FXOMInstance fxomInstance, Tunable tunable) {
+
+    public EditCurveGesture(SceneBuilderBeanFactory context, Content contentPanelController, FXOMInstance fxomInstance, Tunable tunable) {
         super(contentPanelController);
         //assert contentPanelController.lookupDriver(fxomInstance) != null;
         assert fxomInstance.getSceneGraphObject() instanceof Node;
@@ -102,8 +101,8 @@ public class EditCurveGesture extends AbstractMouseGesture {
         this.fxomInstance = fxomInstance;
         tunableMap.put(tunable, -1);
         editor = context.getBean(Driver.class).makeCurveEditor(fxomInstance);
-        
-        FXOMObject parent = fxomInstance.getClosestParent(); 
+
+        FXOMObject parent = fxomInstance.getClosestParent();
         if (parent != null && parent.getSceneGraphObject() != null) {
             closestParent = ((Parent)parent.getSceneGraphObject());
         } else {
@@ -161,7 +160,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         assert hitParent != null;
 
         DesignHierarchyMask hitParentMask = new DesignHierarchyMask(hitParent);
-        
+
         // no free child positioning is not needed here
         //assert hitParentMask.getMainAccessory() != null && hitParentMask.getMainAccessory().isFreeChildPositioning();
 

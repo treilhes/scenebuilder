@@ -1,19 +1,19 @@
 package com.oracle.javafx.scenebuilder.welcome.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.launcher.actions.OpenScenebuilderAction;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
 
 public class OpenScenebuilderExtension extends AbstractActionExtension<OpenScenebuilderAction> {
 
-    private ApplicationContext context;
+    private SceneBuilderBeanFactory context;
 
     public OpenScenebuilderExtension(
-            @Autowired ApplicationContext context) {
+            @Autowired SceneBuilderBeanFactory context) {
         super();
         this.context = context;
     }

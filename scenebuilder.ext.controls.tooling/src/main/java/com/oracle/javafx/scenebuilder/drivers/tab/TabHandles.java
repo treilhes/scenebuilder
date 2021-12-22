@@ -32,7 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.tab;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -76,11 +75,11 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
     private Node tabNode; // Skin node representing the tab
 
     public TabHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Tab.class);
     }
-    
+
     @Override
     public void initialize() {
         getSceneGraphObject().tabPaneProperty().addListener(

@@ -37,11 +37,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -61,7 +60,7 @@ public class ModifyCacheHintJob extends ModifySelectionJob {
     private final PropertyName cachePN = new PropertyName("cache"); //NOCHECK
     private final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOCHECK
 
-    public ModifyCacheHintJob(ApplicationContext context, ValuePropertyMetadata propertyMetadata, Object newValue, Editor editor) {
+    public ModifyCacheHintJob(SceneBuilderBeanFactory context, ValuePropertyMetadata propertyMetadata, Object newValue, Editor editor) {
         super(context, propertyMetadata, newValue, editor);
         assert cacheHintPN.equals(propertyMetadata.getName());
     }

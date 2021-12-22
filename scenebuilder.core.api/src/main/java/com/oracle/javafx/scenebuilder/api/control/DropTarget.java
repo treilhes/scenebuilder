@@ -32,16 +32,15 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 public interface DropTarget {
 
-	Job makeDropJob(ApplicationContext context, DragSource dragSource, Editor editorController);
+	Job makeDropJob(SceneBuilderBeanFactory context, DragSource dragSource, Editor editorController);
 
 	FXOMObject getTargetObject();
 

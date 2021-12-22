@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -70,7 +69,7 @@ public class UnwrapJob extends BatchSelectionJob {
     private FXOMInstance oldContainer, newContainer;
     private List<FXOMObject> oldContainerChildren;
 
-    public UnwrapJob(ApplicationContext context, Editor editor) {
+    public UnwrapJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 
@@ -125,7 +124,7 @@ public class UnwrapJob extends BatchSelectionJob {
             // Check that the num and type of children can be added to the parent container
             final DesignHierarchyMask parentContainerMask
                     = new DesignHierarchyMask(parentContainer);
-            
+
             if (parentContainerMask.isAcceptingSubComponent()) {
                 if (parentContainerMask.getMainAccessory().isCollection()) {
                     return childrenCount >= 1;
@@ -133,7 +132,7 @@ public class UnwrapJob extends BatchSelectionJob {
                     final FXOMObject child = children.iterator().next();
                     return parentContainerMask.isAcceptingAccessory(parentContainerMask.getMainAccessory(), child);
                 }
-                
+
             } else {
                 // those cases are handled by sub component now
                 // TODO what about collection

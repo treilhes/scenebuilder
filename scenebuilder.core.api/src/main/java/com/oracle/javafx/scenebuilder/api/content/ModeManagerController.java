@@ -39,7 +39,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -54,16 +53,16 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class ModeManagerController implements ModeManager {
-    
+
     private Logger logger = LoggerFactory.getLogger(ModeManagerController.class);
-    
+
     private Map<Object, AbstractModeController> availableModes = new HashMap<>();
-    
+
     private AbstractModeController previousMode = null;
     private AbstractModeController currentMode = null;
 
     public ModeManagerController(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired DocumentManager documentManager,
             @Autowired List<ModeProvider> modeProviders
             ) {
@@ -90,7 +89,7 @@ public class ModeManagerController implements ModeManager {
     public boolean hasModeEnabled() {
         return currentMode != null;
     }
-    
+
     /**
      * Returns true if the mode identified by modeId is enabled.
      * @param modeId the mode id to check
@@ -100,7 +99,7 @@ public class ModeManagerController implements ModeManager {
     public boolean isModeEnabled(Object modeId) {
         return currentMode != null && currentMode.getModeId() == modeId;
     }
-    
+
     @Override
     public void enableMode(Object modeId) {
         assert modeId != null;
@@ -119,7 +118,7 @@ public class ModeManagerController implements ModeManager {
         }
         changeModeController(newModeController);
     }
-    
+
     public void enablePreviousMode() {
         if (previousMode == null) {
             logger.error("No previous mode available");
@@ -127,7 +126,7 @@ public class ModeManagerController implements ModeManager {
         }
         changeModeController(previousMode);
     }
-    
+
     private void changeModeController(AbstractModeController nextModeController) {
         assert nextModeController != currentMode;
         assert nextModeController != null;

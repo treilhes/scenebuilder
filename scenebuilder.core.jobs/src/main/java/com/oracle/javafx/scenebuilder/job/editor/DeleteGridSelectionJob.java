@@ -37,11 +37,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -58,7 +57,7 @@ public class DeleteGridSelectionJob extends BatchSelectionJob {
 
     private FXOMObject targetGridPane;
 
-    public DeleteGridSelectionJob(ApplicationContext context, Editor editor) {
+    public DeleteGridSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 

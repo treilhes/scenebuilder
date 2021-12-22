@@ -34,14 +34,13 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -92,10 +91,10 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
     private final LineTo lineTo1 = new LineTo();
     private final LineTo lineTo2 = new LineTo();
     private final LineTo lineTo3 = new LineTo();
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private final Driver driver;
 
-    public AbstractGenericHandles(ApplicationContext context, Content contentPanelController,
+    public AbstractGenericHandles(SceneBuilderBeanFactory context, Content contentPanelController,
             Class<T> sceneGraphObjectClass) {
         super(contentPanelController, sceneGraphObjectClass);
         this.context = context;
@@ -143,8 +142,8 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
         rootNodeChildren.add(handleSS);
         rootNodeChildren.add(handleWW);
     }
-    
-    
+
+
 
     @Override
     public void setFxomObject(FXOMObject fxomObject) {

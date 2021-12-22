@@ -32,21 +32,20 @@
  */
 package com.oracle.javafx.scenebuilder.api.editor.job;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 /**
  *
  */
 public abstract class Job {
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private final Editor editor;
 	private ExtendedJob<?> extendedJob;
 
 
-    public Job(ApplicationContext context, Editor editor) {
+    public Job(SceneBuilderBeanFactory context, Editor editor) {
     	this.context = context;
         this.editor = editor;
     }
@@ -55,7 +54,7 @@ public abstract class Job {
         return editor;
     }
 
-    public ApplicationContext getContext() {
+    public SceneBuilderBeanFactory getContext() {
         return context;
     }
 

@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.treetableview;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -66,13 +65,13 @@ import javafx.scene.shape.Line;
 public class TreeTableViewHandles extends AbstractNodeHandles<Node> {
 
     private final Group grips = new Group();
-	private ApplicationContext context;
+	private SceneBuilderBeanFactory context;
 
     public TreeTableViewHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(context, contentPanelController, Node.class);
-        
+
         this.context = context;
         getRootNode().getChildren().add(grips); // Above handles
     }
@@ -81,7 +80,7 @@ public class TreeTableViewHandles extends AbstractNodeHandles<Node> {
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof TreeTableView;
     }
-    
+
     public TreeTableView<?> getTreeTableView() {
         return (TreeTableView<?>) getSceneGraphObject();
     }

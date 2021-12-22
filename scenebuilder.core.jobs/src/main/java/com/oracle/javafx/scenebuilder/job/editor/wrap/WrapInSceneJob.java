@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -56,7 +55,7 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ReplaceObjectJob;
 public class WrapInSceneJob extends AbstractWrapInJob {
     private final FXOMDocument fxomDocument;
 
-    public WrapInSceneJob(ApplicationContext context, Editor editor) {
+    public WrapInSceneJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

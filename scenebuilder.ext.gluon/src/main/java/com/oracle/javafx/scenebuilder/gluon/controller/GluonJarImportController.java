@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +47,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJarsPreference;
@@ -57,13 +57,13 @@ import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJars
 public class GluonJarImportController {
 
     private final Main main;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final ControlLibrary library;
     private final IconSetting iconSetting;
     private final ImportedGluonJarsPreference importedJarPreference;
 
     public GluonJarImportController(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired Main main,
             @Autowired ControlLibrary library,
             @Autowired IconSetting iconSetting,
@@ -82,7 +82,7 @@ public class GluonJarImportController {
         library.setOnUpdatedJarReports(jarReports -> {
             boolean shouldShowImportGluonJarAlert = false;
             List<String> gluonJarsCollection = new ArrayList<>();
-            
+
             for (ControlReportImpl jarReport : jarReports) {
                 if (hasGluonControls(jarReport)) {
                     gluonJarsCollection.add(jarReport.getSource().getFileName().toString());
@@ -104,7 +104,7 @@ public class GluonJarImportController {
                     }
                     ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
                     iconSetting.setWindowIcon(alert);
-                    
+
                     WelcomeDialog welcome = context.getBean(WelcomeDialog.class);
                     if (welcome.getStage().isShowing()) {
                         alert.initOwner(welcome.getStage());
@@ -114,11 +114,11 @@ public class GluonJarImportController {
             }
             updateImportedGluonJars(importedJarPreference, gluonJarsCollection);
         });
-        
-        //TODO test me, this case may be handled by the previous code. 
+
+        //TODO test me, this case may be handled by the previous code.
 //        library.setOnUpdatedExploringJarReports(jarReports -> {
 //            boolean shouldShowImportGluonJarAlert = false;
-//            
+//
 //            for (ControlReport jarReport : jarReports) {
 //                if (hasGluonControls(jarReport)) {
 //                    shouldShowImportGluonJarAlert = true;
@@ -139,7 +139,7 @@ public class GluonJarImportController {
 //        });
 
     }
-    
+
     private static void updateImportedGluonJars(ImportedGluonJarsPreference preference, List<String> jarReportCollection) {
         if (jarReportCollection.isEmpty()) {
             preference.setValue(new String[0]);
@@ -148,16 +148,16 @@ public class GluonJarImportController {
         }
         preference.write();
     }
-    
+
     private static boolean hasGluonControls(ControlReportImpl jarReport) {
         return jarReport.getEntries().stream().anyMatch(e -> isGluon(e));
     }
 
-    private static boolean isGluon(ControlReportEntryImpl entry) { 
-        return entry.getClassName() != null && entry.getClassName().startsWith(GluonConstants.GLUON_PACKAGE); 
+    private static boolean isGluon(ControlReportEntryImpl entry) {
+        return entry.getClassName() != null && entry.getClassName().startsWith(GluonConstants.GLUON_PACKAGE);
     }
 
-    
+
     private static boolean hasGluonJarBeenImported(ImportedGluonJarsPreference preference, String jar) {
         String[] importedJars = preference.getValue();
         if (importedJars == null) {

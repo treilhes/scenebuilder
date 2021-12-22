@@ -38,11 +38,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -79,7 +78,7 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         TOP, RIGHT, BOTTOM, LEFT
     }
 
-    public FitToParentObjectJob(ApplicationContext context, FXOMInstance fxomInstance, Editor editor) {
+    public FitToParentObjectJob(SceneBuilderBeanFactory context, FXOMInstance fxomInstance, Editor editor) {
         super(context, editor);
 
         assert fxomInstance != null;

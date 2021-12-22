@@ -37,12 +37,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
@@ -62,7 +61,7 @@ public class ModifySelectionJob extends BatchDocumentJob {
     protected final ValuePropertyMetadata propertyMetadata;
     protected final Object newValue;
 
-    public ModifySelectionJob(ApplicationContext context, ValuePropertyMetadata propertyMetadata,
+    public ModifySelectionJob(SceneBuilderBeanFactory context, ValuePropertyMetadata propertyMetadata,
             Object newValue, Editor editor) {
         super(context, editor);
         this.propertyMetadata = propertyMetadata;

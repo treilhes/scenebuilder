@@ -198,6 +198,26 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.javafx.customization</artifactId>
         </dependency>
+
+        <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.script</artifactId>
+        </dependency>
+
+<!--  SCRIPT ENGINE javascript START -->
+        <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
+<dependency>
+      <groupId>org.graalvm.js</groupId>
+      <artifactId>js</artifactId>
+      <version>21.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.js</groupId>
+      <artifactId>js-scriptengine</artifactId>
+      <version>21.3.0</version>
+    </dependency>
+<!--  SCRIPT ENGINE javascript END -->
+
     </dependencies>
 
     <build>

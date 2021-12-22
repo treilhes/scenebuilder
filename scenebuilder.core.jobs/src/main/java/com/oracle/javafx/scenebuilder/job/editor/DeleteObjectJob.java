@@ -35,10 +35,9 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
@@ -55,7 +54,7 @@ public class DeleteObjectJob extends InlineDocumentJob {
 
     private final FXOMObject targetFxomObject;
 
-    public DeleteObjectJob(ApplicationContext context, FXOMObject fxomObject, Editor editor) {
+    public DeleteObjectJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, Editor editor) {
         super(context, editor);
 
         assert fxomObject != null;

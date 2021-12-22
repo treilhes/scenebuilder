@@ -67,7 +67,10 @@
         <module>scenebuilder.metadata.javafx</module>
         <module>scenebuilder.metadata.gluon</module>
     <module>scenebuilder.ext.javafx.customization</module>
-  </modules>
+    <module>scenebuilder.ext.script.graalvm-javascript</module>
+    <module>scenebuilder.ext.script.graalvm-javascript-rt</module>
+    <module>scenebuilder.ext.script</module>
+    </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -344,6 +347,12 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.javafx.customization</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.script</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

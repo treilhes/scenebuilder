@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.core.dock;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
 import javafx.scene.Node;
@@ -57,9 +57,9 @@ public class DockTypeTab implements DockType<Tab> {
 
     private final static String VIEW_SOURCE = "Tab.fxml";
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
-    public DockTypeTab(@Autowired ApplicationContext context) {
+    public DockTypeTab(@Autowired SceneBuilderBeanFactory context) {
         this.context = context;
     }
 
@@ -107,13 +107,13 @@ public class DockTypeTab implements DockType<Tab> {
     public Node computeRoot(List<DockContext<Tab>> views, DockContext<Tab> focused) {
         Tab[] panes = views.stream().map(v -> v.getDockContent()).toArray(Tab[]::new);
         var tabs = new TabPane(panes);
-        
+
         if (focused == null && !tabs.getTabs().isEmpty()) {
             tabs.getSelectionModel().select(tabs.getTabs().get(0));
         } else if (focused != null) {
             tabs.getSelectionModel().select(focused.getDockContent());
         }
-        
+
         return tabs;
     }
 

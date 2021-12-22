@@ -34,11 +34,10 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 import java.util.Objects;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -53,7 +52,7 @@ public class ModifyFxControllerJob extends Job {
     private final String oldValue;
     private FXOMDocument fxomDocument;
 
-    public ModifyFxControllerJob(ApplicationContext context, FXOMObject fxomObject, String newValue, Editor editor) {
+    public ModifyFxControllerJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, String newValue, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

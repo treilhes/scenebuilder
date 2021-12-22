@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -69,7 +68,7 @@ public class DockWindowController extends AbstractFxmlWindowController {
 
     private final DocumentManager documentManager;
     private final Dialog dialog;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     private final ViewManager viewManager;
     private final DockManager dockManager;
@@ -77,15 +76,15 @@ public class DockWindowController extends AbstractFxmlWindowController {
     private final DockNameHelper dockNameHelper;
     // @formatter:off
     public DockWindowController(
-            @Autowired Api api, 
+            @Autowired Api api,
             @Autowired DocumentWindow documentWindow,
-            @Autowired DockPanelController dockPanelController, 
+            @Autowired DockPanelController dockPanelController,
             @Autowired ViewManager viewManager,
             @Autowired DockManager dockManager,
             @Autowired DockNameHelper dockNameHelper) {
         super(api, DockWindowController.class.getResource("DockWindow.fxml"), I18N.getBundle(), documentWindow);
      // @formatter:on
-        
+
         this.context = api.getContext();
         this.dialog = api.getApiDoc().getDialog();
         this.documentManager = api.getApiDoc().getDocumentManager();

@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.controllibrary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -70,7 +69,7 @@ import javafx.stage.Window;
 public class LibraryController {
 
     private final Editor editor;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final JobManager jobManager;
     private final Drag drag;
     private FXOMDocument fxomDocument;
@@ -78,9 +77,9 @@ public class LibraryController {
 
 
     public LibraryController(
-            @Autowired ApplicationContext context, 
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired Editor editor,
-            @Autowired JobManager jobManager, 
+            @Autowired JobManager jobManager,
             @Autowired Drag drag,
             @Autowired @Lazy DocumentManager documentManager) {
 

@@ -32,9 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
@@ -47,7 +46,7 @@ import javafx.scene.Node;
 public abstract class AbstractNodeHandles<T extends Node> extends AbstractGenericHandles<T> {
 
     public AbstractNodeHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController,
             Class<T> sceneGraphObjectClass) {
         super(context, contentPanelController, sceneGraphObjectClass);

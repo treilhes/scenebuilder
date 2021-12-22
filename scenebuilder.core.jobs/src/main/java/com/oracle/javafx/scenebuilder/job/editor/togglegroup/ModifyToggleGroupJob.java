@@ -36,11 +36,10 @@ package com.oracle.javafx.scenebuilder.job.editor.togglegroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -66,7 +65,7 @@ public class ModifyToggleGroupJob extends BatchDocumentJob {
     private final FXOMObject targetObject;
     private final String toggleGroupId;
 
-    public ModifyToggleGroupJob(ApplicationContext context, FXOMObject fxomObject, String toggleGroupId,
+    public ModifyToggleGroupJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, String toggleGroupId,
             Editor editor) {
         super(context, editor);
 

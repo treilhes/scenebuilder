@@ -38,12 +38,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -83,7 +82,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     private final FXOMDocument fxomDocument;
     //private final Selection selection;
 
-    public AbstractWrapInJob(ApplicationContext context, Editor editor) {
+    public AbstractWrapInJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
@@ -94,7 +93,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     //TODO remove "ToExtend" to get the original method name (was added to generate compilation errors and find users)
     //TODO or delete if not used
     public static AbstractWrapInJob getWrapInJob(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
             Editor editor,
             Class<?> wrappingClass) {
 

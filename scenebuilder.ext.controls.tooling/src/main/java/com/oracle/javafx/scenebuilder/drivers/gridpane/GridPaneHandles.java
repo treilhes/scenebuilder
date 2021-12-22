@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.gridpane;
 
 import java.util.Collections;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -62,11 +61,11 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
             = new GridPaneMosaic("handles", //NOCHECK
                     true /* shouldShowTray */,
                     true /* shouldCreateSensors */ );
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private final Selection selection;
 
     public GridPaneHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Selection selection,
     		Content contentPanelController) {
         super(context, contentPanelController, GridPane.class);
@@ -74,7 +73,7 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
         this.selection = selection;
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }
-    
+
     @Override
     public void initialize() {
         mosaic.setGridPane((GridPane)getFxomObject().getSceneGraphObject());
@@ -83,7 +82,7 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> {
     @Override
     public void update() {
         AbstractSelectionGroup group = selection.getGroup();
-        
+
         if (group == null || !(group instanceof GridSelectionGroup)) {
             mosaic.setSelectedColumnIndexes(Collections.emptySet());
             mosaic.setSelectedRowIndexes(Collections.emptySet());

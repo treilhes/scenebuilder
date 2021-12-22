@@ -40,7 +40,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -140,7 +139,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 	private final BackgroundImagePreference backgroundImagePreference;
 	//private final ParentRingColorPreference parentRingColorPreference;
 	private final Editor editorController;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private FXOMDocument oldDocument;
     private final Driver driver;
     private final ModeManager modeManager;

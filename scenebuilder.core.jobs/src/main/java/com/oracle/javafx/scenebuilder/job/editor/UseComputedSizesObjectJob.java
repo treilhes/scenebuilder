@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -61,7 +60,7 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
 
     private final FXOMInstance fxomInstance;
 
-    public UseComputedSizesObjectJob(ApplicationContext context, FXOMInstance fxomInstance, Editor editor) {
+    public UseComputedSizesObjectJob(SceneBuilderBeanFactory context, FXOMInstance fxomInstance, Editor editor) {
         super(context, editor);
         assert fxomInstance != null;
         this.fxomInstance = fxomInstance;

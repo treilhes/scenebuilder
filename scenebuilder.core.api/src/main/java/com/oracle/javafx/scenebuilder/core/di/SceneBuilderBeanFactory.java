@@ -33,9 +33,11 @@
 package com.oracle.javafx.scenebuilder.core.di;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.control.Menu;
@@ -49,7 +51,7 @@ import javafx.scene.control.ToggleGroup;
  */
 @Component
 public class SceneBuilderBeanFactory {
-    
+
     /**
      * Scope identifier for the standard singleton scope: {@value}.
      * <p>
@@ -87,13 +89,13 @@ public class SceneBuilderBeanFactory {
     public static final String SCOPE_THREAD = "thread";
 
     /** The context. */
-    @Autowired
-    ApplicationContext context;
+    private final GenericApplicationContext context;
 
     /**
      * Instantiates a new scene builder bean factory.
      */
-    public SceneBuilderBeanFactory() {
+    public SceneBuilderBeanFactory(@Autowired GenericApplicationContext context) {
+        this.context = context;
     }
 
     /**
@@ -103,8 +105,28 @@ public class SceneBuilderBeanFactory {
      * @param cls the cls
      * @return the c
      */
-    public <C> C get(Class<C> cls) {
+    public <C> C getBean(Class<C> cls) {
         return context.getBean(cls);
+    }
+
+    public Object getBean(String beanName) {
+        return context.getBean(beanName);
+    }
+
+    /**
+     * Gets the.
+     *
+     * @param <C> the generic type
+     * @param cls the cls
+     * @return the c
+     */
+    public <C> C getBean(Class<C> cls, Object... parameters) {
+        return context.getBean(cls, parameters);
+    }
+
+
+    public String[] getBeanNamesForType(ResolvableType resolvable) {
+        return context.getBeanNamesForType(resolvable);
     }
 
     /**
@@ -150,4 +172,21 @@ public class SceneBuilderBeanFactory {
     public Menu createViewMenu(String label) {
         return new Menu(label);
     }
+
+    public String[] getBeanNamesForType(Class<?> cls) {
+        return context.getBeanNamesForType(cls);
+    }
+
+    public BeanDefinition getBeanDefinition(String name) {
+        return context.getBeanDefinition(name);
+    }
+
+    public Class<?> getType(String name) {
+        return context.getType(name);
+    }
+
+    public Object getBean(String string, Object... parameters) {
+        return context.getBean(string, parameters);
+    }
+
 }

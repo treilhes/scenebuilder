@@ -32,12 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class Api {
     // ***************** Singletons **************************
-    private final @Getter ApplicationContext context;
+    private final @Getter SceneBuilderBeanFactory context;
     private final @Getter Main main;
     private final @Getter NetworkManager networkManager;
     private final @Getter SceneBuilderManager sceneBuilderManager;
@@ -54,7 +54,7 @@ public class Api {
     private final @Getter Glossary glossary;
     private final @Getter IconSetting iconSetting;
     private final @Getter Documentation documentation;
-    
+
     public ApiDoc getApiDoc() {
         return context.getBean(ApiDoc.class);
     }

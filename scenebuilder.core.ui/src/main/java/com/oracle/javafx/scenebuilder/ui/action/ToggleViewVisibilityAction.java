@@ -1,7 +1,6 @@
 package com.oracle.javafx.scenebuilder.ui.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,9 +20,9 @@ import com.oracle.javafx.scenebuilder.core.dock.DockViewController.ViewItem;
 public class ToggleViewVisibilityAction extends AbstractAction {
 
     private final DockViewController dockViewController;
-    
+
     private ViewItem viewItem;
-    
+
     public ToggleViewVisibilityAction(
             @Autowired Api api,
             @Autowired DockViewController dockViewController) {
@@ -46,7 +45,7 @@ public class ToggleViewVisibilityAction extends AbstractAction {
 
     @Override
     public ActionStatus perform() {
-        ApplicationContext ctx = getApi().getContext();
+        SceneBuilderBeanFactory ctx = getApi().getContext();
         View view = ctx.getBean(viewItem.getViewClass());
         if (view.isVisible()) {
             dockViewController.performCloseView(view);

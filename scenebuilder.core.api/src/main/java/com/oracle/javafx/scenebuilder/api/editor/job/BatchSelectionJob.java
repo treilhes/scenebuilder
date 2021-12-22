@@ -34,9 +34,8 @@ package com.oracle.javafx.scenebuilder.api.editor.job;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 
@@ -50,7 +49,7 @@ public abstract class BatchSelectionJob extends BatchDocumentJob {
     private AbstractSelectionGroup oldSelectionGroup;
     private AbstractSelectionGroup newSelectionGroup;
 
-    public BatchSelectionJob(ApplicationContext context, Editor editor) {
+    public BatchSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 

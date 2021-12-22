@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -87,7 +86,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     @FXML
     private ListView<DialogListItem> libraryListView;
-    
+
     @FXML
     private Label listLabel;
 
@@ -102,7 +101,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     @FXML
     private Hyperlink manageRepositoriesLink;
-    
+
     @FXML
     private Hyperlink classesLink;
 
@@ -124,20 +123,20 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     // libraryPanelController.copyFilesToUserLibraryDir(files)
     private final FileSystem fileSystem;
     private final Dialog dialog;
-    private final ApplicationContext context;
-    
+    private final SceneBuilderBeanFactory context;
+
     private final ListChangeListener<? super MavenArtifact> artifactListener = c -> loadLibraryList();
     private final ListChangeListener<? super Path> fileOrFolderListener = c -> loadLibraryList();
 
     private AbstractLibrary<?, ?> library;
-    
+
 
     public LibraryDialogController(
             @Autowired Api api,
             @Autowired Editor editorController,
-            @Autowired MavenSetting mavenSetting, 
+            @Autowired MavenSetting mavenSetting,
             @Autowired MavenArtifactsPreferences mavenPreferences,
-            @Autowired MavenRepositoriesPreferences repositoryPreferences, 
+            @Autowired MavenRepositoriesPreferences repositoryPreferences,
             @Autowired DocumentWindow document) {
         super(api, LibraryDialogController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
                 document); // NOI18N
@@ -150,17 +149,17 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         this.fileSystem = api.getFileSystem();
         this.dialog = api.getApiDoc().getDialog();
     }
-    
+
     public void initForLibrary(AbstractLibrary<?, ?> library) {
         this.library = library;
-        
+
         final LibraryStoreConfiguration libraryConfiguration = library.getDialogConfiguration();
-        
+
         String mainLabel = libraryConfiguration.getListLabel();
         String fileLabel = libraryConfiguration.getSelectFileLabel();
         String folderLabel = libraryConfiguration.getSelectFolderLabel();
         String artifactLabel = libraryConfiguration.getSelectArtifactLabel();
-        
+
         if (mainLabel != null && !mainLabel.isEmpty()) {
             this.listLabel.setText(mainLabel);
         }
@@ -173,11 +172,11 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         if (artifactLabel != null && !artifactLabel.isEmpty()) {
             this.selectArtifactLink.setText(artifactLabel);
         }
-        
+
         boolean handleFile = library.newFileExplorer() != null;
         boolean handleFolder = library.newFolderExplorer() != null;
         boolean handleArtifact = library.newArtifactExplorer() != null;
-        
+
         this.selectFileLink.setManaged(handleFile);
         this.classesLink.setManaged(handleFolder);
         this.selectArtifactLink.setManaged(handleArtifact);
@@ -218,12 +217,12 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         assert library != null;
         super.openWindow();
         super.getStage().setTitle(I18N.getString("library.dialog.title"));
-        
+
         String title = library.getDialogConfiguration().getTitleLabel();
         if (title != null && !title.isEmpty()) {
             super.getStage().setTitle(title);
         }
-        
+
         loadLibraryList();
 
         library.getStore().getArtifacts().addListener(artifactListener);
@@ -231,13 +230,13 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     }
 
     void loadLibraryList() {
-        
+
         Stream<DialogListItem> artifactStream = library.getStore().getArtifacts().stream()
             .map(ma -> new ArtifactDialogListItem(this, ma));
-        
+
         Stream<DialogListItem> filesStream = library.getStore().getFilesOrFolders().stream()
             .map(f -> new LibraryDialogListItem(this, f));
-        
+
         SbPlatform.runLater(() -> {
             libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream)
                     .sorted(new DialogListItemComparator())
@@ -334,7 +333,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         } else if (dialogListItem instanceof ArtifactDialogListItem) {
             library.performEditArtifact(((ArtifactDialogListItem)dialogListItem).getMavenArtifact());
         }
-        
+
         //TODO need to manage fxml edition
 ////    if (SceneBuilderApp.getSingleton().lookupUnusedDocumentWindowController() != null) {
 ////    closeWindow();
@@ -384,7 +383,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
         return folder;
     }
-    
+
     /**
      * Open a file chooser that allows to select one or more FXML and JAR file.
      * @return the list of selected files

@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -79,14 +78,14 @@ import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
-    
+
     public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
     public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar");
-    
+
     private final static Logger logger = LoggerFactory.getLogger(ExtensionLibrary.class);
 
     private final static String LIBRARY_ID = "Extensions";
-    
+
     private final ExtensionBuiltinLibrary builtinLibrary;
 
     // Where we store canonical class names of items we want to exclude from
@@ -98,7 +97,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 
     private final List<LibraryFilter> filters;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
     private final ExtensionFileExplorer controlFileExplorer;
 
@@ -119,7 +118,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
      * Public
      */
     protected ExtensionLibrary(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired ExtensionBuiltinLibrary builtinLibrary,
             @Autowired ExtensionLibraryDialogConfiguration libraryDialogConfiguration,
             @Autowired ExtensionFileSystemFactory extFactory,
@@ -143,12 +142,12 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
         this.builtinLibrary = builtinLibrary;
         this.filters = filters;
         this.sceneBuilderManager = sceneBuilderManager;
-        
+
         this.controlFileExplorer = controlFileExplorer;
         this.controlFolderExplorer = controlFolderExplorer;
         this.controlMavenArtifactExplorer = controlMavenArtifactExplorer;
     }
-    
+
     @Override
     public String getLibraryId() {
         return LIBRARY_ID;
@@ -158,9 +157,9 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 	public void afterPropertiesSet() throws Exception {
 
         getItems().addAll(builtinLibrary.getItems());
-        
+
 	}
-    
+
     @Override
     public Explorer<MavenArtifact, ExtensionReport> newArtifactExplorer(){
         return controlMavenArtifactExplorer;
@@ -173,12 +172,12 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
     public Explorer<Path, ExtensionReport> newFileExplorer(){
         return controlFileExplorer;
     }
-    
+
     @Override
     public List<ExtensionReport> createApplyAndSaveFilter(List<ExtensionReport> reports){
-        
+
         ExtensionImportWindowController importWindow = context.getBean(ExtensionImportWindowController.class);
-        
+
         try {
             if (getFilterFile().exists()) {
                 controlFilter = Transform.read(getFilterFile());
@@ -189,20 +188,20 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
         if (controlFilter == null) {
             controlFilter = new ExtensionFilterTransform();
         }
-        
+
         List<Path> sources = reports.stream().map(r -> r.getSource()).collect(Collectors.toList());
-        
+
         try(URLClassLoader classLoader = classLoaderController.copyClassLoader(sources)){
             controlFilter = importWindow.editTransform(reports, controlFilter, classLoader);
         } catch(IOException e) {
             logger.error("Unable to create a copy of classloader", e);
         }
-        
-        
+
+
         if (controlFilter == null) { // import canceled
             return null;
         }
-                
+
         if (controlFilter == null && getFilterFile().exists()) {
             getFilterFile().delete();
         } else {
@@ -212,13 +211,13 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
                 logger.error("Unable to save the control library filter!", e);
             }
         }
-        
+
         return applySavedFilter(reports);
     }
-    
+
     @Override
     public List<ExtensionReport> applySavedFilter(List<ExtensionReport> reports){
-        
+
         try {
             if (controlFilter == null) {
                 if (getFilterFile().exists()) {
@@ -233,12 +232,12 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
         }
         return reports;
     }
-    
+
     @Override
     protected void resetBeforeUpdate() {
         loadedFonts.clear();
     }
-    
+
     @Override
     protected Collection<LibraryItemImpl> makeLibraryItems(ExtensionReport reports) throws IOException {
         // No need to implements this, no ui to add extension in fxml doc
@@ -247,11 +246,11 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 
     @Override
     protected void updateItems(Collection<LibraryItemImpl> items) {
-        
+
         Collection<LibraryItemImpl> newItems = new ArrayList<>(items);
         newItems.addAll(builtinLibrary.getItems());
         setItems(newItems);
-        
+
     }
 
 
@@ -266,23 +265,23 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 
     @Override
     protected void userLibraryExplorationDidChange(Exploration<ExtensionReport> previous, Exploration<ExtensionReport> current) {
-        
+
         Map<Boolean, List<ExtensionReport>> partitioned = current.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
         List<ExtensionReport> currentFxmlReports = partitioned.get(true);
         List<ExtensionReport> currentJarReports = partitioned.get(false);
-        
-        
+
+
         // We can have 0, 1 or N FXML file, same for JAR one.
         final int numOfFxmlFiles = currentFxmlReports.size();
         final int numOfJarFiles = currentJarReports.size();
 
         switch (numOfFxmlFiles + numOfJarFiles) {
             case 0: // Case 0-0
-                
+
                 Map<Boolean, List<ExtensionReport>> previousPartitioned = previous.getReports().stream().collect(Collectors.partitioningBy(r -> LibraryUtil.isFxmlPath(r.getSource())));
                 List<ExtensionReport> previousFxmlReports = previousPartitioned.get(true);
                 List<ExtensionReport> previousJarReports = previousPartitioned.get(false);
-                
+
                 final int previousNumOfJarFiles = previousJarReports.size();
                 final int previousNumOfFxmlFiles = previousFxmlReports.size();
                 if (previousNumOfFxmlFiles > 0 || previousNumOfJarFiles > 0) {
@@ -330,7 +329,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
                 break;
         }
     }
-    
+
 
     @Override
     public void unlock(List<Path> pathes) {
@@ -361,5 +360,5 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
     public void dispose() {
         stopWatching();
     }
-    
+
 }

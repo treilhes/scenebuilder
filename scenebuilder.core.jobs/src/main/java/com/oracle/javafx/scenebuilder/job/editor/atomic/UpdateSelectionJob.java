@@ -37,11 +37,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -58,7 +57,7 @@ public class UpdateSelectionJob extends Job {
     private FXOMDocument fxomDocument;
     private Selection selection;
 
-    public UpdateSelectionJob(ApplicationContext context, AbstractSelectionGroup group, Editor editor) {
+    public UpdateSelectionJob(SceneBuilderBeanFactory context, AbstractSelectionGroup group, Editor editor) {
         super(context, editor);
         newSelectionGroup = group;
         DocumentManager documentManager = context.getBean(DocumentManager.class);
@@ -66,7 +65,7 @@ public class UpdateSelectionJob extends Job {
         this.selection = documentManager.selectionDidChange().get().getSelection();
     }
 
-    public UpdateSelectionJob(ApplicationContext context, FXOMObject newSelectedObject, Editor editor) {
+    public UpdateSelectionJob(SceneBuilderBeanFactory context, FXOMObject newSelectedObject, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
@@ -78,12 +77,12 @@ public class UpdateSelectionJob extends Job {
         newSelectionGroup = new ObjectSelectionGroup(newSelectedObjects, newSelectedObject, null);
     }
 
-    public UpdateSelectionJob(ApplicationContext context, Collection<FXOMObject> newSelectedObjects, Editor editor) {
+    public UpdateSelectionJob(SceneBuilderBeanFactory context, Collection<FXOMObject> newSelectedObjects, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selection = documentManager.selectionDidChange().get().getSelection();
-        
+
         assert newSelectedObjects != null; // But possibly empty
         if (newSelectedObjects.isEmpty()) {
             newSelectionGroup = null;

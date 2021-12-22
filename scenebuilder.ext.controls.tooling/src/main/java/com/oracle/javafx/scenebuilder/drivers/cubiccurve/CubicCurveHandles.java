@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.drivers.cubiccurve;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +55,7 @@ import javafx.scene.shape.Line;
 /**
 *
 * CubicCurve handles: <br><img src="doc-files/cubic-curve-handles.png" alt="cubic curve handles"><br>
-* Appears when resizing a 
+* Appears when resizing a
 * <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/CubicCurve.html">javafx.scene.shape.CubicCurve</a>
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
@@ -72,11 +71,11 @@ public class CubicCurveHandles extends AbstractCurveHandles<CubicCurve> {
     private final Line leftHandle = new Line();
     private final Line centerHandle = new Line();
     private final Line rightHandle = new Line();
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 
     public CubicCurveHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(contentPanelController, CubicCurve.class);
         this.context = context;

@@ -32,12 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.draganddrop.controller;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 /**
  *
@@ -48,9 +47,9 @@ class LiveUpdater {
     private final Editor editorController;
     private DropTarget dropTarget;
     private Job dropTargetMoveJob;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
-    public LiveUpdater(ApplicationContext context, DragSource dragSource, Editor editorController) {
+    public LiveUpdater(SceneBuilderBeanFactory context, DragSource dragSource, Editor editorController) {
         assert dragSource != null;
         assert editorController != null;
 

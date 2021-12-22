@@ -35,16 +35,15 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 import java.util.Collections;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 /**
  *
  */
 public class ClearSelectionJob extends UpdateSelectionJob {
 
-    public ClearSelectionJob(ApplicationContext context, Editor editor) {
+    public ClearSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, Collections.emptyList(), editor);
     }
 }

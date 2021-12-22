@@ -32,9 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.wrap;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.scene.layout.FlowPane;
 
@@ -43,7 +42,7 @@ import javafx.scene.layout.FlowPane;
  */
 public class WrapInFlowPaneJob extends AbstractWrapInSubComponentJob {
 
-    public WrapInFlowPaneJob(ApplicationContext context, Editor editor) {
+    public WrapInFlowPaneJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         newContainerClass = FlowPane.class;
     }

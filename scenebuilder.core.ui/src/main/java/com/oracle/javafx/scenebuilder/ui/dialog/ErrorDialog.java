@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.ui.dialog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +52,7 @@ import javafx.stage.Window;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ErrorDialog extends AlertDialog {
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     //private final SceneBuilderManager sceneBuilderManager;
 
     private String debugInfo;

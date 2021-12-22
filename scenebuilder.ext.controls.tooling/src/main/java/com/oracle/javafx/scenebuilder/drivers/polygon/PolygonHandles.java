@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +57,7 @@ import javafx.scene.shape.Polygon;
 /**
 *
 * Polygon handles: <br><img src="doc-files/polygon-handles.png" alt="polygon handles"><br>
-* Appears when resizing a 
+* Appears when resizing a
 * <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Polygon.html">javafx.scene.shape.Polygon</a>
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
@@ -69,15 +68,15 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();
     private final List<Line> linesHandle = new ArrayList<>();
-	private ApplicationContext context;
+	private SceneBuilderBeanFactory context;
 
     public PolygonHandles(
-    		ApplicationContext context,
+            SceneBuilderBeanFactory context,
     		Content contentPanelController) {
         super(contentPanelController, Polygon.class);
         this.context = context;
     }
-    
+
     @Override
     public void initialize() {
         final List<Node> rootNodeChildren = getRootNode().getChildren();

@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -319,7 +318,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     Map<String, MenuItem> menuMap = null;
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final DocumentWindowController documentWindowController;
     private final Content content;
     private final Editor editor;
@@ -334,7 +333,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private final Main main;
 
     public MenuBarController(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired DocumentManager documentManager,
             @Autowired Content content,
             @Autowired Editor editor,
@@ -352,7 +351,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         this.menuItemProviders = menuItemProviders;
         this.documentWindowController = documentWindowController;
         this.main = main;
-        
+
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
     }
 
@@ -372,13 +371,13 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 menuMap.put(m.getId(), m);
             }
         }
-        
+
         if (m instanceof Menu) {
             ((Menu)m).getItems().forEach(mi -> {
                 addToMenuMap(mi);
             });
         }
-        
+
     }
 
     @Override
@@ -386,14 +385,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         systemMenuBarController = this;
         //setupMenuBar()
     }
-    
+
     private void setupMenuBar() {
         MenuBar menuBar = getMenuBar();
         buildMenuMap(menuBar);
         populateMenus();
         populateMenuItems();
     }
-    
+
     private void populateMenus() {
         if (menuProviders != null && !menuProviders.isEmpty()) {
 
@@ -426,7 +425,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                    }
 
                    Menu target = (Menu)targetCandidate;
-                   
+
                    if (ma.getMenu().getId() == null) {
                        ma.getMenu().setId(ma.getClass().getSimpleName());
                    }
@@ -493,7 +492,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                        it.remove();
                        atLeastOneInserted = true;
                    }
-               
+
                }
            }
 
@@ -514,7 +513,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
            }
        }
     }
-    
+
     private void populateMenuItems() {
         if (menuItemProviders != null && !menuItemProviders.isEmpty()) {
 
@@ -1185,7 +1184,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         }
 
         windowMenu.setOnMenuValidation(onWindowMenuValidationHandler);
-        
+
         setupMenuBar();
     }
 
@@ -1573,7 +1572,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     }
 
-    
+
     class SetZoomActionController extends MenuItemController {
 
         private final double scaling;

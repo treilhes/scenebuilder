@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.ui.message;
 import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -60,7 +59,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
- 
+
 /**
  *
  */
@@ -89,7 +88,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
 
     private final ImageView fileDirtyImage;
     private Tooltip statusLabelTooltip = null;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final MessageLogger messageLogger;
 
     public MessageBarController(

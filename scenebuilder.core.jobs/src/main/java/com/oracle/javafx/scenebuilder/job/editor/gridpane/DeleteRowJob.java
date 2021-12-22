@@ -36,11 +36,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -55,7 +54,7 @@ public class DeleteRowJob extends BatchSelectionJob {
     private FXOMObject targetGridPane;
     private final List<Integer> targetIndexes = new ArrayList<>();
 
-    public DeleteRowJob(ApplicationContext context, Editor editor) {
+    public DeleteRowJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
     }
 

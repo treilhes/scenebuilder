@@ -39,12 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -78,9 +77,9 @@ public class ResizeRowGesture extends AbstractMouseGesture {
     private final int rowIndex;
     private final GridPane gridPane;
     private GridPaneRowResizer resizer;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
-    public ResizeRowGesture(ApplicationContext context,GridPaneHandles gridPaneHandles, int rowIndex) {
+    public ResizeRowGesture(SceneBuilderBeanFactory context,GridPaneHandles gridPaneHandles, int rowIndex) {
         super(gridPaneHandles.getContentPanelController());
         this.context = context;
         assert rowIndex >= 0;

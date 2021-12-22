@@ -35,12 +35,11 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
@@ -54,7 +53,7 @@ public abstract class InlineDocumentJob extends CompositeJob {
     private List<Job> subJobs;
     private final FXOMDocument fxomDocument;
 
-    public InlineDocumentJob(ApplicationContext context, Editor editor) {
+    public InlineDocumentJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();

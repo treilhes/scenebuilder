@@ -45,7 +45,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -156,7 +155,7 @@ public class EditorController implements Editor {
 
     private Stage ownerWindow;
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 	private final FileSystem fileSystem;
 	private final Dialog dialog;
     private I18nResourceProvider resourceConfig;
@@ -166,7 +165,7 @@ public class EditorController implements Editor {
 //    private Library builtinLibrary;
     //private final Api api;
     private final SceneBuilderManager sceneBuilderManager;
-    
+
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
@@ -197,7 +196,7 @@ public class EditorController implements Editor {
 
     	//TODO remove below
     	//libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
-    	
+
     	api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
 
@@ -213,7 +212,7 @@ public class EditorController implements Editor {
             resourceConfig = s;
             resourcesDidChange();
         });
-        
+
         documentManager.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
         sceneBuilderManager.classloader().subscribe(cl -> libraryClassLoaderDidChange(cl));
     }
@@ -264,7 +263,7 @@ public class EditorController implements Editor {
      */
     @Override
     public boolean canGetFxmlText() {
-//        
+//
 //        final boolean result;
 //
 //        if (requestTextEditingSessionEnd == null) {
@@ -544,8 +543,8 @@ public class EditorController implements Editor {
      */
     @Override
     public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
-        updateFxomDocument(fxmlText, fxmlLocation, 
-                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()), 
+        updateFxomDocument(fxmlText, fxmlLocation,
+                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()),
                 checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
@@ -1362,7 +1361,7 @@ public class EditorController implements Editor {
                 performCopy();
                 break;
             }
-            
+
             case SELECT_ALL: {
                 performSelectAll();
                 break;
@@ -1655,7 +1654,7 @@ public class EditorController implements Editor {
         return job.extend().isExecutable();
     }
 
-    
+
     /**
      * Performs the copy control action.
      */
@@ -2151,7 +2150,7 @@ public class EditorController implements Editor {
         getJobManager().push(addTooltipJob);
    }
 
-    
+
     private void updateFxomDocument(String fxmlText, URL fxmlLocation, ResourceBundle resources, boolean checkTheme) throws IOException {
         final FXOMDocument newFxomDocument;
 
@@ -2162,7 +2161,7 @@ public class EditorController implements Editor {
         }
 
         documentManager.fxomDocument().set(newFxomDocument);
-        
+
         updateFileWatcher(newFxomDocument);
 
 
@@ -2226,7 +2225,7 @@ public class EditorController implements Editor {
     private void fxomDocumentDidChange(FXOMDocument fxomDocument) {
         this.fxomDocument = fxomDocument;
     }
-    
+
     private void libraryClassLoaderDidChange(ClassLoader classLoader) {
         if (fxomDocument != null) {
             errorReport.forget();

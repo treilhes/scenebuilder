@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -61,14 +60,14 @@ import javafx.stage.FileChooser;
 @Lazy
 public class SceneStyleSheetMenuController {
 
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private final DocumentWindow document;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final UserStylesheetsPreference userStylesheetsPreference;
 
     public SceneStyleSheetMenuController(
-    		@Autowired ApplicationContext context,
+    		@Autowired SceneBuilderBeanFactory context,
     		@Autowired @Lazy DocumentWindow document,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,

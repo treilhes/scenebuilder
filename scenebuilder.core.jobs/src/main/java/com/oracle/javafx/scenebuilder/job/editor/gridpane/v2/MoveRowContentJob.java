@@ -36,11 +36,10 @@ package com.oracle.javafx.scenebuilder.job.editor.gridpane.v2;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -66,7 +65,7 @@ public class MoveRowContentJob extends BatchDocumentJob {
     private final int movingRowIndex;
     private final int rowIndexDelta;
 
-    public MoveRowContentJob(ApplicationContext context, FXOMObject gridPaneObject, int movingRowIndex, int rowIndexDelta, Editor editor) {
+    public MoveRowContentJob(SceneBuilderBeanFactory context, FXOMObject gridPaneObject, int movingRowIndex, int rowIndexDelta, Editor editor) {
         super(context, editor);
         assert gridPaneObject instanceof FXOMInstance;
         assert gridPaneObject.getSceneGraphObject() instanceof GridPane;

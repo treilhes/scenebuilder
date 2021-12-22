@@ -33,10 +33,9 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
@@ -46,7 +45,7 @@ public class RemoveObjectJob extends Job {
 
     private final Job subJob;
 
-    public RemoveObjectJob(ApplicationContext context, FXOMObject targetObject, Editor editor) {
+    public RemoveObjectJob(SceneBuilderBeanFactory context, FXOMObject targetObject, Editor editor) {
         super(context, editor);
 
         assert targetObject != null;

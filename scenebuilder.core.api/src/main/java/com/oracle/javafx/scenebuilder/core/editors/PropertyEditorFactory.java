@@ -40,7 +40,6 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -58,15 +57,15 @@ public class PropertyEditorFactory {
 
     // Map metadata class to editor class
     private final HashMap<Class<? extends PropertyMetadata>, List<Class<? extends PropertyEditor>>> metadataToEditors;
-    
+
     // Map of editor pools
     private final HashMap<Class<? extends PropertyEditor>, Stack<PropertyEditor>> editorPools;
 
     /** The spring context. */
-    private final ApplicationContext context;
-    
+    private final SceneBuilderBeanFactory context;
+
     public PropertyEditorFactory(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired List<EditorMapProvider> editorMapProviders
             ) {
         this.editorPools = new HashMap<>();
@@ -104,34 +103,34 @@ public class PropertyEditorFactory {
     private Class<? extends PropertyEditor> findEditorClass(Class<? extends PropertyMetadata> valueClass) {
         Class<?> uncheckedValueClass = valueClass;
         Class<? extends PropertyEditor> editorClass = null;
-        
+
         while(editorClass == null && PropertyMetadata.class.isAssignableFrom(uncheckedValueClass)) {
             List<Class<? extends PropertyEditor>> possibleEditors = metadataToEditors.get(uncheckedValueClass);
-            
+
             if (possibleEditors != null && possibleEditors.size() > 0) {
                 //TODO handling multiple editors may be a good thing
                 editorClass = possibleEditors.get(0);
-            } 
-            
+            }
+
             if (editorClass != null) {
                 return editorClass;
             }
-            
+
             uncheckedValueClass = uncheckedValueClass.getSuperclass();
         }
         return null;
     }
     public PropertyEditor newEditor(PropertyMetadata propMeta) {
         Class<? extends PropertyEditor> editorClass = findEditorClass(propMeta.getClass());
-        
+
         if (editorClass == null) {
             return null;
         }
-        
+
         if (!editorPools.containsKey(editorClass)) {
             editorPools.put(editorClass, new Stack<>());
         }
-        
+
         Stack<PropertyEditor> editorPool = editorPools.get(editorClass);
         if ((editorPool != null) && !editorPool.isEmpty()) {
             return editorPool.pop();
@@ -139,7 +138,7 @@ public class PropertyEditorFactory {
             return context.getBean(editorClass);
         }
     }
-    
+
     public void releaseEditors(List<PropertyEditor> editorsInUse) {
      // Put all the editors used in the editor pools
         for (PropertyEditor editor : editorsInUse) {
@@ -153,21 +152,21 @@ public class PropertyEditorFactory {
         // remove all editor listeners
         editor.removeAllListeners();
     }
-    
+
     public class PropertyEditorFactorySession {
         // Editors currently in use
         //   Could be a HashMap<SectionId, PropertyEditor>
         //   if we want to optimize a bit more the property editors usage,
         //   by re-using them directly in the GridPane, instead of using the pools.
         private final List<PropertyEditor> editorsInUse = new ArrayList<>();
-        
+
         protected PropertyEditorFactorySession() {}
-        
+
         public PropertyEditor getEditor(ValuePropertyMetadata propMeta, SelectionState selectionState) {
             assert propMeta != null;
-            
+
             PropertyEditor editor = newEditor(propMeta);
-            
+
             assert editor != null;
             editor.setUpdateFromModel(true);
             editor.reset(propMeta, selectionState);
@@ -175,19 +174,19 @@ public class PropertyEditorFactory {
             editorsInUse.add(editor);
             return editor;
         }
-        
+
         public void clear() {
             releaseEditors(editorsInUse);
             editorsInUse.clear();
         }
-        
+
         public void reset(SelectionState selectionState, PropertyEditor... excludedEditors) {
             List<PropertyEditor> excluded = Arrays.asList(excludedEditors);
             editorsInUse.stream()
                 .filter(e -> !excluded.contains(e))
                 .forEach(e -> e.reset(e.getPropertyMeta(), selectionState));
         }
-        
+
         public void forEach(Consumer<PropertyEditor> doSomething, PropertyEditor... excludedEditors) {
             List<PropertyEditor> excluded = Arrays.asList(excludedEditors);
             editorsInUse.stream()
@@ -198,11 +197,11 @@ public class PropertyEditorFactory {
         public PropertyEditor getFxIdEditor(SelectionState selectionState) {
             return getEditor(CoreEditors.FXID_EDITOR, selectionState);
         }
-        
+
         public PropertyEditor getControllerClassEditor(SelectionState selectionState) {
             return getEditor(CoreEditors.FXCONTROLLER_EDITOR, selectionState);
         }
-        
+
         public PropertyEditor find(PropertyName propName) {
             try {
                 return editorsInUse.stream().filter(e -> e.getPropertyName().equals(propName)).findFirst().get();

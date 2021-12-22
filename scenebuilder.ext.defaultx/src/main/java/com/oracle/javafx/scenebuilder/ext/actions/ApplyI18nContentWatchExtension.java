@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -60,11 +59,11 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
 	private final I18NResourcePreference i18NResourcePreference;
 	private final FileSystem fileSystem;
     private final I18nResourceMenuController i18nResourceMenuController;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
 
 	public ApplyI18nContentWatchExtension(
 	        @Autowired FileSystem fileSystem,
-	        @Autowired ApplicationContext context,
+	        @Autowired SceneBuilderBeanFactory context,
             @Autowired I18nResourceMenuController i18nResourceMenuController,
 			@Autowired @Lazy I18NResourcePreference i18NResourcePreference
 			) {

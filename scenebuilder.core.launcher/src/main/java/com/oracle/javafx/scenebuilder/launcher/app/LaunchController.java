@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
@@ -57,7 +56,6 @@ import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
 import com.oracle.javafx.scenebuilder.launcher.actions.OpenScenebuilderAction;
 
 import javafx.application.Application.Parameters;
-import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -65,20 +63,11 @@ import javafx.stage.Stage;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @DependsOn("i18n") // NOCHECK
 public class LaunchController implements AppPlatform.AppNotificationHandler, ApplicationListener<StageReadyEvent> {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(LaunchController.class);
 
     @Autowired
-    private ApplicationContext context;
-
-    @Autowired
-    private HostServices hostServices;
-
-    @Autowired
     private Parameters parameters;
-
-    @Autowired
-    private SceneBuilderBeanFactory sceneBuilderFactory;
 
     private final FileSystem fileSystem;
 
@@ -89,7 +78,7 @@ public class LaunchController implements AppPlatform.AppNotificationHandler, App
     private final Main main;
 
     public LaunchController(
-            @Autowired FileSystem fileSystem, 
+            @Autowired FileSystem fileSystem,
             @Autowired ActionFactory actionFactory,
             @Autowired Main main,
             @Autowired @Lazy Dialog dialog) {
@@ -132,7 +121,7 @@ public class LaunchController implements AppPlatform.AppNotificationHandler, App
      */
     @Override
     public void handleLaunch(List<String> files) {
-        List<File> lFiles = files.stream().map(s -> new File(s)).filter(f -> f.exists()).collect(Collectors.toList()); 
+        List<File> lFiles = files.stream().map(s -> new File(s)).filter(f -> f.exists()).collect(Collectors.toList());
         actionFactory.create(OpenScenebuilderAction.class, a -> a.setFiles(lFiles)).checkAndPerform();
     }
 

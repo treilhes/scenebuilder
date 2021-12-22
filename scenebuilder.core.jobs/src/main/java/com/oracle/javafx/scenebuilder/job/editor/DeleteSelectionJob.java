@@ -32,10 +32,9 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
@@ -48,7 +47,7 @@ public class DeleteSelectionJob extends Job {
 
     private Job subJob;
 
-    public DeleteSelectionJob(ApplicationContext context, Editor editor) {
+    public DeleteSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         buildSubJobs();
     }

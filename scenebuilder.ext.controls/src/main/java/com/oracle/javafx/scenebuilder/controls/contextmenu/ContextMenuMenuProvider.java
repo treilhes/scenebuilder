@@ -36,11 +36,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -51,11 +51,11 @@ import javafx.scene.control.MenuItem;
 public class ContextMenuMenuProvider implements MenuItemProvider {
 
 	private final static String REF_MENU_ID = "TBD";
-	
-	private final ApplicationContext context;
+
+	private final SceneBuilderBeanFactory context;
 
 	public ContextMenuMenuProvider(
-			@Autowired ApplicationContext context
+			@Autowired SceneBuilderBeanFactory context
 			) {
 		this.context = context;
 	}

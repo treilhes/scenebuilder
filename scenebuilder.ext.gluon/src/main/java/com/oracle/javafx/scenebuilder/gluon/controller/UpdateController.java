@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.gluon.controller;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.gluon.dialog.UpdateSceneBuilderDialog;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
@@ -52,16 +52,16 @@ import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 @Component
 @Lazy
 public class UpdateController {
-    
+
     private final Main main;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final VersionSetting versionSetting;
     private final IgnoreVersionPreference ignoreVersionPreference;
     private final ShowUpdateDialogDatePreference showUpdateDialogDatePreference;
-    
+
     public UpdateController(
-            @Autowired ApplicationContext context, 
-            @Autowired Main main, 
+            @Autowired SceneBuilderBeanFactory context,
+            @Autowired Main main,
             @Autowired IgnoreVersionPreference ignoreVersionPreference,
             @Autowired ShowUpdateDialogDatePreference showUpdateDialogDatePreference,
             @Autowired VersionSetting versionSetting) {
@@ -73,12 +73,12 @@ public class UpdateController {
         this.versionSetting = versionSetting;
 
     }
-    
+
     public void checkUpdates() {
         versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 SbPlatform.runLater(() -> {
-                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, 
+                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR,
                             main.getFrontDocumentWindow().getDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.error.title"));
                     alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
@@ -94,7 +94,7 @@ public class UpdateController {
                         dialog.showAndWait();
                     });
                 } else {
-                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION, 
+                    SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
                             main.getFrontDocumentWindow().getDocumentWindow().getStage());
                     alert.setTitle(I18N.getString("check_for_updates.alert.up_to_date.title"));
                     alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
@@ -126,7 +126,7 @@ public class UpdateController {
                 } else {
                     showUpdateDialog = false;
                 }
-                
+
                 if (showUpdateDialog) {
                     SbPlatform.runLater(() -> {
                         UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
@@ -141,7 +141,7 @@ public class UpdateController {
             }
         });
     }
-    
+
     private boolean isVersionToBeIgnored(String latestVersion) {
         String ignoreVersion = getIgnoreVersion();
         return latestVersion.equals(ignoreVersion);
@@ -157,7 +157,7 @@ public class UpdateController {
             return false;
         }
     }
-    
+
     private void showVersionNumberFormatError(DocumentWindow dwc) {
         SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, dwc.getStage());
         // The version number format is not supported and this is most probably only happening
@@ -167,7 +167,7 @@ public class UpdateController {
         alert.setContentText("Version number format not supported. Maybe using SNAPSHOT or RC versions.");
         alert.showAndWait();
     }
-    
+
     public void setIgnoreVersion(String ignoreVersion) {
         this.ignoreVersionPreference.setValue(ignoreVersion).writeToJavaPreferences();
     }
@@ -175,7 +175,7 @@ public class UpdateController {
     public String getIgnoreVersion() {
         return ignoreVersionPreference.getValue();
     }
-    
+
     public void setShowUpdateDialogAfter(LocalDate showUpdateDialogDate) {
         this.showUpdateDialogDatePreference.setValue(showUpdateDialogDate).writeToJavaPreferences();
     }

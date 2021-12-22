@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -94,7 +93,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     private IndexEntry.Type entryType = IndexEntry.Type.FX_ID;
     private ControllerClassEditor controllerClassEditor;
     private boolean controllerDidLoadFxmlOver = false;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
     private final PropertyEditorFactorySession editorFactorysession;
     private final Editor editor;
 
@@ -151,7 +150,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
         final Selection selection = getApi().getApiDoc().getSelection();
 
         final Set<IndexEntry> selectedEntries = new HashSet<>();
-        
+
         if (!selection.isEmpty()){
             selectedEntries.addAll(searchIndexEntries(selection.getGroup().getItems()));
         }
@@ -181,7 +180,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
         assert controllerAndCogHBox != null;
 
         performInitialization();
-        
+
         getApi().getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
         getApi().getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
         getApi().getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
@@ -196,7 +195,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     // to take.
     private void performInitialization() {
         SelectionState selectionState = new SelectionState(getApi().getApiDoc().getSelection());
-        
+
         if (controllerClassEditor == null) {
             controllerClassEditor = (ControllerClassEditor) editorFactorysession.getControllerClassEditor(selectionState);
         } else {
@@ -454,7 +453,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
                 controllerClassEditor.setUpdateFromModel(false);
             } else {
                 fxrootCheckBox.setDisable(false);
-                String topClassName = fxomDocument.getGlue().getRootElement().getTagName();
+                String topClassName = fxomDocument.getGlue().getMainElement().getTagName();
                 fxrootCheckBox.setTooltip(new Tooltip(I18N.getString("info.tooltip.controller", topClassName)));
                 controllerClassEditor.setDisable(false);
             }

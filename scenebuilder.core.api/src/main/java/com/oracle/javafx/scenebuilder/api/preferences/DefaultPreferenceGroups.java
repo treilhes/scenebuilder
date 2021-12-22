@@ -34,20 +34,22 @@ package com.oracle.javafx.scenebuilder.api.preferences;
 
 public interface DefaultPreferenceGroups {
 	public static String GROUP_NAME_EMPTY = "";
-	
+
 	public static final PreferenceGroup GLOBAL_GROUP_A = new PreferenceGroup("A", GROUP_NAME_EMPTY);
 	public static final PreferenceGroup GLOBAL_GROUP_B = new PreferenceGroup("B", GROUP_NAME_EMPTY);
 	public static final PreferenceGroup GLOBAL_GROUP_C = new PreferenceGroup("C", GROUP_NAME_EMPTY);
 	public static final PreferenceGroup GLOBAL_GROUP_D = new PreferenceGroup("D", GROUP_NAME_EMPTY);
 	public static final PreferenceGroup GLOBAL_GROUP_E = new PreferenceGroup("E", GROUP_NAME_EMPTY);
 	public static final PreferenceGroup GLOBAL_GROUP_F = new PreferenceGroup("F", GROUP_NAME_EMPTY);
-	
+
+	public static final PreferenceGroup GLOBAL_GROUP_G = new PreferenceGroup("G", GROUP_NAME_EMPTY);
+
 	public static final PreferenceGroup DOCUMENT_GROUP_A = new PreferenceGroup("A", GROUP_NAME_EMPTY);
-	
+
 	public class PreferenceGroup {
 		private final String orderKey;
 		private final String name;
-		
+
 		public PreferenceGroup(String orderKey, String name) {
 			super();
 			this.orderKey = orderKey;
@@ -92,6 +94,6 @@ public interface DefaultPreferenceGroups {
 				return false;
 			return true;
 		}
-		
+
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,11 +29,11 @@ public class SetEffectsMenuProvider implements MenuItemProvider {
     private final static String MODIFY_MENU_ID = "modifyMenu";
     private final static String SET_EFFECTS_MENU_ID = "setEffect";
 
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final List<Class<? extends Effect>> effects;
 
     public SetEffectsMenuProvider(
-            @Autowired ApplicationContext context,
+            @Autowired SceneBuilderBeanFactory context,
             @Autowired List<EffectProvider> effectProviders) {
         this.context = context;
         this.effects = effectProviders.stream().flatMap(p -> p.effects().stream()).collect(Collectors.toList());
@@ -73,7 +72,7 @@ public class SetEffectsMenuProvider implements MenuItemProvider {
 
             menu = new Menu(I18N.getString("menu.title.add.effect"));
             menu.setId(SET_EFFECTS_MENU_ID);
-            
+
             for (Class<? extends Effect> c : effects) {
                 MenuItem mi = new MenuItem(c.getSimpleName());
                 mi.setUserData(c);
@@ -93,7 +92,7 @@ public class SetEffectsMenuProvider implements MenuItemProvider {
             });
             return menu;
         }
-        
+
     }
 
 }

@@ -35,7 +35,6 @@ package org.scenebuilder.ext.javafx.customization.anchorpane;
 import java.io.File;
 
 import org.mockito.Mockito;
-import org.springframework.context.support.GenericApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.ApiDoc;
@@ -44,21 +43,22 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 public class MockObjects {
     public static Api buildApiMock() {
-        
+
         try {
             Api api = Mockito.mock(Api.class);
             ApiDoc apiDoc = Mockito.mock(ApiDoc.class);
-            
+
             FileSystem fs = Mockito.mock(FileSystem.class);
-            GenericApplicationContext ctx = Mockito.mock(GenericApplicationContext.class);
+            SceneBuilderBeanFactory ctx = Mockito.mock(SceneBuilderBeanFactory.class);
             Editor editor = Mockito.mock(Editor.class);
             Dialog dialog = Mockito.mock(Dialog.class);
             MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
             DocumentManager dm = new DocumentManager.DocumentManagerImpl();
-            
+
             Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
             Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
             Mockito.when(apiDoc.getMessageLogger()).thenReturn(messageLogger);

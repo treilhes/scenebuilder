@@ -52,7 +52,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -246,7 +245,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
     //private final AccordionAnimationPreference accordionAnimationPreference;
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final DocumentManager documentManager;
     private final FileSystem fileSystem;
 

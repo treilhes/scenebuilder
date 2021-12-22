@@ -32,9 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.ui.message;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.ui.AbstractPopupController;
 
 import javafx.geometry.Bounds;
@@ -48,7 +47,7 @@ public class MessagePopupController extends AbstractPopupController {
 
     private final MessagePanelController messagePanelController;
 
-    public MessagePopupController(ApplicationContext context) {
+    public MessagePopupController(SceneBuilderBeanFactory context) {
         super(context.getBean(Api.class));
         this.messagePanelController = context.getBean(MessagePanelController.class);
 

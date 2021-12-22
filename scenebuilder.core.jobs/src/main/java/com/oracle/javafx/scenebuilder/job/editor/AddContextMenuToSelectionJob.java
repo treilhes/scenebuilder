@@ -41,8 +41,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
@@ -50,6 +48,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -65,13 +64,13 @@ import javafx.scene.control.ContextMenu;
  *
  */
 public class AddContextMenuToSelectionJob extends BatchSelectionJob {
-    
+
     private Map<FXOMObject, FXOMObject> contextMenuMap; // Initialized lazily
-    private final ApplicationContext context;
+    private final SceneBuilderBeanFactory context;
     private final FXOMDocument fxomDocument;
     private final SceneBuilderManager sceneBuilderManager;
-    
-    public AddContextMenuToSelectionJob(ApplicationContext context, Editor editor) {
+
+    public AddContextMenuToSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
         super(context, editor);
         this.context = context;
         DocumentManager documentManager = context.getBean(DocumentManager.class);
@@ -99,11 +98,11 @@ public class AddContextMenuToSelectionJob extends BatchSelectionJob {
             DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
             Accessory contextMenuAccessory = designHierarchyMask
                     .getAccessoryForPropertyName(DesignHierarchyMask.AccessoryProperty.CONTEXT_MENU);
-            
+
             if (contextMenuAccessory == null) {
                 continue;
             }
-            
+
             final FXOMObject contextMenuObject = e.getValue();
             final Job insertJob = new InsertAsAccessoryJob(getContext(),
                     contextMenuObject, fxomObject,

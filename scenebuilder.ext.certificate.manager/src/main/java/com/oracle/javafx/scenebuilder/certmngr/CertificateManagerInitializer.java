@@ -33,16 +33,16 @@
 package com.oracle.javafx.scenebuilder.certmngr;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 @Component
 public class CertificateManagerInitializer implements InitWithSceneBuilder {
-    
+
        public CertificateManagerInitializer(
-            @Autowired ApplicationContext context
+            @Autowired SceneBuilderBeanFactory context
         ) {
         super();
     }

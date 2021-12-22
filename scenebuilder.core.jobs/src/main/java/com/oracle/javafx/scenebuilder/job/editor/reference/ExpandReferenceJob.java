@@ -33,10 +33,9 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.reference;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
@@ -49,7 +48,7 @@ public class ExpandReferenceJob  extends Job {
 
     private final Job subJob;
 
-    public ExpandReferenceJob(ApplicationContext context, FXOMNode reference, FXOMCloner cloner, Editor editor) {
+    public ExpandReferenceJob(SceneBuilderBeanFactory context, FXOMNode reference, FXOMCloner cloner, Editor editor) {
         super(context, editor);
         if (reference instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) reference;

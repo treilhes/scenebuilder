@@ -33,7 +33,6 @@
 package com.oracle.javafx.scenebuilder.sb.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -49,10 +48,10 @@ import com.oracle.javafx.scenebuilder.sb.preferences.global.ToolThemePreference;
 public class ApplyToolCssThemeExtension extends AbstractActionExtension<ApplyToolCssAction> implements InitWithDocument {
 
 	private final ToolThemePreference toolThemePreference;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 
 	public ApplyToolCssThemeExtension(
-			@Autowired ApplicationContext context,
+			@Autowired SceneBuilderBeanFactory context,
 			@Autowired @Lazy ToolThemePreference toolThemePreference
 			) {
 		super();

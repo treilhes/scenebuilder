@@ -36,8 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
@@ -56,6 +54,7 @@ import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
@@ -92,42 +91,42 @@ public class ResizeGesture extends AbstractMouseGesture {
     //private RegionRectangle shadow;
     private boolean snapEnabled;
     private boolean guidesDisabled;
-	private final ApplicationContext context;
+	private final SceneBuilderBeanFactory context;
 	private final GenericDriver driver;
     private final ModeManager modeManager;
     private Layer<Rudder> rudderLayer;
     private Layer<Handles> handleLayer;
     private Layer<ResizeGuide> resizeGuideLayer;
     private Layer<Shadow> shadowLayer;
-    
+
     private boolean matchWidth;
     private boolean matchHeight;
 
-    public ResizeGesture(ApplicationContext context, Content contentPanelController, FXOMInstance fxomInstance, CardinalPoint tunable) {
+    public ResizeGesture(SceneBuilderBeanFactory context, Content contentPanelController, FXOMInstance fxomInstance, CardinalPoint tunable) {
         super(contentPanelController);
         this.context = context;
         this.driver = context.getBean(GenericDriver.class);
         this.modeManager = context.getBean(ModeManager.class);
-        
+
         assert fxomInstance.getSceneGraphObject() instanceof Node;
         this.fxomInstance = fxomInstance;
         this.tunable = tunable;
-        
+
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
             handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);
             resizeGuideLayer = modeManager.getEnabledMode().getLayer(ResizeGuide.class);
             shadowLayer = modeManager.getEnabledMode().getLayer(Shadow.class);
         }
-        
+
         assert rudderLayer != null;
         assert handleLayer != null;
         assert resizeGuideLayer != null;
         assert shadowLayer != null;
     }
 
-    
-    
+
+
     /*
      * AbstractMouseGesture
      */
@@ -184,7 +183,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     protected void mouseDragged() {
         resizeGuideLayer.update();
         shadowLayer.update();
-        
+
         setRudderVisible(isSnapRequired());
         updateSceneGraphObjectSize();
         contentPanelController.getHudWindowController().updatePopupLocation();
@@ -284,14 +283,14 @@ public class ResizeGesture extends AbstractMouseGesture {
         setRudderVisible(false);
         //hideShadow();
         contentPanelController.getHudWindowController().closeWindow();
-        
+
         handleLayer.enable();
         resizeGuideLayer.disable();
         shadowLayer.disable();
         //contentPanelController.getHandleLayer().setVisible(true);
-        
+
         //resizer.getSceneGraphObject().getParent().layout();
-        
+
         //support for detached graph (clip, shape,...)
         ((Node)resizer.getFxomObject().getClosestMainGraphNode().getSceneGraphObject()).getParent().layout();
     }
@@ -309,10 +308,10 @@ public class ResizeGesture extends AbstractMouseGesture {
         if (relocater != null) {
             relocater.revertToOriginalLocation();
         }
-        
+
         final Node sceneGraphObject = resizer.getSceneGraphObject();
         Parent parentToLayout = (Parent)resizer.getFxomObject().getClosestMainGraphNode().getClosestParent().getSceneGraphObject();
-        
+
         parentToLayout.layout();
 
         // Compute mouse displacement in local coordinates of scene graph object
@@ -387,7 +386,7 @@ public class ResizeGesture extends AbstractMouseGesture {
             relocater.moveToLayoutX(newLayoutX, guidedLayoutBounds);
             relocater.moveToLayoutY(newLayoutY, guidedLayoutBounds);
         }
-        
+
         parentToLayout.layout();
 
         updateHudWindow();
@@ -404,7 +403,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 //        } else {
 //            rudderLayer.disable();
 //        }
- 
+
 //        final boolean alreadyVisible = rudder.getRootNode().getParent() != null;
 //
 //        if (alreadyVisible != visible) {
@@ -599,6 +598,6 @@ public class ResizeGesture extends AbstractMouseGesture {
     public boolean isMatchHeight() {
         return matchHeight;
     }
-    
-    
+
+
 }

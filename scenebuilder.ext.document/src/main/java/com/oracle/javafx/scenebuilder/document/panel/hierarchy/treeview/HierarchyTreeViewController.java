@@ -37,11 +37,10 @@ import static javafx.geometry.Orientation.HORIZONTAL;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
 
 import javafx.collections.ObservableList;
@@ -65,7 +64,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     @FXML
     protected TreeView<HierarchyItem> treeView;
 
-	private ApplicationContext context;
+	private SceneBuilderBeanFactory context;
 
 
     public HierarchyTreeViewController(

@@ -40,11 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup.Type;
@@ -73,7 +72,7 @@ public class AddRowJob extends BatchSelectionJob {
     private final Map<FXOMObject, Set<Integer>> targetGridPanes = new HashMap<>();
     private final Position position;
 
-    public AddRowJob(ApplicationContext context, final Editor editor, final Position position) {
+    public AddRowJob(SceneBuilderBeanFactory context, final Editor editor, final Position position) {
         super(context, editor);
         assert position == Position.ABOVE || position == Position.BELOW;
         this.position = position;

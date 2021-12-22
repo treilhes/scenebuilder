@@ -37,10 +37,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -66,7 +65,7 @@ public class InsertRowConstraintsJob extends Job {
     private final int rowIndex;
     private final int insertCount;
 
-    public InsertRowConstraintsJob(ApplicationContext context, FXOMObject gridPaneObject,
+    public InsertRowConstraintsJob(SceneBuilderBeanFactory context, FXOMObject gridPaneObject,
             int rowIndex, int insertCount, Editor editor) {
         super(context, editor);
 

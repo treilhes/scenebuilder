@@ -34,12 +34,11 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 import java.util.Objects;
 
-import org.springframework.context.ApplicationContext;
-
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -56,7 +55,7 @@ public class ModifyObjectJob extends Job {
     private final String description;
     private FXOMDocument fxomDocument;
 
-    public ModifyObjectJob(ApplicationContext context,
+    public ModifyObjectJob(SceneBuilderBeanFactory context,
             FXOMInstance fxomInstance,
             ValuePropertyMetadata propertyMetadata,
             Object newValue,
@@ -64,7 +63,7 @@ public class ModifyObjectJob extends Job {
         super(context, editor);
         DocumentManager documentManager = context.getBean(DocumentManager.class);
         this.fxomDocument = documentManager.fxomDocument().get();
-        
+
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject() != null;
         assert propertyMetadata != null;
@@ -78,7 +77,7 @@ public class ModifyObjectJob extends Job {
                 fxomInstance.getSceneGraphObject().getClass().getSimpleName());
     }
 
-    public ModifyObjectJob(ApplicationContext context,
+    public ModifyObjectJob(SceneBuilderBeanFactory context,
             FXOMInstance fxomInstance,
             ValuePropertyMetadata propertyMetadata,
             Object newValue,
