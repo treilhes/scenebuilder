@@ -221,7 +221,7 @@ public class GridSelectionGroup extends AbstractSelectionGroup {
             assert fxomProperty instanceof FXOMPropertyC;
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
             int index = 0;
-            for (FXOMObject v : fxomPropertyC.getValues()) {
+            for (FXOMObject v : fxomPropertyC.getChildren()) {
                 assert v.getSceneGraphObject() instanceof RowConstraints;
                 assert v instanceof FXOMInstance;
                 if (indexes.contains(index++)) {
@@ -247,7 +247,7 @@ public class GridSelectionGroup extends AbstractSelectionGroup {
             assert fxomProperty instanceof FXOMPropertyC;
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
             int index = 0;
-            for (FXOMObject v : fxomPropertyC.getValues()) {
+            for (FXOMObject v : fxomPropertyC.getChildren()) {
                 assert v.getSceneGraphObject() instanceof ColumnConstraints;
                 assert v instanceof FXOMInstance;
                 if (indexes.contains(index++)) {

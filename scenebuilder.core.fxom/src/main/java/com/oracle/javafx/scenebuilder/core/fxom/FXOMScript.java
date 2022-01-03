@@ -19,9 +19,8 @@ public class FXOMScript extends FXOMVirtual {
         super(fxomDocument, glueElement, sceneGraphObject);
     }
 
-    public FXOMScript(FXOMDocument document, String source) {
+    public FXOMScript(FXOMDocument document) {
         super(document, "fx:script");
-        getGlueElement().getAttributes().put(SOURCE_PROPERTY, source);
     }
 
 

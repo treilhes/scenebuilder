@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.dock;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -84,11 +85,11 @@ public class DockPanelController implements Dock {
 
     private final List<DockContext<?>> views = new ArrayList<>();
     private SceneBuilderWindow parentWindow;
-    
+
 
     // @formatter:off
     public DockPanelController(
-            @Autowired DockManager dockManager, 
+            @Autowired DockManager dockManager,
             @Autowired ViewManager viewManager,
             @Autowired DockViewController viewMenuController,
             @Autowired LastDockUuidPreference lastDockUuidPreference,
@@ -107,22 +108,23 @@ public class DockPanelController implements Dock {
         VBox.setVgrow(this.content, Priority.ALWAYS);
 
         assert dockTypes != null && !dockTypes.isEmpty();
-        
-        updateActiveDockType(dockTypes.get(0));
-        
+
+        Optional<DockType<?>> def = dockTypes.stream().filter(dt -> DockTypeSplitV.class.isInstance(dt)).findFirst();
+        updateActiveDockType(def.orElse(dockTypes.get(0)));
+
 
         viewManager.dock().filter(dr -> dr.getTarget().equals(this.getId())).observeOn(JavaFxScheduler.platform())
                 .subscribe(dr -> viewAdded(dr.getSource(), dr.isSelect()));
 
         viewManager.undock().observeOn(JavaFxScheduler.platform()).subscribe(v -> viewDeleted(v));
     }
-    
+
     @SuppressWarnings("rawtypes")
     private void updateActiveDockType(DockType newDockType) {
         lastDockDockTypePreference.getValue().put(this.getId(), newDockType.getNameKey());
         this.activeDockType = newDockType;
     }
-    
+
     public void notifyDockCreated() {
         dockManager.dockCreated().onNext(this);
     }

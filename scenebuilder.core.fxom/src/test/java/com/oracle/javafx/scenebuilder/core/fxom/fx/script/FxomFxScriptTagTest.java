@@ -49,8 +49,9 @@ import org.testfx.framework.junit5.Start;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMSaver;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMScript;
+import com.oracle.javafx.scenebuilder.core.fxom.fx.CloneFixture;
+import com.oracle.javafx.scenebuilder.core.fxom.fx.IOFixture;
 
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 /**
@@ -59,6 +60,7 @@ import javafx.stage.Stage;
 @ExtendWith(ApplicationExtension.class)
 public class FxomFxScriptTagTest {
 
+    private static final boolean FAILURE_EXPECTED = true;
     private static final String JFX_VERSION = "xxx";
 
     private enum Case {
@@ -71,11 +73,19 @@ public class FxomFxScriptTagTest {
         ;
 
         String fileName;
+        boolean failureExpected;
         Case(String fileName){
+            this(fileName, false);
+        }
+        Case(String fileName, boolean failureExpected){
             this.fileName = fileName;
+            this.failureExpected = failureExpected;
         }
         String getFileName() {
             return this.fileName;
+        }
+        boolean isFailureExpected() {
+            return this.failureExpected;
         }
     }
 
@@ -86,48 +96,25 @@ public class FxomFxScriptTagTest {
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsLoadableByJavafx(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(testCase.getFileName()));
-            loader.load(stream);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsLoadableByJavafx(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsFxomLoadable(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            new FXOMDocument(new String(stream.readAllBytes()), null, FxomFxScriptTagTest.class.getClassLoader(), null);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsFxomLoadable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsFxomSerializable(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            FXOMDocument fxomDocument = new FXOMDocument(new String(stream.readAllBytes()), null, FxomFxScriptTagTest.class.getClassLoader(), null);
-            new FXOMSaver().save(fxomDocument);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsFxomSerializable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testSerializedIsEqualToSource(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            String content = new String(stream.readAllBytes());
-            FXOMDocument fxomDocument = new FXOMDocument(content, null, FxomFxScriptTagTest.class.getClassLoader(), null);
-            String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
-            assertNotNull(serializedContent);
-            assertEquals(content.trim(), serializedContent.trim());
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testSerializedIsEqualToSource(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
@@ -157,7 +144,15 @@ public class FxomFxScriptTagTest {
             assertTrue(serializedContent.trim().contains("var txt = 'You changed me!';"));
 
         } catch (IOException e) {
-            fail(e);
+            if (!testCase.isFailureExpected()) {
+                fail(e);
+            }
         }
+    }
+
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    public void testIsCloneable(Case testCase) {
+        CloneFixture.testIsCloneable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 }

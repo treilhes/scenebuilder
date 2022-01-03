@@ -154,7 +154,7 @@ public class ObjectDeleter {
                 for (FXOMProperty p : new LinkedList<>(fxomInstance.getProperties().values())) {
                     if (p instanceof FXOMPropertyC) {
                         final FXOMPropertyC cp = (FXOMPropertyC) p;
-                        for (FXOMObject value : new LinkedList<>(cp.getValues())) {
+                        for (FXOMObject value : new LinkedList<>(cp.getChildren())) {
                             prepareDeleteObject(value, target);
                         }
                     }

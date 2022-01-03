@@ -44,12 +44,14 @@ class XMLBuffer {
     private final StringBuffer buffer = new StringBuffer();
     private final List<String> elementStack = new ArrayList<>();
     private boolean tagOpened;
+    private boolean compress;
 
     /*
      * XMLBuffer
      */
 
-    public XMLBuffer() {
+    public XMLBuffer(boolean compress) {
+        this.compress = compress;
         clear();
     }
 
@@ -119,6 +121,11 @@ class XMLBuffer {
             buffer.append(">"); //NOCHECK
             tagOpened = false;
         }
+
+        if(compress) {
+            return;
+        }
+
         buffer.append(text);
     }
 
@@ -128,6 +135,10 @@ class XMLBuffer {
         if (tagOpened) {
             buffer.append(">"); //NOCHECK
             tagOpened = false;
+        }
+
+        if(compress) {
+            return;
         }
 
         buffer.append("<!--"); //NOCHECK
@@ -140,6 +151,11 @@ class XMLBuffer {
             buffer.append(">"); //NOCHECK
             tagOpened = false;
         }
+
+        if(compress) {
+            return;
+        }
+
         buffer.append('\n');
     }
 

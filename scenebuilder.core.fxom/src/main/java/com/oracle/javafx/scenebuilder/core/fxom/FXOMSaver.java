@@ -69,6 +69,9 @@ public class FXOMSaver {
     }
 
     public String save(FXOMDocument fxomDocument, String javafxVersion) {
+        return save(fxomDocument, javafxVersion, false);
+    }
+    public String save(FXOMDocument fxomDocument, String javafxVersion, boolean compress) {
 
         assert fxomDocument != null;
         assert fxomDocument.getGlue() != null;
@@ -78,7 +81,7 @@ public class FXOMSaver {
             updateImportInstructions(fxomDocument);
         }
 
-        return fxomDocument.getGlue().toString();
+        return fxomDocument.getGlue().toString(compress);
     }
 
     public String save(FXOMDocument fxomDocument) {

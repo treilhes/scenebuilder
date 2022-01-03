@@ -37,7 +37,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
@@ -46,12 +46,12 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 public class AddPropertyJob extends Job {
 
     private final FXOMProperty property;
-    private final FXOMInstance targetInstance;
+    private final FXOMElement targetInstance;
     private final int targetIndex;
     private final FXOMDocument fxomDocument;
 
     public AddPropertyJob(SceneBuilderBeanFactory context, FXOMProperty property,
-            FXOMInstance targetInstance,
+            FXOMElement targetInstance,
             int targetIndex,
             Editor editor) {
         super(context, editor);

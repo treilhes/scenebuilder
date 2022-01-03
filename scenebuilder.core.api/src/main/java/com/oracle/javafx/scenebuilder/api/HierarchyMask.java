@@ -49,6 +49,7 @@ public interface HierarchyMask {
         PropertyName getName();
         Class<?> getContentType();
         boolean isCollection();
+        boolean isAccepting(Object value);
         boolean isAccepting(Class<?> valueClass);
         boolean isMain();
         boolean isFreeChildPositioning();
@@ -58,17 +59,17 @@ public interface HierarchyMask {
     public boolean isAcceptingAccessory(Accessory accessory);
 
     public FXOMObject getAccessory(Accessory accessory);
-    
+
     public List<FXOMObject> getAccessories(Accessory accessory);
 
     public boolean isAcceptingSubComponent();
 
     public int getSubComponentCount(Accessory accessory);
-    
+
     public int getSubComponentCount();
 
     public FXOMObject getSubComponentAtIndex(Accessory accessory, int i);
-    
+
     public FXOMObject getSubComponentAtIndex(int i);
 
     public FXOMObject getFxomObject();

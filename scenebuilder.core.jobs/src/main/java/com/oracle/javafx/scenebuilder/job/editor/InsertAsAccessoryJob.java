@@ -48,6 +48,7 @@ import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
@@ -235,10 +236,11 @@ public class InsertAsAccessoryJob extends BatchSelectionJob {
             } else {
                 sb.append("Unresolved Object");
             }
+        } else if (newObject instanceof FXOMIntrinsic) {
+            sb.append(((FXOMIntrinsic)newObject).getType());
         } else if (newObject instanceof FXOMCollection) {
             sb.append("Collection");
         } else {
-            assert false;
             sb.append(newObject.getClass().getSimpleName());
         }
         result = sb.toString();

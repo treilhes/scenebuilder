@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
@@ -85,7 +85,7 @@ public class ExpandExpressionReferenceJob extends InlineDocumentJob {
         final List<Job> result = new LinkedList<>();
 
         // 1) remove the reference
-        final FXOMInstance parentInstance = reference.getParentInstance();
+        final FXOMElement parentInstance = reference.getParentInstance();
         final Job removeReference = new RemovePropertyJob(getContext(), reference, getEditorController()).extend();
         removeReference.execute();
         result.add(removeReference);

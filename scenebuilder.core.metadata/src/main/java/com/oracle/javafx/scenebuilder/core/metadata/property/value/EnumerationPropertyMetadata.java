@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
@@ -87,7 +87,7 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
         this.nullEquivalent = builder.nullEquivalent;
     }
 
-    public String getValue(FXOMInstance fxomInstance) {
+    public String getValue(FXOMElement fxomInstance) {
         final String result;
 
         if (isReadWrite()) {
@@ -120,7 +120,7 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
         return result;
     }
 
-    public void setValue(FXOMInstance fxomInstance, String value) {
+    public void setValue(FXOMElement fxomInstance, String value) {
         assert isReadWrite();
         assert value != null;
 
@@ -190,12 +190,12 @@ public class EnumerationPropertyMetadata extends ValuePropertyMetadata {
     }
 
     @Override
-    public Object getValueObject(FXOMInstance fxomInstance) {
+    public Object getValueObject(FXOMElement fxomInstance) {
         return getValue(fxomInstance);
     }
 
     @Override
-    public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
+    public void setValueObject(FXOMElement fxomInstance, Object valueObject) {
         assert valueObject instanceof String;
         setValue(fxomInstance, (String) valueObject);
     }

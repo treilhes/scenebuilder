@@ -32,12 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.core.fxom.fx.define;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.io.IOException;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -45,10 +39,9 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMComment;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMSaver;
+import com.oracle.javafx.scenebuilder.core.fxom.fx.CloneFixture;
+import com.oracle.javafx.scenebuilder.core.fxom.fx.IOFixture;
 
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 /**
@@ -57,11 +50,12 @@ import javafx.stage.Stage;
 @ExtendWith(ApplicationExtension.class)
 public class FxomFxDefineTagTest {
 
+    private static final boolean FAILURE_EXPECTED = true;
     private static final String JFX_VERSION = "xxx";
 
     private enum Case {
         ALWAYS_VALID("always_valid.fxml"),
-        //HEADER_DEFINE("header_define.fxml"), // Unloadable by javafx
+        HEADER_DEFINE("header_define.fxml", FAILURE_EXPECTED), // Unloadable by javafx
         STANDALONE_DEFINE("standalone_define.fxml"),
         PROPERTY_DEFINE("property_define.fxml"),
         OBJECT_DEFINE("object_define.fxml"),
@@ -70,11 +64,19 @@ public class FxomFxDefineTagTest {
         ;
 
         String fileName;
+        boolean failureExpected;
         Case(String fileName){
+            this(fileName, false);
+        }
+        Case(String fileName, boolean failureExpected){
             this.fileName = fileName;
+            this.failureExpected = failureExpected;
         }
         String getFileName() {
             return this.fileName;
+        }
+        boolean isFailureExpected() {
+            return this.failureExpected;
         }
     }
 
@@ -85,48 +87,25 @@ public class FxomFxDefineTagTest {
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsLoadableByJavafx(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(testCase.getFileName()));
-            loader.load(stream);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsLoadableByJavafx(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsFxomLoadable(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            new FXOMDocument(new String(stream.readAllBytes()), null, FxomFxDefineTagTest.class.getClassLoader(), null);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsFxomLoadable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsFxomSerializable(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            FXOMDocument fxomDocument = new FXOMDocument(new String(stream.readAllBytes()), null, FxomFxDefineTagTest.class.getClassLoader(), null);
-            new FXOMSaver().save(fxomDocument);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsFxomSerializable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testSerializedIsEqualToSource(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            String content = new String(stream.readAllBytes());
-            FXOMDocument fxomDocument = new FXOMDocument(content, null, FxomFxDefineTagTest.class.getClassLoader(), null);
-            String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
-            assertNotNull(serializedContent);
-            assertEquals(content.trim(), serializedContent.trim());
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testSerializedIsEqualToSource(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
 //    @ParameterizedTest
@@ -156,7 +135,15 @@ public class FxomFxDefineTagTest {
 //            assertTrue(serializedContent.trim().contains("there is some"));
 //
 //        } catch (IOException e) {
-//            fail(e);
+//                if (!testCase.isFailureExpected()) {
+//                    fail(e);
+//                }
 //        }
 //    }
+
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    public void testIsCloneable(Case testCase) {
+        CloneFixture.testIsCloneable(this, testCase.getFileName(), testCase.isFailureExpected());
+    }
 }

@@ -41,7 +41,7 @@ import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ReIndexObjectJob;
 
 /**
@@ -84,8 +84,8 @@ public class SendToBackJob extends InlineDocumentJob {
             final FXOMObject candidate = candidates.get(i);
             final FXOMObject previousSlibing = candidate.getPreviousSlibing();
             if (previousSlibing != null) {
-                final FXOMPropertyC parentProperty = candidate.getParentProperty();
-                final FXOMObject beforeChild = parentProperty.getValues().get(0);
+                final FXOMProperty parentProperty = candidate.getParentProperty();
+                final FXOMObject beforeChild = parentProperty.getChildren().get(0);
                 final Job subJob = new ReIndexObjectJob(getContext(),
                         candidate, beforeChild, getEditorController()).extend();
                 if (subJob.isExecutable()) {

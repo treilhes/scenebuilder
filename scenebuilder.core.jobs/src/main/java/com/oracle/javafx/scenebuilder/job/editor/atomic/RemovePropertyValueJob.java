@@ -38,7 +38,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
  *
@@ -47,7 +47,7 @@ public class RemovePropertyValueJob extends Job {
 
     private final FXOMObject targetValue;
 
-    private FXOMPropertyC parentProperty;
+    private FXOMProperty parentProperty;
     private int indexInParentProperty;
     private Job removePropertyJob;
 
@@ -77,7 +77,7 @@ public class RemovePropertyValueJob extends Job {
 
         parentProperty = targetValue.getParentProperty();
         indexInParentProperty = targetValue.getIndexInParentProperty();
-        if ((parentProperty.getValues().size() == 1) && (parentProperty.getParentInstance() != null)) {
+        if ((parentProperty.getChildren().size() == 1) && (parentProperty.getParentInstance() != null)) {
             // targetValue is the last value of its parent property
             // => parent property must also be removed from its parent instance
             removePropertyJob = new RemovePropertyJob(getContext(), parentProperty, getEditorController()).extend();

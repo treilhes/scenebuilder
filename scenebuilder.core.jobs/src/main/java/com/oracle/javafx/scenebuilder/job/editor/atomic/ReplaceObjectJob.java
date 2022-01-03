@@ -38,7 +38,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
  *
@@ -47,7 +47,7 @@ public class ReplaceObjectJob extends Job {
 
     private final FXOMObject original;
     private final FXOMObject replacement;
-    private FXOMPropertyC parentProperty;
+    private FXOMProperty parentProperty;
     private FXOMCollection parentCollection;
     private int indexInParentProperty;
     private int indexInParentCollection;

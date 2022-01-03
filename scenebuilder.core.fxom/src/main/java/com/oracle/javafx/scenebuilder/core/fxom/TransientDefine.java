@@ -47,8 +47,9 @@ class TransientDefine extends TransientVirtual {
 
     public TransientDefine(
             TransientNode parentNode,
-            GlueElement propertyElement) {
-        super(parentNode, name.getName(), propertyElement);
+            GlueElement propertyElement,
+            long virtualIndex) {
+        super(parentNode, name.getName(), propertyElement, virtualIndex);
 
         assert name != null;
         assert propertyElement != null;
@@ -62,6 +63,6 @@ class TransientDefine extends TransientVirtual {
 
     @Override
     public FXOMProperty makeFxomProperty(FXOMDocument fxomDocument) {
-        return new FXOMPropertyV(fxomDocument, name, List.of(makeFxomObject(fxomDocument)), getGlueElement());
+        return new FXOMPropertyV(fxomDocument, getVirtualIndex(), List.of(makeFxomObject(fxomDocument)));
     }
 }

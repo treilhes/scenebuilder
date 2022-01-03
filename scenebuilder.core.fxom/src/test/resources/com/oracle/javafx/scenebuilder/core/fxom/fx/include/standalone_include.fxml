@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<fx:include source="/com/oracle/javafx/scenebuilder/core/fxom/fx/include/always_valid.fxml" xmlns="http://javafx.com/javafx/xxx" xmlns:fx="http://javafx.com/fxml/1" />

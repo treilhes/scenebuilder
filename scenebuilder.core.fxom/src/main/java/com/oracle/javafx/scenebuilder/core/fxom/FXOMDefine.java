@@ -24,6 +24,10 @@ public class FXOMDefine extends FXOMVirtual {
 
     }
 
+    public FXOMDefine(FXOMDocument document) {
+        super(document, "fx:define");
+    }
+
     public List<FXOMObject> getItems() {
         return Collections.unmodifiableList(items);
     }

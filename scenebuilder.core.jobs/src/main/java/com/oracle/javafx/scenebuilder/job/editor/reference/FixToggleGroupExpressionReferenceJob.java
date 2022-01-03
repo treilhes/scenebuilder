@@ -41,7 +41,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
@@ -101,7 +101,7 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
             assert referee.getParentProperty().getParentInstance() != null;
 
             // 2a.1) Toggle group is available : disconnect it and re-use it
-            final FXOMInstance parentInstance
+            final FXOMElement parentInstance
                     = referee.getParentProperty().getParentInstance();
             final Job removeJob
                     = new RemoveObjectJob(getContext(), referee, getEditorController()).extend();
@@ -123,7 +123,7 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
         } else {
 
             // 2b.1) Removes the reference
-            final FXOMInstance targetInstance = reference.getParentInstance();
+            final FXOMElement targetInstance = reference.getParentInstance();
             final Job removeJob = new RemovePropertyJob(getContext(), reference, getEditorController()).extend();
             removeJob.execute();
             result.add(removeJob);

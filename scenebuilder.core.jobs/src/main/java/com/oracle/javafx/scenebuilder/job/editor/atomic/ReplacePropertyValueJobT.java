@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
@@ -49,7 +49,7 @@ public class ReplacePropertyValueJobT extends Job {
     private final FXOMPropertyT hostProperty;
     private final FXOMObject newValue;
 
-    private FXOMInstance hostInstance;
+    private FXOMElement hostInstance;
     private FXOMPropertyC newProperty;
 
     public ReplacePropertyValueJobT(SceneBuilderBeanFactory context, FXOMPropertyT hostProperty, FXOMObject newValue, Editor editor) {

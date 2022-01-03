@@ -34,6 +34,7 @@ package com.oracle.javafx.scenebuilder.core.fxom;
 
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
@@ -42,6 +43,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  */
 /**
  * A FXOMPropertyV represents a virtual property not involved in the scenegraph<br/>
+ * This kind of property has an unique name and a totaly empty glue element
  * <br/>
  * There are mainly fx tags like <br/>
  * &lt;fx:include><br/>
@@ -58,8 +60,19 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  */
 public class FXOMPropertyV extends FXOMPropertyC {
 
-    public FXOMPropertyV(FXOMDocument document, PropertyName name, List<FXOMObject> values, GlueElement glueElement) {
-        super(document, name, values, glueElement);
+    private static GlueElement emptyGlue(GlueDocument document) {
+        GlueElement e = new GlueElement(document, "", 0, false);
+        e.setSynthetic(true);
+        return e;
+    }
+
+    public FXOMPropertyV(FXOMDocument document, long index, List<FXOMObject> values) {
+        super(document, new PropertyName(VIRTUAL_PREFIX + index), values, emptyGlue(document.getGlue()));
+    }
+
+    protected FXOMPropertyV(FXOMDocument document, PropertyName name) {
+        super(document, name, List.of(), emptyGlue(document.getGlue()));
+        assert name.getName().startsWith(VIRTUAL_PREFIX);
     }
 
 }

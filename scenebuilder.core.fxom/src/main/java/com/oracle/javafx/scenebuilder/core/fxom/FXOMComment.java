@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueComment;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
@@ -14,6 +15,10 @@ public class FXOMComment extends FXOMVirtual {
     FXOMComment(FXOMDocument fxomDocument, GlueElement glueElement, String comment) {
         super(fxomDocument, glueElement, null);
         setComment(comment);
+    }
+
+    FXOMComment(FXOMDocument fxomDocument, String comment) {
+        this(fxomDocument, new GlueComment(fxomDocument.getGlue()), comment);
     }
 
     @Override

@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
@@ -67,7 +68,7 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
         return defaultValue;
     }
 
-    public Object getValue(FXOMInstance fxomInstance) {
+    public Object getValue(FXOMElement fxomInstance) {
         final Object result;
 
         if (isReadWrite()) {
@@ -75,9 +76,9 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
             if (fxomProperty instanceof FXOMPropertyC) {
 
                 final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-                assert fxomPropertyC.getValues().size() == 1;
+                assert fxomPropertyC.getChildren().size() == 1;
 
-                final FXOMObject valueFxomObject = fxomPropertyC.getValues().get(0);
+                final FXOMObject valueFxomObject = fxomPropertyC.getChildren().get(0);
                 final Object sceneGraphObject = valueFxomObject.getSceneGraphObject();
 
                 result = castValue(sceneGraphObject);
@@ -96,7 +97,7 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
         return result;
     }
 
-    public void setValue(FXOMInstance fxomInstance, Object value) {
+    public void setValue(FXOMElement fxomInstance, Object value) {
         assert isReadWrite();
 
         final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
@@ -142,12 +143,12 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
     }
 
     @Override
-    public Object getValueObject(FXOMInstance fxomInstance) {
+    public Object getValueObject(FXOMElement fxomInstance) {
         return getValue(fxomInstance);
     }
 
     @Override
-    public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
+    public void setValueObject(FXOMElement fxomInstance, Object valueObject) {
         setValue(fxomInstance, castValue(valueObject));
     }
 
@@ -156,7 +157,7 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
      * Private
      */
 
-    protected FXOMProperty makeFxomPropertyFromValue(FXOMInstance fxomInstance, Object value) {
+    protected FXOMProperty makeFxomPropertyFromValue(FXOMElement fxomInstance, Object value) {
         assert fxomInstance != null;
         assert value != null;
 
@@ -171,9 +172,9 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
         assert fxomProperty instanceof FXOMPropertyC; // Because Callback are expressed using fx:constant
 
         final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-        assert fxomPropertyC.getValues().size() == 1;
+        assert fxomPropertyC.getChildren().size() == 1;
 
-        FXOMObject valueObject = fxomPropertyC.getValues().get(0);
+        FXOMObject valueObject = fxomPropertyC.getChildren().get(0);
         if (valueObject instanceof FXOMInstance) {
             updateFxomInstanceWithValue((FXOMInstance) valueObject, value);
         } else {

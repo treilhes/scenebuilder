@@ -77,7 +77,7 @@ public class AddPropertyValueJob extends Job {
 
     @Override
     public void execute() {
-        assert targetIndex <= targetProperty.getValues().size();
+        assert targetIndex <= targetProperty.getChildren().size();
         redo();
     }
 

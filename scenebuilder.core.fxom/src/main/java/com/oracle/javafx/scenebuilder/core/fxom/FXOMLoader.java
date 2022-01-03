@@ -46,6 +46,7 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.core.fxom.control.NullReference;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.LoaderCapabilitiesManager;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueCursor;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
@@ -76,7 +77,7 @@ class FXOMLoader implements LoadListener {
     private final FXOMDocument document;
     private TransientNode currentTransientNode;
     private GlueCursor glueCursor;
-
+    private long virtualElementIndex;
     /*
      * FXOMLoader
      */
@@ -102,6 +103,8 @@ class FXOMLoader implements LoadListener {
         fxmlLoader.setResources(new ResourceKeyCollector(document.getResources()));
         fxmlLoader.setClassLoader(new TransientClassLoader(classLoader));
         fxmlLoader.setLoadListener(this);
+
+        fxmlLoader.getNamespace().put("$sb_nullReference", new NullReference());
 
         if (loaderCapabilitiesManagers.size() == 0
                 || loaderCapabilitiesManagers.stream().anyMatch(l -> l.isStaticLoadingEnabled())) {
@@ -177,7 +180,8 @@ class FXOMLoader implements LoadListener {
         }
 
         final GlueDocument glueDocument = currentTransientNode.getGlueElement().getDocument();
-        final TransientComment transientComment = new TransientComment(currentTransientNode, glueDocument, glueCursor.getCurrentElement(), string);
+        final TransientComment transientComment = new TransientComment(currentTransientNode, glueDocument,
+                glueCursor.getCurrentElement(), ++virtualElementIndex, string);
 
         if (currentTransientNode instanceof TransientProperty) {
             final TransientProperty parentProperty = (TransientProperty) currentTransientNode;
@@ -286,7 +290,7 @@ class FXOMLoader implements LoadListener {
         assert glueCursor.getCurrentElement().getTagName().equals("fx:script"); // NOCHECK
 
         final TransientScript transientScript = new TransientScript(currentTransientNode,
-                glueCursor.getCurrentElement());
+                glueCursor.getCurrentElement(), ++virtualElementIndex);
 
         currentTransientNode = transientScript;
         glueCursor.moveToNextElement();
@@ -297,7 +301,7 @@ class FXOMLoader implements LoadListener {
         assert glueCursor.getCurrentElement().getTagName().equals("fx:define"); // NOCHECK
 
         final TransientDefine transientDefine = new TransientDefine(currentTransientNode,
-                glueCursor.getCurrentElement());
+                glueCursor.getCurrentElement(), ++virtualElementIndex);
 
         currentTransientNode = transientDefine;
         glueCursor.moveToNextElement();
@@ -415,7 +419,7 @@ class FXOMLoader implements LoadListener {
             final TransientProperty currentProperty = (TransientProperty) currentTransientNode;
             final TransientNode currentParent = currentProperty.getParentNode();
             final FXOMProperty currentFxomProperty = currentProperty.makeFxomProperty(document);
-            assert currentParent instanceof TransientObject;
+            assert currentParent instanceof TransientObject || currentParent instanceof TransientIntrinsic;
             if (currentParent instanceof TransientObject) {
                 final TransientObject parentObject = (TransientObject) currentParent;
                 parentObject.getProperties().add(currentFxomProperty);

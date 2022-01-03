@@ -49,8 +49,9 @@ import org.testfx.framework.junit5.Start;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMComment;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMSaver;
+import com.oracle.javafx.scenebuilder.core.fxom.fx.CloneFixture;
+import com.oracle.javafx.scenebuilder.core.fxom.fx.IOFixture;
 
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 /**
@@ -59,11 +60,12 @@ import javafx.stage.Stage;
 @ExtendWith(ApplicationExtension.class)
 public class FxomFxCommentTagTest {
 
-    private static final String JFX_VERSION = "xxx";
+    private static final boolean FAILURE_EXPECTED = true;
+
 
     private enum Case {
         ALWAYS_VALID("always_valid.fxml"),
-        //STANDALONE_COMMENT("standalone_comment.fxml"), // Unloadable by javafx
+        STANDALONE_COMMENT("standalone_comment.fxml", FAILURE_EXPECTED), // Unloadable by javafx
         PROPERTY_COMMENT("property_comment.fxml"),
         OBJECT_COMMENT("object_comment.fxml"),
         VALUE_COMMENT("value_comment.fxml"),
@@ -71,11 +73,19 @@ public class FxomFxCommentTagTest {
         ;
 
         String fileName;
+        boolean failureExpected;
         Case(String fileName){
+            this(fileName, false);
+        }
+        Case(String fileName, boolean failureExpected){
             this.fileName = fileName;
+            this.failureExpected = failureExpected;
         }
         String getFileName() {
             return this.fileName;
+        }
+        boolean isFailureExpected() {
+            return this.failureExpected;
         }
     }
 
@@ -86,48 +96,25 @@ public class FxomFxCommentTagTest {
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsLoadableByJavafx(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(testCase.getFileName()));
-            loader.load(stream);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsLoadableByJavafx(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsFxomLoadable(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            new FXOMDocument(new String(stream.readAllBytes()), null, FxomFxCommentTagTest.class.getClassLoader(), null);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsFxomLoadable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testIsFxomSerializable(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            FXOMDocument fxomDocument = new FXOMDocument(new String(stream.readAllBytes()), null, FxomFxCommentTagTest.class.getClassLoader(), null);
-            new FXOMSaver().save(fxomDocument);
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testIsFxomSerializable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
     @EnumSource(Case.class)
     public void testSerializedIsEqualToSource(Case testCase) {
-        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
-            String content = new String(stream.readAllBytes());
-            FXOMDocument fxomDocument = new FXOMDocument(content, null, FxomFxCommentTagTest.class.getClassLoader(), null);
-            String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
-            assertNotNull(serializedContent);
-            assertEquals(content.trim(), serializedContent.trim());
-        } catch (IOException e) {
-            fail(e);
-        }
+        IOFixture.testSerializedIsEqualToSource(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 
     @ParameterizedTest
@@ -144,20 +131,28 @@ public class FxomFxCommentTagTest {
 
             List<FXOMComment> comments = fxomDocument.getFxomRoot().collectComments();
 
-            assertEquals(comments.size(), 1);
+            assertEquals(1, comments.size());
 
             String comment = comments.get(0).getComment();
             comment = comment.replace("this is some", "there is some");
             comments.get(0).setComment(comment);
 
-            String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
+            String serializedContent = new FXOMSaver().save(fxomDocument, IOFixture.JFX_VERSION);
 
             assertNotNull(serializedContent);
 
             assertTrue(serializedContent.trim().contains("there is some"));
 
         } catch (IOException e) {
-            fail(e);
+            if (!testCase.isFailureExpected()) {
+                fail(e);
+            }
         }
+    }
+
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    public void testIsCloneable(Case testCase) {
+        CloneFixture.testIsCloneable(this, testCase.getFileName(), testCase.isFailureExpected());
     }
 }

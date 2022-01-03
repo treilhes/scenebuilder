@@ -1,5 +1,6 @@
 open module scenebuilder.core.metadata {
     exports com.oracle.javafx.scenebuilder.core.metadata;
+    exports com.oracle.javafx.scenebuilder.core.metadata.fx;
     exports com.oracle.javafx.scenebuilder.core.metadata.klass;
     exports com.oracle.javafx.scenebuilder.core.metadata.property;
     exports com.oracle.javafx.scenebuilder.core.metadata.property.value;

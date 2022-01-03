@@ -36,7 +36,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,12 +51,11 @@ import javafx.fxml.FXMLLoader;
  *
  *
  */
-public class FXOMInstance extends FXOMObject {
+public class FXOMInstance extends FXOMElement {
 
-    private final Map<PropertyName, FXOMProperty> properties = new LinkedHashMap<>();
-    private Class<?> declaredClass;
+
+    //FIXME why not using this.getFxomDocument()
     private FXOMDocument fxomDocument;
-
 
     FXOMInstance(
             FXOMDocument fxomDocument,
@@ -75,10 +73,10 @@ public class FXOMInstance extends FXOMObject {
         assert properties != null;
 
         this.fxomDocument = fxomDocument;
-        this.declaredClass = declaredClass;
+        setDeclaredClass(declaredClass);
         for (FXOMProperty p : properties) {
-            this.properties.put(p.getName(), p);
             p.setParentInstance(this);
+            addProperty(p);
         }
     }
 
@@ -90,10 +88,9 @@ public class FXOMInstance extends FXOMObject {
 
         assert properties != null;
 
-        this.declaredClass = null;
         for (FXOMProperty p : properties) {
-            this.properties.put(p.getName(), p);
             p.setParentInstance(this);
+            addProperty(p);
         }
     }
 
@@ -103,24 +100,11 @@ public class FXOMInstance extends FXOMObject {
 
     public FXOMInstance(FXOMDocument fxomDocument, Class<?> declaredClass) {
         super(fxomDocument, PropertyName.makeClassFullName(declaredClass));
-        this.declaredClass = declaredClass;
+        setDeclaredClass(declaredClass);
     }
 
     public FXOMInstance(FXOMDocument fxomDocument, String tagName) {
-        super(fxomDocument, tagName);
-        this.declaredClass = null; // This is an unresolved instance
-    }
-
-    public Class<?> getDeclaredClass() {
-        return declaredClass;
-    }
-
-    public void setDeclaredClass(Class<?> declaredClass) {
-        this.declaredClass = declaredClass;
-    }
-
-    public Map<PropertyName, FXOMProperty> getProperties() {
-        return Collections.unmodifiableMap(properties);
+        super(fxomDocument, tagName);// This is an unresolved instance
     }
 
     public boolean isFxRoot() {
@@ -157,7 +141,7 @@ public class FXOMInstance extends FXOMObject {
     }
 
     @Override
-    public void addToParentProperty(int index, FXOMPropertyC newParentProperty) {
+    public void addToParentProperty(int index, FXOMProperty newParentProperty) {
         super.addToParentProperty(index, newParentProperty); //To change body of generated methods, choose Tools | Templates.
 
         // May be this object was root : fx:root, type properties must be reset.
@@ -169,11 +153,12 @@ public class FXOMInstance extends FXOMObject {
     public List<FXOMObject> getChildObjects() {
         final List<FXOMObject> result = new ArrayList<>();
 
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                final FXOMPropertyC pc = (FXOMPropertyC) p;
-                result.addAll(pc.getValues());
-            }
+        for (FXOMProperty p : getProperties().values()) {
+//            if (p instanceof FXOMPropertyC) {
+//                final FXOMPropertyC pc = (FXOMPropertyC) p;
+//                result.addAll(pc.getChildren());
+//            }
+            result.addAll(p.getChildren());
         }
         return result;
     }
@@ -185,16 +170,22 @@ public class FXOMInstance extends FXOMObject {
 
         result = super.searchWithSceneGraphObject(sceneGraphObject);
         if (result == null) {
-            final Iterator<FXOMProperty> it = properties.values().iterator();
+            final Iterator<FXOMProperty> it = getProperties().values().iterator();
             while ((result == null) && it.hasNext()) {
                 final FXOMProperty property = it.next();
-                if (property instanceof FXOMPropertyC) {
-                    FXOMPropertyC propertyC = (FXOMPropertyC) property;
-                    final Iterator<FXOMObject> itValue = propertyC.getValues().iterator();
-                    while ((result == null) && itValue.hasNext()) {
-                        final FXOMObject value = itValue.next();
-                        result = value.searchWithSceneGraphObject(sceneGraphObject);
-                    }
+//                if (property instanceof FXOMPropertyC) {
+//                    FXOMPropertyC propertyC = (FXOMPropertyC) property;
+//                    final Iterator<FXOMObject> itValue = propertyC.getChildren().iterator();
+//                    while ((result == null) && itValue.hasNext()) {
+//                        final FXOMObject value = itValue.next();
+//                        result = value.searchWithSceneGraphObject(sceneGraphObject);
+//                    }
+//                }
+
+                final Iterator<FXOMObject> itValue = property.getChildren().iterator();
+                while ((result == null) && itValue.hasNext()) {
+                    final FXOMObject value = itValue.next();
+                    result = value.searchWithSceneGraphObject(sceneGraphObject);
                 }
             }
         }
@@ -208,16 +199,21 @@ public class FXOMInstance extends FXOMObject {
 
         result = super.searchWithFxId(fxId);
         if (result == null) {
-            final Iterator<FXOMProperty> it = properties.values().iterator();
+            final Iterator<FXOMProperty> it = getProperties().values().iterator();
             while ((result == null) && it.hasNext()) {
                 final FXOMProperty property = it.next();
-                if (property instanceof FXOMPropertyC) {
-                    FXOMPropertyC propertyC = (FXOMPropertyC) property;
-                    final Iterator<FXOMObject> itValue = propertyC.getValues().iterator();
-                    while ((result == null) && itValue.hasNext()) {
-                        final FXOMObject value = itValue.next();
-                        result = value.searchWithFxId(fxId);
-                    }
+//                if (property instanceof FXOMPropertyC) {
+//                    FXOMPropertyC propertyC = (FXOMPropertyC) property;
+//                    final Iterator<FXOMObject> itValue = propertyC.getChildren().iterator();
+//                    while ((result == null) && itValue.hasNext()) {
+//                        final FXOMObject value = itValue.next();
+//                        result = value.searchWithFxId(fxId);
+//                    }
+//                }
+                final Iterator<FXOMObject> itValue = property.getChildren().iterator();
+                while ((result == null) && itValue.hasNext()) {
+                    final FXOMObject value = itValue.next();
+                    result = value.searchWithFxId(fxId);
                 }
             }
         }
@@ -229,17 +225,20 @@ public class FXOMInstance extends FXOMObject {
     protected void collectDeclaredClasses(Set<Class<?>> result) {
         assert result != null;
 
-        if (declaredClass != null) {
-            result.add(declaredClass);
+        if (getDeclaredClass() != null && getDeclaredClass() != Object.class) {
+            result.add(getDeclaredClass());
         }
 
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectDeclaredClasses(result);
-                }
-            } else if (p instanceof FXOMPropertyT) {
-                collectGlueElementPropertiesT(((FXOMPropertyT)p).getValueElement(), result);
+        for (FXOMProperty p : getProperties().values()) {
+//            if (p instanceof FXOMPropertyC) {
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectDeclaredClasses(result);
+//                }
+//            } else if (p instanceof FXOMPropertyT) {
+//                collectGlueElementPropertiesT(((FXOMPropertyT)p).getValueElement(), result);
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectDeclaredClasses(result);
             }
         }
 
@@ -273,14 +272,17 @@ public class FXOMInstance extends FXOMObject {
         assert propertyName != null;
         assert result != null;
 
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             if (p.getName().equals(propertyName)) {
                 result.add(p);
             }
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectProperties(propertyName, result);
-                }
+//            if (p instanceof FXOMPropertyC) {
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectProperties(propertyName, result);
+//                }
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectProperties(propertyName, result);
             }
         }
     }
@@ -289,17 +291,21 @@ public class FXOMInstance extends FXOMObject {
     protected void collectNullProperties(List<FXOMPropertyT> result) {
         assert result != null;
 
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             if (p instanceof FXOMPropertyT) {
                 final FXOMPropertyT tp = (FXOMPropertyT) p;
                 if (tp.getValue().equals("$null")) {
                     result.add(tp);
                 }
-            } else {
-                assert p instanceof FXOMPropertyC;
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectNullProperties(result);
-                }
+            }
+//            else {
+//                assert p instanceof FXOMPropertyC;
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectNullProperties(result);
+//                }
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectNullProperties(result);
             }
         }
     }
@@ -308,26 +314,33 @@ public class FXOMInstance extends FXOMObject {
     protected void collectPropertiesT(List<FXOMPropertyT> result) {
         assert result != null;
 
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             if (p instanceof FXOMPropertyT) {
                 final FXOMPropertyT tp = (FXOMPropertyT) p;
                 result.add(tp);
-            } else {
-                assert p instanceof FXOMPropertyC;
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectPropertiesT(result);
-                }
+            }
+//            else {
+//                assert p instanceof FXOMPropertyC;
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectPropertiesT(result);
+//                }
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectPropertiesT(result);
             }
         }
     }
 
     @Override
     protected void collectReferences(String source, List<FXOMIntrinsic> result) {
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectReferences(source, result);
-                }
+        for (FXOMProperty p : getProperties().values()) {
+//            if (p instanceof FXOMPropertyC) {
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectReferences(source, result);
+//                }
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectReferences(source, result);
             }
         }
     }
@@ -335,12 +348,27 @@ public class FXOMInstance extends FXOMObject {
     @Override
     protected void collectReferences(String source, FXOMObject scope, List<FXOMNode> result) {
         if ((scope == null) || (scope != this)) {
-            for (FXOMProperty p : properties.values()) {
-                if (p instanceof FXOMPropertyC) {
-                    for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                        v.collectReferences(source, scope, result);
-                    }
-                } else if (p instanceof FXOMPropertyT) {
+            for (FXOMProperty p : getProperties().values()) {
+//                if (p instanceof FXOMPropertyC) {
+//                    for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                        v.collectReferences(source, scope, result);
+//                    }
+//                } else if (p instanceof FXOMPropertyT) {
+//                    final FXOMPropertyT pt = (FXOMPropertyT) p;
+//                    final PrefixedValue pv = new PrefixedValue(pt.getValue());
+//                    if (pv.isExpression()) {
+//                        final String suffix = pv.getSuffix();
+//                        if (JavaLanguage.isIdentifier(suffix)) {
+//                            if ((source == null) || source.equals(suffix)) {
+//                                result.add(pt);
+//                            }
+//                        }
+//                    }
+//                }
+                for (FXOMObject v : p.getChildren()) {
+                    v.collectReferences(source, scope, result);
+                }
+                if (p instanceof FXOMPropertyT) {
                     final FXOMPropertyT pt = (FXOMPropertyT) p;
                     final PrefixedValue pv = new PrefixedValue(pt.getValue());
                     if (pv.isExpression()) {
@@ -358,11 +386,14 @@ public class FXOMInstance extends FXOMObject {
 
     @Override
     protected void collectIncludes(String source, List<FXOMIntrinsic> result) {
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectIncludes(source, result);
-                }
+        for (FXOMProperty p : getProperties().values()) {
+//            if (p instanceof FXOMPropertyC) {
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectIncludes(source, result);
+//                }
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectIncludes(source, result);
             }
         }
     }
@@ -374,11 +405,14 @@ public class FXOMInstance extends FXOMObject {
             result.put(fxId, this);
         }
 
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectFxIds(result);
-                }
+        for (FXOMProperty p : getProperties().values()) {
+//            if (p instanceof FXOMPropertyC) {
+//                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                    v.collectFxIds(result);
+//                }
+//            }
+            for (FXOMObject v : p.getChildren()) {
+                v.collectFxIds(result);
             }
         }
     }
@@ -389,11 +423,14 @@ public class FXOMInstance extends FXOMObject {
             if (getSceneGraphObject().getClass() == sceneGraphObjectClass) {
                 result.add(this);
             }
-            for (FXOMProperty p : properties.values()) {
-                if (p instanceof FXOMPropertyC) {
-                    for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                        v.collectObjectWithSceneGraphObjectClass(sceneGraphObjectClass, result);
-                    }
+            for (FXOMProperty p : getProperties().values()) {
+//                if (p instanceof FXOMPropertyC) {
+//                    for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                        v.collectObjectWithSceneGraphObjectClass(sceneGraphObjectClass, result);
+//                    }
+//                }
+                for (FXOMObject v : p.getChildren()) {
+                    v.collectObjectWithSceneGraphObjectClass(sceneGraphObjectClass, result);
                 }
             }
         }
@@ -402,21 +439,24 @@ public class FXOMInstance extends FXOMObject {
     @Override
     protected void collectEventHandlers(List<FXOMPropertyT> result) {
         if (getSceneGraphObject() != null) {
-            for (FXOMProperty p : properties.values()) {
+            for (FXOMProperty p : getProperties().values()) {
                 if (p instanceof FXOMPropertyT) {
                     final FXOMPropertyT pt = (FXOMPropertyT) p;
                     if (pt.getName().getName().startsWith("on") && pt.getValue().startsWith("#")) {
                         result.add(pt);
                     }
                 }
-            }
-            for (FXOMProperty p : properties.values()) {
-                if (p instanceof FXOMPropertyC) {
-                    for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                        v.collectEventHandlers(result);
-                    }
+                for (FXOMObject v : p.getChildren()) {
+                    v.collectEventHandlers(result);
                 }
             }
+//            for (FXOMProperty p : properties.values()) {
+//                if (p instanceof FXOMPropertyC) {
+//                    for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
+//                        v.collectEventHandlers(result);
+//                    }
+//                }
+//            }
         }
     }
 
@@ -428,14 +468,14 @@ public class FXOMInstance extends FXOMObject {
     protected void changeFxomDocument(FXOMDocument destination) {
 
         super.changeFxomDocument(destination);
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             p.changeFxomDocument(destination);
         }
     }
 
     @Override
     public void documentLocationWillChange(URL newLocation) {
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             p.documentLocationWillChange(newLocation);
         }
     }
@@ -445,29 +485,7 @@ public class FXOMInstance extends FXOMObject {
      * Package
      */
 
-    /* For FXOMProperty.addToParentInstance() private use only */
-    void addProperty(FXOMProperty property) {
-        assert property.getParentInstance() == this;
-//        assert property instanceof FXOMPropertyC ||
-//            (property instanceof FXOMPropertyT && properties.get(property.getName()) == null);
-        assert properties.get(property.getName()) == null;
-        properties.put(property.getName(), property);
-    }
 
-    /* For FXOMProperty.removeFromParentInstance() private use only */
-    void removeProperty(FXOMProperty property) {
-        assert property.getParentInstance() == null;
-        assert properties.get(property.getName()) == property;
-        properties.remove(property.getName());
-
-    }
-
-    public void fillProperties(Map<PropertyName, FXOMProperty> properties ) {
-        for (FXOMProperty p : properties.values()) {
-            this.properties.put(p.getName(), p);
-            p.setParentInstance(this);
-        }
-    }
 
     /*
      * Private
@@ -481,22 +499,18 @@ public class FXOMInstance extends FXOMObject {
 
     @Override
     protected void collectScripts(String source, List<FXOMScript> result) {
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectScripts(source, result);
-                }
+        for (FXOMProperty p : getProperties().values()) {
+            for (FXOMObject v : p.getChildren()) {
+                v.collectScripts(source, result);
             }
         }
     }
 
     @Override
     protected void collectComments(List<FXOMComment> result) {
-        for (FXOMProperty p : properties.values()) {
-            if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
-                    v.collectComments(result);
-                }
+        for (FXOMProperty p : getProperties().values()) {
+            for (FXOMObject v : p.getChildren()) {
+                v.collectComments(result);
             }
         }
     }

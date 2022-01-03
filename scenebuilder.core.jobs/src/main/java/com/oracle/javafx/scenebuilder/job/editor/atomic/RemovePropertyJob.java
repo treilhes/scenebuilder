@@ -37,7 +37,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
@@ -47,7 +47,7 @@ public class RemovePropertyJob extends Job {
 
     private final FXOMProperty targetProperty;
 
-    private FXOMInstance parentInstance;
+    private FXOMElement parentInstance;
     private int indexInParentInstance;
 
     private FXOMDocument fxomDocument;

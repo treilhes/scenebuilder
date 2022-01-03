@@ -50,15 +50,15 @@ import javafx.stage.Window;
  * This object will refresh an FXOMDocument.
  * Refreshing means generating an fxml representation of an FXOMDocument A,
  * then creating a new FXOMDOcument B from the generated fxml
- * and then updating the original FXOMDocument A content with the objects 
+ * and then updating the original FXOMDocument A content with the objects
  * contained in the FXOMDocument B<br/>
- * Take a look at {@link com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher} to provide 
- * a custom extension to this process using the {@link ServiceLoader} mechanism  
+ * Take a look at {@link com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher} to provide
+ * a custom extension to this process using the {@link ServiceLoader} mechanism
  */
 class FXOMRefresher {
-    
+
     private static ServiceLoader<com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher> extensions;
-    
+
     static {
         extensions = ServiceLoader.load(com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher.class);
     }
@@ -81,10 +81,10 @@ class FXOMRefresher {
                 refreshDocument(document, newDocument);
             }
             backup.restore();
-            
+
             //synchronizeDividerPositions(document);
             extensions.forEach(e -> e.refresh(document));
-            
+
         } catch (RuntimeException | IOException x) {
             final StringBuilder sb = new StringBuilder();
             sb.append("Bug in ");
@@ -111,8 +111,8 @@ class FXOMRefresher {
         FXOMInstance fxomRoot = (FXOMInstance) document.getFxomRoot();
         if (fxomRoot != null) {
             FXOMPropertyC propertyC = (FXOMPropertyC) fxomRoot.getProperties().get(new PropertyName("children"));
-            if (propertyC.getValues().get(0) instanceof FXOMIntrinsic) {
-                FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) propertyC.getValues().get(0);
+            if (propertyC.getChildren().get(0) instanceof FXOMIntrinsic) {
+                FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) propertyC.getChildren().get(0);
                 fxomIntrinsic.removeCharsetProperty();
             }
         }
@@ -159,6 +159,12 @@ class FXOMRefresher {
             refreshFxomCollection((FXOMCollection) currentObject, (FXOMCollection) newObject);
         } else if (currentObject instanceof FXOMIntrinsic) {
             refreshFxomIntrinsic((FXOMIntrinsic) currentObject, (FXOMIntrinsic) newObject);
+        } else if (currentObject instanceof FXOMDefine) {
+            refreshFxomDefine((FXOMDefine) currentObject, (FXOMDefine) newObject);
+        } else if (currentObject instanceof FXOMScript) {
+            refreshFxomScript((FXOMScript) currentObject, (FXOMScript) newObject);
+        } else if (currentObject instanceof FXOMComment) {
+            refreshFxomComment((FXOMComment) currentObject, (FXOMComment) newObject);
         } else {
             assert false : "Unexpected fxom object " + currentObject;
         }
@@ -198,6 +204,26 @@ class FXOMRefresher {
         currentIntrinsic.fillProperties(newIntrinsic.getProperties());
     }
 
+    private void refreshFxomComment(FXOMComment currentComment, FXOMComment newComment) {
+        assert currentComment != null;
+        assert newComment != null;
+        currentComment.setComment(newComment.getComment());
+    }
+
+    private void refreshFxomScript(FXOMScript currentScript, FXOMScript newScript) {
+        assert currentScript != null;
+        assert newScript != null;
+        currentScript.setScript(newScript.getScript());
+    }
+
+    private void refreshFxomDefine(FXOMDefine currentDefine, FXOMDefine newDefine) {
+        assert currentDefine != null;
+        assert newDefine != null;
+        refreshFxomObjects(currentDefine.getItems(), newDefine.getItems());
+    }
+
+
+
     private void refreshFxomProperty(FXOMProperty currentProperty, FXOMProperty newProperty) {
         assert currentProperty != null;
         assert newProperty != null;
@@ -205,13 +231,9 @@ class FXOMRefresher {
         if (currentProperty instanceof FXOMPropertyT) {
             assert newProperty instanceof FXOMPropertyT;
             assert ((FXOMPropertyT) currentProperty).getValue().equals(((FXOMPropertyT) newProperty).getValue());
-        } else {
-            assert currentProperty instanceof FXOMPropertyC;
-            assert newProperty instanceof FXOMPropertyC;
-            final FXOMPropertyC currentPC = (FXOMPropertyC) currentProperty;
-            final FXOMPropertyC newPC = (FXOMPropertyC) newProperty;
-            refreshFxomObjects(currentPC.getValues(), newPC.getValues());
         }
+        refreshFxomObjects(currentProperty.getChildren(), newProperty.getChildren());
+
     }
 
 

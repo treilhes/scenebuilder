@@ -33,7 +33,7 @@
 
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 
 public class FunctionalInterfacePropertyMetadata extends TextEncodablePropertyMetadata<String> {
     private FunctionalInterface functionalInterface;
@@ -62,7 +62,7 @@ public class FunctionalInterfacePropertyMetadata extends TextEncodablePropertyMe
     }
 
     @Override
-    public String getValue(FXOMInstance fxomInstance) {
+    public String getValue(FXOMElement fxomInstance) {
         // We override just to add a sanity check
         assert isReadWrite();
         return super.getValue(fxomInstance);

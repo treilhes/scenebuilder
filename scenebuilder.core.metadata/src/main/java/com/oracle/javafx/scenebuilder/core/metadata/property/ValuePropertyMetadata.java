@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -125,7 +126,7 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
      * @param fxomInstance the fxom instance
      * @return the value object
      */
-    public abstract Object getValueObject(FXOMInstance fxomInstance);
+    public abstract Object getValueObject(FXOMElement fxomInstance);
 
     /**
      * Sets the current value object from the given fxom instance
@@ -133,7 +134,7 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
      * @param fxomInstance the fxom instance
      * @param valueObject the value object
      */
-    public abstract void setValueObject(FXOMInstance fxomInstance, Object valueObject);
+    public abstract void setValueObject(FXOMElement fxomInstance, Object valueObject);
 
     public Map<Class<?>, Object> getDefaultValueAlternatives() {
         return defaultValueAlternatives;

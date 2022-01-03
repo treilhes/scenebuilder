@@ -3,6 +3,7 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -16,7 +17,7 @@ import javafx.scene.control.TitledPane;
 
 //@formatter:off
 /**
- * 
+ *
  * We look for the following pattern:<br/>
  * <br/>
  * &lt;Accordion><br/>
@@ -29,7 +30,7 @@ import javafx.scene.control.TitledPane;
  * &nbsp;&nbsp;&nbsp;&lt;/panes><br/>
  * &lt;/Accordion><br/>
  * <br/>
- * 
+ *
  * and transform it as:<br/>
  * <br/>
  * &lt;Accordion><br/>
@@ -39,7 +40,7 @@ import javafx.scene.control.TitledPane;
  * &nbsp;&nbsp;&nbsp;&lt;/panes><br/>
  * &lt;/Accordion><br/>
  * <br/>
- * 
+ *
  */
 //@formatter:on
 public class ExpandedPaneNormalizer implements FXOMNormalizer {
@@ -56,8 +57,8 @@ public class ExpandedPaneNormalizer implements FXOMNormalizer {
         for (FXOMProperty p : expandedPaneProperties) {
             if (p instanceof FXOMPropertyC) {
                 final FXOMPropertyC pc = (FXOMPropertyC) p;
-                assert pc.getValues().isEmpty() == false;
-                final FXOMObject v0 = pc.getValues().get(0);
+                assert pc.getChildren().isEmpty() == false;
+                final FXOMObject v0 = pc.getChildren().get(0);
                 if (v0 instanceof FXOMInstance) {
                     normalizeExpandedPaneProperty(pc);
                 } else {
@@ -82,27 +83,27 @@ public class ExpandedPaneNormalizer implements FXOMNormalizer {
 
         // @formatter:off
         /*
-         * 
+         *
          * <Accordion>                           // p.getParentInstance()
          *   <expandedPane>                      // p
          *     <TitledPane fx:id="x1" text="B">  // p.getValues().get(0)
          *       ...
          *     </TitledPane>
          *   </expandedPane>
-         *   <panes>                             // reference.getParentProperty()         
+         *   <panes>                             // reference.getParentProperty()
          *     <TitledPane text="A">
          *       ...
          *     </TitledPane>
          *     <fx:reference source="x1" />      // reference
          *   </panes>
          * </Accordion>
-         * 
+         *
          */
         // @formatter:on
 
-        final FXOMInstance parentInstance = p.getParentInstance();
+        final FXOMElement parentInstance = p.getParentInstance();
         assert parentInstance != null;
-        final FXOMObject titledPane = p.getValues().get(0);
+        final FXOMObject titledPane = p.getChildren().get(0);
         assert titledPane.getSceneGraphObject() instanceof TitledPane;
         assert titledPane.getFxId() != null;
 

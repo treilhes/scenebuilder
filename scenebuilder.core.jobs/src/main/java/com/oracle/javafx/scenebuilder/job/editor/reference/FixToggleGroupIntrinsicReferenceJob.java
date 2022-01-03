@@ -44,6 +44,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
@@ -97,8 +98,8 @@ public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
         if (referee != null) {
             assert referee.getParentProperty() != null;
 
-            final FXOMPropertyC referenceProperty = reference.getParentProperty();
-            final FXOMPropertyC refereeProperty = referee.getParentProperty();
+            final FXOMProperty referenceProperty = reference.getParentProperty();
+            final FXOMProperty refereeProperty = referee.getParentProperty();
 
             // 2a.1) Removes referenceProperty
             final RemovePropertyJob removeReferenceJob
@@ -127,7 +128,7 @@ public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
         } else {
 
             // 2b.1) Removes reference
-            final FXOMPropertyC referenceProperty = reference.getParentProperty();
+            final FXOMProperty referenceProperty = reference.getParentProperty();
             final RemovePropertyJob removeReferenceJob
                     = new RemovePropertyJob(getContext(), referenceProperty, getEditorController());
             removeReferenceJob.extend().execute();

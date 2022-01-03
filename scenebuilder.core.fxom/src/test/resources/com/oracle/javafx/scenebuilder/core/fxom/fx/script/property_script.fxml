@@ -3,6 +3,7 @@
 <?language javascript?>
 <?import javafx.scene.layout.Pane?>
 
+
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/xxx" xmlns:fx="http://javafx.com/fxml/1">
     <fx:script>
         var pane = new javafx.scene.layout.Pane();

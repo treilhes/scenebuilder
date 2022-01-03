@@ -32,12 +32,12 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 public class VirtualValuePropertyMetadata extends ValuePropertyMetadata {
 
-    
+
     public VirtualValuePropertyMetadata(PropertyName name) {
         super(name, true, null);
         // TODO Auto-generated constructor stub
@@ -55,13 +55,13 @@ public class VirtualValuePropertyMetadata extends ValuePropertyMetadata {
     }
 
     @Override
-    public Object getValueObject(FXOMInstance fxomInstance) {
+    public Object getValueObject(FXOMElement fxomInstance) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
+    public void setValueObject(FXOMElement fxomInstance, Object valueObject) {
         // TODO Auto-generated method stub
 
     }

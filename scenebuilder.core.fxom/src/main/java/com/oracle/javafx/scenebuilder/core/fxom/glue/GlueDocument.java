@@ -119,6 +119,41 @@ public class GlueDocument extends GlueNode {
         return result;
     }
 
+    public List<GlueElement> collectHeaderElements() {
+        final List<GlueElement> result = new ArrayList<>();
+
+        for (GlueNode node : content) {
+            if (node instanceof GlueElement) {
+                if (node == getMainElement()) {
+                    return result;
+                }
+                final GlueElement i = (GlueElement) node;
+                result.add(i);
+            }
+        }
+
+        return result;
+    }
+
+
+    public List<GlueElement> collectFooterElements() {
+        final List<GlueElement> result = new ArrayList<>();
+        boolean collect = false;
+        for (GlueNode node : content) {
+            if (node instanceof GlueElement) {
+                if (collect) {
+                    final GlueElement i = (GlueElement) node;
+                    result.add(i);
+                }
+
+                if (node == getMainElement()) {
+                    collect = true;
+                }
+            }
+        }
+        return result;
+    }
+
     public static boolean isEmptyXmlText(String xmlText) {
         assert xmlText != null;
         return xmlText.trim().isEmpty();
@@ -130,12 +165,16 @@ public class GlueDocument extends GlueNode {
 
     @Override
     public String toString() {
+        return toString(false);
+    }
+
+    public String toString(boolean compress) {
         final String result;
         if (mainElement == null) {
             result = ""; //NOCHECK
         } else {
             final GlueSerializer serializer = new GlueSerializer(this);
-            result = serializer.toString();
+            result = serializer.toString(compress);
         }
         return result;
     }
@@ -160,11 +199,11 @@ public class GlueDocument extends GlueNode {
          *     </AnchorPane>
          */
 
-        if ((mainElement != null) && mainElement.getChildren().isEmpty()) {
+        if (mainElement != null) {
             if (mainElement.getFront().isEmpty()) {
                 mainElement.getFront().add(new GlueCharacters(this, "\n")); //NOCHECK
             }
-            if (mainElement.getTail().isEmpty()) {
+            if (mainElement.getTail().isEmpty() && mainElement.getChildren().isEmpty()) {
                 mainElement.getTail().add(new GlueCharacters(this, "\n")); //NOCHECK
             }
         }

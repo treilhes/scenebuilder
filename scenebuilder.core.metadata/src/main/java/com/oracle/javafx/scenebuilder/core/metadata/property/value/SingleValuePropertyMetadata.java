@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -77,7 +78,7 @@ public abstract class SingleValuePropertyMetadata<T> extends ValuePropertyMetada
         return defaultValue;
     }
 
-    public T getValue(FXOMInstance fxomInstance) {
+    public T getValue(FXOMElement fxomInstance) {
         final T result;
 
         if (isReadWrite()) {
@@ -97,8 +98,8 @@ public abstract class SingleValuePropertyMetadata<T> extends ValuePropertyMetada
                 }
             } else if (fxomProperty instanceof FXOMPropertyC) {
                 final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-                assert fxomPropertyC.getValues().isEmpty() == false;
-                final FXOMObject firstValue = fxomPropertyC.getValues().get(0);
+                assert fxomPropertyC.getChildren().isEmpty() == false;
+                final FXOMObject firstValue = fxomPropertyC.getChildren().get(0);
                 if (firstValue instanceof FXOMInstance) {
                     result = makeValueFromFxomInstance((FXOMInstance) firstValue);
                 } else {
@@ -118,7 +119,7 @@ public abstract class SingleValuePropertyMetadata<T> extends ValuePropertyMetada
         return result;
     }
 
-    public void setValue(FXOMInstance fxomInstance, T value) {
+    public void setValue(FXOMElement fxomInstance, T value) {
         assert isReadWrite();
 
         final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
@@ -167,12 +168,12 @@ public abstract class SingleValuePropertyMetadata<T> extends ValuePropertyMetada
     }
 
     @Override
-    public Object getValueObject(FXOMInstance fxomInstance) {
+    public Object getValueObject(FXOMElement fxomInstance) {
         return getValue(fxomInstance);
     }
 
     @Override
-    public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
+    public void setValueObject(FXOMElement fxomInstance, Object valueObject) {
         setValue(fxomInstance, valueClass.cast(valueObject));
     }
 

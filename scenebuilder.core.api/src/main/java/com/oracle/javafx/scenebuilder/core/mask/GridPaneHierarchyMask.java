@@ -83,7 +83,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         } else {
             assert fxomProperty instanceof FXOMPropertyC; // ie cannot be written as an XML attribute
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-            result = fxomPropertyC.getValues().size();
+            result = fxomPropertyC.getChildren().size();
         }
 
         return result;
@@ -107,7 +107,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         } else {
             assert fxomProperty instanceof FXOMPropertyC; // ie cannot be written as an XML attribute
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-            result = fxomPropertyC.getValues().size();
+            result = fxomPropertyC.getChildren().size();
         }
 
         return result;
@@ -204,7 +204,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         if (constraintsProperty != null) {
             assert constraintsProperty instanceof FXOMPropertyC;
             final List<FXOMObject> constraintsValues
-                    = ((FXOMPropertyC) constraintsProperty).getValues();
+                    = ((FXOMPropertyC) constraintsProperty).getChildren();
             if (index < constraintsValues.size()) {
                 result = constraintsValues.get(index);
             }
@@ -230,7 +230,7 @@ public class GridPaneHierarchyMask extends DesignHierarchyMask {
         if (constraintsProperty != null) {
             assert constraintsProperty instanceof FXOMPropertyC;
             final List<FXOMObject> constraintsValues
-                    = ((FXOMPropertyC) constraintsProperty).getValues();
+                    = ((FXOMPropertyC) constraintsProperty).getChildren();
             if (index < constraintsValues.size()) {
                 result = constraintsValues.get(index);
             }

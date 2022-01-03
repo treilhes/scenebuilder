@@ -48,7 +48,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
@@ -381,7 +381,7 @@ public class Metadata implements InitializingBean {
         return null;
     }
 
-    public ValuePropertyMetadata queryValueProperty(FXOMInstance fxomInstance, PropertyName targetName) {
+    public ValuePropertyMetadata queryValueProperty(FXOMElement fxomInstance, PropertyName targetName) {
         final ValuePropertyMetadata result;
         assert fxomInstance != null;
         assert targetName != null;

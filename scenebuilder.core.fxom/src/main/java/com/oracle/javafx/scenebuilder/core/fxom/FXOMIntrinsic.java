@@ -34,7 +34,6 @@ package com.oracle.javafx.scenebuilder.core.fxom;
 
 import java.net.URL;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +45,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  * FXOM for special elements like includes or references.
  *
  */
-public class FXOMIntrinsic extends FXOMObject {
+public class FXOMIntrinsic extends FXOMElement {
 
     private static final String CHARSET_PROPERTY = "charset";
     private static final String SOURCE_PROPERTY = "source";
@@ -58,7 +57,7 @@ public class FXOMIntrinsic extends FXOMObject {
         UNDEFINED
     }
 
-    private final Map<PropertyName, FXOMProperty> properties = new LinkedHashMap<>();
+    //private final Map<PropertyName, FXOMProperty> properties = new LinkedHashMap<>();
     private Object sourceSceneGraphObject;
 
 
@@ -66,8 +65,13 @@ public class FXOMIntrinsic extends FXOMObject {
         super(document, glueElement, null);
         this.sourceSceneGraphObject = targetSceneGraphObject;
         for (FXOMProperty p : properties) {
-            this.properties.put(p.getName(), p);
+            p.setParentInstance(this);
+            addProperty(p);
         }
+    }
+
+    public FXOMIntrinsic(FXOMDocument document, Type type) {
+        super(document, makeTagNameFromType(type));
     }
 
     public FXOMIntrinsic(FXOMDocument document, Type type, String source) {
@@ -140,16 +144,6 @@ public class FXOMIntrinsic extends FXOMObject {
 
     public void setSourceSceneGraphObject(Object sourceSceneGraphObject) {
         this.sourceSceneGraphObject = sourceSceneGraphObject;
-    }
-
-    public Map<PropertyName, FXOMProperty> getProperties() {
-        return properties;
-    }
-
-    public void fillProperties(Map<PropertyName, FXOMProperty> properties ) {
-        for (FXOMProperty p : properties.values()) {
-            this.properties.put(p.getName(), p);
-        }
     }
 
     public FXOMInstance createFxomInstanceFromIntrinsic() {
@@ -253,9 +247,9 @@ public class FXOMIntrinsic extends FXOMObject {
 
     @Override
     protected void collectScripts(String source, List<FXOMScript> result) {
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
+                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
                     v.collectScripts(source, result);
                 }
             }
@@ -282,9 +276,9 @@ public class FXOMIntrinsic extends FXOMObject {
 
     @Override
     protected void collectComments(List<FXOMComment> result) {
-        for (FXOMProperty p : properties.values()) {
+        for (FXOMProperty p : getProperties().values()) {
             if (p instanceof FXOMPropertyC) {
-                for (FXOMObject v : ((FXOMPropertyC)p).getValues()) {
+                for (FXOMObject v : ((FXOMPropertyC)p).getChildren()) {
                     v.collectComments(result);
                 }
             }

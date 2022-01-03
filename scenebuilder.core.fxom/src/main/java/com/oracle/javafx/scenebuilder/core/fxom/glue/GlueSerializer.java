@@ -61,7 +61,10 @@ class GlueSerializer {
 
     @Override
     public String toString() {
-        final XMLBuffer result = new XMLBuffer();
+        return toString(false);
+    }
+    public String toString(boolean compress) {
+        final XMLBuffer result = new XMLBuffer(compress);
 
         result.addLineSeparator();
         result.addLineSeparator();
@@ -104,6 +107,11 @@ class GlueSerializer {
 
             if (element instanceof GlueComment) {
                 xmlBuffer.addComment(element.getContentText());
+            } else if (element.getTagName().equals("Object") && element.getAttributes().containsKey("fx:value")) {
+                xmlBuffer.addText(element.getAttributes().get("fx:value"));
+//                for (GlueAuxiliary auxiliary : element.getTail()) {
+//                    serializeAuxiliary(auxiliary, xmlBuffer);
+//                }
             } else {
                 xmlBuffer.beginElement(element.getTagName());
                 serializeAttributes(element, xmlBuffer);

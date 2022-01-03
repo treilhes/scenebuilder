@@ -36,7 +36,6 @@ import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
@@ -44,15 +43,15 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  */
 class TransientComment extends TransientVirtual {
 
-    private final static PropertyName name = new PropertyName("fx:comment");
     private String value;
 
     public TransientComment(
             TransientNode parentNode,
             GlueDocument glueDocument,
             GlueElement glueElement,
+            long virtualIndex,
             String comment) {
-        super(parentNode, glueElement);
+        super(parentNode, glueElement, virtualIndex);
 
         assert comment != null;
         assert comment.equals(glueElement.getContentText());
@@ -73,8 +72,9 @@ class TransientComment extends TransientVirtual {
         return new FXOMComment(fxomDocument, getGlueElement(), value);
     }
 
+    @Override
     public FXOMProperty makeFxomProperty(FXOMDocument fxomDocument) {
-        return new FXOMPropertyV(fxomDocument, name, List.of(makeFxomObject(fxomDocument)), getGlueElement());
+        return new FXOMPropertyV(fxomDocument, getVirtualIndex(), List.of(makeFxomObject(fxomDocument)));
     }
 
 //    @Override

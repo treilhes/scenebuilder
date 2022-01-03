@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
@@ -48,7 +49,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
  */
 public class ModifyObjectJob extends Job {
 
-    private final FXOMInstance fxomInstance;
+    private final FXOMElement fxomInstance;
     private final ValuePropertyMetadata propertyMetadata;
     private final Object newValue;
     private final Object oldValue;
@@ -56,7 +57,7 @@ public class ModifyObjectJob extends Job {
     private FXOMDocument fxomDocument;
 
     public ModifyObjectJob(SceneBuilderBeanFactory context,
-            FXOMInstance fxomInstance,
+            FXOMElement fxomInstance,
             ValuePropertyMetadata propertyMetadata,
             Object newValue,
             Editor editor) {

@@ -32,61 +32,104 @@
  */
 package com.oracle.javafx.scenebuilder.core.fxom;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
- * 
+ *
  */
 public abstract class FXOMProperty extends FXOMNode {
-    
+
+    public static final String VIRTUAL_PREFIX = "virtual:";
+
     private final PropertyName name;
-    private FXOMInstance parentInstance;
-    
-    
+    private FXOMElement parentElement;
+    private final List<FXOMObject> children = new ArrayList<>();
+    private final GlueElement propertyElement;
+
     FXOMProperty(
-            FXOMDocument document, 
-            PropertyName name) {
+            FXOMDocument document,
+            PropertyName name,
+            GlueElement propertyElement) {
         super(document);
-        
+
         assert name != null;
-                
+
         this.name = name;
+        this.propertyElement = propertyElement;
     }
 
     public PropertyName getName() {
         return name;
     }
 
-    public FXOMInstance getParentInstance() {
-        return parentInstance;
+    public GlueElement getPropertyElement() {
+        return propertyElement;
     }
-    
-    public abstract void addToParentInstance(int index, FXOMInstance newParentInstance);
+
+    public FXOMElement getParentInstance() {
+        return parentElement;
+    }
+
+    public abstract void addToParentInstance(int index, FXOMElement newParentInstance);
     public abstract void removeFromParentInstance();
     public abstract int getIndexInParentInstance();
-    
-    
+
+    public List<FXOMObject> getChildren() {
+        return Collections.unmodifiableList(children);
+    }
+
+
+    protected void addChild(int index, FXOMObject value) {
+        assert value != null;
+        //assert value.getParentProperty() == this;
+        assert children.contains(value) == false;
+        if (index == -1) {
+            children.add(value);
+        } else {
+            children.add(index, value);
+        }
+    }
+
+    protected void addAllChildren(List<FXOMObject> values) {
+        assert values != null;
+        children.addAll(values);
+    }
+
+    protected void removeChild(FXOMObject value) {
+        assert value != null;
+        //assert value.getParentProperty() == null;
+        assert children.contains(value);
+        children.remove(value);
+    }
+
     /*
      * FXOMNode
      */
-    
+
     @Override
     protected void changeFxomDocument(FXOMDocument destination) {
         assert destination != null;
         assert destination != getFxomDocument();
-        assert (parentInstance == null) || (destination == parentInstance.getFxomDocument());
-        
+        assert (parentElement == null) || (destination == parentElement.getFxomDocument());
+
         super.changeFxomDocument(destination);
     }
 
-    
-  
+
+
     /*
      * Package
      */
 
-    void setParentInstance(FXOMInstance parentInstance) {
-        this.parentInstance = parentInstance;
+    void setParentInstance(FXOMElement parentInstance) {
+        this.parentElement = parentInstance;
     }
+
+    //public abstract
 }

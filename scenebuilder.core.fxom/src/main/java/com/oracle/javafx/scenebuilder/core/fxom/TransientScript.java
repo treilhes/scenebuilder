@@ -47,8 +47,9 @@ class TransientScript extends TransientVirtual {
 
     public TransientScript(
             TransientNode parentNode,
-            GlueElement propertyElement) {
-        super(parentNode, propertyElement);
+            GlueElement propertyElement,
+            long virtualIndex) {
+        super(parentNode, propertyElement, virtualIndex);
         assert propertyElement != null;
         assert propertyElement.getTagName().equals(name.toString());
     }
@@ -58,7 +59,8 @@ class TransientScript extends TransientVirtual {
         return new FXOMScript(fxomDocument, getGlueElement(), null);
     }
 
+    @Override
     public FXOMProperty makeFxomProperty(FXOMDocument fxomDocument) {
-        return new FXOMPropertyV(fxomDocument, name, List.of(makeFxomObject(fxomDocument)), getGlueElement());
+        return new FXOMPropertyV(fxomDocument, getVirtualIndex(), List.of(makeFxomObject(fxomDocument)));
     }
 }

@@ -57,7 +57,7 @@ import javafx.scene.SubScene;
 public abstract class FXOMObject extends FXOMNode {
 
     private final GlueElement glueElement;
-    private FXOMPropertyC parentProperty;
+    private FXOMProperty parentProperty;
     private FXOMCollection parentCollection;
     private FXOMDefine parentDefine;
     private Object sceneGraphObject;
@@ -81,7 +81,7 @@ public abstract class FXOMObject extends FXOMNode {
         return glueElement;
     }
 
-    public FXOMPropertyC getParentProperty() {
+    public FXOMProperty getParentProperty() {
         return parentProperty;
     }
 
@@ -93,14 +93,14 @@ public abstract class FXOMObject extends FXOMNode {
         return parentDefine;
     }
 
-    public void addToParentProperty(int index, FXOMPropertyC newParentProperty) {
+    public void addToParentProperty(int index, FXOMProperty newParentProperty) {
 
         assert newParentProperty != null;
         assert -1 <= index;
-        assert index <= newParentProperty.getValues().size();
+        assert index <= newParentProperty.getChildren().size();
 
         if (parentProperty != null) {
-            if (parentProperty.getValues().size() == 1) {
+            if (parentProperty.getChildren().size() == 1) {
                 // it's the last value -> we remove the whole property
                 if (parentProperty.getParentInstance() != null) {
                     parentProperty.removeFromParentInstance();
@@ -115,9 +115,9 @@ public abstract class FXOMObject extends FXOMNode {
         }
 
         parentProperty = newParentProperty;
-        newParentProperty.addValue(index, this);
+        newParentProperty.addChild(index, this);
 
-        final GlueElement newParentElement = parentProperty.getGlueElement();
+        final GlueElement newParentElement = parentProperty.getPropertyElement();
         glueElement.addToParent(index, newParentElement);
 
         // May be this object was a root : properties like fx:controller must
@@ -128,14 +128,14 @@ public abstract class FXOMObject extends FXOMNode {
     public void removeFromParentProperty() {
         assert parentProperty != null;
         assert parentProperty.getParentInstance() == null
-                || parentProperty.getValues().size() >= 2;
+                || parentProperty.getChildren().size() >= 2;
 
-        assert glueElement.getParent() == parentProperty.getGlueElement();
+        assert glueElement.getParent() == parentProperty.getPropertyElement();
         glueElement.removeFromParent();
 
-        final FXOMPropertyC keepParentProperty = parentProperty;
+        final FXOMProperty keepParentProperty = parentProperty;
         parentProperty = null;
-        keepParentProperty.removeValue(this);
+        keepParentProperty.removeChild(this);
     }
 
     public int getIndexInParentProperty() {
@@ -144,7 +144,7 @@ public abstract class FXOMObject extends FXOMNode {
         if (parentProperty == null) {
             result = -1;
         } else {
-            result = parentProperty.getValues().indexOf(this);
+            result = parentProperty.getChildren().indexOf(this);
             assert result != -1;
         }
 
@@ -264,8 +264,8 @@ public abstract class FXOMObject extends FXOMNode {
         if (parentProperty != null) {
             final int index = getIndexInParentProperty();
             assert index != -1;
-            if (index+1 < parentProperty.getValues().size()) {
-                result = parentProperty.getValues().get(index+1);
+            if (index+1 < parentProperty.getChildren().size()) {
+                result = parentProperty.getChildren().get(index+1);
             } else {
                 result = null;
             }
@@ -291,7 +291,7 @@ public abstract class FXOMObject extends FXOMNode {
             final int index = getIndexInParentProperty();
             assert index != -1;
             if (index-1 >= 0) {
-                result = parentProperty.getValues().get(index-1);
+                result = parentProperty.getChildren().get(index-1);
             } else {
                 result = null;
             }
@@ -317,7 +317,7 @@ public abstract class FXOMObject extends FXOMNode {
         if (parentProperty != null) {
             assert (sibling == null) || (sibling.getParentProperty() == parentProperty);
 
-            final FXOMPropertyC oldParentProperty = parentProperty;
+            final FXOMProperty oldParentProperty = parentProperty;
             removeFromParentProperty();
             assert parentProperty == null;
 
@@ -546,7 +546,7 @@ public abstract class FXOMObject extends FXOMNode {
 
     public void removeFromParentObject() {
         if (parentProperty != null) {
-            if (parentProperty.getValues().size() == 1) {
+            if (parentProperty.getChildren().size() == 1) {
                 // This object is the last value of its parent property
                 // We remove the property from the parent instance
                 if (parentProperty.getParentInstance() != null) {
@@ -775,7 +775,7 @@ public abstract class FXOMObject extends FXOMNode {
         assert destination != getFxomDocument();
         assert (parentProperty == null)
                 || (parentProperty.getParentInstance() == null)
-                || (parentProperty.getValues().size() >= 2);
+                || (parentProperty.getChildren().size() >= 2);
 
         if (URLUtils.equals(getFxomDocument().getLocation(), destination.getLocation()) == false) {
             documentLocationWillChange(destination.getLocation());
@@ -888,7 +888,7 @@ public abstract class FXOMObject extends FXOMNode {
     void setParentProperty(FXOMPropertyC newParentProperty) {
         assert parentProperty == null;
         assert parentCollection == null;
-        assert newParentProperty.getValues().contains(this);
+        assert newParentProperty.getChildren().contains(this);
         parentProperty = newParentProperty;
     }
 

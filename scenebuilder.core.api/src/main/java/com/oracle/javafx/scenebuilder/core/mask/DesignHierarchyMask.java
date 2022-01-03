@@ -403,8 +403,8 @@ public class DesignHierarchyMask implements HierarchyMask {
 
         if (fxomProperty instanceof FXOMPropertyC) {
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-            assert fxomPropertyC.getValues() != null : "accessory=" + accessory;
-            result = fxomPropertyC.getValues();
+            assert fxomPropertyC.getChildren() != null : "accessory=" + accessory;
+            result = fxomPropertyC.getChildren();
         } else {
             result = null;
         }
@@ -456,16 +456,11 @@ public class DesignHierarchyMask implements HierarchyMask {
      */
     public boolean isAcceptingSubComponent(final Collection<FXOMObject> fxomObjects) {
         if (mainAccessory != null) {
-            final ComponentPropertyMetadata subComponentMetadata
-                    = mainAccessory.getPropertyMetadata();
-            assert subComponentMetadata != null;
 
-            if (!subComponentMetadata.isCollection() && getSubComponentCount(mainAccessory) >= 1) {
+            if (!mainAccessory.isCollection() && getSubComponentCount(mainAccessory) >= 1) {
                 return false;
             }
 
-            final Class<?> subComponentClass
-                    = subComponentMetadata.getClassMetadata().getKlass();
             for (FXOMObject obj : fxomObjects) {
                 final Object sceneGraphObject;
                 if (obj instanceof FXOMIntrinsic) {
@@ -474,7 +469,7 @@ public class DesignHierarchyMask implements HierarchyMask {
                 } else {
                     sceneGraphObject = obj.getSceneGraphObject();
                 }
-                if (!subComponentClass.isInstance(sceneGraphObject)) {
+                if (!mainAccessory.isAccepting(sceneGraphObject.getClass())) {
                     return false;
                 }
             }
@@ -512,7 +507,7 @@ public class DesignHierarchyMask implements HierarchyMask {
 
         final List<FXOMObject> result;
         if (fxomProperty instanceof FXOMPropertyC) {
-            result = ((FXOMPropertyC) fxomProperty).getValues();
+            result = ((FXOMPropertyC) fxomProperty).getChildren();
         //} if (fxomProperty instanceof FXOMPropertyT) {
         //    result = ((FXOMPropertyT) fxomProperty).getValues();
         } else {
@@ -638,6 +633,14 @@ public class DesignHierarchyMask implements HierarchyMask {
         @Override
         public boolean isCollection() {
             return propertyMetadata.isCollection();
+        }
+
+        @Override
+        public boolean isAccepting(Object value) {
+            if (value == null) {
+                return false;
+            }
+            return isAccepting(value.getClass());
         }
 
         @Override

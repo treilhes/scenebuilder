@@ -151,7 +151,7 @@ public class ReferencesUpdater {
 
 
     private void updatePropertyC(FXOMPropertyC property) {
-        final List<FXOMObject> values = property.getValues();
+        final List<FXOMObject> values = property.getChildren();
         for (int i = 0, count = values.size(); i < count; i++) {
             update(values.get(i));
         }

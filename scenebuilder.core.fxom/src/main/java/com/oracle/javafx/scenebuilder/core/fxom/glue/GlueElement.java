@@ -44,7 +44,7 @@ import java.util.Objects;
  *
  */
 public class GlueElement extends GlueNode {
-
+    private final static String FX_PREFIX = "fx:";
     private final static int INDENT_STEP = 3;
 
     private GlueDocument document;
@@ -185,7 +185,7 @@ public class GlueElement extends GlueNode {
     }
 
     public void updateIndent(int depth) {
-        if (indentDepth != depth) {
+        if (!tagName.isBlank() && indentDepth != depth) {
             final int indentDelta = (depth - indentDepth) * INDENT_STEP;
             if (front.isEmpty()) {
                 front.add(makeIndentCharacters(depth * INDENT_STEP));
@@ -323,6 +323,10 @@ public class GlueElement extends GlueNode {
         return result;
     }
 
+    public boolean isVirtual() {
+        return tagName != null && tagName.startsWith(FX_PREFIX);
+    }
+
     /*
      * Object
      */
@@ -344,19 +348,19 @@ public class GlueElement extends GlueNode {
      */
 
     /**
-     * The content holder is the last TEXT node of the "content". //NOCHECK When
-     * "content" contains more than one node, it will be the one //NOCHECK which is
-     * used to get/set the content text. This matches FXMLLoader behavior.
-     *
-     * For example, with the following FXML:
-     *
-     * <Label> <text>Hello <!-- Disruptive comment -->World!</text> </Label>
-     *
-     * FXMLLoader will produce a Label with text="World!". //NOCHECK
-     *
-     * <text> -> GlueElement "Hello " -> GlueCharacters //NOCHECK " Disruptive
-     * comment " -> GlueCharacters //NOCHECK "World !" -> GlueCharacters (HOLDER)
-     * //NOCHECK
+     * The content holder is the last TEXT node of the "content".<br/>
+     * When "content" contains more than one node, it will be the one <br/>
+     * which is used to get/set the content text. This matches FXMLLoader behavior.<br/>
+     * <br/>
+     * For example, with the following FXML:<br/>
+     * <br/>
+     * &lt;Label> &lt;text>Hello &lt;!-- Disruptive comment -->World!&lt;/text> &lt;/Label><br/>
+     * <br/>
+     * FXMLLoader will produce a Label with text="World!". <br/>
+     * <br/>
+     * &lt;text> -> GlueElement "Hello " -> GlueCharacters " Disruptive
+     * comment " -> GlueCharacters "World !" -> GlueCharacters (HOLDER)
+     * <br/><br/>
      *
      * @return
      */

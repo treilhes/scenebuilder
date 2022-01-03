@@ -42,8 +42,9 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -64,9 +65,9 @@ import javafx.scene.transform.Transform;
  */
 public class FitToParentObjectJob extends BatchDocumentJob {
 
-    private final FXOMInstance fxomInstance;
-    private final FXOMPropertyC parentProperty;
-    private final FXOMInstance parentInstance;
+    private final FXOMElement fxomInstance;
+    private final FXOMProperty parentProperty;
+    private final FXOMElement parentInstance;
 
     private enum Sizing {
 

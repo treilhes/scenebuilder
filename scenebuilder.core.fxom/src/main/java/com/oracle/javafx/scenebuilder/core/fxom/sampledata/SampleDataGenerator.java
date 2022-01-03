@@ -189,7 +189,7 @@ public class SampleDataGenerator {
             for (FXOMProperty p : fxomInstance.getProperties().values()) {
                 if (p instanceof FXOMPropertyC) {
                     final FXOMPropertyC pc = (FXOMPropertyC) p;
-                    for (FXOMObject v : pc.getValues()) {
+                    for (FXOMObject v : pc.getChildren()) {
                         assignSampleData(v);
                     }
                 }
@@ -214,7 +214,7 @@ public class SampleDataGenerator {
             for (FXOMProperty p : fxomInstance.getProperties().values()) {
                 if (p instanceof FXOMPropertyC) {
                     final FXOMPropertyC pc = (FXOMPropertyC) p;
-                    for (FXOMObject v : pc.getValues()) {
+                    for (FXOMObject v : pc.getChildren()) {
                         removeSampleData(v);
                     }
                 }

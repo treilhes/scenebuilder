@@ -57,6 +57,10 @@ import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.CommentMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.DefineMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.IntrinsicElementMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.ScriptMetadata;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class CoreExtension extends AbstractExtension {
@@ -75,9 +79,12 @@ public class CoreExtension extends AbstractExtension {
                 CoreEditors.class,
                 ControllerClassEditor.class,
                 FxIdEditor.class,
-                
                 Selection.class,
                 Metadata.class,
+                DefineMetadata.class,
+                ScriptMetadata.class,
+                CommentMetadata.class,
+                IntrinsicElementMetadata.class,
                 DocumentationImpl.class,
                 DockPanelController.class,
                 DockTypeAccordion.class,

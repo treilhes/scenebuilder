@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -84,7 +85,7 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
         return defaultValue;
     }
 
-    public List<T> getValue(FXOMInstance fxomInstance) {
+    public List<T> getValue(FXOMElement fxomInstance) {
         final List<T> result;
 
         if (isReadWrite()) {
@@ -105,7 +106,7 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
             } else if (fxomProperty instanceof FXOMPropertyC) {
                 final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
                 result = new ArrayList<>();
-                for (FXOMObject itemFxomObject : fxomPropertyC.getValues()) {
+                for (FXOMObject itemFxomObject : fxomPropertyC.getChildren()) {
                     if (itemFxomObject instanceof FXOMInstance) {
                         final FXOMInstance itemFxomInstance = (FXOMInstance) itemFxomObject;
                         result.add(itemMetadata.makeValueFromFxomInstance(itemFxomInstance));
@@ -128,7 +129,7 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
         return result;
     }
 
-    public void setValue(FXOMInstance fxomInstance, List<T> value) {
+    public void setValue(FXOMElement fxomInstance, List<T> value) {
         assert isReadWrite();
 
         final FXOMProperty fxomProperty = fxomInstance.getProperties().get(getName());
@@ -219,12 +220,12 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
     }
 
     @Override
-    public Object getValueObject(FXOMInstance fxomInstance) {
+    public Object getValueObject(FXOMElement fxomInstance) {
         return getValue(fxomInstance);
     }
 
     @Override
-    public void setValueObject(FXOMInstance fxomInstance, Object valueObject) {
+    public void setValueObject(FXOMElement fxomInstance, Object valueObject) {
         assert valueObject instanceof List;
         setValue(fxomInstance, castItemList((List<?>) valueObject));
     }

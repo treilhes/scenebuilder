@@ -245,7 +245,7 @@ public class ErrorReportImpl implements ErrorReport {
             }
         } else if (fxomNode instanceof FXOMPropertyC) {
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomNode;
-            for (FXOMObject value : fxomPropertyC.getValues()) {
+            for (FXOMObject value : fxomPropertyC.getChildren()) {
                 collectEntries(value, collected);
             }
         }

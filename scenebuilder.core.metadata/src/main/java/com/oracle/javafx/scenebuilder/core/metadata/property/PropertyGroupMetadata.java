@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 // TODO check if complexmetadata is not a valid substitute of this one
@@ -95,7 +96,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     }
 
     @Override
-    public Object getValueObject(FXOMInstance fxomInstance) {
+    public Object getValueObject(FXOMElement fxomInstance) {
         Object[] values = new Object[getProperties().length];
         for (int i=0; i<getProperties().length; i++) {
             ValuePropertyMetadata property = getProperties()[i];
@@ -105,7 +106,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     }
 
     @Override
-    public void setValueObject(FXOMInstance fxomInstance, Object newValue) {
+    public void setValueObject(FXOMElement fxomInstance, Object newValue) {
         assert newValue instanceof Object[];
         Object[] values = (Object[])newValue;
 

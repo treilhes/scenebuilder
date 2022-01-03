@@ -125,7 +125,7 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = ImageLibraryPanelController.VIEW_NAME, id = ImageLibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true)
+@ViewDescriptor(name = ImageLibraryPanelController.VIEW_NAME, id = ImageLibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = false, selectOnStart = false)
 public class ImageLibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
 
     public final static String VIEW_ID = "453fc4cf-eb86-4115-b744-f61103a14d51";

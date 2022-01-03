@@ -46,7 +46,9 @@ import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.core.fxom.ext.FileLoader;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.WeakProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueComment;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueInstruction;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
@@ -229,21 +231,37 @@ public class FXOMNodes {
          * then clones import instructions from the source document
          * to the new document.
          */
-        final FXOMDocument sourceDocument
-                = source.getFxomDocument();
+        final FXOMDocument sourceDocument = source.getFxomDocument();
         assert sourceDocument.getFxomRoot() != null; // contains at least source
+
+        final boolean cloneHeaderFooter = source.getFxomDocument().getFxomRoot() == source;
+
         final List<FXOMObject> unresolvedObjects
                 = collectUnresolvedObjects(sourceDocument.getFxomRoot());
+
+        final GlueDocument sourceGlue = sourceDocument.getGlue();
+        final GlueDocument resultGlue = result.getGlue();
+
         if (unresolvedObjects.isEmpty() == false) {
             // Copy all the imports from the source document to the new document
-            final GlueDocument sourceGlue = sourceDocument.getGlue();
-            final GlueDocument resultGlue = result.getGlue();
             for (GlueInstruction i : sourceGlue.collectInstructions("import")) {
                 final GlueInstruction ci = new GlueInstruction(resultGlue, i.getTarget(), i.getData());
                 resultGlue.addHeader(ci);
             }
         }
 
+        if (cloneHeaderFooter) {
+            //if we clone top level element, we also clone headers (virtual) elements
+            for (GlueElement i : sourceGlue.collectHeaderElements()) {
+                if (GlueComment.class.isInstance(i)) {
+                    // only comments can be in header/footer
+                    GlueComment comment = (GlueComment)i;
+                    final GlueComment ci = new GlueComment(resultGlue, comment);
+                    ci.setContentText(comment.getContentText());
+                    resultGlue.addHeader(ci);
+                }
+            }
+        }
         /*
          * Clones source to the new document
          */
@@ -267,7 +285,7 @@ public class FXOMNodes {
     }
 
 
-    public static void updateProperty(FXOMInstance fxomInstance, FXOMProperty sourceProperty) {
+    public static void updateProperty(FXOMElement fxomInstance, FXOMProperty sourceProperty) {
         assert fxomInstance != null;
         assert sourceProperty != null;
         assert sourceProperty.getFxomDocument() == fxomInstance.getFxomDocument();
@@ -307,9 +325,9 @@ public class FXOMNodes {
         assert fxomProperty.getName().equals(sourceProperty.getName());
 
         final List<FXOMObject> currentValues = new ArrayList<>();
-        currentValues.addAll(fxomProperty.getValues());
+        currentValues.addAll(fxomProperty.getChildren());
         final List<FXOMObject> sourceValues = new ArrayList<>();
-        sourceValues.addAll(sourceProperty.getValues());
+        sourceValues.addAll(sourceProperty.getChildren());
 
         final int currentCount = currentValues.size();
         final int newCount = sourceValues.size();
@@ -597,7 +615,7 @@ public class FXOMNodes {
                         final PropertyName propertyName = intrinsic.getParentProperty().getName();
                         if (propertyName.getResidenceClass() == null) {
                             //TODO test me
-                            FXOMInstance parent = intrinsic.getParentProperty().getParentInstance();
+                            FXOMElement parent = intrinsic.getParentProperty().getParentInstance();
                             if (parent.getSceneGraphObject() != null) {
                                 Class<?> parentClass = parent.getSceneGraphObject().getClass();
                                 result = getWeakProperties().stream().anyMatch(wp -> {
@@ -627,7 +645,7 @@ public class FXOMNodes {
                     //result = getWeakPropertyNames().contains(propertyName.getName());
 
                     //TODO test me
-                    FXOMInstance parent = property.getParentInstance();
+                    FXOMElement parent = property.getParentInstance();
                     if (parent.getSceneGraphObject() != null) {
                         Class<?> parentClass = parent.getSceneGraphObject().getClass();
                         result = getWeakProperties().stream().anyMatch(wp -> {
@@ -680,7 +698,7 @@ public class FXOMNodes {
                 assert property != null;
                 if (property instanceof FXOMPropertyC) {
                     final FXOMPropertyC propertyC = (FXOMPropertyC) property;
-                    for (FXOMObject v : propertyC.getValues()) {
+                    for (FXOMObject v : propertyC.getChildren()) {
                         sort(v, objects, result);
                     }
                 }
@@ -724,7 +742,7 @@ public class FXOMNodes {
             for (FXOMProperty p : fxomInstance.getProperties().values()) {
                 if (p instanceof FXOMPropertyC) {
                     final FXOMPropertyC pc = (FXOMPropertyC) p;
-                    for (FXOMObject v : pc.getValues()) {
+                    for (FXOMObject v : pc.getChildren()) {
                         serializeObjects(v, result);
                     }
                 }
