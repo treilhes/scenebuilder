@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,7 +44,7 @@ import javafx.scene.input.InputEvent;
  *
  */
 public abstract class AbstractGesture implements Gesture {
-    
+
     private static final String GESTURE = "GESTURE";
 
     protected final Content contentPanelController;
@@ -83,7 +84,7 @@ public abstract class AbstractGesture implements Gesture {
             node.getProperties().put(GESTURE, gesture);
         }
     }
-    
+
     public static void detachGesture(Node node, AbstractGesture gesture) {
         assert node != null;
         assert node.isMouseTransparent() == false;

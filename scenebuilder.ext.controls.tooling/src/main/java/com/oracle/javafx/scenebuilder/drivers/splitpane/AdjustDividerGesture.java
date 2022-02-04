@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,16 +36,20 @@ package com.oracle.javafx.scenebuilder.drivers.splitpane;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
@@ -59,34 +64,47 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class AdjustDividerGesture extends AbstractMouseGesture {
 
-    private final FXOMInstance splitPaneInstance;
-    private final int dividerIndex;
+    private static final PropertyName dividerPositionsName
+        = new PropertyName("dividerPositions"); //NOCHECK
+
+    private FXOMInstance splitPaneInstance;
+    private int dividerIndex;
+
     private final SplitPaneDesignInfoX di = new SplitPaneDesignInfoX();
     private double[] originalDividerPositions;
-	private final SceneBuilderBeanFactory context;
+
+	private final JobManager jobManager;
+	private final Metadata metadata;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+
+	@SuppressWarnings("rawtypes")
     private Layer<Handles> handleLayer;
 
-    private static final PropertyName dividerPositionsName
-            = new PropertyName("dividerPositions"); //NOCHECK
-
-    public AdjustDividerGesture(
-            SceneBuilderBeanFactory context,
+    protected AdjustDividerGesture(
     		Content content,
-            FXOMInstance splitPaneInstance, int dividerIndex) {
+    		Metadata metadata,
+    		JobManager jobManager,
+    		ModeManager modeManager,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(content);
-        this.context = context;
+        this.metadata = metadata;
+        this.jobManager = jobManager;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
 
-        assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
-        this.splitPaneInstance = splitPaneInstance;
-        this.dividerIndex = dividerIndex;
-
-        ModeManager modeManager = context.getBean(ModeManager.class);
         if (modeManager.hasModeEnabled()) {
             handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);
         }
         assert handleLayer != null;
+    }
+
+    protected void setupGestureParameters(FXOMInstance splitPaneInstance, int dividerIndex) {
+        assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
+        this.splitPaneInstance = splitPaneInstance;
+        this.dividerIndex = dividerIndex;
     }
 
     /*
@@ -141,18 +159,11 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         userDidCancel();
 
         // Step #3
-        final Metadata metadata = Metadata.getMetadata();
-        final Editor editorController
-                = contentPanelController.getEditorController();
         final ValuePropertyMetadata dividerPositionsMeta
                 = metadata.queryValueProperty(splitPaneInstance, dividerPositionsName);
-        final Job j = new ModifyObjectJob(context,
-                splitPaneInstance,
-                dividerPositionsMeta,
-                newDividerPositions,
-                editorController).extend();
+        final AbstractJob j = modifyObjectJobFactory.getJob(splitPaneInstance,dividerPositionsMeta,newDividerPositions);
         if (j.isExecutable()) {
-            editorController.getJobManager().push(j);
+            jobManager.push(j);
         } // else divider has been release to its original position
     }
 
@@ -213,4 +224,16 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         String str = String.format("%.2f %%", dividerPosition * 100); //NOCHECK
         hudWindowController.setValueAtRowIndex(str, 0);
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<AdjustDividerGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public AdjustDividerGesture getGesture(FXOMInstance splitPaneInstance, int dividerIndex) {
+            return create(AdjustDividerGesture.class, g -> g.setupGestureParameters(splitPaneInstance, dividerIndex));
+        }
+    }
+
 }

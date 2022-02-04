@@ -48,7 +48,7 @@ public abstract class AbstractMouseDragGesture extends AbstractGesture {
     private Observer observer;
     private Node eventTarget;
 
-    public AbstractMouseDragGesture(Content contentPanelController) {
+    protected AbstractMouseDragGesture(Content contentPanelController) {
         super(contentPanelController);
     }
 

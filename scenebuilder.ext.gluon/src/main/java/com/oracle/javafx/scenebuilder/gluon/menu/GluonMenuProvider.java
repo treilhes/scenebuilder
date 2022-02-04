@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,16 +41,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
-import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
@@ -65,17 +67,17 @@ public class GluonMenuProvider implements MenuItemProvider {
 
     private final static String THEME_MENU_ID = "themeMenu";
     private final static String ABOUT_MENU_ID = "aboutMenuItem";
-    private final GluonSwatchPreference gluonSwatchPreference;
-    private final ThemePreference themePreference;
-    private final SceneBuilderBeanFactory context;
+    private final GluonSwatchDocumentPreference gluonSwatchPreference;
+    private final ThemeDocumentPreference themePreference;
+    private final ActionFactory actionFactory;
     private final UpdateController updateController;
 
     public GluonMenuProvider(
-            @Autowired SceneBuilderBeanFactory context,
+            @Autowired ActionFactory actionFactory,
             @Autowired UpdateController updateController,
-            @Autowired @Lazy ThemePreference themePreference,
-            @Autowired @Lazy GluonSwatchPreference gluonSwatchPreference) {
-        this.context = context;
+            @Autowired @Lazy ThemeDocumentPreference themePreference,
+            @Autowired @Lazy GluonSwatchDocumentPreference gluonSwatchPreference) {
+        this.actionFactory = actionFactory;
         this.gluonSwatchPreference = gluonSwatchPreference;
         this.themePreference = themePreference;
         this.updateController = updateController;
@@ -162,7 +164,7 @@ public class GluonMenuProvider implements MenuItemProvider {
 
             gluonSwatchPreference.getObservableValue().addListener((ob, o, n) -> {
                 updateMenu();
-                context.getBean(ApplyCssContentAction.class).extend().checkAndPerform();
+                actionFactory.create(ApplyCssContentAction.class).checkAndPerform();
             });
             themePreference.getObservableValue().addListener((ob, o, n) -> {
                 updateMenu();

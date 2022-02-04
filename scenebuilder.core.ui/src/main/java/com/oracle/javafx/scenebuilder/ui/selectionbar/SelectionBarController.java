@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,15 +39,18 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -69,24 +73,35 @@ import javafx.scene.layout.StackPane;
 @Lazy
 public class SelectionBarController extends AbstractFxmlPanelController {
 
+    private final DocumentManager documentManager;
+    private final Selection selection;
+    private final DesignHierarchyMask.Factory maskFactory;
+
     @FXML
     private HBox pathBox;
 
     private final Image selectionChevronImage;
 
     public SelectionBarController(
-            Api api) {
-        super(api, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle());
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            JobManager jobManager,
+            Selection selection,
+            DesignHierarchyMask.Factory maskFactory) {
+        super(scenebuilderManager, documentManager, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle());
+        this.documentManager = documentManager;
+        this.selection = selection;
+        this.maskFactory = maskFactory;
 
         // Initialize selection chevron image
         final URL selectionChevronURL = SelectionBarController.class.getResource("selection-chevron.png");
         assert selectionChevronURL != null;
         selectionChevronImage = new Image(selectionChevronURL.toExternalForm());
-        
-        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
-        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
-        api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+
+        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
     }
 
     protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
@@ -128,8 +143,6 @@ public class SelectionBarController extends AbstractFxmlPanelController {
      * Private
      */
     private void updateSelectionBar() {
-        final Selection selection = getApi().getApiDoc().getSelection();
-
         pathBox.getChildren().clear();
 
         if (selection.isEmpty()) {
@@ -143,7 +156,7 @@ public class SelectionBarController extends AbstractFxmlPanelController {
                 // Recursive error report for the leaf object only
 //                boolean recursive = true;
                 while (fxomObject != null) {
-                    final DesignHierarchyMask mask = new DesignHierarchyMask(fxomObject);
+                    final HierarchyMask mask = maskFactory.getMask(fxomObject);
                     final String entryText = makeEntryText(mask);
                     final Hyperlink boxItem = new Hyperlink();
                     boxItem.setText(entryText);
@@ -205,7 +218,7 @@ public class SelectionBarController extends AbstractFxmlPanelController {
         }
     }
 
-    private String makeEntryText(DesignHierarchyMask mask) {
+    private String makeEntryText(HierarchyMask mask) {
         final StringBuilder result = new StringBuilder();
 
         result.append(mask.getClassNameInfo());
@@ -226,9 +239,8 @@ public class SelectionBarController extends AbstractFxmlPanelController {
     };
 
     private void handleSelect(FXOMObject fxomObject) {
-        final Selection selection = getApi().getApiDoc().getSelection();
 
-        assert fxomObject.getFxomDocument() == getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        assert fxomObject.getFxomDocument() == documentManager.fxomDocument().get();
 
         selection.select(fxomObject);
     }

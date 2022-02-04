@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,8 +35,6 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.TreeTableView;
 import javafx.util.Callback;
@@ -45,12 +44,12 @@ import javafx.util.Callback;
  */
 public class TreeTableViewResizePolicyPropertyMetadata extends CallbackPropertyMetadata {
 
-    public TreeTableViewResizePolicyPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, readWrite, defaultValue, inspectorPath);
-        assert (defaultValue == TreeTableView.CONSTRAINED_RESIZE_POLICY)
-                || (defaultValue == TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
-    }
+//    public TreeTableViewResizePolicyPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, readWrite, defaultValue, inspectorPath);
+//        assert (defaultValue == TreeTableView.CONSTRAINED_RESIZE_POLICY)
+//                || (defaultValue == TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+//    }
 
     protected TreeTableViewResizePolicyPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

@@ -10,11 +10,11 @@ import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.clipboard.action.CopyAction;
 import com.oracle.javafx.scenebuilder.core.clipboard.action.CutAction;
 import com.oracle.javafx.scenebuilder.core.clipboard.action.PasteAction;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;

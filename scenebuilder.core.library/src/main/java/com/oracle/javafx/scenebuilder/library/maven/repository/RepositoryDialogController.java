@@ -39,10 +39,10 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 

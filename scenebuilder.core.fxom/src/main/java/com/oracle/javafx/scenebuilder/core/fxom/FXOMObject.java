@@ -455,6 +455,13 @@ public abstract class FXOMObject extends FXOMNode {
 
     protected abstract void collectReferences(String source, List<FXOMIntrinsic> result);
 
+    /**
+     * Collect all {@link FXOMNode} ({@link FXOMIntrinsic} or {@link FXOMPropertyT} referencing the source id
+     *
+     * @param source
+     * @param scope
+     * @return
+     */
     public List<FXOMNode> collectReferences(String source, FXOMObject scope) {
         assert source != null;
 

@@ -59,7 +59,7 @@ public abstract class AbstractMouseGesture extends AbstractGesture {
     protected abstract void keyEvent(KeyEvent e);
     protected abstract void userDidCancel();
 
-    public AbstractMouseGesture(Content contentPanelController) {
+    protected AbstractMouseGesture(Content contentPanelController) {
         super(contentPanelController);
     }
 

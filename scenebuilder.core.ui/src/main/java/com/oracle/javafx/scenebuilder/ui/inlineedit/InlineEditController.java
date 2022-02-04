@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.ui.inlineedit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractPopupController;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractPopupController;
 import com.oracle.javafx.scenebuilder.extension.OsPlatform;
 
 import javafx.beans.value.ChangeListener;
@@ -74,21 +75,25 @@ import javafx.util.Callback;
 public class InlineEditController implements InlineEdit{
 
     // Style class used for styling the inline editor (TextInputControl)
-    
+
     private static final double TEXT_INPUT_CONTROL_MIN_WIDTH = 15;
     private static final double TEXT_AREA_MIN_HEIGHT = 80;
     private static final double TEXT_FIELD_MIN_HEIGHT = 15;
     //private final EditorController editorController;
     private InlineEditPopupController popupController;
-    private final Api api;
+
+    private final SceneBuilderManager scenebuilderManager;
+    private final DocumentManager documentManager;
 
     private static final String NID_INLINE_EDITOR = "inlineEditor";
 
 
 
     public InlineEditController(
-            @Autowired Api api) {
-        this.api = api;
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager) {
+        this.scenebuilderManager = scenebuilderManager;
+        this.documentManager = documentManager;
     }
 
     @Override
@@ -176,7 +181,7 @@ public class InlineEditController implements InlineEdit{
         //assert getEditorController().isTextEditingSessionOnGoing() == false;
         assert isTextEditingSessionOnGoing() == false;
 
-        popupController = new InlineEditPopupController(api, editor, requestCommit);
+        popupController = new InlineEditPopupController(scenebuilderManager, documentManager, editor, requestCommit);
 
         // Handle key events
         // 1) Commit then stop inline editing when pressing Ctl/Meta + ENTER key
@@ -332,8 +337,12 @@ public class InlineEditController implements InlineEdit{
         private final Callback<String, Boolean> requestCommit;
         private final String initialValue;
 
-        public InlineEditPopupController(Api api, final TextInputControl editor, final Callback<String, Boolean> requestCommit) {
-            super(api);
+        public InlineEditPopupController(
+                SceneBuilderManager scenebuilderManager,
+                DocumentManager documentManager,
+                final TextInputControl editor,
+                final Callback<String, Boolean> requestCommit) {
+            super(scenebuilderManager, documentManager);
             this.editor = editor;
             this.requestCommit = requestCommit;
             this.initialValue = editor.getText();
@@ -447,10 +456,10 @@ public class InlineEditController implements InlineEdit{
                     popupController.editor.getText());
         }
     }
-    
-    
-    
-    
+
+
+
+
     private Callback<Void, Boolean> requestTextEditingSessionEnd;
     /**
      * Returns true if fxml content being edited can be returned safely.
@@ -458,7 +467,7 @@ public class InlineEditController implements InlineEdit{
      *
      * @return true if fxml content being edited can be returned safely.
      */
-    
+
     @Override
     public boolean canGetFxmlText() {
         final boolean result;
@@ -509,7 +518,7 @@ public class InlineEditController implements InlineEdit{
     public boolean isTextEditingSessionOnGoing() {
         return requestTextEditingSessionEnd != null;
     }
-    
+
 
     /**
      * Returns true if the specified node is part of the main scene and is either a

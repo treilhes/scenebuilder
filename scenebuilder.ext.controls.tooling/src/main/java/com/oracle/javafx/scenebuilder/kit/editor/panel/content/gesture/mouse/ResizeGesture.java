@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,13 +37,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
@@ -52,14 +58,13 @@ import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Resizer.Feature;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
-import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
@@ -79,10 +84,12 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ResizeGesture extends AbstractMouseGesture {
 
-    private final FXOMInstance fxomInstance;
-    private final CardinalPoint tunable;
+    private FXOMInstance fxomInstance;
+    private CardinalPoint tunable;
     //private final ResizeRudder rudder;
 
     private Resizer<?> resizer;
@@ -91,26 +98,38 @@ public class ResizeGesture extends AbstractMouseGesture {
     //private RegionRectangle shadow;
     private boolean snapEnabled;
     private boolean guidesDisabled;
-	private final SceneBuilderBeanFactory context;
-	private final GenericDriver driver;
-    private final ModeManager modeManager;
+	private final Driver driver;
+    private final Metadata metadata;
+    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+
+    @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
+
+    @SuppressWarnings("rawtypes")
     private Layer<Handles> handleLayer;
+
+    @SuppressWarnings("rawtypes")
     private Layer<ResizeGuide> resizeGuideLayer;
+
+    @SuppressWarnings("rawtypes")
     private Layer<Shadow> shadowLayer;
 
     private boolean matchWidth;
     private boolean matchHeight;
 
-    public ResizeGesture(SceneBuilderBeanFactory context, Content contentPanelController, FXOMInstance fxomInstance, CardinalPoint tunable) {
+    protected ResizeGesture(
+            Content contentPanelController,
+            Metadata metadata,
+            Driver driver,
+            DesignHierarchyMask.Factory designMaskFactory,
+            ModeManager modeManager,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(contentPanelController);
-        this.context = context;
-        this.driver = context.getBean(GenericDriver.class);
-        this.modeManager = context.getBean(ModeManager.class);
-
-        assert fxomInstance.getSceneGraphObject() instanceof Node;
-        this.fxomInstance = fxomInstance;
-        this.tunable = tunable;
+        this.metadata = metadata;
+        this.driver = driver;
+        this.designMaskFactory = designMaskFactory;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
 
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
@@ -125,6 +144,11 @@ public class ResizeGesture extends AbstractMouseGesture {
         assert shadowLayer != null;
     }
 
+    protected void setupGestureParameters(FXOMInstance fxomInstance, CardinalPoint tunable) {
+        assert fxomInstance.getSceneGraphObject() instanceof Node;
+        this.fxomInstance = fxomInstance;
+        this.tunable = tunable;
+    }
 
 
     /*
@@ -154,7 +178,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     @Override
     protected void mouseDragStarted() {
-        resizer = context.getBean(Driver.class).makeResizer(fxomInstance);
+        resizer = driver.makeResizer(fxomInstance);
         assert resizer != null;
         assert resizer.getSceneGraphObject() == fxomInstance.getSceneGraphObject();
 
@@ -214,7 +238,6 @@ public class ResizeGesture extends AbstractMouseGesture {
         userDidCancel();
 
         // Step #3
-        final Metadata metadata = Metadata.getMetadata();
         final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
         for (Map.Entry<PropertyName,Object> e : changeMap.entrySet()) {
             final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, e.getKey());
@@ -225,13 +248,7 @@ public class ResizeGesture extends AbstractMouseGesture {
             final Editor editorController
                     = contentPanelController.getEditorController();
             for (Map.Entry<ValuePropertyMetadata, Object> e : metaValueMap.entrySet()) {
-                final Job job = new ModifyObjectJob(
-                		context,
-                        fxomInstance,
-                        e.getKey(),
-                        e.getValue(),
-                        editorController,
-                        "Resize").extend();
+                final AbstractJob job = modifyObjectJobFactory.getJob("Resize",fxomInstance,e.getKey(),e.getValue());
                 if (job.isExecutable()) {
                     editorController.getJobManager().push(job);
                 }
@@ -555,7 +572,7 @@ public class ResizeGesture extends AbstractMouseGesture {
                 resizingGuideController.addSampleBounds(sceneGraphNode);
             }
 
-            final DesignHierarchyMask m = new DesignHierarchyMask(fxomObject);
+            final HierarchyMask m = designMaskFactory.getMask(fxomObject);
             if (m.isAcceptingSubComponent()) {
                 for (int i = 0, count = m.getSubComponentCount(); i < count; i++) {
                     addToResizingGuideController(m.getSubComponentAtIndex(i));
@@ -599,5 +616,15 @@ public class ResizeGesture extends AbstractMouseGesture {
         return matchHeight;
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<ResizeGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public ResizeGesture getGesture(FXOMInstance fxomInstance, CardinalPoint tunable) {
+            return create(ResizeGesture.class, g -> g.setupGestureParameters(fxomInstance, tunable));
+        }
+    }
 
 }

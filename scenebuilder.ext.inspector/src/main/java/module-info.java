@@ -22,6 +22,7 @@ open module scenebuilder.ext.inspector {
     requires transitive scenebuilder.core.api;
     requires scenebuilder.ext.editors;
     requires scenebuilder.core.extension.api;
+    requires scenebuilder.core.selection;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;

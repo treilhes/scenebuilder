@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.control.DropTargetFactory;
+import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
@@ -54,28 +54,28 @@ import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.drivers.anchorpane.AnchorPaneRelocater;
 import com.oracle.javafx.scenebuilder.drivers.arc.ArcResizer;
-import com.oracle.javafx.scenebuilder.drivers.borderpane.BorderPaneDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.borderpane.BorderPaneDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.borderpane.BorderPaneTring;
 import com.oracle.javafx.scenebuilder.drivers.canvas.CanvasResizer;
 import com.oracle.javafx.scenebuilder.drivers.circle.CircleResizer;
-import com.oracle.javafx.scenebuilder.drivers.common.DefaultZDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.common.DefaultZDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.common.GenericParentTring;
-import com.oracle.javafx.scenebuilder.drivers.common.MainAccessoryDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.common.MainAccessoryDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.cubiccurve.CubicCurveEditor;
 import com.oracle.javafx.scenebuilder.drivers.cubiccurve.CubicCurveHandles;
 import com.oracle.javafx.scenebuilder.drivers.ellipse.EllipseResizer;
-import com.oracle.javafx.scenebuilder.drivers.flowpane.FlowPaneDropTargetFactory;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.flowpane.FlowPaneDropTargetProvider;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneHandles;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPanePring;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneTring;
-import com.oracle.javafx.scenebuilder.drivers.hbox.HBoxDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.hbox.HBoxDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.hbox.HBoxTring;
-import com.oracle.javafx.scenebuilder.drivers.imageview.ImageViewDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.imageview.ImageViewDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.imageview.ImageViewResizer;
 import com.oracle.javafx.scenebuilder.drivers.line.LineEditor;
 import com.oracle.javafx.scenebuilder.drivers.line.LineHandles;
-import com.oracle.javafx.scenebuilder.drivers.node.NodeDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.node.NodeDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.node.NodeHandles;
 import com.oracle.javafx.scenebuilder.drivers.node.NodeIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.drivers.node.NodeOutline;
@@ -112,8 +112,8 @@ import com.oracle.javafx.scenebuilder.drivers.tableview.TableViewHandles;
 import com.oracle.javafx.scenebuilder.drivers.tableview.TableViewPickRefiner;
 import com.oracle.javafx.scenebuilder.drivers.tabpane.TabPanePickRefiner;
 import com.oracle.javafx.scenebuilder.drivers.text.TextResizer;
-import com.oracle.javafx.scenebuilder.drivers.textflow.TextFlowDropTargetFactory;
-import com.oracle.javafx.scenebuilder.drivers.toolbar.ToolBarDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.textflow.TextFlowDropTargetProvider;
+import com.oracle.javafx.scenebuilder.drivers.toolbar.ToolBarDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.treetablecolumn.TreeTableColumnHandles;
 import com.oracle.javafx.scenebuilder.drivers.treetablecolumn.TreeTableColumnInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.drivers.treetablecolumn.TreeTableColumnIntersectsBoundsCheck;
@@ -121,7 +121,7 @@ import com.oracle.javafx.scenebuilder.drivers.treetablecolumn.TreeTableColumnPri
 import com.oracle.javafx.scenebuilder.drivers.treetablecolumn.TreeTableColumnTring;
 import com.oracle.javafx.scenebuilder.drivers.treetableview.TreeTableViewHandles;
 import com.oracle.javafx.scenebuilder.drivers.treetableview.TreeTableViewPickRefiner;
-import com.oracle.javafx.scenebuilder.drivers.vbox.VBoxDropTargetFactory;
+import com.oracle.javafx.scenebuilder.drivers.vbox.VBoxDropTargetProvider;
 import com.oracle.javafx.scenebuilder.drivers.vbox.VBoxTring;
 import com.oracle.javafx.scenebuilder.drivers.webview.WebViewResizer;
 import com.oracle.javafx.scenebuilder.drivers.window.WindowHandles;
@@ -176,7 +176,7 @@ public class DriverExtensionInitializer {
     public DriverExtensionInitializer(@Autowired DriverExtensionRegistry registry) {
         super();
         registry.registerExtension(CurveEditor.class);
-        registry.registerExtension(DropTargetFactory.class);
+        registry.registerExtension(DropTargetProvider.class);
         registry.registerExtension(Handles.class);
         registry.registerExtension(InlineEditorBounds.class);
         registry.registerExtension(IntersectsBoundsCheck.class);
@@ -197,8 +197,8 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Resizer.class, Arc.class, ArcResizer.class);
 
         // BorderPane
-        registry.registerImplementationClass(DropTargetFactory.class, BorderPane.class,
-                BorderPaneDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, BorderPane.class,
+                BorderPaneDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, BorderPane.class, BorderPaneTring.class);
 
         // Canvas
@@ -222,22 +222,22 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Resizer.class, Ellipse.class, EllipseResizer.class);
 
         // FlowPane
-        registry.registerImplementationClass(DropTargetFactory.class, FlowPane.class, FlowPaneDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, FlowPane.class, FlowPaneDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, FlowPane.class, GenericParentTring.class);
 
         // GridPane
-        registry.registerImplementationClass(DropTargetFactory.class, GridPane.class, GridPaneDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, GridPane.class, GridPaneDropTargetProvider.class);
         registry.registerImplementationClass(Handles.class, GridPane.class, GridPaneHandles.class);
         registry.registerImplementationClass(Pring.class, GridPane.class, GridPanePring.class);
         registry.registerImplementationClass(Tring.class, GridPane.class, GridPaneTring.class);
 
         // HBox
-        registry.registerImplementationClass(DropTargetFactory.class, HBox.class, HBoxDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, HBox.class, HBoxDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, HBox.class, HBoxTring.class);
 
         // ImageView
         registry.registerImplementationClass(Resizer.class, ImageView.class, ImageViewResizer.class);
-        registry.registerImplementationClass(DropTargetFactory.class, ImageView.class, ImageViewDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, ImageView.class, ImageViewDropTargetProvider.class);
 
         // Line
         registry.registerImplementationClass(CurveEditor.class, Line.class, LineEditor.class);
@@ -248,7 +248,7 @@ public class DriverExtensionInitializer {
 
         // Node
         registry.registerImplementationClass(CurveEditor.class, Node.class, null);
-        registry.registerImplementationClass(DropTargetFactory.class, Node.class, NodeDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, Node.class, NodeDropTargetProvider.class);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, Node.class, NodeIntersectsBoundsCheck.class);
         registry.registerImplementationClass(Handles.class, Node.class, NodeHandles.class);
         registry.registerImplementationClass(Outline.class, Node.class, NodeOutline.class);
@@ -289,7 +289,7 @@ public class DriverExtensionInitializer {
 
         // Scene
         registry.registerImplementationClass(CurveEditor.class, Scene.class, null);
-        registry.registerImplementationClass(DropTargetFactory.class, Scene.class, MainAccessoryDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, Scene.class, MainAccessoryDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, Scene.class, null);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, Scene.class, SceneIntersectsBoundsCheck.class);
         registry.registerImplementationClass(Handles.class, Scene.class, SceneHandles.class);
@@ -314,7 +314,7 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Resizer.class, Tab.class, null);
         registry.registerImplementationClass(CurveEditor.class, Tab.class, null);
         registry.registerImplementationClass(PickRefiner.class, Tab.class, NoPickRefiner.class);
-        registry.registerImplementationClass(DropTargetFactory.class, Tab.class, MainAccessoryDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, Tab.class, MainAccessoryDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, Tab.class, TabInlineEditorBounds.class);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, Tab.class, TabIntersectsBoundsCheck.class);
         
@@ -329,7 +329,7 @@ public class DriverExtensionInitializer {
         // TODO TableColumnResizer is not registered and does not implement Resizer, why?
         registry.registerImplementationClass(Resizer.class, TableColumn.class, null);
         registry.registerImplementationClass(Tring.class, TableColumn.class, TableColumnTring.class);
-        registry.registerImplementationClass(DropTargetFactory.class, TableColumn.class, DefaultZDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, TableColumn.class, DefaultZDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, TableColumn.class, TableColumnInlineEditorBounds.class);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, TableColumn.class, TableColumnIntersectsBoundsCheck.class);
 
@@ -347,7 +347,7 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Resizer.class, Text.class, TextResizer.class);
 
         // TextFlow
-        registry.registerImplementationClass(DropTargetFactory.class, TextFlow.class, TextFlowDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, TextFlow.class, TextFlowDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, TextFlow.class, GenericParentTring.class);
 
         // TextInputControl
@@ -359,7 +359,7 @@ public class DriverExtensionInitializer {
                 SimilarInlineEditorBounds.class);
 
         // ToolBar
-        registry.registerImplementationClass(DropTargetFactory.class, ToolBar.class, ToolBarDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, ToolBar.class, ToolBarDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, ToolBar.class, GenericParentTring.class);
         
         // Tooltip
@@ -375,7 +375,7 @@ public class DriverExtensionInitializer {
         // TODO TreeTableColumnResizer is not registered and does not implement Resizer, why?
         registry.registerImplementationClass(Resizer.class, TreeTableColumn.class, null);
         registry.registerImplementationClass(Tring.class, TreeTableColumn.class, TreeTableColumnTring.class);
-        registry.registerImplementationClass(DropTargetFactory.class, TreeTableColumn.class, DefaultZDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, TreeTableColumn.class, DefaultZDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, TreeTableColumn.class, TreeTableColumnInlineEditorBounds.class);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, TreeTableColumn.class, TreeTableColumnIntersectsBoundsCheck.class);
         
@@ -385,7 +385,7 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(PickRefiner.class, TreeTableView.class, TreeTableViewPickRefiner.class);
         
         // VBox
-        registry.registerImplementationClass(DropTargetFactory.class, VBox.class, VBoxDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, VBox.class, VBoxDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, VBox.class, VBoxTring.class);
 
         // WebView
@@ -398,7 +398,7 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Resizer.class, Window.class, null);
         registry.registerImplementationClass(CurveEditor.class, Window.class, null);
         registry.registerImplementationClass(PickRefiner.class, Window.class, NoPickRefiner.class);
-        registry.registerImplementationClass(DropTargetFactory.class, Window.class, MainAccessoryDropTargetFactory.class);
+        registry.registerImplementationClass(DropTargetProvider.class, Window.class, MainAccessoryDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, Window.class, null);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, Window.class, WindowIntersectsBoundsCheck.class);
 

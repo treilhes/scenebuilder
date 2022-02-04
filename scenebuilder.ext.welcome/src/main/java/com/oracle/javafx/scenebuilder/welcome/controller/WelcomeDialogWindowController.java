@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
@@ -46,6 +48,7 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.template.Template;
@@ -66,6 +69,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
 @Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class WelcomeDialogWindowController extends TemplatesBaseWindowController implements WelcomeDialog {
 
@@ -178,7 +182,9 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 //    }
 
     private void fireOpenRecentProject(ActionEvent event, String projectPath) {
-        actionFactory.create(OpenFilesAction.class, a -> a.setFxmlFile(Arrays.asList(new File(projectPath)))).checkAndPerform();
+        OpenFilesAction action = actionFactory.create(OpenFilesAction.class);
+        action.setFxmlFile(Arrays.asList(new File(projectPath)));
+        action.checkAndPerform();
         getStage().hide();
     }
 
@@ -189,7 +195,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         sceneBuilderApp.performControlAction(Main.ApplicationControlAction.OPEN_FILE, documentWC);
         getStage().hide();
     }
-    
+
     @FXML
     private void openEmpty() {
         getStage().hide();

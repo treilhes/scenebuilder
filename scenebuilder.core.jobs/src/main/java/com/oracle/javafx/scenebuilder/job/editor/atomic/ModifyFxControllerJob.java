@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,29 +35,40 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
- * Job used to modify the FX controller class.
+ * Job used to modify the FX controller (fx:controller) class.
  *
  */
-public class ModifyFxControllerJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ModifyFxControllerJob extends AbstractJob {
 
-    private final FXOMObject fxomObject;
-    private final String newValue;
-    private final String oldValue;
+    private FXOMObject fxomObject;
+    private String newValue;
+    private String oldValue;
     private FXOMDocument fxomDocument;
 
-    public ModifyFxControllerJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, String newValue, Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected ModifyFxControllerJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+    // @formatter:on
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
+    }
 
+    protected void setJobParameters(FXOMObject fxomObject, String newValue) {
         assert fxomObject != null;
 
         this.fxomObject = fxomObject;
@@ -73,12 +85,12 @@ public class ModifyFxControllerJob extends Job {
     }
 
     @Override
-    public void execute() {
-        redo();
+    public void doExecute() {
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         fxomDocument.beginUpdate();
         this.fxomObject.setFxController(oldValue);
         fxomDocument.endUpdate();
@@ -86,7 +98,7 @@ public class ModifyFxControllerJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         fxomDocument.beginUpdate();
         this.fxomObject.setFxController(newValue);
         fxomDocument.endUpdate();
@@ -99,5 +111,25 @@ public class ModifyFxControllerJob extends Job {
         result.append("Set controller class on ");
         result.append(fxomObject.getGlueElement().getTagName());
         return result.toString();
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static final class Factory extends JobFactory<ModifyFxControllerJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link ModifyFxControllerJob} job.
+         *
+         * @param fxomObject the fxom object
+         * @param newFxControllerValue the new fx:controller value
+         * @return the job to execute
+         */
+        public ModifyFxControllerJob getJob(FXOMObject fxomObject, String newFxControllerValue) {
+            return create(ModifyFxControllerJob.class, j -> j.setJobParameters(fxomObject, newFxControllerValue));
+        }
+
     }
 }

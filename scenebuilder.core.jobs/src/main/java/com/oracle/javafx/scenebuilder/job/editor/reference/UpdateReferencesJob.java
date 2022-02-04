@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,32 +38,49 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
- *
+ * This job look for all reference in an {@link FXOMDocument} and update them with the referee content
  */
-public class UpdateReferencesJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class UpdateReferencesJob extends AbstractJob {
 
-    private final Job subJob;
-    private final List<Job> fixJobs = new ArrayList<>();
+    private AbstractJob subJob;
+    private final List<AbstractJob> fixJobs = new ArrayList<>();
     private final FXOMDocument fxomDocument;
+    private final ReferencesUpdaterJob.Factory referencesUpdaterJobFactory;
 
-    public UpdateReferencesJob(SceneBuilderBeanFactory context, Job subJob) {
-        super(context, subJob.getEditorController());
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+ // @formatter:off
+    protected UpdateReferencesJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            ReferencesUpdaterJob.Factory referencesUpdaterJobFactory) {
+    // @formatter:on
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.referencesUpdaterJobFactory = referencesUpdaterJobFactory;
+    }
+
+    protected void setJobParameters(AbstractJob subJob) {
         this.subJob = subJob;
     }
 
-    public Job getSubJob() {
+    public AbstractJob getSubJob() {
         return subJob;
     }
 
-    public List<Job> getFixJobs() {
+    public List<AbstractJob> getFixJobs() {
         return Collections.unmodifiableList(fixJobs);
     }
 
@@ -76,22 +94,22 @@ public class UpdateReferencesJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         fxomDocument.beginUpdate();
 
         // First executes the subjob => references may become valid
         subJob.execute();
 
         // Now sorts the reference in the document and archives the sorting jobs
-        final ReferencesUpdater updater = new ReferencesUpdater(getContext(), getEditorController());
-        updater.update();
-        fixJobs.addAll(updater.getExecutedJobs());
+        final ReferencesUpdaterJob updater = referencesUpdaterJobFactory.getJob();
+        updater.execute();
+        fixJobs.add(updater);
 
         fxomDocument.endUpdate();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         fxomDocument.beginUpdate();
         for (int i = fixJobs.size() - 1; i >= 0; i--) {
             fixJobs.get(i).undo();
@@ -101,10 +119,10 @@ public class UpdateReferencesJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         fxomDocument.beginUpdate();
         subJob.redo();
-        for (Job fixJob : fixJobs) {
+        for (AbstractJob fixJob : fixJobs) {
             fixJob.redo();
         }
         fxomDocument.endUpdate();
@@ -113,5 +131,24 @@ public class UpdateReferencesJob extends Job {
     @Override
     public String getDescription() {
         return subJob.getDescription();
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<UpdateReferencesJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link UpdateReferencesJob} job.
+         *
+         * @param subJob the sub job
+         * @return the job to execute
+         */
+        public UpdateReferencesJob getJob(AbstractJob subJob) {
+            return create(UpdateReferencesJob.class, j -> j.setJobParameters(subJob));
+        }
     }
 }

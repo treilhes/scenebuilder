@@ -15,6 +15,7 @@ open module scenebuilder.ext.source.gen {
 //    requires javafx.graphics;
     requires static lombok;
     requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;

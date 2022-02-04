@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,45 +37,46 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.devutils.model.ClassFile;
+import com.oracle.javafx.scenebuilder.devutils.model.ModuleFile;
+import com.oracle.javafx.scenebuilder.devutils.model.StringOccurence;
 import com.oracle.javafx.scenebuilder.devutils.strchk.Config;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.ClassFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.ModuleFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.StringOccurence;
 import com.oracle.javafx.scenebuilder.devutils.strchk.utils.Patterns;
 import com.oracle.javafx.scenebuilder.devutils.strchk.utils.StringValue;
 
 public class ClassFileLoader {
-    
+
     public static ClassFile loadClassFile(File file) {
         String name = file.getName().replace(".java", "");
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             String content = String.join("\n", lines);
             String packageName = Patterns.PACKAGE.matcher(content).results().findFirst().get().group(1);
-            long numComponents = Patterns.COMPONENT.matcher(content).results().count();
-            boolean hasComponent = numComponents > 0;
-            boolean hasInnerComponent = Patterns.INNER_COMPONENT.matcher(content).results().findFirst().isPresent();
-            
-            ClassFile cls = new ClassFile(file, packageName, hasComponent, hasInnerComponent, numComponents); 
-            
+//            long numComponents = Patterns.COMPONENT.matcher(content).results().count();
+//            boolean hasComponent = numComponents > 0;
+//            boolean hasInnerComponent = Patterns.INNER_COMPONENT.matcher(content).results().findFirst().isPresent();
+//
+//            ClassFile cls = new ClassFile(file, packageName, hasComponent, hasInnerComponent, numComponents);
+            ClassFile cls = new ClassFile(file, packageName, false, false, -1);
+
             for (String line:lines) {
                 String trimmed = line.trim();
-                
+
                 if (!Config.DISABLE_ALL_FILTERS) {
                     boolean prefixFound = Config.EXCLUDE_LINES_WITH_PREFIX.stream().anyMatch(trimmed::startsWith);
                     if (prefixFound) {
                         continue;
                     }
-                    
+
                     boolean suffixFound = Config.EXCLUDE_LINES_WITH_SUFFIX.stream().anyMatch(trimmed::endsWith);
                     if (suffixFound) {
                         continue;
                     }
-                    
+
     //                if (line.contains("@SuppressWarnings")) {
     //                    System.out.println();
     //                }
-                        
+
                     boolean patternFound = Config.EXCLUDE_LINES_WITH_PATTERN.stream().anyMatch(p -> p.matcher(trimmed).matches());
                     if (patternFound) {
                         patternFound = Config.INCLUDE_LINES_WITH_PATTERN.stream().anyMatch(p -> p.matcher(trimmed).matches());
@@ -89,15 +91,15 @@ public class ClassFileLoader {
                     }
                 });
             }
-            
-            
+
+
             return cls;
         } catch (Exception e) {
             e.printStackTrace();
             return new ClassFile(file, null, false, false, -1);
         }
     }
-    
+
     public static ModuleFile loadModuleFile(File file) {
         String name = file.getName().replace(".java", "");
         try {
@@ -106,13 +108,13 @@ public class ClassFileLoader {
 //            long numComponents = Patterns.COMPONENT.matcher(content).results().count();
 //            boolean hasComponent = numComponents > 0;
 //            boolean hasInnerComponent = Patterns.INNER_COMPONENT.matcher(content).results().findFirst().isPresent();
-//            
-            ModuleFile cls = new ModuleFile(file); 
-            
+//
+            ModuleFile cls = new ModuleFile(file);
+
 //            Patterns.STRING.matcher(content).results().forEach(r -> {
 //                cls.getStringOccurences().add(new StringOccurence(r.group(1)));
 //            });
-            
+
             return cls;
         } catch (Exception e) {
             e.printStackTrace();

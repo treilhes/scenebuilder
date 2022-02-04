@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,10 +49,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.preferences.CssPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.CssPreference.CssProperty;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.sb.spi.InMemoryFileRegistry;
 import com.oracle.javafx.scenebuilder.sb.spi.InMemoryFileURLStreamHandlerProvider;
 
@@ -70,14 +72,15 @@ public class ApplyToolCssPreferencesExtension extends AbstractActionExtension<Ap
     private final static String cssClassFormat = "%s {%s\n}\n\n";
     private final static String cssPropertyFormat = "\n   %s: %s;";
 
-    private final SceneBuilderBeanFactory context;
+    private final ActionFactory actionFactory;
     private final List<CssPreference<?>> cssPreferences;
     private final Subject<Boolean> throttledUpdate = PublishSubject.create();
 
-    public ApplyToolCssPreferencesExtension(@Autowired SceneBuilderBeanFactory context,
+    public ApplyToolCssPreferencesExtension(
+            @Autowired ActionFactory actionFactory,
             @Autowired @Lazy List<CssPreference<?>> cssPreferences) {
         super();
-        this.context = context;
+        this.actionFactory = actionFactory;
         this.cssPreferences = cssPreferences;
     }
 
@@ -120,7 +123,7 @@ public class ApplyToolCssPreferencesExtension extends AbstractActionExtension<Ap
     public void initWithDocument() {
         throttledUpdate.throttleWithTimeout(1, TimeUnit.SECONDS)
             .observeOn(JavaFxScheduler.platform())
-            .subscribe( b -> context.getBean(ApplyToolCssAction.class).extend().perform());
+            .subscribe( b -> actionFactory.create(ApplyToolCssAction.class).perform());
 
         cssPreferences.forEach(p -> {
             p.getObservableValue()

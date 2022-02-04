@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,9 +36,7 @@ package com.oracle.javafx.scenebuilder.api.editor.job;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
@@ -48,17 +47,20 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
  */
 public abstract class BatchDocumentJob extends CompositeJob {
 
-    private List<Job> subJobs;
+    private List<AbstractJob> subJobs;
     private FXOMDocument fxomDocument;
 
-    public BatchDocumentJob(SceneBuilderBeanFactory context, Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    public BatchDocumentJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+     // @formatter:on
+        super(extensionFactory);
         fxomDocument = documentManager.fxomDocument().get();
     }
 
     @Override
-    public final List<Job> getSubJobs() {
+    public final List<AbstractJob> getSubJobs() {
         if (subJobs == null) {
             subJobs = Collections.unmodifiableList(makeSubJobs());
             assert subJobs != null;
@@ -72,16 +74,16 @@ public abstract class BatchDocumentJob extends CompositeJob {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         fxomDocument.beginUpdate();
-        for (Job subJob : getSubJobs()) {
+        for (AbstractJob subJob : getSubJobs()) {
             subJob.execute();
         }
         fxomDocument.endUpdate();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         fxomDocument.beginUpdate();
         for (int i = getSubJobs().size() - 1; i >= 0; i--) {
             getSubJobs().get(i).undo();
@@ -90,13 +92,13 @@ public abstract class BatchDocumentJob extends CompositeJob {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         fxomDocument.beginUpdate();
-        for (Job subJob : getSubJobs()) {
+        for (AbstractJob subJob : getSubJobs()) {
             subJob.redo();
         }
         fxomDocument.endUpdate();
     }
 
-    protected abstract List<Job> makeSubJobs();
+    protected abstract List<AbstractJob> makeSubJobs();
 }

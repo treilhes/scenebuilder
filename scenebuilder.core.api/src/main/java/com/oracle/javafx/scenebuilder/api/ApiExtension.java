@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,25 +37,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
 import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.SearchController;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
-import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.AnnotatedActionMenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager.DockManagerImpl;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager.DocumentManagerImpl;
-import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager.NetworkManagerImpl;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager.SceneBuilderManagerImpl;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.ViewManagerImpl;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class ApiExtension extends AbstractExtension {
@@ -67,30 +72,35 @@ public class ApiExtension extends AbstractExtension {
     @Override
     public List<Class<?>> explicitClassToRegister() {
         return Arrays.asList(
-            I18N.class,
-            PreferencesContext.class,
-            MavenSetting.class,
-            SceneBuilderBeanFactory.class,
-            ExtendedJob.class,
-            ExtendedAction.class,
-            Api.class,
-            PreferencesContext.class,
-            DockManagerImpl.class,
-            DocumentManagerImpl.class,
-            NetworkManagerImpl.class,
-            SceneBuilderManagerImpl.class,
-            ViewManagerImpl.class,
-            DriverExtensionRegistry.class,
-            ApiDoc.class,
-            GenericDriver.class,
-            SearchController.class,
-            ModeManagerController.class,
-            ViewController.class,
-            SimilarInlineEditorBounds.class,
-            NoPickRefiner.class,
-            ActionFactory.class
+                ActionExtensionFactory.class,
+                ActionFactory.class,
+                AnnotatedActionMenuItemProvider.class,
+                Api.class,
+                ApiDoc.class,
+                DesignHierarchyMask.class,
+                DesignHierarchyMask.Factory.class,
+                DiscardGesture.class,
+                DiscardGesture.Factory.class,
+                DockManager.DockManagerImpl.class,
+                DocumentManager.DocumentManagerImpl.class,
+                DriverExtensionRegistry.class,
+                GenericDriver.class,
+                I18N.class,
+                JobExtensionFactory.class,
+                MavenSetting.class,
+                ModeManagerController.class,
+                NetworkManager.NetworkManagerImpl.class,
+                NoPickRefiner.class,
+                PreferencesContext.class,
+                SceneBuilderBeanFactory.class,
+                SceneBuilderManager.SceneBuilderManagerImpl.class,
+                SearchController.class,
+                Selection.class,
+                SimilarInlineEditorBounds.class,
+                ViewController.class,
+                ViewManager.ViewManagerImpl.class
         );
     }
 
-    
+
 }

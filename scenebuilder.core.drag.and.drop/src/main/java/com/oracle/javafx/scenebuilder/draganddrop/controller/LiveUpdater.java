@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +34,8 @@
 package com.oracle.javafx.scenebuilder.draganddrop.controller;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 
 /**
  *
@@ -44,18 +43,12 @@ import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 class LiveUpdater {
 
     private final DragSource dragSource;
-    private final Editor editorController;
     private DropTarget dropTarget;
-    private Job dropTargetMoveJob;
-	private final SceneBuilderBeanFactory context;
+    private AbstractJob dropTargetMoveJob;
 
-    public LiveUpdater(SceneBuilderBeanFactory context, DragSource dragSource, Editor editorController) {
+    public LiveUpdater(DragSource dragSource) {
         assert dragSource != null;
-        assert editorController != null;
-
-        this.context = context;
         this.dragSource = dragSource;
-        this.editorController = editorController;
     }
 
     public void setDropTarget(DropTarget newDropTarget) {
@@ -83,7 +76,7 @@ class LiveUpdater {
         this.dropTarget = newDropTarget;
         this.dropTargetMoveJob = null;
         if (this.dropTarget != null) {
-            this.dropTargetMoveJob = this.dropTarget.makeDropJob(context, dragSource, editorController).extend();
+            this.dropTargetMoveJob = this.dropTarget.makeDropJob(dragSource);
             this.dropTargetMoveJob.execute();
         }
     }

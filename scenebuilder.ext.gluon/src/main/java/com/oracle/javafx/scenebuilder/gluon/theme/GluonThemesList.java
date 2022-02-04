@@ -40,13 +40,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.charm.glisten.visual.GlistenStyleClasses;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.theme.AbstractTheme;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeMeta;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
-import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchDocumentPreference;
 @Component
 public class GluonThemesList implements ThemeProvider {
     
@@ -69,7 +69,7 @@ public class GluonThemesList implements ThemeProvider {
 	@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 	@ThemeMeta(name = "title.theme.gluon_mobile_light", group = GluonGroup.class)
 	public static class GluonMobileLight extends AbstractTheme {
-		public GluonMobileLight(@Autowired GluonSwatchPreference gluonSwatchPreference) {
+		public GluonMobileLight(@Autowired GluonSwatchDocumentPreference gluonSwatchPreference) {
 			super(new DefaultThemesList.Modena().getUserAgentStylesheet(),
 					Arrays.asList(
 							GlistenStyleClasses.impl_loadResource("glisten.gls"),
@@ -85,7 +85,7 @@ public class GluonThemesList implements ThemeProvider {
 	@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 	@ThemeMeta(name = "title.theme.gluon_mobile_dark", group = GluonGroup.class)
 	public static class GluonMobileDark extends AbstractTheme {
-		public GluonMobileDark(@Autowired GluonSwatchPreference gluonSwatchPreference) {
+		public GluonMobileDark(@Autowired GluonSwatchDocumentPreference gluonSwatchPreference) {
 			super(new DefaultThemesList.Modena().getUserAgentStylesheet(),
 					Arrays.asList(
 							GlistenStyleClasses.impl_loadResource("glisten.gls"),

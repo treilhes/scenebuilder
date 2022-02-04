@@ -38,13 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState.CssStyle;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.sun.javafx.scene.NodeHelper;
@@ -137,7 +137,7 @@ public class CssContentMaker {
         PropertyName beanPropertyName = new PropertyName(beanPropName);
         assert fxomObject instanceof FXOMInstance;
         FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        ValuePropertyMetadata propMeta = Metadata.getMetadata().queryValueProperty(fxomInstance, beanPropertyName);
+        ValuePropertyMetadata propMeta = Api.get().getMetadata().queryValueProperty(fxomInstance, beanPropertyName);
         if (propMeta == null) {
             // No corresponding metadata
             return null;

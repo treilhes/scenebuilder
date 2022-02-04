@@ -38,8 +38,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.util.InheritanceMap;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 @Component
 public class DriverExtensionRegistry {

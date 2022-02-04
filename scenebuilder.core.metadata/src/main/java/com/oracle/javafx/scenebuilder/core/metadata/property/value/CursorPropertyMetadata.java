@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,10 +49,10 @@ import javafx.scene.ImageCursor;
 
 /**
  *
- * 
+ *
  */
 public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
-    
+
     private final CoordinateDoublePropertyMetadata hotspotXMetadata = new CoordinateDoublePropertyMetadata.Builder()
             .withName(new PropertyName("hotspotX"))
             .withReadWrite(true)
@@ -71,12 +72,12 @@ public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
             .withInspectorPath(InspectorPath.UNUSED).build();
 
     private static Map<Cursor, String> cursorMap;
-    
-    protected CursorPropertyMetadata(PropertyName name, boolean readWrite, 
-            Cursor defaultValue, InspectorPath inspectorPath) {
-        super(name, Cursor.class, readWrite, defaultValue, inspectorPath);
-    }
-    
+
+//    protected CursorPropertyMetadata(PropertyName name, boolean readWrite,
+//            Cursor defaultValue, InspectorPath inspectorPath) {
+//        super(name, Cursor.class, readWrite, defaultValue, inspectorPath);
+//    }
+
     protected CursorPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);
     }
@@ -106,18 +107,18 @@ public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
             cursorMap.put(Cursor.W_RESIZE,      "W_RESIZE"      );
             cursorMap = Collections.unmodifiableMap(cursorMap);
         }
-        
+
         return cursorMap;
     }
-    
-    
+
+
     /*
      * ComplexPropertyMetadata
      */
     @Override
     public FXOMInstance makeFxomInstanceFromValue(Cursor value, FXOMDocument fxomDocument) {
         final FXOMInstance result;
-        
+
         final String cursorName = getCursorMap().get(value);
         if (cursorName != null) {
             // It's a standard cursor
@@ -135,13 +136,13 @@ public class CursorPropertyMetadata extends ComplexPropertyMetadata<Cursor> {
             result = new FXOMInstance(fxomDocument, Cursor.class);
             result.setFxConstant(getCursorMap().get(Cursor.DEFAULT));
         }
-        
+
         return result;
     }
-    
+
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Cursor> {
     }
-    
+
     public static final class Builder extends AbstractBuilder<Builder, CursorPropertyMetadata> {
         @Override
         public CursorPropertyMetadata build() {

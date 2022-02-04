@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.FileLoader;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
@@ -83,7 +83,7 @@ public class ImageFileLoader implements FileLoader {
         final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
 
         final ComponentClassMetadata<?> imageViewMeta
-                = Metadata.getMetadata().queryComponentMetadata(ImageView.class);
+                = Api.get().getMetadata().queryComponentMetadata(ImageView.class);
         final PropertyMetadata imagePropMeta
                 = imageViewMeta.lookupProperty(imageName);
         final PropertyMetadata fitWidthPropMeta

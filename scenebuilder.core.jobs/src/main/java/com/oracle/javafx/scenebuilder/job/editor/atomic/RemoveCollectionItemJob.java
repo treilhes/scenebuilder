@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,34 +33,45 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It removes the provided {@link FXOMObject} from his parent collection property provided by {@link FXOMObject#getParentProperty()}
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class RemoveCollectionItemJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RemoveCollectionItemJob extends AbstractJob {
 
-    private final FXOMObject targetValue;
+    private FXOMObject targetValue;
 
     private FXOMCollection parentCollection;
     private int indexInParentCollection;
 
     private FXOMDocument fxomDocument;
 
-    public RemoveCollectionItemJob(SceneBuilderBeanFactory context, FXOMObject value, Editor editor) {
-        super(context, editor);
-        this.targetValue = value;
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    protected RemoveCollectionItemJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager
+            ) {
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
-
     }
 
+    protected void setJobParameters(FXOMObject value) {
+        this.targetValue = value;
+    }
 
     /*
      * Job
@@ -71,7 +83,7 @@ public class RemoveCollectionItemJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         assert parentCollection == null;
         assert isExecutable();
 
@@ -79,11 +91,11 @@ public class RemoveCollectionItemJob extends Job {
         indexInParentCollection = targetValue.getIndexInParentCollection();
 
         // Now same as redo()
-        redo();
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert targetValue.getParentCollection() == null;
 
         fxomDocument.beginUpdate();
@@ -95,7 +107,7 @@ public class RemoveCollectionItemJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert targetValue.getParentCollection() == parentCollection;
         assert targetValue.getIndexInParentCollection() == indexInParentCollection;
 
@@ -115,4 +127,20 @@ public class RemoveCollectionItemJob extends Job {
                 + "]"; //NOCHECK
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<RemoveCollectionItemJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link RemoveCollectionItemJob} job
+         * @param value the value to remove
+         * @return the job to execute
+         */
+        public RemoveCollectionItemJob getJob(FXOMObject value) {
+            return create(RemoveCollectionItemJob.class, j -> j.setJobParameters(value));
+        }
+    }
 }

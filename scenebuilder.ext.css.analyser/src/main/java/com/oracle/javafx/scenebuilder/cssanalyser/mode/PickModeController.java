@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,10 +41,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -72,7 +72,7 @@ public class PickModeController extends AbstractModeController {
     		@Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);
         this.driver = driver;
-        
+
         newLayer(HitNodeChrome.class, false, selection,
                 // object selection
                 s -> s.getGroup().getItems(),
@@ -94,7 +94,7 @@ public class PickModeController extends AbstractModeController {
     public Object getModeId() {
         return PickModeController.class;
     }
-    
+
     /*
      * AbstractModeController
      */
@@ -196,7 +196,7 @@ public class PickModeController extends AbstractModeController {
             selection.clear();
         } else {
             if (selection.isSelected(hitObject)) {
-                assert selection.getGroup() instanceof ObjectSelectionGroup;
+                //assert selection.getGroup() instanceof ObjectSelectionGroup;
                 selection.updateHitObject(hitObject, hitNode);
             } else {
                 selection.select(hitObject, hitNode);

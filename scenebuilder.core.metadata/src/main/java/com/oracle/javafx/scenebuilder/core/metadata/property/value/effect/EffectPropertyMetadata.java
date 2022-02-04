@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,9 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.Bloom;
@@ -64,10 +63,10 @@ import javafx.scene.effect.Shadow;
 //TODO update this class to handle custom effects provided by extension if it is possible
 public class EffectPropertyMetadata extends ComplexPropertyMetadata<Effect> {
 
-    protected EffectPropertyMetadata(PropertyName name, boolean readWrite, 
-            Effect defaultValue, InspectorPath inspectorPath) {
-        super(name, Effect.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected EffectPropertyMetadata(PropertyName name, boolean readWrite, 
+//            Effect defaultValue, InspectorPath inspectorPath) {
+//        super(name, Effect.class, readWrite, defaultValue, inspectorPath);
+//    }
     
     protected EffectPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

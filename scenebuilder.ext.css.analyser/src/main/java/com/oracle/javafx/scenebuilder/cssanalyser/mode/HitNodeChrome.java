@@ -45,7 +45,7 @@ import javafx.scene.Node;
 *
 * Hit node chrome: <br><img src="doc-files/hit-node-chrome.png" alt="hit node chrome"><br>
 * Appears when picking mode is enabled
-* 
+*
 */
 public class HitNodeChrome extends AbstractDecoration<Object> {
 
@@ -60,12 +60,12 @@ public class HitNodeChrome extends AbstractDecoration<Object> {
         assert hitNode.getScene() != null;
 
         this.hitNode = hitNode;
-        
+
         chrome.setMouseTransparent(true);
         chrome.getRegion().getStyleClass().add("css-pick-chrome"); //NOCHECK
         getRootNode().getChildren().add(chrome);
     }
-    
+
     @Override
     public void initialize() {
         this.closestNode = findClosestNode();
@@ -121,7 +121,7 @@ public class HitNodeChrome extends AbstractDecoration<Object> {
 //            final Transform t = getContentPanelController().computeSceneGraphToRudderLayerTransform(hitNode);
 //            chrome.getTransforms().clear();
 //            chrome.getTransforms().add(t);
-            
+
             chrome.setLayoutBounds(hitNode.getLayoutBounds());
             chrome.setVisible(true);
         }

@@ -36,11 +36,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.drivers.tabpane.TabPaneDesignInfoX;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 
 import javafx.beans.value.ChangeListener;
@@ -51,39 +54,35 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 /**
+ * Handles for Tab need a special treatment.
  *
+ * A Tab instance can be transiently disconnected from its parent TabPane:<br/>
+ * - Tab.getTabPane() returns null <br/>
+ * - TabPane.getTabs().contains() returns false<br/>
+ *<br/>
+ * When the Tab is disconnected, handles cannot be drawn. This Handles class
+ * inherits from {@link AbstractResilientHandles} to take care of this singularity.
  *
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class TabHandles extends AbstractResilientHandles<Tab> {
 
-    /*
-     * Handles for Tab need a special treatment.
-     *
-     * A Tab instance can be transiently disconnected from its parent TabPane:
-     *  - Tab.getTabPane() returns null
-     *  - TabPane.getTabs().contains() returns false
-     *
-     * When the Tab is disconnected, handles cannot be drawn.
-     * This Handles class inherits from AbstractResilientHandles to take
-     * care of this singularity.
-     *
-     */
-
     private TabPane tabPane;
     private Node tabNode; // Skin node representing the tab
 
     public TabHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(context, contentPanelController, Tab.class);
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, Tab.class);
     }
 
     @Override
     public void initialize() {
-        getSceneGraphObject().tabPaneProperty().addListener(
-                (ChangeListener<TabPane>) (ov, v1, v2) -> tabPaneDidChange());
+        getSceneGraphObject().tabPaneProperty()
+                .addListener((ChangeListener<TabPane>) (ov, v1, v2) -> tabPaneDidChange());
 
         tabPaneDidChange();
     }
@@ -143,7 +142,6 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
         stopListeningToLocalToSceneTransform(tabPane);
         stopListeningToBoundsInParent(tabNode);
     }
-
 
     /*
      * Private

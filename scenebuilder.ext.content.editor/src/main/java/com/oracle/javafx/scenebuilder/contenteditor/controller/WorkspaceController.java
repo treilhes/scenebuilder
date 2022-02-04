@@ -42,11 +42,11 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Workspace;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import javafx.animation.FadeTransition;

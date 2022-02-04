@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,27 +33,27 @@
  */
 package com.oracle.javafx.scenebuilder.api.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import javafx.scene.input.KeyCombination;
 
 public abstract class AbstractAction implements Action {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(AbstractAction.class);
 
 	private final String nameI18nKey;
 	private final String descriptionI18nKey;
 	private final String rawAccelerator;
-	private ExtendedAction<?> extendedAction;
-    private final Api api;
+	private final List<ActionExtension<?>> extensions = new ArrayList<>();
 
-	public AbstractAction(Api api) {
-	    this.api = api;
 
+	public AbstractAction(ActionExtensionFactory extensionFactory) {
 		ActionMeta actionMeta = this.getClass().getAnnotation(ActionMeta.class);
 
 		if (actionMeta == null) {
@@ -62,6 +63,8 @@ public abstract class AbstractAction implements Action {
 		nameI18nKey = actionMeta.nameKey();
 		descriptionI18nKey = actionMeta.descriptionKey();
 		rawAccelerator = actionMeta.accelerator().isBlank() ? null : actionMeta.accelerator();
+
+		extensions.addAll(extensionFactory.getExtensions(this));
 	}
 
 	@Override
@@ -100,18 +103,33 @@ public abstract class AbstractAction implements Action {
         return ActionStatus.CANCELLED;
 	}
 
-	@Override
-	public ExtendedAction<?> extend() {
-		if (ExtendedAction.class.isAssignableFrom(this.getClass())) {
-			return (ExtendedAction<?>) this;
-		}
-		if (extendedAction == null) {
-			extendedAction = api.getContext().getBean(ExtendedAction.class, this);
-		}
-		return extendedAction;
-	}
+    @Override
+    public final ActionStatus perform() {
+        if (!extensions.isEmpty()) {
+            extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> {
+                logger.debug("Will Execute prePerform on {}", ext.getClass());
+                ext.prePerform();
+                logger.info("Executed prePerform on {}", ext.getClass());
+            });
+        }
 
-	public Api getApi() {
-		return api;
-	}
+        logger.debug("Will execute perform on {}", getClass());
+        ActionStatus status = doPerform();
+        logger.info("Executed perform on {} : {}", getClass(), status);
+
+        if (!extensions.isEmpty()) {
+            extensions.stream().filter(ext -> ext.canPerform()).forEach(ext -> {
+                logger.info("Will execute postPerform on {}", ext.getClass());
+                ext.postPerform();
+                logger.info("Executed postPerform on {}", ext.getClass());
+            });
+        }
+
+        return status;
+    }
+
+    @Override
+    public abstract boolean canPerform();
+
+    public abstract ActionStatus doPerform();
 }

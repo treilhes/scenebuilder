@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,23 +40,22 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.stage.Window;
 
 /**
  *
@@ -66,12 +66,15 @@ import javafx.stage.Window;
 public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
     private final Drag drag;
+    private final DocumentDragSource.Factory documentDragSourceFactory;
 
-    public SelectAndMoveGesture(
+    protected SelectAndMoveGesture(
             @Autowired @Lazy Content contentPanelController,
-            @Autowired Drag drag) {
+            @Autowired Drag drag,
+            DocumentDragSource.Factory documentDragSourceFactory) {
         super(contentPanelController);
         this.drag = drag;
+        this.documentDragSourceFactory = documentDragSourceFactory;
     }
 
     private FXOMObject hitObject;
@@ -189,15 +192,10 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
                     osg = (ObjectSelectionGroup) selection.getGroup();
 
             if (osg.hasSingleParent()) {
-                final Editor editorController
-                        = contentPanelController.getEditorController();
-                final Window ownerWindow
-                        = contentPanelController.getRoot().getScene().getWindow();
-                final Point2D hitPoint
-                        = computeHitPoint(selectedHitObject);
-                final DocumentDragSource dragSource = new DocumentDragSource(
-                        osg.getSortedItems(), selectedHitObject,
-                        hitPoint.getX(), hitPoint.getY(), ownerWindow);
+
+                final Point2D hitPoint = computeHitPoint(selectedHitObject);
+                final DocumentDragSource dragSource = documentDragSourceFactory.getDragSource(osg.getSortedItems(),
+                        selectedHitObject, hitPoint.getX(), hitPoint.getY());
 
                 if (dragSource.isAcceptable()) {
                     final Node glassLayer = contentPanelController.getGlassLayer();
@@ -226,7 +224,7 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
             assert nodeObject.getSceneGraphObject() instanceof Node;
             return CoordinateHelper.sceneToLocal(nodeObject, hitSceneX, hitSceneY, true /* rootScene */);
         }
-        
+
     }
 
     @Override
@@ -275,6 +273,17 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
         // Commenting the assertion : in some cases, this method is executed ;
         // is it related to DTL-6393 ?
 //        assert false;
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<SelectAndMoveGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public SelectAndMoveGesture getGesture() {
+            return create(SelectAndMoveGesture.class, null); // g -> g.setupGestureParameters());
+        }
     }
 
 }

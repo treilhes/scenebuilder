@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,6 +49,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsSectionsAction;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
+import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.ImageLibraryDragSource;
 import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowController;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryDialogConfiguration;
@@ -59,12 +61,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageMavenAr
 import com.oracle.javafx.scenebuilder.imagelibrary.menu.ImageLibraryMenuProvider;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
-import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;
 
-@ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.imagelibrary.action"
-        })
 public class ImageLibraryExtension extends AbstractExtension {
 
     @Override
@@ -76,34 +73,35 @@ public class ImageLibraryExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                ImageLibraryController.class,
-                ImageLibraryMenuProvider.class,
-                ImageImportWindowController.class,
-                ImageLibraryPanelController.class,
-                ImageDisplayModePreference.class,
-                ImageLibrary.class,
                 ImageBuiltinLibrary.class,
                 ImageDefaultLibraryFilter.class,
-                ImageLibraryDialogConfiguration.class,
-                LibraryStoreFactory.class,
-                ImageJarAnalysisReportController.class,
+                ImageDisplayModePreference.class,
                 ImageFileExplorer.class,
                 ImageFolderExplorer.class,
+                ImageImportWindowController.class,
+                ImageJarAnalysisReportController.class,
+                ImageLibrary.class,
+                ImageLibraryController.class,
+                ImageLibraryDialogConfiguration.class,
+                ImageLibraryMenuProvider.class,
+                ImageLibraryPanelController.class,
                 ImageMavenArtifactExplorer.class,
-                ThumbnailServiceController.class,
                 ImportSelectionAction.class,
+                ImageLibraryDragSource.class,
+                ImageLibraryDragSource.Factory.class,
                 ManageJarFxmlAction.class,
                 RevealCustomFolderAction.class,
                 ShowJarAnalysisReportAction.class,
+                ThumbnailServiceController.class,
                 ViewAsListAction.class,
                 ViewAsSectionsAction.class
             );
      // @formatter:on
     }
-    
+
     // TODO need to mark the dependency to fontbox
-    // TODO how to do it? 
-    // TODO explicit declaration (=duplicating pom data) ? 
+    // TODO how to do it?
+    // TODO explicit declaration (=duplicating pom data) ?
     // TODO or exploring the pom inside the jar (=filtering already provided dependencies and external ones) ?
     // TODO something else ?
 //    <dependencies>

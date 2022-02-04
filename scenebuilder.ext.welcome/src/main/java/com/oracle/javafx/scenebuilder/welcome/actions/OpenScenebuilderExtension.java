@@ -3,8 +3,8 @@ package com.oracle.javafx.scenebuilder.welcome.actions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.launcher.actions.OpenScenebuilderAction;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
 

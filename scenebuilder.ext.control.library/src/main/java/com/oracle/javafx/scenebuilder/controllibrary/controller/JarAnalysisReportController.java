@@ -46,14 +46,14 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;

@@ -40,10 +40,10 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture.Factory;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
@@ -91,14 +91,18 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
     private final LineTo lineTo1 = new LineTo();
     private final LineTo lineTo2 = new LineTo();
     private final LineTo lineTo3 = new LineTo();
-	private final SceneBuilderBeanFactory context;
     private final Driver driver;
+    private final Factory resizeGestureFactory;
 
-    public AbstractGenericHandles(SceneBuilderBeanFactory context, Content contentPanelController,
+    public AbstractGenericHandles(
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
             Class<T> sceneGraphObjectClass) {
-        super(contentPanelController, sceneGraphObjectClass);
-        this.context = context;
-        this.driver = context.getBean(Driver.class);
+        super(contentPanelController, discardGestureFactory, sceneGraphObjectClass);
+        this.driver = driver;
+        this.resizeGestureFactory = resizeGestureFactory;
 
         final Path shadow = new Path();
         final List<PathElement> shadowElements = shadow.getElements();
@@ -292,36 +296,28 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
         final AbstractGesture result;
 
         if (isResizable() == false) {
-            result = new DiscardGesture(getContentPanelController());
+            result = discardGestureFactory.getGesture();
         } else {
             assert getFxomObject() instanceof FXOMInstance;
 
             final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
 
             if (node == handleNW) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.NW);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.NW);
             } else if (node == handleNE) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.NE);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.NE);
             } else if (node == handleSE) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.SE);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.SE);
             } else if (node == handleSW) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.SW);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.SW);
             }  else if (node == handleNN) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.N);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.N);
             } else if (node == handleEE) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.E);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.E);
             } else if (node == handleSS) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.S);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.S);
             } else if (node == handleWW) {
-                result = new ResizeGesture(context, getContentPanelController(),
-                        fxomInstance, CardinalPoint.W);
+                result = resizeGestureFactory.getGesture(fxomInstance, CardinalPoint.W);
             } else {
                 result = null;
             }

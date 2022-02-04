@@ -35,10 +35,11 @@ package com.oracle.javafx.scenebuilder.drivers.scene;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBoundsCheck;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -48,10 +49,17 @@ import javafx.scene.Scene;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
+    private final DesignHierarchyMask.Factory maskFactory;
+
+    public SceneIntersectsBoundsCheck(DesignHierarchyMask.Factory maskFactory) {
+        super();
+        this.maskFactory = maskFactory;
+    }
+
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Scene;
-        DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
+        HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
         FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;

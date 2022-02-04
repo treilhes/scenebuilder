@@ -145,7 +145,7 @@ public class SceneBuilderBootstrap extends JavafxApplication {
         assert Platform.isFxApplicationThread() == false; // Warning
 
         // PreferencesController.getSingleton();
-        // Metadata.getMetadata();
+        // Api.get().getMetadata();
     }
 
     private void backgroundStartPhase2() {

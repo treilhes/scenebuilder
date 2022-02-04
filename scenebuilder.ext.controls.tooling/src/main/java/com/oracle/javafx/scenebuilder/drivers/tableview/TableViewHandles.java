@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,16 +35,21 @@ package com.oracle.javafx.scenebuilder.drivers.tableview;
 
 import java.util.List;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.drivers.tablecolumn.ResizeTableColumnGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
 import javafx.geometry.Bounds;
@@ -62,17 +68,30 @@ import javafx.scene.shape.Line;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class TableViewHandles extends AbstractNodeHandles<Node> {
+public class TableViewHandles extends AbstractNodeHandles<Node> implements InitializingBean{
 
     private final Group grips = new Group();
-	private final SceneBuilderBeanFactory context;
+	//private final SceneBuilderBeanFactory context;
+    private final DesignHierarchyMask.Factory maskFactory;
+    private final ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory;
 
     public TableViewHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(context, contentPanelController, Node.class);
-        this.context = context;
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
+            DesignHierarchyMask.Factory maskFactory,
+    		ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, Node.class);
+        //this.context = context;
+        this.maskFactory = maskFactory;
+        this.resizeTableColumnGestureFactory = resizeTableColumnGestureFactory;
+        //
+    }
 
+    //FIXME replace with jsr250 annotation @PostConstrut
+    @Override
+    public void afterPropertiesSet() throws Exception {
         getRootNode().getChildren().add(grips); // Above handles
     }
 
@@ -109,11 +128,10 @@ public class TableViewHandles extends AbstractNodeHandles<Node> {
 
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
-            final DesignHierarchyMask m = new DesignHierarchyMask(getFxomInstance());
+            final HierarchyMask m = maskFactory.getMask(getFxomInstance());
             final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
             assert columnObject instanceof FXOMInstance;
-            result = new ResizeTableColumnGesture(context, getContentPanelController(),
-                    (FXOMInstance)columnObject);
+            result = resizeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {
             result = super.findGesture(node);
         }

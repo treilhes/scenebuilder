@@ -38,10 +38,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.Gesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 
@@ -69,14 +70,17 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     private final Circle endHandle = new Circle(SELECTION_HANDLES_SIZE / 2.0);
     private final Line leftHandle = new Line();
     private final Line rightHandle = new Line();
-	private final SceneBuilderBeanFactory context;
+
+    private final EditCurveGesture.Factory editCurveGestureFactory;
 
 
     public QuadCurveHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(contentPanelController, QuadCurve.class);
-        this.context = context;
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            EditCurveGesture.Factory editCurveGestureFactory) {
+        super(contentPanelController, discardGestureFactory, QuadCurve.class);
+
+        this.editCurveGestureFactory = editCurveGestureFactory;
     }
 
     @Override
@@ -161,18 +165,15 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
     }
 
     @Override
-    public AbstractGesture findGesture(Node node) {
-        final AbstractGesture result;
+    public Gesture findGesture(Node node) {
+        final Gesture result;
 
         if (node == startHandle) {
-            result = new EditCurveGesture(context, getContentPanelController(),
-                    getFxomInstance(), Tunable.START);
+            result = editCurveGestureFactory.getGesture(getFxomInstance(), Tunable.START);
         } else if (node == controlHandle) {
-            result = new EditCurveGesture(context, getContentPanelController(),
-                    getFxomInstance(), Tunable.CONTROL1);
+            result = editCurveGestureFactory.getGesture(getFxomInstance(), Tunable.CONTROL1);
         } else if (node == endHandle) {
-            result = new EditCurveGesture(context, getContentPanelController(),
-                    getFxomInstance(), Tunable.END);
+            result = editCurveGestureFactory.getGesture(getFxomInstance(), Tunable.END);
         } else {
             result = null;
         }

@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 
 /**
  *

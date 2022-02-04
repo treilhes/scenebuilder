@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,14 +39,12 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.ButtonType;
 
 /**
  *
- * 
+ *
  */
 public class ButtonTypePropertyMetadata extends ComplexPropertyMetadata<ButtonType> {
 
@@ -69,10 +68,10 @@ public class ButtonTypePropertyMetadata extends ComplexPropertyMetadata<ButtonTy
         return buttonTypeMap;
     }
 
-    protected ButtonTypePropertyMetadata(PropertyName name, boolean readWrite, ButtonType defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, ButtonType.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected ButtonTypePropertyMetadata(PropertyName name, boolean readWrite, ButtonType defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, ButtonType.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected ButtonTypePropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

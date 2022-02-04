@@ -39,7 +39,8 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;
@@ -55,7 +56,7 @@ public class ZoomGesture extends AbstractGesture {
 
     private Observer observer;
 
-    public ZoomGesture(
+    protected ZoomGesture(
             @Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);
     }
@@ -100,4 +101,16 @@ public class ZoomGesture extends AbstractGesture {
         observer.gestureDidTerminate(this);
         observer = null;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<ZoomGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public ZoomGesture getGesture() {
+            return create(ZoomGesture.class, null); // g -> g.setupGestureParameters());
+        }
+    }
+
 }

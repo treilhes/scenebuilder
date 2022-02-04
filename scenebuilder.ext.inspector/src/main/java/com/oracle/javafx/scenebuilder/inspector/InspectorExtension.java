@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import java.util.UUID;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.inspector.actions.ShowAllAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ShowSectionAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
@@ -51,7 +53,7 @@ public class InspectorExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("5f4b6abb-21a0-4be4-8aa4-406ebeb487a6");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
@@ -61,6 +63,7 @@ public class InspectorExtension extends AbstractExtension {
                 InspectorSectionIdPreference.class,
                 ShowAllAction.class,
                 ShowEditedAction.class,
+                ShowSectionAction.class,
                 ViewByPropertyNameAction.class,
                 ViewByPropertyTypeAction.class,
                 ViewBySectionsAction.class

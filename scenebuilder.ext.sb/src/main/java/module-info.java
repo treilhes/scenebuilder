@@ -27,6 +27,7 @@ open module scenebuilder.ext.sb {
 
     requires scenebuilder.starter;
     requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
     requires static lombok;
 

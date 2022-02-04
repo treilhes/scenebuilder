@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
@@ -64,7 +65,7 @@ public class JobUtils {
             property.addToParentInstance(-1, gridPane);
         }
         assert property instanceof FXOMPropertyC;
-        constraints.addToParentProperty(index, (FXOMPropertyC) property);
+        constraints.addToParentProperty(index, property);
     }
 
     public static void addRowConstraints(
@@ -80,7 +81,7 @@ public class JobUtils {
             property.addToParentInstance(-1, gridPane);
         }
         assert property instanceof FXOMPropertyC;
-        constraints.addToParentProperty(index, (FXOMPropertyC) property);
+        constraints.addToParentProperty(index, property);
     }
 
     public static boolean getFillHeight(
@@ -464,7 +465,7 @@ public class JobUtils {
             final Class<?> componentClass, final String name) {
 
         final ComponentClassMetadata<?> componentClassMetadata
-                = Metadata.getMetadata().queryComponentMetadata(componentClass);
+                = Api.get().getMetadata().queryComponentMetadata(componentClass);
         final PropertyName propertyName = new PropertyName(name);
         return componentClassMetadata.lookupProperty(propertyName);
     }

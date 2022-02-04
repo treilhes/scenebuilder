@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +38,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -59,6 +65,8 @@ import javafx.scene.layout.GridPane;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ResizeColumnGesture extends AbstractMouseGesture {
 
     private static final PropertyName columnConstraintsName
@@ -70,21 +78,25 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
             .withDefaultValue(Collections.emptyList())
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    private final GridPaneHandles gridPaneHandles;
-    private final FXOMInstance fxomInstance;
-    private final int columnIndex;
-    private final GridPane gridPane;
+    private GridPaneHandles gridPaneHandles;
+    private FXOMInstance fxomInstance;
+    private int columnIndex;
+    private GridPane gridPane;
     private GridPaneColumnResizer resizer;
-	private final SceneBuilderBeanFactory context;
 
+    private final JobManager jobManager;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
-    public ResizeColumnGesture(
-            SceneBuilderBeanFactory context,
-    		GridPaneHandles gridPaneHandles,
-    		int columnIndex) {
-        super(gridPaneHandles.getContentPanelController());
-        this.context = context;
+	protected ResizeColumnGesture(
+            Content content,
+            JobManager jobManager,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
+        super(content);
+        this.jobManager = jobManager;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+    }
 
+	protected void setupGestureParameters(GridPaneHandles gridPaneHandles, int columnIndex) {
         assert columnIndex >= 0;
 
         this.gridPaneHandles = gridPaneHandles;
@@ -152,15 +164,8 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
         userDidCancel();
 
         // Step #3
-        final Editor editorController
-                = contentPanelController.getEditorController();
-        final Job j = new ModifyObjectJob(context,
-                fxomInstance,
-                columnConstraintsMeta,
-                newConstraints,
-                editorController,
-                I18N.getString("label.action.edit.resize.column")).extend();
-        editorController.getJobManager().push(j);
+        final AbstractJob j = modifyObjectJobFactory.getJob(I18N.getString("label.action.edit.resize.column"), fxomInstance, columnConstraintsMeta, newConstraints);
+        jobManager.push(j);
 
         gridPaneHandles.layoutDecoration();
         resizer = null; // For sake of symetry...
@@ -212,4 +217,16 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
 
         return result;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<ResizeColumnGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public ResizeColumnGesture getGesture(GridPaneHandles gridPaneHandles, int columnIndex) {
+            return create(ResizeColumnGesture.class, g -> g.setupGestureParameters(gridPaneHandles, columnIndex));
+        }
+    }
+
 }

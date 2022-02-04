@@ -2,6 +2,7 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -36,7 +37,7 @@ public class SplitPaneRefresher implements FXOMRefresher {
         final FXOMObject fxomRoot = document.getFxomRoot();
         if (fxomRoot != null) {
             final Metadata metadata
-                    = Metadata.getMetadata();
+                    = Api.get().getMetadata();
             final PropertyName dividerPositionsName
                     = new PropertyName("dividerPositions");
             final List<FXOMObject> candidates

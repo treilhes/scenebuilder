@@ -33,7 +33,7 @@
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;

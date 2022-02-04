@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,18 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.HierarchyDND;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.DragEvent;
@@ -55,10 +61,18 @@ import javafx.scene.input.DragEvent;
  *
  * @treatAsPrivate
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class HierarchyDNDController implements HierarchyDND {
 
-    private final AbstractHierarchyPanelController panelController;
-    private final HierarchyTaskScheduler scheduler;
+    private final Drag drag;
+    private final RootDropTarget.Factory rootDropTargetFactory;
+    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
+
+    private AbstractHierarchyPanelController panelController;
+    private HierarchyTaskScheduler scheduler;
+
 
     /**
      * Defines the mouse location within the cell when the dropping gesture
@@ -71,7 +85,19 @@ public class HierarchyDNDController implements HierarchyDND {
         BOTTOM, CENTER, TOP
     }
 
-    public HierarchyDNDController(final AbstractHierarchyPanelController panelController) {
+    protected HierarchyDNDController(
+            Drag drag,
+            RootDropTarget.Factory rootDropTargetFactory,
+            DesignHierarchyMask.Factory designHierarchyMaskFactory,
+            AccessoryDropTarget.Factory accessoryDropTargetFactory
+            ) {
+        this.drag = drag;
+        this.rootDropTargetFactory = rootDropTargetFactory;
+        this.designHierarchyMaskFactory = designHierarchyMaskFactory;
+        this.accessoryDropTargetFactory = accessoryDropTargetFactory;
+    }
+
+    private void setControllerParameters(final AbstractHierarchyPanelController panelController) {
         this.panelController = panelController;
         this.scheduler = new HierarchyTaskScheduler(panelController);
     }
@@ -178,13 +204,11 @@ public class HierarchyDNDController implements HierarchyDND {
 //        }
 
         // First update drop target
-        final Drag dragController
-                = panelController.getApi().getApiDoc().getDrag();
         final DropTarget dropTarget = makeDropTarget(treeItem, location);
-        dragController.setDropTarget(dropTarget);
+        drag.setDropTarget(dropTarget);
 
         // Then update transfer mode
-        event.acceptTransferModes(dragController.getAcceptedTransferModes());
+        event.acceptTransferModes(drag.getAcceptedTransferModes());
 
         //TODO nothing to add anymore
 //        // Schedule adding empty graphic place holder job :
@@ -251,7 +275,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
         final FXOMDocument document = panelController.getEditorController().getFxomDocument();
         if (document == null || document.getFxomRoot() == null) {
-            return new RootDropTarget();
+            return rootDropTargetFactory.getDropTarget();
         }
         // TreeItem is null when dropping below the datas
         // => the drop target is the root
@@ -275,7 +299,7 @@ public class HierarchyDNDController implements HierarchyDND {
             if (item.isPlaceHolder()) { // (1)
 
                 assert treeItem != rootTreeItem;
-                assert item instanceof HierarchyItemAccessory; 
+                assert item instanceof HierarchyItemAccessory;
 //                item instanceof HierarchyItemBorderPane
 //                        || item instanceof HierarchyItemGraphic
 //                        || item instanceof HierarchyItemDialogPane;
@@ -346,13 +370,12 @@ public class HierarchyDNDController implements HierarchyDND {
                         } else {
                             // If the parent accepts sub components,
                             // this is a reordering gesture and the target is the parent
-                            final Drag dragController
-                                    = panelController.getApi().getApiDoc().getDrag();
-                            final DragSource dragSource = dragController.getDragSource();
+
+                            final DragSource dragSource = drag.getDragSource();
                             final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
                             assert parentTreeItem != null; // Because of (2)
                             final FXOMObject parentObject = parentTreeItem.getValue().getFxomObject();
-                            final DesignHierarchyMask parentMask = new DesignHierarchyMask(parentObject);
+                            final DesignHierarchyMask parentMask = designHierarchyMaskFactory.getMask(parentObject);
                             if (parentMask.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                                 dropTargetObject = parentTreeItem.getValue().getFxomObject();
                                 targetIndex = item.getFxomObject().getIndexInParentProperty();
@@ -373,13 +396,12 @@ public class HierarchyDNDController implements HierarchyDND {
                             if (treeItem.isLeaf() || !treeItem.isExpanded()) {
                                 // If the parent accepts sub components,
                                 // this is a reordering gesture and the target is the parent
-                                final Drag dragController
-                                        = panelController.getApi().getApiDoc().getDrag();
-                                final DragSource dragSource = dragController.getDragSource();
+
+                                final DragSource dragSource = drag.getDragSource();
                                 final TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
                                 assert parentTreeItem != null; // Because of (3)
                                 final FXOMObject parentObject = parentTreeItem.getValue().getFxomObject();
-                                final DesignHierarchyMask parentMask = new DesignHierarchyMask(parentObject);
+                                final DesignHierarchyMask parentMask = designHierarchyMaskFactory.getMask(parentObject);
                                 if (parentMask.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                                     dropTargetObject = parentTreeItem.getValue().getFxomObject();
                                     targetIndex = item.getFxomObject().getIndexInParentProperty() + 1;
@@ -413,16 +435,14 @@ public class HierarchyDNDController implements HierarchyDND {
         DropTarget result = null;
 
         if (dropTargetObject instanceof FXOMInstance) {
-            final Drag dragController
-                    = panelController.getApi().getApiDoc().getDrag();
-            final DragSource dragSource = dragController.getDragSource();
+
+            final DragSource dragSource = drag.getDragSource();
             assert dragSource != null;
             final FXOMInstance dropTargetInstance = (FXOMInstance) dropTargetObject;
             if (accessory != null) {
-                result = new AccessoryDropTarget(dropTargetInstance, accessory);
+                result = accessoryDropTargetFactory.getDropTarget(dropTargetInstance, accessory);
             } else {
-                final DesignHierarchyMask dropTargetMask
-                        = new DesignHierarchyMask(dropTargetInstance);
+                final DesignHierarchyMask dropTargetMask = designHierarchyMaskFactory.getMask(dropTargetInstance);
                 // Check if the drop target accepts sub components
                 if (dropTargetMask.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                     final FXOMObject beforeChild;
@@ -436,7 +456,7 @@ public class HierarchyDNDController implements HierarchyDND {
                             beforeChild = dropTargetMask.getSubComponentAtIndex(targetIndex);
                         }
                     }
-                    result = new AccessoryDropTarget(dropTargetInstance, beforeChild);
+                    result = accessoryDropTargetFactory.getDropTarget(dropTargetInstance, beforeChild);
                 } //
                 // Check if the drop target accepts accessories
                 else {
@@ -459,8 +479,7 @@ public class HierarchyDNDController implements HierarchyDND {
 //                        Accessory.SCENE
 //                    };
                     for (Accessory a : dropTargetMask.getAccessories()) {
-                        final AccessoryDropTarget dropTarget
-                                = new AccessoryDropTarget(dropTargetInstance, a);
+                        final AccessoryDropTarget dropTarget = accessoryDropTargetFactory.getDropTarget(dropTargetInstance, a);
                         // If the accessory drop target accepts the dragged objects,
                         // we return this drop target.
                         // Otherwise, we look for the next accessory.
@@ -473,5 +492,18 @@ public class HierarchyDNDController implements HierarchyDND {
             }
         }
         return result;
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static final class Factory extends AbstractFactory<HierarchyDNDController> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        public HierarchyDNDController newDndController(AbstractHierarchyPanelController owner) {
+            return create(HierarchyDNDController.class, c -> c.setControllerParameters(owner));
+        }
+
     }
 }

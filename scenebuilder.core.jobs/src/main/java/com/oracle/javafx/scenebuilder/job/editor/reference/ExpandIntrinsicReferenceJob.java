@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,15 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
@@ -49,22 +55,30 @@ import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ReplaceObjectJob;
 
 /**
- *
+ * This job find the reference id contained in source attribute of an {@link FXOMIntrinsic}
+ * then replace it by cloning the referee using the provided {@link FXOMCloner}
  */
-public class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
 
-    private final FXOMIntrinsic reference;
-    private final FXOMCloner cloner;
+    private FXOMIntrinsic reference;
+    private FXOMCloner cloner;
     private final FXOMDocument fxomDocument;
+    private final ReplaceObjectJob.Factory replaceObjectJobFactory;
 
-    public ExpandIntrinsicReferenceJob(SceneBuilderBeanFactory context,
-            FXOMIntrinsic reference,
-            FXOMCloner cloner,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected ExpandIntrinsicReferenceJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            ReplaceObjectJob.Factory replaceObjectJobFactory) {
+    // @formatter:on
+        super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.replaceObjectJobFactory = replaceObjectJobFactory;
+    }
 
+    protected void setJobParameters(FXOMIntrinsic reference, FXOMCloner cloner) {
         assert reference != null;
         assert cloner != null;
         assert reference.getFxomDocument() == fxomDocument;
@@ -78,8 +92,8 @@ public class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
      * InlineDocumentJob
      */
     @Override
-    protected List<Job> makeAndExecuteSubJobs() {
-        final List<Job> result = new LinkedList<>();
+    protected List<AbstractJob> makeAndExecuteSubJobs() {
+        final List<AbstractJob> result = new LinkedList<>();
 
         // 1) clone the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
@@ -87,7 +101,7 @@ public class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
         final FXOMObject refereeClone = cloner.clone(referee);
 
         // 2) replace the reference by the referee clone
-        final Job replaceJob = new ReplaceObjectJob(getContext(), reference, refereeClone, getEditorController()).extend();
+        final AbstractJob replaceJob = replaceObjectJobFactory.getJob(reference, refereeClone);
         replaceJob.execute();
         result.add(replaceJob);
 
@@ -107,5 +121,24 @@ public class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
                 (reference.getParentCollection() != null));
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<ExpandIntrinsicReferenceJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link ExpandIntrinsicReferenceJob} job.
+         *
+         * @param reference the {@link FXOMIntrinsic} reference
+         * @param cloner the cloner
+         * @return the job to execute
+         */
+        public ExpandIntrinsicReferenceJob getJob(FXOMIntrinsic reference, FXOMCloner cloner) {
+            return create(ExpandIntrinsicReferenceJob.class, j -> j.setJobParameters(reference, cloner));
+        }
+    }
 
 }

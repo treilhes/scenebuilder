@@ -64,20 +64,20 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.Action.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.core.di.DocumentScope;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
-import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -115,7 +115,7 @@ public class DocumentController implements Document, InitializingBean {
     private final Content contentPanelController;
     //private final DocumentPanelController documentPanelController;
     //private final InspectorPanelController inspectorPanelController;
-    
+
     //private final LibraryPanel libraryPanelController;
     //private final SelectionBarController selectionBarController;
     //private final WildcardImportsPreference wildcardImportsPreference;
@@ -139,14 +139,14 @@ public class DocumentController implements Document, InitializingBean {
     private final MessageBarController messageBarController;
     private final SelectionBarController selectionBarController;
     private FXOMDocument fxomDocument;
-    
+
 
     /*
      * DocumentWindowController
      */
     // @formatter:off
     public DocumentController(
-            @Autowired Api api, 
+            @Autowired Api api,
             @Autowired RecentItemsPreference recentItemsPreference,
             //@Autowired WildcardImportsPreference wildcardImportsPreference,
             @Autowired Preferences documentPreferencesController,
@@ -183,7 +183,7 @@ public class DocumentController implements Document, InitializingBean {
         this.menuBarController = menuBarController;
         this.messageBarController = messageBarController;
         this.selectionBarController = selectionBarController;
-        
+
         this.fileSystem = api.getFileSystem();
         this.dialog = api.getApiDoc().getDialog();
         this.contentPanelController = contentPanelController;
@@ -290,7 +290,7 @@ public class DocumentController implements Document, InitializingBean {
         SbPlatform.runForDocumentLater(() -> {
             initializeDocumentWindow();
         });
-        
+
         documentManager.fxomDocument().subscribe(fd -> fxomDocument = fd);
     }
 
@@ -315,11 +315,11 @@ public class DocumentController implements Document, InitializingBean {
             editorController.setFxmlTextAndLocation(fxmlText, keepTrackOfLocation ? fxmlURL : null, false);
             updateLoadFileTime();
             documentWindow.updateStageTitle(); // No-op if fxml has not been loaded yet
-            
-            
+
+
             documentWindow.untrack();
             documentPreferencesController.readFromJavaPreferences();
-            
+
             SbPlatform.runForDocumentLater(() -> {
                 documentWindow.apply();
                 documentWindow.track();
@@ -783,7 +783,7 @@ public class DocumentController implements Document, InitializingBean {
         documentWindow.setMessageBar(messageBarController.getRoot());
 
         messageBarController.getSelectionBarHost().getChildren().add(selectionBarController.getRoot());
-        
+
         documentWindow.getStage().focusedProperty().addListener((ob, o, n) -> {
             if (n) {
                 this.onFocus();
@@ -807,7 +807,7 @@ public class DocumentController implements Document, InitializingBean {
         if (performCloseAction() == ActionStatus.DONE) {
             // Write java preferences at close time but before losing the current document
             // scope
-            
+
             updatePreferences();
 
             // TODO remove after checking the new watching system is operational in
@@ -822,7 +822,7 @@ public class DocumentController implements Document, InitializingBean {
 
             // Closes if confirmed
             main.documentWindowRequestClose(this);
-            
+
             DocumentScope.removeScope(this);
         }
     }
@@ -891,7 +891,7 @@ public class DocumentController implements Document, InitializingBean {
         }
     }
 
-    
+
 
     private boolean canPerformDelete() {
         boolean result;
@@ -948,7 +948,7 @@ public class DocumentController implements Document, InitializingBean {
                 d.setDetails(I18N.getString("alert.delete.fxid.details"));
                 d.setOKButtonTitle(I18N.getString("label.delete"));
 
-                deleteConfirmed = (d.showAndWait() == AbstractModalDialog.ButtonID.OK);
+                deleteConfirmed = (d.showAndWait() == ButtonID.OK);
             }
 
             if (deleteConfirmed) {
@@ -969,7 +969,7 @@ public class DocumentController implements Document, InitializingBean {
 
     private Optional<File> fetchFXMLFile() {
         var fileChooser = new FileChooser();
-        var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"), 
+        var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"),
                 "*.fxml"); // NOI18N
         fileChooser.getExtensionFilters().add(f);
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
@@ -1166,7 +1166,7 @@ public class DocumentController implements Document, InitializingBean {
 //        if (editorController.canGetFxmlText()) {
 //            final FileChooser fileChooser = new FileChooser();
 //            final FileChooser.ExtensionFilter f = new FileChooser.ExtensionFilter(
-//                    I18N.getString("file.filter.label.fxml"), 
+//                    I18N.getString("file.filter.label.fxml"),
 //                    "*.fxml"); // NOI18N
 //            fileChooser.getExtensionFilters().add(f);
 //            fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());

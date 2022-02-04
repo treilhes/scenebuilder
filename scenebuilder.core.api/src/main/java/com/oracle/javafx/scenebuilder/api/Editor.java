@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 

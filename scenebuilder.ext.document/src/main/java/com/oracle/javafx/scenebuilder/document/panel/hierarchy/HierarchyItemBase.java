@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,11 +42,12 @@ import java.util.List;
 import java.util.Objects;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 
 import javafx.scene.image.Image;
 
@@ -56,7 +58,7 @@ import javafx.scene.image.Image;
  */
 public class HierarchyItemBase implements HierarchyItem {
 
-    protected DesignHierarchyMask mask;
+    protected HierarchyMask mask;
 
     /**
      * Creates a hierarchy item. Empty constructor used by the HierarchyItem
@@ -70,11 +72,11 @@ public class HierarchyItemBase implements HierarchyItem {
      *
      * @param fxomObject The FX object represented by this item
      */
-    public HierarchyItemBase(final FXOMObject fxomObject) {
+    public HierarchyItemBase(DesignHierarchyMask.Factory maskFactory, final FXOMObject fxomObject) {
         assert fxomObject != null;
-        this.mask = new DesignHierarchyMask(fxomObject);
+        this.mask = maskFactory.getMask(fxomObject);
     }
-    
+
     /**
      * Returns true if the specified object is a HierarchyItem and it defines
      * same non null FXOMObject.
@@ -110,7 +112,7 @@ public class HierarchyItemBase implements HierarchyItem {
      * @return the mask represented by this item.
      */
     @Override
-    public final DesignHierarchyMask getMask() {
+    public final HierarchyMask getMask() {
         return mask;
     }
 

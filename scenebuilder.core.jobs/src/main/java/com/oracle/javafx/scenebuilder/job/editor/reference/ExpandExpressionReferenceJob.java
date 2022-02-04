@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,15 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
@@ -53,22 +59,33 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 
 /**
- *
+ * This job find the reference id contained in the provided {@link FXOMPropertyT}
+ * then replace it by cloning the referee using the provided {@link FXOMCloner}
  */
-public class ExpandExpressionReferenceJob extends InlineDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ExpandExpressionReferenceJob extends InlineDocumentJob {
 
-    private final FXOMPropertyT reference;
-    private final FXOMCloner cloner;
+    private FXOMPropertyT reference;
+    private FXOMCloner cloner;
     private final FXOMDocument fxomDocument;
+    private final RemovePropertyJob.Factory removePropertyJobFactory;
+    private final AddPropertyJob.Factory addPropertyJobFactory;
 
-    public ExpandExpressionReferenceJob(SceneBuilderBeanFactory context,
-            FXOMPropertyT reference,
-            FXOMCloner cloner,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected ExpandExpressionReferenceJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            RemovePropertyJob.Factory removePropertyJobFactory,
+            AddPropertyJob.Factory addPropertyJobFactory) {
+    // @formatter:on
+        super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.removePropertyJobFactory = removePropertyJobFactory;
+        this.addPropertyJobFactory = addPropertyJobFactory;
+    }
 
+    protected void setJobParameters(FXOMPropertyT reference, FXOMCloner cloner) {
         assert reference != null;
         assert reference.getFxomDocument() == fxomDocument;
         assert (cloner == null) || (cloner.getTargetDocument() == fxomDocument);
@@ -81,12 +98,12 @@ public class ExpandExpressionReferenceJob extends InlineDocumentJob {
      * InlineDocumentJob
      */
     @Override
-    protected List<Job> makeAndExecuteSubJobs() {
-        final List<Job> result = new LinkedList<>();
+    protected List<AbstractJob> makeAndExecuteSubJobs() {
+        final List<AbstractJob> result = new LinkedList<>();
 
         // 1) remove the reference
         final FXOMElement parentInstance = reference.getParentInstance();
-        final Job removeReference = new RemovePropertyJob(getContext(), reference, getEditorController()).extend();
+        final AbstractJob removeReference = removePropertyJobFactory.getJob(reference);
         removeReference.execute();
         result.add(removeReference);
 
@@ -96,10 +113,8 @@ public class ExpandExpressionReferenceJob extends InlineDocumentJob {
         final FXOMObject refereeClone = cloner.clone(referee);
 
         // 3) insert the clone in place of the reference
-        final FXOMPropertyC cloneProperty
-                = new FXOMPropertyC(fxomDocument, reference.getName(), refereeClone);
-        final Job addCloneJob
-                = new AddPropertyJob(getContext(), cloneProperty, parentInstance, -1, getEditorController()).extend();
+        final FXOMPropertyC cloneProperty = new FXOMPropertyC(fxomDocument, reference.getName(), refereeClone);
+        final AbstractJob addCloneJob = addPropertyJobFactory.getJob(cloneProperty, parentInstance, -1);
         addCloneJob.execute();
         result.add(addCloneJob);
 
@@ -117,5 +132,20 @@ public class ExpandExpressionReferenceJob extends InlineDocumentJob {
         return pv.isExpression();
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<ExpandExpressionReferenceJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
 
+        /**
+         * Create an {@link ExpandExpressionReferenceJob} job
+         * @return the job to execute
+         */
+        public ExpandExpressionReferenceJob getJob(FXOMPropertyT reference, FXOMCloner cloner) {
+            return create(ExpandExpressionReferenceJob.class, j -> j.setJobParameters(reference, cloner));
+        }
+    }
 }

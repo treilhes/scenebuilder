@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +37,6 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -46,10 +45,10 @@ import javafx.scene.control.ToggleGroup;
  */
 public class ToggleGroupPropertyMetadata extends SingleValuePropertyMetadata<String> {
 
-    public ToggleGroupPropertyMetadata(PropertyName name, boolean readWrite, String defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, String.class, readWrite, defaultValue, inspectorPath);
-    }
+//    public ToggleGroupPropertyMetadata(PropertyName name, boolean readWrite, String defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, String.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected ToggleGroupPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

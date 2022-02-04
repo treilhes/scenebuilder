@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
-import com.oracle.javafx.scenebuilder.api.control.DropTargetFactory;
+import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
@@ -68,7 +68,7 @@ import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -79,9 +79,9 @@ import javafx.scene.Node;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class GenericDriver extends AbstractDriver {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(GenericDriver.class);
-    
+
     private final DriverExtensionRegistry registry;
 
     public GenericDriver(
@@ -90,7 +90,7 @@ public class GenericDriver extends AbstractDriver {
         super(contentPanelController);
         this.registry = registry;
     }
-    
+
 
     public <T> T make(Class<T> cls, FXOMObject fxomObject) {
         assert fxomObject instanceof FXOMInstance;
@@ -105,7 +105,7 @@ public class GenericDriver extends AbstractDriver {
             handles.setFxomObject(fxomObject);
             handles.initialize();
         }
-        
+
         if (logger.isInfoEnabled()) {
             logger.info("driver makeHandles returned {} for object {}",
                     handles == null ? "null" : handles.getClass().getName(),
@@ -130,15 +130,15 @@ public class GenericDriver extends AbstractDriver {
         }
         return pring;
     }
-    
+
     @Override
     public Relocater makeRelocater(FXOMObject fxomObject) {
         assert fxomObject.isNode();
         final Node node = (Node)fxomObject.getSceneGraphObject();
         final FXOMObject parentObject = fxomObject.getParentObject();
-        
+
         AbstractRelocater relocater = null;
-        
+
         if (parentObject == null || node.getParent() == null) {// root element or detached graph
             relocater = new RootRelocater();
         } else {
@@ -154,7 +154,7 @@ public class GenericDriver extends AbstractDriver {
                     relocater == null ? "null" : relocater.getClass().getName(),
                     node == null ? "null" : node.getClass().getName());
         }
-        
+
         return relocater;
     }
 
@@ -162,7 +162,7 @@ public class GenericDriver extends AbstractDriver {
     public Tring<?> makeTring(DropTarget dropTarget) {
         assert dropTarget != null;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
-        AbstractTring tring = (AbstractTring)make(Tring.class, dropTarget.getTargetObject()); 
+        AbstractTring tring = (AbstractTring)make(Tring.class, dropTarget.getTargetObject());
         if (tring != null) {
             tring.setFxomObject(dropTarget.getTargetObject());
             tring.defineDropTarget(dropTarget);
@@ -211,12 +211,12 @@ public class GenericDriver extends AbstractDriver {
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
         AbstractPickRefiner pickRefiner = (AbstractPickRefiner)make(PickRefiner.class, fxomObject);
-        
+
         if (pickRefiner != null) {
 //            pickRefiner.setSceneGraphObject((Node)fxomObject.getSceneGraphObject());
 //            pickRefiner.initialize();
             FXOMObject refinedPick = pickRefiner.refinePick(hitNode, sceneX, sceneY, fxomObject);
-            
+
             if (logger.isDebugEnabled()) {
                 logger.debug("driver refinePick used {} for object {} returned {} for (x: {}, y: {})",
                         pickRefiner == null ? "null" : pickRefiner.getClass().getName(),
@@ -226,17 +226,17 @@ public class GenericDriver extends AbstractDriver {
                                 : refinedPick.getSceneGraphObject().getClass().getName(),
                                 sceneX, sceneY);
             }
-            
+
             return refinedPick;
         }
-        
+
         return null;
     }
 
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
-        DropTargetFactory factory = make(DropTargetFactory.class, fxomObject);
-        
+        DropTargetProvider factory = make(DropTargetProvider.class, fxomObject);
+
         if (logger.isInfoEnabled()) {
             logger.info("driver makeDropTarget used {} for object {}",
                     factory == null ? "null" : factory.getClass().getName(),
@@ -253,14 +253,14 @@ public class GenericDriver extends AbstractDriver {
     @Override
     public Node getInlineEditorBounds(FXOMObject fxomObject) {
         AbstractInlineEditorBounds inlineEditorBounds = (AbstractInlineEditorBounds)make(InlineEditorBounds.class, fxomObject);
-        
+
         if (logger.isInfoEnabled()) {
             logger.info("driver getInlineEditorBounds used {} for object {}",
                     inlineEditorBounds == null ? "null" : inlineEditorBounds.getClass().getName(),
                     fxomObject.getSceneGraphObject() == null ? "null"
                             : fxomObject.getSceneGraphObject().getClass().getName());
         }
-        
+
         if (inlineEditorBounds != null) {
             //inlineEditorBounds.setSceneGraphObject((Node)fxomObject.getSceneGraphObject());
             //inlineEditorBounds.initialize();
@@ -272,7 +272,7 @@ public class GenericDriver extends AbstractDriver {
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         AbstractIntersectsBoundsCheck intersectsBoundsCheck = (AbstractIntersectsBoundsCheck)make(IntersectsBoundsCheck.class, fxomObject);
-        
+
         if (logger.isInfoEnabled()) {
             logger.info("driver intersectsBounds used {} for object {}",
                     intersectsBoundsCheck == null ? "null" : intersectsBoundsCheck.getClass().getName(),
@@ -304,7 +304,7 @@ public class GenericDriver extends AbstractDriver {
         }
         return rudder;
     }
-    
+
     @Override
     public Outline makeOutline(FXOMObject fxomObject) {
         AbstractOutline<?> outline = (AbstractOutline)make(Outline.class, fxomObject);
@@ -312,7 +312,7 @@ public class GenericDriver extends AbstractDriver {
             outline.setFxomObject(fxomObject);
             outline.initialize();
         }
-        
+
         if (logger.isInfoEnabled()) {
             logger.info("driver makeOutline returned {} for object {}",
                     outline == null ? "null" : outline.getClass().getName(),
@@ -321,7 +321,7 @@ public class GenericDriver extends AbstractDriver {
         }
         return outline;
     }
-    
+
     @Override
     public ResizeGuide<?> makeResizeGuide(FXOMObject fxomObject) {
         AbstractResizeGuide<?> resizeGuide = (AbstractResizeGuide)make(ResizeGuide.class, fxomObject);
@@ -329,7 +329,7 @@ public class GenericDriver extends AbstractDriver {
             resizeGuide.setFxomObject(fxomObject);
             resizeGuide.initialize();
         }
-        
+
         if (logger.isInfoEnabled()) {
             logger.info("driver makeResizeGuide returned {} for object {}",
                     resizeGuide == null ? "null" : resizeGuide.getClass().getName(),
@@ -338,7 +338,7 @@ public class GenericDriver extends AbstractDriver {
         }
         return resizeGuide;
     }
-    
+
     @Override
     public Shadow<?> makeShadow(FXOMObject fxomObject) {
         AbstractShadow<?> shadow = (AbstractShadow)make(Shadow.class, fxomObject);
@@ -346,7 +346,7 @@ public class GenericDriver extends AbstractDriver {
             shadow.setFxomObject(fxomObject);
             shadow.initialize();
         }
-        
+
         if (logger.isInfoEnabled()) {
             logger.info("driver makeShadow returned {} for object {}",
                     shadow == null ? "null" : shadow.getClass().getName(),

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,10 +47,8 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.SingleValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.fxml.FXMLLoader;
 
@@ -62,13 +61,13 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
     private final SingleValuePropertyMetadata<T> itemMetadata;
     private final List<T> defaultValue;
 
-    protected ListValuePropertyMetadata(PropertyName name, Class<T> itemClass, SingleValuePropertyMetadata<T> itemMetadata,
-            boolean readWrite, List<T> defaultValue, InspectorPath inspectorPath) {
-        super(name, readWrite, inspectorPath);
-        this.itemClass = itemClass;
-        this.defaultValue = defaultValue;
-        this.itemMetadata = itemMetadata;
-    }
+//    protected ListValuePropertyMetadata(PropertyName name, Class<T> itemClass, SingleValuePropertyMetadata<T> itemMetadata,
+//            boolean readWrite, List<T> defaultValue, InspectorPath inspectorPath) {
+//        super(name, readWrite, inspectorPath);
+//        this.itemClass = itemClass;
+//        this.defaultValue = defaultValue;
+//        this.itemMetadata = itemMetadata;
+//    }
 
     protected ListValuePropertyMetadata(AbstractBuilder<?, ?, T> builder) {
         super(builder);
@@ -119,6 +118,7 @@ public abstract class ListValuePropertyMetadata<T> extends ValuePropertyMetadata
                 result = defaultValue;
             }
         } else {
+            assert getName() != null;
             final List<?> items = (List<?>) getName().getValue(fxomInstance.getSceneGraphObject());
             result = new ArrayList<>();
             for (Object item : items) {

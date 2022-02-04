@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,11 +40,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -61,6 +67,8 @@ import javafx.scene.layout.RowConstraints;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ResizeRowGesture extends AbstractMouseGesture {
 
     private static final PropertyName rowConstraintsName
@@ -72,16 +80,25 @@ public class ResizeRowGesture extends AbstractMouseGesture {
                     .withDefaultValue(Collections.emptyList())
                     .withInspectorPath(InspectorPath.UNUSED).build();
 
-    private final GridPaneHandles gridPaneHandles;
-    private final FXOMInstance fxomInstance;
-    private final int rowIndex;
-    private final GridPane gridPane;
+    private GridPaneHandles gridPaneHandles;
+    private FXOMInstance fxomInstance;
+    private int rowIndex;
+    private GridPane gridPane;
     private GridPaneRowResizer resizer;
-    private final SceneBuilderBeanFactory context;
 
-    public ResizeRowGesture(SceneBuilderBeanFactory context,GridPaneHandles gridPaneHandles, int rowIndex) {
-        super(gridPaneHandles.getContentPanelController());
-        this.context = context;
+    private final JobManager jobManager;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+
+    protected ResizeRowGesture(
+            Content content,
+            JobManager jobManager,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
+        super(content);
+        this.jobManager = jobManager;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+    }
+
+    protected void setupGestureParameters(GridPaneHandles gridPaneHandles, int rowIndex) {
         assert rowIndex >= 0;
 
         this.gridPaneHandles = gridPaneHandles;
@@ -152,15 +169,8 @@ public class ResizeRowGesture extends AbstractMouseGesture {
         final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
         metaValueMap.put(rowConstraintsMeta, newConstraints);
 
-        final Editor editorController
-                = contentPanelController.getEditorController();
-        final Job j = new ModifyObjectJob(context,
-                fxomInstance,
-                rowConstraintsMeta,
-                newConstraints,
-                editorController,
-                I18N.getString("label.action.edit.resize.row")).extend();
-        editorController.getJobManager().push(j);
+        final AbstractJob j = modifyObjectJobFactory.getJob(I18N.getString("label.action.edit.resize.row"), fxomInstance,rowConstraintsMeta,newConstraints);
+        jobManager.push(j);
 
         gridPaneHandles.layoutDecoration();
         resizer = null; // For sake of symetry...
@@ -212,4 +222,16 @@ public class ResizeRowGesture extends AbstractMouseGesture {
 
         return result;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<ResizeRowGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public ResizeRowGesture getGesture(GridPaneHandles gridPaneHandles, int rowIndex) {
+            return create(ResizeRowGesture.class, g -> g.setupGestureParameters(gridPaneHandles, rowIndex));
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,16 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -53,21 +60,43 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ReplacePropertyValueJobT;
 
+import javafx.scene.control.ToggleGroup;
+
 /**
- *
+ * This job creates a {@link ToggleGroup} in place of a toggleGroup reference<br/>
+ * If the referee {@link ToggleGroup} exists, it is moved<br/>
+ * If not, a new {@link ToggleGroup} is created<br/>
  */
-public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
 
-    private final FXOMPropertyT reference;
+    private FXOMPropertyT reference;
     private final FXOMDocument fxomDocument;
+    private RemoveObjectJob.Factory removeObjectJobFactory;
+    private ReplacePropertyValueJobT.Factory replacePropertyValueJobTFactory;
+    private AddPropertyJob.Factory addPropertyJobFactory;
+    private RemovePropertyJob.Factory removePropertyJobFactory;
 
-    public FixToggleGroupExpressionReferenceJob(SceneBuilderBeanFactory context,
-            FXOMPropertyT reference,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected FixToggleGroupExpressionReferenceJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Selection selection,
+            RemoveObjectJob.Factory removeObjectJobFactory,
+            ReplacePropertyValueJobT.Factory replacePropertyValueJobTFactory,
+            AddPropertyJob.Factory addPropertyJobFactory,
+            RemovePropertyJob.Factory removePropertyJobFactory) {
+    // @formatter:on
+        super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.removeObjectJobFactory = removeObjectJobFactory;
+        this.replacePropertyValueJobTFactory = replacePropertyValueJobTFactory;
+        this.addPropertyJobFactory = addPropertyJobFactory;
+        this.removePropertyJobFactory = removePropertyJobFactory;
+    }
 
+    protected void setJobParameters(FXOMPropertyT reference) {
         assert reference != null;
         assert reference.getFxomDocument() == fxomDocument;
 
@@ -78,13 +107,14 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
      * InlineDocumentJob
      */
     @Override
-    protected List<Job> makeAndExecuteSubJobs() {
-        final List<Job> result = new LinkedList<>();
+    protected List<AbstractJob> makeAndExecuteSubJobs() {
+        final List<AbstractJob> result = new LinkedList<>();
 
         // 1) Locates the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
         final FXOMObject referee = fxomDocument.searchWithFxId(fxId);
 
+        // @formatter:off
         /*
          *    <RadioButton toggleGroup="$oxebo" />          // reference    //NOCHECK
          *    ...
@@ -94,6 +124,7 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
          *       </toggleGroup>
          *    </RadioButton>
          */
+         // @formatter:on
 
         // 2) Finds or create the matching toggle group
         if (referee != null) {
@@ -101,22 +132,18 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
             assert referee.getParentProperty().getParentInstance() != null;
 
             // 2a.1) Toggle group is available : disconnect it and re-use it
-            final FXOMElement parentInstance
-                    = referee.getParentProperty().getParentInstance();
-            final Job removeJob
-                    = new RemoveObjectJob(getContext(), referee, getEditorController()).extend();
+            final FXOMElement parentInstance = referee.getParentProperty().getParentInstance();
+            final AbstractJob removeJob = removeObjectJobFactory.getJob(referee);
             removeJob.execute();
             result.add(removeJob);
 
             // 2a.2) Replace the reference by the toggleGroup
-            final Job replaceJob = new ReplacePropertyValueJobT(getContext(), reference,
-                    referee, getEditorController()).extend();
+            final AbstractJob replaceJob = replacePropertyValueJobTFactory.getJob(reference, referee);
             replaceJob.execute();
             result.add(replaceJob);
 
             // 2a.3) Put reference at referee previous place
-            final Job addJob = new AddPropertyJob(getContext(), reference, parentInstance,
-                    -1, getEditorController()).extend();
+            final AbstractJob addJob = addPropertyJobFactory.getJob(reference, parentInstance, -1);
             addJob.execute();
             result.add(addJob);
 
@@ -124,14 +151,13 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
 
             // 2b.1) Removes the reference
             final FXOMElement targetInstance = reference.getParentInstance();
-            final Job removeJob = new RemovePropertyJob(getContext(), reference, getEditorController()).extend();
+            final AbstractJob removeJob = removePropertyJobFactory.getJob(reference);
             removeJob.execute();
             result.add(removeJob);
 
             // 2b.2) Creates and adds toggle group
             final FXOMPropertyC newToggleGroup = FXOMNodes.makeToggleGroup(fxomDocument, fxId);
-            final Job addJob = new AddPropertyJob(getContext(), newToggleGroup,
-                    targetInstance, -1, getEditorController()).extend();
+            final AbstractJob addJob = addPropertyJobFactory.getJob(newToggleGroup, targetInstance, -1);
             addJob.execute();
             result.add(addJob);
         }
@@ -148,5 +174,24 @@ public class FixToggleGroupExpressionReferenceJob extends InlineDocumentJob {
     public boolean isExecutable() {
         final PrefixedValue pv = new PrefixedValue(reference.getValue());
         return pv.isExpression();
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<FixToggleGroupExpressionReferenceJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link FixToggleGroupExpressionReferenceJob} job.
+         *
+         * @param reference the reference
+         * @return the job to execute
+         */
+        public FixToggleGroupExpressionReferenceJob getJob(FXOMPropertyT reference) {
+            return create(FixToggleGroupExpressionReferenceJob.class, j -> j.setJobParameters(reference));
+        }
     }
 }

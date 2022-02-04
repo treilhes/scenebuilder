@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -59,10 +60,10 @@ public class SepiaTonePropertyMetadata extends ComplexPropertyMetadata<SepiaTone
             .withDefaultValue(1.0)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected SepiaTonePropertyMetadata(PropertyName name, boolean readWrite, 
-            SepiaTone defaultValue, InspectorPath inspectorPath) {
-        super(name, SepiaTone.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected SepiaTonePropertyMetadata(PropertyName name, boolean readWrite, 
+//            SepiaTone defaultValue, InspectorPath inspectorPath) {
+//        super(name, SepiaTone.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected SepiaTonePropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

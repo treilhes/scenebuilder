@@ -8,6 +8,7 @@ import ${component.custom["propertyNamesClass"]};
 
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /*
@@ -29,6 +30,7 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 				.withDefaultValue(${property.custom["defaultValue"]})
 	</#if>
                 .withInspectorPath(new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.order?c}))
+                .withVisibility(Visibility.${property.raw.visibility.name()})
                 .build();
 </#if>
 <#if property.type == "COMPONENT">
@@ -46,15 +48,16 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 
         <#list properties as property>${logger.info("Processing " + component.raw.name + "." + property.raw.name)}
 		<#if property.type == "COMPONENT">
-		    ${property.raw.name}PropertyMetadata = new ${property.raw.metadataClass.name?replace("$", ".")}(
-	                PropertyNames.${property.custom["memberName"]}Name,
-	                <#if property.raw.collection == true>${property.raw.collectionType.simpleName?uncap_first}<#else>${property.raw.type.simpleName?uncap_first}</#if>Metadata,
-	                ${property.raw.collection}, /* collection */
-	                <#if property.raw.image??>getClass().getResource("${property.raw.image}")<#else>null</#if>,
-	                <#if property.raw.imageX2??>getClass().getResource("${property.raw.imageX2}")<#else>null</#if>,
-	                <#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>,
-	                ${property.raw.order?c}
-	                );
+		    ${property.raw.name}PropertyMetadata = new ${property.raw.metadataClass.name?replace("$", ".")}.Builder()
+	                .withName(PropertyNames.${property.custom["memberName"]}Name)
+	                .withClassMetadata(<#if property.raw.collection == true>${property.raw.collectionType.simpleName?uncap_first}<#else>${property.raw.type.simpleName?uncap_first}</#if>Metadata)
+	                .withIsCollection(${property.raw.collection})
+	                <#if property.raw.image??>.withIconUrl(getClass().getResource("${property.raw.image}"))</#if>
+	                <#if property.raw.imageX2??>.withIconX2Url(getClass().getResource("${property.raw.imageX2}"))</#if>
+	                .withIsMain(<#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>)
+	                .withOrder(${property.raw.order?c})
+	                .withVisibility(Visibility.${property.raw.visibility.name()})
+	                .build();
 		</#if>
 		</#list>
 

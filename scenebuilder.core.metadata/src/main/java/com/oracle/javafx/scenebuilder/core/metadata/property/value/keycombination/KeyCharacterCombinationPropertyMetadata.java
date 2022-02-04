@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,7 +51,7 @@ public class KeyCharacterCombinationPropertyMetadata extends ComplexPropertyMeta
 
     /*
      * NOTE : KeyCharacterCombination singularity
-     * 
+     *
      * Same as KeyCodeCombination => see comments in KeyCodeCombination
      */
     private static final String DUMMY = "dummy"; // NOCHECK
@@ -59,43 +60,43 @@ public class KeyCharacterCombinationPropertyMetadata extends ComplexPropertyMeta
             .withName(new PropertyName("alt")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata controlMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("control")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata metaMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("meta")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata shiftMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("shift")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata shortcutMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("shortcut")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final I18nStringPropertyMetadata characterMetadata = new I18nStringPropertyMetadata.Builder()
             .withName(new PropertyName("character")) //NOCHECK
             .withReadWrite(true)
             .withDefaultValue(null)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public KeyCharacterCombinationPropertyMetadata(PropertyName name, boolean readWrite,
-            KeyCharacterCombination defaultValue, InspectorPath inspectorPath) {
-        super(name, KeyCharacterCombination.class, readWrite, defaultValue, inspectorPath);
-    }
-    
+//    public KeyCharacterCombinationPropertyMetadata(PropertyName name, boolean readWrite,
+//            KeyCharacterCombination defaultValue, InspectorPath inspectorPath) {
+//        super(name, KeyCharacterCombination.class, readWrite, defaultValue, inspectorPath);
+//    }
+
     protected KeyCharacterCombinationPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,21 +34,31 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
- *
+ * This job remove the property fx:controller from an FXOMObject if any
  */
-public class RemoveFxControllerJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RemoveFxControllerJob extends AbstractJob {
 
-    private final FXOMObject fxomObject;
+    private FXOMObject fxomObject;
     private String oldFxController;
 
-    public RemoveFxControllerJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, Editor editor) {
-        super(context, editor);
+    protected RemoveFxControllerJob(
+            JobExtensionFactory extensionFactory) {
+        super(extensionFactory);
+    }
+
+    protected void setJobParameters(FXOMObject fxomObject) {
         assert fxomObject != null;
         this.fxomObject = fxomObject;
     }
@@ -62,21 +73,21 @@ public class RemoveFxControllerJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         assert oldFxController == null;
         oldFxController = fxomObject.getFxController();
         // Now like redo()
-        redo();
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert oldFxController != null;
         fxomObject.setFxController(oldFxController);
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert oldFxController != null;
         fxomObject.setFxController(null);
     }
@@ -84,6 +95,24 @@ public class RemoveFxControllerJob extends Job {
     @Override
     public String getDescription() {
         return getClass().getSimpleName(); // Should not reach user
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<RemoveFxControllerJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link RemoveFxControllerJob} job
+         *
+         * @param fxomObject the object whose fx:controller property will be removed
+         * @return the job to execute
+         */
+        public RemoveFxControllerJob getJob(FXOMObject fxomObject) {
+            return create(RemoveFxControllerJob.class, j -> j.setJobParameters(fxomObject));
+        }
     }
 
 }

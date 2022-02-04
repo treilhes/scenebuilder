@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,15 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
+import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeCell;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeViewController;
+import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 
 /**
  * Concrete class to create and control the Hierarchy Panel of Scene Builder
@@ -55,9 +64,20 @@ import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.Hierarch
 public class HierarchyPanelController extends HierarchyTreeViewController {
 
     public HierarchyPanelController(
-    		@Autowired Api api,
-    		//@Autowired ParentRingColorPreference parentRingColorPreference,
-    		@Autowired Editor editorController) {
-        super(api, editorController);//, parentRingColorPreference);
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            Editor editor,
+            JobManager jobManager,
+            Drag drag,
+            Selection selection,
+            ShowExpertByDefaultPreference showExpertByDefaultPreference,
+            DocumentDragSource.Factory documentDragSourceFactory,
+            ExternalDragSource.Factory externalDragSourceFactory,
+            DesignHierarchyMask.Factory designHierarchyMaskFactory,
+            HierarchyTreeCell.Factory hierarchyTreeCellFactory,
+            HierarchyDNDController.Factory hierarchyDNDControllerFactory) {
+        super(scenebuilderManager, documentManager, editor, jobManager, drag, selection, showExpertByDefaultPreference,
+                documentDragSourceFactory, externalDragSourceFactory, designHierarchyMaskFactory,
+                hierarchyTreeCellFactory, hierarchyDNDControllerFactory);
     }
 }

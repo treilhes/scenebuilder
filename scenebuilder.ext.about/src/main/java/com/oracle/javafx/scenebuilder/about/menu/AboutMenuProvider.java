@@ -42,10 +42,10 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.about.actions.ShowAboutAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)

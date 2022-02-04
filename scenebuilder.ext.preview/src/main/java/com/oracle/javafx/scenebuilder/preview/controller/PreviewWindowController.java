@@ -50,14 +50,14 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Size;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 

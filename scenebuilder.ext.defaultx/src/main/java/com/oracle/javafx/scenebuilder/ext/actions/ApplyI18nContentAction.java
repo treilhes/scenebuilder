@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,17 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
+import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import lombok.Getter;
 
@@ -63,9 +63,10 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 	private final DocumentManager documentManager;
 
 	public ApplyI18nContentAction(
-	        @Autowired Api api) {
-		super(api);
-		this.documentManager = api.getApiDoc().getDocumentManager();
+	        ActionExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+        super(extensionFactory);
+        this.documentManager = documentManager;
 	}
 
 	public synchronized ApplyI18nContentConfig getActionConfig() {
@@ -85,7 +86,7 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 	}
 
 	@Override
-	public ActionStatus perform() {
+	public ActionStatus doPerform() {
 		assert getActionConfig() != null;
 		documentManager.i18nResourceConfig().set(getActionConfig());
 		return ActionStatus.DONE;
@@ -97,6 +98,6 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 
 	@Override
 	public void initWithDocument() {
-		extend().checkAndPerform();
+		checkAndPerform();
 	}
 }

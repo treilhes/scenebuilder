@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -78,10 +79,10 @@ public class ReflectionPropertyMetadata extends ComplexPropertyMetadata<Reflecti
             .withDefaultValue(0.5)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected ReflectionPropertyMetadata(PropertyName name, boolean readWrite, 
-            Reflection defaultValue, InspectorPath inspectorPath) {
-        super(name, Reflection.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected ReflectionPropertyMetadata(PropertyName name, boolean readWrite, 
+//            Reflection defaultValue, InspectorPath inspectorPath) {
+//        super(name, Reflection.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected ReflectionPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

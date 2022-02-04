@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,10 +36,16 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -54,33 +61,49 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 
 /**
+ * This job apply the constant USE_COMPUTED_SIZE on width and height of the provided {@link FXOMInstance}
  *
  */
-public class UseComputedSizesObjectJob extends BatchDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class UseComputedSizesObjectJob extends BatchDocumentJob {
 
-    private final FXOMInstance fxomInstance;
+    private FXOMInstance fxomInstance;
+    private final Metadata metadata;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
-    public UseComputedSizesObjectJob(SceneBuilderBeanFactory context, FXOMInstance fxomInstance, Editor editor) {
-        super(context, editor);
+ // @formatter:off
+    protected UseComputedSizesObjectJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Metadata metadata,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
+    // @formatter:on
+        super(extensionFactory, documentManager);
+        this.metadata = metadata;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+    }
+
+    protected void setJobParameters(FXOMInstance fxomInstance) {
         assert fxomInstance != null;
         this.fxomInstance = fxomInstance;
     }
 
     @Override
-    protected List<Job> makeSubJobs() {
+    protected List<AbstractJob> makeSubJobs() {
 
-        final List<Job> result = new ArrayList<>();
+        final List<AbstractJob> result = new ArrayList<>();
         final Object sceneGraphObject = fxomInstance.getSceneGraphObject();
 
         // RowConstraints: only height property is meaningfull
         if (sceneGraphObject instanceof RowConstraints) {
             result.addAll(modifyHeightJobs(fxomInstance));
         } //
-        // ColumnConstraints: only width property is meaningfull
+          // ColumnConstraints: only width property is meaningfull
         else if (sceneGraphObject instanceof ColumnConstraints) {
             result.addAll(modifyWidthJobs(fxomInstance));
         } //
-        // Region: both height and width properties are meaningfull
+          // Region: both height and width properties are meaningfull
         else if (sceneGraphObject instanceof Region) {
             // First remove anchors if any
             result.addAll(removeAnchorsJobs());
@@ -88,12 +111,12 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
             result.addAll(modifyHeightJobs(fxomInstance));
             result.addAll(modifyWidthJobs(fxomInstance));
         } //
-        // Use computed sizes on ImageView => set the fit size to (0,0)
+          // Use computed sizes on ImageView => set the fit size to (0,0)
         else if (sceneGraphObject instanceof ImageView) {
             result.addAll(modifyFitHeightJob(fxomInstance));
             result.addAll(modifyFitWidthJob(fxomInstance));
         } //
-        // TableColumnBase: only width property is meaningfull
+          // TableColumnBase: only width property is meaningfull
         else if (sceneGraphObject instanceof TableColumnBase) {
             result.addAll(modifyWidthJobs(fxomInstance));
         }
@@ -110,30 +133,25 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         return sb.toString();
     }
 
-    private List<Job> removeAnchorsJobs() {
-        final List<Job> result = new ArrayList<>();
+    private List<AbstractJob> removeAnchorsJobs() {
+        final List<AbstractJob> result = new ArrayList<>();
         final FXOMObject parentObject = fxomInstance.getParentObject();
 
         if (parentObject != null && parentObject.getSceneGraphObject() instanceof AnchorPane) {
             // switch off AnchorPane Constraints when parent is AnchorPane
             final PropertyName topAnchorPN = new PropertyName("topAnchor", AnchorPane.class);
-            final ValuePropertyMetadata topAnchorVPM
-                    = Metadata.getMetadata().queryValueProperty(fxomInstance, topAnchorPN);
+            final ValuePropertyMetadata topAnchorVPM = metadata.queryValueProperty(fxomInstance, topAnchorPN);
             final PropertyName rightAnchorPN = new PropertyName("rightAnchor", AnchorPane.class);
-            final ValuePropertyMetadata rightAnchorVPM
-                    = Metadata.getMetadata().queryValueProperty(fxomInstance, rightAnchorPN);
+            final ValuePropertyMetadata rightAnchorVPM = metadata.queryValueProperty(fxomInstance, rightAnchorPN);
             final PropertyName bottomAnchorPN = new PropertyName("bottomAnchor", AnchorPane.class);
-            final ValuePropertyMetadata bottomAnchorVPM
-                    = Metadata.getMetadata().queryValueProperty(fxomInstance, bottomAnchorPN);
+            final ValuePropertyMetadata bottomAnchorVPM = metadata.queryValueProperty(fxomInstance, bottomAnchorPN);
             final PropertyName leftAnchorPN = new PropertyName("leftAnchor", AnchorPane.class);
-            final ValuePropertyMetadata leftAnchorVPM
-                    = Metadata.getMetadata().queryValueProperty(fxomInstance, leftAnchorPN);
-            for (ValuePropertyMetadata vpm : new ValuePropertyMetadata[]{
-                topAnchorVPM, rightAnchorVPM, bottomAnchorVPM, leftAnchorVPM}) {
+            final ValuePropertyMetadata leftAnchorVPM = metadata.queryValueProperty(fxomInstance, leftAnchorPN);
+            for (ValuePropertyMetadata vpm : new ValuePropertyMetadata[] { topAnchorVPM, rightAnchorVPM,
+                    bottomAnchorVPM, leftAnchorVPM }) {
 
                 if (vpm.getValueObject(fxomInstance) != null) {
-                    final Job subJob = new ModifyObjectJob(getContext(),
-                            fxomInstance, vpm, null, getEditorController()).extend();
+                    final AbstractJob subJob = modifyObjectJobFactory.getJob(fxomInstance, vpm, null);
                     result.add(subJob);
                 }
             }
@@ -141,26 +159,20 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         return result;
     }
 
-    private List<Job> modifyHeightJobs(final FXOMInstance candidate) {
-        final List<Job> result = new ArrayList<>();
+    private List<AbstractJob> modifyHeightJobs(final FXOMInstance candidate) {
+        final List<AbstractJob> result = new ArrayList<>();
 
         final PropertyName maxHeight = new PropertyName("maxHeight");
         final PropertyName minHeight = new PropertyName("minHeight");
         final PropertyName prefHeight = new PropertyName("prefHeight");
 
-        final ValuePropertyMetadata maxHeightVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, maxHeight);
-        final ValuePropertyMetadata minHeightVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, minHeight);
-        final ValuePropertyMetadata prefHeightVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, prefHeight);
+        final ValuePropertyMetadata maxHeightVPM = metadata.queryValueProperty(candidate, maxHeight);
+        final ValuePropertyMetadata minHeightVPM = metadata.queryValueProperty(candidate, minHeight);
+        final ValuePropertyMetadata prefHeightVPM = metadata.queryValueProperty(candidate, prefHeight);
 
-        final Job maxHeightJob = new ModifyObjectJob(getContext(),
-                candidate, maxHeightVPM, -1.0, getEditorController()).extend();
-        final Job minHeightJob = new ModifyObjectJob(getContext(),
-                candidate, minHeightVPM, -1.0, getEditorController()).extend();
-        final Job prefHeightJob = new ModifyObjectJob(getContext(),
-                candidate, prefHeightVPM, -1.0, getEditorController()).extend();
+        final AbstractJob maxHeightJob = modifyObjectJobFactory.getJob(candidate, maxHeightVPM, -1.0);
+        final AbstractJob minHeightJob = modifyObjectJobFactory.getJob(candidate, minHeightVPM, -1.0);
+        final AbstractJob prefHeightJob = modifyObjectJobFactory.getJob(candidate, prefHeightVPM, -1.0);
 
         if (maxHeightJob.isExecutable()) {
             result.add(maxHeightJob);
@@ -174,26 +186,20 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         return result;
     }
 
-    private List<Job> modifyWidthJobs(final FXOMInstance candidate) {
-        final List<Job> result = new ArrayList<>();
+    private List<AbstractJob> modifyWidthJobs(final FXOMInstance candidate) {
+        final List<AbstractJob> result = new ArrayList<>();
 
         final PropertyName maxWidth = new PropertyName("maxWidth");
         final PropertyName minWidth = new PropertyName("minWidth");
         final PropertyName prefWidth = new PropertyName("prefWidth");
 
-        final ValuePropertyMetadata maxWidthVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, maxWidth);
-        final ValuePropertyMetadata minWidthVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, minWidth);
-        final ValuePropertyMetadata prefWidthVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, prefWidth);
+        final ValuePropertyMetadata maxWidthVPM = metadata.queryValueProperty(candidate, maxWidth);
+        final ValuePropertyMetadata minWidthVPM = metadata.queryValueProperty(candidate, minWidth);
+        final ValuePropertyMetadata prefWidthVPM = metadata.queryValueProperty(candidate, prefWidth);
 
-        final Job maxWidthJob = new ModifyObjectJob(getContext(),
-                candidate, maxWidthVPM, -1.0, getEditorController()).extend();
-        final Job minWidthJob = new ModifyObjectJob(getContext(),
-                candidate, minWidthVPM, -1.0, getEditorController()).extend();
-        final Job prefWidthJob = new ModifyObjectJob(getContext(),
-                candidate, prefWidthVPM, -1.0, getEditorController()).extend();
+        final AbstractJob maxWidthJob = modifyObjectJobFactory.getJob(candidate, maxWidthVPM, -1.0);
+        final AbstractJob minWidthJob = modifyObjectJobFactory.getJob(candidate, minWidthVPM, -1.0);
+        final AbstractJob prefWidthJob = modifyObjectJobFactory.getJob(candidate, prefWidthVPM, -1.0);
 
         if (maxWidthJob.isExecutable()) {
             result.add(maxWidthJob);
@@ -207,14 +213,12 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         return result;
     }
 
-    private List<Job> modifyFitHeightJob(final FXOMInstance candidate) {
-        final List<Job> result = new ArrayList<>();
+    private List<AbstractJob> modifyFitHeightJob(final FXOMInstance candidate) {
+        final List<AbstractJob> result = new ArrayList<>();
 
         final PropertyName fitHeight = new PropertyName("fitHeight");
-        final ValuePropertyMetadata fitHeightVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, fitHeight);
-        final Job fitHeightJob = new ModifyObjectJob(getContext(),
-                candidate, fitHeightVPM, 0.0, getEditorController()).extend();
+        final ValuePropertyMetadata fitHeightVPM = metadata.queryValueProperty(candidate, fitHeight);
+        final AbstractJob fitHeightJob = modifyObjectJobFactory.getJob(candidate, fitHeightVPM, 0.0);
 
         if (fitHeightJob.isExecutable()) {
             result.add(fitHeightJob);
@@ -222,18 +226,35 @@ public class UseComputedSizesObjectJob extends BatchDocumentJob {
         return result;
     }
 
-    private List<Job> modifyFitWidthJob(final FXOMInstance candidate) {
-        final List<Job> result = new ArrayList<>();
+    private List<AbstractJob> modifyFitWidthJob(final FXOMInstance candidate) {
+        final List<AbstractJob> result = new ArrayList<>();
 
         final PropertyName fitWidth = new PropertyName("fitWidth");
-        final ValuePropertyMetadata fitWidthVPM
-                = Metadata.getMetadata().queryValueProperty(candidate, fitWidth);
-        final Job fitWidthJob = new ModifyObjectJob(getContext(),
-                candidate, fitWidthVPM, 0.0, getEditorController()).extend();
+        final ValuePropertyMetadata fitWidthVPM = metadata.queryValueProperty(candidate, fitWidth);
+        final AbstractJob fitWidthJob = modifyObjectJobFactory.getJob(candidate, fitWidthVPM, 0.0);
 
         if (fitWidthJob.isExecutable()) {
             result.add(fitWidthJob);
         }
         return result;
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<UseComputedSizesObjectJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link UseComputedSizesObjectJob} job
+         *
+         * @param fxomInstance the target {@link FXOMInstance}
+         * @return the job to execute
+         */
+        public UseComputedSizesObjectJob getJob(FXOMInstance fxomInstance) {
+            return create(UseComputedSizesObjectJob.class, j -> j.setJobParameters(fxomInstance));
+        }
     }
 }

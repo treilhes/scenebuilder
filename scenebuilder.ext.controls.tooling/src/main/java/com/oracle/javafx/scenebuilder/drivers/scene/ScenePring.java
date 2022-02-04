@@ -36,11 +36,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.drivers.node.AbstractNodePring;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -49,26 +51,32 @@ import javafx.scene.Scene;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ScenePring extends AbstractNodePring<Node> {
 
-    public ScenePring(Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    private final DesignHierarchyMask.Factory maskFactory;
+
+    public ScenePring(
+            SelectWithPringGesture.Factory selectWithPringGestureFactory,
+            Content contentPanelController,
+            DesignHierarchyMask.Factory maskFactory) {
+        super( contentPanelController, selectWithPringGestureFactory, Node.class);
+        this.maskFactory = maskFactory;
     }
-    
+
     @Override
     public void initialize() {
     }
 
     @Override
     public void setFxomObject(FXOMObject fxomObject) {
-        
+
         assert fxomObject.getSceneGraphObject() instanceof Scene;
-        DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(fxomObject);
+        HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
         FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         assert root instanceof FXOMInstance;
-        
+
         super.setFxomObject(root);
     }
 
-    
+
 }

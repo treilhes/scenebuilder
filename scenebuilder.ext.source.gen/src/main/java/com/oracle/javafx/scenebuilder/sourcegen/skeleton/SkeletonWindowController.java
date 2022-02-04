@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,15 +41,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 
 import javafx.beans.value.ChangeListener;
@@ -85,13 +86,14 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
     private String documentName;
     private boolean dirty = true;
     private final DocumentManager documentManager;
-    
+
     public SkeletonWindowController(
-            @Autowired Api api,
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
             @Autowired DocumentWindow document) {
-        super(api, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle());
-        
-        this.documentManager = api.getApiDoc().getDocumentManager();
+        super(scenebuilderManager, documentManager, SkeletonWindowController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle());
+
+        this.documentManager = documentManager;
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {
@@ -126,7 +128,7 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
         languageChoiceBox.getItems().addAll(SkeletonSettings.LANGUAGE.values());
         languageChoiceBox.getSelectionModel().select(SkeletonSettings.LANGUAGE.JAVA);
         languageChoiceBox.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> update());
-        
+
         commentCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> update());
 
         formatCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> update());
@@ -149,7 +151,7 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
             final SkeletonBuffer buf = new SkeletonBuffer(fxomDocument, documentName);
 
             buf.setLanguage(languageChoiceBox.getSelectionModel().getSelectedItem());
-            
+
             if (commentCheckBox.isSelected()) {
                 buf.setTextType(SkeletonSettings.TEXT_TYPE.WITH_COMMENTS);
             } else {
@@ -183,6 +185,6 @@ public class SkeletonWindowController extends AbstractFxmlViewController {
 
     @Override
     public void onHidden() {
-        
+
     }
 }

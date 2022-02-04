@@ -12,11 +12,15 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.api</artifactId>
+            <artifactId>scenebuilder.core.core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.jobs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.selection</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -43,8 +43,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;

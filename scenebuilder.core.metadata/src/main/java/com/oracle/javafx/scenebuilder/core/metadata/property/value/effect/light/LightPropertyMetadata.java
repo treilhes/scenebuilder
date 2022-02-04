@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,9 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.effect.light
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.effect.Light;
 
@@ -49,13 +48,13 @@ public class LightPropertyMetadata extends ComplexPropertyMetadata<Light> {
     private final PointLightPropertyMetadata pointLightMetadata;
     private final SpotLightPropertyMetadata spotLightMetadata;
 
-    protected LightPropertyMetadata(PropertyName name, boolean readWrite,
-            Light defaultValue, InspectorPath inspectorPath) {
-        super(name, Light.class, readWrite, defaultValue, inspectorPath);
-        distantLightMetadata = fillBuilder(this, new DistantLightPropertyMetadata.Builder()).withDefaultValue(null).build();
-        pointLightMetadata = fillBuilder(this, new PointLightPropertyMetadata.Builder()).withDefaultValue(null).build();
-        spotLightMetadata = fillBuilder(this, new SpotLightPropertyMetadata.Builder()).withDefaultValue(null).build();
-    }
+//    protected LightPropertyMetadata(PropertyName name, boolean readWrite,
+//            Light defaultValue, InspectorPath inspectorPath) {
+//        super(name, Light.class, readWrite, defaultValue, inspectorPath);
+//        distantLightMetadata = fillBuilder(this, new DistantLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        pointLightMetadata = fillBuilder(this, new PointLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        spotLightMetadata = fillBuilder(this, new SpotLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+//    }
 
     protected LightPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

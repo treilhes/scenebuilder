@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,19 +33,35 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 @Component
-public class Api {
+public class Api implements InitializingBean {
+
+    private static Api instance;
+
+    public static synchronized Api get() {
+        assert instance != null;
+
+        if (instance == null) {
+            throw new NullPointerException();
+        }
+
+        return instance;
+    }
+
     // ***************** Singletons **************************
     private final @Getter SceneBuilderBeanFactory context;
     private final @Getter Main main;
@@ -54,8 +71,14 @@ public class Api {
     private final @Getter Glossary glossary;
     private final @Getter IconSetting iconSetting;
     private final @Getter Documentation documentation;
+    private final @Getter Metadata metadata;
 
     public ApiDoc getApiDoc() {
         return context.getBean(ApiDoc.class);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        instance = this;
     }
 }

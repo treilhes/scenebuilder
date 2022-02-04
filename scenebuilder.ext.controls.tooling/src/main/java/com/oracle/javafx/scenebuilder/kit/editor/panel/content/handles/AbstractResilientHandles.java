@@ -34,7 +34,9 @@
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 
 import javafx.geometry.Point2D;
 import javafx.scene.transform.Transform;
@@ -47,10 +49,12 @@ public abstract class AbstractResilientHandles<T> extends AbstractGenericHandles
     private boolean ready;
 
     public AbstractResilientHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController,
-            Class<T> sceneGraphClass) {
-        super(context, contentPanelController, sceneGraphClass);
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
+            Class<T> sceneGraphObjectClass) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, sceneGraphObjectClass);
         getRootNode().setVisible(false);
     }
 

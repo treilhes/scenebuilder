@@ -37,10 +37,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

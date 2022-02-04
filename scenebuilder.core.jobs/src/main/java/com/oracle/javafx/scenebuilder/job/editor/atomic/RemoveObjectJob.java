@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,32 +34,51 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It removes the provided {@link FXOMObject} from his parent property provided by {@link FXOMObject#getParentProperty()}
+ * regardless if the parent property is a collection or not.<br/>
+ * If single value property, delegates to {@link RemovePropertyValueJob}<br/>
+ * If collection property, delegates to {@link RemoveCollectionItemJob}<br/>
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class RemoveObjectJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RemoveObjectJob extends AbstractJob {
 
-    private final Job subJob;
+    private AbstractJob subJob;
+    private RemovePropertyValueJob.Factory removePropertyValueJobFactory;
+    private RemoveCollectionItemJob.Factory removeCollectionItemJobFactory;
 
-    public RemoveObjectJob(SceneBuilderBeanFactory context, FXOMObject targetObject, Editor editor) {
-        super(context, editor);
+    protected RemoveObjectJob(
+            JobExtensionFactory extensionFactory,
+            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
+            RemoveCollectionItemJob.Factory removeCollectionItemJobFactory) {
+        super(extensionFactory);
+        this.removePropertyValueJobFactory = removePropertyValueJobFactory;
+        this.removeCollectionItemJobFactory = removeCollectionItemJobFactory;
+    }
 
+    protected void setJobParameters(FXOMObject targetObject) {
         assert targetObject != null;
         assert (targetObject.getParentProperty() != null) || (targetObject.getParentCollection() != null);
 
         if (targetObject.getParentProperty() != null) {
-            subJob = new RemovePropertyValueJob(getContext(), targetObject, editor).extend();
+            subJob = removePropertyValueJobFactory.getJob(targetObject);
         } else {
             assert targetObject.getParentCollection() != null;
-            subJob = new RemoveCollectionItemJob(getContext(), targetObject, editor).extend();
+            subJob = removeCollectionItemJobFactory.getJob(targetObject);
         }
     }
-
 
     /*
      * Job
@@ -70,17 +90,17 @@ public class RemoveObjectJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         subJob.execute();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         subJob.undo();
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         subJob.redo();
     }
 
@@ -89,4 +109,20 @@ public class RemoveObjectJob extends Job {
         return getClass().getSimpleName(); // Should not reach end user
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<RemoveObjectJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link RemoveObjectJob} job
+         * @param targetObject the object to remove
+         * @return the job to execute
+         */
+        public RemoveObjectJob getJob(FXOMObject targetObject) {
+            return create(RemoveObjectJob.class, j -> j.setJobParameters(targetObject));
+        }
+    }
 }

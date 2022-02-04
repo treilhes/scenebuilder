@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -72,10 +73,10 @@ public class BoxBlurPropertyMetadata extends ComplexPropertyMetadata<BoxBlur> {
             .withDefaultValue(1)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected BoxBlurPropertyMetadata(PropertyName name, boolean readWrite, 
-            BoxBlur defaultValue, InspectorPath inspectorPath) {
-        super(name, BoxBlur.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected BoxBlurPropertyMetadata(PropertyName name, boolean readWrite, 
+//            BoxBlur defaultValue, InspectorPath inspectorPath) {
+//        super(name, BoxBlur.class, readWrite, defaultValue, inspectorPath);
+//    }
     
     protected BoxBlurPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

@@ -34,14 +34,13 @@ package com.oracle.javafx.scenebuilder.api.editor.job;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 /**
  * This Job updates the FXOM document AND the selection at execution time.
- *
+ * The subclasses are intended to execute changes on the current selection content
  * The sub jobs are FIRST all created, THEN executed.
  */
 public abstract class BatchSelectionJob extends BatchDocumentJob {
@@ -49,8 +48,18 @@ public abstract class BatchSelectionJob extends BatchDocumentJob {
     private AbstractSelectionGroup oldSelectionGroup;
     private AbstractSelectionGroup newSelectionGroup;
 
-    public BatchSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
-        super(context, editor);
+    private final Selection selection;
+
+    protected BatchSelectionJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Selection selection) {
+        super(extensionFactory, documentManager);
+        this.selection = selection;
+    }
+
+    protected Selection getSelection() {
+        return selection;
     }
 
     protected final AbstractSelectionGroup getOldSelectionGroup() {
@@ -60,13 +69,13 @@ public abstract class BatchSelectionJob extends BatchDocumentJob {
     protected abstract AbstractSelectionGroup getNewSelectionGroup();
 
     @Override
-    public final void execute() {
-        final Selection selection = getEditorController().getSelection();
+    public final void doExecute() {
+
         try {
             selection.beginUpdate();
             oldSelectionGroup = selection.getGroup() == null ? null
                     : selection.getGroup().clone();
-            super.execute();
+            super.doExecute();
             newSelectionGroup = getNewSelectionGroup();
             selection.select(newSelectionGroup);
             selection.endUpdate();
@@ -78,23 +87,23 @@ public abstract class BatchSelectionJob extends BatchDocumentJob {
     }
 
     @Override
-    public final void undo() {
-        final Selection selection = getEditorController().getSelection();
+    public final void doUndo() {
+
         selection.beginUpdate();
-        super.undo();
+        super.doUndo();
         selection.select(oldSelectionGroup);
         selection.endUpdate();
     }
 
     @Override
-    public final void redo() {
-        final Selection selection = getEditorController().getSelection();
+    public final void doRedo() {
+
         selection.beginUpdate();
-        super.redo();
+        super.doRedo();
         selection.select(newSelectionGroup);
         selection.endUpdate();
     }
 
     @Override
-    protected abstract List<Job> makeSubJobs();
+    protected abstract List<AbstractJob> makeSubJobs();
 }

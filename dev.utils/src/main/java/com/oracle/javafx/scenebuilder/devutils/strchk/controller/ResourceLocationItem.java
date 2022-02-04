@@ -1,8 +1,8 @@
 package com.oracle.javafx.scenebuilder.devutils.strchk.controller;
 
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.Project;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.ProjectFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.StringOccurence;
+import com.oracle.javafx.scenebuilder.devutils.model.Project;
+import com.oracle.javafx.scenebuilder.devutils.model.ProjectFile;
+import com.oracle.javafx.scenebuilder.devutils.model.StringOccurence;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

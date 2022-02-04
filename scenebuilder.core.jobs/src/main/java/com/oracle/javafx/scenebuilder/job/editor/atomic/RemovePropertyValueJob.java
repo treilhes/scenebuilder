@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,34 +33,49 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It removes the provided {@link FXOMObject} from his parent property provided by {@link FXOMObject#getParentProperty()}
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class RemovePropertyValueJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RemovePropertyValueJob extends AbstractJob {
 
-    private final FXOMObject targetValue;
+    private FXOMObject targetValue;
 
     private FXOMProperty parentProperty;
     private int indexInParentProperty;
-    private Job removePropertyJob;
+    private AbstractJob removePropertyJob;
 
-    private FXOMDocument fxomDocument;
+    private final FXOMDocument fxomDocument;
 
-    public RemovePropertyValueJob(SceneBuilderBeanFactory context, FXOMObject value, Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    private final RemovePropertyJob.Factory removePropertyJobFactoty;
+
+    protected RemovePropertyValueJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            RemovePropertyJob.Factory removePropertyJobFactoty) {
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.targetValue = value;
+        this.removePropertyJobFactoty = removePropertyJobFactoty;
     }
 
+    protected void setJobParameters(FXOMObject value) {
+        this.targetValue = value;
+    }
 
     /*
      * Job
@@ -71,7 +87,7 @@ public class RemovePropertyValueJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         assert parentProperty == null;
         assert isExecutable();
 
@@ -80,7 +96,7 @@ public class RemovePropertyValueJob extends Job {
         if ((parentProperty.getChildren().size() == 1) && (parentProperty.getParentInstance() != null)) {
             // targetValue is the last value of its parent property
             // => parent property must also be removed from its parent instance
-            removePropertyJob = new RemovePropertyJob(getContext(), parentProperty, getEditorController()).extend();
+            removePropertyJob = removePropertyJobFactoty.getJob(parentProperty);
         }
 
         // Note : below we may have to run removePropertyJob.execute() so
@@ -94,7 +110,7 @@ public class RemovePropertyValueJob extends Job {
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert targetValue.getParentProperty() == null;
 
         fxomDocument.beginUpdate();
@@ -109,7 +125,7 @@ public class RemovePropertyValueJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert targetValue.getParentProperty() == parentProperty;
         assert targetValue.getIndexInParentProperty() == indexInParentProperty;
 
@@ -132,4 +148,20 @@ public class RemovePropertyValueJob extends Job {
                 + "]";
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<RemovePropertyValueJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link RemovePropertyValueJob} job
+         * @param value the value to remove
+         * @return the job to execute
+         */
+        public RemovePropertyValueJob getJob(FXOMObject value) {
+            return create(RemovePropertyValueJob.class, j -> j.setJobParameters(value));
+        }
+    }
 }

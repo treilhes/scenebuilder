@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,11 +35,11 @@ package com.oracle.javafx.scenebuilder.job.editor;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 /**
  * This Job updates the FXOM document AND the selection at execution time.
@@ -49,9 +50,20 @@ public abstract class InlineSelectionJob extends InlineDocumentJob {
 
     private AbstractSelectionGroup oldSelectionGroup;
     private AbstractSelectionGroup newSelectionGroup;
+    private final Selection selection;
 
-    public InlineSelectionJob(SceneBuilderBeanFactory context, Editor editor) {
-        super(context, editor);
+    // @formatter:off
+    protected InlineSelectionJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Selection selection) {
+     // @formatter:on
+        super(extensionFactory, documentManager);
+        this.selection = selection;
+    }
+
+    protected Selection getSelection() {
+        return selection;
     }
 
     protected final AbstractSelectionGroup getOldSelectionGroup() {
@@ -61,13 +73,13 @@ public abstract class InlineSelectionJob extends InlineDocumentJob {
     protected abstract AbstractSelectionGroup getNewSelectionGroup();
 
     @Override
-    public final void execute() {
-        final Selection selection = getEditorController().getSelection();
+    public final void doExecute() {
+
         try {
             selection.beginUpdate();
             oldSelectionGroup = selection.getGroup() == null ? null
                     : selection.getGroup().clone();
-            super.execute();
+            super.doExecute();
             newSelectionGroup = getNewSelectionGroup();
             selection.select(newSelectionGroup);
             selection.endUpdate();
@@ -79,23 +91,21 @@ public abstract class InlineSelectionJob extends InlineDocumentJob {
     }
 
     @Override
-    public final void undo() {
-        final Selection selection = getEditorController().getSelection();
+    public final void doUndo() {
         selection.beginUpdate();
-        super.undo();
+        super.doUndo();
         selection.select(oldSelectionGroup);
         selection.endUpdate();
     }
 
     @Override
-    public final void redo() {
-        final Selection selection = getEditorController().getSelection();
+    public final void doRedo() {
         selection.beginUpdate();
-        super.redo();
+        super.doRedo();
         selection.select(newSelectionGroup);
         selection.endUpdate();
     }
 
     @Override
-    protected abstract List<Job> makeAndExecuteSubJobs();
+    protected abstract List<AbstractJob> makeAndExecuteSubJobs();
 }

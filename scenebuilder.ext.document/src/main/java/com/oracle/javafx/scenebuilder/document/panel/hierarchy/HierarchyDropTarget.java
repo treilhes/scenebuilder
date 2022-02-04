@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,24 +36,29 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
+import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.editors.drag.target.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
-import com.oracle.javafx.scenebuilder.job.editor.InsertAsAccessoryJob;
-import com.oracle.javafx.scenebuilder.job.editor.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ReIndexObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
+import com.oracle.javafx.scenebuilder.selection.job.InsertAsAccessoryJob;
+import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
@@ -60,13 +66,40 @@ import javafx.scene.layout.BorderPane;
 /**
  *
  */
-public class HierarchyDropTarget extends AbstractDropTarget {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class HierarchyDropTarget extends AbstractDropTarget {
 
-    private final FXOMInstance targetContainer;
+    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final BatchJob.Factory batchJobFactory;
+    private final ReIndexObjectJob.Factory reIndexObjectJobFactory;
+    private final RemoveObjectJob.Factory removeObjectJobFactory;
+    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
+    private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+
+    private FXOMInstance targetContainer;
     private Accessory accessory;
-    private final FXOMObject beforeChild;
+    private FXOMObject beforeChild;
 
-    public HierarchyDropTarget(FXOMInstance targetContainer, Accessory accessory, FXOMObject beforeChild) {
+    protected HierarchyDropTarget(
+            DesignHierarchyMask.Factory designMaskFactory,
+            BatchJob.Factory batchJobFactory,
+            ReIndexObjectJob.Factory reIndexObjectJobFactory,
+            RemoveObjectJob.Factory removeObjectJobFactory,
+            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory,
+            InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
+        this.designMaskFactory = designMaskFactory;
+        this.batchJobFactory = batchJobFactory;
+        this.reIndexObjectJobFactory = reIndexObjectJobFactory;
+        this.removeObjectJobFactory = removeObjectJobFactory;
+        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+        this.insertAsAccessoryJobFactory = insertAsAccessoryJobFactory;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+    }
+
+    protected void setDropTargetParameters(FXOMInstance targetContainer, Accessory accessory, FXOMObject beforeChild) {
         assert targetContainer != null;
         this.targetContainer = targetContainer;
         this.accessory = accessory;
@@ -93,7 +126,7 @@ public class HierarchyDropTarget extends AbstractDropTarget {
     public boolean acceptDragSource(DragSource dragSource) {
         assert dragSource != null;
 
-        final DesignHierarchyMask m = new DesignHierarchyMask(targetContainer);
+        final HierarchyMask m = designMaskFactory.getMask(targetContainer);
 
         if (accessory == null){
             accessory = m.getMainAccessory();
@@ -121,13 +154,11 @@ public class HierarchyDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public Job makeDropJob(SceneBuilderBeanFactory context, DragSource dragSource, Editor editorController) {
+    public AbstractJob makeDropJob(DragSource dragSource) {
         assert acceptDragSource(dragSource);
-        assert editorController != null;
 
         final boolean shouldRefreshSceneGraph = true;
-        final BatchJob result = new BatchJob(context, editorController,
-                shouldRefreshSceneGraph, dragSource.makeDropJobDescription());
+        final BatchJob result = batchJobFactory.getJob(dragSource.makeDropJobDescription(), shouldRefreshSceneGraph);
 
         // TODO recode below if/else, it is a merge between Accessory/ContainerZ Target yet
         if (accessory.isCollection()){
@@ -137,8 +168,7 @@ public class HierarchyDropTarget extends AbstractDropTarget {
             if (currentParent == targetContainer) {
                 // It's a re-indexing job
                 for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
-                    result.addSubJob(new ReIndexObjectJob(context,
-                            draggedObject, beforeChild, editorController).extend());
+                    result.addSubJob(reIndexObjectJobFactory.getJob(draggedObject, beforeChild));
                 }
             } else {
                 // It's a reparening job :
@@ -147,21 +177,19 @@ public class HierarchyDropTarget extends AbstractDropTarget {
 
                 if (currentParent != null) {
                     for (FXOMObject draggedObject : draggedObjects) {
-                        result.addSubJob(new RemoveObjectJob(context, draggedObject,
-                                editorController).extend());
+                        result.addSubJob(removeObjectJobFactory.getJob(draggedObject));
                     }
                 }
                 int targetIndex;
                 if (beforeChild == null) {
-                    final DesignHierarchyMask m = new DesignHierarchyMask(targetContainer);
+                    final HierarchyMask m = designMaskFactory.getMask(targetContainer);
                     targetIndex = m.getSubComponentCount();
                 } else {
                     targetIndex = beforeChild.getIndexInParentProperty();
                     assert targetIndex != -1;
                 }
                 for (FXOMObject draggedObject : draggedObjects) {
-                    final Job j = new InsertAsSubComponentJob(context, draggedObject,
-                            targetContainer, targetIndex++, editorController).extend();
+                    final AbstractJob j = insertAsSubComponentJobFactory.getJob(draggedObject,targetContainer, targetIndex++);
                     result.addSubJob(j);
                 }
             }
@@ -174,10 +202,9 @@ public class HierarchyDropTarget extends AbstractDropTarget {
             //  - set the drag source object as accessory of the drop target
 
             if (currentParent != null) {
-                result.addSubJob(new RemoveObjectJob(context, draggedObject, editorController).extend());
+                result.addSubJob(removeObjectJobFactory.getJob(draggedObject));
             }
-            final Job j = new InsertAsAccessoryJob(context, draggedObject,
-                    targetContainer, accessory, editorController).extend();
+            final AbstractJob j = insertAsAccessoryJobFactory.getJob(draggedObject,targetContainer, accessory);
             result.addSubJob(j);
 
             if ((targetContainer.getSceneGraphObject() instanceof BorderPane)
@@ -195,17 +222,16 @@ public class HierarchyDropTarget extends AbstractDropTarget {
                             .withNullEquivalent("UNUSED")//NOCHECK
                             .withInspectorPath(InspectorPath.UNUSED).build();
 
-                final Job alignmentJob
-                        = new ModifyObjectJob(context, draggedInstance, alignmentMeta,
-                                Pos.CENTER.toString(), editorController).extend();
+                final AbstractJob alignmentJob
+                        = modifyObjectJobFactory.getJob(draggedInstance, alignmentMeta, Pos.CENTER.toString());
                 result.addSubJob(alignmentJob);
             }
         }
 
 
-        assert result.extend().isExecutable();
+        assert result.isExecutable();
 
-        return result.extend();
+        return result;
     }
 
     @Override
@@ -247,5 +273,16 @@ public class HierarchyDropTarget extends AbstractDropTarget {
         return "HierarchyDropTarget{" + "targetContainer=" + targetContainer + ", accessory=" + accessory + '}'; //NOCHECK
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public static class Factory extends DropTargetFactory<HierarchyDropTarget> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
 
+        public HierarchyDropTarget getDropTarget(FXOMInstance targetContainer, Accessory accessory, FXOMObject beforeChild) {
+            return create(HierarchyDropTarget.class, j -> j.setDropTargetParameters(targetContainer, accessory, beforeChild));
+        }
+    }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,9 +44,9 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -80,14 +81,18 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
     private final Label centerLabel = new Label();
     private BorderPaneHierarchyMask borderPaneHierarchyMask;
 
+    private final BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
 
-    public BorderPaneTring(Content contentPanelController) {
+    public BorderPaneTring(
+            Content contentPanelController,
+            BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory) {
         super(contentPanelController, BorderPane.class);
+        this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;
     }
 
     private BorderPaneHierarchyMask getMask() {
         if (borderPaneHierarchyMask == null || borderPaneHierarchyMask.getFxomObject() != getFxomObject()) {
-            borderPaneHierarchyMask = new BorderPaneHierarchyMask(getFxomInstance());
+            borderPaneHierarchyMask = borderPaneHierarchyMaskFactory.getMask(getFxomInstance());
         }
         return borderPaneHierarchyMask;
     }

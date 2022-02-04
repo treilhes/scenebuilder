@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.launcher.util.MessageBox;
 
 import javafx.application.Application;

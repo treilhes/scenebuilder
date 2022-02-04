@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,16 +50,16 @@ public class ClipboardExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("898396ea-fac4-4ca2-8915-72501f2d5f10");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                I18NClipboard.class,
                 ClipboardController.class,
                 ClipboardMenuProvider.class,
                 CopyAction.class,
                 CutAction.class,
+                I18NClipboard.class,
                 PasteAction.class
             );
      // @formatter:on

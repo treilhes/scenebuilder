@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,17 +35,17 @@ package com.oracle.javafx.scenebuilder.contenteditor.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPopupController;
 import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPopupController;
 
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;
@@ -81,9 +82,10 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
      * Instantiates a new hud window controller.
      */
     public HudWindowController(
-            @Autowired Api api
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager
             ) {
-        super(api, HudWindowController.class.getResource("HudWindow.fxml"));
+        super(scenebuilderManager, documentManager, HudWindowController.class.getResource("HudWindow.fxml"));
     }
 
     /** The relative position. */

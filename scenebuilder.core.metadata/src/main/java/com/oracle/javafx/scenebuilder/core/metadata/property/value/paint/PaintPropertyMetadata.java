@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,9 +35,7 @@ package com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ComplexPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -54,15 +53,15 @@ public class PaintPropertyMetadata extends ComplexPropertyMetadata<Paint> {
     private final LinearGradientPropertyMetadata linearGradientMetadata;
     private final RadialGradientPropertyMetadata radialGradientMetadata;
 
-    protected PaintPropertyMetadata(PropertyName name, boolean readWrite,
-            Paint defaultValue, InspectorPath inspectorPath) {
-        super(name, Paint.class, readWrite, defaultValue, inspectorPath);
-        
-        colorMetadata = fillBuilder(this, new ColorPropertyMetadata.Builder()).withDefaultValue(null).build();
-        imagePatternMetadata = fillBuilder(this, new ImagePatternPropertyMetadata.Builder()).withDefaultValue(null).build();
-        linearGradientMetadata = fillBuilder(this, new LinearGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
-        radialGradientMetadata = fillBuilder(this, new RadialGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
-    }
+//    protected PaintPropertyMetadata(PropertyName name, boolean readWrite,
+//            Paint defaultValue, InspectorPath inspectorPath) {
+//        super(name, Paint.class, readWrite, defaultValue, inspectorPath);
+//        
+//        colorMetadata = fillBuilder(this, new ColorPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        imagePatternMetadata = fillBuilder(this, new ImagePatternPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        linearGradientMetadata = fillBuilder(this, new LinearGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        radialGradientMetadata = fillBuilder(this, new RadialGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
+//    }
 
     protected PaintPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

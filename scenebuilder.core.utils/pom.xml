@@ -13,10 +13,5 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.starter.test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,13 +34,15 @@
 package com.oracle.javafx.scenebuilder.library.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystem;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferencesFactory;
 import com.oracle.javafx.scenebuilder.library.store.LibraryStoreController;
 
+@Component
 public class LibraryStoreFactory {
-    
+
     private final MavenArtifactsPreferencesFactory mavenArtifactsPreferencesFactory;
 
     public LibraryStoreFactory(

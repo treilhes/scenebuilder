@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,42 +33,46 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
- *
+ * Add an {@link FXOMObject} before 'beforeObject' into 'beforeObject''s parent
  */
-public class ReIndexObjectJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ReIndexObjectJob extends AbstractJob {
 
-    private final FXOMObject reindexedObject;
-    private final FXOMObject beforeObject;
-    private final FXOMObject oldBeforeObject;
+    private FXOMObject reindexedObject;
+    private FXOMObject beforeObject;
+    private FXOMObject oldBeforeObject;
     private String description;
     private FXOMDocument fxomDocument;
 
-
-    public ReIndexObjectJob(SceneBuilderBeanFactory context,
-            FXOMObject reindexedObject,
-            FXOMObject beforeObject,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    protected ReIndexObjectJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
+    }
 
+    protected void setJobParameters(FXOMObject reindexedObject, FXOMObject beforeObject) {
         assert reindexedObject != null;
 
         this.reindexedObject = reindexedObject;
         this.beforeObject = beforeObject;
         this.oldBeforeObject = reindexedObject.getNextSlibing();
     }
-
 
     /*
      * Job
@@ -79,12 +84,12 @@ public class ReIndexObjectJob extends Job {
     }
 
     @Override
-    public void execute() {
-        redo();
+    public void doExecute() {
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert isExecutable();
 
         fxomDocument.beginUpdate();
@@ -93,7 +98,7 @@ public class ReIndexObjectJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert isExecutable();
 
         fxomDocument.beginUpdate();
@@ -126,4 +131,23 @@ public class ReIndexObjectJob extends Job {
         return description;
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static final class Factory extends JobFactory<ReIndexObjectJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link ReIndexObjectJob} job.
+         *
+         * @param reindexedObject the reindexed object
+         * @param beforeObject the object before which the reindexed object will be inserted
+         * @return the job to execute
+         */
+        public ReIndexObjectJob getJob(FXOMObject reindexedObject, FXOMObject beforeObject) {
+            return create(ReIndexObjectJob.class, j -> j.setJobParameters(reindexedObject, beforeObject));
+        }
+
+    }
 }

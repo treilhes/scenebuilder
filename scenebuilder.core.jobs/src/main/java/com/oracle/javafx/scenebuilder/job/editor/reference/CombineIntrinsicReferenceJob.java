@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,14 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -49,44 +54,55 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ReplaceObjectJob;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * Replace the reference id from the {@link FXOMIntrinsic} by the original referee {@link FXOMObject}<br/>
+ * The referee is moved from his original location
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class CombineIntrinsicReferenceJob extends InlineDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class CombineIntrinsicReferenceJob extends InlineDocumentJob {
 
-    private final FXOMIntrinsic reference;
+    private FXOMIntrinsic reference;
     private final FXOMDocument fxomDocument;
+    private final RemoveObjectJob.Factory removeObjectJobFactory;
+    private final ReplaceObjectJob.Factory replaceObjectJobFactory;
 
-    public CombineIntrinsicReferenceJob(SceneBuilderBeanFactory context,
-            FXOMIntrinsic reference,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    protected CombineIntrinsicReferenceJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            RemoveObjectJob.Factory removeObjectJobFactory,
+            ReplaceObjectJob.Factory replaceObjectJobFactory) {
+        super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();
-
-        assert reference != null;
-        assert reference.getFxomDocument() == fxomDocument;
-
-        this.reference = reference;
+        this.removeObjectJobFactory = removeObjectJobFactory;
+        this.replaceObjectJobFactory = replaceObjectJobFactory;
     }
 
+    protected void setJobParameters(FXOMIntrinsic reference) {
+        assert reference != null;
+        assert reference.getFxomDocument() == fxomDocument;
+        this.reference = reference;
+    }
     /*
      * InlineDocumentJob
      */
     @Override
-    protected List<Job> makeAndExecuteSubJobs() {
-        final List<Job> result = new LinkedList<>();
+    protected List<AbstractJob> makeAndExecuteSubJobs() {
+        final List<AbstractJob> result = new LinkedList<>();
 
         // 1) Locate the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
         final FXOMObject referee = fxomDocument.searchWithFxId(fxId);
 
         // 2) Remove the referee
-        final Job removeJob = new RemoveObjectJob(getContext(), referee, getEditorController()).extend();
+        // FIXME i think removing the referee is not a valid move if the reference is an fx:copy, a test/check must be done
+        final AbstractJob removeJob = removeObjectJobFactory.getJob(referee);
         removeJob.execute();
         result.add(removeJob);
 
         // 3) Replace ther reference by the referee
-        final Job replaceJob = new ReplaceObjectJob(getContext(), reference, referee, getEditorController()).extend();
+        final AbstractJob replaceJob = replaceObjectJobFactory.getJob(reference, referee);
         replaceJob.execute();
         result.add(replaceJob);
 
@@ -106,5 +122,20 @@ public class CombineIntrinsicReferenceJob extends InlineDocumentJob {
                 (reference.getParentCollection() != null));
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<CombineIntrinsicReferenceJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
 
+        /**
+         * Create an {@link CombineIntrinsicReferenceJob} job
+         * @param reference
+         * @return the job to execute
+         */
+        public CombineIntrinsicReferenceJob getJob(FXOMIntrinsic reference) {
+            return create(CombineIntrinsicReferenceJob.class, j -> j.setJobParameters(reference));
+        }
+    }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,47 +41,62 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RelocateNodeJob;
 
 import javafx.geometry.Point2D;
 
 /**
- *
+ * Update the layout position of given {@link FXOMObject} objects to their mapped position {@link Point2D}
  */
-public class RelocateSelectionJob extends BatchDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RelocateSelectionJob extends BatchDocumentJob {
 
     private static final long MERGE_PERIOD = 1000; //  milliseconds
 
     private final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
     private long time = System.currentTimeMillis();
 
-    public RelocateSelectionJob(SceneBuilderBeanFactory context, Map<FXOMObject, Point2D> locationMap,
-            Editor editor) {
-        super(context, editor);
+    private final RelocateNodeJob.Factory relocateNodeJobFactory;
+
+    // @formatter:off
+    protected RelocateSelectionJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Selection selection,
+            RelocateNodeJob.Factory relocateNodeJobFactory) {
+    // @formatter:on
+        super(extensionFactory, documentManager);
+        this.relocateNodeJobFactory = relocateNodeJobFactory;
+    }
+
+    protected void setJobParameters(Map<FXOMObject, Point2D> locationMap) {
         this.locationMap.putAll(locationMap);
     }
 
-    public boolean canBeMergedWith(Job other) {
+    /**
+     * This job is collapsible with other if:<br/>
+     *      0) other is a RelocateSelectionJob instance<br/>
+     *      1) other is younger than this of 1000 ms no more<br/>
+     *      2) other and this have the same location map keys<br/>
+     */
+    public boolean canBeMergedWith(AbstractJob other) {
 
-        /*
-         * This job is collapsible with other if:
-         *      0) other is a RelocateSelectionJob instance
-         *      1) other is younger than this of 1000 ms no more
-         *      2) other and this have the same location map keys
-         */
+
 
         final boolean result;
         if (other instanceof RelocateSelectionJob) {
@@ -101,15 +117,12 @@ public class RelocateSelectionJob extends BatchDocumentJob {
     }
 
 
-    public void mergeWith(Job younger) {
+    public void mergeWith(AbstractJob younger) {
         assert canBeMergedWith(younger); // (1)
         assert younger instanceof RelocateSelectionJob; // Because (1)
 
         final RelocateSelectionJob youngerSelection = (RelocateSelectionJob) younger;
-        for (Job subJob : getSubJobs()) {
-        	if (subJob instanceof ExtendedJob) {
-        		subJob = ((ExtendedJob<?>)subJob).getExtendedJob();
-        	}
+        for (AbstractJob subJob : getSubJobs()) {
             assert subJob instanceof RelocateNodeJob;
             final RelocateNodeJob thisRelocateJob
                     = (RelocateNodeJob) subJob;
@@ -125,11 +138,7 @@ public class RelocateSelectionJob extends BatchDocumentJob {
     public RelocateNodeJob lookupSubJob(FXOMObject fxomObject) {
         RelocateNodeJob result = null;
 
-        for (Job subJob : getSubJobs()) {
-
-        	if (subJob instanceof ExtendedJob) {
-        		subJob = ((ExtendedJob<?>)subJob).getExtendedJob();
-        	}
+        for (AbstractJob subJob : getSubJobs()) {
             assert subJob instanceof RelocateNodeJob;
             final RelocateNodeJob relocateJob = (RelocateNodeJob) subJob;
             if (relocateJob.getFxomInstance() == fxomObject) {
@@ -141,47 +150,15 @@ public class RelocateSelectionJob extends BatchDocumentJob {
         return result;
     }
 
-    public static boolean isSelectionMovable(Editor editor) {
-        /*
-         * Selection can be moved if:
-         * 1) it's an object selection (group instanceof ObjectSelectionGroup)
-         * 2) selected objects have a single parent
-         * 3) single parent supports free child positioning
-         *
-         * => all selected items are Node.
-         */
-
-        final boolean result;
-
-        final Selection selection = editor.getSelection();
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-            if (osg.hasSingleParent()) {
-                final FXOMObject parent = osg.getAncestor();
-                final DesignHierarchyMask m = new DesignHierarchyMask(parent);
-                PropertyName parentPropertyName = osg.getHitItem().getParentProperty().getName();
-                Accessory parentAccessory = m.getAccessoryForPropertyName(parentPropertyName);
-                result = parentAccessory.isFreeChildPositioning();
-            } else {
-                result = false;
-            }
-        } else {
-            result = false;
-        }
-
-        return result;
-    }
-
     @Override
-    protected List<Job> makeSubJobs() {
-        final List<Job> result = new ArrayList<>();
+    protected List<AbstractJob> makeSubJobs() {
+        final List<AbstractJob> result = new ArrayList<>();
 
         for (Map.Entry<FXOMObject, Point2D> entry : locationMap.entrySet()) {
             assert entry.getKey() instanceof FXOMInstance;
             final FXOMInstance fxomInstance = (FXOMInstance) entry.getKey();
             final Point2D layoutXY = entry.getValue();
-            final Job relocateJob = new RelocateNodeJob(getContext(), fxomInstance,
-                layoutXY.getX(), layoutXY.getY(), getEditorController()).extend();
+            final AbstractJob relocateJob = relocateNodeJobFactory.getJob(fxomInstance,layoutXY.getX(), layoutXY.getY());
             result.add(relocateJob);
         }
 
@@ -228,4 +205,22 @@ public class RelocateSelectionJob extends BatchDocumentJob {
         return result;
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<RelocateSelectionJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link RelocateSelectionJob} job.
+         *
+         * @param locationMap the location map
+         * @return the job to execute
+         */
+        public RelocateSelectionJob getJob(Map<FXOMObject, Point2D> locationMap) {
+            return create(RelocateSelectionJob.class, j -> j.setJobParameters(locationMap));
+        }
+    }
 }

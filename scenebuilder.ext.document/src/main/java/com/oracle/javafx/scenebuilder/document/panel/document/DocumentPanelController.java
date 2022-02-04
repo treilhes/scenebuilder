@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,21 +36,21 @@ package com.oracle.javafx.scenebuilder.document.panel.document;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
@@ -83,8 +84,6 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 	private final AbstractHierarchyPanelController hierarchyPanelController;
 	private final InfoPanelController infoPanelController;
 	private final DisplayOptionPreference displayOptionPreference;
-	private final SceneBuilderBeanFactory sceneBuilderFactory;
-	//private final AccordionAnimationPreference accordionAnimationPreference;
 
 	private final Action showInfoAction;
     private final Action showFxIdAction;
@@ -119,22 +118,19 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
      * @param showNodeIdAction
      */
     public DocumentPanelController(
-            @Autowired Api api,
-    		@Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-    		@Autowired HierarchyPanelController hierarchyPanelController,
-    		@Autowired InfoPanelController infoPanelController,
-    		@Autowired DisplayOptionPreference displayOptionPreference,
-    		//@Autowired AccordionAnimationPreference accordionAnimationPreference,
-    		@Autowired ShowInfoAction showInfoAction,
-    		@Autowired ShowFxIdAction showFxIdAction,
-    		@Autowired ShowNodeIdAction showNodeIdAction
-    		) { //, UserLibrary library) {
-        super(api, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
-        this.sceneBuilderFactory = sceneBuilderFactory;
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+    		HierarchyPanelController hierarchyPanelController,
+    		InfoPanelController infoPanelController,
+    		DisplayOptionPreference displayOptionPreference,
+    		ShowInfoAction showInfoAction,
+    		ShowFxIdAction showFxIdAction,
+    		ShowNodeIdAction showNodeIdAction
+    		) {
+        super(scenebuilderManager, documentManager, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
         this.displayOptionPreference = displayOptionPreference;
-        //this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.showInfoAction = showInfoAction;
         this.showFxIdAction = showFxIdAction;
@@ -178,14 +174,15 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
         ToggleGroup hierarchyDisplayOptionTG = new ToggleGroup();
 
-        hierarchyMenu = sceneBuilderFactory.createViewMenu(
-        		getResources().getString("hierarchy.displays"));
-        showInfoMenuItem = sceneBuilderFactory.createViewRadioMenuItem(
-        		getResources().getString("hierarchy.show.info"), hierarchyDisplayOptionTG);
-        showFxIdMenuItem = sceneBuilderFactory.createViewRadioMenuItem(
-        		getResources().getString("hierarchy.show.fxid"), hierarchyDisplayOptionTG);
-        showNodeIdMenuItem = sceneBuilderFactory.createViewRadioMenuItem(
-        		getResources().getString("hierarchy.show.nodeid"), hierarchyDisplayOptionTG);
+        hierarchyMenu = new Menu(getResources().getString("hierarchy.displays"));
+        showInfoMenuItem = new RadioMenuItem(getResources().getString("hierarchy.show.info"));
+        showInfoMenuItem.setToggleGroup(hierarchyDisplayOptionTG);
+
+        showFxIdMenuItem = new RadioMenuItem(getResources().getString("hierarchy.show.fxid"));
+        showFxIdMenuItem.setToggleGroup(hierarchyDisplayOptionTG);
+
+        showNodeIdMenuItem = new RadioMenuItem(getResources().getString("hierarchy.show.nodeid"));
+        showNodeIdMenuItem.setToggleGroup(hierarchyDisplayOptionTG);
 
         showInfoMenuItem.setOnAction((e) -> showInfoAction.checkAndPerform());
         showFxIdMenuItem.setOnAction((e) -> showFxIdAction.checkAndPerform());

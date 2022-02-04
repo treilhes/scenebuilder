@@ -38,10 +38,11 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.drivers.tabpane.TabPaneDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture.Factory;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -75,10 +76,15 @@ public class TabPring extends AbstractPring<Tab> {
 
     private Node tabNode; // Skin node representing the tab
 
-    public TabPring(Content contentPanelController) {
+    private final Factory selectWithPringGestureFactory;
+
+    public TabPring(
+            Content contentPanelController,
+            SelectWithPringGesture.Factory selectWithPringGestureFactory) {
         super(contentPanelController, Tab.class);
+        this.selectWithPringGestureFactory = selectWithPringGestureFactory;
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof Tab;
@@ -153,8 +159,7 @@ public class TabPring extends AbstractPring<Tab> {
         final AbstractGesture result;
 
         if (node == tabOutline.getRingPath()) {
-            result = new SelectWithPringGesture(getContentPanelController(),
-                    getFxomInstance());
+            result = selectWithPringGestureFactory.getGesture(getFxomInstance());
         } else {
             result = null;
         }

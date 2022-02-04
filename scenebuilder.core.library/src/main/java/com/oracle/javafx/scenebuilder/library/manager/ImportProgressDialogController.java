@@ -45,8 +45,8 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 
 import javafx.concurrent.Task;
@@ -77,10 +77,10 @@ public class ImportProgressDialogController extends AbstractModalDialog {
 
     @FXML
     ProgressIndicator processingProgressIndicator;
-    
+
     @FXML
     private VBox tasksHolder;
-    
+
     private final Dialog dialog;
 
     private List<Task<?>> currentTasks;
@@ -91,7 +91,7 @@ public class ImportProgressDialogController extends AbstractModalDialog {
         super(api, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), I18N.getBundle(), null);
         this.dialog = api.getApiDoc().getDialog();
     }
-    
+
 
     /*
      * Event handlers
@@ -163,9 +163,9 @@ public class ImportProgressDialogController extends AbstractModalDialog {
 
     private void showErrorDialog(Exception exception) {
         dialog.showErrorAndWait(
-                I18N.getString("import.error.title"), 
-                I18N.getString("import.error.message"), 
-                I18N.getString("import.error.details"), 
+                I18N.getString("import.error.title"),
+                I18N.getString("import.error.message"),
+                I18N.getString("import.error.details"),
                 exception);
     }
 
@@ -189,7 +189,7 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     public <R> void execute(List<Task<List<R>>> taskList) {
         this.currentTasks = (List<Task<?>>) (Object) taskList;
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        
+
         final AtomicInteger count = new AtomicInteger();
         taskList.stream()
             .peek(t -> {
@@ -200,7 +200,7 @@ public class ImportProgressDialogController extends AbstractModalDialog {
                 t.setOnSucceeded((e) -> handleEnd(taskList.size(), count.incrementAndGet(), box));
             })
             .forEach(t -> executor.execute(t));
-        
+
         executor.shutdown();
     }
 
@@ -208,7 +208,7 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     @Override
     protected void controllerDidLoadContentFxml() {
         // TODO Auto-generated method stub
-        
+
     }
 
 
@@ -229,14 +229,14 @@ public class ImportProgressDialogController extends AbstractModalDialog {
             taskLabel = new Label();
             pBar = new ProgressBar();
             pBar.setMaxWidth(Double.MAX_VALUE);
-            
+
             pBar.progressProperty().bind(task.progressProperty());
             taskLabel.textProperty().bind(task.messageProperty());
-            
+
             this.getChildren().add(pBar);
             this.getChildren().add(taskLabel);
         }
-        
+
         private void unbind() {
             pBar.progressProperty().unbind();
             taskLabel.textProperty().unbind();

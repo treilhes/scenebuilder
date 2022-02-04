@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +38,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.draganddrop.controller.DragController;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerXYDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerZDropTargetBck;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DragAndDropExtension extends AbstractExtension {
@@ -44,12 +49,20 @@ public class DragAndDropExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("285f16bb-9af8-4c60-9ca9-5098a9d6e920");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                DragController.class
+                AccessoryDropTarget.class,
+                AccessoryDropTarget.Factory.class,
+                ContainerXYDropTarget.class,
+                ContainerXYDropTarget.Factory.class,
+                ContainerZDropTargetBck.class,
+                ContainerZDropTargetBck.Factory.class,
+                DragController.class,
+                RootDropTarget.class,
+                RootDropTarget.Factory.class
             );
      // @formatter:on
     }

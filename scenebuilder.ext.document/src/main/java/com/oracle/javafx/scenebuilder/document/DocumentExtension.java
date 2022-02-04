@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,8 +41,12 @@ import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDropTarget;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeCell;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
+import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
@@ -56,13 +61,20 @@ public class DocumentExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-            DocumentPanelController.class,
-            HierarchyPanelController.class,
-            InfoPanelController.class,
-            DisplayOptionPreference.class,
-            ShowFxIdAction.class,
-            ShowInfoAction.class,
-            ShowNodeIdAction.class
+                DisplayOptionPreference.class,
+                DocumentPanelController.class,
+                HierarchyDNDController.class,
+                HierarchyDNDController.Factory.class,
+                HierarchyDropTarget.class,
+                HierarchyDropTarget.Factory.class,
+                HierarchyPanelController.class,
+                HierarchyTreeCell.class,
+                HierarchyTreeCell.Factory.class,
+                InfoPanelController.class,
+                ShowExpertByDefaultPreference.class,
+                ShowFxIdAction.class,
+                ShowInfoAction.class,
+                ShowNodeIdAction.class
             );
      // @formatter:on
     }

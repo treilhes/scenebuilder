@@ -38,10 +38,11 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.drivers.tableview.TableViewDesignInfoX;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture.Factory;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -58,11 +59,16 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
 
     private final TableViewDesignInfoX tableViewDesignInfo
             = new TableViewDesignInfoX();
+    private final Factory selectWithPringGestureFactory;
 
-    public TableColumnPring(Content contentPanelController) {
+    public TableColumnPring(
+            Content contentPanelController,
+            SelectWithPringGesture.Factory selectWithPringGestureFactory
+            ) {
         super(contentPanelController, Object.class);
+        this.selectWithPringGestureFactory = selectWithPringGestureFactory;
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof TableColumn;
@@ -106,8 +112,7 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
         final AbstractGesture result;
 
         if (node == ringPath) {
-            result = new SelectWithPringGesture(getContentPanelController(),
-                    getFxomInstance());
+            result = selectWithPringGestureFactory.getGesture(getFxomInstance());
         } else {
             result = null;
         }

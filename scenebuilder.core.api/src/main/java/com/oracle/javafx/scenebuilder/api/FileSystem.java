@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 
 public interface FileSystem {
 

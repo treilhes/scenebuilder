@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,20 +37,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.gluon.controller.AlertController;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
+import com.oracle.javafx.scenebuilder.gluon.dialog.UpdateSceneBuilderDialog;
 import com.oracle.javafx.scenebuilder.gluon.editor.job.AddPropertyValueJobExtension;
 import com.oracle.javafx.scenebuilder.gluon.editor.job.SetFxomRootJobExtension;
 import com.oracle.javafx.scenebuilder.gluon.i18n.I18NGluon;
 import com.oracle.javafx.scenebuilder.gluon.menu.GluonMenuProvider;
 import com.oracle.javafx.scenebuilder.gluon.metadata.GluonDocumentationUrlBuilder;
-import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchPreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchDocumentPreference;
+import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJarsPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.LastSentTrackingInfoDatePreference;
@@ -57,14 +58,11 @@ import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmail
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationOptInPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
+import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowController;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 import com.oracle.javafx.scenebuilder.gluon.template.GluonTemplateList;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
-@ComponentScan(basePackages = {
-        "com.oracle.javafx.scenebuilder.gluon.template",
-        "com.oracle.javafx.scenebuilder.gluon.theme"
-        })
 public class GluonExtension extends AbstractExtension {
 
     @Override
@@ -76,33 +74,35 @@ public class GluonExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                GluonDocumentationUrlBuilder.class,
                 AddPropertyValueJobExtension.class,
-                SetFxomRootJobExtension.class,
+                AlertController.class,
+                GluonControlLibraryFilter.class,
+                GluonDocumentationUrlBuilder.class,
+                GluonInitializer.class,
+                GluonJarImportController.class,
                 GluonMenuProvider.class,
-                //GluonComponentClassMetadatas.class,
-                //GluonComponentPropertyMetadataCatalog.class,
-                //GluonValuePropertyMetadataCatalog.class,
-                GluonThemesList.class,
+                GluonSwatchDocumentPreference.class,
                 GluonSwatchPreference.class,
-                com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.class,
+                GluonTemplateList.BasicPhoneTemplate.class,
+                GluonTemplateList.EmptyPhoneTemplate.class,
+                GluonThemesList.class,
+                GluonThemesList.GluonMobileDark.class,
+                GluonThemesList.GluonMobileLight.class,
+                I18NGluon.class,
                 IgnoreVersionPreference.class,
                 ImportedGluonJarsPreference.class,
                 LastSentTrackingInfoDatePreference.class,
+                RegistrationController.class,
                 RegistrationEmailPreference.class,
                 RegistrationHashPreference.class,
                 RegistrationOptInPreference.class,
+                RegistrationWindowController.class,
+                SetFxomRootJobExtension.class,
                 ShowUpdateDialogDatePreference.class,
-                GluonInitializer.class,
-                VersionSetting.class,
-                I18NGluon.class,
-                AlertController.class,
-                GluonJarImportController.class,
-                RegistrationController.class,
                 TrackingController.class,
                 UpdateController.class,
-                GluonControlLibraryFilter.class,
-                GluonTemplateList.class
+                UpdateSceneBuilderDialog.class,
+                VersionSetting.class
             );
      // @formatter:on
     }

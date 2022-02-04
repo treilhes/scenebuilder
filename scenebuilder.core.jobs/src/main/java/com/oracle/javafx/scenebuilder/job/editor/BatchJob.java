@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,86 +37,68 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
- *
+ * Allow to group multiple jobs into one job logic unit. Child jobs are executed
+ * in the same order they were inserted Allow only one notification for
+ * selection change and/or document change
  */
-public class BatchJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class BatchJob extends AbstractJob {
 
-    private final List<Job> subJobs = new ArrayList<>();
-    private final boolean shouldRefreshSceneGraph;
-    private final boolean shouldUpdateSelection;
-    private final String description;
+    private final List<AbstractJob> subJobs = new ArrayList<>();
+    private boolean shouldRefreshSceneGraph;
+    private boolean shouldUpdateSelection;
+    private String description;
     private final FXOMDocument fxomDocument;
     private final Selection selection;
 
-
-    public BatchJob(SceneBuilderBeanFactory context, Editor editor,
-            boolean shouldRefreshSceneGraph,
-            boolean shouldUpdateSelection,
-            String description) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected BatchJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Selection selection) {
+    // @formatter:on
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.selection = documentManager.selectionDidChange().get().getSelection();
-        this.description = description;
+        this.selection = selection;
+    }
+
+    protected void setJobParameters(String description, boolean shouldRefreshSceneGraph,
+            boolean shouldUpdateSelection) {
+        this.description = description == null ? getClass().getSimpleName() : description;
         this.shouldRefreshSceneGraph = shouldRefreshSceneGraph;
         this.shouldUpdateSelection = shouldUpdateSelection;
     }
 
-    public BatchJob(SceneBuilderBeanFactory context, Editor editor,
-            boolean shouldRefreshSceneGraph, String description) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
-        this.fxomDocument = documentManager.fxomDocument().get();
-        this.selection = documentManager.selectionDidChange().get().getSelection();
-        this.description = description;
-        this.shouldRefreshSceneGraph = shouldRefreshSceneGraph;
-        this.shouldUpdateSelection = true;
-    }
-
-     public BatchJob(SceneBuilderBeanFactory context, Editor editor, String description) {
-         super(context, editor);
-         DocumentManager documentManager = context.getBean(DocumentManager.class);
-         this.fxomDocument = documentManager.fxomDocument().get();
-         this.selection = documentManager.selectionDidChange().get().getSelection();
-         this.description = description;
-         this.shouldRefreshSceneGraph = true;
-         this.shouldUpdateSelection = true;
-    }
-
-   public BatchJob(SceneBuilderBeanFactory context, Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
-        this.fxomDocument = documentManager.fxomDocument().get();
-        this.selection = documentManager.selectionDidChange().get().getSelection();
-        this.description = getClass().getSimpleName();
-        this.shouldRefreshSceneGraph = true;
-        this.shouldUpdateSelection = true;
-    }
-
-    public void addSubJob(Job subJob) {
+    public void addSubJob(AbstractJob subJob) {
         assert subJob != null;
         this.subJobs.add(subJob);
     }
 
-    public void addSubJobs(List<Job> subJobs) {
+    public void addSubJobs(List<AbstractJob> subJobs) {
         assert subJobs != null;
         this.subJobs.addAll(subJobs);
     }
 
-    public void prependSubJob(Job subJob) {
+    public void prependSubJob(AbstractJob subJob) {
         assert subJob != null;
         this.subJobs.add(0, subJob);
     }
 
-    public List<Job> getSubJobs() {
+    public List<AbstractJob> getSubJobs() {
         return Collections.unmodifiableList(subJobs);
     }
 
@@ -129,14 +112,14 @@ public class BatchJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         if (shouldUpdateSelection) {
             selection.beginUpdate();
         }
         if (shouldRefreshSceneGraph) {
             fxomDocument.beginUpdate();
         }
-        for (Job subJob : subJobs) {
+        for (AbstractJob subJob : subJobs) {
             subJob.execute();
         }
         if (shouldRefreshSceneGraph) {
@@ -148,14 +131,14 @@ public class BatchJob extends Job {
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         if (shouldUpdateSelection) {
             selection.beginUpdate();
         }
         if (shouldRefreshSceneGraph) {
             fxomDocument.beginUpdate();
         }
-        for (int i = subJobs.size()-1; i >= 0; i--) {
+        for (int i = subJobs.size() - 1; i >= 0; i--) {
             subJobs.get(i).undo();
         }
         if (shouldRefreshSceneGraph) {
@@ -167,14 +150,14 @@ public class BatchJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         if (shouldUpdateSelection) {
             selection.beginUpdate();
         }
         if (shouldRefreshSceneGraph) {
             fxomDocument.beginUpdate();
         }
-        for (Job subJob : subJobs) {
+        for (AbstractJob subJob : subJobs) {
             subJob.redo();
         }
         if (shouldRefreshSceneGraph) {
@@ -190,4 +173,64 @@ public class BatchJob extends Job {
         return description;
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public static class Factory extends JobFactory<BatchJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create a {@link BatchJob} job
+         *
+         * @param description             the job description (or class name if null)
+         * @param shouldRefreshSceneGraph if true wrap jobs execution between
+         *                                {@link FXOMDocument#beginUpdate()} /
+         *                                {@link FXOMDocument#endUpdate()}
+         * @param shouldUpdateSelection   if true wrap jobs execution between
+         *                                {@link Selection#beginUpdate()} /
+         *                                {@link Selection#endUpdate()}
+         * @return the job to execute
+         */
+        public BatchJob getJob(String description, boolean shouldRefreshSceneGraph, boolean shouldUpdateSelection) {
+            return create(BatchJob.class,
+                    j -> j.setJobParameters(description, shouldRefreshSceneGraph, shouldUpdateSelection));
+        }
+
+        /**
+         * Create a {@link BatchJob} job
+         *
+         * @param description             the job description (or class name if null)
+         * @param shouldRefreshSceneGraph if true wrap jobs execution between
+         *                                {@link FXOMDocument#beginUpdate()} /
+         *                                {@link FXOMDocument#endUpdate()}
+         * @return the job to execute
+         */
+        public BatchJob getJob(String description, boolean shouldRefreshSceneGraph) {
+            return create(BatchJob.class,
+                    j -> j.setJobParameters(description, shouldRefreshSceneGraph, true));
+        }
+
+        /**
+         * Create a {@link BatchJob} job and notify {@link FXOMDocument} and
+         * {@link Selection} updates
+         *
+         * @param description the job description (or class name if null)
+         * @return the job to execute
+         */
+        public BatchJob getJob(String description) {
+            return getJob(description, true, true);
+        }
+
+        /**
+         * Create a default {@link BatchJob} job and notify {@link FXOMDocument} and
+         * {@link Selection} updates
+         *
+         * @return the job to execute
+         */
+        public BatchJob getJob() {
+            return getJob(null, true, true);
+        }
+    }
 }

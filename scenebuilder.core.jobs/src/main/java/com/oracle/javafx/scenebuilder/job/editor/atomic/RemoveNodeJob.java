@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,33 +34,53 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It delete the provided {@link FXOMNode} from its owner<br/>
+ * If {@link FXOMObject}, delegates to {@link RemoveObjectJob}<br/>
+ * If {@link FXOMProperty}, delegates to {@link RemovePropertyJob}<br/>
+ * else bug
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class RemoveNodeJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RemoveNodeJob extends AbstractJob {
 
-    private final Job subJob;
+    private final RemoveObjectJob.Factory removeObjectJobFactory;
+    private final RemovePropertyJob.Factory removePropertyJobFactory;
 
-    public RemoveNodeJob(SceneBuilderBeanFactory context, FXOMNode targetNode, Editor editor) {
-        super(context, editor);
+    private AbstractJob subJob;
 
+    public RemoveNodeJob(
+            JobExtensionFactory extensionFactory,
+            RemoveObjectJob.Factory removeObjectJobFactory,
+            RemovePropertyJob.Factory removePropertyJobFactory) {
+        super(extensionFactory);
+        this.removeObjectJobFactory = removeObjectJobFactory;
+        this.removePropertyJobFactory = removePropertyJobFactory;
+    }
+
+    protected void setJobParameters(FXOMNode targetNode) {
         assert (targetNode instanceof FXOMObject) || (targetNode instanceof FXOMProperty);
 
         if (targetNode instanceof FXOMObject) {
-            subJob = new RemoveObjectJob(getContext(), (FXOMObject)targetNode, editor).extend();
+            subJob = removeObjectJobFactory.getJob((FXOMObject)targetNode);
         } else {
             assert targetNode instanceof FXOMProperty;
-            subJob = new RemovePropertyJob(getContext(), (FXOMProperty)targetNode, editor).extend();
+            subJob = removePropertyJobFactory.getJob((FXOMProperty)targetNode);
         }
     }
-
 
     /*
      * Job
@@ -71,17 +92,17 @@ public class RemoveNodeJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         subJob.execute();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         subJob.undo();
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         subJob.redo();
     }
 
@@ -90,4 +111,19 @@ public class RemoveNodeJob extends Job {
         return getClass().getSimpleName(); // Should not reach end user
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<RemoveNodeJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        /**
+         * Create an {@link RemoveNodeJob} job
+         * @param targetNode the {@link FXOMNode} to delete
+         * @return the job to execute
+         */
+        public RemoveNodeJob getJob(FXOMNode targetNode) {
+            return create(RemoveNodeJob.class, j -> j.setJobParameters(targetNode));
+        }
+    }
 }

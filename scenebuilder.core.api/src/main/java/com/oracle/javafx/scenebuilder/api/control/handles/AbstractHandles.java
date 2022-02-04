@@ -35,11 +35,12 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 import java.net.URL;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.Gesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture.Factory;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -63,9 +64,11 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
     private static Image sideHandleDimImage = null;
 
     private boolean enabled = true;
+    protected final Factory discardGestureFactory;
 
-    public AbstractHandles(Content contentPanelController, Class<T> sceneGraphClass) {
+    public AbstractHandles(Content contentPanelController, DiscardGesture.Factory discardGestureFactory, Class<T> sceneGraphClass) {
         super(contentPanelController, sceneGraphClass);
+        this.discardGestureFactory = discardGestureFactory;
     }
 
     public boolean isEnabled() {
@@ -81,19 +84,20 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
     }
 
     @Override
-    public AbstractGesture findEnabledGesture(Node node) {
-        final AbstractGesture result;
+    public Gesture findEnabledGesture(Node node) {
+        final Gesture result;
 
         if (enabled) {
             result = findGesture(node);
         } else {
-            result = new DiscardGesture(getContentPanelController());
+            result = discardGestureFactory.getGesture();
         }
 
         return result;
     }
 
-    public abstract AbstractGesture findGesture(Node node);
+    public abstract Gesture findGesture(Node node);
+
     public abstract void enabledDidChange();
 
     private static final String HANDLES = "HANDLES";
@@ -160,8 +164,8 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
 
     @Override
     public void update(AbstractSelectionGroup selectionGroup) {
-        
+
     }
 
-    
+
 }

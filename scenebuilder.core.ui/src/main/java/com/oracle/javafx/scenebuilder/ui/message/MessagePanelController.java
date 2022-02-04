@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,16 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.ui.message;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.ui.editor.messagelog.MessageLogEntry;
 
 import javafx.beans.value.ChangeListener;
@@ -71,16 +73,21 @@ public class MessagePanelController extends AbstractFxmlPanelController {
     @FXML private GridPane gridPane;
     @FXML private Button clearButton;
 
+    private final MessageLogger messageLogger;
+
     public MessagePanelController(
-            @Autowired Api api) {
-        super(api, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle());
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            MessageLogger messageLogger) {
+        super(scenebuilderManager, documentManager, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle());
+        this.messageLogger = messageLogger;
     }
 
     @FXML
     public void onClear(ActionEvent event) {
-        getApi().getApiDoc().getMessageLogger().clear();
+        messageLogger.clear();
     }
-    
+
     public void setPanelWidth(double panelWidth) {
         this.panelWidth = panelWidth;
         if (scrollPane != null) {
@@ -100,7 +107,7 @@ public class MessagePanelController extends AbstractFxmlPanelController {
         assert clearButton != null;
 
         // Listens to the message log
-        getApi().getApiDoc().getMessageLogger().revisionProperty().addListener(
+        messageLogger.revisionProperty().addListener(
                 (ChangeListener<Number>) (ov, t, t1) -> messageLogDidChange());
 
         updateScrollPaneWidth();
@@ -118,10 +125,10 @@ public class MessagePanelController extends AbstractFxmlPanelController {
         gridPane.getChildren().clear();
         int rowIndex = 0;
         int columnIndex = 0;
-        for (MessageEntry mle : getApi().getApiDoc().getMessageLogger().getEntries()) {
+        for (MessageEntry mle : messageLogger.getEntries()) {
             if (mle.getType() == MessageLogEntry.Type.WARNING) {
                 Button dismissButton = new Button("x"); //NOCHECK
-                dismissButton.addEventHandler(MouseEvent.MOUSE_RELEASED, t -> getApi().getApiDoc().getMessageLogger().clearEntry(mle));
+                dismissButton.addEventHandler(MouseEvent.MOUSE_RELEASED, t -> messageLogger.clearEntry(mle));
                 StackPane paneForButton = new StackPane();
                 paneForButton.getChildren().add(dismissButton);
                 paneForButton.setAlignment(Pos.CENTER_RIGHT);

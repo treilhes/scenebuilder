@@ -43,7 +43,7 @@ import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.event.ActionEvent;

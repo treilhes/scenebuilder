@@ -33,16 +33,17 @@
 
 package com.oracle.javafx.scenebuilder.drivers.gridpane;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.SelectAndMoveInGridGesture;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.gesture.SelectAndMoveInGridGesture;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.gesture.SelectAndMoveInGridGesture.Factory;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -55,18 +56,28 @@ import javafx.scene.paint.Paint;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class GridPanePring extends AbstractPring<GridPane> {
+public class GridPanePring extends AbstractPring<GridPane> implements InitializingBean {
 
     private final GridPaneMosaic mosaic
             = new GridPaneMosaic("pring", //NOCHECK
                     true /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
+    private final Factory selectAndMoveInGridGestureFactory;
 
-    public GridPanePring(Content contentPanelController) {
+    public GridPanePring(
+            Content contentPanelController,
+            SelectAndMoveInGridGesture.Factory selectAndMoveInGridGestureFactory) {
         super(contentPanelController, GridPane.class);
+        this.selectAndMoveInGridGestureFactory = selectAndMoveInGridGestureFactory;
+
+    }
+
+    //FIXME replace with jsr250 annotation @PostConstrut
+    @Override
+    public void afterPropertiesSet() throws Exception {
         getRootNode().getChildren().add(mosaic.getTopGroup());
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof GridPane;
@@ -167,8 +178,7 @@ public class GridPanePring extends AbstractPring<GridPane> {
         if (trayIndex == -1) {
             result = null;
         } else {
-            result = new SelectAndMoveInGridGesture(getContentPanelController(),
-                    getFxomInstance(), feature, trayIndex);
+            result = selectAndMoveInGridGestureFactory.getGesture(getFxomInstance(), feature, trayIndex);
         }
 
         return result;

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,15 @@ package com.oracle.javafx.scenebuilder.job.editor.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -49,38 +55,52 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 
+import javafx.scene.control.ToggleGroup;
+
 /**
- *
+ * This job creates a {@link ToggleGroup} in place of a toggleGroup referenced using an {@link FXOMIntrinsic} (fx:reference)<br/>
+ * If the referee {@link ToggleGroup} exists, it is moved<br/>
+ * If not, a new {@link ToggleGroup} is created<br/>
  */
-public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
 
-    private final FXOMIntrinsic reference;
+    private FXOMIntrinsic reference;
     private final FXOMDocument fxomDocument;
+    private final RemovePropertyJob.Factory removePropertyJobFactory;
 
-    public FixToggleGroupIntrinsicReferenceJob(SceneBuilderBeanFactory context,
-            FXOMIntrinsic reference,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected FixToggleGroupIntrinsicReferenceJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            RemovePropertyJob.Factory removePropertyJobFactory) {
+    // @formatter:on
+        super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.removePropertyJobFactory = removePropertyJobFactory;
+    }
 
+    protected void setJobParameters(FXOMIntrinsic reference) {
         assert reference != null;
         assert reference.getFxomDocument() == fxomDocument;
 
         this.reference = reference;
     }
 
+
     /*
      * InlineDocumentJob
      */
     @Override
-    protected List<Job> makeAndExecuteSubJobs() {
-        final List<Job> result = new LinkedList<>();
+    protected List<AbstractJob> makeAndExecuteSubJobs() {
+        final List<AbstractJob> result = new LinkedList<>();
 
         // 1) Locates the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
         final FXOMObject referee = fxomDocument.searchWithFxId(fxId);
 
+        // @formatter:off
         /*
          *    <RadioButton>
          *       <toggleGroup>
@@ -94,6 +114,7 @@ public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
          *       </toggleGroup>
          *    </RadioButton>
          */
+        // @formatter:on
 
         if (referee != null) {
             assert referee.getParentProperty() != null;
@@ -102,43 +123,42 @@ public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
             final FXOMProperty refereeProperty = referee.getParentProperty();
 
             // 2a.1) Removes referenceProperty
-            final RemovePropertyJob removeReferenceJob
-                    = new RemovePropertyJob(getContext(), referenceProperty, getEditorController());
-            removeReferenceJob.extend().execute();
-            result.add(removeReferenceJob.extend());
+            final RemovePropertyJob removeReferenceJob = removePropertyJobFactory.getJob(referenceProperty);
+            removeReferenceJob.execute();
+            result.add(removeReferenceJob);
 
             // 2a.2) Removes refereeProperty
             final RemovePropertyJob removeRefereeJob
-                    = new RemovePropertyJob(getContext(), refereeProperty, getEditorController());
-            removeRefereeJob.extend().execute();
-            result.add(removeRefereeJob.extend());
+                    = removePropertyJobFactory.getJob(refereeProperty);
+            removeRefereeJob.execute();
+            result.add(removeRefereeJob);
 
             // 2a.3) Adds referenceProperty where refereeProperty was
-            final Job addReferenceJob
+            final AbstractJob addReferenceJob
                     = removeRefereeJob.makeMirrorJob(referenceProperty);
-            addReferenceJob.extend().execute();
-            result.add(addReferenceJob.extend());
+            addReferenceJob.execute();
+            result.add(addReferenceJob);
 
             // 2a.4) Adds refereeProperty where referenceProperty was
-            final Job addRefereeJob
+            final AbstractJob addRefereeJob
                     = removeRefereeJob.makeMirrorJob(refereeProperty);
-            addRefereeJob.extend().execute();
-            result.add(addReferenceJob.extend());
+            addRefereeJob.execute();
+            result.add(addReferenceJob);
 
         } else {
 
             // 2b.1) Removes reference
             final FXOMProperty referenceProperty = reference.getParentProperty();
             final RemovePropertyJob removeReferenceJob
-                    = new RemovePropertyJob(getContext(), referenceProperty, getEditorController());
-            removeReferenceJob.extend().execute();
-            result.add(removeReferenceJob.extend());
+                    = removePropertyJobFactory.getJob(referenceProperty);
+            removeReferenceJob.execute();
+            result.add(removeReferenceJob);
 
             // 2b.2) Creates and adds toggle group
             final FXOMPropertyC newToggleGroup = FXOMNodes.makeToggleGroup(fxomDocument, fxId);
-            final Job addJob = removeReferenceJob.makeMirrorJob(newToggleGroup);
-            addJob.extend().execute();
-            result.add(addJob.extend());
+            final AbstractJob addJob = removeReferenceJob.makeMirrorJob(newToggleGroup);
+            addJob.execute();
+            result.add(addJob);
         }
 
         return result;
@@ -156,4 +176,22 @@ public class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob {
     }
 
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<FixToggleGroupIntrinsicReferenceJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link FixToggleGroupIntrinsicReferenceJob} job.
+         *
+         * @param reference the reference
+         * @return the job to execute
+         */
+        public FixToggleGroupIntrinsicReferenceJob getJob(FXOMIntrinsic reference) {
+            return create(FixToggleGroupIntrinsicReferenceJob.class, j -> j.setJobParameters(reference));
+        }
+    }
 }

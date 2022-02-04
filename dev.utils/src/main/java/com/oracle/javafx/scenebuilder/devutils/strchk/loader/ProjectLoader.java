@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,36 +34,37 @@
 package com.oracle.javafx.scenebuilder.devutils.strchk.loader;
 
 import java.io.File;
+import java.util.ArrayList;
 
-import com.oracle.javafx.scenebuilder.devutils.strchk.Config;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.Project;
+import com.oracle.javafx.scenebuilder.devutils.CommonConfig;
+import com.oracle.javafx.scenebuilder.devutils.model.Project;
 import com.oracle.javafx.scenebuilder.devutils.strchk.utils.ModelUtils;
 
 public class ProjectLoader {
-    
+
     public static Project load(File root) {
         assert root != null;
         assert root.exists();
         assert root.isDirectory();
-        
+
         Project project = new Project(root, root.getName());
-        
+
         for (var file:root.listFiles()) {
-            if (file.isDirectory() && !Config.EXCLUDED_PROJECTS.contains(file.getName()) && new File(file, "pom.xml").exists()) {
+            if (file.isDirectory() && !CommonConfig.EXCLUDED_PROJECTS.contains(file.getName()) && new File(file, "pom.xml").exists()) {
                 project.getSubProjects().add(load(file));
             }
         }
-        
-        File javaSources = new File(root, "src/main/java");
+
+        File javaSources = new File(root, CommonConfig.PROJECT_JAVA_FOLDER);
         if (javaSources.exists() && javaSources.isDirectory()) {
             loadJavaSources(project, javaSources);
         }
-        
-        File javaResources = new File(root, "src/main/resources");
+
+        File javaResources = new File(root, CommonConfig.PROJECT_RESOURCE_FOLDER);
         if (javaResources.exists() && javaResources.isDirectory()) {
             loadJavaResources(project, javaResources);
         }
-        
+
         return project;
     }
 
@@ -94,14 +96,14 @@ public class ProjectLoader {
                 if (file.getName().toLowerCase().equals("module-info.java")) {
                     project.setModuleDescriptor(ClassFileLoader.loadModuleFile(file));
                 } else if (file.getName().toLowerCase().endsWith(".java")) {
-                    project.getClasses().put(relativePath, ClassFileLoader.loadClassFile(file));
-                } 
+                    project.getClasses().computeIfAbsent(relativePath, (k) -> new ArrayList<>()).add(ClassFileLoader.loadClassFile(file));
+                }
 //                else  {
 //                    project.getResources().add(ResourceLoader.loadResourceFile(file));
-//                } 
+//                }
             }
         }
     }
 
-    
+
 }

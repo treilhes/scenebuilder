@@ -53,6 +53,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.sun.javafx.fxml.FXMLLoaderHelper;
 
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.LoadListener;
 import javafx.scene.Scene;
@@ -78,6 +79,8 @@ class FXOMLoader implements LoadListener {
     private TransientNode currentTransientNode;
     private GlueCursor glueCursor;
     private long virtualElementIndex;
+    private TransientClassLoader classloader;
+    private FXMLLoader fxmlLoader;
     /*
      * FXOMLoader
      */
@@ -98,10 +101,11 @@ class FXOMLoader implements LoadListener {
             classLoader = FXMLLoader.getDefaultClassLoader();
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader();
+        classloader = new TransientClassLoader(classLoader);
+        fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(document.getLocation());
         fxmlLoader.setResources(new ResourceKeyCollector(document.getResources()));
-        fxmlLoader.setClassLoader(new TransientClassLoader(classLoader));
+        fxmlLoader.setClassLoader(classloader);
         fxmlLoader.setLoadListener(this);
 
         fxmlLoader.getNamespace().put("$sb_nullReference", new NullReference());
@@ -435,6 +439,14 @@ class FXOMLoader implements LoadListener {
         }
 
         currentTransientNode = currentTransientNode.getParentNode();
+    }
+
+    public ObservableMap<String, Object> getNamespace() {
+        return fxmlLoader.getNamespace();
+    }
+
+    public Set<String> getNotFoundClasses() {
+        return classloader.getNotFoundClasses();
     }
 
     // Deprecated stuff in FXMLLoader

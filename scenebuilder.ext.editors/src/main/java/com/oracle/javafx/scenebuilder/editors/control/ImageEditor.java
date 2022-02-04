@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,9 +45,9 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
@@ -83,20 +84,18 @@ public class ImageEditor extends AbstractPropertyEditor {
     private Parent root;
     private DesignImage image = null;
 
-    private final MenuItem documentRelativeMenuItem
-            = new MenuItem(I18N.getString("inspector.resource.documentrelative"));
-    private final MenuItem classPathRelativeMenuItem
-            = new MenuItem(I18N.getString("inspector.resource.classpathrelative"));
-    private final MenuItem absoluteMenuItem
-            = new MenuItem(I18N.getString("inspector.resource.absolute"));
+    private final MenuItem documentRelativeMenuItem = new MenuItem(
+            I18N.getString("inspector.resource.documentrelative"));
+    private final MenuItem classPathRelativeMenuItem = new MenuItem(
+            I18N.getString("inspector.resource.classpathrelative"));
+    private final MenuItem absoluteMenuItem = new MenuItem(I18N.getString("inspector.resource.absolute"));
 
     private PrefixedValue.Type type = PrefixedValue.Type.PLAIN_STRING;
     private URL fxmlFileLocation;
-	private final FileSystem fileSystem;
+    private final FileSystem fileSystem;
     private FXOMDocument fxomDocument;
 
-    public ImageEditor(
-            @Autowired Api api) {
+    public ImageEditor(@Autowired Api api) {
         super(api);
         this.fileSystem = api.getFileSystem();
         api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fxom -> this.fxomDocument = fxom);
@@ -155,7 +154,7 @@ public class ImageEditor extends AbstractPropertyEditor {
         String newSuffix = null;
         if ((url == null) || (newType == PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH)) {
             // In this case we empty the text field (i.e. suffix) content
-            newSuffix = ""; //NOCHECK
+            newSuffix = ""; // NOCHECK
         } else if (newType == PrefixedValue.Type.PLAIN_STRING) {
             newSuffix = url.toExternalForm();
         } else if (newType == PrefixedValue.Type.DOCUMENT_RELATIVE_PATH) {
@@ -192,7 +191,7 @@ public class ImageEditor extends AbstractPropertyEditor {
         if (type == PrefixedValue.Type.DOCUMENT_RELATIVE_PATH) {
             setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX);
         } else if (type == PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH) {
-            setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");//NOCHECK
+            setPrefix(FXMLLoader.RELATIVE_PATH_PREFIX + "/");// NOCHECK
         } else {
             // absolute
             removeLabel();
@@ -231,7 +230,7 @@ public class ImageEditor extends AbstractPropertyEditor {
 
         if (value == null) {
             image = null;
-            imagePathTf.setText(""); //NOCHECK
+            imagePathTf.setText(""); // NOCHECK
         } else {
             assert value instanceof DesignImage;
             image = (DesignImage) value;
@@ -260,13 +259,11 @@ public class ImageEditor extends AbstractPropertyEditor {
     //
     @FXML
     void chooseImage(ActionEvent event) {
-        String[] extensions = {"*.jpg", "*.jpeg", "*.png", "*.gif"}; //NOCHECK
+        String[] extensions = { "*.jpg", "*.jpeg", "*.png", "*.gif" }; // NOCHECK
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(I18N.getString("inspector.select.image"));
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(
-                        I18N.getString("inspector.select.image"),
-                        Arrays.asList(extensions)));
+                new FileChooser.ExtensionFilter(I18N.getString("inspector.select.image"), Arrays.asList(extensions)));
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         File file = fileChooser.showOpenDialog(imagePathTf.getScene().getWindow());
         if ((file == null)) {
@@ -278,7 +275,7 @@ public class ImageEditor extends AbstractPropertyEditor {
         try {
             url = file.toURI().toURL();
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Invalid URL", ex); //NOCHECK
+            throw new RuntimeException("Invalid URL", ex); // NOCHECK
         }
 
         // If the document exists, make the type as document relative by default.
@@ -294,7 +291,8 @@ public class ImageEditor extends AbstractPropertyEditor {
         type = prefixedValue.getType();
         String suffix = prefixedValue.getSuffix();
         imagePathTf.setText(suffix);
-        image = new DesignImage(new Image(EditorUtils.getUrl(suffix, type, fxmlFileLocation).toExternalForm()), prefixedValue.toString());
+        image = new DesignImage(new Image(EditorUtils.getUrl(suffix, type, fxmlFileLocation).toExternalForm()),
+                prefixedValue.toString());
         userUpdateValueProperty(getValue());
         updateMenuItems();
         handlePrefix();

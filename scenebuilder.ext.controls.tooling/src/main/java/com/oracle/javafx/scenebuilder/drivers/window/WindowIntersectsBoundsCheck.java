@@ -35,11 +35,12 @@ package com.oracle.javafx.scenebuilder.drivers.window;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBoundsCheck;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -50,17 +51,24 @@ import javafx.stage.Window;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class WindowIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
+    private final DesignHierarchyMask.Factory maskFactory;
+
+    public WindowIntersectsBoundsCheck(DesignHierarchyMask.Factory maskFactory) {
+        super();
+        this.maskFactory = maskFactory;
+    }
+
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
-        DesignHierarchyMask windowDesignHierarchyMask = new DesignHierarchyMask(fxomObject);
+        HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
         FXOMObject scene = windowDesignHierarchyMask.getAccessory(windowDesignHierarchyMask.getMainAccessory());
         if (scene == null) {
             return false;
         }
         assert scene.getSceneGraphObject() instanceof Scene;
         assert scene instanceof FXOMInstance;
-        DesignHierarchyMask sceneDesignHierarchyMask = new DesignHierarchyMask(scene);
+        HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
         FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;

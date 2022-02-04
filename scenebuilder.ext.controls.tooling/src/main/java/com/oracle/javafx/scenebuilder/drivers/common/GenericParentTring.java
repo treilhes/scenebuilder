@@ -36,13 +36,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
@@ -62,12 +63,15 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
 
     private static final double CRACK_MIN_WIDTH = 6;
 
+    private final DesignHierarchyMask.Factory maskFactory;
+
     private int targetIndex = Integer.MIN_VALUE;
     private final Line crackLine = new Line();
 
-    public GenericParentTring(Content contentPanelController) {
+    public GenericParentTring(DesignHierarchyMask.Factory maskFactory, Content contentPanelController) {
         super(contentPanelController, Parent.class);
-        
+        this.maskFactory = maskFactory;
+
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);
         crackLine.setMouseTransparent(true);
         getRootNode().getChildren().add(crackLine);
@@ -86,20 +90,22 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
         assert targetIndex >= -1;
         this.targetIndex = targetIndex;
     }
-    
+
     @Override
     public void initialize() {
         assert targetIndex >= -1;
     }
-    
-    public static int lookupCrackIndex(FXOMObject fxomObject, double sceneX, double sceneY) {
+
+    public static int lookupCrackIndex(HierarchyMask fxomObjectMask, double sceneX, double sceneY) {
+        assert fxomObjectMask != null;
+        FXOMObject fxomObject = fxomObjectMask.getFxomObject();
+
         assert fxomObject != null;
         assert fxomObject.getSceneGraphObject() instanceof Parent;
 
-        final DesignHierarchyMask m = new DesignHierarchyMask(fxomObject);
-        final Parent parent = (Parent) m.getFxomObject().getSceneGraphObject();
+        final Parent parent = (Parent) fxomObject.getSceneGraphObject();
         final Point2D hitPoint = CoordinateHelper.sceneToLocal(fxomObject, sceneX, sceneY, true /* rootScene */);
-        final int childCount = m.getSubComponentCount();
+        final int childCount = fxomObjectMask.getSubComponentCount();
 
         final int targetIndex;
         if (childCount == 0) {
@@ -114,8 +120,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
             double minDistance = Double.MAX_VALUE;
             int minIndex = -1;
             for (int i = 0, count = childCount; i < count; i++) {
-                final Bounds cb
-                        = GenericParentTring.computeCrackBounds(m, i);
+                final Bounds cb = GenericParentTring.computeCrackBounds(fxomObjectMask, i);
                 final double midX = (cb.getMinX() + cb.getMaxX()) / 2.0;
                 final double midY = (cb.getMinY() + cb.getMaxY()) / 2.0;
                 final double d = MathUtils.distance(hitX, hitY, midX, midY);
@@ -126,7 +131,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
             }
 
             final Bounds cb
-                    = GenericParentTring.computeCrackBounds(m, -1);
+                    = GenericParentTring.computeCrackBounds(fxomObjectMask, -1);
             final double midX = (cb.getMinX() + cb.getMaxX()) / 2.0;
             final double midY = (cb.getMinY() + cb.getMaxY()) / 2.0;
             final double d = MathUtils.distance(hitX, hitY, midX, midY);
@@ -149,7 +154,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
 
         super.layoutDecoration();
 
-        final DesignHierarchyMask m = new DesignHierarchyMask(getFxomObject());
+        final HierarchyMask m = maskFactory.getMask(getFxomObject());
         final int childCount = m.getSubComponentCount();
 
         if (childCount == 0) {
@@ -182,7 +187,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
      * Private
      */
 
-    private static Bounds computeCrackBounds(DesignHierarchyMask m, int childIndex) {
+    private static Bounds computeCrackBounds(HierarchyMask m, int childIndex) {
         assert m != null;
         assert m.isAcceptingSubComponent();
         assert childIndex >= -1;
@@ -311,7 +316,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
     }
 
 
-    private static Node getChildNode(DesignHierarchyMask m, int childIndex) {
+    private static Node getChildNode(HierarchyMask m, int childIndex) {
         assert m != null;
         assert m.isAcceptingSubComponent();
         assert 0 <= childIndex;

@@ -1,5 +1,6 @@
 /*
-/ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,21 +45,23 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
-import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.contenteditor.guides.MovingGuideController;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.draganddrop.target.ContainerXYDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerXYDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.event.EventType;
@@ -70,7 +73,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Window;
 
 /**
  *
@@ -92,24 +94,35 @@ public class DragGesture extends AbstractGesture {
     private boolean willReceiveDragDone;
     private boolean shouldInvokeEnd;
     private FXOMObject hitParent;
-    private DesignHierarchyMask hitParentMask;
+    private HierarchyMask hitParentMask;
     private MovingGuideController movingGuideController;
     private boolean guidesDisabled;
     private Node shadow;
 
-    private final GenericDriver driver;
+    private final Driver driver;
 
+    @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
 
-    public DragGesture(
+    private final DesignHierarchyMask.Factory maskFactory;
+    private final ExternalDragSource.Factory externalDragSourceFactory;
+    private final RootDropTarget.Factory rootDropTargetFactory;
+
+    protected DragGesture(
             @Autowired Content contentPanelController,
             @Autowired Drag dragController,
             @Autowired ModeManager modeManager,
-            @Autowired GenericDriver driver) {
+            @Autowired Driver driver,
+            DesignHierarchyMask.Factory maskFactory,
+            ExternalDragSource.Factory externalDragSourceFactory,
+            RootDropTarget.Factory rootDropTargetFactory) {
         super(contentPanelController);
         this.dragController = dragController;
         this.driver = driver;
-        
+        this.maskFactory = maskFactory;
+        this.externalDragSourceFactory = externalDragSourceFactory;
+        this.rootDropTargetFactory = rootDropTargetFactory;
+
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
         }
@@ -185,12 +198,7 @@ public class DragGesture extends AbstractGesture {
 
     private void dragEnteredGlassLayer() {
         if (dragController.getDragSource() == null) { // Drag started externally
-            final FXOMDocument fxomDocument
-                    = contentPanelController.getEditorController().getFxomDocument();
-            final Window ownerWindow
-                    = contentPanelController.getRoot().getScene().getWindow();
-            final ExternalDragSource dragSource = new ExternalDragSource(
-                    lastDragEvent.getDragboard(), fxomDocument, ownerWindow);
+            final ExternalDragSource dragSource = externalDragSourceFactory.getDragSource(lastDragEvent.getDragboard());
             assert dragSource.isAcceptable();
             dragController.begin(dragSource);
             shouldInvokeEnd = true;
@@ -243,14 +251,14 @@ public class DragGesture extends AbstractGesture {
     }
 
     private void dragOverEmptyDocument() {
-        dragController.setDropTarget(new RootDropTarget());
+        dragController.setDropTarget(rootDropTargetFactory.getDropTarget());
         lastDragEvent.acceptTransferModes(dragController.getAcceptedTransferModes());
         updateShadow(lastDragEvent.getSceneX(), lastDragEvent.getSceneY());
     }
 
     private void dragOverHitObject(FXOMObject hitObject) {
         assert hitObject != null;
-        
+
         logger.debug("dragOverHitObject {}", hitObject == null ? "null" : hitObject.getSceneGraphObject().getClass().getName());
 
         final FXOMDocument fxomDocument = contentPanelController.getEditorController().getFxomDocument();
@@ -263,7 +271,7 @@ public class DragGesture extends AbstractGesture {
 
         DropTarget dropTarget = null;
         FXOMObject newHitParent = null;
-        
+
         dropTarget = driver.makeDropTarget(hitObject, hitX, hitY);
         if (dropTarget != null) {
             newHitParent = hitObject;
@@ -281,7 +289,7 @@ public class DragGesture extends AbstractGesture {
         // Update movingGuideController
         if (newHitParent != hitParent) {
             hitParent = newHitParent;
-            hitParentMask = new DesignHierarchyMask(hitParent);
+            hitParentMask = maskFactory.getMask(hitParent);
             if (hitParent == null) {
                 assert hitParentMask == null;
                 movingGuideController.clearSampleBounds();
@@ -468,9 +476,21 @@ public class DragGesture extends AbstractGesture {
     private void dismantleMovingGuideController() {
         assert movingGuideController != null;
         final Group guideGroup = movingGuideController.getGuideGroup();
-        
+
         assert rudderLayer.getLayerUI().getChildren().contains(guideGroup);
         rudderLayer.getLayerUI().getChildren().remove(guideGroup);
         movingGuideController = null;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<DragGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public DragGesture getGesture() {
+            return create(DragGesture.class, null); // g -> g.setupGestureParameters());
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +38,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.ui.action.ToggleDockVisibilityAction;
+import com.oracle.javafx.scenebuilder.ui.action.ToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.ui.controller.MainController;
@@ -47,9 +50,11 @@ import com.oracle.javafx.scenebuilder.ui.dialog.TextViewDialog;
 import com.oracle.javafx.scenebuilder.ui.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.ui.i18n.I18NLayout;
 import com.oracle.javafx.scenebuilder.ui.inlineedit.InlineEditController;
+import com.oracle.javafx.scenebuilder.ui.menu.CoreUiMenuProvider;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessagePanelController;
+import com.oracle.javafx.scenebuilder.ui.message.MessagePopupController;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
@@ -72,29 +77,33 @@ public class BaseUiExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                I18NLayout.class,
-                MainController.class,
+                AlertDialog.class,
+                BottomDividerVPosPreference.class,
+                CoreUiMenuProvider.class,
+                DialogController.class,
+                DocumentController.class,
                 DocumentWindowController.class,
+                ErrorDialog.class,
+                I18NLayout.class,
+                InlineEditController.class,
+                LeftDividerHPosPreference.class,
+                MainController.class,
+                MaximizedPreference.class,
                 MenuBarController.class,
                 MessageBarController.class,
-                MessagePanelController.class,
-                SelectionBarController.class, 
                 MessageLog.class,
-                BottomDividerVPosPreference.class,
-                LeftDividerHPosPreference.class,
-                MaximizedPreference.class,
+                MessagePanelController.class,
+                MessagePopupController.class,
+                PathPreference.class,
                 RightDividerHPosPreference.class,
+                SelectionBarController.class,
                 StageHeightPreference.class,
                 StageWidthPreference.class,
-                XPosPreference.class,
-                YPosPreference.class,
-                AlertDialog.class,
-                DialogController.class,
-                ErrorDialog.class,
                 TextViewDialog.class,
-                InlineEditController.class,
-                DocumentController.class,
-                PathPreference.class
+                ToggleDockVisibilityAction.class,
+                ToggleViewVisibilityAction.class,
+                XPosPreference.class,
+                YPosPreference.class
             );
      // @formatter:on
     }

@@ -34,12 +34,17 @@ package com.oracle.javafx.scenebuilder.drivers.splitpane;
 
 import java.util.List;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.drivers.splitpane.AdjustDividerGesture.Factory;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
 import javafx.geometry.Bounds;
@@ -61,17 +66,27 @@ import javafx.scene.shape.Line;
 */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
+public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> implements InitializingBean {
 
     private final Group grips = new Group();
-	private final SceneBuilderBeanFactory context;
+    private final Factory adjustDividerGestureFactory;
 
     public SplitPaneHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(context, contentPanelController, SplitPane.class);
-        this.context = context;
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
+    		AdjustDividerGesture.Factory adjustDividerGestureFactory) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, SplitPane.class);
 
+        this.adjustDividerGestureFactory = adjustDividerGestureFactory;
+
+
+    }
+
+    //FIXME replace with jsr250 annotation @PostConstrut
+    @Override
+    public void afterPropertiesSet() throws Exception {
         getRootNode().getChildren().add(grips); // Above handles
     }
 
@@ -110,8 +125,7 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
         final AbstractGesture result;
         if (gripIndex < gripCount) {
             assert gripNodes.get(gripIndex) == node;
-            result = new AdjustDividerGesture(context, getContentPanelController(),
-                    getFxomInstance(), gripIndex);
+            result = adjustDividerGestureFactory.getGesture(getFxomInstance(), gripIndex);
         } else {
             result = super.findGesture(node);
         }
@@ -229,4 +243,6 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> {
     private void attachHandles(Node node) {
         attachHandles(node, this);
     }
+
+
 }

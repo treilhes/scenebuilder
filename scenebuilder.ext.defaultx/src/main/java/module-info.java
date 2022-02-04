@@ -21,6 +21,7 @@ open module scenebuilder.ext.defaultx {
 //    requires org.slf4j;
     requires scenebuilder.starter;
     requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;

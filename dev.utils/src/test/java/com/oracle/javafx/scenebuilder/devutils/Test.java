@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.devutils;
 
-import com.oracle.javafx.scenebuilder.devutils.tbview.TestExternalFile;
+import com.oracle.javafx.scenebuilder.devutils.tbview.TestAnim;
 import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
 
 import javafx.beans.property.DoubleProperty;
@@ -45,7 +46,13 @@ public class Test extends AppTester {
 
     @Override
     public void start(Stage stage) {
-        //new TestAnim().start(stage);
+        int test = -23;
+
+        System.out.println(test);
+        System.out.println(+test);
+        System.out.println(test);
+
+        new TestAnim().start(stage);
         //new TestContent().start(primaryStage);
         //new TestContent2().start(primaryStage);
         //new TestContent5().start(stage);
@@ -57,7 +64,7 @@ public class Test extends AppTester {
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\accFocusTravers.fxml");
         //new TestExternalFile().start(stage, "C:\\SSDDrive\\git\\scenebuilder\\scenebuilder.core.fxom\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\core\\fxom\\fx\\comments.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\script.fxml");
-        new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\one.fxml");
+        //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\one.fxml");
 
     }
 

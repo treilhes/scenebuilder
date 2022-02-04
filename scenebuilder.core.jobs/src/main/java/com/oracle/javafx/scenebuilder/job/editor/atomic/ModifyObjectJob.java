@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,96 +35,89 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It updates the property defined by the provided {@link ValuePropertyMetadata} owned by {@link FXOMElement} with the the provided value
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class ModifyObjectJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ModifyObjectJob extends AbstractJob {
 
-    private final FXOMElement fxomInstance;
-    private final ValuePropertyMetadata propertyMetadata;
-    private final Object newValue;
-    private final Object oldValue;
-    private final String description;
-    private FXOMDocument fxomDocument;
+    private final FXOMDocument fxomDocument;
 
-    public ModifyObjectJob(SceneBuilderBeanFactory context,
-            FXOMElement fxomInstance,
-            ValuePropertyMetadata propertyMetadata,
-            Object newValue,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    private FXOMElement fxomElement;
+    private ValuePropertyMetadata propertyMetadata;
+    private Object newValue;
+    private Object oldValue;
+    private String description;
+
+
+    public ModifyObjectJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager
+            ) {
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
-
-        assert fxomInstance != null;
-        assert fxomInstance.getSceneGraphObject() != null;
-        assert propertyMetadata != null;
-
-        this.fxomInstance = fxomInstance;
-        this.propertyMetadata = propertyMetadata;
-        this.newValue = newValue;
-        this.oldValue = propertyMetadata.getValueObject(fxomInstance);
-        this.description = I18N.getString("label.action.edit.set.1",
-                propertyMetadata.getName().toString(),
-                fxomInstance.getSceneGraphObject().getClass().getSimpleName());
     }
 
-    public ModifyObjectJob(SceneBuilderBeanFactory context,
-            FXOMInstance fxomInstance,
-            ValuePropertyMetadata propertyMetadata,
-            Object newValue,
-            Editor editor,
-            String description) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
-        this.fxomDocument = documentManager.fxomDocument().get();
-
-        assert fxomInstance != null;
-        assert fxomInstance.getSceneGraphObject() != null;
+    /**
+     * Update the property defined by propertyMetadata and owned by fxomInstance with the new value newValue
+     * @param fxomElement the {@link FXOMElement} owning the property
+     * @param propertyMetadata the property definition
+     * @param newValue the new value
+     */
+    protected void setJobParameters(String description, FXOMElement fxomElement, ValuePropertyMetadata propertyMetadata, Object newValue) {
+        assert fxomElement != null;
+        assert fxomElement.getSceneGraphObject() != null;
         assert propertyMetadata != null;
 
-        this.fxomInstance = fxomInstance;
+        this.fxomElement = fxomElement;
         this.propertyMetadata = propertyMetadata;
         this.newValue = newValue;
-        this.oldValue = propertyMetadata.getValueObject(fxomInstance);
-        this.description = description;
+        this.oldValue = propertyMetadata.getValueObject(fxomElement);
+        this.description = description != null ? description
+                : I18N.getString("label.action.edit.set.1", propertyMetadata.getName().toString(),
+                        fxomElement.getSceneGraphObject().getClass().getSimpleName());
     }
-
     /*
      * Job
      */
     @Override
     public boolean isExecutable() {
-        final Object currentValue = propertyMetadata.getValueObject(fxomInstance);
+        final Object currentValue = propertyMetadata.getValueObject(fxomElement);
         return Objects.equals(newValue, currentValue) == false;
     }
 
     @Override
-    public void execute() {
-        redo();
+    public void doExecute() {
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         fxomDocument.beginUpdate();
-        this.propertyMetadata.setValueObject(fxomInstance, oldValue);
+        this.propertyMetadata.setValueObject(fxomElement, oldValue);
         fxomDocument.endUpdate();
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         fxomDocument.beginUpdate();
-        this.propertyMetadata.setValueObject(fxomInstance, newValue);
+        this.propertyMetadata.setValueObject(fxomElement, newValue);
         fxomDocument.endUpdate();
     }
 
@@ -132,4 +126,33 @@ public class ModifyObjectJob extends Job {
         return description;
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<ModifyObjectJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        /**
+         * Create an {@link ModifyObjectJob} job
+         * @param description the job description or null
+         * @param fxomElement the {@link FXOMElement} owning the property
+         * @param propertyMetadata the property definition
+         * @param newValue the new value
+         * @return the job to execute
+         */
+        public ModifyObjectJob getJob(String description, FXOMElement fxomElement, ValuePropertyMetadata propertyMetadata, Object newValue) {
+            return create(ModifyObjectJob.class, j -> j.setJobParameters(description, fxomElement, propertyMetadata, newValue));
+        }
+
+        /**
+         * Create an {@link ModifyObjectJob} job
+         * @param fxomElement the {@link FXOMElement} owning the property
+         * @param propertyMetadata the property definition
+         * @param newValue the new value
+         * @return the job to execute
+         */
+        public ModifyObjectJob getJob(FXOMElement fxomElement, ValuePropertyMetadata propertyMetadata, Object newValue) {
+            return create(ModifyObjectJob.class, j -> j.setJobParameters(null, fxomElement, propertyMetadata, newValue));
+        }
+    }
 }

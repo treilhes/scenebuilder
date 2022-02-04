@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.scenicview.controller;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 
 /**
  * @treatAsPrivate

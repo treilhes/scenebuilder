@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,14 +42,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -100,7 +100,7 @@ public class SetRootSizesMenuItemProvider implements MenuItemProvider {
 
             menu = new Menu(I18N.getString("menu.title.size"));
             menu.setId(SET_ROOT_SIZE_MENU_ID);
-            
+
             for (Size size : Size.values()) {
                 if (size == Size.SIZE_DEFAULT || size == Size.SIZE_PREFERRED) {
                     continue;
@@ -108,7 +108,8 @@ public class SetRootSizesMenuItemProvider implements MenuItemProvider {
 
                 MenuItem mi = new MenuItem(size.toString());
                 mi.setUserData(size);
-                Action action = actionFactory.create(SetRootSizeAction.class, (a) -> a.setSize(size));
+                SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
+                action.setSize(size);
                 mi.setOnAction(e -> action.perform());
                 menu.getItems().add(mi);
             }
@@ -116,7 +117,8 @@ public class SetRootSizesMenuItemProvider implements MenuItemProvider {
             menu.setOnMenuValidation(e -> {
                 menu.getItems().forEach(i -> {
                     Size menuSize = (Size)i.getUserData();
-                    Action action = actionFactory.create(SetRootSizeAction.class, (a) -> a.setSize(menuSize));
+                    SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
+                    action.setSize(menuSize);
                     i.setDisable(!action.canPerform());
                 });
             });

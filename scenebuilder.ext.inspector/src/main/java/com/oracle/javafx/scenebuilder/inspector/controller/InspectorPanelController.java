@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,30 +52,33 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.css.CssInternal;
+import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
-import com.oracle.javafx.scenebuilder.core.editors.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
@@ -86,14 +90,11 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
@@ -103,11 +104,14 @@ import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
+import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
-import com.oracle.javafx.scenebuilder.job.editor.ModifyCacheHintJob;
-import com.oracle.javafx.scenebuilder.job.editor.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
-import com.oracle.javafx.scenebuilder.job.editor.togglegroup.ModifySelectionToggleGroupJob;
+import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
+import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
+import com.oracle.javafx.scenebuilder.selection.job.ModifySelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.togglegroup.ModifySelectionToggleGroupJob;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.property.ObjectProperty;
@@ -184,7 +188,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     @FXML
     private SplitPane inspectorRoot;
 
-
     public enum ViewMode {
 
         SECTION, // View properties by section (default)
@@ -242,12 +245,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private Action viewByPropertyTypeAction;
 
     private final Editor editorController;
-    private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
-    //private final AccordionAnimationPreference accordionAnimationPreference;
-    private final SceneBuilderBeanFactory context;
+
     private final DocumentManager documentManager;
-    private final FileSystem fileSystem;
+    private final Drag drag;
+    private final ModifyCacheHintJob.Factory modifyCacheHintJobFactory;
+    private final ModifySelectionJob.Factory modifySelectionJobFactory;
+    private final ModifyFxIdJob.Factory modifyFxIdJobFactory;
+    private final ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory;
 
     private PropertyEditorFactorySession session;
 
@@ -258,35 +263,46 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     /*
      * Public
      */
-    public InspectorPanelController(@Autowired Api api, @Autowired Editor editorController,
-            @Autowired InspectorSectionIdPreference inspectorSectionIdPreference,
-            @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-            @Autowired PropertyEditorFactory propertyEditorFactory,
-            //@Autowired AccordionAnimationPreference accordionAnimationPreference,
-            @Autowired ShowAllAction showAllAction,
-            @Autowired ShowEditedAction showEditedAction,
-            @Autowired ViewBySectionsAction viewBySectionsAction,
-            @Autowired ViewByPropertyNameAction viewByPropertyNameAction,
-            @Autowired ViewByPropertyTypeAction viewByPropertyTypeAction,
-            @Autowired ViewSearch viewSearch) {
-        super(api, InspectorPanelController.class.getResource(fxmlFile), I18N.getBundle());
-        this.context = api.getContext();
-        this.fileSystem = api.getFileSystem();
+ // @formatter:off
+    public InspectorPanelController(
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            Editor editorController,
+            InspectorSectionIdPreference inspectorSectionIdPreference,
+            Drag drag,
+            PropertyEditorFactory propertyEditorFactory,
+            ShowAllAction showAllAction,
+            ShowEditedAction showEditedAction,
+            ViewBySectionsAction viewBySectionsAction,
+            ViewByPropertyNameAction viewByPropertyNameAction,
+            ViewByPropertyTypeAction viewByPropertyTypeAction,
+            ViewSearch viewSearch,
+            ModifyCacheHintJob.Factory modifyCacheHintJobFactory,
+            ModifySelectionJob.Factory modifySelectionJobFactory,
+            ModifyFxIdJob.Factory modifyFxIdJobFactory,
+            ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory) {
+     // @formatter:on
+        super(scenebuilderManager, documentManager, InspectorPanelController.class.getResource(fxmlFile),
+                I18N.getBundle());
+        this.drag = drag;
         this.editorController = editorController;
-        this.documentManager = api.getApiDoc().getDocumentManager();
+        this.documentManager = documentManager;
         this.session = propertyEditorFactory.newSession();
 
         this.viewSearch = viewSearch;
 
-        this.sceneBuilderFactory = sceneBuilderFactory;
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
-        //this.accordionAnimationPreference = accordionAnimationPreference;
 
         this.showAllAction = showAllAction;
         this.showEditedAction = showEditedAction;
         this.viewBySectionsAction = viewBySectionsAction;
         this.viewByPropertyNameAction = viewByPropertyNameAction;
         this.viewByPropertyTypeAction = viewByPropertyTypeAction;
+
+        this.modifyCacheHintJobFactory = modifyCacheHintJobFactory;
+        this.modifySelectionJobFactory = modifySelectionJobFactory;
+        this.modifyFxIdJobFactory = modifyFxIdJobFactory;
+        this.modifySelectionToggleGroupJobFactory = modifySelectionToggleGroupJobFactory;
 
         viewModeProperty.setValue(ViewMode.SECTION);
         viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
@@ -297,13 +313,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         expandedSectionProperty.setValue(SectionId.PROPERTIES);
         expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
 
-        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange()
-                .subscribe(c -> sceneGraphRevisionDidChange());
-        api.getApiDoc().getDocumentManager().cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
+        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        documentManager.cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
                 .subscribe(c -> cssRevisionDidChange());
-
-        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
     }
 
@@ -526,22 +540,21 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         clearSections();
 
         // Listen the drag property changes
-        getApi().getApiDoc().getDrag().dragSourceProperty()
-                .addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
-                    if (newVal != null) {
+        drag.dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
+            if (newVal != null) {
 //                    System.out.println("Drag started !");
-                        dragOnGoing = true;
-                    } else {
+                dragOnGoing = true;
+            } else {
 //                    System.out.println("Drag finished.");
-                        dragOnGoing = false;
-                        updateInspector();
-                    }
-                });
+                dragOnGoing = false;
+                updateInspector();
+            }
+        });
 
         // Listen the Scene stylesheets changes
         documentManager.stylesheetConfig().subscribe(s -> updateInspector());
 
-        selectionState = new SelectionState(editorController.getSelection());
+        selectionState = new SelectionStateImpl(editorController.getSelection());
         viewModeChanged(null, getViewMode());
         expandedSectionChanged();
 
@@ -562,19 +575,24 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         ToggleGroup showTg = new ToggleGroup();
         ToggleGroup viewTg = new ToggleGroup();
 
-        showAll = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.all"), showTg);
+        showAll = new RadioMenuItem(getResources().getString("inspector.show.all"));
+        showAll.setToggleGroup(showTg);
         showAll.setSelected(true);
 
-        showEdited = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("inspector.show.edited"),
-                showTg);
-        separator = sceneBuilderFactory.createSeparatorMenuItem();
-        viewAsSections = sceneBuilderFactory
-                .createViewRadioMenuItem(getResources().getString("inspector.view.sections"), viewTg);
+        showEdited = new RadioMenuItem(getResources().getString("inspector.show.edited"));
+        showEdited.setToggleGroup(showTg);
+
+        separator = new SeparatorMenuItem();
+
+        viewAsSections = new RadioMenuItem(getResources().getString("inspector.view.sections"));
+        viewAsSections.setToggleGroup(viewTg);
         viewAsSections.setSelected(true);
-        viewByPropName = sceneBuilderFactory
-                .createViewRadioMenuItem(getResources().getString("inspector.by.property.name"), viewTg);
-        viewByPropType = sceneBuilderFactory
-                .createViewRadioMenuItem(getResources().getString("inspector.by.property.type"), viewTg);
+
+        viewByPropName = new RadioMenuItem(getResources().getString("inspector.by.property.name"));
+        viewByPropName.setToggleGroup(viewTg);
+
+        viewByPropType = new RadioMenuItem(getResources().getString("inspector.by.property.type"));
+        viewByPropType.setToggleGroup(viewTg);
 
         showAll.setOnAction((e) -> showAllAction.checkAndPerform());
         showEdited.setOnAction((e) -> showEditedAction.checkAndPerform());
@@ -592,7 +610,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      */
     private void updateInspector() {
         if (isInspectorLoaded() && hasFxomDocument()) {
-            SelectionState newSelectionState = new SelectionState(editorController.getSelection());
+            SelectionState newSelectionState = new SelectionStateImpl(editorController.getSelection());
             if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
                 selectionState = newSelectionState;
                 rebuild();
@@ -726,7 +744,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         Set<ValuePropertyMetadata> propMetaAll = getValuePropertyMetadata();
 
         SortedMap<InspectorPath, ValuePropertyMetadata> propMetaSection = new TreeMap<>(
-                Metadata.getMetadata().INSPECTOR_PATH_COMPARATOR);
+                Api.get().getMetadata().INSPECTOR_PATH_COMPARATOR);
         assert propMetaAll != null;
 
         for (ValuePropertyMetadata valuePropMeta : propMetaAll) {
@@ -1291,27 +1309,27 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private void setSelectedFXOMInstances(ValuePropertyMetadata propMeta, Object value) {
         final PropertyName cacheHintPN = new PropertyName("cacheHint"); // NOI18N
-        final Job job;
+        final AbstractJob job;
         if (cacheHintPN.equals(propMeta.getName())) {
-            job = new ModifyCacheHintJob(context, propMeta, value, getEditorController()).extend();
+            job = modifyCacheHintJobFactory.getJob(propMeta, value);
         } else {
-            job = new ModifySelectionJob(context, propMeta, value, getEditorController()).extend();
+            job = modifySelectionJobFactory.getJob(propMeta, value);
         }
 //        System.out.println(job.getDescription());
         pushJob(job);
     }
 
     private void setSelectedFXOMInstanceFxId(FXOMObject fxomObject, String fxId) {
-        final Job job = new ModifyFxIdJob(context, fxomObject, fxId, getEditorController()).extend();
+        final AbstractJob job = modifyFxIdJobFactory.getJob(fxomObject, fxId);
         pushJob(job);
     }
 
     private void setSelectionToggleGroup(String tgId) {
-        final Job job = new ModifySelectionToggleGroupJob(context, tgId, getEditorController()).extend();
+        final AbstractJob job = modifySelectionToggleGroupJobFactory.getJob(tgId);
         pushJob(job);
     }
 
-    private void pushJob(Job job) {
+    private void pushJob(AbstractJob job) {
         if (job.isExecutable()) {
             getEditorController().getJobManager().push(job);
         } else {
@@ -1384,7 +1402,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // General case
         boolean first = true;
         for (FXOMInstance instance : getSelectedInstances()) {
-            ValuePropertyMetadata propMeta = Metadata.getMetadata().queryValueProperty(instance, propName);
+            ValuePropertyMetadata propMeta = Api.get().getMetadata().queryValueProperty(instance, propName);
             assert propMeta != null;
             Object newVal = propMeta.getValueObject(instance);
 //            System.out.println(propName + " value : " + newVal);
@@ -1616,7 +1634,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private Set<ValuePropertyMetadata> getValuePropertyMetadata() {
-        Set<ValuePropertyMetadata> values = Metadata.getMetadata().queryValueProperties(getSelectedClasses());
+        Set<ValuePropertyMetadata> values = Api.get().getMetadata().queryValueProperties(getSelectedClasses());
         ;
         Set<PropertyName> disabledProperties = getDisabledPropertiesFromMetadata();
         return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
@@ -1628,7 +1646,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                 .forEach(fxi -> {
                     FXOMObject parent = fxi.getParentObject();
                     FXOMProperty property = fxi.getParentProperty();
-                    ComponentPropertyMetadata cpm = Metadata.getMetadata()
+                    ComponentPropertyMetadata cpm = Api.get().getMetadata()
                             .queryComponentProperty(parent.getSceneGraphObject().getClass(), property.getName());
                     if (cpm != null) {
                         disabled.addAll(cpm.getDisabledProperties());

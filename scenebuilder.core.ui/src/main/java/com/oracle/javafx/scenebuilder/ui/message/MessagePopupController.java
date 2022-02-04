@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,9 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.ui.message;
 
-import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractPopupController;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractPopupController;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -43,13 +48,18 @@ import javafx.stage.WindowEvent;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class MessagePopupController extends AbstractPopupController {
 
     private final MessagePanelController messagePanelController;
 
-    public MessagePopupController(SceneBuilderBeanFactory context) {
-        super(context.getBean(Api.class));
-        this.messagePanelController = context.getBean(MessagePanelController.class);
+    public MessagePopupController(
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            MessagePanelController messagePanelController) {
+        super(scenebuilderManager, documentManager);
+        this.messagePanelController = messagePanelController;
 
         setRoot(messagePanelController.getRoot());
     }

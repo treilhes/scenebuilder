@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,8 +45,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyI18nContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 
@@ -60,19 +62,19 @@ import javafx.stage.FileChooser;
 @Lazy
 public class I18nResourceMenuController {
 
-	private final SceneBuilderBeanFactory context;
+    private final ActionFactory actionFactory;
     private final DocumentWindow document;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final I18NResourcePreference i18nResourcePreference;
 
     public I18nResourceMenuController(
-    		@Autowired SceneBuilderBeanFactory context,
+    		@Autowired ActionFactory actionFactory,
     		@Autowired @Lazy DocumentWindow document,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,
     		@Autowired @Lazy I18NResourcePreference i18nResourcePreference) {
-    	this.context = context;
+    	this.actionFactory = actionFactory;
         this.document = document;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
@@ -126,7 +128,7 @@ public class I18nResourceMenuController {
     }
 
     public void performReloadResource() {
-    	context.getBean(ApplyI18nContentAction.class).extend().checkAndPerform();
+        actionFactory.create(ApplyI18nContentAction.class).checkAndPerform();
     }
 
 }

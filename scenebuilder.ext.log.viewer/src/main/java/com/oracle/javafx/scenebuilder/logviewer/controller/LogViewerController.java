@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,19 +38,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,17 +73,18 @@ public class LogViewerController extends AbstractFxmlViewController {
     public final static String VIEW_NAME = "menu.title.show.log";
     public final static int MAX_LINES = 10000;
     private LogReader logReader = new LogReader();
-    
+
     @FXML
     ListView<String> logs;
-        
+
     public LogViewerController(
-            @Autowired Api api,
-            @Autowired Editor editor) {
-        super(api, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle());
-        
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            Editor editor) {
+        super(scenebuilderManager, documentManager, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle());
+
     }
-    
+
     @FXML
     private void initialize() {
         logs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -102,7 +104,7 @@ public class LogViewerController extends AbstractFxmlViewController {
 
         Clipboard.getSystemClipboard().setContent(content);
     }
-    
+
     /*
      * AbstractFxmlWindowController
      */
@@ -155,5 +157,5 @@ public class LogViewerController extends AbstractFxmlViewController {
         logReader.stopUpdateThread();
         logs.getItems().clear();
     }
-    
+
 }

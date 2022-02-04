@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.launcher.splash;
 
 import java.io.IOException;
 
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
 
 import javafx.application.Platform;
 import javafx.application.Preloader;

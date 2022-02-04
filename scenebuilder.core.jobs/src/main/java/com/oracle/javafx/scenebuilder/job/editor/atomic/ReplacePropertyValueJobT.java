@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,36 +34,47 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It removes the provided {@link FXOMPropertyT} from his parent {@link FXOMElement} provided by {@link FXOMPropertyT#getParentInstance()}
+ * by an {@link FXOMPropertyC} containing the new {@link FXOMObject} value.
+ * This peculiar case happens mainly when replacing a reference by the referee scenegraph
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class ReplacePropertyValueJobT extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ReplacePropertyValueJobT extends AbstractJob {
 
-    private final FXOMPropertyT hostProperty;
-    private final FXOMObject newValue;
+    private FXOMPropertyT hostProperty;
+    private FXOMObject newValue;
 
     private FXOMElement hostInstance;
     private FXOMPropertyC newProperty;
 
-    public ReplacePropertyValueJobT(SceneBuilderBeanFactory context, FXOMPropertyT hostProperty, FXOMObject newValue, Editor editor) {
-        super(context, editor);
+    protected ReplacePropertyValueJobT(
+            JobExtensionFactory extensionFactory) {
+        super(extensionFactory);
+    }
 
+    protected void setJobParameters(FXOMPropertyT hostProperty, FXOMObject newValue) {
         assert hostProperty != null;
         assert newValue != null;
 
         this.hostProperty = hostProperty;
         this.newValue = newValue;
     }
-
-
     /*
      * Job
      */
@@ -72,16 +84,16 @@ public class ReplacePropertyValueJobT extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         hostInstance = hostProperty.getParentInstance();
         newProperty = new FXOMPropertyC(hostProperty.getFxomDocument(), hostProperty.getName());
 
         // Now same as redo()
-        redo();
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert hostProperty.getParentInstance() == null;
         assert newProperty.getParentInstance() == hostInstance;
 
@@ -91,7 +103,7 @@ public class ReplacePropertyValueJobT extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert hostProperty.getParentInstance() == hostInstance;
         assert newProperty.getParentInstance() == null;
 
@@ -105,6 +117,21 @@ public class ReplacePropertyValueJobT extends Job {
         return getClass().getSimpleName();
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<ReplacePropertyValueJobT> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
 
+        /**
+         * Create an {@link ReplacePropertyValueJobT} job
+         * @param reference the property containing the reference expression
+         * @return the job to execute
+         */
+        public ReplacePropertyValueJobT getJob(FXOMPropertyT hostProperty, FXOMObject newValue) {
+            return create(ReplacePropertyValueJobT.class, j -> j.setJobParameters(hostProperty, newValue));
+        }
+    }
 
 }

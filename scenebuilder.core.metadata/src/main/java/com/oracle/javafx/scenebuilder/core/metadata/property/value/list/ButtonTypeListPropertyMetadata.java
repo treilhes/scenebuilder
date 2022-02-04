@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
 
-import java.util.List;
-
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ButtonTypePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -52,10 +51,10 @@ public class ButtonTypeListPropertyMetadata extends ListValuePropertyMetadata<Bu
             .withInspectorPath(InspectorPath.UNUSED)
             .build();
 
-    public ButtonTypeListPropertyMetadata(PropertyName name, boolean readWrite, List<ButtonType> defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, ButtonType.class, itemMetadata, readWrite, defaultValue, inspectorPath);
-    }
+//    public ButtonTypeListPropertyMetadata(PropertyName name, boolean readWrite, List<ButtonType> defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, ButtonType.class, itemMetadata, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected ButtonTypeListPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

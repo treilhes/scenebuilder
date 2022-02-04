@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,73 +50,73 @@ public class KeyCodeCombinationPropertyMetadata extends ComplexPropertyMetadata<
 
     /*
      * NOTE : KeyCodeCombination singularity
-     * 
-     * Default value for 'alt', 'control', 'meta', 'shift' and 'shortcut' is 'UP'. 
+     *
+     * Default value for 'alt', 'control', 'meta', 'shift' and 'shortcut' is 'UP'.
      * However FXMLLoader refuses to load:
-     * 
+     *
      *     <KeyCombinationCode code='PASTE' />
-     * 
+     *
      * Properties must be explicitely specified even when they have the default value.
-     * 
+     *
      *     <KeyCombinationCode code='PASTE' alt='UP' control='UP' meta='UP' shift='UP' shortcut='UP' />
-     * 
+     *
      * To force this behavior, the EnumerationPropertyMetadata below are all
      * set with a dummy default value.
      */
     private static final String DUMMY = "dummy"; //NOCHECK
-    
+
     private final EnumerationPropertyMetadata altMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("alt")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata controlMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("control")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata metaMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("meta")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata shiftMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("shift")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata shortcutMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("shortcut")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
     private final EnumerationPropertyMetadata codeMetadata = new EnumerationPropertyMetadata.Builder<>(KeyCombination.ModifierValue.class)
             .withName(new PropertyName("code")) //NOCHECK
             .withReadWrite(true)
             .withNullEquivalent(DUMMY)
-            .withInspectorPath(getInspectorPath()).build();
+            .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected KeyCodeCombinationPropertyMetadata(PropertyName name, boolean readWrite, 
-            KeyCodeCombination defaultValue, InspectorPath inspectorPath) {
-        super(name, KeyCodeCombination.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected KeyCodeCombinationPropertyMetadata(PropertyName name, boolean readWrite,
+//            KeyCodeCombination defaultValue, InspectorPath inspectorPath) {
+//        super(name, KeyCodeCombination.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected KeyCodeCombinationPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);
     }
-    
+
     /*
      * ComplexPropertyMetadata
      */
     @Override
     public FXOMInstance makeFxomInstanceFromValue(KeyCodeCombination value, FXOMDocument fxomDocument) {
         final FXOMInstance result = new FXOMInstance(fxomDocument, value.getClass());
-        
+
         altMetadata.setValue(result, value.getAlt().toString());
         controlMetadata.setValue(result, value.getControl().toString());
         metaMetadata.setValue(result, value.getMeta().toString());
@@ -125,7 +126,7 @@ public class KeyCodeCombinationPropertyMetadata extends ComplexPropertyMetadata<
 
         return result;
     }
-    
+
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, KeyCodeCombination> {
         public AbstractBuilder() {
             super();

@@ -37,9 +37,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;

@@ -44,6 +44,7 @@ open module scenebuilder.core.library {
 //    requires org.slf4j;
 //    requires plexus.utils;
     requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.extension.store;
     requires scenebuilder.core.filesystem;

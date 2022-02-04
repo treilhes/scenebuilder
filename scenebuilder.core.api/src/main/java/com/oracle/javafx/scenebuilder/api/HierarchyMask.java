@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,11 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
+
+import javafx.scene.image.Image;
 
 public interface HierarchyMask {
     // TODO this must disapear when control project will contain owned jobs/drivers
@@ -54,11 +59,17 @@ public interface HierarchyMask {
         boolean isMain();
         boolean isFreeChildPositioning();
         ComponentPropertyMetadata getPropertyMetadata();
+
+        boolean isHidden();
+        boolean isStandard();
+        boolean isExpert();
     }
 
     public boolean isAcceptingAccessory(Accessory accessory);
 
     public FXOMObject getAccessory(Accessory accessory);
+
+    public Accessory getAccessory(PropertyName accessoryName);
 
     public List<FXOMObject> getAccessories(Accessory accessory);
 
@@ -76,4 +87,44 @@ public interface HierarchyMask {
 
     //new
     public List<Accessory> getAccessories();
+
+    public Accessory getMainAccessory();
+
+    public PropertyName getPropertyNameForDescription();
+
+    public String getClassNameInfo();
+
+    public String getSingleLineDescription();
+
+    public Image getClassNameIcon();
+
+    public FXOMObject getParentFXOMObject();
+
+    public boolean isResourceKey(PropertyName propertyNameForDescription);
+
+    public FXOMObject getClosestFxNode();
+
+    public String getDescription();
+
+    public boolean isAcceptingAccessory(Accessory accessory, FXOMObject newObject);
+
+    public PropertyName getPropertyNameForAccessory(Accessory accessory);
+
+    public boolean needResizeWhenTopElement();
+
+    public boolean isAcceptingSubComponent(FXOMObject newObject);
+
+    public boolean isAcceptingSubComponent(Collection<FXOMObject> fxomObjects);
+
+    public List<FXOMObject> getSubComponents();
+
+    public URL getClassNameIconURL();
+
+    public boolean isAcceptingAccessory(Accessory targetAccessory, Collection<FXOMObject> draggedObject);
+
+    public String getNodeId();
+
+    public String getFxId();
+
+    public String getClassNameInfo(Accessory accessory);
 }

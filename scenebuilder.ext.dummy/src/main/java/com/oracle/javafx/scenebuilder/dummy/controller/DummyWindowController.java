@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.dummy.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 
 /**
  *
@@ -57,9 +58,10 @@ public class DummyWindowController extends AbstractFxmlViewController {
     public final static String VIEW_NAME = "menu.title.dummy";
 
     public DummyWindowController(
-            @Autowired Api api
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager
             ) {
-        super(api, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle());
+        super(scenebuilderManager, documentManager, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle());
     }
 
     @Override
@@ -74,13 +76,13 @@ public class DummyWindowController extends AbstractFxmlViewController {
     @Override
     public void onShow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
 }

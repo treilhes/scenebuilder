@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,7 +48,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -59,24 +59,23 @@ import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
+import com.oracle.javafx.scenebuilder.api.css.CssInternal;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.core.util.CssInternal;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.ShowStyledOnlyAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.SplitDefaultsAction;
@@ -93,6 +92,7 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.Pro
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import javafx.animation.FadeTransition;
@@ -234,7 +234,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
-    private final SceneBuilderBeanFactory sceneBuilderFactory;
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
 
     private Menu viewAs;
@@ -279,27 +278,27 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
      */
     // @formatter:off
     public CssPanelController(
-            @Autowired Api api, 
-            @Autowired Editor editor, 
-            @Autowired Delegate delegate,
-            @Autowired SceneBuilderBeanFactory sceneBuilderFactory,
-            @Autowired CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
-            @Autowired Drag drag, 
-            @Autowired ViewTableAction viewTableAction,
-            @Autowired ViewRulesAction viewRulesAction,
-            @Autowired ViewTextAction viewTextAction,
-            @Autowired CopyStyleablePathAction copyStyleablePathAction,
-            @Autowired ShowStyledOnlyAction showStyledOnlyAction,
-            @Autowired SplitDefaultsAction splitDefaultsAction,
-            @Autowired ViewSearch viewSearch) {
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            Editor editor,
+            Delegate delegate,
+            CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
+            Drag drag,
+            FileSystem fileSystem,
+            ViewTableAction viewTableAction,
+            ViewRulesAction viewRulesAction,
+            ViewTextAction viewTextAction,
+            CopyStyleablePathAction copyStyleablePathAction,
+            ShowStyledOnlyAction showStyledOnlyAction,
+            SplitDefaultsAction splitDefaultsAction,
+            ViewSearch viewSearch) {
      // @formatter:on
-        super(api, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
+        super(scenebuilderManager, documentManager, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
         this.editorController = editor;
-        this.documentManager = api.getApiDoc().getDocumentManager();
+        this.documentManager = documentManager;
         this.applicationDelegate = delegate;
-        this.sceneBuilderFactory = sceneBuilderFactory;
         this.drag = drag;
-        this.fileSystem = api.getFileSystem();
+        this.fileSystem = fileSystem;
         this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
         this.viewSearch = viewSearch;
         this.viewTableAction = viewTableAction;
@@ -309,11 +308,11 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         this.showStyledOnlyAction = showStyledOnlyAction;
         this.splitDefaultsAction = splitDefaultsAction;
 
-        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        api.getApiDoc().getDocumentManager().sceneGraphRevisionDidChange()
+        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        documentManager.sceneGraphRevisionDidChange()
                 .subscribe(c -> sceneGraphRevisionDidChange());
-        api.getApiDoc().getDocumentManager().cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
-        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        documentManager.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
+        documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
     }
 
@@ -454,17 +453,18 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
         ToggleGroup cssTableTg = new ToggleGroup();
 
-        viewAs = sceneBuilderFactory.createViewMenu(getResources().getString("csspanel.view.as"));
-        viewAsTable = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("csspanel.table"),
-                cssTableTg);
-        viewAsRules = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("csspanel.rules"),
-                cssTableTg);
-        viewAsText = sceneBuilderFactory.createViewRadioMenuItem(getResources().getString("csspanel.text"), cssTableTg);
-        separator = sceneBuilderFactory.createSeparatorMenuItem();
-        copyPath = sceneBuilderFactory.createViewMenuItem(getResources().getString("csspanel.copy.path"));
-        hideDefaultValues = sceneBuilderFactory
-                .createViewMenuItem(getResources().getString("csspanel.hide.default.values"));
-        defaultsSplit = sceneBuilderFactory.createViewMenuItem(getResources().getString("csspanel.defaults.split"));
+        viewAs = new Menu(getResources().getString("csspanel.view.as"));
+        viewAsTable = new RadioMenuItem(getResources().getString("csspanel.table"));
+        viewAsTable.setToggleGroup(cssTableTg);
+        viewAsRules = new RadioMenuItem(getResources().getString("csspanel.rules"));
+        viewAsRules.setToggleGroup(cssTableTg);
+        viewAsText = new RadioMenuItem(getResources().getString("csspanel.text"));
+        viewAsText.setToggleGroup(cssTableTg);
+
+        separator = new SeparatorMenuItem();
+        copyPath = new MenuItem(getResources().getString("csspanel.copy.path"));
+        hideDefaultValues = new MenuItem(getResources().getString("csspanel.hide.default.values"));
+        defaultsSplit = new MenuItem(getResources().getString("csspanel.defaults.split"));
 
         viewAsTable.setOnAction((e) -> viewTableAction.checkAndPerform());
         viewAsRules.setOnAction((e) -> viewRulesAction.checkAndPerform());
@@ -820,7 +820,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private boolean isMultipleSelection() {
         if (selection != null && selection.getGroup() instanceof ObjectSelectionGroup) {
-            return ((ObjectSelectionGroup) selection.getGroup()).getItems().size() > 1;
+            return selection.getGroup().getItems().size() > 1;
         } else {
             // GridSelectionGroup: consider the GridPane only
             return false;
@@ -832,7 +832,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private boolean hasFxomDocument() {
-        return getApi().getApiDoc().getDocumentManager().fxomDocument().get() != null;
+        return documentManager.fxomDocument().get() != null;
     }
 
     private boolean isPickMode() {
@@ -871,7 +871,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private void addSubStructure(Node componentRootNode, Item parentItem, Node node) {
-        FXOMDocument fxomDoc = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDoc = documentManager.fxomDocument().get();
         assert fxomDoc != null;
         Node enclosingNode = getEnclosingNode(fxomDoc, node);
         // The componentRootNode can be a skin structure (Tab, Column), in this case the
@@ -1676,8 +1676,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             return null;
         }
         if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-            for (FXOMObject item : osg.getItems()) {
+            for (FXOMObject item : selection.getGroup().getItems()) {
                 if (item instanceof FXOMInstance) {
                     fxomInstance = (FXOMInstance) item;
                 }
@@ -1691,7 +1690,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private ValuePropertyMetadata getValuePropertyMeta(PropertyName propName) {
         ValuePropertyMetadata valuePropMeta = null;
         if (selectedObject instanceof FXOMInstance) {
-            valuePropMeta = Metadata.getMetadata().queryValueProperty((FXOMInstance) selectedObject, propName);
+            valuePropMeta = Api.get().getMetadata().queryValueProperty((FXOMInstance) selectedObject, propName);
         }
         return valuePropMeta;
     }
@@ -2362,13 +2361,13 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     @Override
     public void onShow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
-        
+
     }
 
     //ClipboardHandler

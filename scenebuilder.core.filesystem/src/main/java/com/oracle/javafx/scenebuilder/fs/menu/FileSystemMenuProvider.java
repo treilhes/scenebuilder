@@ -46,15 +46,15 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.fs.action.ImportFxmlAction;
 import com.oracle.javafx.scenebuilder.fs.action.ImportMediaAction;

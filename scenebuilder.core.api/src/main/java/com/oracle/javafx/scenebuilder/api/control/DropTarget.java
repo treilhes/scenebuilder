@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +34,12 @@
 package com.oracle.javafx.scenebuilder.api.control;
 
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 public interface DropTarget {
 
-	Job makeDropJob(SceneBuilderBeanFactory context, DragSource dragSource, Editor editorController);
+	AbstractJob makeDropJob(DragSource dragSource);
 
 	FXOMObject getTargetObject();
 

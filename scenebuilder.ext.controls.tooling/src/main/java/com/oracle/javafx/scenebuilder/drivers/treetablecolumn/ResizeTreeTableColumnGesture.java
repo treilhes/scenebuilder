@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,12 +39,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
@@ -61,17 +67,28 @@ import javafx.scene.input.KeyEvent;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
 
-    private final FXOMInstance columnInstance;
+    private FXOMInstance columnInstance;
     private TreeTableColumnResizer resizer;
-	private final SceneBuilderBeanFactory context;
+	private final BatchJob.Factory batchJobFactory;
+    private final JobManager jobManager;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
-
-    public ResizeTreeTableColumnGesture(SceneBuilderBeanFactory context, Content content,
-            FXOMInstance fxomInstance) {
+    protected ResizeTreeTableColumnGesture(
+            Content content,
+            JobManager jobManager,
+            BatchJob.Factory batchJobFactory,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(content);
-        this.context = context;
+        this.jobManager = jobManager;
+        this.batchJobFactory = batchJobFactory;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+    }
+
+    protected void setupGestureParameters(FXOMInstance fxomInstance) {
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject() instanceof TreeTableColumn;
 
@@ -137,19 +154,17 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
         userDidCancel();
 
         // Step #3
-        final Editor editorController
-                = contentPanelController.getEditorController();
+
         final BatchJob batchJob
-                = new BatchJob(context, editorController, true,
-                I18N.getString("label.action.edit.resize.column"));
+                = batchJobFactory.getJob(I18N.getString("label.action.edit.resize.column"), true);
         if (changeMap.isEmpty() == false) {
             batchJob.addSubJobs(makeResizeJob(columnInstance, changeMap));
         }
         if (changeMapNext.isEmpty() == false) {
             batchJob.addSubJobs(makeResizeJob(columnInstance.getNextSlibing(), changeMapNext));
         }
-        if (batchJob.extend().isExecutable()) {
-            editorController.getJobManager().push(batchJob.extend());
+        if (batchJob.isExecutable()) {
+            jobManager.push(batchJob);
         }
 
         resizer = null; // For sake of symetry...
@@ -176,13 +191,13 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
      * Private
      */
 
-    private List<Job> makeResizeJob(FXOMObject columnObject, Map<PropertyName, Object> changeMap) {
+    private List<AbstractJob> makeResizeJob(FXOMObject columnObject, Map<PropertyName, Object> changeMap) {
         assert columnObject.getSceneGraphObject() instanceof TreeTableColumn;
         assert columnObject instanceof FXOMInstance;
 
-        final List<Job> result = new ArrayList<>();
+        final List<AbstractJob> result = new ArrayList<>();
 
-        final Metadata metadata = Metadata.getMetadata();
+        final Metadata metadata = Api.get().getMetadata();
         final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
         for (Map.Entry<PropertyName,Object> e : changeMap.entrySet()) {
             final ValuePropertyMetadata vpm = metadata.queryValueProperty(columnInstance, e.getKey());
@@ -191,13 +206,21 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
         }
 
         for (Map.Entry<ValuePropertyMetadata, Object> e : metaValueMap.entrySet()) {
-            final Job job = new ModifyObjectJob(context,
-                    (FXOMInstance) columnObject,
-                    e.getKey(),
-                    e.getValue(),
-                    contentPanelController.getEditorController()).extend();
+            final AbstractJob job = modifyObjectJobFactory.getJob((FXOMInstance) columnObject,e.getKey(),e.getValue());
             result.add(job);
         }
         return result;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<ResizeTreeTableColumnGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public ResizeTreeTableColumnGesture getGesture(FXOMInstance fxomInstance) {
+            return create(ResizeTreeTableColumnGesture.class, g -> g.setupGestureParameters(fxomInstance));
+        }
+    }
+
 }

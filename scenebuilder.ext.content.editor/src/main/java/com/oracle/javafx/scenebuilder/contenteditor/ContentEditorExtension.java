@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.contenteditor.actions.DeleteAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.FocusContentAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.SelectAllAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.SelectNoneAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleGuidesVisibilityAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleOutlinesVisibilityAction;
@@ -48,6 +52,7 @@ import com.oracle.javafx.scenebuilder.contenteditor.controller.HudWindowControll
 import com.oracle.javafx.scenebuilder.contenteditor.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
+import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.DebugMouseGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
@@ -58,6 +63,7 @@ import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.Alignment
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.contenteditor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
 
 public class ContentEditorExtension extends AbstractExtension {
     @Override
@@ -69,28 +75,39 @@ public class ContentEditorExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-            I18NContentEditor.class,
-            ContentPanelController.class,
-            ContentModeProvider.class,
-            HudWindowController.class,
-            WorkspaceController.class,
-            SelectWithMarqueeGesture.class,
-            SelectAndMoveGesture.class,
-            DragGesture.class,
-            ZoomGesture.class,
-            AlignmentGuidesColorPreference.class,
-            BackgroundImagePreference.class,
-            EditModeController.class,
-            EditorController.class, 
-            ContextMenuController.class,
-            ErrorReportImpl.class,
-            SetRootSizesMenuItemProvider.class,
-            SetRootSizeAction.class,
-            ToggleGuidesVisibilityAction.class,
-            ToggleOutlinesVisibilityAction.class,
-            ToggleMenuItemProvider.class,
-            FocusContentAction.class,
-            FocusContentMenuItemProvider.class
+                AlignmentGuidesColorPreference.class,
+                BackgroundImagePreference.class,
+                ContentModeProvider.class,
+                ContentPanelController.class,
+                ContextMenuController.class,
+                DebugMouseGesture.class,
+                DebugMouseGesture.Factory.class,
+                DeleteAction.class,
+                DragGesture.class,
+                DragGesture.Factory.class,
+                EditModeController.class,
+                EditorController.class,
+                ErrorReportImpl.class,
+                FocusContentAction.class,
+                FocusContentMenuItemProvider.class,
+                HudWindowController.class,
+                I18NContentEditor.class,
+                MoveWithKeyGesture.class,
+                MoveWithKeyGesture.Factory.class,
+                SelectAllAction.class,
+                SelectAndMoveGesture.class,
+                SelectAndMoveGesture.Factory.class,
+                SelectNoneAction.class,
+                SelectWithMarqueeGesture.class,
+                SelectWithMarqueeGesture.Factory.class,
+                SetRootSizeAction.class,
+                SetRootSizesMenuItemProvider.class,
+                ToggleGuidesVisibilityAction.class,
+                ToggleMenuItemProvider.class,
+                ToggleOutlinesVisibilityAction.class,
+                WorkspaceController.class,
+                ZoomGesture.class,
+                ZoomGesture.Factory.class
             );
      // @formatter:on
     }

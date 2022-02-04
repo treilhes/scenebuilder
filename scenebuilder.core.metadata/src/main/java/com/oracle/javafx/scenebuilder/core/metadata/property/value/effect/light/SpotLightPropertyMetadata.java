@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -78,10 +79,10 @@ public class SpotLightPropertyMetadata extends ComplexPropertyMetadata<Light.Spo
             .withDefaultValue(1.0)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, Light.Spot defaultValue,
-            InspectorPath inspectorPath) {
-        super(name, Light.Spot.class, readWrite, defaultValue, inspectorPath);
-    }
+//    public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, Light.Spot defaultValue,
+//            InspectorPath inspectorPath) {
+//        super(name, Light.Spot.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected SpotLightPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

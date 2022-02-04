@@ -32,7 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.gesture;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 
 import javafx.scene.input.KeyEvent;
 
@@ -40,10 +44,16 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class DiscardGesture extends AbstractMouseGesture {
 
-    public DiscardGesture(Content contentPanelController) {
+    protected DiscardGesture(Content contentPanelController) {
         super(contentPanelController);
+    }
+
+    protected void setupGestureParameters() {
+        //Noop
     }
 
     /*
@@ -77,4 +87,16 @@ public class DiscardGesture extends AbstractMouseGesture {
     @Override
     protected void userDidCancel() {
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<DiscardGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public DiscardGesture getGesture() {
+            return create(DiscardGesture.class, g -> g.setupGestureParameters());
+        }
+    }
+
 }

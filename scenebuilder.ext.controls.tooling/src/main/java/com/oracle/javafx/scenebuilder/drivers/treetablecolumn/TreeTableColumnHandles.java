@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,16 +35,21 @@ package com.oracle.javafx.scenebuilder.drivers.treetablecolumn;
 
 import java.util.List;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.drivers.treetableview.TreeTableViewDesignInfoX;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 
 import javafx.beans.value.ChangeListener;
@@ -63,7 +69,7 @@ import javafx.scene.shape.Line;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class TreeTableColumnHandles extends AbstractResilientHandles<Object> {
+public class TreeTableColumnHandles extends AbstractResilientHandles<Object> implements InitializingBean {
 
     /*
      * Handles for TreeTableColumn need a special treatment.
@@ -82,14 +88,27 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> {
             = new TreeTableViewDesignInfoX();
     private TreeTableView<?> treeTableView;
     private Node columnHeaderNode;
-	private SceneBuilderBeanFactory context;
+	//private final SceneBuilderBeanFactory context;
+    private final DesignHierarchyMask.Factory maskFactory;
+    private final ResizeTreeTableColumnGesture.Factory resizeTreeTableColumnGestureFactory;
 
     public TreeTableColumnHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(context, contentPanelController, Object.class);
-        this.context = context;
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
+            DesignHierarchyMask.Factory maskFactory,
+            ResizeTreeTableColumnGesture.Factory resizeTreeTableColumnGestureFactory) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory,  Object.class);
+        //this.context = context;
+        this.maskFactory = maskFactory;
+        this.resizeTreeTableColumnGestureFactory = resizeTreeTableColumnGestureFactory;
+        //getRootNode().getChildren().add(grips); // Above handles
+    }
 
+    //FIXME replace with jsr250 annotation @PostConstrut
+    @Override
+    public void afterPropertiesSet() throws Exception {
         getRootNode().getChildren().add(grips); // Above handles
     }
 
@@ -171,11 +190,10 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> {
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
             final FXOMObject parentObject = getFxomInstance().getParentObject();
-            final DesignHierarchyMask m = new DesignHierarchyMask(parentObject);
+            final HierarchyMask m = maskFactory.getMask(parentObject);
             final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
             assert columnObject instanceof FXOMInstance;
-            result = new ResizeTreeTableColumnGesture(context, getContentPanelController(),
-                    (FXOMInstance)columnObject);
+            result = resizeTreeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {
             result = super.findGesture(node);
         }

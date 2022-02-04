@@ -45,13 +45,13 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

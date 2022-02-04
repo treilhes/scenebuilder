@@ -36,12 +36,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
 
@@ -54,17 +55,19 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * 
+ *
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodeResizeGuide extends AbstractResizeGuide<Node> {
 
     private ResizingGuideController resizingGuideController;
+    private DesignHierarchyMask.Factory maskFactory;
 
-    public NodeResizeGuide(Content contentPanelController) {
+    public NodeResizeGuide(DesignHierarchyMask.Factory maskFactory, Content contentPanelController) {
         super(contentPanelController, Node.class);
-        
+        this.maskFactory = maskFactory;
+
     }
 
     @Override
@@ -76,17 +79,17 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
         //resizingGuideController.match(targetBounds);
     }
 
-    
+
 
     @Override
     public void update() {
         super.update();
         AbstractGesture gesture = AbstractGesture.lookupGesture(getSceneGraphObject());
-        
+
         if (gesture != null && gesture instanceof ResizeGesture) {
             ResizeGesture resizeGesture = (ResizeGesture)gesture;
             setupResizingGuideController(resizeGesture);
-            
+
          // Compute mouse displacement in local coordinates of scene graph object
             final double startSceneX = resizeGesture.getMousePressedEvent().getSceneX();
             final double startSceneY = resizeGesture.getMousePressedEvent().getSceneY();
@@ -104,7 +107,7 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
                 rawDeltaX = currentSceneX - startSceneX;
                 rawDeltaY = currentSceneY - startSceneY;
             }
-            
+
          // Clamps deltaX/deltaY relatively to tunable.
             // Example: tunable == E => clampDeltaX = rawDeltaX, clampDeltaY = 0.0
             final Point2D clampDelta = resizeGesture.clampVector(rawDeltaX, rawDeltaY);
@@ -139,10 +142,10 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
         addToResizingGuideController(getFxomObject().getFxomDocument().getFxomRoot());
 
         getRootNode().getChildren().clear();
-        
+
         final Group guideGroup = resizingGuideController.getGuideGroup();
         assert guideGroup.isMouseTransparent();
-        
+
         getRootNode().getChildren().add(guideGroup);
     }
 
@@ -156,7 +159,7 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
                 resizingGuideController.addSampleBounds(sceneGraphNode);
             }
 
-            final DesignHierarchyMask m = new DesignHierarchyMask(fxomObject);
+            final HierarchyMask m = maskFactory.getMask(fxomObject);
             if (m.isAcceptingSubComponent()) {
                 for (int i = 0, count = m.getSubComponentCount(); i < count; i++) {
                     addToResizingGuideController(m.getSubComponentAtIndex(i));

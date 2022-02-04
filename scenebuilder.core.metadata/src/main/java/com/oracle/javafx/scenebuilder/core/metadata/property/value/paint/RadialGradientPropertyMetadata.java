@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -107,10 +108,10 @@ public class RadialGradientPropertyMetadata extends ComplexPropertyMetadata<Radi
             .withDefaultValue(DEFAULT_STOPS)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected RadialGradientPropertyMetadata(PropertyName name, boolean readWrite, 
-            RadialGradient defaultValue, InspectorPath inspectorPath) {
-        super(name, RadialGradient.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected RadialGradientPropertyMetadata(PropertyName name, boolean readWrite, 
+//            RadialGradient defaultValue, InspectorPath inspectorPath) {
+//        super(name, RadialGradient.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected RadialGradientPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

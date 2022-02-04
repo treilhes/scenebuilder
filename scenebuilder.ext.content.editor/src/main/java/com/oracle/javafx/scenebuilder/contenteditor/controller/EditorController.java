@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -59,18 +60,16 @@ import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -79,32 +78,35 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.job.editor.AddContextMenuToSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.AddTooltipToSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.BringForwardJob;
-import com.oracle.javafx.scenebuilder.job.editor.BringToFrontJob;
-import com.oracle.javafx.scenebuilder.job.editor.CutSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.DeleteSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.DuplicateSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.FitToParentSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.ImportFileJob;
-import com.oracle.javafx.scenebuilder.job.editor.IncludeFileJob;
-import com.oracle.javafx.scenebuilder.job.editor.PasteIntoJob;
-import com.oracle.javafx.scenebuilder.job.editor.PasteJob;
-import com.oracle.javafx.scenebuilder.job.editor.SendBackwardJob;
-import com.oracle.javafx.scenebuilder.job.editor.SendToBackJob;
-import com.oracle.javafx.scenebuilder.job.editor.TrimSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.UseComputedSizesSelectionJob;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.GridSelectionGroup;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.AddColumnJob;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.AddRowJob;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.GridPaneJobUtils.Position;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.MoveColumnJob;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.MoveRowJob;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.SpanJob;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.job.SpanJob.SpanAction;
 import com.oracle.javafx.scenebuilder.job.editor.UsePredefinedSizeJob;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.AddColumnJob;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.AddRowJob;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.MoveColumnJob;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.MoveRowJob;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.v2.SpanJob;
-import com.oracle.javafx.scenebuilder.job.editor.gridpane.v2.SpanJob.SpanAction;
-import com.oracle.javafx.scenebuilder.job.editor.wrap.AbstractWrapInJob;
-import com.oracle.javafx.scenebuilder.job.editor.wrap.UnwrapJob;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.selection.job.AddContextMenuToSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.AddTooltipToSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.BringForwardJob;
+import com.oracle.javafx.scenebuilder.selection.job.BringToFrontJob;
+import com.oracle.javafx.scenebuilder.selection.job.CutSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.DeleteSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.ImportFileJob;
+import com.oracle.javafx.scenebuilder.selection.job.IncludeFileJob;
+import com.oracle.javafx.scenebuilder.selection.job.PasteIntoJob;
+import com.oracle.javafx.scenebuilder.selection.job.PasteJob;
+import com.oracle.javafx.scenebuilder.selection.job.SendBackwardJob;
+import com.oracle.javafx.scenebuilder.selection.job.SendToBackJob;
+import com.oracle.javafx.scenebuilder.selection.job.TrimSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.wrap.AbstractWrapInJob;
+import com.oracle.javafx.scenebuilder.selection.job.wrap.UnwrapJob;
+import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInJobFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -119,8 +121,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
- * An editor controller is the central object which coordinates the editing
- * of an FXML document across the different panels (hierarchy, content,
+ * An editor controller is the central object which coordinates the editing of
+ * an FXML document across the different panels (hierarchy, content,
  * inspector...).
  * <p>
  * An editor controller is associated to an FXML document. It can perform
@@ -142,62 +144,150 @@ public class EditorController implements Editor {
 //    private final DragController dragController;
     private final InlineEdit inlineEditController;// = new InlineEditController(this);
     private final ContextMenuController contextMenuController;// = new ContextMenuController(this);
-    //private final WatchingController watchingController;// = new WatchingController(this);
+    // private final WatchingController watchingController;// = new
+    // WatchingController(this);
 
-    //private final ObjectProperty<Library> libraryProperty;
+    // private final ObjectProperty<Library> libraryProperty;
     private final ObjectProperty<URL> fxmlLocationProperty;
-    private final BooleanProperty pickModeEnabledProperty
-            = new SimpleBooleanProperty(false);
-    private final BooleanProperty sampleDataEnabledProperty
-            = new SimpleBooleanProperty(false);
+    private final BooleanProperty pickModeEnabledProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty sampleDataEnabledProperty = new SimpleBooleanProperty(false);
 
-    //private Callback<Void, Boolean> requestTextEditingSessionEnd;
+    // private Callback<Void, Boolean> requestTextEditingSessionEnd;
 
     private Stage ownerWindow;
 
-	private final SceneBuilderBeanFactory context;
-	private final FileSystem fileSystem;
-	private final Dialog dialog;
+    private final SceneBuilderBeanFactory context;
+    private final FileSystem fileSystem;
+    private final Dialog dialog;
     private I18nResourceProvider resourceConfig;
     private final DocumentManager documentManager;
 
     private FXOMDocument fxomDocument;
 //    private Library builtinLibrary;
-    //private final Api api;
+    // private final Api api;
     private final SceneBuilderManager sceneBuilderManager;
+
+    private final GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory;
+    private final BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
+
+    private final AddColumnJob.Factory addColumnJobFactory;
+    private final AddRowJob.Factory addRowJobFactory;
+    private final BringForwardJob.Factory bringForwardJobFactory;
+    private final BringToFrontJob.Factory bringToFrontJobFactory;
+    private final CutSelectionJob.Factory cutSelectionJobFactory;
+    private final SpanJob.Factory spanJobFactory;
+    private final DeleteSelectionJob.Factory deleteSelectionJobFactory;
+    private final DuplicateSelectionJob.Factory duplicateSelectionJobFactory;
+    private final FitToParentSelectionJob.Factory fitToParentSelectionJobFactory;
+    private final MoveColumnJob.Factory moveColumnJobFactory;
+    private final MoveRowJob.Factory moveRowJobFactory;
+    private final PasteJob.Factory pasteJobFactory;
+    private final PasteIntoJob.Factory pasteIntoJobFactory;
+    private final SendBackwardJob.Factory sendBackwardJobFactory;
+    private final SendToBackJob.Factory sendToBackJobFactory;
+    private final UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory;
+    private final TrimSelectionJob.Factory trimSelectionJobFactory;
+    private final UnwrapJob.Factory unwrapJobFactory;
+    private final UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory;
+    private final ImportFileJob.Factory importFileJobFactory;
+    private final IncludeFileJob.Factory includeFileJobFactory;
+    private final AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory;
+    private final AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory;
+
+    private final WrapInJobFactory wrapInJobFactory;
+    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
 
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
+    // @formatter:off
     public EditorController(
             @Autowired Api api,
-    	    @Lazy @Autowired InlineEdit inlineEditController,
-    		@Lazy @Autowired ContextMenuController contextMenuController
+            @Lazy @Autowired InlineEdit inlineEditController,
+            @Lazy @Autowired ContextMenuController contextMenuController,
 
-    		) {
-        //this.api = api;
-    	this.context = api.getContext();
-    	this.sceneBuilderManager = api.getSceneBuilderManager();
-    	this.jobManager = api.getApiDoc().getJobManager();
-    	this.fileSystem = api.getFileSystem();
-    	this.dialog = api.getApiDoc().getDialog();
+            GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory,
+            BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory,
+
+            AddColumnJob.Factory addColumnJobFactory,
+            AddRowJob.Factory addRowJobFactory,
+            BringForwardJob.Factory bringForwardJobFactory,
+            BringToFrontJob.Factory bringToFrontJobFactory,
+            CutSelectionJob.Factory cutSelectionJobFactory,
+            SpanJob.Factory spanJobFactory,
+            DeleteSelectionJob.Factory deleteSelectionJobFactory,
+            DuplicateSelectionJob.Factory duplicateSelectionJobFactory,
+            FitToParentSelectionJob.Factory fitToParentSelectionJobFactory,
+            MoveColumnJob.Factory moveColumnJobFactory,
+            MoveRowJob.Factory moveRowJobFactory,
+            PasteJob.Factory pasteJobFactory,
+            PasteIntoJob.Factory pasteIntoJobFactory,
+            SendBackwardJob.Factory sendBackwardJobFactory,
+            SendToBackJob.Factory sendToBackJobFactory,
+            UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory,
+            TrimSelectionJob.Factory trimSelectionJobFactory,
+            UnwrapJob.Factory unwrapJobFactory,
+            UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory,
+            ImportFileJob.Factory importFileJobFactory,
+            IncludeFileJob.Factory includeFileJobFactory,
+            AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory,
+            AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory,
+
+            WrapInJobFactory wrapInJobFactory,
+            GridSelectionGroup.Factory gridSelectionGroupFactory
+        	) {
+        // @formatter:on
+        // this.api = api;
+        this.context = api.getContext();
+        this.sceneBuilderManager = api.getSceneBuilderManager();
+        this.jobManager = api.getApiDoc().getJobManager();
+        this.fileSystem = api.getFileSystem();
+        this.dialog = api.getApiDoc().getDialog();
 //    	this.dragController = dragController;
-    	this.messageLogger = api.getApiDoc().getMessageLogger();
-    	this.selection = api.getApiDoc().getSelection();
-    	this.documentManager = api.getApiDoc().getDocumentManager();
-    	this.errorReport = api.getApiDoc().getErrorReport();
-    	this.inlineEditController = inlineEditController;
-    	this.contextMenuController = contextMenuController;
-    	//this.watchingController = watchingController;
+        this.messageLogger = api.getApiDoc().getMessageLogger();
+        this.selection = api.getApiDoc().getSelection();
+        this.documentManager = api.getApiDoc().getDocumentManager();
+        this.errorReport = api.getApiDoc().getErrorReport();
+        this.inlineEditController = inlineEditController;
+        this.contextMenuController = contextMenuController;
+        this.gridSelectionGroupFactory = gridSelectionGroupFactory;
 
+        this.gridPaneHierarchyMaskFactory = gridPaneHierarchyMaskFactory;
+        this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;
 
-    	//libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
-    	fxmlLocationProperty = new SimpleObjectProperty<>();
+        this.addColumnJobFactory = addColumnJobFactory;
+        this.addRowJobFactory = addRowJobFactory;
+        this.bringForwardJobFactory = bringForwardJobFactory;
+        this.bringToFrontJobFactory = bringToFrontJobFactory;
+        this.cutSelectionJobFactory = cutSelectionJobFactory;
+        this.spanJobFactory = spanJobFactory;
+        this.deleteSelectionJobFactory = deleteSelectionJobFactory;
+        this.duplicateSelectionJobFactory = duplicateSelectionJobFactory;
+        this.fitToParentSelectionJobFactory = fitToParentSelectionJobFactory;
+        this.moveColumnJobFactory = moveColumnJobFactory;
+        this.moveRowJobFactory = moveRowJobFactory;
+        this.pasteJobFactory = pasteJobFactory;
+        this.pasteIntoJobFactory = pasteIntoJobFactory;
+        this.sendToBackJobFactory = sendToBackJobFactory;
+        this.sendBackwardJobFactory = sendBackwardJobFactory;
+        this.usePredefinedSizeJobFactory = usePredefinedSizeJobFactory;
+        this.trimSelectionJobFactory = trimSelectionJobFactory;
+        this.unwrapJobFactory = unwrapJobFactory;
+        this.useComputedSizesSelectionJobFactory = useComputedSizesSelectionJobFactory;
+        this.importFileJobFactory = importFileJobFactory;
+        this.includeFileJobFactory = includeFileJobFactory;
+        this.addContextMenuToSelectionJobFactory = addContextMenuToSelectionJobFactory;
+        this.addTooltipToSelectionJobFactory = addTooltipToSelectionJobFactory;
 
-    	//TODO remove below
-    	//libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
+        this.wrapInJobFactory = wrapInJobFactory;
 
-    	api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
+        // libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
+        fxmlLocationProperty = new SimpleObjectProperty<>();
+
+        // TODO remove below
+        // libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
+
+        api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
 
 //	@Override
@@ -205,9 +295,10 @@ public class EditorController implements Editor {
 //		initialize();
 //	}
 
-	@Override
+    @Override
     public void initialize() {
-	    jobManager.revisionProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
+        jobManager.revisionProperty()
+                .addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
         documentManager.i18nResourceConfig().subscribe(s -> {
             resourceConfig = s;
             resourcesDidChange();
@@ -218,8 +309,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Sets the fxml content to be edited by this editor.
-     * A null value makes this editor empty.
+     * Sets the fxml content to be edited by this editor. A null value makes this
+     * editor empty.
      *
      * @param fxmlText null or the fxml text to be edited
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
@@ -256,8 +347,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Returns true if fxml content being edited can be returned safely.
-     * This method will return false if there is a text editing session on-going.
+     * Returns true if fxml content being edited can be returned safely. This method
+     * will return false if there is a text editing session on-going.
      *
      * @return true if fxml content being edited can be returned safely.
      */
@@ -281,14 +372,14 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Tells this editor that a text editing session has started.
-     * The editor controller may invoke the requestSessionEnd() callback
-     * if it needs the text editing session to stop. The callback should;
-     *   - either stop the text editing session, invoke textEditingSessionDidEnd()
-     *     and return true
-     *   - either keep the text editing session on-going and return false
+     * Tells this editor that a text editing session has started. The editor
+     * controller may invoke the requestSessionEnd() callback if it needs the text
+     * editing session to stop. The callback should; - either stop the text editing
+     * session, invoke textEditingSessionDidEnd() and return true - either keep the
+     * text editing session on-going and return false
      *
-     * @param requestSessionEnd Callback that should end the text editing session or return false
+     * @param requestSessionEnd Callback that should end the text editing session or
+     *                          return false
      */
     @Override
     public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd) {
@@ -297,14 +388,13 @@ public class EditorController implements Editor {
         inlineEditController.textEditingSessionDidBegin(requestSessionEnd);
     }
 
-
     /**
      * Tells this editor that the text editing session has ended.
      */
     @Override
     public void textEditingSessionDidEnd() {
-        //assert requestTextEditingSessionEnd != null;
-        //requestTextEditingSessionEnd = null;
+        // assert requestTextEditingSessionEnd != null;
+        // requestTextEditingSessionEnd = null;
         inlineEditController.textEditingSessionDidEnd();
     }
 
@@ -313,12 +403,13 @@ public class EditorController implements Editor {
      */
     @Override
     public boolean isTextEditingSessionOnGoing() {
-        //return requestTextEditingSessionEnd != null;
+        // return requestTextEditingSessionEnd != null;
         return inlineEditController.isTextEditingSessionOnGoing();
     }
 
     /**
      * The property holding the fxml location associated to this editor.
+     *
      * @return the property holding the fxml location associated to this editor.
      */
     @Override
@@ -327,9 +418,9 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Sets the location of the fxml being edited.
-     * If null value is passed, fxml text is being interpreted with any location
-     * (ie some references may be broken).
+     * Sets the location of the fxml being edited. If null value is passed, fxml
+     * text is being interpreted with any location (ie some references may be
+     * broken).
      *
      * @param fxmlLocation null or the location of the fxml being edited.
      */
@@ -444,6 +535,7 @@ public class EditorController implements Editor {
 
     /**
      * Returns true if 'pick mode' is enabled for this editor.
+     *
      * @return true if 'pick mode' is enabled for this editor.
      */
     @Override
@@ -472,8 +564,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Returns true if content and preview panels attached to this editor
-     * should display sample data.
+     * Returns true if content and preview panels attached to this editor should
+     * display sample data.
      *
      * @return true if content and preview panels should display sample data.
      */
@@ -506,7 +598,6 @@ public class EditorController implements Editor {
         return sampleDataEnabledProperty;
     }
 
-
     /**
      * Returns null or the location of the fxml being edited.
      *
@@ -518,11 +609,11 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Sets both fxml text and location to be edited by this editor.
-     * Performs setFxmlText() and setFxmlLocation() but in a optimized manner
-     * (it avoids an extra scene graph refresh).
+     * Sets both fxml text and location to be edited by this editor. Performs
+     * setFxmlText() and setFxmlLocation() but in a optimized manner (it avoids an
+     * extra scene graph refresh).
      *
-     * @param fxmlText null or the fxml text to be edited
+     * @param fxmlText     null or the fxml text to be edited
      * @param fxmlLocation null or the location of the fxml text being edited
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
@@ -531,54 +622,54 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Sets both fxml text and location to be edited by this editor.
-     * Performs setFxmlText() and setFxmlLocation() but in a optimized manner
-     * (it avoids an extra scene graph refresh).
+     * Sets both fxml text and location to be edited by this editor. Performs
+     * setFxmlText() and setFxmlLocation() but in a optimized manner (it avoids an
+     * extra scene graph refresh).
      *
-     * @param fxmlText null or the fxml text to be edited
+     * @param fxmlText     null or the fxml text to be edited
      * @param fxmlLocation null or the location of the fxml text being edited
-     * @param checkTheme if set to true a check will be made if the fxml contains
-     *                           Gluon controls and if so, the correct theme is set
+     * @param checkTheme   if set to true a check will be made if the fxml contains
+     *                     Gluon controls and if so, the correct theme is set
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
     @Override
     public void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
         updateFxomDocument(fxmlText, fxmlLocation,
-                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>(): resourceConfig.getBundles()),
+                new CombinedResourceBundle(resourceConfig == null ? new ArrayList<>() : resourceConfig.getBundles()),
                 checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
 
     /**
-     * Sets fxml text, location and resources to be edited by this editor.
-     * Performs setFxmlText(), setFxmlLocation() and setResources() but in an
-     * optimized manner (it avoids extra scene graph refresh).
+     * Sets fxml text, location and resources to be edited by this editor. Performs
+     * setFxmlText(), setFxmlLocation() and setResources() but in an optimized
+     * manner (it avoids extra scene graph refresh).
      *
-     * @param fxmlText null or the fxml text to be edited
+     * @param fxmlText     null or the fxml text to be edited
      * @param fxmlLocation null or the location of the fxml text being edited
-     * @param resources null or the resource bundle used to load the fxml text
+     * @param resources    null or the resource bundle used to load the fxml text
      *
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
-    private void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation,
-                                                ResourceBundle resources) throws IOException {
+    private void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation, ResourceBundle resources)
+            throws IOException {
         setFxmlTextLocationAndResources(fxmlText, fxmlLocation, resources, false);
     }
 
     /**
-     * Sets fxml text, location and resources to be edited by this editor.
-     * Performs setFxmlText(), setFxmlLocation() and setResources() but in an
-     * optimized manner (it avoids extra scene graph refresh).
+     * Sets fxml text, location and resources to be edited by this editor. Performs
+     * setFxmlText(), setFxmlLocation() and setResources() but in an optimized
+     * manner (it avoids extra scene graph refresh).
      *
-     * @param fxmlText null or the fxml text to be edited
+     * @param fxmlText     null or the fxml text to be edited
      * @param fxmlLocation null or the location of the fxml text being edited
-     * @param resources null or the resource bundle used to load the fxml text
-     * @param checkTheme if set to true a check will be made if the fxml contains G
-     *                           Gluon controls and if so, the correct theme is set
+     * @param resources    null or the resource bundle used to load the fxml text
+     * @param checkTheme   if set to true a check will be made if the fxml contains
+     *                     G Gluon controls and if so, the correct theme is set
      * @throws IOException if fxml text cannot be parsed and loaded correctly.
      */
-    private void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation,
-            ResourceBundle resources, boolean checkTheme) throws IOException {
+    private void setFxmlTextLocationAndResources(String fxmlText, URL fxmlLocation, ResourceBundle resources,
+            boolean checkTheme) throws IOException {
         updateFxomDocument(fxmlText, fxmlLocation, resources, checkTheme);
         this.fxmlLocationProperty.setValue(fxmlLocation);
     }
@@ -674,7 +765,7 @@ public class EditorController implements Editor {
     /**
      * @treatAsPrivate Returns the selection associated to this editor.
      *
-     * @return  the selection associated to this editor.
+     * @return the selection associated to this editor.
      */
     @Override
     public Selection getSelection() {
@@ -703,11 +794,10 @@ public class EditorController implements Editor {
         return selectedObjects;
     }
 
-
     /**
      * @treatAsPrivate Returns the job manager associated to this editor.
      *
-     * @return  the job manager associated to this editor.
+     * @return the job manager associated to this editor.
      */
     @Override
     public JobManager getJobManager() {
@@ -717,7 +807,7 @@ public class EditorController implements Editor {
     /**
      * @treatAsPrivate Returns the message log associated to this editor.
      *
-     * @return  the message log associated to this editor.
+     * @return the message log associated to this editor.
      */
     @Override
     public MessageLogger getMessageLog() {
@@ -727,7 +817,7 @@ public class EditorController implements Editor {
     /**
      * @treatAsPrivate Returns the error report associated to this editor.
      *
-     * @return  the error report associated to this editor.
+     * @return the error report associated to this editor.
      */
     @Override
     public ErrorReport getErrorReport() {
@@ -755,7 +845,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * @treatAsPrivate Returns the context menu controller associated to this editor.
+     * @treatAsPrivate Returns the context menu controller associated to this
+     *                 editor.
      *
      * @return the context menu controller associated to this editor.
      */
@@ -765,8 +856,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Returns true if the undo action is permitted (ie there is something
-     * to be undone).
+     * Returns true if the undo action is permitted (ie there is something to be
+     * undone).
      *
      * @return true if the undo action is permitted.
      */
@@ -795,8 +886,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Returns true if the redo action is permitted (ie there is something
-     * to be redone).
+     * Returns true if the redo action is permitted (ie there is something to be
+     * redone).
      *
      * @return true if the redo action is permitted.
      */
@@ -838,252 +929,252 @@ public class EditorController implements Editor {
      */
     @Override
     public void performEditAction(EditAction editAction) {
-        switch(editAction) {
-            case ADD_CONTEXT_MENU: {
-                performAddContextMenu();
-                break;
-            }
-            case ADD_TOOLTIP: {
-                performAddTooltip();
-                break;
-            }
-            case ADD_COLUMN_BEFORE: {
-                final Job job = new AddColumnJob(context, this, Position.BEFORE).extend();
-                jobManager.push(job);
-                break;
-            }
-            case ADD_COLUMN_AFTER: {
-                final Job job = new AddColumnJob(context, this, Position.AFTER).extend();
-                jobManager.push(job);
-                break;
-            }
-            case ADD_ROW_ABOVE: {
-                final Job job = new AddRowJob(context, this, Position.ABOVE).extend();
-                jobManager.push(job);
-                break;
-            }
-            case ADD_ROW_BELOW: {
-                final Job job = new AddRowJob(context, this, Position.BELOW).extend();
-                jobManager.push(job);
-                break;
-            }
-            case BRING_FORWARD: {
-                final Job job = new BringForwardJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case BRING_TO_FRONT: {
-                final Job job = new BringToFrontJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case CUT: {
-                final Job job = new CutSelectionJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case DECREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.DECREASE_COLUMN_SPAN).extend();
-                jobManager.push(job);
-                break;
-            }
-            case DECREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.DECREASE_ROW_SPAN).extend();
-                jobManager.push(job);
-                break;
-            }
-            case DELETE: {
-                final Job job = new DeleteSelectionJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case DUPLICATE: {
-                final Job job = new DuplicateSelectionJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case FIT_TO_PARENT: {
-                final Job job = new FitToParentSelectionJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case INCREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.INCREASE_COLUMN_SPAN).extend();
-                jobManager.push(job);
-                break;
-            }
-            case INCREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.INCREASE_ROW_SPAN).extend();
-                jobManager.push(job);
-                break;
-            }
-            case MOVE_COLUMN_BEFORE: {
-                final Job job = new MoveColumnJob(context, this, Position.BEFORE).extend();
-                jobManager.push(job);
-                break;
-            }
-            case MOVE_COLUMN_AFTER: {
-                final Job job = new MoveColumnJob(context, this, Position.AFTER).extend();
-                jobManager.push(job);
-                break;
-            }
-            case MOVE_ROW_ABOVE: {
-                final Job job = new MoveRowJob(context, this, Position.ABOVE).extend();
-                jobManager.push(job);
-                break;
-            }
-            case MOVE_ROW_BELOW: {
-                final Job job = new MoveRowJob(context, this, Position.BELOW).extend();
-                jobManager.push(job);
-                break;
-            }
-            case PASTE: {
-                final Job job = new PasteJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case PASTE_INTO: {
-                final Job job = new PasteIntoJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SEND_BACKWARD: {
-                final Job job = new SendBackwardJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SEND_TO_BACK: {
-                final Job job = new SendToBackJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SET_SIZE_335x600: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_335x600).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SET_SIZE_900x600: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_900x600).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SET_SIZE_320x240: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_320x240).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SET_SIZE_640x480: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_640x480).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SET_SIZE_1280x800: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_1280x800).extend();
-                jobManager.push(job);
-                break;
-            }
-            case SET_SIZE_1920x1080: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_1920x1080).extend();
-                jobManager.push(job);
-                break;
-            }
-            case TRIM: {
-                final Job job = new TrimSelectionJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case UNWRAP: {
-                final Job job = new UnwrapJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case USE_COMPUTED_SIZES: {
-                final Job job = new UseComputedSizesSelectionJob(context, this).extend();
-                jobManager.push(job);
-                break;
-            }
-            case WRAP_IN_ANCHOR_PANE: {
-                performWrap(javafx.scene.layout.AnchorPane.class);
-                break;
-            }
-            case WRAP_IN_BORDER_PANE: {
-                performWrap(javafx.scene.layout.BorderPane.class);
-                break;
-            }
-            case WRAP_IN_BUTTON_BAR: {
-                performWrap(javafx.scene.control.ButtonBar.class);
-                break;
-            }
-            case WRAP_IN_DIALOG_PANE: {
-                performWrap(javafx.scene.control.DialogPane.class);
-                break;
-            }
-            case WRAP_IN_FLOW_PANE: {
-                performWrap(javafx.scene.layout.FlowPane.class);
-                break;
-            }
-            case WRAP_IN_GRID_PANE: {
-                performWrap(javafx.scene.layout.GridPane.class);
-                break;
-            }
-            case WRAP_IN_GROUP: {
-                performWrap(javafx.scene.Group.class);
-                break;
-            }
-            case WRAP_IN_HBOX: {
-                performWrap(javafx.scene.layout.HBox.class);
-                break;
-            }
-            case WRAP_IN_PANE: {
-                performWrap(javafx.scene.layout.Pane.class);
-                break;
-            }
-            case WRAP_IN_SCROLL_PANE: {
-                performWrap(javafx.scene.control.ScrollPane.class);
-                break;
-            }
-            case WRAP_IN_SPLIT_PANE: {
-                performWrap(javafx.scene.control.SplitPane.class);
-                break;
-            }
-            case WRAP_IN_STACK_PANE: {
-                performWrap(javafx.scene.layout.StackPane.class);
-                break;
-            }
-            case WRAP_IN_TAB_PANE: {
-                performWrap(javafx.scene.control.TabPane.class);
-                break;
-            }
-            case WRAP_IN_TEXT_FLOW: {
-                performWrap(javafx.scene.text.TextFlow.class);
-                break;
-            }
-            case WRAP_IN_TILE_PANE: {
-                performWrap(javafx.scene.layout.TilePane.class);
-                break;
-            }
-            case WRAP_IN_TITLED_PANE: {
-                performWrap(javafx.scene.control.TitledPane.class);
-                break;
-            }
-            case WRAP_IN_TOOL_BAR: {
-                performWrap(javafx.scene.control.ToolBar.class);
-                break;
-            }
-            case WRAP_IN_VBOX: {
-                performWrap(javafx.scene.layout.VBox.class);
-                break;
-            }
-            case WRAP_IN_SCENE: {
-                performWrap(javafx.scene.Scene.class);
-                break;
-            }
-            case WRAP_IN_STAGE: {
-                performWrap(javafx.stage.Stage.class);
-                break;
-            }
-            default:
-                throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
+        switch (editAction) {
+        case ADD_CONTEXT_MENU: {
+            performAddContextMenu();
+            break;
+        }
+        case ADD_TOOLTIP: {
+            performAddTooltip();
+            break;
+        }
+        case ADD_COLUMN_BEFORE: {
+            final AbstractJob job = addColumnJobFactory.getJob(Position.BEFORE);
+            jobManager.push(job);
+            break;
+        }
+        case ADD_COLUMN_AFTER: {
+            final AbstractJob job = addColumnJobFactory.getJob(Position.AFTER);
+            jobManager.push(job);
+            break;
+        }
+        case ADD_ROW_ABOVE: {
+            final AbstractJob job = addRowJobFactory.getJob(Position.ABOVE);
+            jobManager.push(job);
+            break;
+        }
+        case ADD_ROW_BELOW: {
+            final AbstractJob job = addRowJobFactory.getJob(Position.BELOW);
+            jobManager.push(job);
+            break;
+        }
+        case BRING_FORWARD: {
+            final AbstractJob job = bringForwardJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case BRING_TO_FRONT: {
+            final AbstractJob job = bringToFrontJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case CUT: {
+            final AbstractJob job = cutSelectionJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case DECREASE_COLUMN_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_COLUMN_SPAN);
+            jobManager.push(job);
+            break;
+        }
+        case DECREASE_ROW_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_ROW_SPAN);
+            jobManager.push(job);
+            break;
+        }
+        case DELETE: {
+            final AbstractJob job = deleteSelectionJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case DUPLICATE: {
+            final AbstractJob job = duplicateSelectionJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case FIT_TO_PARENT: {
+            final AbstractJob job = fitToParentSelectionJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case INCREASE_COLUMN_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_COLUMN_SPAN);
+            jobManager.push(job);
+            break;
+        }
+        case INCREASE_ROW_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_ROW_SPAN);
+            jobManager.push(job);
+            break;
+        }
+        case MOVE_COLUMN_BEFORE: {
+            final AbstractJob job = moveColumnJobFactory.getJob(Position.BEFORE);
+            jobManager.push(job);
+            break;
+        }
+        case MOVE_COLUMN_AFTER: {
+            final AbstractJob job = moveColumnJobFactory.getJob(Position.AFTER);
+            jobManager.push(job);
+            break;
+        }
+        case MOVE_ROW_ABOVE: {
+            final AbstractJob job = moveRowJobFactory.getJob(Position.ABOVE);
+            jobManager.push(job);
+            break;
+        }
+        case MOVE_ROW_BELOW: {
+            final AbstractJob job = moveRowJobFactory.getJob(Position.BELOW);
+            jobManager.push(job);
+            break;
+        }
+        case PASTE: {
+            final AbstractJob job = pasteJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case PASTE_INTO: {
+            final AbstractJob job = pasteIntoJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case SEND_BACKWARD: {
+            final AbstractJob job = sendBackwardJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case SEND_TO_BACK: {
+            final AbstractJob job = sendToBackJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case SET_SIZE_335x600: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_335x600);
+            jobManager.push(job);
+            break;
+        }
+        case SET_SIZE_900x600: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_900x600);
+            jobManager.push(job);
+            break;
+        }
+        case SET_SIZE_320x240: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_320x240);
+            jobManager.push(job);
+            break;
+        }
+        case SET_SIZE_640x480: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_640x480);
+            jobManager.push(job);
+            break;
+        }
+        case SET_SIZE_1280x800: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1280x800);
+            jobManager.push(job);
+            break;
+        }
+        case SET_SIZE_1920x1080: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1920x1080);
+            jobManager.push(job);
+            break;
+        }
+        case TRIM: {
+            final AbstractJob job = trimSelectionJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case UNWRAP: {
+            final AbstractJob job = unwrapJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case USE_COMPUTED_SIZES: {
+            final AbstractJob job = useComputedSizesSelectionJobFactory.getJob();
+            jobManager.push(job);
+            break;
+        }
+        case WRAP_IN_ANCHOR_PANE: {
+            performWrap(javafx.scene.layout.AnchorPane.class);
+            break;
+        }
+        case WRAP_IN_BORDER_PANE: {
+            performWrap(javafx.scene.layout.BorderPane.class);
+            break;
+        }
+        case WRAP_IN_BUTTON_BAR: {
+            performWrap(javafx.scene.control.ButtonBar.class);
+            break;
+        }
+        case WRAP_IN_DIALOG_PANE: {
+            performWrap(javafx.scene.control.DialogPane.class);
+            break;
+        }
+        case WRAP_IN_FLOW_PANE: {
+            performWrap(javafx.scene.layout.FlowPane.class);
+            break;
+        }
+        case WRAP_IN_GRID_PANE: {
+            performWrap(javafx.scene.layout.GridPane.class);
+            break;
+        }
+        case WRAP_IN_GROUP: {
+            performWrap(javafx.scene.Group.class);
+            break;
+        }
+        case WRAP_IN_HBOX: {
+            performWrap(javafx.scene.layout.HBox.class);
+            break;
+        }
+        case WRAP_IN_PANE: {
+            performWrap(javafx.scene.layout.Pane.class);
+            break;
+        }
+        case WRAP_IN_SCROLL_PANE: {
+            performWrap(javafx.scene.control.ScrollPane.class);
+            break;
+        }
+        case WRAP_IN_SPLIT_PANE: {
+            performWrap(javafx.scene.control.SplitPane.class);
+            break;
+        }
+        case WRAP_IN_STACK_PANE: {
+            performWrap(javafx.scene.layout.StackPane.class);
+            break;
+        }
+        case WRAP_IN_TAB_PANE: {
+            performWrap(javafx.scene.control.TabPane.class);
+            break;
+        }
+        case WRAP_IN_TEXT_FLOW: {
+            performWrap(javafx.scene.text.TextFlow.class);
+            break;
+        }
+        case WRAP_IN_TILE_PANE: {
+            performWrap(javafx.scene.layout.TilePane.class);
+            break;
+        }
+        case WRAP_IN_TITLED_PANE: {
+            performWrap(javafx.scene.control.TitledPane.class);
+            break;
+        }
+        case WRAP_IN_TOOL_BAR: {
+            performWrap(javafx.scene.control.ToolBar.class);
+            break;
+        }
+        case WRAP_IN_VBOX: {
+            performWrap(javafx.scene.layout.VBox.class);
+            break;
+        }
+        case WRAP_IN_SCENE: {
+            performWrap(javafx.scene.Scene.class);
+            break;
+        }
+        case WRAP_IN_STAGE: {
+            performWrap(javafx.stage.Stage.class);
+            break;
+        }
+        default:
+            throw new UnsupportedOperationException("Not yet implemented"); // NOCHECK
         }
         assert getFxomDocument().isUpdateOnGoing() == false;
     }
@@ -1097,253 +1188,253 @@ public class EditorController implements Editor {
     @Override
     public boolean canPerformEditAction(EditAction editAction) {
         final boolean result;
-        switch(editAction) {
-            case ADD_CONTEXT_MENU: {
-                result = canPerformAddContextMenu();
-                break;
-            }
-            case ADD_TOOLTIP: {
-                result = canPerformAddTooltip();
-                break;
-            }
-            case ADD_COLUMN_BEFORE: {
-                final Job job = new AddColumnJob(context, this, Position.BEFORE).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case ADD_COLUMN_AFTER: {
-                final Job job = new AddColumnJob(context, this, Position.AFTER).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case ADD_ROW_ABOVE: {
-                final Job job = new AddRowJob(context, this, Position.ABOVE).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case ADD_ROW_BELOW: {
-                final Job job = new AddRowJob(context, this, Position.BELOW).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case BRING_FORWARD: {
-                final Job job = new BringForwardJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case BRING_TO_FRONT: {
-                final Job job = new BringToFrontJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case CUT: {
-                final Job job = new CutSelectionJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case DECREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.DECREASE_COLUMN_SPAN).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case DECREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.DECREASE_ROW_SPAN).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case DELETE: {
-                final Job job = new DeleteSelectionJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case DUPLICATE: {
-                final Job job = new DuplicateSelectionJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case FIT_TO_PARENT: {
-                final Job job = new FitToParentSelectionJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case INCREASE_COLUMN_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.INCREASE_COLUMN_SPAN).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case INCREASE_ROW_SPAN: {
-                final Job job = new SpanJob(context, this, SpanAction.INCREASE_ROW_SPAN).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case MOVE_COLUMN_BEFORE: {
-                final Job job = new MoveColumnJob(context, this, Position.BEFORE).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case MOVE_COLUMN_AFTER: {
-                final Job job = new MoveColumnJob(context, this, Position.AFTER).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case MOVE_ROW_ABOVE: {
-                final Job job = new MoveRowJob(context, this, Position.ABOVE).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case MOVE_ROW_BELOW: {
-                final Job job = new MoveRowJob(context, this, Position.BELOW).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case PASTE: {
-                final Job job = new PasteJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case PASTE_INTO: {
-                final Job job = new PasteIntoJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SEND_BACKWARD: {
-                final Job job = new SendBackwardJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SEND_TO_BACK: {
-                final Job job = new SendToBackJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SET_SIZE_335x600: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_335x600).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SET_SIZE_900x600: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_900x600).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SET_SIZE_320x240: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_320x240).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SET_SIZE_640x480: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_640x480).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SET_SIZE_1280x800: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_1280x800).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case SET_SIZE_1920x1080: {
-                final Job job = new UsePredefinedSizeJob(context, this, Size.SIZE_1920x1080).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case TRIM: {
-                final Job job = new TrimSelectionJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case UNWRAP: {
-                final Job job = new UnwrapJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case USE_COMPUTED_SIZES: {
-                final Job job = new UseComputedSizesSelectionJob(context, this).extend();
-                result = job.isExecutable();
-                break;
-            }
-            case WRAP_IN_ANCHOR_PANE: {
-                result = canPerformWrap(javafx.scene.layout.AnchorPane.class);
-                break;
-            }
-            case WRAP_IN_BORDER_PANE: {
-                result = canPerformWrap(javafx.scene.layout.BorderPane.class);
-                break;
-            }
-            case WRAP_IN_BUTTON_BAR: {
-                result = canPerformWrap(javafx.scene.control.ButtonBar.class);
-                break;
-            }
-            case WRAP_IN_DIALOG_PANE: {
-                result = canPerformWrap(javafx.scene.control.DialogPane.class);
-                break;
-            }
-            case WRAP_IN_FLOW_PANE: {
-                result = canPerformWrap(javafx.scene.layout.FlowPane.class);
-                break;
-            }
-            case WRAP_IN_GRID_PANE: {
-                result = canPerformWrap(javafx.scene.layout.GridPane.class);
-                break;
-            }
-            case WRAP_IN_GROUP: {
-                result = canPerformWrap(javafx.scene.Group.class);
-                break;
-            }
-            case WRAP_IN_HBOX: {
-                result = canPerformWrap(javafx.scene.layout.HBox.class);
-                break;
-            }
-            case WRAP_IN_PANE: {
-                result = canPerformWrap(javafx.scene.layout.Pane.class);
-                break;
-            }
-            case WRAP_IN_SCROLL_PANE: {
-                result = canPerformWrap(javafx.scene.control.ScrollPane.class);
-                break;
-            }
-            case WRAP_IN_SPLIT_PANE: {
-                result = canPerformWrap(javafx.scene.control.SplitPane.class);
-                break;
-            }
-            case WRAP_IN_STACK_PANE: {
-                result = canPerformWrap(javafx.scene.layout.StackPane.class);
-                break;
-            }
-            case WRAP_IN_TAB_PANE: {
-                result = canPerformWrap(javafx.scene.control.TabPane.class);
-                break;
-            }
-            case WRAP_IN_TEXT_FLOW: {
-                result = canPerformWrap(javafx.scene.text.TextFlow.class);
-                break;
-            }
-            case WRAP_IN_TILE_PANE: {
-                result = canPerformWrap(javafx.scene.layout.TilePane.class);
-                break;
-            }
-            case WRAP_IN_TITLED_PANE: {
-                result = canPerformWrap(javafx.scene.control.TitledPane.class);
-                break;
-            }
-            case WRAP_IN_TOOL_BAR: {
-                result = canPerformWrap(javafx.scene.control.ToolBar.class);
-                break;
-            }
-            case WRAP_IN_VBOX: {
-                result = canPerformWrap(javafx.scene.layout.VBox.class);
-                break;
-            }
-            case WRAP_IN_SCENE: {
-                result = canPerformWrap(javafx.scene.Scene.class);
-                break;
-            }
-            case WRAP_IN_STAGE: {
-                result = canPerformWrap(javafx.stage.Stage.class);
-                break;
-            }
-            default:
-                result = false;
-                break;
+        switch (editAction) {
+        case ADD_CONTEXT_MENU: {
+            result = canPerformAddContextMenu();
+            break;
+        }
+        case ADD_TOOLTIP: {
+            result = canPerformAddTooltip();
+            break;
+        }
+        case ADD_COLUMN_BEFORE: {
+            final AbstractJob job = addColumnJobFactory.getJob(Position.BEFORE);
+            result = job.isExecutable();
+            break;
+        }
+        case ADD_COLUMN_AFTER: {
+            final AbstractJob job = addColumnJobFactory.getJob(Position.AFTER);
+            result = job.isExecutable();
+            break;
+        }
+        case ADD_ROW_ABOVE: {
+            final AbstractJob job = addRowJobFactory.getJob(Position.ABOVE);
+            result = job.isExecutable();
+            break;
+        }
+        case ADD_ROW_BELOW: {
+            final AbstractJob job = addRowJobFactory.getJob(Position.BELOW);
+            result = job.isExecutable();
+            break;
+        }
+        case BRING_FORWARD: {
+            final AbstractJob job = bringForwardJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case BRING_TO_FRONT: {
+            final AbstractJob job = bringToFrontJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case CUT: {
+            final AbstractJob job = cutSelectionJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case DECREASE_COLUMN_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_COLUMN_SPAN);
+            result = job.isExecutable();
+            break;
+        }
+        case DECREASE_ROW_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_ROW_SPAN);
+            result = job.isExecutable();
+            break;
+        }
+        case DELETE: {
+            final AbstractJob job = deleteSelectionJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case DUPLICATE: {
+            final AbstractJob job = duplicateSelectionJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case FIT_TO_PARENT: {
+            final AbstractJob job = fitToParentSelectionJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case INCREASE_COLUMN_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_COLUMN_SPAN);
+            result = job.isExecutable();
+            break;
+        }
+        case INCREASE_ROW_SPAN: {
+            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_ROW_SPAN);
+            result = job.isExecutable();
+            break;
+        }
+        case MOVE_COLUMN_BEFORE: {
+            final AbstractJob job = moveColumnJobFactory.getJob(Position.BEFORE);
+            result = job.isExecutable();
+            break;
+        }
+        case MOVE_COLUMN_AFTER: {
+            final AbstractJob job = moveColumnJobFactory.getJob(Position.AFTER);
+            result = job.isExecutable();
+            break;
+        }
+        case MOVE_ROW_ABOVE: {
+            final AbstractJob job = moveRowJobFactory.getJob(Position.ABOVE);
+            result = job.isExecutable();
+            break;
+        }
+        case MOVE_ROW_BELOW: {
+            final AbstractJob job = moveRowJobFactory.getJob(Position.BELOW);
+            result = job.isExecutable();
+            break;
+        }
+        case PASTE: {
+            final AbstractJob job = pasteJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case PASTE_INTO: {
+            final AbstractJob job = pasteIntoJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case SEND_BACKWARD: {
+            final AbstractJob job = sendBackwardJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case SEND_TO_BACK: {
+            final AbstractJob job = sendToBackJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case SET_SIZE_335x600: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_335x600);
+            result = job.isExecutable();
+            break;
+        }
+        case SET_SIZE_900x600: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_900x600);
+            result = job.isExecutable();
+            break;
+        }
+        case SET_SIZE_320x240: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_320x240);
+            result = job.isExecutable();
+            break;
+        }
+        case SET_SIZE_640x480: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_640x480);
+            result = job.isExecutable();
+            break;
+        }
+        case SET_SIZE_1280x800: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1280x800);
+            result = job.isExecutable();
+            break;
+        }
+        case SET_SIZE_1920x1080: {
+            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1920x1080);
+            result = job.isExecutable();
+            break;
+        }
+        case TRIM: {
+            final AbstractJob job = trimSelectionJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case UNWRAP: {
+            final AbstractJob job = unwrapJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case USE_COMPUTED_SIZES: {
+            final AbstractJob job = useComputedSizesSelectionJobFactory.getJob();
+            result = job.isExecutable();
+            break;
+        }
+        case WRAP_IN_ANCHOR_PANE: {
+            result = canPerformWrap(javafx.scene.layout.AnchorPane.class);
+            break;
+        }
+        case WRAP_IN_BORDER_PANE: {
+            result = canPerformWrap(javafx.scene.layout.BorderPane.class);
+            break;
+        }
+        case WRAP_IN_BUTTON_BAR: {
+            result = canPerformWrap(javafx.scene.control.ButtonBar.class);
+            break;
+        }
+        case WRAP_IN_DIALOG_PANE: {
+            result = canPerformWrap(javafx.scene.control.DialogPane.class);
+            break;
+        }
+        case WRAP_IN_FLOW_PANE: {
+            result = canPerformWrap(javafx.scene.layout.FlowPane.class);
+            break;
+        }
+        case WRAP_IN_GRID_PANE: {
+            result = canPerformWrap(javafx.scene.layout.GridPane.class);
+            break;
+        }
+        case WRAP_IN_GROUP: {
+            result = canPerformWrap(javafx.scene.Group.class);
+            break;
+        }
+        case WRAP_IN_HBOX: {
+            result = canPerformWrap(javafx.scene.layout.HBox.class);
+            break;
+        }
+        case WRAP_IN_PANE: {
+            result = canPerformWrap(javafx.scene.layout.Pane.class);
+            break;
+        }
+        case WRAP_IN_SCROLL_PANE: {
+            result = canPerformWrap(javafx.scene.control.ScrollPane.class);
+            break;
+        }
+        case WRAP_IN_SPLIT_PANE: {
+            result = canPerformWrap(javafx.scene.control.SplitPane.class);
+            break;
+        }
+        case WRAP_IN_STACK_PANE: {
+            result = canPerformWrap(javafx.scene.layout.StackPane.class);
+            break;
+        }
+        case WRAP_IN_TAB_PANE: {
+            result = canPerformWrap(javafx.scene.control.TabPane.class);
+            break;
+        }
+        case WRAP_IN_TEXT_FLOW: {
+            result = canPerformWrap(javafx.scene.text.TextFlow.class);
+            break;
+        }
+        case WRAP_IN_TILE_PANE: {
+            result = canPerformWrap(javafx.scene.layout.TilePane.class);
+            break;
+        }
+        case WRAP_IN_TITLED_PANE: {
+            result = canPerformWrap(javafx.scene.control.TitledPane.class);
+            break;
+        }
+        case WRAP_IN_TOOL_BAR: {
+            result = canPerformWrap(javafx.scene.control.ToolBar.class);
+            break;
+        }
+        case WRAP_IN_VBOX: {
+            result = canPerformWrap(javafx.scene.layout.VBox.class);
+            break;
+        }
+        case WRAP_IN_SCENE: {
+            result = canPerformWrap(javafx.scene.Scene.class);
+            break;
+        }
+        case WRAP_IN_STAGE: {
+            result = canPerformWrap(javafx.stage.Stage.class);
+            break;
+        }
+        default:
+            result = false;
+            break;
         }
 
         return result;
@@ -1356,38 +1447,38 @@ public class EditorController implements Editor {
      */
     @Override
     public void performControlAction(ControlAction controlAction) {
-        switch(controlAction) {
-            case COPY: {
-                performCopy();
-                break;
-            }
+        switch (controlAction) {
+        case COPY: {
+            performCopy();
+            break;
+        }
 
-            case SELECT_ALL: {
-                performSelectAll();
-                break;
-            }
-            case SELECT_NONE: {
-                performSelectNone();
-                break;
-            }
-            case SELECT_PARENT: {
-                performSelectParent();
-                break;
-            }
-            case SELECT_NEXT: {
-                performSelectNext();
-                break;
-            }
-            case SELECT_PREVIOUS: {
-                performSelectPrevious();
-                break;
-            }
-            case TOGGLE_SAMPLE_DATA: {
-                setSampleDataEnabled( ! isSampleDataEnabled());
-                break;
-            }
-            default:
-                throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
+        case SELECT_ALL: {
+            performSelectAll();
+            break;
+        }
+        case SELECT_NONE: {
+            performSelectNone();
+            break;
+        }
+        case SELECT_PARENT: {
+            performSelectParent();
+            break;
+        }
+        case SELECT_NEXT: {
+            performSelectNext();
+            break;
+        }
+        case SELECT_PREVIOUS: {
+            performSelectPrevious();
+            break;
+        }
+        case TOGGLE_SAMPLE_DATA: {
+            setSampleDataEnabled(!isSampleDataEnabled());
+            break;
+        }
+        default:
+            throw new UnsupportedOperationException("Not yet implemented"); // NOCHECK
         }
     }
 
@@ -1405,48 +1496,48 @@ public class EditorController implements Editor {
         if (getFxomDocument() == null || getFxomDocument().getFxomRoot() == null) {
             return false;
         }
-        switch(controlAction) {
-            case COPY: {
-                result = canPerformCopy();
-                break;
-            }
-            case SELECT_ALL: {
-                result = canPerformSelectAll();
-                break;
-            }
-            case SELECT_NONE: {
-                result = canPerformSelectNone();
-                break;
-            }
-            case SELECT_PARENT: {
-                result = canPerformSelectParent();
-                break;
-            }
-            case SELECT_NEXT: {
-                result = canPerformSelectNext();
-                break;
-            }
-            case SELECT_PREVIOUS: {
-                result = canPerformSelectPrevious();
-                break;
-            }
-            case TOGGLE_SAMPLE_DATA: {
-                result = true;
-                break;
-            }
-            default:
-                result = false;
-                break;
+        switch (controlAction) {
+        case COPY: {
+            result = canPerformCopy();
+            break;
+        }
+        case SELECT_ALL: {
+            result = canPerformSelectAll();
+            break;
+        }
+        case SELECT_NONE: {
+            result = canPerformSelectNone();
+            break;
+        }
+        case SELECT_PARENT: {
+            result = canPerformSelectParent();
+            break;
+        }
+        case SELECT_NEXT: {
+            result = canPerformSelectNext();
+            break;
+        }
+        case SELECT_PREVIOUS: {
+            result = canPerformSelectPrevious();
+            break;
+        }
+        case TOGGLE_SAMPLE_DATA: {
+            result = true;
+            break;
+        }
+        default:
+            result = false;
+            break;
         }
 
         return result;
     }
 
     /**
-     * Performs the 'import' FXML edit action.
-     * This action creates an object matching the root node of the selected
-     * FXML file and insert it in the document (either as root if the document
-     * is empty or under the selection common ancestor node otherwise).
+     * Performs the 'import' FXML edit action. This action creates an object
+     * matching the root node of the selected FXML file and insert it in the
+     * document (either as root if the document is empty or under the selection
+     * common ancestor node otherwise).
      *
      * @param fxmlFile the FXML file to be imported
      */
@@ -1456,11 +1547,10 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Performs the 'import' media edit action.
-     * This action creates an object matching the type of the selected
-     * media file (either ImageView or MediaView) and insert it in the document
-     * (either as root if the document is empty or under the selection common
-     * ancestor node otherwise).
+     * Performs the 'import' media edit action. This action creates an object
+     * matching the type of the selected media file (either ImageView or MediaView)
+     * and insert it in the document (either as root if the document is empty or
+     * under the selection common ancestor node otherwise).
      *
      * @param mediaFile the media file to be imported
      */
@@ -1470,16 +1560,15 @@ public class EditorController implements Editor {
     }
 
     private void performImport(File file) {
-        final ImportFileJob job = new ImportFileJob(context, file, this);
-        if (job.extend().isExecutable()) {
-            jobManager.push(job.extend());
+        final ImportFileJob job = importFileJobFactory.getJob(file);
+        if (job.isExecutable()) {
+            jobManager.push(job);
         } else {
             final String target;
             if (job.getTargetObject() == null) {
                 target = null;
             } else {
-                final Object sceneGraphTarget
-                        = job.getTargetObject().getSceneGraphObject();
+                final Object sceneGraphTarget = job.getTargetObject().getSceneGraphObject();
                 if (sceneGraphTarget == null) {
                     target = null;
                 } else {
@@ -1487,36 +1576,31 @@ public class EditorController implements Editor {
                 }
             }
             if (target != null) {
-                getMessageLog().logWarningMessage(
-                        "import.from.file.failed.target",
-                        file.getName(), target);
+                getMessageLog().logWarningMessage("import.from.file.failed.target", file.getName(), target);
             } else {
-                getMessageLog().logWarningMessage(
-                        "import.from.file.failed",
-                        file.getName());
+                getMessageLog().logWarningMessage("import.from.file.failed", file.getName());
             }
         }
     }
 
     /**
-     * Performs the 'include' FXML edit action.
-     * As opposed to the 'import' edit action, the 'include' action does not
-     * copy the FXML content but adds an fx:include element to the FXML document.
+     * Performs the 'include' FXML edit action. As opposed to the 'import' edit
+     * action, the 'include' action does not copy the FXML content but adds an
+     * fx:include element to the FXML document.
      *
      * @param fxmlFile the FXML file to be included
      */
     @Override
     public void performIncludeFxml(File fxmlFile) {
-        final IncludeFileJob job = new IncludeFileJob(context, fxmlFile, this);
-        if (job.extend().isExecutable()) {
-            jobManager.push(job.extend());
+        final IncludeFileJob job = includeFileJobFactory.getJob(fxmlFile);
+        if (job.isExecutable()) {
+            jobManager.push(job);
         } else {
             final String target;
             if (job.getTargetObject() == null) {
                 target = null;
             } else {
-                final Object sceneGraphTarget
-                        = job.getTargetObject().getSceneGraphObject();
+                final Object sceneGraphTarget = job.getTargetObject().getSceneGraphObject();
                 if (sceneGraphTarget == null) {
                     target = null;
                 } else {
@@ -1524,13 +1608,9 @@ public class EditorController implements Editor {
                 }
             }
             if (target != null) {
-                getMessageLog().logWarningMessage(
-                        "include.file.failed.target",
-                        fxmlFile.getName(), target);
+                getMessageLog().logWarningMessage("include.file.failed.target", fxmlFile.getName(), target);
             } else {
-                getMessageLog().logWarningMessage(
-                        "include.file.failed",
-                        fxmlFile.getName());
+                getMessageLog().logWarningMessage("include.file.failed", fxmlFile.getName());
             }
         }
     }
@@ -1572,7 +1652,7 @@ public class EditorController implements Editor {
 //            job = new InsertAsSubComponentJob(context, newObject, target, -1, this);
 //        }
 //
-//        jobManager.push(job.extend());
+//        jobManager.push(job);
 //
 //        //TODO remove comment
 //        //WarnThemeAlert.showAlertIfRequired(this, newObject, ownerWindow);
@@ -1606,7 +1686,7 @@ public class EditorController implements Editor {
 //                final FXOMObject rootObject = getFxomDocument().getFxomRoot();
 //                if (rootObject == null) { // Empty document
 //                    final Job job = new SetDocumentRootJob(context,
-//                            newItemRoot, true /* usePredefinedSize */, "unused", this).extend(); //NOCHECK
+//                            newItemRoot, true /* usePredefinedSize */, "unused", this); //NOCHECK
 //                    result = job.isExecutable();
 //                } else {
 //                    if (selection.isEmpty() || selection.isSelected(rootObject)) {
@@ -1618,7 +1698,7 @@ public class EditorController implements Editor {
 //                        targetCandidate = selection.getAncestor();
 //                    }
 //                    final Job job = new InsertAsSubComponentJob(context,
-//                            newItemRoot, targetCandidate, -1, this).extend();
+//                            newItemRoot, targetCandidate, -1, this);
 //                    result = job.isExecutable();
 //                }
 //            }
@@ -1628,16 +1708,15 @@ public class EditorController implements Editor {
 //    }
 
     /**
-     * Performs the 'wrap' edit action. This action creates an object
-     * matching the specified class and reparent all the selected objects
-     * below this new object.
+     * Performs the 'wrap' edit action. This action creates an object matching the
+     * specified class and reparent all the selected objects below this new object.
      *
      * @param wrappingClass the wrapping class
      */
     public void performWrap(Class<?> wrappingClass) {
         assert canPerformWrap(wrappingClass);
-        final AbstractWrapInJob job = AbstractWrapInJob.getWrapInJob(context, this, wrappingClass);
-        jobManager.push(job.extend());
+        final AbstractWrapInJob job = wrapInJobFactory.getWrapInJob(wrappingClass);
+        jobManager.push(job);
     }
 
     /**
@@ -1647,13 +1726,12 @@ public class EditorController implements Editor {
      * @return true if the 'wrap' action is permitted.
      */
     public boolean canPerformWrap(Class<?> wrappingClass) {
-        if (AbstractWrapInJob.getClassesSupportingWrapping().contains(wrappingClass) == false) {
+        if (WrapInJobFactory.getClassesSupportingWrapping().contains(wrappingClass) == false) {
             return false;
         }
-        final AbstractWrapInJob job = AbstractWrapInJob.getWrapInJob(context, this, wrappingClass);
-        return job.extend().isExecutable();
+        final AbstractWrapInJob job = wrapInJobFactory.getWrapInJob(wrappingClass);
+        return job.isExecutable();
     }
-
 
     /**
      * Performs the copy control action.
@@ -1678,8 +1756,8 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Performs the select all control action.
-     * Select all sub components of the selection common ancestor.
+     * Performs the select all control action. Select all sub components of the
+     * selection common ancestor.
      */
     private void performSelectAll() {
         assert canPerformSelectAll(); // (1)
@@ -1691,7 +1769,7 @@ public class EditorController implements Editor {
             // Otherwise, select all sub components of the common ancestor ??
             final FXOMObject ancestor = selection.getAncestor();
             assert ancestor != null; // Because of (1)
-            final BorderPaneHierarchyMask mask = new BorderPaneHierarchyMask(ancestor);
+            final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(ancestor);
             final Set<FXOMObject> selectableObjects = new HashSet<>();
             // BorderPane special case : use accessories
             if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
@@ -1700,8 +1778,7 @@ public class EditorController implements Editor {
                 final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
                 final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
                 final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
-                for (FXOMObject accessoryObject : new FXOMObject[]{
-                    top, left, center, right, bottom}) {
+                for (FXOMObject accessoryObject : new FXOMObject[] { top, left, center, right, bottom }) {
                     if (accessoryObject != null) {
                         selectableObjects.add(accessoryObject);
                     }
@@ -1716,37 +1793,37 @@ public class EditorController implements Editor {
             final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
             final FXOMObject gridPane = gsg.getHitItem();
             assert gridPane instanceof FXOMInstance;
-            final GridPaneHierarchyMask gridPaneMask = new GridPaneHierarchyMask(gridPane);
+            final GridPaneHierarchyMask gridPaneMask = gridPaneHierarchyMaskFactory.getMask(gridPane);
             int size = 0;
             switch (gsg.getType()) {
-                case ROW:
-                    size = gridPaneMask.getRowsSize();
-                    break;
-                case COLUMN:
-                    size = gridPaneMask.getColumnsSize();
-                    break;
-                default:
-                    assert false;
-                    break;
+            case ROW:
+                size = gridPaneMask.getRowsSize();
+                break;
+            case COLUMN:
+                size = gridPaneMask.getColumnsSize();
+                break;
+            default:
+                assert false;
+                break;
             }
             // Select first index
-            selection.select((FXOMInstance) gridPane, gsg.getType(), 0);
+
+            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), 0));
             for (int index = 1; index < size; index++) {
-                selection.toggleSelection((FXOMInstance) gridPane, gsg.getType(), index);
+                selection.toggleSelection(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), index));
             }
         } else {
-            assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOCHECK
+            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
 
         }
     }
 
     /**
-     * Returns true if the root object is not selected and if the sub components
-     * of the selection common ancestor are not all already selected.
-     *
-     * @return if the root object is not selected and if the sub components of
+     * Returns true if the root object is not selected and if the sub components of
      * the selection common ancestor are not all already selected.
+     *
+     * @return if the root object is not selected and if the sub components of the
+     *         selection common ancestor are not all already selected.
      */
     private boolean canPerformSelectAll() {
         assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
@@ -1761,7 +1838,7 @@ public class EditorController implements Editor {
                 // Cannot select all if all sub components are already selected
                 final FXOMObject ancestor = selection.getAncestor();
                 assert ancestor != null; // Because of (1)
-                final BorderPaneHierarchyMask mask = new BorderPaneHierarchyMask(ancestor);
+                final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(ancestor);
                 // BorderPane special case : use accessories
                 if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
                     final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
@@ -1769,10 +1846,8 @@ public class EditorController implements Editor {
                     final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
                     final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
                     final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
-                    for (FXOMObject bpAccessoryObject : new FXOMObject[] {
-                        top, left, center, right, bottom}) {
-                        if (bpAccessoryObject != null
-                                && selection.isSelected(bpAccessoryObject) == false) {
+                    for (FXOMObject bpAccessoryObject : new FXOMObject[] { top, left, center, right, bottom }) {
+                        if (bpAccessoryObject != null && selection.isSelected(bpAccessoryObject) == false) {
                             return true;
                         }
                     }
@@ -1790,15 +1865,14 @@ public class EditorController implements Editor {
             assert gsg.getIndexes().isEmpty() == false;
             return true;
         } else {
-            assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOCHECK
+            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
         }
         return false;
     }
 
     /**
-     * Performs the select parent control action.
-     * If the selection is multiple, we select the common ancestor.
+     * Performs the select parent control action. If the selection is multiple, we
+     * select the common ancestor.
      */
     private void performSelectParent() {
         assert canPerformSelectParent(); // (1)
@@ -1811,8 +1885,7 @@ public class EditorController implements Editor {
      * Returns true if the selection is not empty and the root object is not
      * selected.
      *
-     * @return if the selection is not empty and the root object is not
-     * selected.
+     * @return if the selection is not empty and the root object is not selected.
      */
     private boolean canPerformSelectParent() {
         assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
@@ -1839,7 +1912,7 @@ public class EditorController implements Editor {
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
             final FXOMObject gridPane = gsg.getHitItem();
-            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
+            final GridPaneHierarchyMask mask = gridPaneHierarchyMaskFactory.getMask(gridPane);
             assert gridPane instanceof FXOMInstance;
             final Set<Integer> indexes = gsg.getIndexes();
             assert indexes.size() == 1; // Because of (1)
@@ -1847,18 +1920,18 @@ public class EditorController implements Editor {
             int nextIndex = selectedIndex + 1;
             int size = 0;
             switch (gsg.getType()) {
-                case ROW:
-                    size = mask.getRowsSize();
-                    break;
-                case COLUMN:
-                    size = mask.getColumnsSize();
-                    break;
-                default:
-                    assert false;
-                    break;
+            case ROW:
+                size = mask.getRowsSize();
+                break;
+            case COLUMN:
+                size = mask.getColumnsSize();
+                break;
+            default:
+                assert false;
+                break;
             }
             assert nextIndex < size; // Because of (1)
-            selection.select((FXOMInstance) gridPane, gsg.getType(), nextIndex);
+            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), nextIndex));
         }
     }
 
@@ -1866,8 +1939,8 @@ public class EditorController implements Editor {
      * Returns true if the selection is single and the container of the selected
      * object container contains a child next to the selected one.
      *
-     * @return if the selection is single and the container of the selected
-     * object container contains a child next to the selected one.
+     * @return if the selection is single and the container of the selected object
+     *         container contains a child next to the selected one.
      */
     private boolean canPerformSelectNext() {
         assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
@@ -1890,24 +1963,23 @@ public class EditorController implements Editor {
                 return false;
             }
             final FXOMObject gridPane = gsg.getHitItem();
-            final GridPaneHierarchyMask mask = new GridPaneHierarchyMask(gridPane);
+            final GridPaneHierarchyMask mask = gridPaneHierarchyMaskFactory.getMask(gridPane);
             int size = 0;
             switch (gsg.getType()) {
-                case ROW:
-                    size = mask.getRowsSize();
-                    break;
-                case COLUMN:
-                    size = mask.getColumnsSize();
-                    break;
-                default:
-                    assert false;
-                    break;
+            case ROW:
+                size = mask.getRowsSize();
+                break;
+            case COLUMN:
+                size = mask.getColumnsSize();
+                break;
+            default:
+                assert false;
+                break;
             }
             final int index = indexes.iterator().next();
             return index < size - 1;
         } else {
-            assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOCHECK
+            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
         }
         return false;
     }
@@ -1937,7 +2009,7 @@ public class EditorController implements Editor {
             int selectedIndex = indexes.iterator().next();
             int previousIndex = selectedIndex - 1;
             assert previousIndex >= 0; // Because of (1)
-            selection.select((FXOMInstance) gridPane, gsg.getType(), previousIndex);
+            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), previousIndex));
         }
     }
 
@@ -1945,8 +2017,8 @@ public class EditorController implements Editor {
      * Returns true if the selection is single and the container of the selected
      * object container contains a child previous to the selected one.
      *
-     * @return if the selection is single and the container of the selected
-     * object container contains a child previous to the selected one.
+     * @return if the selection is single and the container of the selected object
+     *         container contains a child previous to the selected one.
      */
     private boolean canPerformSelectPrevious() {
         assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
@@ -1971,8 +2043,7 @@ public class EditorController implements Editor {
             final int index = indexes.iterator().next();
             return index > 0;
         } else {
-            assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup(); //NOCHECK
+            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
         }
         return false;
     }
@@ -1995,19 +2066,17 @@ public class EditorController implements Editor {
     }
 
     /**
-     * If selection contains single FXOM object and this an fx:include instance, then
-     * returns the included file. Else returns null.
+     * If selection contains single FXOM object and this an fx:include instance,
+     * then returns the included file. Else returns null.
      *
-     * If the selection is single and is an included FXOM object :
-     * 1) if included file source does not start with /,
-     *    it's a path relative to the document location.
-     *   - if FXOM document location is null (document not saved yet), return null
-     *   - else return selection included file
+     * If the selection is single and is an included FXOM object : 1) if included
+     * file source does not start with /, it's a path relative to the document
+     * location. - if FXOM document location is null (document not saved yet),
+     * return null - else return selection included file
      *
-     * 2) if included file source starts with /,
-     *    it's a path relative to the document class loader.
-     *   - if FXOM document class loader is null, return null
-     *   - else return selection included file
+     * 2) if included file source starts with /, it's a path relative to the
+     * document class loader. - if FXOM document class loader is null, return null -
+     * else return selection included file
      *
      * @return the included file associated to the selected object or null.
      */
@@ -2033,12 +2102,11 @@ public class EditorController implements Editor {
         if (source == null) {
             return null; // Can this happen ?
         }
-        if (source.startsWith("/")) { //NOCHECK
+        if (source.startsWith("/")) { // NOCHECK
             // Source relative to FXOM document class loader
             final ClassLoader classLoader = getFxomDocument().getClassLoader();
             if (classLoader != null) {
-                final PrefixedValue pv = new PrefixedValue(
-                        PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH, source);
+                final PrefixedValue pv = new PrefixedValue(PrefixedValue.Type.CLASSLOADER_RELATIVE_PATH, source);
                 final URL url = pv.resolveClassLoaderRelativePath(classLoader);
                 final File file;
                 try {
@@ -2052,8 +2120,7 @@ public class EditorController implements Editor {
             // Source relative to FXOM document location
             final URL location = getFxmlLocation();
             if (location != null) {
-                final PrefixedValue pv = new PrefixedValue(
-                        PrefixedValue.Type.DOCUMENT_RELATIVE_PATH, source);
+                final PrefixedValue pv = new PrefixedValue(PrefixedValue.Type.DOCUMENT_RELATIVE_PATH, source);
                 final URL url = pv.resolveDocumentRelativePath(location);
                 final File file;
                 try {
@@ -2068,9 +2135,11 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Returns true if the selection is an included file that can be edited/revealed.
+     * Returns true if the selection is an included file that can be
+     * edited/revealed.
      *
-     * @return true if the selection is an included file that can be edited/revealed.
+     * @return true if the selection is an included file that can be
+     *         edited/revealed.
      */
     private boolean canPerformIncludedFileAction() {
         return getIncludedFile() != null;
@@ -2084,10 +2153,8 @@ public class EditorController implements Editor {
         try {
             fileSystem.open(includedFile.getAbsolutePath());
         } catch (IOException ioe) {
-        	dialog.showErrorAndWait(
-        			I18N.getString("error.file.open.title"),
-        			I18N.getString("error.file.open.message", includedFile.getAbsolutePath()),
-        			"", ioe);
+            dialog.showErrorAndWait(I18N.getString("error.file.open.title"),
+                    I18N.getString("error.file.open.message", includedFile.getAbsolutePath()), "", ioe);
         }
     }
 
@@ -2097,19 +2164,18 @@ public class EditorController implements Editor {
         final File includedFile = getIncludedFile();
         assert includedFile != null; // Because of (1)
         try {
-        	fileSystem.revealInFileBrowser(includedFile);
+            fileSystem.revealInFileBrowser(includedFile);
         } catch (IOException ioe) {
-        	dialog.showErrorAndWait(
-        			I18N.getString("error.file.reveal.title"),
-        			I18N.getString("error.file.reveal.message", includedFile.getAbsolutePath()),
-        			I18N.getString("error.write.details"), ioe);
+            dialog.showErrorAndWait(I18N.getString("error.file.reveal.title"),
+                    I18N.getString("error.file.reveal.message", includedFile.getAbsolutePath()),
+                    I18N.getString("error.write.details"), ioe);
         }
     }
 
     /**
      * Returns true if the 'add context menu' action is permitted with the current
-     * selection.
-     * In other words, returns true if the selection contains only Control objects.
+     * selection. In other words, returns true if the selection contains only
+     * Control objects.
      *
      * @return true if the 'add context menu' action is permitted.
      */
@@ -2118,20 +2184,20 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Performs the 'add context menu' edit action. This method creates an instance of
-     * ContextMenu and sets it in the contextMenu property of the
-     * selected objects.
+     * Performs the 'add context menu' edit action. This method creates an instance
+     * of ContextMenu and sets it in the contextMenu property of the selected
+     * objects.
      */
     public void performAddContextMenu() {
         assert canPerformAddContextMenu();
-        final Job addContextMenuJob = new AddContextMenuToSelectionJob(context, this).extend();
+        final AbstractJob addContextMenuJob = addContextMenuToSelectionJobFactory.getJob();
         getJobManager().push(addContextMenuJob);
     }
 
     /**
      * Returns true if the 'add tooltip' action is permitted with the current
-     * selection.
-     * In other words, returns true if the selection contains only Control objects.
+     * selection. In other words, returns true if the selection contains only
+     * Control objects.
      *
      * @return true if the 'add tooltip' action is permitted.
      */
@@ -2141,21 +2207,21 @@ public class EditorController implements Editor {
 
     /**
      * Performs the 'add tooltip' edit action. This method creates an instance of
-     * Tooltip and sets it in the tooltip property of the
-     * selected objects.
+     * Tooltip and sets it in the tooltip property of the selected objects.
      */
     public void performAddTooltip() {
         assert canPerformAddTooltip(); // (1)
-        final Job addTooltipJob = new AddTooltipToSelectionJob(context,this).extend();
+        final AbstractJob addTooltipJob = addTooltipToSelectionJobFactory.getJob();
         getJobManager().push(addTooltipJob);
-   }
+    }
 
-
-    private void updateFxomDocument(String fxmlText, URL fxmlLocation, ResourceBundle resources, boolean checkTheme) throws IOException {
+    private void updateFxomDocument(String fxmlText, URL fxmlLocation, ResourceBundle resources, boolean checkTheme)
+            throws IOException {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(), resources);
+            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
+                    resources);
         } else {
             newFxomDocument = null;
         }
@@ -2164,8 +2230,7 @@ public class EditorController implements Editor {
 
         updateFileWatcher(newFxomDocument);
 
-
-       //TODO remove comment
+        // TODO remove comment
 //        if (checkTheme) {
 //            WarnThemeAlert.showAlertIfRequired(this, newFxomDocument, ownerWindow);
 //        }
@@ -2178,35 +2243,35 @@ public class EditorController implements Editor {
 
     private void updateFileWatcher(FXOMDocument fxomDocument) {
 
-    	fileSystem.unwatch(this);
+        fileSystem.unwatch(this);
 
         if (fxomDocument != null && fxomDocument.getLocation() != null) {
-        	final FXOMAssetIndex assetIndex = new FXOMAssetIndex(fxomDocument);
-        	fileSystem.watch(null, assetIndex.getFileAssets().keySet(), new FileSystem.WatchingCallback() {
+            final FXOMAssetIndex assetIndex = new FXOMAssetIndex(fxomDocument);
+            fileSystem.watch(null, assetIndex.getFileAssets().keySet(), new FileSystem.WatchingCallback() {
 
-				@Override
-				public void modified(Path path) {
-					assert Platform.isFxApplicationThread();
-			        updateEditorController("file.watching.file.modified", path);
-				}
+                @Override
+                public void modified(Path path) {
+                    assert Platform.isFxApplicationThread();
+                    updateEditorController("file.watching.file.modified", path);
+                }
 
-				@Override
-				public void deleted(Path path) {
-					assert Platform.isFxApplicationThread();
-			        updateEditorController("file.watching.file.deleted", path);
-				}
+                @Override
+                public void deleted(Path path) {
+                    assert Platform.isFxApplicationThread();
+                    updateEditorController("file.watching.file.deleted", path);
+                }
 
-				@Override
-				public void created(Path path) {
-					assert Platform.isFxApplicationThread();
-			        updateEditorController("file.watching.file.created", path);
-				}
+                @Override
+                public void created(Path path) {
+                    assert Platform.isFxApplicationThread();
+                    updateEditorController("file.watching.file.created", path);
+                }
 
                 @Override
                 public Object getOwnerKey() {
                     return EditorController.this;
                 }
-			});
+            });
         }
     }
 
@@ -2214,7 +2279,7 @@ public class EditorController implements Editor {
         final String targetFileName = target.getFileName().toString();
         messageLogger.logInfoMessage(messageKey, targetFileName);
         getErrorReport().forget();
-        if (targetFileName.toLowerCase(Locale.ROOT).endsWith(".css")) { //NOCHECK
+        if (targetFileName.toLowerCase(Locale.ROOT).endsWith(".css")) { // NOCHECK
             getErrorReport().cssFileDidChange(target);
             getFxomDocument().reapplyCSS(target);
         } else {
@@ -2256,7 +2321,7 @@ public class EditorController implements Editor {
         return ownerWindow;
     }
 
-    //TODO to remove
+    // TODO to remove
     @Override
     public FXOMDocument getFxomDocument() {
         return fxomDocument;

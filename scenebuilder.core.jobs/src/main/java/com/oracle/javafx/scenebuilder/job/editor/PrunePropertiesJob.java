@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,15 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -49,27 +55,43 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveFxControllerJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 
 /**
- *
+ * Job used to remove properties from an {@link FXOMObject} if the property is either:<br/>
+ * 1) static like GridPane.columnIndex and the new parent class is different than the previous parent</br>
+ * 2) without any meaning in another parent (like position/rotation/scaling). This list is provided by {@link Metadata#isPropertyTrimmingNeeded(com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName)}
  */
-public class PrunePropertiesJob extends BatchDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class PrunePropertiesJob extends BatchDocumentJob {
 
-    private final FXOMObject fxomObject;
-    private final FXOMObject targetParent;
+    private FXOMObject fxomObject;
+    private FXOMObject targetParent;
 
-    public PrunePropertiesJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, FXOMObject targetParent, Editor editor) {
-        super(context, editor);
+    private final Metadata metadata;
+    private final RemovePropertyJob.Factory removePropertyJobFactory;
+    private final RemoveFxControllerJob.Factory removeFxControllerJobFactory;
 
+    protected PrunePropertiesJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Metadata metadata,
+            RemovePropertyJob.Factory removePropertyJobFactory,
+            RemoveFxControllerJob.Factory removeFxControllerJobFactory) {
+        super(extensionFactory, documentManager);
+        this.removePropertyJobFactory = removePropertyJobFactory;
+        this.removeFxControllerJobFactory = removeFxControllerJobFactory;
+        this.metadata = metadata;
+    }
+
+    protected void setJobParameters(FXOMObject fxomObject, FXOMObject targetParent) {
         assert fxomObject != null;
 
         this.fxomObject = fxomObject;
         this.targetParent = targetParent;
     }
 
-
     @Override
-    protected List<Job> makeSubJobs() {
-        final List<Job> result = new ArrayList<>();
-        final Metadata metadata = Metadata.getMetadata();
+    protected List<AbstractJob> makeSubJobs() {
+        final List<AbstractJob> result = new ArrayList<>();
 
         if (fxomObject instanceof FXOMInstance) {
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
@@ -88,14 +110,14 @@ public class PrunePropertiesJob extends BatchDocumentJob {
                         prune = true;
                     }
                     if (prune) {
-                        result.add(new RemovePropertyJob(getContext(), p, getEditorController()).extend());
+                        result.add(removePropertyJobFactory.getJob(p));
                     }
                 }
             }
         }
 
         if ((fxomObject.getFxController() != null) && (targetParent != null)) {
-            result.add(new RemoveFxControllerJob(getContext(), fxomObject, getEditorController()).extend());
+            result.add(removeFxControllerJobFactory.getJob(fxomObject));
         }
 
         return result;
@@ -106,4 +128,21 @@ public class PrunePropertiesJob extends BatchDocumentJob {
         return getClass().getSimpleName(); // Should not reach user
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<PrunePropertiesJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link  PrunePropertiesJob} job
+         * @param fxomObject the object whose properties will be pruned
+         * @param targetParent the new parent object
+         * @return the job to execute
+         */
+        public PrunePropertiesJob getJob(FXOMObject fxomObject, FXOMObject targetParent) {
+            return create(PrunePropertiesJob.class, j -> j.setJobParameters(fxomObject, targetParent));
+        }
+    }
 }

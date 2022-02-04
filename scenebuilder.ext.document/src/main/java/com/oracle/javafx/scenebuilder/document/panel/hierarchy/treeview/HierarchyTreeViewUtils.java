@@ -32,8 +32,6 @@
  */
 package com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview;
 
-import static com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeCell.HIERARCHY_TREE_CELL;
-
 import java.util.List;
 import java.util.Set;
 
@@ -60,7 +58,7 @@ public abstract class HierarchyTreeViewUtils {
     public static <T> Set<Node> getTreeCells(final TreeView<T> treeView) {
         assert treeView != null;
         // Looks for the sub nodes which match the CSS selector
-        return treeView.lookupAll("." + HIERARCHY_TREE_CELL); //NOCHECK
+        return treeView.lookupAll("." + HierarchyTreeCell.HIERARCHY_TREE_CELL); //NOCHECK
     }
 
     /**
@@ -163,7 +161,7 @@ public abstract class HierarchyTreeViewUtils {
 
         assert treeItems != null && !treeItems.isEmpty();
 
-        // TreeItems contains ROOT 
+        // TreeItems contains ROOT
         // => return ROOT as the common parent
         for (TreeItem<T> treeItem : treeItems) {
             if (Deprecation.getNodeLevel(treeItem) == 0) {
@@ -218,7 +216,7 @@ public abstract class HierarchyTreeViewUtils {
             if (parent1 == parent2) {
                 return parent1;
             } else {
-                // At this step, parent1 and parent2 have same node level 
+                // At this step, parent1 and parent2 have same node level
                 // within the TreeView
                 while (parent1 != parent2) {
                     parent1 = parent1.getParent();
@@ -235,7 +233,7 @@ public abstract class HierarchyTreeViewUtils {
             if (parent1 == parent2) {
                 return parent1;
             } else {
-                // At this step, parent1 and parent2 have same node level 
+                // At this step, parent1 and parent2 have same node level
                 // within the TreeView
                 while (parent1 != parent2) {
                     parent1 = parent1.getParent();

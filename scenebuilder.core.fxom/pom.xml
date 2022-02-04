@@ -27,11 +27,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.starter.test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.graalvm.js</groupId>
             <artifactId>js</artifactId>
@@ -42,6 +38,38 @@
             <groupId>org.graalvm.js</groupId>
             <artifactId>js-scriptengine</artifactId>
             <version>21.3.0</version>
+            <scope>test</scope>
+        </dependency>
+
+         <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>${testfx.junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -56,7 +84,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.plugin.version}</version>
                     <executions>
-
                         <execution>
                             <id>test</id>
                             <phase>test-compile</phase>

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,8 +57,10 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
 //    }
 
     protected PropertyGroupMetadata(AbstractBuilder<?,?> builder) {
-        super(builder.name, true, builder.properties.values().stream().anyMatch(p -> p.isReadWrite()),
-                builder.properties.isEmpty() ? null : builder.properties.values().iterator().next().getInspectorPath());
+        super(((AbstractBuilder<Builder, PropertyGroupMetadata>)builder)
+                .withInspectorPath(builder.properties.isEmpty() ? null : builder.properties.values().iterator().next().getInspectorPath())
+                .withReadWrite(builder.properties.values().stream().anyMatch(p -> p.isReadWrite()))
+                );
         this.properties.putAll(builder.properties);
     }
 

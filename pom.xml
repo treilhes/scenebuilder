@@ -70,7 +70,9 @@
     <module>scenebuilder.ext.script.graalvm-javascript</module>
     <module>scenebuilder.ext.script.graalvm-javascript-rt</module>
     <module>scenebuilder.ext.script</module>
-    </modules>
+    <module>scenebuilder.core.core</module>
+    <module>scenebuilder.core.selection</module>
+  </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -128,6 +130,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.drag.and.drop</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -159,6 +166,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.launcher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.selection</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -38,10 +38,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 
 @Component
@@ -51,12 +51,12 @@ public class AlertController implements InitWithDocument {
 
     private final DocumentWindow document;
     private final DocumentManager documentManager;
-    private final ThemePreference themePreference;
+    private final ThemeDocumentPreference themePreference;
     
     public AlertController(
             @Autowired @Lazy DocumentWindow document,
             @Autowired DocumentManager documentManager,
-            @Autowired ThemePreference themePreference
+            @Autowired ThemeDocumentPreference themePreference
             ) {
         super();
         this.document = document;

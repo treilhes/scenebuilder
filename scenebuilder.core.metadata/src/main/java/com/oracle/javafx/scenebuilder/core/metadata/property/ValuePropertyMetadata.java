@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +38,6 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
@@ -56,29 +56,29 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
     /** The default value alternatives. */
     private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
 
-    /**
-     * Instantiates a new value property metadata.
-     *
-     * @param name the property name
-     * @param readWrite Is the property writable?
-     * @param inspectorPath the inspector path
-     */
-    public ValuePropertyMetadata(PropertyName name, boolean readWrite, InspectorPath inspectorPath) {
-        this(name, false, readWrite, inspectorPath);
-    }
-
-    /**
-     * Instantiates a new value property metadata.
-     *
-     * @param name the property name
-     * @param readWrite Is the property writable?
-     * @param inspectorPath the inspector path
-     */
-    protected ValuePropertyMetadata(PropertyName name, boolean isGroup, boolean readWrite, InspectorPath inspectorPath) {
-        super(name, isGroup);
-        this.readWrite = readWrite;
-        this.inspectorPath = inspectorPath;
-    }
+//    /**
+//     * Instantiates a new value property metadata.
+//     *
+//     * @param name the property name
+//     * @param readWrite Is the property writable?
+//     * @param inspectorPath the inspector path
+//     */
+//    public ValuePropertyMetadata(PropertyName name, boolean readWrite, InspectorPath inspectorPath) {
+//        this(name, false, readWrite, inspectorPath);
+//    }
+//
+//    /**
+//     * Instantiates a new value property metadata.
+//     *
+//     * @param name the property name
+//     * @param readWrite Is the property writable?
+//     * @param inspectorPath the inspector path
+//     */
+//    protected ValuePropertyMetadata(PropertyName name, boolean isGroup, boolean readWrite, InspectorPath inspectorPath) {
+//        super(name, isGroup);
+//        this.readWrite = readWrite;
+//        this.inspectorPath = inspectorPath;
+//    }
 
     protected ValuePropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

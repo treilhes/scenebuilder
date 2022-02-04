@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,10 +59,10 @@ public class FloatMapPropertyMetadata extends ComplexPropertyMetadata<FloatMap> 
             .withDefaultValue(1)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected FloatMapPropertyMetadata(PropertyName name, boolean readWrite, 
-            FloatMap defaultValue, InspectorPath inspectorPath) {
-        super(name, FloatMap.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected FloatMapPropertyMetadata(PropertyName name, boolean readWrite, 
+//            FloatMap defaultValue, InspectorPath inspectorPath) {
+//        super(name, FloatMap.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected FloatMapPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

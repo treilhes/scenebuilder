@@ -39,11 +39,11 @@ import java.util.prefs.Preferences;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.library.maven.repository.Repository;
 
 /**

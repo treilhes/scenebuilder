@@ -36,7 +36,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
 
 import javafx.scene.Node;
 
@@ -48,13 +49,15 @@ import javafx.scene.Node;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodePring extends AbstractNodePring<Node> {
 
-    public NodePring(Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    public NodePring(
+            SelectWithPringGesture.Factory selectWithPringGestureFactory,
+            Content contentPanelController) {
+        super(contentPanelController, selectWithPringGestureFactory, Node.class);
     }
 
     @Override
     public void initialize() {
-        
+
     }
-    
+
 }

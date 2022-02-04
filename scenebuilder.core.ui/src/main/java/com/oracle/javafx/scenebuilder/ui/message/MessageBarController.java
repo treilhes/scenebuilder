@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,17 +35,17 @@ package com.oracle.javafx.scenebuilder.ui.message;
 
 import java.net.URL;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.MessageLogger.MessageEntry;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.ui.editor.messagelog.MessageLogEntry;
 
 import javafx.animation.FadeTransition;
@@ -68,9 +69,6 @@ import javafx.util.Duration;
 @Lazy
 public class MessageBarController extends AbstractFxmlPanelController {
 
-    private MessagePopupController messageWindowController;
-    private int previousTotalNumOfMessages = 0;
-
     @FXML
     private HBox messageBox;
     @FXML
@@ -86,17 +84,25 @@ public class MessageBarController extends AbstractFxmlPanelController {
     @FXML
     private HBox iconsHbox;
 
-    private final ImageView fileDirtyImage;
-    private Tooltip statusLabelTooltip = null;
-    private final SceneBuilderBeanFactory context;
     private final MessageLogger messageLogger;
+    private final MessagePopupController messagePopup;
+
+    private final ImageView fileDirtyImage;
+
+    private int previousTotalNumOfMessages = 0;
+    private Tooltip statusLabelTooltip = null;
+
 
     public MessageBarController(
-            @Autowired Api api
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            MessageLogger messageLogger,
+            MessagePopupController messagePopupController
             ) {
-        super(api, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle());
-        this.context = api.getContext();
-        this.messageLogger = api.getApiDoc().getMessageLogger();
+        super(scenebuilderManager, documentManager, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle());
+        this.messageLogger = messageLogger;
+        this.messagePopup = messagePopupController;
+
         // Initialize file dirty image
         final URL fileDirtyURL = MessageBarController.class.getResource("file-dirty.png");
         assert fileDirtyURL != null;
@@ -112,13 +118,13 @@ public class MessageBarController extends AbstractFxmlPanelController {
      */
     @FXML
     void onOpenCloseAction(ActionEvent e) {
-        if (messageWindowController == null) {
-            messageWindowController = new MessagePopupController(context);
-        }
-        if (messageWindowController.isWindowOpened()) {
-            messageWindowController.closeWindow();
+//        if (messageWindowController == null) {
+//            messageWindowController = new MessagePopupController(context);
+//        }
+        if (messagePopup.isWindowOpened()) {
+            messagePopup.closeWindow();
         } else {
-            messageWindowController.openWindow(messageBox);
+            messagePopup.openWindow(messageBox);
         }
     }
     /*
@@ -190,7 +196,7 @@ public class MessageBarController extends AbstractFxmlPanelController {
             // If no message panel is defined nor in use we compute message bar
             // button. But as soon as a message panel is opened it means one or
             // more message is being displayed so we do not alter the message button.
-            if (messageWindowController == null || ! messageWindowController.isWindowOpened()) {
+            if (messagePopup == null || ! messagePopup.isWindowOpened()) {
                 if (messageLogger.getWarningEntryCount() == 0) {
                     messageButton.setVisible(false);
                     messageButton.setManaged(false);
@@ -228,8 +234,8 @@ public class MessageBarController extends AbstractFxmlPanelController {
             messageButton.setVisible(false);
             messageButton.setManaged(false);
 
-            if (messageWindowController != null && messageWindowController.isWindowOpened()) {
-                messageWindowController.closeWindow();
+            if (messagePopup != null && messagePopup.isWindowOpened()) {
+                messagePopup.closeWindow();
             }
         }
 

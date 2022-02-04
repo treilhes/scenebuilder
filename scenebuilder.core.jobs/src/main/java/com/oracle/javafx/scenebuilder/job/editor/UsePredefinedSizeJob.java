@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,9 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
@@ -46,32 +53,106 @@ import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthP
  * set to Region.USE_PREF_SIZE.
  * No action is taken unless the FXOMObject is an instance of Region or WebView.
  */
-public class UsePredefinedSizeJob extends UseSizeJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class UsePredefinedSizeJob extends AbstractJob {
 
-    public UsePredefinedSizeJob(SceneBuilderBeanFactory context, Editor editor, Size size, FXOMObject fxomObject) {
-        super(context, editor, getWidthFromSize(context, size), getHeightFromSize(context, size), fxomObject);
+    private AbstractJob subJob;
+    private final UseSizeJob.Factory useSizeJobFactory;
+    private final RootContainerHeightPreference rootContainerHeightPreference;
+    private final RootContainerWidthPreference rootContainerWidthPreference;
+
+    protected UsePredefinedSizeJob(
+            JobExtensionFactory extensionFactory,
+            UseSizeJob.Factory useSizeJobFactory,
+            RootContainerHeightPreference rootContainerHeightPreference,
+            RootContainerWidthPreference rootContainerWidthPreference) {
+        super(extensionFactory);
+        this.useSizeJobFactory = useSizeJobFactory;
+        this.rootContainerHeightPreference = rootContainerHeightPreference;
+        this.rootContainerWidthPreference = rootContainerWidthPreference;
     }
 
-    public UsePredefinedSizeJob(SceneBuilderBeanFactory context, Editor editor, Size size) {
-        super(context, editor, getWidthFromSize(context, size), getHeightFromSize(context, size));
+
+    protected void setJobParameters(Size size, FXOMObject fxomObject ) {
+        final int width = getWidthFromSize(size);
+        final int height = getHeightFromSize(size);
+        subJob = useSizeJobFactory.getJob(width, height, fxomObject);
     }
 
-    private static int getWidthFromSize(SceneBuilderBeanFactory context, Size size) {
+    private int getWidthFromSize(Size size) {
         assert size != Size.SIZE_PREFERRED;
 
         if (size == Size.SIZE_DEFAULT) {
-            return context.getBean(RootContainerWidthPreference.class).getValue().intValue();
+            return rootContainerWidthPreference.getValue().intValue();
         }
         return size.getWidth();
     }
 
-    private static int getHeightFromSize(SceneBuilderBeanFactory context, Size size) {
+    private int getHeightFromSize(Size size) {
         assert size != Size.SIZE_PREFERRED;
 
         if (size == Size.SIZE_DEFAULT) {
-            return context.getBean(RootContainerHeightPreference.class).getValue().intValue();
+            return rootContainerHeightPreference.getValue().intValue();
         }
 
         return size.getHeight();
+    }
+
+    /*
+     * Job
+     */
+    @Override
+    public boolean isExecutable() {
+        return subJob.isExecutable();
+    }
+
+    @Override
+    public void doExecute() {
+        subJob.execute();
+    }
+
+    @Override
+    public void doUndo() {
+        subJob.undo();
+    }
+
+    @Override
+    public void doRedo() {
+        subJob.doRedo();
+    }
+
+    @Override
+    public String getDescription() {
+        return subJob.getDescription();
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static final class Factory extends JobFactory<UsePredefinedSizeJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link UsePredefinedSizeJob} job
+         *
+         * @param size the new size
+         * @param fxomObject the target {@link FXOMObject}, if null the target is {@link FXOMDocument#getFxomRoot()}
+         * @return the job to execute
+         */
+        public UsePredefinedSizeJob getJob(Size size, FXOMObject fxomObject) {
+            return create(UsePredefinedSizeJob.class, j -> j.setJobParameters(size, fxomObject));
+        }
+
+        /**
+         * Create an {@link UsePredefinedSizeJob} job that target {@link FXOMDocument#getFxomRoot()}
+         *
+         * @param size the new size
+         * @return the job to execute
+         */
+        public UsePredefinedSizeJob getJob(Size size) {
+            return create(UsePredefinedSizeJob.class, j -> j.setJobParameters(size, null));
+        }
     }
 }

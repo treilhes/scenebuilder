@@ -49,7 +49,7 @@ public abstract class AbstractKeyGesture extends AbstractGesture {
     private Observer observer;
 
 
-    public AbstractKeyGesture(Content contentPanelController) {
+    protected AbstractKeyGesture(Content contentPanelController) {
         super(contentPanelController);
     }
 

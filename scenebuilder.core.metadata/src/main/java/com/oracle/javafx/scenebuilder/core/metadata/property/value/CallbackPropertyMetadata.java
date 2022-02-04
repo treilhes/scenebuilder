@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,9 +41,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 import javafx.util.Callback;
 
@@ -54,10 +53,10 @@ public abstract class CallbackPropertyMetadata extends ValuePropertyMetadata {
 
     private final Object defaultValue;
 
-    public CallbackPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue, InspectorPath inspectorPath) {
-        super(name, readWrite, inspectorPath);
-        this.defaultValue = defaultValue;
-    }
+//    public CallbackPropertyMetadata(PropertyName name, boolean readWrite, Object defaultValue, InspectorPath inspectorPath) {
+//        super(name, readWrite, inspectorPath);
+//        this.defaultValue = defaultValue;
+//    }
 
     protected CallbackPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

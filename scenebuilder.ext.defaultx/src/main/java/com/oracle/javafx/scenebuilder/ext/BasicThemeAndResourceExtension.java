@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentThemeExtension;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentUserStylesheetsExtension;
@@ -53,13 +52,11 @@ import com.oracle.javafx.scenebuilder.ext.menu.ThemeMenuProvider;
 import com.oracle.javafx.scenebuilder.ext.menu.UserStylesheetsMenuProvider;
 import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@ComponentScan(basePackages = { 
-        "com.oracle.javafx.scenebuilder.ext.theme"
-        })
 public class BasicThemeAndResourceExtension extends AbstractExtension {
 
     @Override
@@ -71,24 +68,38 @@ public class BasicThemeAndResourceExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-            ApplyCssContentAction.class,
-            ApplyCssContentThemeExtension.class,
-            ApplyCssContentUserStylesheetsExtension.class,
-            ApplyCssContentWatchExtension.class,
-            ApplyI18nContentAction.class,
-            ApplyI18nContentResourceExtension.class,
-            ApplyI18nContentWatchExtension.class,
-            I18nResourceMenuController.class,
-            SceneStyleSheetMenuController.class,
-            ThemeMenuController.class,
-            I18nMenuProvider.class,
-            ThemeMenuProvider.class,
-            UserStylesheetsMenuProvider.class,
-            I18NResourcePreference.class,
-            com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference.class,
-            UserStylesheetsPreference.class,
-            ThemePreference.class,
-            DefaultThemesList.class
+                ApplyCssContentAction.class,
+                ApplyCssContentThemeExtension.class,
+                ApplyCssContentUserStylesheetsExtension.class,
+                ApplyCssContentWatchExtension.class,
+                ApplyI18nContentAction.class,
+                ApplyI18nContentResourceExtension.class,
+                ApplyI18nContentWatchExtension.class,
+                DefaultThemesList.class,
+                DefaultThemesList.Caspian.class,
+                DefaultThemesList.CaspianEmbedded.class,
+                DefaultThemesList.CaspianEmbeddedHighContrast.class,
+                DefaultThemesList.CaspianEmbeddedQvga.class,
+                DefaultThemesList.CaspianEmbeddedQvgaHighContrast.class,
+                DefaultThemesList.CaspianHighContrast.class,
+                DefaultThemesList.Modena.class,
+                DefaultThemesList.ModenaHighContrastBlackOnWhite.class,
+                DefaultThemesList.ModenaHighContrastWhiteOnBlack.class,
+                DefaultThemesList.ModenaHighContrastYellowOnBlack.class,
+                DefaultThemesList.ModenaTouch.class,
+                DefaultThemesList.ModenaTouchHighContrastBlackOnWhite.class,
+                DefaultThemesList.ModenaTouchHighContrastWhiteOnBlack.class,
+                DefaultThemesList.ModenaTouchHighContrastYellowOnBlack.class,
+                I18NResourcePreference.class,
+                I18nMenuProvider.class,
+                I18nResourceMenuController.class,
+                SceneStyleSheetMenuController.class,
+                ThemeMenuController.class,
+                ThemeMenuProvider.class,
+                ThemeDocumentPreference.class,
+                ThemePreference.class,
+                UserStylesheetsMenuProvider.class,
+                UserStylesheetsPreference.class
             );
      // @formatter:on
     }

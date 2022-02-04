@@ -38,20 +38,20 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ApplyCssContentThemeExtension extends AbstractActionExtension<ApplyCssContentAction> {
 
-	private final ThemePreference themePreference;
+	private final ThemeDocumentPreference themePreference;
 	private final SceneBuilderBeanFactory context;
 
 	public ApplyCssContentThemeExtension(
 			@Autowired SceneBuilderBeanFactory context,
-			@Autowired @Lazy ThemePreference themePreference
+			@Autowired @Lazy ThemeDocumentPreference themePreference
 			) {
 		super();
 		this.context = context;

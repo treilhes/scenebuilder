@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +38,19 @@ import static javafx.geometry.Orientation.HORIZONTAL;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyItem;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
+import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController;
+import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -64,14 +73,26 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     @FXML
     protected TreeView<HierarchyItem> treeView;
 
-	private SceneBuilderBeanFactory context;
+	private final HierarchyTreeCell.Factory hierarchyTreeCellFactory;
 
 
     public HierarchyTreeViewController(
-    		Api api,
-    		Editor editorController) {
-        super(api, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editorController);
-        this.context = api.getContext();
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            Editor editor,
+            JobManager jobManager,
+            Drag drag,
+            Selection selection,
+            ShowExpertByDefaultPreference showExpertByDefaultPreference,
+            DocumentDragSource.Factory documentDragSourceFactory,
+            ExternalDragSource.Factory externalDragSourceFactory,
+            DesignHierarchyMask.Factory designHierarchyMaskFactory,
+            HierarchyTreeCell.Factory hierarchyTreeCellFactory,
+            HierarchyDNDController.Factory hierarchyDNDControllerFactory) {
+        super(scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editor,
+                jobManager, drag, selection, showExpertByDefaultPreference, documentDragSourceFactory,
+                externalDragSourceFactory, designHierarchyMaskFactory, hierarchyDNDControllerFactory);
+        this.hierarchyTreeCellFactory = hierarchyTreeCellFactory;
     }
 
     @FXML
@@ -98,7 +119,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
         // Initialize and configure tree view
         treeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Cell factory
-        treeView.setCellFactory(p -> new HierarchyTreeCell<>(context, HierarchyTreeViewController.this));
+        treeView.setCellFactory(p -> hierarchyTreeCellFactory.newCell(HierarchyTreeViewController.this));
         // We do not use the platform editing feature because
         // editing is started on selection + simple click instead of double click
         treeView.setEditable(false);

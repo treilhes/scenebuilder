@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,18 +37,20 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractKeyGesture;
-import com.oracle.javafx.scenebuilder.api.editor.job.ExtendedJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -56,18 +59,27 @@ import javafx.scene.input.InputEvent;
 /**
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class MoveWithKeyGesture extends AbstractKeyGesture {
 
-    private double vectorX;
-    private double vectorY;
-	private final SceneBuilderBeanFactory context;
+    private final Selection selection;
+	private final JobManager jobManager;
+	private final RelocateSelectionJob.Factory relocateSelectionJobFactory;
 
-    public MoveWithKeyGesture(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
+	private double vectorX;
+    private double vectorY;
+
+    protected MoveWithKeyGesture(
+            Content contentPanelController,
+            Selection selection,
+    		JobManager jobManager,
+    		RelocateSelectionJob.Factory relocateSelectionJobFactory) {
         super(contentPanelController);
-        this.context = context;
-        assert RelocateSelectionJob.isSelectionMovable(contentPanelController.getEditorController()); // (1)
+        this.selection = selection;
+        this.jobManager = jobManager;
+        this.relocateSelectionJobFactory = relocateSelectionJobFactory;
+        assert selection.isMovable(); // (1)
     }
 
     /*
@@ -81,8 +93,6 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         final double moveX = extend * vectorX;
         final double moveY = extend * vectorY;
 
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
         assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
         final ObjectSelectionGroup osg
                 = (ObjectSelectionGroup) selection.getGroup();
@@ -102,10 +112,6 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
     protected void keyReleased() {
         keyPressed();
 
-        final Editor editorController
-                = contentPanelController.getEditorController();
-        final Selection selection
-                = editorController.getSelection();
         assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
 
         final ObjectSelectionGroup osg
@@ -121,19 +127,14 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
             final Point2D layoutXY = new Point2D(node.getLayoutX(), node.getLayoutY());
             locationMap.put(selectedObject, layoutXY);
         }
-        final RelocateSelectionJob newRelocateJob
-                = new RelocateSelectionJob(context, locationMap, editorController);
+
+        final RelocateSelectionJob newRelocateJob = relocateSelectionJobFactory.getJob(locationMap);
 
         // ... and pushes it
         // If the current job is already a RelocateSelectionJob,
         // then we see if the new job can be merged with it.
-        final JobManager jobManager = editorController.getJobManager();
-        Job currentJob = jobManager.getCurrentJob();
 
-        if (currentJob instanceof ExtendedJob) {
-        	ExtendedJob<?> extendedJob = (ExtendedJob<?>)currentJob;
-        	currentJob = extendedJob.getExtendedJob();
-        }
+        AbstractJob currentJob = jobManager.getCurrentJob();
 
         if (currentJob instanceof RelocateSelectionJob) {
             final RelocateSelectionJob currentRelocateJob = (RelocateSelectionJob) currentJob;
@@ -141,10 +142,10 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
                 newRelocateJob.execute();
                 currentRelocateJob.mergeWith(newRelocateJob);
             } else {
-                jobManager.push(newRelocateJob.extend());
+                jobManager.push(newRelocateJob);
             }
         } else {
-            jobManager.push(newRelocateJob.extend());
+            jobManager.push(newRelocateJob);
         }
     }
 
@@ -180,5 +181,15 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         }
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<MoveWithKeyGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public MoveWithKeyGesture getGesture() {
+            return create(MoveWithKeyGesture.class, null); // g -> g.setupGestureParameters());
+        }
+    }
 
 }

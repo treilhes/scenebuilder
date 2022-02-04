@@ -32,14 +32,19 @@
  */
 package com.oracle.javafx.scenebuilder.drivers.scene;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractGenericHandles;
 
 import javafx.geometry.Bounds;
@@ -50,21 +55,27 @@ import javafx.scene.Scene;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SceneHandles extends AbstractGenericHandles<Scene> {
     private Node sceneGraphObject;
+    private final DesignHierarchyMask.Factory maskFactory;
 
     public SceneHandles(
-            SceneBuilderBeanFactory context,
-            Content contentPanelController) {
-        super(context, contentPanelController, Scene.class);
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
+            @Autowired DesignHierarchyMask.Factory maskFactory) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, Scene.class);
+        this.maskFactory = maskFactory;
     }
 
     @Override
     public void initialize() {
-        final DesignHierarchyMask designHierarchyMask = new DesignHierarchyMask(getFxomObject());
+        final HierarchyMask designHierarchyMask = maskFactory.getMask(getFxomObject());
         final FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root instanceof FXOMInstance;
         assert root.getSceneGraphObject() instanceof Node;
         sceneGraphObject = (Node) root.getSceneGraphObject();
+
     }
 
     @Override

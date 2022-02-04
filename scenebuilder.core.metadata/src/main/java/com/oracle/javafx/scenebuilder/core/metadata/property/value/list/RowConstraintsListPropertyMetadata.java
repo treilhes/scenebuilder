@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -101,6 +102,7 @@ public class RowConstraintsListPropertyMetadata extends ListValuePropertyMetadat
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, RowConstraints> {
         public AbstractBuilder() {
             super();
+            withName(new PropertyName("rowConstraints"));
             withItemClass(RowConstraints.class);
             withItemMetadata(RowConstraintsListPropertyMetadata.itemMetadata);
         }

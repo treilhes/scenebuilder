@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
 import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
@@ -70,7 +71,7 @@ public class FileSystemMenuController {
 
     public FileSystemMenuController(
             @Autowired Main main,
-            @Autowired Document document, 
+            @Autowired Document document,
             @Autowired Editor editor,
             @Autowired ActionFactory actionFactory,
             @Autowired RecentItemsPreference recentItemsPreference) {
@@ -124,7 +125,9 @@ public class FileSystemMenuController {
 
     public void performOpenRecent(File file) {
         //main.performOpenRecent(document, file);
-        actionFactory.create(OpenFilesAction.class, a -> a.setFxmlFile(Arrays.asList(file))).checkAndPerform();
+        OpenFilesAction action = actionFactory.create(OpenFilesAction.class);
+        action.setFxmlFile(Arrays.asList(file));
+        action.checkAndPerform();
     }
 
     public void performImportMedia() {

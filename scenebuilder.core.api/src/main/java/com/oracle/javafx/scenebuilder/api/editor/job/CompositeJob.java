@@ -34,18 +34,15 @@ package com.oracle.javafx.scenebuilder.api.editor.job;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-
 /**
  * This Job handles a list of sub jobs and a description.
  */
-public abstract class CompositeJob extends Job {
+public abstract class CompositeJob extends AbstractJob {
 
     private String description;
 
-    public CompositeJob(SceneBuilderBeanFactory context, Editor editor) {
-        super(context, editor);
+    public CompositeJob(JobExtensionFactory extensionFactory) {
+        super(extensionFactory);
     }
 
     @Override
@@ -57,6 +54,6 @@ public abstract class CompositeJob extends Job {
         return description;
     }
 
-    public abstract List<Job> getSubJobs();
+    public abstract List<AbstractJob> getSubJobs();
     protected abstract String makeDescription();
 }

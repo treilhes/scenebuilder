@@ -37,7 +37,7 @@ import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
@@ -53,7 +53,7 @@ import javafx.stage.Stage;
 public class WarnThemeAlert extends SBAlert {
     private static boolean hasBeenShown = false;
 
-    private WarnThemeAlert(ThemePreference themePreference, Stage owner) {
+    private WarnThemeAlert(ThemeDocumentPreference themePreference, Stage owner) {
         super(AlertType.WARNING, owner);
 
         setTitle(I18N.getString("alert.theme.gluon.mobile.title"));
@@ -74,14 +74,14 @@ public class WarnThemeAlert extends SBAlert {
         setOnShown(event -> hasBeenShown = true);
     }
 
-    public static void showAlertIfRequired(ThemePreference themePreference, FXOMObject fxomObject, Stage owner) {
+    public static void showAlertIfRequired(ThemeDocumentPreference themePreference, FXOMObject fxomObject, Stage owner) {
         if (!hasBeenShown && fxomObject != null && isGluon(fxomObject) && (themePreference.getValue() != GluonThemesList.GluonMobileLight.class
                 && themePreference.getValue() != GluonThemesList.GluonMobileDark.class)) {
             new WarnThemeAlert(themePreference, owner).showAndWait();
         }
     }
 
-    public static void showAlertIfRequired(ThemePreference themePreference, FXOMDocument fxomDocument, Stage owner) {
+    public static void showAlertIfRequired(ThemeDocumentPreference themePreference, FXOMDocument fxomDocument, Stage owner) {
         if (!hasBeenShown && fxomDocument != null && hasGluonControls(fxomDocument) && (themePreference.getValue() != GluonThemesList.GluonMobileLight.class
                 && themePreference.getValue() != GluonThemesList.GluonMobileDark.class)) {
             new WarnThemeAlert(themePreference, owner).showAndWait();

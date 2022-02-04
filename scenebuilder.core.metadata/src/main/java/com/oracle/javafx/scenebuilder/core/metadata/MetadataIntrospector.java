@@ -83,17 +83,19 @@ import javafx.util.Duration;
 class MetadataIntrospector {
 
     private final Class<?> componentClass;
-    private final ComponentClassMetadata ancestorMetadata;
+    private final ComponentClassMetadata<?> ancestorMetadata;
     private int counter;
+    private final Metadata metadata;
 
-    public MetadataIntrospector(Class<?> componentClass, ComponentClassMetadata ancestorMetadata) {
+    public MetadataIntrospector(Class<?> componentClass, ComponentClassMetadata<?> ancestorMetadata, Metadata metadata) {
         this.componentClass = componentClass;
         this.ancestorMetadata = ancestorMetadata;
+        this.metadata = metadata;
     }
 
-    public ComponentClassMetadata introspect() {
+    public ComponentClassMetadata<?> introspect() {
         final Set<PropertyMetadata> properties = new HashSet<>();
-        final Set<PropertyName> hiddenProperties = Metadata.getMetadata().getHiddenProperties();
+        final Set<PropertyName> hiddenProperties = metadata.getHiddenProperties();
         Exception exception;
 
 
@@ -167,7 +169,7 @@ class MetadataIntrospector {
 
 
     private PropertyMetadata lookupPropertyMetadata(
-            ComponentClassMetadata ccm, PropertyName propertyName) {
+            ComponentClassMetadata<?> ccm, PropertyName propertyName) {
         PropertyMetadata result = null;
 
         while ((ccm != null) && (result == null)) {
@@ -304,7 +306,7 @@ class MetadataIntrospector {
                         ParameterizedType parameterizedType = (ParameterizedType) type;
                         Type genericType = parameterizedType.getActualTypeArguments()[0];
                         if (genericType instanceof Class) {
-                            Class genericClass = (Class) parameterizedType.getActualTypeArguments()[0];
+                            Class<?> genericClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
                             if (genericClass.equals(java.lang.String.class)) {
                                 result = new StringListPropertyMetadata.Builder()
                                         .withName(name)

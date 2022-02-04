@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,7 +36,7 @@ package com.oracle.javafx.scenebuilder.api.menubar;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
 
-import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
@@ -68,7 +69,7 @@ public interface MenuItemFactory {
     }
 
     static MenuItem single(String titleKey, String menuId, ActionFactory actionFactory,
-            Class<? extends Action> actionClass) {
+            Class<? extends AbstractAction> actionClass) {
         return single(titleKey, menuId, (e) -> actionFactory.create(actionClass).perform(),
                 () -> actionFactory.create(actionClass).canPerform());
     }
@@ -79,14 +80,14 @@ public interface MenuItemFactory {
     }
 
     static MenuItem bindSingle(MenuItem menuItem, String titleKey, String menuId, ActionFactory actionFactory,
-            Class<? extends Action> actionClass) {
-        
+            Class<? extends AbstractAction> actionClass) {
+
         KeyCombination accelerator = actionFactory.create(actionClass).getWishedAccelerator();
         if (accelerator != null) {
             menuItem.setAccelerator(accelerator);
         }
-        
-        return bindSingle(menuItem, titleKey, menuId, 
+
+        return bindSingle(menuItem, titleKey, menuId,
                 (e) -> {
                     System.out.println(menuItem.isDisable() +"");
                     actionFactory.create(actionClass).perform();
@@ -114,7 +115,7 @@ public interface MenuItemFactory {
     }
 
     static MenuItem toggle(String titleOnKey, String titleOffKey, String menuId, ActionFactory actionFactory,
-            Class<? extends Action> actionClass, BooleanSupplier onOffStateSupplier) {
+            Class<? extends AbstractAction> actionClass, BooleanSupplier onOffStateSupplier) {
         return toggle(titleOnKey, titleOffKey, menuId, (e) -> actionFactory.create(actionClass).perform(),
                 onOffStateSupplier, () -> actionFactory.create(actionClass).canPerform());
     }
@@ -131,7 +132,7 @@ public interface MenuItemFactory {
     }
 
     static MenuItem bindToggle(MenuItem menuItem, String titleOnKey, String titleOffKey, String menuId,
-            ActionFactory actionFactory, Class<? extends Action> actionClass,
+            ActionFactory actionFactory, Class<? extends AbstractAction> actionClass,
             BooleanSupplier onOffStateSupplier) {
         return bindToggle(menuItem, titleOnKey, titleOffKey, menuId, (e) -> actionFactory.create(actionClass).perform(),
                 onOffStateSupplier, () -> actionFactory.create(actionClass).canPerform());
@@ -169,7 +170,7 @@ public interface MenuItemFactory {
     /**
      * Resolve the provided i18n keys and return the localized String according to the onOffStateSupplier result
      * @param titleOnKey i18n key used when onOffStateSupplier return true
-     * @param titleOffKey i18n key used when onOffStateSupplier is null or onOffStateSupplier return false 
+     * @param titleOffKey i18n key used when onOffStateSupplier is null or onOffStateSupplier return false
      * @param onOffStateSupplier boolean supplier switch
      * @return a localized string
      */
@@ -188,7 +189,7 @@ public interface MenuItemFactory {
     }
 
     static void bindSingle(MenuItem newMenuItem, ActionFactory actionFactory,
-            Class<? extends Action> actionClass) {
+            Class<? extends AbstractAction> actionClass) {
         bindSingle(newMenuItem, newMenuItem.getText(), newMenuItem.getId(), actionFactory, actionClass);
     }
 }

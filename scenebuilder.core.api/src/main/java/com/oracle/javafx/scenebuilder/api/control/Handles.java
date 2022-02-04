@@ -33,18 +33,21 @@
 package com.oracle.javafx.scenebuilder.api.control;
 
 import com.oracle.javafx.scenebuilder.api.Gesture;
-import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 
 public interface Handles<T> extends Decoration<T> {
 
-	FXOMObject getFxomObject();
+	@Override
+    FXOMObject getFxomObject();
 
-	void setEnabled(boolean enabled);
+	@Override
+    void setEnabled(boolean enabled);
 
-	Node getRootNode();
+	@Override
+    Node getRootNode();
 
 	Gesture findEnabledGesture(Node hitNode);
 

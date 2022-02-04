@@ -40,7 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer.LayerItemCreator;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer.LayerItemSelector;
 import com.oracle.javafx.scenebuilder.api.control.Decoration;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import javafx.scene.Group;

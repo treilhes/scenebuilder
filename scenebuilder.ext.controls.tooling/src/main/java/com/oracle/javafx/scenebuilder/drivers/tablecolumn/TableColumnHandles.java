@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,12 +39,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.drivers.tableview.TableViewDesignInfoX;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 
 import javafx.beans.value.ChangeListener;
@@ -82,13 +87,21 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
             = new TableViewDesignInfoX();
     private TableView<?> tableView;
     private Node columnHeaderNode;
-	private final SceneBuilderBeanFactory context;
+	//private final SceneBuilderBeanFactory context;
+    private final DesignHierarchyMask.Factory maskFactory;
+    private final ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory;
 
     public TableColumnHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(context, contentPanelController, Object.class);
-        this.context = context;
+            Driver driver,
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            ResizeGesture.Factory resizeGestureFactory,
+            DesignHierarchyMask.Factory maskFactory,
+    		ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory) {
+        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, Object.class);
+//        this.context = context;
+        this.maskFactory = maskFactory;
+        this.resizeTableColumnGestureFactory = resizeTableColumnGestureFactory;
     }
 
     @Override
@@ -173,11 +186,10 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
             final FXOMObject parentObject = getFxomInstance().getParentObject();
-            final DesignHierarchyMask m = new DesignHierarchyMask(parentObject);
+            final HierarchyMask m = maskFactory.getMask(parentObject);
             final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
             assert columnObject instanceof FXOMInstance;
-            result = new ResizeTableColumnGesture(context, getContentPanelController(),
-                    (FXOMInstance)columnObject);
+            result = resizeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {
             result = super.findGesture(node);
         }

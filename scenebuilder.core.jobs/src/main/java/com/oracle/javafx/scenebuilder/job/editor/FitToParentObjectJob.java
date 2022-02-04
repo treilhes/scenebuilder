@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,10 +39,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
@@ -61,13 +68,19 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 
 /**
- *
+ * {@link FXOMInstance} cannot be root
+ * Only if parent object is {@link AnchorPane}
+ * Force the provided {@link FXOMInstance} to the same size of the parent {@link AnchorPane}
  */
-public class FitToParentObjectJob extends BatchDocumentJob {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class FitToParentObjectJob extends BatchDocumentJob {
 
-    private final FXOMElement fxomInstance;
-    private final FXOMProperty parentProperty;
-    private final FXOMElement parentInstance;
+    private FXOMElement fxomInstance;
+    private FXOMProperty parentProperty;
+    private FXOMElement parentInstance;
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final Metadata metadata;
 
     private enum Sizing {
 
@@ -79,9 +92,17 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         TOP, RIGHT, BOTTOM, LEFT
     }
 
-    public FitToParentObjectJob(SceneBuilderBeanFactory context, FXOMInstance fxomInstance, Editor editor) {
-        super(context, editor);
+    protected FitToParentObjectJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager,
+            Metadata metadata,
+            ModifyObjectJob.Factory modifyObjectJobFactory) {
+        super(extensionFactory, documentManager);
+        this.metadata = metadata;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+    }
 
+    protected void setJobParameters(FXOMInstance fxomInstance) {
         assert fxomInstance != null;
         this.fxomInstance = fxomInstance;
         this.parentProperty = fxomInstance.getParentProperty();
@@ -89,9 +110,9 @@ public class FitToParentObjectJob extends BatchDocumentJob {
     }
 
     @Override
-    protected List<Job> makeSubJobs() {
+    protected List<AbstractJob> makeSubJobs() {
 
-        final List<Job> result = new ArrayList<>();
+        final List<AbstractJob> result = new ArrayList<>();
 
         // Object cannot be root
         if (parentProperty == null) {
@@ -142,33 +163,33 @@ public class FitToParentObjectJob extends BatchDocumentJob {
 
         // Modify pref size jobs
         //----------------------------------------------------------------------
-        final Job prefWidthJob = modifyJob("prefWidth", prefWidthValue);
+        final AbstractJob prefWidthJob = modifyJob("prefWidth", prefWidthValue);
         if (prefWidthJob.isExecutable()) { // Update if new value differs from old one
             result.add(prefWidthJob);
         }
-        final Job prefHeightJob = modifyJob("prefHeight", prefHeightValue);
+        final AbstractJob prefHeightJob = modifyJob("prefHeight", prefHeightValue);
         if (prefHeightJob.isExecutable()) { // Update if new value differs from old one
             result.add(prefHeightJob);
         }
 
         // Modify Anchors Jobs
         //----------------------------------------------------------------------
-        final Job leftAnchorJob = modifyAnchorJob(Anchor.LEFT, leftAnchorValue);
+        final AbstractJob leftAnchorJob = modifyAnchorJob(Anchor.LEFT, leftAnchorValue);
         if (leftAnchorJob.isExecutable()) { // Update if new value differs from old one
             result.add(leftAnchorJob);
         }
-        final Job topAnchorJob = modifyAnchorJob(Anchor.TOP, topAnchorValue);
+        final AbstractJob topAnchorJob = modifyAnchorJob(Anchor.TOP, topAnchorValue);
         if (topAnchorJob.isExecutable()) { // Update if new value differs from old one
             result.add(topAnchorJob);
         }
         if (isResizableX) {
-            final Job rightAnchorJob = modifyAnchorJob(Anchor.RIGHT, 0.0);
+            final AbstractJob rightAnchorJob = modifyAnchorJob(Anchor.RIGHT, 0.0);
             if (rightAnchorJob.isExecutable()) { // Update if new value differs from old one
                 result.add(rightAnchorJob);
             }
         }
         if (isResizableY) {
-            final Job bottomAnchorJob = modifyAnchorJob(Anchor.BOTTOM, 0.0);
+            final AbstractJob bottomAnchorJob = modifyAnchorJob(Anchor.BOTTOM, 0.0);
             if (bottomAnchorJob.isExecutable()) { // Update if new value differs from old one
                 result.add(bottomAnchorJob);
             }
@@ -186,20 +207,18 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         return sb.toString();
     }
 
-    private Job modifyJob(final Class<?> clazz, final String name, double value) {
+    private AbstractJob modifyJob(final Class<?> clazz, final String name, double value) {
         final PropertyName pn = new PropertyName(name, clazz);
-        final ValuePropertyMetadata vpm
-                = Metadata.getMetadata().queryValueProperty(fxomInstance, pn);
-        final Job subJob = new ModifyObjectJob(getContext(),
-                fxomInstance, vpm, value, getEditorController()).extend();
+        final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, pn);
+        final AbstractJob subJob = modifyObjectJobFactory.getJob(fxomInstance, vpm, value);
         return subJob;
     }
 
-    private Job modifyJob(final String name, double value) {
+    private AbstractJob modifyJob(final String name, double value) {
         return modifyJob(null, name, value);
     }
 
-    private Job modifyAnchorJob(final Anchor anchor, double value) {
+    private AbstractJob modifyAnchorJob(final Anchor anchor, double value) {
         final String name = anchor.name().toLowerCase(Locale.ROOT) + "Anchor";
         return modifyJob(AnchorPane.class, name, value);
     }
@@ -244,4 +263,22 @@ public class FitToParentObjectJob extends BatchDocumentJob {
         }
         return result;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<FitToParentObjectJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        /**
+         * Create an {@link FitToParentObjectJob} job
+         * @param fxomInstance the fxom instance with an {@link AnchorPane} as parent
+         * @return the job to execute
+         */
+        public FitToParentObjectJob getJob(FXOMInstance fxomInstance) {
+            return create(FitToParentObjectJob.class, j -> j.setJobParameters(fxomInstance));
+        }
+    }
+
 }

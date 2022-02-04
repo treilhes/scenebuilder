@@ -37,9 +37,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJobExtension;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
 
@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
 public class SetFxomRootJobExtension extends AbstractJobExtension<SetFxomRootJob> {
 
 	@Autowired private Editor editorController;
-	@Autowired private ThemePreference themePreference;
+	@Autowired private ThemeDocumentPreference themePreference;
 
 	@Override
 	public void postExecute() {

@@ -34,17 +34,17 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 
 public interface JobManager {
 
-	List<Job> getUndoStack();
+	List<AbstractJob> getUndoStack();
 
-	void push(Job job);
+	void push(AbstractJob job);
 
-	Job getCurrentJob();
+	AbstractJob getCurrentJob();
 
 	ReadOnlyIntegerProperty revisionProperty();
 
@@ -62,6 +62,6 @@ public interface JobManager {
 
 	void undo();
 
-	List<Job> getRedoStack();
+	List<AbstractJob> getRedoStack();
 
 }

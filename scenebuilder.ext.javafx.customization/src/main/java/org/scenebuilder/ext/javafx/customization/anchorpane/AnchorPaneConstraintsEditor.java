@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,8 +43,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -110,7 +111,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
     // Method to please findBugs
     private void initialize(Api api) {
-        
+
         constraintListener = (ov, prevValue, newValue) -> {
             propertyChanged();
             styleRegions();
@@ -160,26 +161,26 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
         }
         return propertyEditors;
     }
-    
+
     @Override
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         super.reset(propMeta, selectionState);
         assert propMeta.isGroup();
         assert propMeta instanceof AnchorPropertyGroupMetadata;
-        
-        
-        
+
+
+
         AnchorPropertyGroupMetadata anchorsMeta = (AnchorPropertyGroupMetadata)propMeta;
-        
+
         Set<FXOMInstance> selectedInstances = selectionState.getSelectedInstances();
-        
+
         constraintEditors.get(0).reset(selectedInstances, anchorsMeta.getTopAnchorPropertyPropertyMetadata());
         constraintEditors.get(1).reset(selectedInstances, anchorsMeta.getRightAnchorPropertyPropertyMetadata());
         constraintEditors.get(2).reset(selectedInstances, anchorsMeta.getBottomAnchorPropertyPropertyMetadata());
         constraintEditors.get(3).reset(selectedInstances, anchorsMeta.getLeftAnchorPropertyPropertyMetadata());
-        
+
         propertyChanged();
-        
+
         for (int ii = 0; ii < 4; ii++) {
             constraintEditors.get(ii).addValueListener(constraintListener);
         }
@@ -213,7 +214,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
     @Lazy
-    protected static class ConstraintEditor extends AbstractPropertyEditor {
+    public static class ConstraintEditor extends AbstractPropertyEditor {
 
         private ToggleButton toggleButton;
         private TextField textField;
@@ -235,7 +236,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
             //
             // Text field
             //
-            
+
             EventHandler<ActionEvent> valueListener = event -> {
                 if (isHandlingError()) {
                     // Event received because of focus lost due to error dialog
@@ -279,7 +280,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
             //
             // Toggle button
             //
-            
+
 
             toggleButton.selectedProperty().addListener((ChangeListener<Boolean>) (ov, prevSel, newSel) -> {
 //                System.out.println("toggleButton : selectedProperty changed!");
@@ -293,10 +294,10 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
                     // Anchor selected : compute its value from the selected node
                     double anchor = 0;
                     String lcPropName = ConstraintEditor.this.propMeta.getName().toString().toLowerCase();
-                    
+
                     // For the moment, we don't support multi-selection with different anchors:
                     // the first instance anchor only is used.
-                    // TODO Anchors property metadata must know how to calculate itself instead of delegating this task 
+                    // TODO Anchors property metadata must know how to calculate itself instead of delegating this task
                     if (lcPropName.contains("top")) {
                         anchor = EditorUtils.computeTopAnchor(getFirstInstance());
                     } else if (lcPropName.contains("right")) {
@@ -377,7 +378,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
         public void requestFocus() {
             EditorUtils.doNextFrame(() -> textField.requestFocus());
         }
-        
+
         private FXOMInstance getFirstInstance() {
             return (FXOMInstance) selectedInstances.toArray()[0];
         }

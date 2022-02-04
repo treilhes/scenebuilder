@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,11 +35,16 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
@@ -47,18 +53,25 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
  * Job used to modify an fx:id.
  *
  */
-public class ModifyFxIdJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class ModifyFxIdJob extends AbstractJob {
 
-    private final FXOMObject fxomObject;
-    private final String newValue;
-    private final String oldValue;
+    private FXOMObject fxomObject;
+    private String newValue;
+    private String oldValue;
     private FXOMDocument fxomDocument;
 
-    public ModifyFxIdJob(SceneBuilderBeanFactory context, FXOMObject fxomObject, String newValue, Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    // @formatter:off
+    protected ModifyFxIdJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+    // @formatter:on
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
+    }
 
+    protected void setJobParameters(FXOMObject fxomObject, String newValue) {
         assert fxomObject != null;
         assert fxomObject.getSceneGraphObject() != null;
 
@@ -66,7 +79,6 @@ public class ModifyFxIdJob extends Job {
         this.newValue = newValue;
         this.oldValue = fxomObject.getFxId();
     }
-
     /*
      * Job
      */
@@ -77,12 +89,12 @@ public class ModifyFxIdJob extends Job {
     }
 
     @Override
-    public void execute() {
-        redo();
+    public void doExecute() {
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         fxomDocument.beginUpdate();
         this.fxomObject.setFxId(oldValue);
         fxomDocument.endUpdate();
@@ -90,7 +102,7 @@ public class ModifyFxIdJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         fxomDocument.beginUpdate();
         this.fxomObject.setFxId(newValue);
         fxomDocument.endUpdate();
@@ -109,5 +121,26 @@ public class ModifyFxIdJob extends Job {
         }
 
         return result;
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public static final class Factory extends JobFactory<ModifyFxIdJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link ModifyFxIdJob} job.
+         *
+         * @param fxomObject the fxom object
+         * @param newFxIdValue the new fx:id value
+         * @return the job to execute
+         */
+        public ModifyFxIdJob getJob(FXOMObject fxomObject, String newFxIdValue) {
+            return create(ModifyFxIdJob.class, j -> j.setJobParameters(fxomObject, newFxIdValue));
+        }
+
     }
 }

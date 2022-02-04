@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.editor.job;
 
-public abstract class AbstractJobExtension<T extends Job> implements JobExtension<T> {
+public abstract class AbstractJobExtension<T extends AbstractJob> implements JobExtension<T> {
 
 	private T extendedJob;
 

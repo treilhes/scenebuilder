@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,44 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.devutils.strchk;
 
-import java.io.File;
-import java.util.Date;
-
+import com.oracle.javafx.scenebuilder.devutils.Loader;
 import com.oracle.javafx.scenebuilder.devutils.strchk.controller.ResourceLocationsController;
-import com.oracle.javafx.scenebuilder.devutils.strchk.loader.ProjectLoader;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.Project;
-import com.oracle.javafx.scenebuilder.devutils.strchk.utils.Loader;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+import javafx.scene.Node;
 
-public class StringCheckerApp extends Application {
-    
-    
-    
-    public static void main(String args[]) {
-        launch(args);
-    }
-    
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        System.out.println(new Date());
-        Project project = ProjectLoader.load(new File(".", Config.ROOT_PROJECT).getCanonicalFile());
-        System.out.println(new Date());
-        HBox box1 = new HBox(5);
-        
+public class StringCheckerApp {
+
+
+    public static Node load() {
         ResourceLocationsController ctrl = new ResourceLocationsController();
-        AnchorPane node = Loader.load(ctrl, "ResourceLocations.fxml");
-        ctrl.initialize(project);
-        
-        Scene scene = new Scene(node, 1024, 768, Color.BEIGE);
-        primaryStage.setTitle("String Checker Application");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return Loader.load(ctrl, "ResourceLocations.fxml");
     }
 
 }

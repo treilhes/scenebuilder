@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,35 +40,37 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUnion;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.content.util.Picker;
 import com.oracle.javafx.scenebuilder.core.content.util.ScrollPaneBooster;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -117,33 +120,26 @@ public class ContentPanelController extends AbstractFxmlPanelController
     @FXML private Group contentGroup;
     @FXML private Pane glassLayer;
     @FXML private Group outlineLayer;
-    //@FXML private Group pringLayer;
-    //@FXML private Group handleLayer;
-    //@FXML private Group rudderLayer;
 
-    private boolean guidesVisible = true;
-    private Paint pringColor = Color.rgb(238, 168, 47);
-    private Paint guidesColor = Color.RED;
-
-    private WorkspaceController workspaceController;
-    private final HudWindowController hudWindowController;
-
-    //private final EditModeController editModeController;
-    //private final PickModeController pickModeController;
-    //private AbstractModeController currentModeController;
-
-    private boolean tracingEvents; // For debugging purpose
-
-    private final Picker picker = new Picker();
-	private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
-	private final BackgroundImagePreference backgroundImagePreference;
-	//private final ParentRingColorPreference parentRingColorPreference;
-	private final Editor editorController;
-	private final SceneBuilderBeanFactory context;
-    private FXOMDocument oldDocument;
+    private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
+    private final BackgroundImagePreference backgroundImagePreference;
+    private final Editor editorController;
     private final Driver driver;
     private final ModeManager modeManager;
     private final Drag drag;
+    private final Selection selection;
+    private final DocumentManager documentManager;
+    private final MessageLogger messageLogger;
+    private final ContextMenu contextMenu;
+    private final DesignHierarchyMask.Factory maskFactory;
+    private final WorkspaceController workspaceController;
+    private final HudWindowController hudWindowController;
+
+    private final Picker picker = new Picker();
+    private boolean guidesVisible = true;
+    private Paint guidesColor = Color.RED;
+    private FXOMDocument oldDocument;
+    private boolean tracingEvents; // For debugging purpose
 
     /*
      * Public
@@ -155,30 +151,34 @@ public class ContentPanelController extends AbstractFxmlPanelController
      * @param editorController the editor controller (never null).
      */
     public ContentPanelController(
-            @Autowired Api api,
-    		@Autowired @Lazy Editor editorController,
-    		@Autowired Driver driver,
-    		@Autowired AlignmentGuidesColorPreference alignmentGuidesColorPreference,
-    		@Autowired BackgroundImagePreference backgroundImagePreference,
-//    		@Autowired ParentRingColorPreference parentRingColorPreference,
-    		@Autowired DocumentManager documentManager,
-    		@Autowired @Lazy HudWindowController hudWindowController,
-    		@Autowired @Lazy ModeManager modeManager
-
-//    		@Autowired @Lazy EditModeController editModeController,
-//    		@Autowired @Lazy PickModeController pickModeController,
-//    		@Autowired WorkspaceController workspaceController
-    		) {
-        super(api, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle());
-        this.context = api.getContext();
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            @Lazy Editor editorController,
+            Driver driver,
+            DesignHierarchyMask.Factory maskFactory,
+            AlignmentGuidesColorPreference alignmentGuidesColorPreference,
+            BackgroundImagePreference backgroundImagePreference,
+            @Lazy HudWindowController hudWindowController,
+            @Lazy ModeManager modeManager,
+            Drag drag,
+            WorkspaceController workspaceController,
+            JobManager jobManager,
+            Selection selection,
+            MessageLogger messageLogger,
+            ContextMenu contextMenu
+            ) {
+        super(scenebuilderManager, documentManager, ContentPanelController.class.getResource("ContentPanel.fxml"), I18N.getBundle());
         this.editorController = editorController;
         this.driver = driver;
         this.modeManager = modeManager;
-        this.drag = api.getApiDoc().getDrag();
-        //TODO try to use getBean without parameters
-        this.workspaceController = context.getBean(WorkspaceController.class, editorController, documentManager);
-
+        this.maskFactory = maskFactory;
+        this.drag = drag;
+        this.selection = selection;
+        this.workspaceController = workspaceController;
+        this.documentManager = documentManager;
         this.hudWindowController = hudWindowController;
+        this.messageLogger = messageLogger;
+        this.contextMenu = contextMenu;
 //        this.editModeController = editModeController;
 //        this.pickModeController = pickModeController;
 //        this.workspaceController = workspaceController;
@@ -187,9 +187,9 @@ public class ContentPanelController extends AbstractFxmlPanelController
         this.backgroundImagePreference = backgroundImagePreference;
 //        this.parentRingColorPreference = parentRingColorPreference;
 
-        api.getApiDoc().getDocumentManager().fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        api.getApiDoc().getDocumentManager().selectionDidChange().subscribe(s -> editorSelectionDidChange());
-        api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        documentManager.selectionDidChange().subscribe(s -> editorSelectionDidChange());
+        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
 
         if (logger.isDebugEnabled()) {
             tracingEvents = false;
@@ -210,7 +210,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
     	alignmentGuidesColorPreference.getObservableValue().addListener((ob,o,n) -> setGuidesColor(n));
     	backgroundImagePreference.getObservableValue().addListener(
-    			(ob,o,n) -> setWorkspaceBackground(BackgroundImagePreference.getImage(n)));
+            	(ob,o,n) -> setWorkspaceBackground(BackgroundImagePreference.getImage(n)));
     	//parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setPringColor(n));
     }
     /**
@@ -388,11 +388,11 @@ public class ContentPanelController extends AbstractFxmlPanelController
     public void scrollToSelection() {
         // Walk through the selected objects and computes the enclosing bounds.
         final BoundsUnion union = new BoundsUnion();
-        final Selection selection = getApi().getApiDoc().getSelection();
+
         if (selection.getGroup() instanceof ObjectSelectionGroup) {
             final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
             for (FXOMObject i : osg.getItems()) {
-                final DesignHierarchyMask mask = new DesignHierarchyMask(i);
+                final HierarchyMask mask = maskFactory.getMask(i);
                 final FXOMObject nodeFxomObject = mask.getClosestFxNode();
                 if (nodeFxomObject != null) {
                     final Node node = (Node) nodeFxomObject.getSceneGraphObject();
@@ -438,7 +438,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
                 }
             }
 
-            DesignHierarchyMask mask = new DesignHierarchyMask(fxomObject);
+            HierarchyMask mask = maskFactory.getMask(fxomObject);
             fxomObject = mask.getParentFXOMObject();
         }
     }
@@ -470,7 +470,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         final FXOMObject result;
 
         if (isContentDisplayable()) {
-            final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             result = pick(fxomDocument, sceneX, sceneY, excludes);
         } else {
             result = null;
@@ -567,10 +567,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
     public FXOMObject searchWithNode(Node sceneGraphNode, double sceneX, double sceneY) {
        final FXOMObject result;
 
-        final FXOMDocument fxomDocument
-                = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
-        final FXOMObject match
-                = fxomDocument.searchWithSceneGraphObject(sceneGraphNode);
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMObject match = fxomDocument.searchWithSceneGraphObject(sceneGraphNode);
          /*
          * Refine the search.
          * With the logic above, a click in a 'tab header' returns the
@@ -725,7 +723,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     public boolean isContentDisplayable() {
         final boolean result;
 
-        final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         if (fxomDocument == null) {
             result = false;
         } else if (fxomDocument.getFxomRoot() == null) {
@@ -750,8 +748,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
         // Setup the mode controller
         if (!this.modeManager.hasModeEnabled()) {
-            getApi().getApiDoc().getDocumentManager().selectionDidChange()
-                .set(new SelectionState(getApi().getApiDoc().getSelection()));
+            documentManager.selectionDidChange().set(new SelectionStateImpl(selection));
             this.modeManager.enableMode(EditModeController.ID);
         }
 
@@ -771,8 +768,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         final Exception newLayoutException
                 = workspaceController.getLayoutException();
         if ((newLayoutException != null) && (newLayoutException != currentLayoutException)) {
-            getApi().getApiDoc().getMessageLogger().logWarningMessage(
-                    "log.warning.layout.failed", newLayoutException.getMessage());
+            messageLogger.logWarningMessage("log.warning.layout.failed", newLayoutException.getMessage());
         }
 
         if (fxomDocument != null) {
@@ -873,8 +869,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
         setupEventTracingFilter();
 
         // Setup the context menu
-        final ContextMenu contextMenuController = getApi().getApiDoc().getContextMenu();
-        scrollPane.setContextMenu(contextMenuController.getContextMenu());
+        scrollPane.setContextMenu(contextMenu.getContextMenu());
 
         // Setup default workspace background
         //setWorkspaceBackground(ImageUtils.getImage(getDefaultWorkspaceBackgroundURL()));

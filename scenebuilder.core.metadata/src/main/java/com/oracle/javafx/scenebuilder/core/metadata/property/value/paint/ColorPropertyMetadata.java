@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -76,10 +77,10 @@ public class ColorPropertyMetadata extends ComplexPropertyMetadata<Color> {
             .withDefaultValue(1.0)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected ColorPropertyMetadata(PropertyName name, boolean readWrite, 
-            Color defaultValue, InspectorPath inspectorPath) {
-        super(name, Color.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected ColorPropertyMetadata(PropertyName name, boolean readWrite, 
+//            Color defaultValue, InspectorPath inspectorPath) {
+//        super(name, Color.class, readWrite, defaultValue, inspectorPath);
+//    }
     
     protected ColorPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

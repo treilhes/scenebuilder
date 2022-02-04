@@ -47,7 +47,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 
 @Component
 public class PreferencesContext {

@@ -45,8 +45,8 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 @Component

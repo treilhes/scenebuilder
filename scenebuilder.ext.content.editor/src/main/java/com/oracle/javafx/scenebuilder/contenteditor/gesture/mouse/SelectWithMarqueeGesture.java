@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,19 +43,21 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;
@@ -77,18 +80,24 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private final Driver driver;
     private Layer<Rudder> rudderLayer;
     private ModeManager modeManager;
+    private final DesignHierarchyMask.Factory maskFactory;
 
-    public SelectWithMarqueeGesture(
+    protected SelectWithMarqueeGesture(
             @Autowired Driver driver,
+            @Autowired DesignHierarchyMask.Factory maskFactory,
             @Autowired @Lazy Content contentPanelController,
             @Autowired @Lazy EditModeController editMode) {
         super(contentPanelController);
         this.driver = driver;
-
+        this.maskFactory = maskFactory;
         rudderLayer = editMode.getLayer(Rudder.class);
         assert rudderLayer != null;
     }
 
+    public void setupGestureParameters() {
+
+    }
+    // TODO move this method to setupGestureParameters like other gesture, but check the patential performance penalty in EditModeController
     public void setup(FXOMObject hitObject, FXOMObject scopeObject) {
         assert (hitObject == null) || (hitObject.isDescendantOf(scopeObject) == false);
         this.hitObject = hitObject;
@@ -245,8 +254,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
                 candidates.add(fxomDocument.getFxomRoot());
             }
         } else {
-            final DesignHierarchyMask m
-                    = new DesignHierarchyMask(scopeObject);
+            final HierarchyMask m = maskFactory.getMask(scopeObject);
             if (m.isAcceptingSubComponent()) {
                 final int count = m.getSubComponentCount();
                 for (int i = 0; i < count; i++) {
@@ -270,4 +278,16 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
             }
         }
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<SelectWithMarqueeGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public SelectWithMarqueeGesture getGesture() { //FXOMObject hitObject, FXOMObject scopeObject) {
+            return create(SelectWithMarqueeGesture.class, null); //g -> g.setupGestureParameters(hitObject, scopeObject));
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,11 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
+import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
 import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDefaultFilter;
@@ -53,12 +53,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.menu.LibraryMenuProvider;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;
 
-@ComponentScan(
-        basePackages = {
-                "com.oracle.javafx.scenebuilder.controllibrary.action"
-        })
 public class ControlLibraryExtension extends AbstractExtension {
 
     @Override
@@ -70,21 +65,27 @@ public class ControlLibraryExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                LibraryPanelActions.class,
-                LibraryController.class,
-                LibraryMenuProvider.class,
-                ImportWindowController.class,
-                LibraryPanelController.class,
-                DisplayModePreference.class,
-                ControlLibrary.class,
                 BuiltinLibrary.class,
-                ControlLibraryDefaultFilter.class,
-                ControlLibraryDialogConfiguration.class,
-                LibraryStoreFactory.class,
-                JarAnalysisReportController.class,
                 ControlFileExplorer.class,
                 ControlFolderExplorer.class,
-                ControlMavenArtifactExplorer.class
+                ControlLibrary.class,
+                ControlLibraryDefaultFilter.class,
+                ControlLibraryDialogConfiguration.class,
+                ControlMavenArtifactExplorer.class,
+                DisplayModePreference.class,
+                ImportWindowController.class,
+                JarAnalysisReportController.class,
+                LibraryController.class,
+                ControlLibraryDragSource.class,
+                ControlLibraryDragSource.Factory.class,
+                LibraryMenuProvider.class,
+                LibraryPanelActions.ImportSelectionAction.class,
+                LibraryPanelActions.ManageJarFxmlAction.class,
+                LibraryPanelActions.RevealCustomFolderAction.class,
+                LibraryPanelActions.ShowJarAnalysisReportAction.class,
+                LibraryPanelActions.ViewAsListAction.class,
+                LibraryPanelActions.ViewAsSectionsAction.class,
+                LibraryPanelController.class
             );
      // @formatter:on
     }

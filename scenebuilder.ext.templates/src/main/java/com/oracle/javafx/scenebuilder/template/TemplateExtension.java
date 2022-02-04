@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 import com.oracle.javafx.scenebuilder.template.controller.TemplatesWindowController;
@@ -45,22 +44,27 @@ import com.oracle.javafx.scenebuilder.template.i18n.I18NTemplate;
 import com.oracle.javafx.scenebuilder.template.menu.TemplateMenuProvider;
 import com.oracle.javafx.scenebuilder.template.templates.DefaultTemplateList;
 
-@ComponentScan(basePackages = { "com.oracle.javafx.scenebuilder.template.templates" })
 public class TemplateExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("7fc1994b-a8d6-4bfd-976b-f8eb6bfb7498");
     }
-    
 
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                TemplateController.class,
+                DefaultTemplateList.BasicDesktopTemplate.class,
+                DefaultTemplateList.ComplexDesktopTemplate.class,
+                DefaultTemplateList.DefaultGroup.class,
+                DefaultTemplateList.DesktopGroup.class,
+                DefaultTemplateList.EmptyTemplate.class,
+                DefaultTemplateList.OtherGroup.class,
+                DefaultTemplateList.PhoneGroup.class,
+                DefaultTemplateList.TabletGroup.class,
                 I18NTemplate.class,
+                TemplateController.class,
                 TemplateMenuProvider.class,
-                DefaultTemplateList.class,
                 TemplatesWindowController.class
             );
      // @formatter:on

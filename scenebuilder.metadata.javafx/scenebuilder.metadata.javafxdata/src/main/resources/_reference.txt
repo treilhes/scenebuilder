@@ -40,6 +40,7 @@ public interface BundleValues {
 	final String TMP_METACLASS_KIND = "classKind";
 	final String HIDDEN = "hidden";
 	final String IS_COMPONENT = "component";
+	final String VISIBILITY = "hidden|standard|expert";
 
 	//both
 	final String IMAGE = "image";

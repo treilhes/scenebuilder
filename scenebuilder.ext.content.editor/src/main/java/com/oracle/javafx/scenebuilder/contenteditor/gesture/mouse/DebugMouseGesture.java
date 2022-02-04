@@ -34,31 +34,41 @@ package com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 
 import javafx.scene.input.KeyEvent;
 
 /**
  *
- * 
+ *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class DebugMouseGesture extends AbstractMouseGesture {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(DebugMouseGesture.class);
 
-    private final String title;
-    
-    public DebugMouseGesture(Content contentPanelController, String title) {
+    private String title;
+
+    protected DebugMouseGesture(Content contentPanelController) {
         super(contentPanelController);
+
+    }
+
+    protected void setupGestureParameters(String title) {
         this.title = title;
     }
 
     /*
      * AbstractMouseGesture
      */
-    
+
     @Override
     protected void mousePressed() {
         logger.debug("DebugMouseGesture.mousePressed");
@@ -93,14 +103,26 @@ public class DebugMouseGesture extends AbstractMouseGesture {
     protected void userDidCancel() {
         logger.debug("DebugMouseGesture.keyEvent");
     }
-    
-    
+
+
     /*
      * Object
      */
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "[" + title + "]";
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<DebugMouseGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public DebugMouseGesture getGesture(String title) {
+            return create(DebugMouseGesture.class, g -> g.setupGestureParameters(title));
+        }
+    }
+
 }

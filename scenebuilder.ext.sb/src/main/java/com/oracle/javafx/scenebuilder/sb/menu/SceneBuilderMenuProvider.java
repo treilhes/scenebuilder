@@ -40,13 +40,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.sb.menu.controller.SceneBuilderMenuController;
 
 import javafx.scene.control.MenuItem;
@@ -73,7 +73,7 @@ public class SceneBuilderMenuProvider implements MenuItemProvider {
     public List<MenuItemAttachment> menuItems() {
         List<MenuItemAttachment> menus = new ArrayList<>();
         menus.add(new CloseWindowAttachment());
-        
+
         if (!EditorPlatform.IS_MAC) {
             menus.add(new ExitSceneBuilderAttachment());
         }
@@ -139,7 +139,7 @@ public class SceneBuilderMenuProvider implements MenuItemProvider {
             menu = new MenuItem(I18N.getString("menu.title.quit"));
             menu.setId(EXIT_ID);
             menu.setOnAction((e) -> sceneBuilderMenuController.performCloseSceneBuilder());
-            
+
             return menu;
         }
     }

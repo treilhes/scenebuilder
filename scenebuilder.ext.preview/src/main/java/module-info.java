@@ -7,7 +7,8 @@ open module scenebuilder.ext.preview {
     exports com.oracle.javafx.scenebuilder.preview;
 
     requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.core.core;
     requires scenebuilder.ext.content.editor;
-    
+
     provides Extension with PreviewExtension;
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,14 +58,14 @@ import javafx.scene.Node;
 public class ControlExplorerUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ControlExplorerUtil.class);
-    
+
     private ControlExplorerUtil() {}
-    
+
     public static Object instantiateWithFXMLLoader(Class<?> klass, ClassLoader classLoader) throws IOException {
         final String fxmlText = LibraryUtil.makeFxmlText(klass);
         return instantiateWithFXMLLoader(fxmlText, classLoader);
     }
-    
+
     public static Object instantiateWithFXMLLoader(String fxmlText, ClassLoader classLoader) throws IOException {
         Object result;
 
@@ -88,7 +89,7 @@ public class ControlExplorerUtil {
             return null;
         }
         filters = filters == null ? new ArrayList<>() : filters;
-        
+
         ControlReportEntryImpl.Status status;
         ControlReportEntryImpl.SubStatus subStatus = SubStatus.NONE;
         Throwable entryException;
@@ -132,10 +133,10 @@ public class ControlExplorerUtil {
         if (entryException != null) {
             logger.warn("Exception while exploring entry {}", entryName, entryException);
         }
-        
+
         return new ControlReportEntryImpl(entryName, status, subStatus, entryException, entryClass, className);
     }
-    
+
     public static ControlReportEntryImpl exploreFxml(Path fxmlFile, ClassLoader classLoader) {
         ControlReportEntryImpl.Status status;
         ControlReportEntryImpl.SubStatus subStatus = SubStatus.NONE;
@@ -143,6 +144,7 @@ public class ControlExplorerUtil {
         Class<?> entryClass = null;
 
         try {
+            logger.debug("Loading custom control file {}", fxmlFile);
             String content = Files.readString(fxmlFile, StandardCharsets.UTF_8);
             FXOMDocument result= new FXOMDocument(content, null, classLoader, null);
             entryClass = result.getFxomRoot().getSceneGraphObject().getClass();
@@ -162,9 +164,9 @@ public class ControlExplorerUtil {
         if (entryException != null) {
             logger.warn("Exception while exploring entry {}", fxmlFile, entryException);
         }
-        
+
         try {
-//            return new ControlReportEntryImpl(fxmlFile.getFileName().toString(), status, 
+//            return new ControlReportEntryImpl(fxmlFile.getFileName().toString(), status,
 //                    entryException, entryClass, entryClass == null ? null : entryClass.getName());
             return new ControlReportEntryImpl(fxmlFile.getFileName().toString(), status, subStatus,
                     entryException, entryClass, entryClass.getName());

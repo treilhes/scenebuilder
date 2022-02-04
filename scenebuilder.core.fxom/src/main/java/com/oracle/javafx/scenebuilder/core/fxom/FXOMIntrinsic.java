@@ -63,7 +63,7 @@ public class FXOMIntrinsic extends FXOMElement {
 
     FXOMIntrinsic(FXOMDocument document, GlueElement glueElement, Object targetSceneGraphObject,  List<FXOMProperty> properties) {
         super(document, glueElement, null);
-        this.sourceSceneGraphObject = targetSceneGraphObject;
+        setSourceSceneGraphObject(targetSceneGraphObject);
         for (FXOMProperty p : properties) {
             p.setParentInstance(this);
             addProperty(p);
@@ -144,6 +144,7 @@ public class FXOMIntrinsic extends FXOMElement {
 
     public void setSourceSceneGraphObject(Object sourceSceneGraphObject) {
         this.sourceSceneGraphObject = sourceSceneGraphObject;
+        setDeclaredClass(sourceSceneGraphObject == null ? null : sourceSceneGraphObject.getClass());
     }
 
     public FXOMInstance createFxomInstanceFromIntrinsic() {
@@ -292,6 +293,7 @@ public class FXOMIntrinsic extends FXOMElement {
     public void documentLocationWillChange(URL newLocation) {
         // Nothing special to do here
     }
+
 
 
     /*

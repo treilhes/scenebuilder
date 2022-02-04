@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,28 +34,52 @@
 
 package com.oracle.javafx.scenebuilder.job.editor.reference;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It replace the reference id from the {@link FXOMNode} by the original referee {@link FXOMObject}<br/>
+ * The referee is moved from his original location
+ * If {@link FXOMIntrinsic}, delegates to {@link CombineIntrinsicReferenceJob}<br/>
+ * If {@link FXOMPropertyT}, delegates to {@link CombineExpressionReferenceJob}<br/>
+ * else bug
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class CombineReferenceJob  extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class CombineReferenceJob  extends AbstractJob {
 
-    private final Job subJob;
+    private AbstractJob subJob;
+    private CombineIntrinsicReferenceJob.Factory combineIntrinsicReferenceJobFactory;
+    private CombineExpressionReferenceJob.Factory combineExpressionReferenceJobFactory;
 
-    public CombineReferenceJob(SceneBuilderBeanFactory context, FXOMNode reference, Editor editor) {
-        super(context, editor);
+    protected CombineReferenceJob(
+            JobExtensionFactory extensionFactory,
+            CombineIntrinsicReferenceJob.Factory combineIntrinsicReferenceJobFactory,
+            CombineExpressionReferenceJob.Factory combineExpressionReferenceJobFactory
+            ) {
+        super(extensionFactory);
+        this.combineIntrinsicReferenceJobFactory = combineIntrinsicReferenceJobFactory;
+        this.combineExpressionReferenceJobFactory = combineExpressionReferenceJobFactory;
+    }
+
+    protected void setJobParameters(FXOMNode reference) {
         if (reference instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) reference;
-            subJob = new CombineIntrinsicReferenceJob(getContext(), fxomIntrinsic, getEditorController()).extend();
+            subJob = combineIntrinsicReferenceJobFactory.getJob(fxomIntrinsic);
         } else if (reference instanceof FXOMPropertyT) {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) reference;
-            subJob = new CombineExpressionReferenceJob(getContext(), fxomProperty, getEditorController()).extend();
+            subJob = combineExpressionReferenceJobFactory.getJob(fxomProperty);
         } else {
             throw new RuntimeException("Bug"); //NOCHECK
         }
@@ -69,17 +94,17 @@ public class CombineReferenceJob  extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         subJob.execute();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         subJob.undo();
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         subJob.redo();
     }
 
@@ -88,6 +113,21 @@ public class CombineReferenceJob  extends Job {
         return subJob.getDescription();
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<CombineReferenceJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
 
+        /**
+         * Create an {@link CombineReferenceJob} job
+         * @param reference
+         * @return the job to execute
+         */
+        public CombineReferenceJob getJob(FXOMNode reference) {
+            return create(CombineReferenceJob.class, j -> j.setJobParameters(reference));
+        }
+    }
 
 }

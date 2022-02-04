@@ -13,6 +13,7 @@ open module scenebuilder.core.fxom {
     exports com.oracle.javafx.scenebuilder.core.fxom.ext;
     exports com.oracle.javafx.scenebuilder.core.fxom.util;
 
+
 //    requires javafx.fxml;
 //    requires transitive javafx.graphics;
 //    requires javafx.controls;

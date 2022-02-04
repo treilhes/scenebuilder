@@ -44,7 +44,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,31 +61,28 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPathComparator
  *
  */
 @Component
-public class Metadata implements InitializingBean {
+public class Metadata {
 
-    private static Metadata metadata = null;
+    private final Map<Class<?>, ComponentClassMetadata<?>> componentClassMap = new HashMap<>();
+    private final Map<Class<?>, ComponentClassMetadata<?>> customComponentClassMap = new WeakHashMap<>();
 
-
-    private final Map<Class<?>, ComponentClassMetadata> componentClassMap = new HashMap<>();
-    private final Map<Class<?>, ComponentClassMetadata> customComponentClassMap = new WeakHashMap<>();
+    /**
+     * During data introspection of an unknown custom component, if the name match,
+     * the property will be ignored.
+     */
     private final Set<PropertyName> hiddenProperties = new HashSet<>();
+
+    /**
+     * parent related properties can be understood as transient properties that have a meaning only in the current parent
+     * Changing the parent means those properties can be deleted because the meaning is lost
+     * Ex: positioning/scaling/rotation
+     */
     private final Set<PropertyName> parentRelatedProperties = new HashSet<>();
     private final List<String> sectionNames = new ArrayList<>();
     private final Map<String, List<String>> subSectionMap = new HashMap<>();
 
     public final InspectorPathComparator INSPECTOR_PATH_COMPARATOR
             = new InspectorPathComparator(sectionNames, subSectionMap);
-
-    // TODO remove me
-    public static synchronized Metadata getMetadata() {
-    	assert metadata != null;
-        return metadata;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        metadata = this;
-    }
 
     private Metadata(
             @Autowired List<ComponentClassMetadata<?>> componentClassMetadatas
@@ -197,16 +193,16 @@ public class Metadata implements InitializingBean {
 //        parentRelatedProperties.add(PropertyNames.scaleZName);
 //        parentRelatedProperties.add(PropertyNames.rotationAxisName);
 //        parentRelatedProperties.add(PropertyNames.rotateName);
-        parentRelatedProperties.add(new PropertyName("layoutXName"));
-        parentRelatedProperties.add(new PropertyName("layoutYName"));
-        parentRelatedProperties.add(new PropertyName("translateXName"));
-        parentRelatedProperties.add(new PropertyName("translateYName"));
-        parentRelatedProperties.add(new PropertyName("translateZName"));
-        parentRelatedProperties.add(new PropertyName("scaleXName"));
-        parentRelatedProperties.add(new PropertyName("scaleYName"));
-        parentRelatedProperties.add(new PropertyName("scaleZName"));
-        parentRelatedProperties.add(new PropertyName("rotationAxisName"));
-        parentRelatedProperties.add(new PropertyName("rotateName"));
+        parentRelatedProperties.add(new PropertyName("layoutX"));
+        parentRelatedProperties.add(new PropertyName("layoutY"));
+        parentRelatedProperties.add(new PropertyName("translateX"));
+        parentRelatedProperties.add(new PropertyName("translateY"));
+        parentRelatedProperties.add(new PropertyName("translateZ"));
+        parentRelatedProperties.add(new PropertyName("scaleX"));
+        parentRelatedProperties.add(new PropertyName("scaleY"));
+        parentRelatedProperties.add(new PropertyName("scaleZ"));
+        parentRelatedProperties.add(new PropertyName("rotationAxis"));
+        parentRelatedProperties.add(new PropertyName("rotate"));
 
         // Populates sectionNames
         sectionNames.add("Properties"); //NOCHECK
@@ -261,19 +257,17 @@ public class Metadata implements InitializingBean {
         subSectionMap.put("Code", ss2); //NOCHECK
     }
 
-    public ComponentClassMetadata queryComponentMetadata(Class<?> componentClass) {
-        final ComponentClassMetadata result;
+    public ComponentClassMetadata<?> queryComponentMetadata(Class<?> componentClass) {
+        final ComponentClassMetadata<?> result;
 
 
-        final ComponentClassMetadata componentMetadata
-                = componentClassMap.get(componentClass);
+        final ComponentClassMetadata<?> componentMetadata = componentClassMap.get(componentClass);
         if (componentMetadata != null) {
             // componentClass is a certified component
             result = componentMetadata;
         } else {
             // componentClass is a custom component
-            final ComponentClassMetadata customMetadata
-                    = customComponentClassMap.get(componentClass);
+            final ComponentClassMetadata<?> customMetadata = customComponentClassMap.get(componentClass);
             if (customMetadata != null) {
                 // componentClass has already been introspected
                 result = customMetadata;
@@ -281,13 +275,13 @@ public class Metadata implements InitializingBean {
                 // componentClass must be introspected
                 // Let's find the first certified ancestor
                 Class<?> ancestorClass = componentClass.getSuperclass();
-                ComponentClassMetadata ancestorMetadata = null;
+                ComponentClassMetadata<?> ancestorMetadata = null;
                 while ((ancestorClass != null) && (ancestorMetadata == null)) {
                     ancestorMetadata = componentClassMap.get(ancestorClass);
                     ancestorClass = ancestorClass.getSuperclass();
                 }
                 final MetadataIntrospector introspector
-                        = new MetadataIntrospector(componentClass, ancestorMetadata);
+                        = new MetadataIntrospector(componentClass, ancestorMetadata, this);
                 result = introspector.introspect();
                 customComponentClassMap.put(componentClass, result);
             }
@@ -397,7 +391,7 @@ public class Metadata implements InitializingBean {
                 componentClass = fxomInstance.getSceneGraphObject().getClass();
             }
 
-            final PropertyMetadata m = Metadata.getMetadata().queryProperty(componentClass, targetName);
+            final PropertyMetadata m = queryProperty(componentClass, targetName);
             if (m instanceof ValuePropertyMetadata) {
                 result = (ValuePropertyMetadata) m;
             } else {
@@ -409,7 +403,7 @@ public class Metadata implements InitializingBean {
     }
 
 
-    public Collection<ComponentClassMetadata> getComponentClasses() {
+    public Collection<ComponentClassMetadata<?>> getComponentClasses() {
         return componentClassMap.values();
     }
 
@@ -417,6 +411,13 @@ public class Metadata implements InitializingBean {
         return hiddenProperties;
     }
 
+    /**
+     * During prune properties job a property is trimmed
+     * if the property is static
+     * if the property is transient (has a meaning in the current parent only)
+     * @param name
+     * @return
+     */
     public boolean isPropertyTrimmingNeeded(PropertyName name) {
         final boolean result;
 
@@ -442,6 +443,20 @@ public class Metadata implements InitializingBean {
 
     // No uncertified properties have been found
 
+    public ComponentClassMetadata<?> queryComponentMetadata(Class<?> clazz, PropertyName propName) {
+
+        ComponentClassMetadata<?> classMeta = queryComponentMetadata(clazz);
+        while (classMeta != null) {
+            for (PropertyMetadata propMeta : classMeta.getProperties()) {
+                if (propMeta.getName().compareTo(propName) == 0) {
+                    return classMeta;
+                }
+            }
+            // Check the inherited classes
+            classMeta = classMeta.getParentMetadata();
+        }
+        return null;
+    }
 }
 
 

@@ -16,7 +16,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.api</artifactId>
+            <artifactId>scenebuilder.core.core</artifactId>
         </dependency>
     </dependencies>
 </project>

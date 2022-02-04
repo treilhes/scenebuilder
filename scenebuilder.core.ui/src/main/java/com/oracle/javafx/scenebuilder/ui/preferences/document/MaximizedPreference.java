@@ -36,15 +36,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class MaximizedPreference extends BooleanPreference implements ManagedDocumentPreference {
-	    
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *

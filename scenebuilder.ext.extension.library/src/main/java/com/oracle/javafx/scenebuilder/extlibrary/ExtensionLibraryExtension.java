@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,13 +38,14 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.extension.ExtensionLibrary;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenuController;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryWindowController;
 import com.oracle.javafx.scenebuilder.extlibrary.i18n.I18NExtensionLibrary;
 import com.oracle.javafx.scenebuilder.extlibrary.importer.ExtensionImportWindowController;
+import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibrary;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryDialogConfiguration;
 import com.oracle.javafx.scenebuilder.extlibrary.library.builtin.ExtensionBuiltinLibrary;
+import com.oracle.javafx.scenebuilder.extlibrary.library.builtin.ExtensionDefaultLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionFileExplorer;
 import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionFolderExplorer;
 import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionMavenArtifactExplorer;
@@ -52,24 +54,25 @@ import com.oracle.javafx.scenebuilder.extlibrary.menu.ExtensionLibraryMenuProvid
 public class ExtensionLibraryExtension extends AbstractExtension {
     @Override
     public UUID getId() {
-        return ExtensionLibrary.ID;
+        return com.oracle.javafx.scenebuilder.extension.ExtensionLibrary.ID;
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                ExtensionLibraryMenuController.class,
-                ExtensionLibraryWindowController.class,
-                I18NExtensionLibrary.class,
-                ExtensionLibraryMenuProvider.class,
-                com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibrary.class,
                 ExtensionBuiltinLibrary.class,
-                ExtensionLibraryDialogConfiguration.class,
+                ExtensionDefaultLibraryFilter.class,
                 ExtensionFileExplorer.class,
                 ExtensionFolderExplorer.class,
+                ExtensionImportWindowController.class,
+                ExtensionLibrary.class,
+                ExtensionLibraryDialogConfiguration.class,
+                ExtensionLibraryMenuController.class,
+                ExtensionLibraryMenuProvider.class,
+                ExtensionLibraryWindowController.class,
                 ExtensionMavenArtifactExplorer.class,
-                ExtensionImportWindowController.class
+                I18NExtensionLibrary.class
             );
      // @formatter:on
     }

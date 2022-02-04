@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,21 +41,30 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.app.action.ShowDocumentationAction;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
+import javafx.scene.control.MenuItem;
+
+/**
+ * @deprecated {@link ShowDocumentationAction} now use {@link com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment} annotation
+ *
+ */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
+@Deprecated(forRemoval = true)
 public class OpenDocMenuProvider implements MenuItemProvider {
 
     private final static String HELP_MENU_ID = "helpMenu"; //NOCHECK
     private final static String DOCUMENTATION_MENU_ID = "documentationMenu"; //NOCHECK
-    
+
     private final ActionFactory actionFactory;
 
     public OpenDocMenuProvider(
@@ -65,10 +75,43 @@ public class OpenDocMenuProvider implements MenuItemProvider {
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        
-        MenuItemAttachment about = MenuItemAttachment.single(HELP_MENU_ID, PositionRequest.AsLastChild, 
+
+        MenuItemAttachment about = MenuItemAttachment.single(HELP_MENU_ID, PositionRequest.AsLastChild,
                 "menu.title.scene.builder.help", DOCUMENTATION_MENU_ID, actionFactory, ShowDocumentationAction.class);
-        
+
+        about = new MenuItemAttachment() {
+            private MenuItem menu = null;
+
+            @Override
+            public String getTargetId() {
+                return HELP_MENU_ID;
+            }
+
+            @Override
+            public PositionRequest getPositionRequest() {
+                return PositionRequest.AsLastChild;
+            }
+
+            @Override
+            public MenuItem getMenuItem() {
+                if (menu != null) {
+                    return menu;
+                }
+
+                AbstractAction action = actionFactory.create(ShowDocumentationAction.class);
+
+                MenuItem newMenu = new MenuItem();
+                newMenu.setText(I18N.getString("menu.title.scene.builder.help") + "X");
+                newMenu.setId(DOCUMENTATION_MENU_ID);
+                newMenu.setOnAction((e) -> action.perform());
+                newMenu.setDisable(!action.canPerform());
+                newMenu.setOnMenuValidation((e) -> newMenu.setDisable(!action.canPerform()));
+
+                menu = newMenu;
+                return menu;
+            }
+        };
+
         return Arrays.asList(about);
     }
 

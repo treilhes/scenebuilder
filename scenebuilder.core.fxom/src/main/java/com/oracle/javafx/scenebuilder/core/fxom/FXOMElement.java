@@ -1,14 +1,15 @@
 package com.oracle.javafx.scenebuilder.core.fxom;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
+import com.oracle.javafx.scenebuilder.core.fxom.util.IndexedHashMap;
+import com.oracle.javafx.scenebuilder.core.fxom.util.IndexedMap;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 public abstract class FXOMElement extends FXOMObject {
 
-    private final Map<PropertyName, FXOMProperty> properties = new LinkedHashMap<>();
+    private final IndexedMap<PropertyName, FXOMProperty> properties = new IndexedHashMap<>();
     private Class<?> declaredClass;
 
     public FXOMElement(FXOMDocument fxomDocument, GlueElement glueElement, Object sceneGraphObject) {
@@ -19,7 +20,7 @@ public abstract class FXOMElement extends FXOMObject {
         super(fxomDocument, tagName);
     }
 
-    public Map<PropertyName, FXOMProperty> getProperties() {
+    public IndexedMap<PropertyName, FXOMProperty> getProperties() {
         //return Collections.unmodifiableMap(properties);
         return properties;
     }

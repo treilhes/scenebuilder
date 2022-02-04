@@ -37,6 +37,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture.Factory;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -47,8 +48,14 @@ import javafx.scene.Node;
  */
 public abstract class AbstractNodePring<T extends Node> extends AbstractGenericPring<T> {
 
-    public AbstractNodePring(Content contentPanelController, Class<T> sceneGraphClass) {
+    private final Factory selectWithPringGestureFactory;
+
+    public AbstractNodePring(
+            Content contentPanelController,
+            SelectWithPringGesture.Factory selectWithPringGestureFactory,
+            Class<T> sceneGraphClass) {
         super(contentPanelController, sceneGraphClass);
+        this.selectWithPringGestureFactory = selectWithPringGestureFactory;
     }
 
     public FXOMInstance getFxomInstance() {
@@ -87,8 +94,7 @@ public abstract class AbstractNodePring<T extends Node> extends AbstractGenericP
         final AbstractGesture result;
 
         if (node == ringPath) {
-            result = new SelectWithPringGesture(getContentPanelController(),
-                    getFxomInstance());
+            result = selectWithPringGestureFactory.getGesture(getFxomInstance());
         } else {
             result = null;
         }

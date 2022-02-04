@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,10 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
@@ -47,11 +53,23 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
 /**
- *
+ * Update the layout position of a given {@link FXOMObject}
  */
-public class RelocateNodeJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class RelocateNodeJob extends AbstractJob {
 
-    private final FXOMInstance fxomInstance;
+    private static final PropertyName layoutXName = new PropertyName("layoutX"); //NOCHECK
+    private static final PropertyName layoutYName = new PropertyName("layoutY"); //NOCHECK
+    private static final PropertyName leftAnchorName   = new PropertyName("leftAnchor",   AnchorPane.class); //NOCHECK
+    private static final PropertyName rightAnchorName  = new PropertyName("rightAnchor",  AnchorPane.class); //NOCHECK
+    private static final PropertyName topAnchorName    = new PropertyName("topAnchor",    AnchorPane.class); //NOCHECK
+    private static final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOCHECK
+
+
+    private final Metadata metadata;
+
+    private FXOMInstance fxomInstance;
     private double oldLayoutX;
     private double oldLayoutY;
     private Double oldLeftAnchor;
@@ -66,16 +84,21 @@ public class RelocateNodeJob extends Job {
     private Double newTopAnchor;
     private Double newBottomAnchor;
 
-    private final DoublePropertyMetadata layoutXMeta;
-    private final DoublePropertyMetadata layoutYMeta;
-    private final DoublePropertyMetadata leftAnchorMeta;
-    private final DoublePropertyMetadata rightAnchorMeta;
-    private final DoublePropertyMetadata topAnchorMeta;
-    private final DoublePropertyMetadata bottomAnchorMeta;
+    private DoublePropertyMetadata layoutXMeta;
+    private DoublePropertyMetadata layoutYMeta;
+    private DoublePropertyMetadata leftAnchorMeta;
+    private DoublePropertyMetadata rightAnchorMeta;
+    private DoublePropertyMetadata topAnchorMeta;
+    private DoublePropertyMetadata bottomAnchorMeta;
 
-    public RelocateNodeJob(SceneBuilderBeanFactory context, FXOMInstance fxomInstance, double newLayoutX, double newLayoutY, Editor editor) {
-        super(context, editor);
+    protected RelocateNodeJob(
+            JobExtensionFactory extensionFactory,
+            Metadata metadata) {
+        super(extensionFactory);
+        this.metadata = metadata;
+    }
 
+    protected void setJobParameters(FXOMInstance fxomInstance, double newLayoutX, double newLayoutY) {
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject() instanceof Node;
 
@@ -83,14 +106,7 @@ public class RelocateNodeJob extends Job {
         this.newLayoutX = newLayoutX; // Root scene coordinates
         this.newLayoutY = newLayoutY; // Root scene coordinates
 
-        final Metadata metadata = Metadata.getMetadata();
         final Class<?> sgoClass = fxomInstance.getSceneGraphObject().getClass();
-        final PropertyName layoutXName = new PropertyName("layoutX"); //NOCHECK
-        final PropertyName layoutYName = new PropertyName("layoutY"); //NOCHECK
-        final PropertyName leftAnchorName   = new PropertyName("leftAnchor",   AnchorPane.class); //NOCHECK
-        final PropertyName rightAnchorName  = new PropertyName("rightAnchor",  AnchorPane.class); //NOCHECK
-        final PropertyName topAnchorName    = new PropertyName("topAnchor",    AnchorPane.class); //NOCHECK
-        final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOCHECK
         this.layoutXMeta = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, layoutXName);
         this.layoutYMeta = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, layoutYName);
         this.leftAnchorMeta   = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, leftAnchorName  );
@@ -128,7 +144,7 @@ public class RelocateNodeJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         this.oldLayoutX = layoutXMeta.getValue(fxomInstance);
         this.oldLayoutY = layoutYMeta.getValue(fxomInstance);
         this.oldLeftAnchor   = leftAnchorMeta.getValue(fxomInstance);
@@ -138,11 +154,11 @@ public class RelocateNodeJob extends Job {
 
         updateNewAnchors();
 
-        redo();
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         this.layoutXMeta.setValue(fxomInstance, oldLayoutX);
         this.layoutYMeta.setValue(fxomInstance, oldLayoutY);
         if (oldLeftAnchor != null) {
@@ -160,7 +176,7 @@ public class RelocateNodeJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         this.layoutXMeta.setValue(fxomInstance, newLayoutX);
         this.layoutYMeta.setValue(fxomInstance, newLayoutY);
         if (newLeftAnchor != null) {
@@ -223,6 +239,26 @@ public class RelocateNodeJob extends Job {
             } else {
                 this.newBottomAnchor = null;
             }
+        }
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public final static class Factory extends JobFactory<RelocateNodeJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link  RelocateNodeJob} job.
+         *
+         * @param fxomInstance the fxom instance
+         * @param newLayoutX the new layout X
+         * @param newLayoutY the new layout Y
+         * @return the job to execute
+         */
+        public RelocateNodeJob getJob(FXOMInstance fxomInstance, double newLayoutX, double newLayoutY) {
+            return create(RelocateNodeJob.class, j -> j.setJobParameters(fxomInstance, newLayoutX, newLayoutY));
         }
     }
 }

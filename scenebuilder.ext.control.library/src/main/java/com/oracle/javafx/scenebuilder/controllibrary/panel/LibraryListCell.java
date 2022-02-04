@@ -34,12 +34,12 @@ package com.oracle.javafx.scenebuilder.controllibrary.panel;
 
 import java.net.URL;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
-import com.oracle.javafx.scenebuilder.core.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 
 import javafx.event.EventHandler;

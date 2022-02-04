@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,50 +58,50 @@ import javafx.scene.Node;
 import lombok.Getter;
 
 /**
- * This class describes an fxml component class 
- * 
+ * This class describes an fxml component class
+ *
  */
 public class ComponentClassMetadata<T> extends ClassMetadata<T> {
-    
+
     public static final Comparator<ComponentPropertyMetadata> COMPARATOR = Comparator.comparing( ComponentPropertyMetadata::getOrder )
             .thenComparing(Comparator.comparing((cpm) -> cpm.getName().getName()));
-    
+
     /** The component properties. */
     private final ObservableSet<PropertyMetadata> properties = FXCollections.observableSet(new HashSet<>());
-    
+
     /** The shadowed properties subset. */
     private final Set<PropertyMetadata> shadowedProperties = new HashSet<>();
-    
+
     /** The component properties values subset. */
     private final Set<ValuePropertyMetadata> values = new HashSet<>();
-    
+
     /** The group properties values subset. */
     private final Set<PropertyGroupMetadata> groups = new HashSet<>();
-    
+
     /** The component properties component subset. */
     private final Set<ComponentPropertyMetadata> subComponents = new HashSet<>();
-    
+
     /** The component properties component subset. */
     private final Map<String, Qualifier> qualifiers = new HashMap<>();
-    
+
     /** The free child positioning flag. default false */
     private final Map<ComponentPropertyMetadata, Boolean> freeChildPositioning = new HashMap<>();
-    
+
     /** The inherited parent metadata. */
     private final ComponentClassMetadata<?> parentMetadata;
 
-    /** true if the component deserves a resizing while used as top element of the layout. default: true */
+    /** true if the component deserves a resizing using predefined size when set as root element of the document. default: true */
     private boolean resizeNeededWhenTopElement = true;
-    
+
     /** property used for object description */
     private PropertyName descriptionProperty = null;
-    
+
     /** if set operate a custom mutation on the original string */
     private LabelMutation labelMutation = null;
-    
+
     /** if set operate a custom mutation on the original string */
     private final Map<ComponentPropertyMetadata, ChildLabelMutation> childLabelMutations = new HashMap<>();
-    
+
     /**
      * Instantiates a new component class metadata.
      *
@@ -111,7 +112,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         super(klass);
         this.parentMetadata = parentMetadata;
         setupSetSync();
-    } 
+    }
 
     private void setupSetSync() {
         properties.addListener((Change<? extends PropertyMetadata> e) -> {
@@ -124,7 +125,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
                     }
                 } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementAdded().getClass())) {
                     subComponents.add((ComponentPropertyMetadata)e.getElementAdded());
-                } 
+                }
             } else if (e.wasRemoved() && e.getElementRemoved() != null) {
                 if (ValuePropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
                     if (e.getElementRemoved().isGroup()) {
@@ -134,12 +135,12 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
                     }
                 } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
                     subComponents.remove(e.getElementRemoved());
-                } 
+                }
             }
-            
+
         });
     }
-    
+
     /**
      * Gets the component's qualifiers (aka default setups).
      *
@@ -148,7 +149,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public Map<String, Qualifier> getQualifiers() {
         return qualifiers;
     }
-    
+
     /**
      * Gets the component's properties.
      *
@@ -157,7 +158,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public Set<PropertyMetadata> getProperties() {
         return properties;
     }
-    
+
     /**
      * Gets the component's shadowed properties (hidden).
      *
@@ -166,7 +167,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public Set<PropertyMetadata> getShadowedProperties() {
         return shadowedProperties;
     }
-    
+
     /**
      * Gets the component's properties values subset.
      *
@@ -175,7 +176,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public Set<ValuePropertyMetadata> getValueProperties() {
         return Collections.unmodifiableSet(values);
     }
-    
+
     /**
      * Gets the component's properties sub components subset.
      *
@@ -194,17 +195,17 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public Set<ComponentPropertyMetadata> getAllSubComponentProperties() {
         TreeSet<ComponentPropertyMetadata> result = new TreeSet<>(COMPARATOR);
         ComponentClassMetadata<?> current = this;
-        
+
         while (current != null) {
             current.getSubComponentProperties().stream()
                 .filter(p -> !shadowedProperties.contains(p))
                 .forEach(p -> result.add(p));
             current = current.getParentMetadata();
         }
-        
+
         return Collections.unmodifiableSet(result);
     }
-    
+
     /**
      * Gets the first main component's property for all the inheritance chain.
      * which isn't shadowed
@@ -212,7 +213,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      */
     public ComponentPropertyMetadata getMainComponentProperty() {
         ComponentClassMetadata<?> current = this;
-        
+
         while (current != null) {
             Optional<ComponentPropertyMetadata> optional = current.getSubComponentProperties().stream()
                 .filter(p -> p.isMain())
@@ -225,7 +226,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         }
         return null;
     }
-    
+
 
     /**
      * Checks if is child positioning is free or constrained.
@@ -234,21 +235,21 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      */
     public boolean isFreeChildPositioning(ComponentPropertyMetadata componentProperty) {
         ComponentClassMetadata<?> current = this;
-        
+
         while (current != null && !current.freeChildPositioning.containsKey(componentProperty)) {
             current = current.getParentMetadata();
         }
-        
+
         if (current == null) {
             return false;
         }
-        
+
         Boolean free = current.freeChildPositioning.get(componentProperty);
         return free == null ? false : free;
     }
-    
-    
-    
+
+
+
     protected void setDescriptionProperty(ValuePropertyMetadata promptTextPropertyMetadata) {
         this.descriptionProperty = promptTextPropertyMetadata.getName();
     }
@@ -261,15 +262,15 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      */
     public PropertyName getDescriptionProperty() {
         ComponentClassMetadata<?> current = this;
-        
+
         while (current != null && current.descriptionProperty == null ) {
             current = current.getParentMetadata();
         }
-        
+
         if (current == null) {
             return null;
         }
-        
+
         return current.descriptionProperty;
     }
 
@@ -281,7 +282,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public ComponentClassMetadata<?> getParentMetadata() {
         return parentMetadata;
     }
-    
+
     /**
      * Lookup property by name.
      *
@@ -289,9 +290,9 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      * @return the property metadata
      */
     public PropertyMetadata lookupProperty(PropertyName propertyName) {
-        
+
         assert propertyName != null;
-        
+
         final Iterator<PropertyMetadata> it = properties.iterator();
         while (it.hasNext()) {
             final PropertyMetadata pm = it.next();
@@ -299,7 +300,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
                 return pm;
             }
         }
-        
+
         for (PropertyGroupMetadata g:groups) {
             for (int i=0; i<g.getProperties().length; i++) {
                 PropertyMetadata pm = g.getProperties()[i];
@@ -314,7 +315,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     /*
      * Object
      */
-    
+
     @Override
     public int hashCode() {
         return super.hashCode(); // Only to please FindBugs
@@ -324,14 +325,14 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public boolean equals(Object obj) {
         return super.equals(obj); // Only to please FindBugs
     }
-    
-       
+
+
     /**
      * Find the applicable qualifiers in the available qualifiers.
      * A {@link ComponentClassMetadata.Qualifier} is applicable if the {@link ApplicabilityCheck} provided trough
      * {@link Qualifier#Qualifier(URL, String, String, URL, URL, String, ApplicabilityCheck)} return true
      * If none were provided during the {@link Qualifier} instantiation then the {@link Qualifier} is always applicable
-     * 
+     *
      * @param sceneGraphObject the scene graph object
      * @return the applicable qualifiers sets
      */
@@ -341,15 +342,15 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         }
         return Collections.unmodifiableSet(getQualifiers().values().stream().filter(q -> q.isApplicable(sceneGraphObject)).collect(Collectors.toSet()));
     }
-    
+
     public static class Qualifier {
-        
+
         public static final Qualifier UNKNOWN = new Qualifier(null, null, null, null, null, null);
-        
+
         public static final String HIDDEN = null;
         public static final String DEFAULT = "";
         public static final String EMPTY = "empty";
-        
+
         @Getter private final URL fxmlUrl;
         @Getter private final String label;
         @Getter private final String description;
@@ -358,11 +359,11 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         @Getter private final String category;
         @SuppressWarnings("rawtypes")
         @Getter private final ApplicabilityCheck applicabilityCheck;
-        
+
         public Qualifier(URL fxmlUrl, String label, String description, URL iconUrl, URL iconX2Url, String category) {
             this(fxmlUrl, label, description, iconUrl, iconX2Url, category, (o) -> true);
         }
-        
+
         public Qualifier(URL fxmlUrl, String label, String description, URL iconUrl, URL iconX2Url, String category, ApplicabilityCheck<?> applicabilityCheck) {
             super();
             this.fxmlUrl = fxmlUrl;
@@ -370,26 +371,26 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
             this.description = description;
             this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
             this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
-            this.category = category;// != null ? category : DefaultSectionNames.TAG_USER_DEFINED;
+            this.category = category != null ? category : "Custom";
             this.applicabilityCheck = applicabilityCheck;
         }
-        
+
         @SuppressWarnings("unchecked")
         public boolean isApplicable(Object object) {
             return applicabilityCheck.isApplicable(object);
         }
     }
-    
+
     @FunctionalInterface
     public interface ApplicabilityCheck<T> {
         boolean isApplicable(T object);
     }
-    
+
     @FunctionalInterface
     public interface LabelMutation {
         String mutate(String originalLabel, Object object);
     }
-    
+
     @FunctionalInterface
     public interface ChildLabelMutation {
         String mutate(String originalLabel, Object object, Node child);
@@ -416,7 +417,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     public ChildLabelMutation getChildLabelMutations(ComponentPropertyMetadata cmp) {
         return childLabelMutations.get(cmp);
     }
-    
+
     protected ComponentClassMetadata<T> setChildLabelMutation(ComponentPropertyMetadata cmp, ChildLabelMutation labelMutation) {
         assert getAllSubComponentProperties().contains(cmp);
         childLabelMutations.put(cmp, labelMutation);
@@ -426,5 +427,5 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     protected void setFreeChildPositioning(ComponentPropertyMetadata componentProperty, boolean freeChildPositioning) {
         this.freeChildPositioning.put(componentProperty, freeChildPositioning);
     }
-    
+
 }

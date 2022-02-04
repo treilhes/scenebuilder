@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,27 +33,39 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 /**
+ * This Job updates the FXOM document at execution time.
+ * It set the root of a document {@link FXOMDocument} with the provided {@link FXOMObject}
  */
-public class SetFxomRootJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class SetFxomRootJob extends AbstractJob {
 
-    private final FXOMObject newRoot;
+    private FXOMObject newRoot;
     private FXOMObject oldRoot;
-    private FXOMDocument fxomDocument;
 
-    public SetFxomRootJob(SceneBuilderBeanFactory context, FXOMObject newRoot, Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    private final FXOMDocument fxomDocument;
+
+    protected SetFxomRootJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
-
         assert fxomDocument != null;
+    }
+
+    protected void setJobParameters(FXOMObject newRoot) {
         assert (newRoot == null) || (newRoot.getFxomDocument() == fxomDocument);
 
         this.newRoot = newRoot;
@@ -67,7 +80,7 @@ public class SetFxomRootJob extends Job {
     }
 
     @Override
-    public void execute() {
+    public void doExecute() {
         assert oldRoot == null;
 
         // Saves the current root
@@ -82,7 +95,7 @@ public class SetFxomRootJob extends Job {
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert fxomDocument.getFxomRoot() == newRoot;
 
         fxomDocument.beginUpdate();
@@ -93,7 +106,7 @@ public class SetFxomRootJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert fxomDocument.getFxomRoot() == oldRoot;
 
         fxomDocument.beginUpdate();
@@ -117,5 +130,19 @@ public class SetFxomRootJob extends Job {
 		return oldRoot;
 	}
 
-
+	@Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<SetFxomRootJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        /**
+         * Create an {@link SetFxomRootJob} job
+         * @param newRoot the new root of current {@link FXOMDocument}
+         * @return the job to execute
+         */
+        public SetFxomRootJob getJob(FXOMObject newRoot) {
+            return create(SetFxomRootJob.class, j -> j.setJobParameters(newRoot));
+        }
+    }
 }

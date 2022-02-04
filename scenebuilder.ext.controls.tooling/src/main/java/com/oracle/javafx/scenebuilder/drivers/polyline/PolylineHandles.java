@@ -41,10 +41,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
+import com.oracle.javafx.scenebuilder.api.Gesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 
@@ -68,13 +69,15 @@ public class PolylineHandles extends AbstractCurveHandles<Polyline> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();
     private final List<Line> linesHandle = new ArrayList<>();
-	private final SceneBuilderBeanFactory context;
+    private final EditCurveGesture.Factory editCurveGestureFactory;
 
     public PolylineHandles(
-            SceneBuilderBeanFactory context,
-    		Content contentPanelController) {
-        super(contentPanelController, Polyline.class);
-        this.context = context;
+            Content contentPanelController,
+            DiscardGesture.Factory discardGestureFactory,
+            EditCurveGesture.Factory editCurveGestureFactory) {
+        super(contentPanelController, discardGestureFactory, Polyline.class);
+
+        this.editCurveGestureFactory = editCurveGestureFactory;
     }
 
     @Override
@@ -140,14 +143,14 @@ public class PolylineHandles extends AbstractCurveHandles<Polyline> {
     }
 
     @Override
-    public AbstractGesture findGesture(Node node) {
+    public Gesture findGesture(Node node) {
         final EditCurveGesture result;
 
         if (node instanceof Circle && verticesHandle.contains(node)) {
-            result = new EditCurveGesture(context, getContentPanelController(), getFxomInstance(), Tunable.VERTEX);
+            result = editCurveGestureFactory.getGesture(getFxomInstance(), Tunable.VERTEX);
             result.getTunableMap().put(Tunable.VERTEX, verticesHandle.indexOf(node));
         } else if (node instanceof Line && linesHandle.contains(node)) {
-            result = new EditCurveGesture(context, getContentPanelController(), getFxomInstance(), Tunable.SIDE);
+            result = editCurveGestureFactory.getGesture(getFxomInstance(), Tunable.SIDE);
             result.getTunableMap().put(Tunable.SIDE, linesHandle.indexOf(node));
         } else {
             result = null;

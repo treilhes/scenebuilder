@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,30 +37,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
+import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.library.api.LibraryDialogFactory;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 public class LibraryPanelActions {
 
@@ -69,13 +66,12 @@ public class LibraryPanelActions {
     @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report", accelerator = "CTRL+J")
     public static class ShowJarAnalysisReportAction extends AbstractAction {
 
-        private final DocumentWindow documentWindowController;
         private final JarAnalysisReportController jarAnalysisReportController;
 
-        public ShowJarAnalysisReportAction(@Autowired Api api, @Autowired @Lazy DocumentWindow documentWindowController,
-                @Autowired @Lazy JarAnalysisReportController jarAnalysisReportController) {
-            super(api);
-            this.documentWindowController = documentWindowController;
+        public ShowJarAnalysisReportAction(
+                ActionExtensionFactory extensionFactory,
+                @Lazy JarAnalysisReportController jarAnalysisReportController) {
+            super(extensionFactory);
             this.jarAnalysisReportController = jarAnalysisReportController;
         }
 
@@ -85,7 +81,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public ActionStatus perform() {
+        public ActionStatus doPerform() {
             // jarAnalysisReportController.setToolStylesheet(documentWindowController.getToolStylesheet());
             jarAnalysisReportController.openWindow();
             return ActionStatus.DONE;
@@ -104,13 +100,17 @@ public class LibraryPanelActions {
         private final FileSystem fileSystem;
         private final Dialog dialog;
 
-        public RevealCustomFolderAction(@Autowired Api api, @Autowired ControlLibrary userLibrary,
-                @Autowired @Lazy DocumentWindow documentWindowController) {
-            super(api);
+        public RevealCustomFolderAction(
+                ActionExtensionFactory extensionFactory,
+                FileSystem fileSystem,
+                Dialog dialog,
+                ControlLibrary userLibrary,
+                @Lazy DocumentWindow documentWindowController) {
+            super(extensionFactory);
             this.documentWindowController = documentWindowController;
             this.userLibrary = userLibrary;
-            this.fileSystem = api.getFileSystem();
-            this.dialog = api.getApiDoc().getDialog();
+            this.fileSystem = fileSystem;
+            this.dialog = dialog;
         }
 
         @Override
@@ -119,7 +119,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public ActionStatus perform() {
+        public ActionStatus doPerform() {
             try {
                 fileSystem.revealInFileBrowser(userLibrary.getPath());
             } catch (IOException x) {
@@ -141,9 +141,11 @@ public class LibraryPanelActions {
         private final Editor editorController;
         private final LibraryPanelController libraryPanelController;
 
-        public ImportSelectionAction(@Autowired Api api, @Autowired @Lazy Editor editorController,
-                @Autowired @Lazy LibraryPanelController libraryPanelController) {
-            super(api);
+        public ImportSelectionAction(
+                ActionExtensionFactory extensionFactory,
+                @Lazy Editor editorController,
+                @Lazy LibraryPanelController libraryPanelController) {
+            super(extensionFactory);
             this.editorController = editorController;
             this.libraryPanelController = libraryPanelController;
         }
@@ -156,7 +158,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public ActionStatus perform() {
+        public ActionStatus doPerform() {
             AbstractSelectionGroup asg = editorController.getSelection().getGroup();
             ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
             assert !osg.getItems().isEmpty();
@@ -175,9 +177,11 @@ public class LibraryPanelActions {
         private final LibraryPanelController libraryPanelController;
         private final DisplayModePreference displayModePreference;
 
-        public ViewAsSectionsAction(@Autowired Api api, @Autowired @Lazy LibraryPanelController libraryPanelController,
-                @Autowired @Lazy DisplayModePreference displayModePreference) {
-            super(api);
+        public ViewAsSectionsAction(
+                ActionExtensionFactory extensionFactory,
+                @Lazy LibraryPanelController libraryPanelController,
+                @Lazy DisplayModePreference displayModePreference) {
+            super(extensionFactory);
             this.libraryPanelController = libraryPanelController;
             this.displayModePreference = displayModePreference;
         }
@@ -188,7 +192,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public ActionStatus perform() {
+        public ActionStatus doPerform() {
             if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
                 libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
             } else {
@@ -209,9 +213,11 @@ public class LibraryPanelActions {
         private final LibraryPanelController libraryPanelController;
         private final DisplayModePreference displayModePreference;
 
-        public ViewAsListAction(@Autowired Api api, @Autowired @Lazy LibraryPanelController libraryPanelController,
-                @Autowired @Lazy DisplayModePreference displayModePreference) {
-            super(api);
+        public ViewAsListAction(
+                ActionExtensionFactory extensionFactory,
+                @Lazy LibraryPanelController libraryPanelController,
+                @Lazy DisplayModePreference displayModePreference) {
+            super(extensionFactory);
             this.libraryPanelController = libraryPanelController;
             this.displayModePreference = displayModePreference;
         }
@@ -222,7 +228,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public ActionStatus perform() {
+        public ActionStatus doPerform() {
             if (libraryPanelController.getDisplayMode() != LibraryPanelController.DISPLAY_MODE.SEARCH) {
                 libraryPanelController.setDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
             } else {
@@ -240,21 +246,12 @@ public class LibraryPanelActions {
     @ActionMeta(nameKey = "action.name.manage.jar.fxml", descriptionKey = "action.description.manage.jar.fxml")
     public static class ManageJarFxmlAction extends AbstractAction {
 
-        private final Main mainController;
-        private final Document documentWindowController;
-        private final LibraryDialogFactory libraryDialogFactory;
-        private final LibraryPanelController libraryPanelController;
         private final ControlLibrary controlLibrary;
 
-        public ManageJarFxmlAction(@Autowired Api api, @Autowired @Lazy ControlLibrary controlLibrary,
-                @Autowired @Lazy Document documentWindowController,
-                @Autowired @Lazy LibraryDialogFactory libraryDialogFactory,
-                @Autowired @Lazy LibraryPanelController libraryPanelController) {
-            super(api);
-            this.mainController = api.getMain();
-            this.documentWindowController = documentWindowController;
-            this.libraryDialogFactory = libraryDialogFactory;
-            this.libraryPanelController = libraryPanelController;
+        public ManageJarFxmlAction(
+                ActionExtensionFactory extensionFactory,
+                @Lazy ControlLibrary controlLibrary) {
+            super(extensionFactory);
             this.controlLibrary = controlLibrary;
         }
 
@@ -264,7 +261,7 @@ public class LibraryPanelActions {
         }
 
         @Override
-        public ActionStatus perform() {
+        public ActionStatus doPerform() {
 //			libraryDialogController = new LibraryDialogController(editorController, libraryPanelController,
 //            		mavenSetting, mavenPreferences, repositoryPreferences, getStage());
 

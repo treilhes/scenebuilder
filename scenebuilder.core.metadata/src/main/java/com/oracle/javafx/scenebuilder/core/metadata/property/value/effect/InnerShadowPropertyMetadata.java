@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -107,10 +108,10 @@ public class InnerShadowPropertyMetadata extends ComplexPropertyMetadata<InnerSh
             .withDefaultValue(21.0)
             .withInspectorPath(InspectorPath.UNUSED).build();
 
-    protected InnerShadowPropertyMetadata(PropertyName name, boolean readWrite, 
-            InnerShadow defaultValue, InspectorPath inspectorPath) {
-        super(name, InnerShadow.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected InnerShadowPropertyMetadata(PropertyName name, boolean readWrite, 
+//            InnerShadow defaultValue, InspectorPath inspectorPath) {
+//        super(name, InnerShadow.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected InnerShadowPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

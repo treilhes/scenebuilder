@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,24 +46,35 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  */
 public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
 
+    public enum Visibility {
+        HIDDEN,
+        STANDARD,
+        EXPERT
+    }
+
+
     /** The property name. */
     private final PropertyName name;
 
     /** The property is a group of properties. */
     private final boolean group;
 
+
+    private Visibility visibility = Visibility.STANDARD;
+
+
     /** The constants values of this property. */
     protected Map<String, Object> constants = new TreeMap<>();
 
-    /**
-     * Instantiates a new property metadata.
-     *
-     * @param name the name of the property
-     */
-    public PropertyMetadata(PropertyName name, boolean isGroup) {
-        this.name = name;
-        this.group = isGroup;
-    }
+//    /**
+//     * Instantiates a new property metadata.
+//     *
+//     * @param name the name of the property
+//     */
+//    protected PropertyMetadata(PropertyName name, boolean isGroup) {
+//        this.name = name;
+//        this.group = isGroup;
+//    }
 
     /**
      * Build a new property metadata.
@@ -72,6 +84,7 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
     protected PropertyMetadata(AbstractBuilder<?, ?> builder) {
         this.name = builder.name;
         this.group = builder.group;
+        this.visibility = builder.visibility;
         this.constants.putAll(builder.constants);
     }
 
@@ -91,6 +104,10 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
      */
     public boolean isGroup() {
         return group;
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
     }
 
     /**
@@ -152,6 +169,8 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
         /** The property is a group of properties. */
         protected boolean group;
 
+        protected Visibility visibility = Visibility.STANDARD;
+
         /** The constants values of this property. */
         protected Map<String, Object> constants = new TreeMap<>();
 
@@ -161,6 +180,11 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
         }
         public SELF withName(PropertyName name) {
             this.name = name;
+            return self();
+        }
+
+        public SELF withVisibility(Visibility visibility) {
+            this.visibility = visibility;
             return self();
         }
 

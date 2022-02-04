@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,16 +43,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
@@ -80,7 +81,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     @FXML
     TextArea textArea;
-    
+
     @FXML
     Label updateResultLabel;
 
@@ -95,14 +96,15 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     private double scrollTopSave;
     private FadeTransition labelFadeTransition;
     private boolean dirty = true;
-    
+
     public SourceViewWindowController(
-            @Autowired Api api,
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
             @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference) {
-        super(api, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle());
-        
-        this.documentManager = api.getApiDoc().getDocumentManager();
+        super(scenebuilderManager, documentManager, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle());
+
+        this.documentManager = documentManager;
         this.editor = editor;
         this.wildcardImportsPreference = wildcardImportsPreference;
     }
@@ -114,7 +116,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
         labelFadeTransition.setCycleCount(1);
         labelFadeTransition.setAutoReverse(false);
     }
-    
+
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
@@ -133,22 +135,22 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
         Clipboard.getSystemClipboard().setContent(content);
     }
-    
+
     @FXML
     private void onUpdateAction(ActionEvent event) {
         try {
             scrollLeftSave = textArea.getScrollLeft();
             scrollTopSave = textArea.getScrollTop();
-            
+
             updateResultLabel.setText("");
-            
+
             String fxmlText = textArea.getText();
             editor.setFxmlTextAndLocation(fxmlText, fxomDocument.getLocation(), false);
-            
+
             updateResultLabel.setOpacity(1.0);
             updateResultLabel.setText("SUCCESS!");
             labelFadeTransition.play();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
             updateResultLabel.setOpacity(1.0);
@@ -179,13 +181,13 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     private void update() {
         assert fxomDocument != null;
-            
+
         // No need to eat CPU if the skeleton window isn't opened
         if (!isHidden()) {
             updateTitle();
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
-            
+
             SbPlatform.runLater(() -> {
                 textArea.setScrollLeft(scrollLeftSave);
                 textArea.setScrollTop(scrollTopSave);
@@ -217,6 +219,6 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     @Override
     public void onHidden() {
     }
-    
-    
+
+
 }

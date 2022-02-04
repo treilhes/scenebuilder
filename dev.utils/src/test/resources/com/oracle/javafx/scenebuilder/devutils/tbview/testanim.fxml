@@ -19,7 +19,7 @@
         }
     </fx:script>
     <children>
-        <Circle fx:id="circleId" fill="DODGERBLUE" layoutX="210.0" layoutY="213.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" >
+        <Circle fx:id="circleId" cache="true" cacheHint="SPEED" fill="#1d84e4" layoutX="210.0" layoutY="213.0" radius="100.0" stroke="BLACK" strokeType="INSIDE">
         <effect>
             <GaussianBlur radius="19.5" />
          </effect></Circle>

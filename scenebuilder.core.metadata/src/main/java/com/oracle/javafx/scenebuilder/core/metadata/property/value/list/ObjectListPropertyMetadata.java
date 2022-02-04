@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,8 +42,12 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
  */
 public class ObjectListPropertyMetadata extends ListValuePropertyMetadata<Object> {
 
-    private final static ObjectPropertyMetadata itemMetadata = new ObjectPropertyMetadata(new PropertyName("unused"), // NOCHECK
-            true, null, InspectorPath.UNUSED);
+    private final static ObjectPropertyMetadata itemMetadata = new ObjectPropertyMetadata.Builder()
+            .withName(new PropertyName("unused")) // NOCHECK
+            .withReadWrite(true)
+            .withDefaultValue(null)
+            .withInspectorPath(InspectorPath.UNUSED).build();
+            //true, null, InspectorPath.UNUSED);
 
 //    public ObjectListPropertyMetadata(PropertyName name, boolean readWrite, List<Object> defaultValue,
 //            InspectorPath inspectorPath) {

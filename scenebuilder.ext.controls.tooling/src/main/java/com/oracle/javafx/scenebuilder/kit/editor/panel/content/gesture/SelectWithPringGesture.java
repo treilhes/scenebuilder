@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,9 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
+import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.MouseEvent;
 
@@ -42,13 +50,24 @@ import javafx.scene.input.MouseEvent;
  *
  *
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SelectWithPringGesture extends AbstractMouseDragGesture {
 
-    private final FXOMInstance fxomInstance;
+    private final Selection selection;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private FXOMInstance fxomInstance;
 
-    public SelectWithPringGesture(Content contentPanelController,
-            FXOMInstance fxomInstance) {
+    protected SelectWithPringGesture(
+            Content contentPanelController,
+            Selection selection,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
         super(contentPanelController);
+        this.selection = selection;
+        this.objectSelectionGroupFactory = objectSelectionGroupFactory;
+    }
+
+    private void setupGestureParameters(FXOMInstance fxomInstance) {
         this.fxomInstance = fxomInstance;
     }
 
@@ -58,7 +77,7 @@ public class SelectWithPringGesture extends AbstractMouseDragGesture {
 
     @Override
     protected void mousePressed(MouseEvent e) {
-        contentPanelController.getEditorController().getSelection().select(fxomInstance);
+        selection.select(objectSelectionGroupFactory.getGroup(fxomInstance));
 
         /*
          * This selection operation will callback EditModeController
@@ -111,5 +130,16 @@ public class SelectWithPringGesture extends AbstractMouseDragGesture {
 ////                assert editorController.getDragSource() == null;
 //            editorController.setDragSource(dragSource);
 //        }
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends GestureFactory<SelectWithPringGesture> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+        public SelectWithPringGesture getGesture(FXOMInstance fxomInstance) {
+            return create(SelectWithPringGesture.class, g -> g.setupGestureParameters(fxomInstance));
+        }
     }
 }

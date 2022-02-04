@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
@@ -55,7 +56,6 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSectionComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemNameComparator;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;

@@ -256,22 +256,12 @@ class FXOMRefresher {
         if (currentObject instanceof FXOMIntrinsic && newObject instanceof FXOMIntrinsic) {
             refreshFxomObject(currentObject, newObject);
         } else if (newObject instanceof FXOMIntrinsic) {
-            FXOMInstance fxomInstance = getFxomInstance((FXOMIntrinsic) newObject);
+            FXOMInstance fxomInstance = ((FXOMIntrinsic) newObject).createFxomInstanceFromIntrinsic();
             refreshFxomObject(currentObject, fxomInstance);
         } else if (currentObject instanceof FXOMIntrinsic) {
-            FXOMInstance fxomInstance = getFxomInstance((FXOMIntrinsic) currentObject);
+            FXOMInstance fxomInstance = ((FXOMIntrinsic) currentObject).createFxomInstanceFromIntrinsic();
             refreshFxomObject(fxomInstance, newObject);
         }
-    }
-
-    private FXOMInstance getFxomInstance(FXOMIntrinsic intrinsic) {
-        FXOMInstance fxomInstance = new FXOMInstance(intrinsic.getFxomDocument(), intrinsic.getGlueElement());
-        fxomInstance.setSceneGraphObject(intrinsic.getSourceSceneGraphObject());
-        fxomInstance.setDeclaredClass(intrinsic.getClass());
-        if (!intrinsic.getProperties().isEmpty()) {
-            fxomInstance.fillProperties(intrinsic.getProperties());
-        }
-        return fxomInstance;
     }
 
 //    /*
@@ -294,7 +284,7 @@ class FXOMRefresher {
 //        final FXOMObject fxomRoot = document.getFxomRoot();
 //        if (fxomRoot != null) {
 //            final Metadata metadata
-//                    = Metadata.getMetadata();
+//                    = Api.get().getMetadata();
 //            final PropertyName dividerPositionsName
 //                    = new PropertyName("dividerPositions");
 //            final List<FXOMObject> candidates

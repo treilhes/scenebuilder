@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -80,10 +81,10 @@ public class ColorInputPropertyMetadata extends ComplexPropertyMetadata<ColorInp
             .withInspectorPath(InspectorPath.UNUSED).build();
 
 
-    protected ColorInputPropertyMetadata(PropertyName name, boolean readWrite, 
-            ColorInput defaultValue, InspectorPath inspectorPath) {
-        super(name, ColorInput.class, readWrite, defaultValue, inspectorPath);
-    }
+//    protected ColorInputPropertyMetadata(PropertyName name, boolean readWrite, 
+//            ColorInput defaultValue, InspectorPath inspectorPath) {
+//        super(name, ColorInput.class, readWrite, defaultValue, inspectorPath);
+//    }
 
     protected ColorInputPropertyMetadata(AbstractBuilder<?, ?> builder) {
         super(builder);

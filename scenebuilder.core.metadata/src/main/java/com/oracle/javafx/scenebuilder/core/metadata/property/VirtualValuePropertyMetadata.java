@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +34,17 @@
 package com.oracle.javafx.scenebuilder.core.metadata.property;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 public class VirtualValuePropertyMetadata extends ValuePropertyMetadata {
 
 
-    public VirtualValuePropertyMetadata(PropertyName name) {
-        super(name, true, null);
-        // TODO Auto-generated constructor stub
+//    public VirtualValuePropertyMetadata(PropertyName name) {
+//        super(name, true, null);
+//        // TODO Auto-generated constructor stub
+//    }
+
+    protected VirtualValuePropertyMetadata(AbstractBuilder<?,?> builder) {
+        super(builder);
     }
 
     @Override
@@ -66,6 +70,13 @@ public class VirtualValuePropertyMetadata extends ValuePropertyMetadata {
 
     }
 
-    protected static abstract class VirtualValuePropertyMetadataBuilder<SELF, TOBUILD> extends AbstractBuilder<SELF, TOBUILD> {
+    protected static abstract class AbstractBuilder<SELF, TOBUILD> extends ValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+    }
+
+    public static final class Builder extends AbstractBuilder<Builder, VirtualValuePropertyMetadata> {
+        @Override
+        public VirtualValuePropertyMetadata build() {
+            return new VirtualValuePropertyMetadata(this);
+        }
     }
 }

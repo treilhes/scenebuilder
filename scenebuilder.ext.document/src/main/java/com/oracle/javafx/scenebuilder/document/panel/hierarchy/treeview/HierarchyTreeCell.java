@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +37,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
@@ -50,10 +55,12 @@ import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
@@ -61,16 +68,14 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController.BorderSide;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController.DroppingMouseLocation;
-import com.oracle.javafx.scenebuilder.draganddrop.target.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.target.GridPaneDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+//import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+//import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
@@ -110,9 +115,11 @@ import javafx.util.Callback;
  *
  * @param <T>
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<HierarchyItem> {
 
-    private final AbstractHierarchyPanelController panelController;
+    private AbstractHierarchyPanelController panelController;
 
     static final String TREE_CELL_GRAPHIC = "tree-cell-graphic";
     public static final String HIERARCHY_FIRST_CELL = "hierarchy-first-cell";
@@ -165,16 +172,25 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
     private final Drag drag;
 
-    public HierarchyTreeCell(
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final ModifyFxIdJob.Factory modifyFxIdJobFactory;
+    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+
+    protected HierarchyTreeCell(
             SceneBuilderBeanFactory context,
-    		final AbstractHierarchyPanelController c) {
+            ModifyObjectJob.Factory modifyObjectJobFactory,
+            ModifyFxIdJob.Factory modifyFxIdJobFactory,
+            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
         super();
         this.context = context;
         this.drag = context.getBean(Drag.class);
         this.glossary = context.getBean(Glossary.class);
         this.jobManager = context.getBean(JobManager.class);
         this.messageLogger = context.getBean(MessageLogger.class);
-        this.panelController = c;
+
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.modifyFxIdJobFactory = modifyFxIdJobFactory;
+        this.designHierarchyMaskFactory = designHierarchyMaskFactory;
 
         iconsStack.getChildren().setAll(
                 classNameImageView,
@@ -208,8 +224,6 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         displayInfoLabel.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(displayInfoLabel, Priority.ALWAYS);
 
-        panelController.displayOptionProperty().addListener(
-                new WeakChangeListener<>(displayOptionListener));
 
         // Key events
         //----------------------------------------------------------------------
@@ -221,7 +235,16 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         final EventHandler<MouseEvent> mouseEventHandler = e -> filterMouseEvent(e);
         this.addEventFilter(MouseEvent.ANY, mouseEventHandler);
 
-        // Drag events
+
+    }
+
+    private void setCellParameters(AbstractHierarchyPanelController owner) {
+        panelController = owner;
+
+        panelController.displayOptionProperty().addListener(
+                new WeakChangeListener<>(displayOptionListener));
+
+     // Drag events
         //----------------------------------------------------------------------
         final HierarchyDNDController dndController = panelController.getDNDController();
 
@@ -292,8 +315,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 final FXOMObject dropTargetObject = dropTarget.getTargetObject();
                 final TreeItem<?> rootTreeItem = getTreeView().getRoot();
 
-                if (dropTarget instanceof RootDropTarget) {
-                    // No visual feedback in case of dropping the root node
+                if (dropTargetObject == null) {
+                    // No visual feedback in case of dropping the root node or no target defined
                     return;
                 }
 
@@ -350,8 +373,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 // Need to handle the insert line indicator.
                 //==========================================================
                 else {
-                    assert dropTarget instanceof AccessoryDropTarget
-                            || dropTarget instanceof GridPaneDropTarget;
+
                     TreeItem<?> startTreeItem;
                     TreeCell<?> startCell, stopCell;
 
@@ -471,6 +493,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                 }
             }
         });
+
     }
 
     @Override
@@ -662,9 +685,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                             final PropertyName propertyName = item.getPropertyNameForDisplayInfo(option);
                             assert propertyName != null;
                             final ValuePropertyMetadata vpm
-                                    = Metadata.getMetadata().queryValueProperty(fxomInstance, propertyName);
-                            final Job job1
-                                    = new ModifyObjectJob(context, fxomInstance, vpm, newValue, editorController).extend();
+                                    = Api.get().getMetadata().queryValueProperty(fxomInstance, propertyName);
+                            final AbstractJob job1 = modifyObjectJobFactory.getJob(fxomInstance, vpm, newValue);
                             if (job1.isExecutable()) {
                                 jobManager.push(job1);
                             }
@@ -673,8 +695,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                     case FXID:
                         assert newValue != null;
                         final String fxId = newValue.isEmpty() ? null : newValue;
-                        final Job job2
-                                = new ModifyFxIdJob(context, fxomObject, fxId, editorController).extend();
+                        final AbstractJob job2 = modifyFxIdJobFactory.getJob(fxomObject, fxId);
                         if (job2.isExecutable()) {
 
                             // If a controller class has been defined,
@@ -831,7 +852,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             result.append(fxomIntrinsic.getSource());
         } else if (fxomNode instanceof FXOMObject) {
             final FXOMObject fxomObject = (FXOMObject) fxomNode;
-            final DesignHierarchyMask mask = new DesignHierarchyMask(fxomObject);
+            final DesignHierarchyMask mask = designHierarchyMaskFactory.getMask(fxomObject);
             //TODO check if an accessory, maybe the main one must be passed here
             result.append(mask.getClassNameInfo(null));
         }
@@ -942,4 +963,15 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         return result.toString();
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public final static class Factory extends AbstractFactory<HierarchyTreeCell> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        public TreeCell<HierarchyItem> newCell(AbstractHierarchyPanelController owner) {
+            return create(HierarchyTreeCell.class, c -> c.setCellParameters(owner));
+        }
+    }
 }

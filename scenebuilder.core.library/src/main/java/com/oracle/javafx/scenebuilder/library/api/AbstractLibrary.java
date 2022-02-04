@@ -56,14 +56,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.library.Library;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialogController;

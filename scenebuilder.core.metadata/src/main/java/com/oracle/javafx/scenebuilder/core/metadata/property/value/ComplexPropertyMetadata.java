@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,31 +38,29 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 /**
  *
- * 
+ *
  */
 public abstract class ComplexPropertyMetadata<T> extends SingleValuePropertyMetadata<T> {
 
-    protected ComplexPropertyMetadata(PropertyName name, Class<T> valueClass, 
-            boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
-        super(name, valueClass, readWrite, defaultValue, inspectorPath);
-    }
-    
+//    protected ComplexPropertyMetadata(PropertyName name, Class<T> valueClass,
+//            boolean readWrite, T defaultValue, InspectorPath inspectorPath) {
+//        super(name, valueClass, readWrite, defaultValue, inspectorPath);
+//    }
+
     protected ComplexPropertyMetadata(AbstractBuilder<?, ?, T> builder) {
         super(builder);
     }
-    
+
     /*
      * SingleValuePropertyMetadata
-     */  
+     */
     @Override
     public T makeValueFromProperty(FXOMPropertyT fxomProperty) {
         final T result;
-        
+
         final PrefixedValue pv = new PrefixedValue(fxomProperty.getValue());
         if (pv.isExpression()) {
             final String fxId = pv.getSuffix();
@@ -75,10 +74,10 @@ public abstract class ComplexPropertyMetadata<T> extends SingleValuePropertyMeta
         } else {
             result = makeValueFromString(fxomProperty.getValue());
         }
-        
+
         return result;
     }
-    
+
     @Override
     public T makeValueFromString(String string) {
         throw new RuntimeException("Bug"); //NOCHECK

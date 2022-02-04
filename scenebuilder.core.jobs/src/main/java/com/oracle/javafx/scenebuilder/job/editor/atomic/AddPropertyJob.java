@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,32 +33,43 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 
 /**
- *
+ * This Job updates the FXOM document at execution time.
+ * It adds the provided {@link FXOMProperty} into the provided {@link FXOMInstance} at the specified index
+ * Use the dedicated {@link Factory} to create an instance
  */
-public class AddPropertyJob extends Job {
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+public final class AddPropertyJob extends AbstractJob {
 
-    private final FXOMProperty property;
-    private final FXOMElement targetInstance;
-    private final int targetIndex;
     private final FXOMDocument fxomDocument;
 
-    public AddPropertyJob(SceneBuilderBeanFactory context, FXOMProperty property,
-            FXOMElement targetInstance,
-            int targetIndex,
-            Editor editor) {
-        super(context, editor);
-        DocumentManager documentManager = context.getBean(DocumentManager.class);
+    private FXOMProperty property;
+    private FXOMElement targetInstance;
+    private int targetIndex;
+
+    protected AddPropertyJob(
+            JobExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+        super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
 
+    }
+
+    protected void setJobParameters(FXOMProperty property, FXOMElement targetInstance, int targetIndex) {
         assert property != null;
         assert targetInstance != null;
         assert targetIndex >= -1;
@@ -77,12 +89,12 @@ public class AddPropertyJob extends Job {
     }
 
     @Override
-    public void execute() {
-        redo();
+    public void doExecute() {
+        doRedo();
     }
 
     @Override
-    public void undo() {
+    public void doUndo() {
         assert property.getParentInstance() == targetInstance;
 
         fxomDocument.beginUpdate();
@@ -93,7 +105,7 @@ public class AddPropertyJob extends Job {
     }
 
     @Override
-    public void redo() {
+    public void doRedo() {
         assert property.getParentInstance() == null;
 
         fxomDocument.beginUpdate();
@@ -109,4 +121,22 @@ public class AddPropertyJob extends Job {
         return getClass().getSimpleName();
     }
 
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends JobFactory<AddPropertyJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link AddPropertyJob} job
+         * @param property the property to add
+         * @param targetInstance the instance receiving the value
+         * @param targetIndex the instance property collection index receiving the value
+         * @return the job to execute
+         */
+        public AddPropertyJob getJob(FXOMProperty property, FXOMElement targetInstance, int targetIndex) {
+            return create(AddPropertyJob.class, j -> j.setJobParameters(property, targetInstance, targetIndex));
+        }
+    }
 }

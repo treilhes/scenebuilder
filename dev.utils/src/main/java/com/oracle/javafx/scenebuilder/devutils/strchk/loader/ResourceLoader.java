@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,12 +39,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
 
-import com.oracle.javafx.scenebuilder.devutils.strchk.Config;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.CssFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.FxmlFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.I18nFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.ResourceFile;
-import com.oracle.javafx.scenebuilder.devutils.strchk.model.StringOccurence;
+import com.oracle.javafx.scenebuilder.devutils.CommonConfig;
+import com.oracle.javafx.scenebuilder.devutils.model.CssFile;
+import com.oracle.javafx.scenebuilder.devutils.model.FxmlFile;
+import com.oracle.javafx.scenebuilder.devutils.model.I18nFile;
+import com.oracle.javafx.scenebuilder.devutils.model.ResourceFile;
+import com.oracle.javafx.scenebuilder.devutils.model.StringOccurence;
 import com.oracle.javafx.scenebuilder.devutils.strchk.utils.Patterns;
 import com.oracle.javafx.scenebuilder.devutils.strchk.utils.StringValue;
 
@@ -54,9 +55,9 @@ public class ResourceLoader {
         boolean localized = file.getName().contains("_");
         String fileName = file.getName();
         String packageName = pathToPackage(path);
-        
+
         String locale = localized ? fileName.substring(fileName.indexOf("_"), fileName.indexOf(".")) : "";
-        
+
         Properties properties = new Properties();
         try(FileInputStream fis = new FileInputStream(file)){
             properties.load(fis);
@@ -64,69 +65,69 @@ public class ResourceLoader {
             e.printStackTrace();
             return new I18nFile(file, packageName, locale, null);
         }
-        
+
         return new I18nFile(file, packageName, locale, properties);
     }
 
     private static String pathToPackage(String path) {
         String packageName = path.replace("\\", "/");
-        if (packageName.contains(Config.PROJECT_RESOURCE_FOLDER)) {
-            packageName = packageName.substring(packageName.indexOf(Config.PROJECT_RESOURCE_FOLDER) + Config.PROJECT_RESOURCE_FOLDER.length()); 
+        if (packageName.contains(CommonConfig.PROJECT_RESOURCE_FOLDER)) {
+            packageName = packageName.substring(packageName.indexOf(CommonConfig.PROJECT_RESOURCE_FOLDER) + CommonConfig.PROJECT_RESOURCE_FOLDER.length());
         } else {
-            packageName = packageName.substring(packageName.indexOf(Config.PROJECT_JAVA_FOLDER) + Config.PROJECT_JAVA_FOLDER.length());
+            packageName = packageName.substring(packageName.indexOf(CommonConfig.PROJECT_JAVA_FOLDER) + CommonConfig.PROJECT_JAVA_FOLDER.length());
         }
-        
+
         if (packageName.startsWith("/")) {
             packageName = packageName.substring(1);
         }
-        
+
         packageName = packageName.replace("/", ".");
         return packageName;
     }
     public static FxmlFile loadFxmlFile(File file) {
         try {
             String path = file.getParentFile().getAbsolutePath();
-            
+
             String packageName = pathToPackage(path);
-            
+
             FxmlFile fxml = new FxmlFile(file, packageName);
-            
+
             String content = new String(Files.readAllBytes(file.toPath()));
-            
+
             Patterns.STRING_IN_FXML.matcher(content).results().forEach(r -> {
                 if (StringValue.isValidCandidate(r.group(1))) {
                     fxml.getStringOccurences().add(new StringOccurence(r.group(1)));
                 }
             });
-            
+
             Patterns.I18N_STRING_IN_FXML.matcher(content).results().forEach(r -> {
                 if (StringValue.isValidCandidate(r.group(1))) {
                     fxml.getStringOccurences().add(new StringOccurence(r.group(1)));
                 }
             });
-                    
+
             return fxml;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
-    
+
     public static CssFile loadCssFile(File file) {
         try {
             String path = file.getParentFile().getAbsolutePath();
             String packageName = pathToPackage(path);
-            
+
             CssFile css = new CssFile(file, packageName);
-            
+
             String content = new String(Files.readAllBytes(file.toPath()));
-            
+
             Patterns.STRING.matcher(content).results().forEach(r -> {
                 if (StringValue.isValidCandidate(r.group(1))) {
                     css.getStringOccurences().add(new StringOccurence(r.group(1)));
                 }
             });
-                                
+
             return css;
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +138,7 @@ public class ResourceLoader {
     public static ResourceFile loadResourceFile(File file) {
         String path = file.getParentFile().getAbsolutePath();
         String packageName = pathToPackage(path);
-        
+
         return new ResourceFile(file, packageName);
     }
 

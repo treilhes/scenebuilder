@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,12 +46,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Gesture;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
@@ -66,26 +67,26 @@ import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.draganddrop.target.RootDropTarget;
-import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
+import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -103,11 +104,6 @@ import javafx.util.Callback;
  *
  *
  */
-
-/**
- *
- *
- */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
@@ -117,8 +113,8 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     public final static Object ID = EditModeController.class;
 
-	private final SceneBuilderBeanFactory context;
-	private final Driver driver;
+    // private final SceneBuilderBeanFactory context;
+    private final Driver driver;
 
     private SelectWithMarqueeGesture selectWithMarqueeGesture;
     private SelectAndMoveGesture selectAndMoveGesture;
@@ -129,26 +125,75 @@ public class EditModeController extends AbstractModeController implements Gestur
     private FXOMInstance inlineEditedObject;
     private final Drag drag;
 
-    private final Api api;
+    // private final Api api;
 
     private final Editor editorController;
 
+    private final DesignHierarchyMask.Factory maskFactory;
+
+    private final Metadata metadata;
+
+    private final SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory;
+
+    private final SelectAndMoveGesture.Factory selectAndMoveGestureFactory;
+
+    private final ZoomGesture.Factory zoomGestureFactory;
+
+    private final MoveWithKeyGesture.Factory moveWithKeyGestureFactory;
+
+    private final Selection selection;
+
+    private final DragGesture.Factory dragGestureFactory;
+
+    private final ContextMenu contextMenu;
+
+    private final MessageLogger messageLogger;
+
+    private final InlineEdit inlineEdit;
+
+    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+
+    private final DocumentManager documentManager;
+
+    // @formatter:off
     public EditModeController(
-            @Autowired Api api,
-    		@Autowired SceneBuilderBeanFactory context,
+            @Autowired Selection selection,
+    		@Autowired DragGesture.Factory dragGestureFactory,
     		@Autowired Driver driver,
     		@Autowired Drag drag,
+    		@Autowired ContextMenu contextMenu,
+    		@Autowired MessageLogger messageLogger,
+    		@Autowired InlineEdit inlineEdit,
     		@Autowired @Lazy Content contentPanelController,
-    		@Autowired @Lazy Editor editor
+    		@Autowired @Lazy Editor editor,
+    		@Autowired DesignHierarchyMask.Factory maskFactory,
+    		@Autowired Metadata metadata,
+    		@Autowired DocumentManager documentManager,
+    		@Autowired SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory,
+    		@Autowired SelectAndMoveGesture.Factory selectAndMoveGestureFactory,
+    		@Autowired ZoomGesture.Factory zoomGestureFactory,
+    		@Autowired MoveWithKeyGesture.Factory moveWithKeyGestureFactory,
+    		@Autowired ModifyObjectJob.Factory modifyObjectJobFactory
             ) {
+     // @formatter:on
         super(contentPanelController);
-        this.context = context;
-        this.api = api;
+        this.selection = selection;
+        this.contextMenu = contextMenu;
+        this.messageLogger = messageLogger;
+        this.inlineEdit = inlineEdit;
+        this.dragGestureFactory = dragGestureFactory;
         this.driver = driver;
         this.drag = drag;
         this.editorController = editor;
+        this.maskFactory = maskFactory;
+        this.metadata = metadata;
+        this.documentManager = documentManager;
 
-        Selection selection = api.getApiDoc().getSelection();
+        this.selectWithMarqueeGestureFactory = selectWithMarqueeGestureFactory;
+        this.selectAndMoveGestureFactory = selectAndMoveGestureFactory;
+        this.zoomGestureFactory = zoomGestureFactory;
+        this.moveWithKeyGestureFactory = moveWithKeyGestureFactory;
+        this.modifyObjectJobFactory = modifyObjectJobFactory;
 
         newLayer(Outline.class, true, selection,
                 // object selection
@@ -161,7 +206,6 @@ public class EditModeController extends AbstractModeController implements Gestur
                 s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
                 // Handles creation
                 fxomObject -> driver.makeShadow(fxomObject));
-
 
         newLayer(Rudder.class, false, selection,
                 // object selection
@@ -194,7 +238,9 @@ public class EditModeController extends AbstractModeController implements Gestur
                 fxomObject -> driver.makeHandles(fxomObject));
 
         newLayer(Tring.class, true, selection,
-                s -> drag.isDropAccepted() && !(drag.getDropTarget() instanceof RootDropTarget) ? new HashSet<>(Arrays.asList(drag.getDropTarget().getTargetObject())) : null,
+                s -> drag.isDropAccepted() && !(drag.getDropTarget() instanceof RootDropTarget)
+                        ? new HashSet<>(Arrays.asList(drag.getDropTarget().getTargetObject()))
+                        : null,
                 fxomObject -> {
                     Tring<?> tring = driver.makeTring(drag.getDropTarget());
 //                    if (tring != null) {
@@ -202,7 +248,6 @@ public class EditModeController extends AbstractModeController implements Gestur
 //                    }
                     return tring;
                 });
-
 
     }
 
@@ -242,9 +287,9 @@ public class EditModeController extends AbstractModeController implements Gestur
         assert contentPanelController.getGlassLayer() != null;
 
         if (this.selectWithMarqueeGesture == null) {
-            this.selectWithMarqueeGesture = context.getBean(SelectWithMarqueeGesture.class);
-            this.selectAndMoveGesture = context.getBean(SelectAndMoveGesture.class);
-            this.zoomGesture = context.getBean(ZoomGesture.class);
+            this.selectWithMarqueeGesture = selectWithMarqueeGestureFactory.getGesture();
+            this.selectAndMoveGesture = selectAndMoveGestureFactory.getGesture();
+            this.zoomGesture = zoomGestureFactory.getGesture();
         }
 
         getLayers().forEach(l -> l.enable());
@@ -299,7 +344,6 @@ public class EditModeController extends AbstractModeController implements Gestur
         }
     }
 
-
     private void startListeningToInputEvents() {
         final Node glassLayer = contentPanelController.getGlassLayer();
         assert glassLayer.getOnMouseEntered() == null;
@@ -345,7 +389,6 @@ public class EditModeController extends AbstractModeController implements Gestur
         pringLayer.setOnMousePressed(null);
     }
 
-
     /*
      * Private (event handlers)
      */
@@ -361,17 +404,15 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private void mouseMovedOnGlassLayer(MouseEvent e) {
         assert activeGesture == null : "activeGesture=" + activeGesture;
-        Selection selection = api.getApiDoc().getSelection();
-        final FXOMObject hitObject
-                = contentPanelController.pick(e.getSceneX(), e.getSceneY());
+
+        final FXOMObject hitObject = contentPanelController.pick(e.getSceneX(), e.getSceneY());
         final FXOMObject selectionAncestor = selection.getAncestor();
 
         // The code below handles selction of detached graph objects
         if (!selection.isEmpty() && selection.getGroup() instanceof ObjectSelectionGroup) {
-            ObjectSelectionGroup selGroup = (ObjectSelectionGroup)selection.getGroup();
+            ObjectSelectionGroup selGroup = (ObjectSelectionGroup) selection.getGroup();
 
-            if (selGroup.getItems().size() == 1
-                    && selGroup.getHitItem().isViewable()
+            if (selGroup.getItems().size() == 1 && selGroup.getHitItem().isViewable()
                     && selGroup.getHitItem().isDescendantOf(hitObject)
                     && CoordinateHelper.isHit(selGroup.getHitItem(), e.getSceneX(), e.getSceneY())) {
                 selectAndMoveGesture.setHitObject(selGroup.getHitItem());
@@ -384,22 +425,19 @@ public class EditModeController extends AbstractModeController implements Gestur
         }
 
         /*
-         *   1) hitObject == null
-         *                  => mouse is over the workspace/background
-         *                  => mouse press+drag should "select with marquee"
+         * 1) hitObject == null => mouse is over the workspace/background => mouse
+         * press+drag should "select with marquee"
          *
-         *   2) hitObject != null
+         * 2) hitObject != null
          *
-         *      2.1) hitObject == root object
+         * 2.1) hitObject == root object
          *
-         *          2.1) hitObject is the selectionAncestor
-         *                  => mouse is over the "parent ring object"
-         *                  => mouse press+drag should "select with marquee"
+         * 2.1) hitObject is the selectionAncestor => mouse is over the
+         * "parent ring object" => mouse press+drag should "select with marquee"
          *
-         *          2.2) hitObject is not the selectionAncestor
-         *                  => mouse is over an object
-         *                  => this object is inside or outside of the parent ring
-         *                  => mouse press+drag should "select and move"
+         * 2.2) hitObject is not the selectionAncestor => mouse is over an object =>
+         * this object is inside or outside of the parent ring => mouse press+drag
+         * should "select and move"
          *
          */
 
@@ -426,14 +464,14 @@ public class EditModeController extends AbstractModeController implements Gestur
         contentPanelController.getGlassLayer().requestFocus();
 
         /*
-         * At that point, is expected that a "mouse entered" or "mouse moved"
-         * event was received before and that this.glassGesture is setup.
+         * At that point, is expected that a "mouse entered" or "mouse moved" event was
+         * received before and that this.glassGesture is setup.
          *
-         * However this is no always the case. It may be null in two cases:
-         * 1) on Linux, mouse entered/moved events are not always delivered
-         *    before mouse pressed event (see DTL-5956).
-         * 2) while the mouse is immobile, fxomDocumentDidRefreshSceneGraph()
-         *    method may have been invoked and reset this.glassGesture.
+         * However this is no always the case. It may be null in two cases: 1) on Linux,
+         * mouse entered/moved events are not always delivered before mouse pressed
+         * event (see DTL-5956). 2) while the mouse is immobile,
+         * fxomDocumentDidRefreshSceneGraph() method may have been invoked and reset
+         * this.glassGesture.
          *
          * That is why we test this.glassGesture and manually invoke
          * mouseMovedOnGlassLayer() here.
@@ -443,56 +481,52 @@ public class EditModeController extends AbstractModeController implements Gestur
         }
 
         assert glassGesture != null;
-        switch(e.getClickCount()) {
-            case 1:
-                if (e.getButton() == MouseButton.SECONDARY) {
-                    // Update the selection (see spec detailed in DTL-5640)
-                    final FXOMObject hitObject;
-                    if (glassGesture == selectAndMoveGesture) {
-                        hitObject = selectAndMoveGesture.getHitObject();
-                    } else {
-                        assert glassGesture == selectWithMarqueeGesture;
-                        hitObject = selectWithMarqueeGesture.getHitObject();
-                    }
-                    final Selection selection = api.getApiDoc().getSelection();
-                    if (hitObject != null && selection.isSelected(hitObject) == false) {
-                        selection.select(hitObject);
-                    }
-                    final ContextMenu contextMenuController = api.getApiDoc().getContextMenu();
-                    // The context menu items depend on the selection so
-                    // we need to rebuild it each time it is invoked.
-                    contextMenuController.updateContextMenuItems();
+        switch (e.getClickCount()) {
+        case 1:
+            if (e.getButton() == MouseButton.SECONDARY) {
+                // Update the selection (see spec detailed in DTL-5640)
+                final FXOMObject hitObject;
+                if (glassGesture == selectAndMoveGesture) {
+                    hitObject = selectAndMoveGesture.getHitObject();
                 } else {
-                    activateGesture(glassGesture, e);
+                    assert glassGesture == selectWithMarqueeGesture;
+                    hitObject = selectWithMarqueeGesture.getHitObject();
                 }
-                break;
-            case 2:
-                mouseDoubleClickedOnGlassLayer(e);
-                break;
-            default:
-                // We ignore triple clicks and upper...
-                break;
+
+                if (hitObject != null && selection.isSelected(hitObject) == false) {
+                    selection.select(hitObject);
+                }
+
+                // The context menu items depend on the selection so
+                // we need to rebuild it each time it is invoked.
+                contextMenu.updateContextMenuItems();
+            } else {
+                activateGesture(glassGesture, e);
+            }
+            break;
+        case 2:
+            mouseDoubleClickedOnGlassLayer(e);
+            break;
+        default:
+            // We ignore triple clicks and upper...
+            break;
         }
         e.consume();
     }
 
     private void mouseDoubleClickedOnGlassLayer(MouseEvent e) {
         assert activeGesture == null;
-        assert (glassGesture == selectAndMoveGesture)
-                || (glassGesture == selectWithMarqueeGesture);
+        assert (glassGesture == selectAndMoveGesture) || (glassGesture == selectWithMarqueeGesture);
 
         if (glassGesture == selectAndMoveGesture) {
             assert selectAndMoveGesture.getHitObject() instanceof FXOMInstance;
-            final FXOMInstance hitObject
-                    = (FXOMInstance) selectAndMoveGesture.getHitObject();
-            final DesignHierarchyMask m
-                    = new DesignHierarchyMask(hitObject);
+            final FXOMInstance hitObject = (FXOMInstance) selectAndMoveGesture.getHitObject();
+            final HierarchyMask m = maskFactory.getMask(hitObject);
             // Do not allow inline editing of the I18N value
             if (m.isResourceKey(m.getPropertyNameForDescription()) == false) {
                 handleInlineEditing((FXOMInstance) selectAndMoveGesture.getHitObject());
             } else {
-                final MessageLogger ml = api.getApiDoc().getMessageLogger();
-                ml.logWarningMessage("log.warning.inline.edit.internationalized.strings");
+                messageLogger.logWarningMessage("log.warning.inline.edit.internationalized.strings");
             }
         }
     }
@@ -502,63 +536,49 @@ public class EditModeController extends AbstractModeController implements Gestur
         assert hitObject != null;
         assert inlineEditedObject == null;
 
-        final Node inlineEditingBounds
-                = driver.getInlineEditorBounds(hitObject);
+        final Node inlineEditingBounds = driver.getInlineEditorBounds(hitObject);
 
         if (inlineEditingBounds != null) {
             inlineEditedObject = hitObject;
 
-            final InlineEdit inlineEditController = api.getApiDoc().getInlineEdit();
-            final DesignHierarchyMask m
-                    = new DesignHierarchyMask(inlineEditedObject);
+
+            final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
             final String text = m.getDescription();
             final InlineEdit.Type type;
-            if (inlineEditingBounds instanceof TextArea
-                    || DesignHierarchyMask.containsLineFeed(text)) {
+            if (inlineEditingBounds instanceof TextArea || DesignHierarchyMask.containsLineFeed(text)) {
                 type = InlineEdit.Type.TEXT_AREA;
             } else {
                 type = InlineEdit.Type.TEXT_FIELD;
             }
-            final TextInputControl inlineEditor
-                    = inlineEditController.createTextInputControl(
-                            type, inlineEditingBounds, text);
+            final TextInputControl inlineEditor = inlineEdit.createTextInputControl(type, inlineEditingBounds,
+                    text);
             // CSS
-            final ObservableList<String> styleSheets
-                    = getContentPanelController().getRoot().getStylesheets();
+            final ObservableList<String> styleSheets = getContentPanelController().getRoot().getStylesheets();
             inlineEditor.getStylesheets().addAll(styleSheets);
-            inlineEditor.getStyleClass().add("theme-presets"); //NOCHECK
+            inlineEditor.getStyleClass().add("theme-presets"); // NOCHECK
             inlineEditor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
-            final Callback<String, Boolean> requestCommit
-                    = value -> inlineEditingDidRequestCommit(value);
-            final Callback<Void, Boolean> requestRevert
-                    = value -> {
+            final Callback<String, Boolean> requestCommit = value -> inlineEditingDidRequestCommit(value);
+            final Callback<Void, Boolean> requestRevert = value -> {
                 inlineEditingDidRequestRevert();
                 return true;
             };
-            inlineEditController.startEditingSession(inlineEditor,
-                    inlineEditingBounds, requestCommit, requestRevert);
+            inlineEdit.startEditingSession(inlineEditor, inlineEditingBounds, requestCommit, requestRevert);
         } else {
             logger.debug("Beep");
         }
 
-        assert editorController.isTextEditingSessionOnGoing()
-                || (inlineEditedObject == null);
+        assert editorController.isTextEditingSessionOnGoing() || (inlineEditedObject == null);
     }
-
 
     private boolean inlineEditingDidRequestCommit(String newValue) {
         assert inlineEditedObject != null;
 
-        final DesignHierarchyMask m
-                = new DesignHierarchyMask(inlineEditedObject);
-        final PropertyName propertyName
-                = m.getPropertyNameForDescription();
+        final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
+        final PropertyName propertyName = m.getPropertyNameForDescription();
         assert propertyName != null;
-        final ValuePropertyMetadata vpm
-                = Metadata.getMetadata().queryValueProperty(inlineEditedObject, propertyName);
+        final ValuePropertyMetadata vpm = metadata.queryValueProperty(inlineEditedObject, propertyName);
 
-        final Job job
-                = new ModifyObjectJob(context, inlineEditedObject, vpm, newValue, editorController).extend();
+        final AbstractJob job = modifyObjectJobFactory.getJob(inlineEditedObject, vpm, newValue);
 
         if (job.isExecutable()) {
             editorController.getJobManager().push(job);
@@ -569,7 +589,6 @@ public class EditModeController extends AbstractModeController implements Gestur
         return true;
     }
 
-
     private void inlineEditingDidRequestRevert() {
         assert inlineEditedObject != null;
         inlineEditedObject = null;
@@ -577,34 +596,33 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private void keyPressedOnGlassLayer(KeyEvent e) {
         assert activeGesture == null : "activeGesture=" + activeGesture;
-        switch(e.getCode()) {
-            case UP:
-            case DOWN:
-            case LEFT:
-            case RIGHT:
-                if (RelocateSelectionJob.isSelectionMovable(editorController)) {
-                    activateGesture(new MoveWithKeyGesture(context, contentPanelController), e);
-                } else {
-                    logger.debug("Selection is not movable");
-                }
-                e.consume();
-                break;
-            case ENTER:
-                final Selection selection = api.getApiDoc().getSelection();
-                if (selection.getGroup() instanceof ObjectSelectionGroup) {
-                    final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-                    if (osg.getItems().size() == 1) {
-                        final DesignHierarchyMask mask = new DesignHierarchyMask(osg.getSortedItems().get(0));
-                        final FXOMObject nodeFxomObject = mask.getClosestFxNode();
-                        if (nodeFxomObject instanceof FXOMInstance) {
-                            handleInlineEditing((FXOMInstance)nodeFxomObject);
-                        }
+        switch (e.getCode()) {
+        case UP:
+        case DOWN:
+        case LEFT:
+        case RIGHT:
+            if (selection.isMovable()) {
+                activateGesture(moveWithKeyGestureFactory.getGesture(), e);
+            } else {
+                logger.debug("Selection is not movable");
+            }
+            e.consume();
+            break;
+        case ENTER:
+            if (selection.getGroup() instanceof ObjectSelectionGroup) {
+                final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+                if (osg.getItems().size() == 1) {
+                    final HierarchyMask mask = maskFactory.getMask(osg.getSortedItems().get(0));
+                    final FXOMObject nodeFxomObject = mask.getClosestFxNode();
+                    if (nodeFxomObject instanceof FXOMInstance) {
+                        handleInlineEditing((FXOMInstance) nodeFxomObject);
                     }
                 }
-                break;
-            default:
-                // We let other key events flow up in the scene graph
-                break;
+            }
+            break;
+        default:
+            // We let other key events flow up in the scene graph
+            break;
         }
     }
 
@@ -614,18 +632,16 @@ public class EditModeController extends AbstractModeController implements Gestur
     }
 
     private void dragEnteredGlassLayer(DragEvent e) {
-        activateGesture(context.getBean(DragGesture.class), e);
+        activateGesture(dragGestureFactory.getGesture(), e);
     }
-
 
     private void mousePressedOnHandleLayer(MouseEvent e) {
         assert e.getTarget() instanceof Node;
 
         if (e.getButton() == MouseButton.SECONDARY) {
-            final ContextMenu contextMenuController = api.getApiDoc().getContextMenu();
             // The context menu items depend on the selection so
             // we need to rebuild it each time it is invoked.
-            contextMenuController.updateContextMenuItems();
+            contextMenu.updateContextMenuItems();
         } else {
             final Node target = (Node) e.getTarget();
             Node hitNode = target;
@@ -671,10 +687,9 @@ public class EditModeController extends AbstractModeController implements Gestur
             return;
         }
         /*
-         * Before activating the gesture, we check:
-         *   - that there is a document attached to the editor controller
-         *   - if a text session is on-going and can be completed cleanly.
-         * If not, we do not activate the gesture.
+         * Before activating the gesture, we check: - that there is a document attached
+         * to the editor controller - if a text session is on-going and can be completed
+         * cleanly. If not, we do not activate the gesture.
          */
 
         if (contentPanelController.isContentDisplayable() && editorController.canGetFxmlText()) {
@@ -695,7 +710,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         final Set<FXOMObject> result = new HashSet<>();
 
         final List<FXOMObject> candidates = new ArrayList<>();
-        final FXOMDocument fxomDocument = api.getApiDoc().getDocumentManager().fxomDocument().get();
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
 
         if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
             candidates.add(fxomDocument.getFxomRoot());
@@ -706,12 +721,12 @@ public class EditModeController extends AbstractModeController implements Gestur
             candidates.remove(0);
             if (candidate.isNode()) {
                 final Node sgo = (Node) candidate.getSceneGraphObject();
-                //if (sgo.getScene() == getRoot().getScene()) {
-                if (sgo.getScene() == ((Node)fxomDocument.getSceneGraphRoot()).getScene()) {
+                // if (sgo.getScene() == getRoot().getScene()) {
+                if (sgo.getScene() == ((Node) fxomDocument.getSceneGraphRoot()).getScene()) {
                     result.add(candidate);
                 }
             }
-            final DesignHierarchyMask m = new DesignHierarchyMask(candidate);
+            final HierarchyMask m = maskFactory.getMask(candidate);
             if (m.isAcceptingSubComponent()) {
                 for (int i = 0, c = m.getSubComponentCount(); i < c; i++) {
                     final FXOMObject subComponent = m.getSubComponentAtIndex(i);
@@ -720,11 +735,10 @@ public class EditModeController extends AbstractModeController implements Gestur
             }
             for (Accessory a : m.getAccessories()) {
                 final List<FXOMObject> accessoryObjects = m.getAccessories(a);
-                accessoryObjects.stream()
-                    .filter(accessoryObject -> accessoryObject != null && accessoryObject.isNode())
-                    .forEach(accessoryObject -> {
-                    candidates.add(accessoryObject);
-                });
+                accessoryObjects.stream().filter(accessoryObject -> accessoryObject != null && accessoryObject.isNode())
+                        .forEach(accessoryObject -> {
+                            candidates.add(accessoryObject);
+                        });
             }
         }
 

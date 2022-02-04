@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,27 +39,25 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.core.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.LibraryDragSource;
+import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.ImageLibraryDragSource;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListItem;
-import com.oracle.javafx.scenebuilder.job.editor.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.job.editor.SetDocumentRootJob;
+import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
+import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 import javafx.scene.control.ListView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.stage.Window;
 
 /**
  *
@@ -68,25 +67,30 @@ import javafx.stage.Window;
 @Lazy
 public class ImageLibraryController {
 
-    private final Editor editor;
-    private final SceneBuilderBeanFactory context;
     private final JobManager jobManager;
     private final Drag drag;
+    private final ImageLibraryDragSource.Factory libraryDragSourceFactory;
+    private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
+    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
+
     private FXOMDocument fxomDocument;
     private SelectionState selectionState;
 
 
     public ImageLibraryController(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired Editor editor,
             @Autowired JobManager jobManager,
             @Autowired Drag drag,
-            @Autowired @Lazy DocumentManager documentManager) {
+            @Autowired @Lazy DocumentManager documentManager,
+            ImageLibraryDragSource.Factory libraryDragSourceFactory,
+            SetDocumentRootJob.Factory setDocumentRootJobFactory,
+            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {
 
-        this.context = context;
-        this.editor = editor;
         this.jobManager = jobManager;
         this.drag = drag;
+        this.libraryDragSourceFactory = libraryDragSourceFactory;
+        this.setDocumentRootJobFactory = setDocumentRootJobFactory;
+        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+
         documentManager.fxomDocument().subscribe(fxom -> this.fxomDocument = fxom);
         documentManager.selectionDidChange().subscribe(s -> this.selectionState = s);
     }
@@ -99,7 +103,7 @@ public class ImageLibraryController {
      * @param libraryItem the library item describing the object to be inserted.
      */
     public void performInsert(LibraryItem libraryItem) {
-        final Job job;
+        final AbstractJob job;
         final FXOMObject target;
 
         assert canPerformInsert(libraryItem); // (1)
@@ -113,7 +117,7 @@ public class ImageLibraryController {
         final FXOMObject rootObject = fxomDocument.getFxomRoot();
         if (rootObject == null) { // Empty document
             final String description = I18N.getString("drop.job.insert.library.item", libraryItem.getName());
-            job = new SetDocumentRootJob(context, newObject, true /* usePredefinedSize */, description, editor);
+            job = setDocumentRootJobFactory.getJob(newObject, true /* usePredefinedSize */, description);
 
         } else {
             Selection selection = selectionState.getSelection();
@@ -125,10 +129,10 @@ public class ImageLibraryController {
                 // It might be null if selection holds some non FXOMObject entries
                 target = selection.getAncestor();
             }
-            job = new InsertAsSubComponentJob(context, newObject, target, -1, editor);
+            job = insertAsSubComponentJobFactory.getJob(newObject, target, -1);
         }
 
-        jobManager.push(job.extend());
+        jobManager.push(job);
 
         // TODO remove comment
         // WarnThemeAlert.showAlertIfRequired(this, newObject, ownerWindow);
@@ -160,8 +164,7 @@ public class ImageLibraryController {
                 assert newItemDocument.getFxomRoot() == null;
                 final FXOMObject rootObject = fxomDocument.getFxomRoot();
                 if (rootObject == null) { // Empty document
-                    final Job job = new SetDocumentRootJob(context, newItemRoot, true /* usePredefinedSize */, "unused",
-                            editor).extend(); // NOI18N
+                    final AbstractJob job = setDocumentRootJobFactory.getJob(newItemRoot, true /* usePredefinedSize */, "unused"); // NOI18N
                     result = job.isExecutable();
                 } else {
                     Selection selection = selectionState.getSelection();
@@ -173,8 +176,7 @@ public class ImageLibraryController {
                         // It might be null if selection holds some non FXOMObject entries
                         targetCandidate = selection.getAncestor();
                     }
-                    final Job job = new InsertAsSubComponentJob(context, newItemRoot, targetCandidate, -1, editor)
-                            .extend();
+                    final AbstractJob job = insertAsSubComponentJobFactory.getJob(newItemRoot, targetCandidate, -1);
                     result = job.isExecutable();
                 }
             }
@@ -194,8 +196,7 @@ public class ImageLibraryController {
                 final ListView<LibraryListItem> list = cell.getListView();
                 final Dragboard db = list.startDragAndDrop(TransferMode.COPY);
 
-                final Window ownerWindow = cell.getScene().getWindow();
-                final LibraryDragSource dragSource = new LibraryDragSource(item, fxomDocument, ownerWindow);
+                final ImageLibraryDragSource dragSource = libraryDragSourceFactory.getDragSource(item);
                 assert drag.getDragSource() == null;
                 assert dragSource.isAcceptable();
                 drag.begin(dragSource);

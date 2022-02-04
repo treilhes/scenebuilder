@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,11 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
+import com.oracle.javafx.scenebuilder.controls.contextmenu.ContextMenuMenuProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-@ComponentScan(basePackages = { "com.oracle.javafx.scenebuilder.controls.metadata" })
 public class BaseControlsExtension extends AbstractExtension {
 
     @Override
@@ -50,7 +49,10 @@ public class BaseControlsExtension extends AbstractExtension {
 
     @Override
     public List<Class<?>> explicitClassToRegister() {
-        return Arrays.asList(BaseDocumentationUrlBuilder.class);
+        return Arrays.asList(
+                BaseDocumentationUrlBuilder.class,
+                ContextMenuMenuProvider.class
+                );
     }
 
 }

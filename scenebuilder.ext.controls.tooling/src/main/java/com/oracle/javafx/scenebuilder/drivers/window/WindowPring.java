@@ -36,11 +36,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.drivers.node.AbstractNodePring;
+import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -50,30 +52,36 @@ import javafx.stage.Window;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class WindowPring extends AbstractNodePring<Node> {
 
-    public WindowPring(Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    private final DesignHierarchyMask.Factory maskFactory;
+
+    public WindowPring(
+            Content contentPanelController,
+            SelectWithPringGesture.Factory selectWithPringGestureFactory,
+            DesignHierarchyMask.Factory maskFactory) {
+        super(contentPanelController, selectWithPringGestureFactory, Node.class);
+        this.maskFactory = maskFactory;
     }
 
     @Override
     public void initialize() {
     }
-    
+
     @Override
     public void setFxomObject(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
-        DesignHierarchyMask windowDesignHierarchyMask = new DesignHierarchyMask(fxomObject);
+        HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
         FXOMObject scene = windowDesignHierarchyMask.getAccessory(windowDesignHierarchyMask.getMainAccessory());
         assert scene != null : "makePring should have only been called if the Window has a scene";
         assert scene.getSceneGraphObject() instanceof Scene;
         assert scene instanceof FXOMInstance;
-        DesignHierarchyMask sceneDesignHierarchyMask = new DesignHierarchyMask(scene);
+        HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
         FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         assert root instanceof FXOMInstance;
-        
+
         super.setFxomObject(root);
     }
 
-    
+
 }

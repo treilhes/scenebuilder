@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.template.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Main;
-import com.oracle.javafx.scenebuilder.api.action.ExtendedAction;
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.template.Template;
-import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
-import com.oracle.javafx.scenebuilder.ext.theme.document.ThemePreference;
+import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
 
 
@@ -58,7 +59,9 @@ public class TemplateController {
 
     private final Main main;
     private final SceneBuilderBeanFactory context;
-
+    private final ActionFactory actionFactory;
+    private final JobManager jobManager;
+    private final UseSizeJob.Factory useSizeJobFactory;
     /**
      * Instantiates a new template controller.
      *
@@ -66,9 +69,15 @@ public class TemplateController {
      * @param main the main controller instance
      */
     public TemplateController(
-            @Autowired SceneBuilderBeanFactory context,
-    		@Autowired Main main) {
+            SceneBuilderBeanFactory context,
+            ActionFactory actionFactory,
+    		Main main,
+    		@Lazy JobManager jobManager,
+    		UseSizeJob.Factory useSizeJobFactory) {
         this.context = context;
+        this.actionFactory = actionFactory;
+        this.jobManager = jobManager;
+        this.useSizeJobFactory = useSizeJobFactory;
     	this.main = main;
     }
 
@@ -120,17 +129,17 @@ public class TemplateController {
         document.openWindow();
 
         if (template != null && template.getThemes().size() > 0) {
-            ThemePreference docThemePref = context.getBean(ThemePreference.class);
+            ThemeDocumentPreference docThemePref = context.getBean(ThemeDocumentPreference.class);
             docThemePref.setValue(template.getThemes().get(0));
             docThemePref.writeToJavaPreferences();
-            ExtendedAction<?> extendedJob = context.getBean(ApplyCssContentAction.class).extend();
-            extendedJob.checkAndPerform();
+            Action action = actionFactory.create(ApplyCssContentAction.class);
+            action.checkAndPerform();
         }
 
         if (template != null && (template.getWidth() != 0 || template.getHeight() != 0)) {
-            final Job job = new UseSizeJob(context, context.getBean(Editor.class), template.getWidth(), template.getHeight()).extend();
+            final AbstractJob job = useSizeJobFactory.getJob(template.getWidth(), template.getHeight());
             if (job.isExecutable()) {
-                context.getBean(JobManager.class).push(job);
+                jobManager.push(job);
             }
         }
 

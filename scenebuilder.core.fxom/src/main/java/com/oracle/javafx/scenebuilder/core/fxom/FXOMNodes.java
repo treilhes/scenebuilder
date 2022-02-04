@@ -539,6 +539,14 @@ public class FXOMNodes {
     }
 
 
+    /**
+     * Extract the reference id from the node <br/>
+     * Case node is a fx:reference/fx:copy then return 'source' property value<br/>
+     * Case node is an single valued property {@link FXOMPropertyT} then return the expression with a removed suffix<br/>
+     * or null
+     * @param node
+     * @return
+     */
     public static String extractReferenceSource(FXOMNode node) {
         final String result;
 

@@ -33,6 +33,7 @@ open module scenebuilder.ext.image.library {
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.extension.store;
     requires scenebuilder.core.filesystem;
+    requires scenebuilder.core.selection;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;
