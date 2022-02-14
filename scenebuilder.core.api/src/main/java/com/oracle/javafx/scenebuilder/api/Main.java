@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,12 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
 public interface Main {
-    
+
     public enum ApplicationControlAction {
 
         //ABOUT,
@@ -65,7 +67,7 @@ public interface Main {
     List<Document> getDocumentWindowControllers();
 
     //void handleOpenFilesAction(List<String> files);
-    
+
     //void performNewTemplate(Template template);
 
     void performControlAction(ApplicationControlAction openFile, Document documentWC);
@@ -78,7 +80,16 @@ public interface Main {
 
     Document lookupDocumentWindowControllers(URL newLocation);
 
-    void documentWindowRequestClose(Document document);
+    void notifyDocumentClosed(Document document);
     int getOpenDocuments();
+
+    /**
+     * @param fxmlFiles
+     */
+    void open(List<File> fxmlFiles);
+    /**
+     *
+     */
+    void close();
 
 }

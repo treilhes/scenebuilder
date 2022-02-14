@@ -63,6 +63,8 @@ import javafx.scene.layout.AnchorPane;
  * Force the selected objects {@link FXOMObject} to the same size of the parent {@link AnchorPane}
  * Subjob {@link FitToParentObjectJob}
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class FitToParentSelectionJob extends BatchDocumentJob {
 
     private static Logger logger = LoggerFactory.getLogger(FitToParentSelectionJob.class);

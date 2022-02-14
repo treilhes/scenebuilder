@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,16 +34,14 @@
 package com.oracle.javafx.scenebuilder.api.menubar;
 
 public interface DefaultMenu {
-	public final static String MENU_QUALIFIER = "DefaultMenu";
-
-	public final static String FILE_MENU_KEY = "A_FILE_MENU_KEY"+MENU_QUALIFIER;
-	public final static String EDIT_MENU_KEY = "B_EDIT_MENU_KEY"+MENU_QUALIFIER;
-	public final static String VIEW_MENU_KEY = "C_VIEW_MENU_KEY"+MENU_QUALIFIER;
-	public final static String INSERT_MENU_KEY = "D_INSERT_MENU_KEY"+MENU_QUALIFIER;
-	public final static String MODIFY_MENU_KEY = "E_MODIFY_MENU_KEY"+MENU_QUALIFIER;
-	public final static String ARRANGE_MENU_KEY = "F_ARRANGE_MENU_KEY"+MENU_QUALIFIER;
-	public final static String PREVIEW_MENU_KEY = "G_PREVIEW_MENU_KEY"+MENU_QUALIFIER;
-	public final static String WINDOW_MENU_KEY = "H_WINDOW_MENU_KEY"+MENU_QUALIFIER;
-	public final static String HELP_MENU_KEY = "I_HELP_MENU_KEY"+MENU_QUALIFIER;
-	public final static String DEBUG_MENU_KEY = "J_DEBUG_MENU_KEY"+MENU_QUALIFIER;
+	public final static String FILE_MENU_ID = "fileMenu";//NOCHECK
+	public final static String EDIT_MENU_ID = "editMenu";//NOCHECK
+	public final static String VIEW_MENU_ID = "viewMenu";//NOCHECK
+	public final static String INSERT_MENU_ID = "insertMenu";//NOCHECK
+	public final static String MODIFY_MENU_ID = "modifyMenu";//NOCHECK
+	public final static String ARRANGE_MENU_ID = "arrangeMenu";//NOCHECK
+	public final static String PREVIEW_MENU_ID = "previewMenu";//NOCHECK
+	public final static String WINDOW_MENU_ID = "windowMenu";//NOCHECK
+	public final static String HELP_MENU_ID = "helpMenu"; //NOCHECK
+	public final static String DEBUG_MENU_ID = "debugMenu";//NOCHECK
 }

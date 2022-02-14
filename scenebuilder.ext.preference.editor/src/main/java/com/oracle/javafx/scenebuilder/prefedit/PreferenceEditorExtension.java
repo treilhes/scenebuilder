@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,14 +42,13 @@ import com.oracle.javafx.scenebuilder.prefedit.actions.ShowPreferencesAction;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
 import com.oracle.javafx.scenebuilder.prefedit.editor.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.prefedit.i18n.I18NPreferenceEditor;
-import com.oracle.javafx.scenebuilder.prefedit.menu.PreferenceEditorMenuProvider;
 
 public class PreferenceEditorExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("75f8ee7c-f2b6-45ed-934a-8e190d4931f2");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
@@ -56,7 +56,6 @@ public class PreferenceEditorExtension extends AbstractExtension {
                 PreferencesWindowController.class,
                 ShowPreferencesAction.class,
                 I18NPreferenceEditor.class,
-                PreferenceEditorMenuProvider.class,
                 PreferenceEditorFactoryImpl.class
             );
      // @formatter:on

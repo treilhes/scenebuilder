@@ -52,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -536,8 +537,11 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
     public List<FXOMObject> getSiblings() {
         Set<FXOMObject> selectedItems = getItems();
 
-        if (selectedItems.size() > 0) {
+        boolean containsRoot = selectedItems.stream().anyMatch(i -> i == i.getFxomDocument().getFxomRoot());
+
+        if (!containsRoot && selectedItems.size() > 0) {
             FXOMObject item = selectedItems.iterator().next();
+
             FXOMObject parent = item.getParentObject();
             FXOMCollection parentCollection = item.getParentCollection();
             if (selectedItems.stream().allMatch(it -> it.getParentObject() == parent && it.getParentCollection() == parentCollection)) {
@@ -556,6 +560,63 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public SelectionGroup selectAll() {
+        return objectSelectionGroupFactory.getGroup(this.getSiblings());
+    }
+
+    @Override
+    public SelectionGroup selectNext() {
+        Set<FXOMObject> localIitems = this.getItems();
+
+        if (localIitems.size() != 1) {
+            return this;
+        }
+
+        List<FXOMObject> siblings = this.getSiblings();
+        if (siblings.size() <= 1) {
+            return this;
+        }
+
+        FXOMObject item = localIitems.iterator().next();
+
+        int index = siblings.indexOf(item) + 1;
+
+        if (index >= siblings.size()) {
+            index = 0;
+        }
+
+        FXOMObject newSelected = siblings.get(index);
+
+        return objectSelectionGroupFactory.getGroup(newSelected, null);
+    }
+
+    @Override
+    public SelectionGroup selectPrevious() {
+        Set<FXOMObject> localIitems = this.getItems();
+
+        if (localIitems.size() != 1) {
+            return this;
+        }
+
+        List<FXOMObject> siblings = this.getSiblings();
+        if (siblings.size() <= 1) {
+            return this;
+        }
+
+        FXOMObject item = localIitems.iterator().next();
+
+        int index = siblings.indexOf(item) - 1;
+
+        if (index < 0) {
+            index = siblings.size() - 1;
+        }
+
+        FXOMObject newSelected = siblings.get(index);
+
+        return objectSelectionGroupFactory.getGroup(newSelected, null);
     }
 
 

@@ -39,6 +39,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import javafx.scene.input.KeyCombination;
@@ -47,61 +48,64 @@ public abstract class AbstractAction implements Action {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractAction.class);
 
-	private final String nameI18nKey;
-	private final String descriptionI18nKey;
-	private final String rawAccelerator;
-	private final List<ActionExtension<?>> extensions = new ArrayList<>();
+    private final String nameI18nKey;
+    private final String descriptionI18nKey;
+    private final String rawAccelerator;
+    private final List<ActionExtension<?>> extensions = new ArrayList<>();
 
+    public AbstractAction(ActionExtensionFactory extensionFactory) {
+        ActionMeta actionMeta = this.getClass().getAnnotation(ActionMeta.class);
 
-	public AbstractAction(ActionExtensionFactory extensionFactory) {
-		ActionMeta actionMeta = this.getClass().getAnnotation(ActionMeta.class);
+        if (actionMeta == null) {
+            throw new RuntimeException("Class inheriting AbstractAction class must be annotated with @ActionMeta");
+        }
 
-		if (actionMeta == null) {
-			throw new RuntimeException("Class inheriting AbstractAction class must be annotated with @ActionMeta");
-		}
+        nameI18nKey = actionMeta.nameKey();
+        descriptionI18nKey = actionMeta.descriptionKey();
 
-		nameI18nKey = actionMeta.nameKey();
-		descriptionI18nKey = actionMeta.descriptionKey();
-		rawAccelerator = actionMeta.accelerator().isBlank() ? null : actionMeta.accelerator();
+        if (EditorPlatform.IS_MAC && !actionMeta.macosAccelerator().isBlank()) {
+            rawAccelerator = actionMeta.macosAccelerator();
+        } else {
+            rawAccelerator = actionMeta.accelerator().isBlank() ? null : actionMeta.accelerator();
+        }
+        extensions.addAll(extensionFactory.getExtensions(this));
+    }
 
-		extensions.addAll(extensionFactory.getExtensions(this));
-	}
+    @Override
+    public String getUniqueId() {
+        return this.getClass().getName();
+    }
 
-	@Override
-	public String getUniqueId() {
-		return this.getClass().getName();
-	}
+    @Override
+    public String getName() {
+        return nameI18nKey == null ? null : I18N.getString(nameI18nKey);
+    }
 
-	@Override
-	public String getName() {
-		return nameI18nKey == null ? null : I18N.getString(nameI18nKey);
-	}
+    @Override
+    public String getDescription() {
+        return descriptionI18nKey == null ? null : I18N.getString(descriptionI18nKey);
+    }
 
-	@Override
-	public String getDescription() {
-		return descriptionI18nKey == null ? null : I18N.getString(descriptionI18nKey);
-	}
+    @Override
+    public KeyCombination getWishedAccelerator() {
+        if (rawAccelerator == null) {
+            return null;
+        }
+        return KeyCombination.valueOf(rawAccelerator);
+    }
 
-	@Override
-	public KeyCombination getWishedAccelerator() {
-		if (rawAccelerator == null) {
-			return null;
-		}
-		return KeyCombination.valueOf(rawAccelerator);
-	}
-
-	@Override
-	public ActionStatus checkAndPerform() {
-		try {
+    @Override
+    public ActionStatus checkAndPerform() {
+        try {
             if (canPerform()) {
-            	return perform();
+                return perform();
             }
         } catch (Exception e) {
             logger.error("Unable to complete action {}", this.getClass().getName(), e);
             return ActionStatus.FAILED;
         }
         return ActionStatus.CANCELLED;
-	}
+    }
 
     @Override
     public final ActionStatus perform() {

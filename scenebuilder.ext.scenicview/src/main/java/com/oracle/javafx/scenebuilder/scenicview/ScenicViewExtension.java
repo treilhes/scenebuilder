@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,21 +40,19 @@ import java.util.UUID;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.scenicview.actions.ShowScenicViewAction;
 import com.oracle.javafx.scenebuilder.scenicview.i18n.I18NScenicView;
-import com.oracle.javafx.scenebuilder.scenicview.menu.ScenicViewMenuProvider;
 
 public class ScenicViewExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("680c9e7e-007a-4167-a27f-71331fb13fcd");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
                 I18NScenicView.class,
-                ShowScenicViewAction.class,
-                ScenicViewMenuProvider.class
+                ShowScenicViewAction.class
             );
      // @formatter:on
     }

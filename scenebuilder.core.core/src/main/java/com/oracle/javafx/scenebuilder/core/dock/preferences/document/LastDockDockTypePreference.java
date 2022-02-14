@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class LastDockDockTypePreference extends MapPreferences<UUID, String> implements ManagedDocumentPreference {
-        
+
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
@@ -79,13 +80,13 @@ public class LastDockDockTypePreference extends MapPreferences<UUID, String> imp
     public String fromValueString(String value) {
         return value;
     }
-    
+
     @Override
     public void read() {
         var backup = new HashMap<>(getValue());
-        
+
         super.read();
-        
+
         if (getValue().isEmpty()) {
             getValue().putAll(backup);
         }

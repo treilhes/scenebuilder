@@ -42,6 +42,9 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
@@ -50,7 +53,14 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 @Lazy
 @ActionMeta(nameKey = "action.name.show.preview.dialog", descriptionKey = "action.description.show.preview.dialog",
     accelerator = "CTRL+P")
+@MenuItemAttachment(
+        id = ShowPreviewAction.SHOW_PREVIEW_IN_WINDOW_ID,
+        targetMenuId = DefaultMenu.PREVIEW_MENU_ID,
+        label = "menu.title.show.preview.in.window",
+        positionRequest = PositionRequest.AsFirstChild)
 public class ShowPreviewAction extends AbstractAction {
+
+    public final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
 
     private final DocumentManager documentManager;
     private final PreviewWindowController previewWindowController;

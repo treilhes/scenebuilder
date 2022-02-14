@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +39,6 @@ import java.net.URL;
 import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 
-import com.oracle.javafx.scenebuilder.api.action.Action.ActionStatus;
-
 public interface Document {
     //API validated
     boolean isInited();
@@ -52,9 +51,9 @@ public interface Document {
 //    ActionStatus save();
 //    ActionStatus saveAs();
 //    void revert();
-    
+
     //API to be validated
-    
+
     /**
      * Load an fxml document from a local file and track his location.
      *
@@ -62,7 +61,7 @@ public interface Document {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     void loadFromFile(File fxmlFile) throws IOException;
-    
+
     /**
      * Load an fxml document from an URL with or without tracking his location.
      * Tracking the document's location allow to define a default location for saving
@@ -73,22 +72,22 @@ public interface Document {
      * @param keepTrackOfLocation keep track of the document location
      */
     void loadFromURL(URL url, boolean keepTrackOfLocation);
-    
+
     void openWindow();
     void updatePreferences();
-    
+
     void updateWithDefaultContent();
 
-    
+
     //ActionStatus performCloseAction();
 
-    void performImportFxml();
-    void performIncludeFxml();
-    //void performRevealAction();
-    void performImportMedia();
+//    void performImportFxml();
+//    void performIncludeFxml();
+//    //void performRevealAction();
+//    void performImportMedia();
     //boolean isRightPanelVisible();
     void performControlAction(DocumentControlAction toggleRightPanel);
-    
+
     public static class TitleComparator implements Comparator<Document> {
 
         @Override
@@ -112,7 +111,7 @@ public interface Document {
         }
 
     }
-        
+
     public enum DocumentControlAction {
         COPY,
         SELECT_ALL,
@@ -151,7 +150,7 @@ public interface Document {
         //INCLUDE_FXML
     }
 
-    void onCloseRequest();
+    void close();
     void onFocus();
     DocumentWindow getDocumentWindow();
     boolean canPerformEditAction(DocumentEditAction editAction);
@@ -162,6 +161,6 @@ public interface Document {
     Editor getEditorController();
     FileTime getLoadFileTime();
     void updateLoadFileTime();
-    ActionStatus performCloseAction();
+    //ActionStatus performCloseAction();
 
 }

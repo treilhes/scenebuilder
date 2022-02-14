@@ -38,6 +38,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.clipboard</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.extension.api</artifactId>
         </dependency>
         <dependency>
@@ -70,6 +74,10 @@
             <artifactId>scenebuilder.ext.glossary</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.menu</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.content.editor</artifactId>

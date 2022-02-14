@@ -44,7 +44,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
+import com.oracle.javafx.scenebuilder.api.launcher.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.extension.ExtensionLoader;
 

@@ -53,9 +53,9 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
-import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
+import com.oracle.javafx.scenebuilder.menu.action.OpenFilesAction;
 import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 import com.oracle.javafx.scenebuilder.template.controller.TemplatesBaseWindowController;
 

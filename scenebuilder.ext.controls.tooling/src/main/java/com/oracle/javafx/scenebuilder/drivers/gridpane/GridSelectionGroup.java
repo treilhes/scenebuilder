@@ -39,6 +39,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -48,6 +50,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -87,7 +90,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     private FXOMObject parentObject;
     private Type type;
     private final Set<Integer> indexes = new HashSet<>();
-    private final Set<FXOMInstance> siblings = new HashSet<>();
+
     // @formatter:off
     protected GridSelectionGroup(
             DesignHierarchyMask.Factory designHierarchyMaskFactory,
@@ -111,7 +114,6 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
         this.type = type;
         this.indexes.addAll(indexes);
         this.items.addAll(collectConstraintInstances());
-        this.siblings.addAll(collectSiblingConstraintInstances());
     }
 
     @Override
@@ -470,7 +472,64 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
 
     @Override
     public List<FXOMObject> getSiblings() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.unmodifiableList((List<FXOMObject>)(List)collectSiblingConstraintInstances());
+    }
+
+    @Override
+    public SelectionGroup selectAll() {
+        List<FXOMObject> siblings = this.getSiblings();
+        if (siblings.size() <= 1) {
+            return this;
+        }
+        Set<Integer> allIndexes = IntStream.range(0, siblings.size()).boxed().collect(Collectors.toSet());
+        return gridSelectionGroupFactory.getGroup(this.getAncestor(), this.getType(), allIndexes);
+    }
+
+    @Override
+    public SelectionGroup selectNext() {
+        Set<FXOMObject> localIitems = this.getItems();
+
+        if (localIitems.size() != 1) {
+            return this;
+        }
+
+        List<FXOMObject> siblings = this.getSiblings();
+        if (siblings.size() <= 1) {
+            return this;
+        }
+
+        FXOMObject item = localIitems.iterator().next();
+
+        int index = siblings.indexOf(item) + 1;
+
+        if (index >= siblings.size()) {
+            index = 0;
+        }
+
+        return gridSelectionGroupFactory.getGroup(this.getAncestor(), this.getType(), index);
+    }
+
+    @Override
+    public SelectionGroup selectPrevious() {
+        Set<FXOMObject> localIitems = this.getItems();
+
+        if (localIitems.size() != 1) {
+            return this;
+        }
+
+        List<FXOMObject> siblings = this.getSiblings();
+        if (siblings.size() <= 1) {
+            return this;
+        }
+
+        FXOMObject item = localIitems.iterator().next();
+
+        int index = siblings.indexOf(item) - 1;
+
+        if (index < 0) {
+            index = siblings.size() - 1;
+        }
+
+        return gridSelectionGroupFactory.getGroup(this.getAncestor(), this.getType(), index);
     }
 }

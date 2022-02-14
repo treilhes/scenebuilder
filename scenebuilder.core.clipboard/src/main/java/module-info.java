@@ -7,6 +7,7 @@ open module scenebuilder.core.clipboard {
 
     //requires scenebuilder.starter;
     requires scenebuilder.core.api;
+    requires scenebuilder.core.selection;
     //requires scenebuilder.core.extension.api;
 
 

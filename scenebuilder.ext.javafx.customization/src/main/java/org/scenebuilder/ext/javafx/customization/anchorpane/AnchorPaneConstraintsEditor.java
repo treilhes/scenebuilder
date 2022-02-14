@@ -139,16 +139,16 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
                 rightTf.selectAll();
             }
         }));
-        bottomTf.setOnMousePressed(event -> rightTf.selectAll());
+        bottomTf.setOnMousePressed(event -> bottomTf.selectAll());
         bottomTf.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {
-                rightTf.selectAll();
+                bottomTf.selectAll();
             }
         }));
-        leftTf.setOnMousePressed(event -> rightTf.selectAll());
+        leftTf.setOnMousePressed(event -> leftTf.selectAll());
         leftTf.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {
-                rightTf.selectAll();
+                leftTf.selectAll();
             }
         }));
     }

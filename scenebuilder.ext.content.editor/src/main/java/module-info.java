@@ -40,7 +40,6 @@ open module scenebuilder.ext.content.editor {
     exports com.oracle.javafx.scenebuilder.contenteditor.actions;
     exports com.oracle.javafx.scenebuilder.contenteditor.guides;
     exports com.oracle.javafx.scenebuilder.contenteditor;
-    exports com.oracle.javafx.scenebuilder.contenteditor.menu;
     exports com.oracle.javafx.scenebuilder.contenteditor.gesture;
     exports com.oracle.javafx.scenebuilder.contenteditor.controller;
     exports com.oracle.javafx.scenebuilder.contenteditor.i18n;

@@ -51,8 +51,6 @@ import com.oracle.javafx.scenebuilder.selection.job.DeleteObjectSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.DeleteSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.ImportFileJob;
-import com.oracle.javafx.scenebuilder.selection.job.IncludeFileJob;
 import com.oracle.javafx.scenebuilder.selection.job.InsertAsAccessoryJob;
 import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
@@ -122,12 +120,9 @@ public class SelectionExtension extends AbstractExtension {
                 DeleteSelectionJob.Factory.class,
                 DuplicateSelectionJob.class,
                 DuplicateSelectionJob.Factory.class,
+                FitToParentSelectionJob.class,
                 FitToParentSelectionJob.Factory.class,
                 I18NSelection.class,
-                ImportFileJob.class,
-                ImportFileJob.Factory.class,
-                IncludeFileJob.class,
-                IncludeFileJob.Factory.class,
                 InsertAsAccessoryJob.class,
                 InsertAsAccessoryJob.Factory.class,
                 InsertAsSubComponentJob.class,

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -162,24 +163,6 @@ public class StringListPropertyMetadata extends ListValuePropertyMetadata<String
             @Override
             public StylesheetsStringListPropertyMetadata build() {
                 return new StylesheetsStringListPropertyMetadata(this);
-            }
-        }
-    }
-
-    public static class SourceStringListPropertyMetadata extends StringListPropertyMetadata {
-//        public SourceStringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
-//                InspectorPath inspectorPath) {
-//            super(name, readWrite, defaultValue, inspectorPath);
-//        }
-//
-        protected SourceStringListPropertyMetadata(AbstractBuilder<?,?> builder) {
-            super(builder);
-        }
-
-        public static final class Builder extends AbstractBuilder<Builder, SourceStringListPropertyMetadata> {
-            @Override
-            public SourceStringListPropertyMetadata build() {
-                return new SourceStringListPropertyMetadata(this);
             }
         }
     }

@@ -41,13 +41,27 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.menu.action.file.QuitScenebuilderAction;
 import com.oracle.javafx.scenebuilder.prefedit.controller.PreferencesWindowController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.show.preferences", descriptionKey = "action.description.show.preferences")
+@ActionMeta(
+        nameKey = "action.name.show.preferences",
+        descriptionKey = "action.description.show.preferences",
+        accelerator = "CTRL+,")
+
+@MenuItemAttachment(
+        id = ShowPreferencesAction.MENU_ID,
+        targetMenuId = QuitScenebuilderAction.MENU_ID,
+        label = "menu.title.preferences",
+        positionRequest = PositionRequest.AsPreviousSibling)
 public class ShowPreferencesAction extends AbstractAction {
+
+    public final static String MENU_ID = "showPreferencesMenuItem";
 
     private final PreferencesWindowController preferencesWindowController;
 

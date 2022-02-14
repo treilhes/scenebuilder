@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,9 +54,8 @@ public class AppPlatform {
 
     private static MessageBox<MessageBoxMessage> messageBox;
 
-    public static boolean requestStart(
-            AppNotificationHandler notificationHandler, Application.Parameters parameters, FileSystem fileSystem)
-    throws IOException {
+    public static boolean requestStart(AppNotificationHandler notificationHandler, Application.Parameters parameters,
+            FileSystem fileSystem) throws IOException {
         if (EditorPlatform.isAssertionEnabled()) {
             // Development mode : we do not delegate to the existing instance
             notificationHandler.handleLaunch(parameters.getUnnamed());
@@ -67,26 +67,27 @@ public class AppPlatform {
 
     public interface AppNotificationHandler {
         public void handleLaunch(List<String> files);
+
         public void handleOpenFilesAction(List<String> files);
+
         public void handleMessageBoxFailure(Exception x);
+
         public void handleQuitAction();
     }
-
 
     /*
      * Private (requestStartGeneric)
      */
 
-    private static synchronized boolean requestStartGeneric(
-            AppNotificationHandler notificationHandler, Application.Parameters parameters, FileSystem fileSystem)
-    throws IOException {
+    private static synchronized boolean requestStartGeneric(AppNotificationHandler notificationHandler,
+            Application.Parameters parameters, FileSystem fileSystem) throws IOException {
         assert notificationHandler != null;
         assert parameters != null;
         assert messageBox == null;
 
         try {
             Files.createDirectories(fileSystem.getMessageBoxFolder().toPath());
-        } catch(FileAlreadyExistsException x) {
+        } catch (FileAlreadyExistsException x) {
             // Fine
         }
 
@@ -103,11 +104,10 @@ public class AppPlatform {
             result = true;
         } else {
             result = false;
-            final MessageBoxMessage unamedParameters
-                    = new MessageBoxMessage(parametersUnnamed);
+            final MessageBoxMessage unamedParameters = new MessageBoxMessage(parametersUnnamed);
             try {
                 messageBox.sendMessage(unamedParameters);
-            } catch(InterruptedException x) {
+            } catch (InterruptedException x) {
                 throw new IOException(x);
             }
         }
@@ -117,6 +117,7 @@ public class AppPlatform {
 
     private static class MessageBoxMessage extends ArrayList<String> {
         static final long serialVersionUID = 10;
+
         public MessageBoxMessage(List<String> strings) {
             super(strings);
         };

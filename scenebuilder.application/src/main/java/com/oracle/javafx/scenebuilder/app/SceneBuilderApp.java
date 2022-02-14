@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,7 +44,7 @@ public class SceneBuilderApp {
      * But on Mac OS, this method seems to be called by the javafx launcher.
      */
 	public static void main(String[] args) {
-	    System.setProperty("polyglot.js.nashorn-compat", "true");
+	    System.setProperty("polyglot.js.nashorn-compat", "true"); // NOCHECK
         SceneBuilderBootstrap.start(args);
 	}
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,10 +47,10 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
@@ -121,26 +122,25 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final DockViewController viewMenuController;
     private SplitPositionController topBottonController;
     private SplitPositionController leftRightController;
-    private CloseHandler closeHandler;
-    private FocusHandler focusHandler;
+
 
     private PreferenceManager preferenceManager;
     //private MenuBarController menuBarController;
     //private Content contentPanelController;
     //private MessageBarController messageBarController;
     //private SelectionBarController selectionBarController;
-    
+
     /*
      * DocumentWindowController
      */
 
     // @formatter:off
     public DocumentWindowController(
-            @Autowired Api api, 
+            @Autowired Api api,
 
-            @Lazy @Autowired XPosPreference xPos, 
+            @Lazy @Autowired XPosPreference xPos,
             @Lazy @Autowired YPosPreference yPos,
-            @Lazy @Autowired StageHeightPreference stageHeight, 
+            @Lazy @Autowired StageHeightPreference stageHeight,
             @Lazy @Autowired StageWidthPreference stageWidth,
             @Lazy @Autowired MaximizedPreference maximizedWindow,
 
@@ -148,11 +148,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             @Lazy @Autowired RightDividerHPosPreference rightDividerHPos,
             @Lazy @Autowired BottomDividerVPosPreference bottomDividerVPos,
 
-            @Autowired DockPanelController leftDockController, 
+            @Autowired DockPanelController leftDockController,
             @Autowired DockPanelController rightDockController,
             @Autowired DockPanelController bottomDockController,
             @Autowired DockViewController viewMenuController) {
-        super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false); 
+        super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false);
         // @formatter:on
 
         this.leftDockController = leftDockController;
@@ -162,7 +162,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.leftDockController.setId(UUID.fromString(Dock.LEFT_DOCK_ID));
         this.rightDockController.setId(UUID.fromString(Dock.RIGHT_DOCK_ID));
         this.bottomDockController.setId(UUID.fromString(Dock.BOTTOM_DOCK_ID));
-        
+
         this.leftDockController.notifyDockCreated();
         this.rightDockController.notifyDockCreated();
         this.bottomDockController.notifyDockCreated();
@@ -179,7 +179,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
         this.viewMenuController = viewMenuController;
         this.preferenceManager = new PreferenceManager();
-        
+
 //        this.menuBarController = menuBarController;
 //        //this.contentPanelController = contentPanelController;
 //        this.messageBarController = messageBarController;
@@ -214,8 +214,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
         assert mainSplitPane != null;
         assert leftRightSplitPane != null;
-        
-        
+
+
 
         // Add a border to the Windows app, because of the specific window decoration on
         // Windows.
@@ -310,23 +310,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         super.closeWindow();
     }
 
-    @Override
-    public void onCloseRequest() {
-        // go back to width and height before maximization to keep the right preferences
-        this.preferenceManager.untrackMaximizedOnly();
-        getStage().setMaximized(false);
-
-        if (closeHandler != null) {
-            closeHandler.onClose();
-        }
-    }
-
-    @Override
-    public void onFocus() {
-        if (focusHandler != null) {
-            focusHandler.onFocus();
-        }
-    }
 
 //    public boolean isFrontDocumentWindow() {
 //        return getStage().isFocused()
@@ -359,10 +342,19 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 //    }
 
     @Override
+    public void setCloseHandler(CloseHandler closeHandler) {
+        super.setCloseHandler(() -> {
+            preferenceManager.untrackMaximizedOnly();
+            getStage().setMaximized(false);
+            closeHandler.onClose();
+        });
+    }
+
+    @Override
     public void updateStageTitle() {
         if (contentPanelHost != null) {
             final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
-            getStage().setTitle(Utils.makeTitle(fxomDocument));
+            getStage().setTitle(FXOMDocumentUtils.makeTitle(fxomDocument));
         } // else controllerDidLoadFxml() will invoke me again
     }
 
@@ -386,16 +378,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void setMessageBar(Parent root) {
         messageBarHost.getChildren().add(root);
-    }
-
-    @Override
-    public void setCloseHandler(CloseHandler closeHandler) {
-        this.closeHandler = closeHandler;
-    }
-
-    @Override
-    public void setFocusHandler(FocusHandler focusHandler) {
-        this.focusHandler = focusHandler;
     }
 
     @Override

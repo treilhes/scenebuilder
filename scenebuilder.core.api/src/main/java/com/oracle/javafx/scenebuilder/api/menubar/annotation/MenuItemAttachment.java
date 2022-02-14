@@ -33,12 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.api.menubar.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Component
 public @interface MenuItemAttachment {
     public String id();
     public String targetMenuId();
     public String label();
-    public String alternativeLabel() default "";
     public PositionRequest positionRequest();
+    public boolean separatorBefore() default false;
+    public boolean separatorAfter() default false;
 }

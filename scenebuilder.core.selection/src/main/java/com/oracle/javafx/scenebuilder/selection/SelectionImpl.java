@@ -216,7 +216,7 @@ public class SelectionImpl implements Selection {
     @Override
     public boolean isSelected(FXOMObject fxomObject) {
         if (fxomObject != null && group != null) {
-            group.getItems().contains(fxomObject);
+            return group.getItems().contains(fxomObject);
         }
         return false;
     }
@@ -614,6 +614,27 @@ public class SelectionImpl implements Selection {
     @Override
     public boolean isMovable() {
         return group == null ? null : new SelectionGroupAccessor(group).isMovable();
+    }
+
+    @Override
+    public void selectNext() {
+        if (!isEmpty()) {
+            this.group.selectNext();
+        }
+    }
+
+    @Override
+    public void selectPrevious() {
+        if (!isEmpty()) {
+            this.group.selectPrevious();
+        }
+    }
+
+    @Override
+    public void selectAll() {
+        if (!isEmpty()) {
+            this.group.selectAll();
+        }
     }
 
 }

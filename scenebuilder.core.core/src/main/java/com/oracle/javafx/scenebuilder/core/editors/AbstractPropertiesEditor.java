@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,8 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.core.editors;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
@@ -160,14 +162,14 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
         // why? after reseting the anchorsEditor you need 4 * Ctrl+Z to rollback instead of only one
         ChangeListener<Object> sharedListener = (ob, o, n) -> {
             List<AbstractPropertyEditor> subEditors = getPropertyEditors();
-            Object[] oldValue = new Object[subEditors.size()];
-            Object[] newValue = new Object[subEditors.size()];
+            Map<String, Object> oldValue = new HashMap<>();
+            Map<String, Object> newValue = new HashMap<>();
 
             for (int i=0; i < subEditors.size(); i++) {
                 AbstractPropertyEditor subEditor = subEditors.get(i);
 
-                oldValue[i] = subEditor.valueProperty() == ob ? o : subEditor.getValue();
-                newValue[i] = subEditor.getValue();
+                oldValue.put(subEditor.getPropertyMeta().getName().getName(), subEditor.valueProperty() == ob ? o : subEditor.getValue());
+                newValue.put(subEditor.getPropertyMeta().getName().getName(), subEditor.getValue());
             }
 
             listener.changed(ob, oldValue, newValue);
@@ -196,11 +198,15 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
 
         this.propMeta = propMeta;
 
-        //TODO there is a big flaw here, there isn't any guarantee the order of sub properties and
-        // editors are the same. At least, AnchorPaneConstraintsEditor, as the only implementing class yet
-        // has a safe order
         for (int i=0;i < editors.size(); i++) {
-            editors.get(i).reset(pgm.getProperties()[i], selectionState);
+            AbstractPropertyEditor editor = editors.get(i);
+            if (editor.getPropertyMeta() != null) {
+                ValuePropertyMetadata prop = pgm.getPropertiesMap().get(editor.getPropertyMeta().getName().getName());
+
+                assert prop != null;
+                editor.reset(prop, selectionState);
+            }
+
         }
 
     }
@@ -275,7 +281,9 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
 
     @Override
     public EventHandler<?> getCommitListener() {
-        return null;
+        return (e) -> {
+            getPropertyEditors().forEach(p -> p.getCommitListener().handle(null));
+        };
     }
 
     @Override
@@ -291,25 +299,21 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
             getPropertyEditors().forEach(e -> e.setValue(value));
         }
 
-        //TODO there is a big flaw here, there isn't any guarantee the order of values are the same.
-
-        Object[] values = null;
-        if (value instanceof Collection<?>) {
-            values = ((Collection<?>)value).toArray();
-        }
-
-        if (value instanceof Object[]) {
-            values = (Object[])value;
+        Map<String, Object> values = null;
+        if (value instanceof Map) {
+            values = (Map<String, Object>)value;
         }
 
         if (values == null) {
             getPropertyEditors().forEach(e -> e.setValue(value));
         }
 
-        assert editors.size() == values.length;
+        assert editors.size() == values.size();
 
         for (int i=0;i < editors.size(); i++) {
-            editors.get(i).setValue(values[i]);
+            AbstractPropertyEditor editor = editors.get(i);
+            Object editorValue = values.get(editor.getPropertyMeta().getName().getName());
+            editor.setValue(editorValue);
         }
     }
 }

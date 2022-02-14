@@ -42,13 +42,25 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(nameKey = "action.name.toggle.guides.visibility", descriptionKey = "action.description.toggle.guides.visibility")
+
+@MenuItemAttachment(
+        id = ToggleGuidesVisibilityAction.TOGGLE_GUIDES_MENU_ID,
+        targetMenuId = ToggleGuidesVisibilityAction.VIEW_MENU_ID,
+        label = "#this.getToggleTitle()", // NOCHECK
+        positionRequest = PositionRequest.AsLastChild,
+        separatorBefore = true)
 public class ToggleGuidesVisibilityAction extends AbstractAction {
+
+    protected final static String VIEW_MENU_ID = "viewMenu"; // NOCHECK
+    public final static String TOGGLE_GUIDES_MENU_ID = "toggleGuidesMenu"; // NOCHECK
 
     private final ContentPanelController contentPanelController;
 
@@ -68,5 +80,14 @@ public class ToggleGuidesVisibilityAction extends AbstractAction {
     public ActionStatus doPerform() {
         contentPanelController.setGuidesVisible(!contentPanelController.isGuidesVisible());
         return ActionStatus.DONE;
+    }
+
+
+    public String getToggleTitle() {
+        if (contentPanelController.isGuidesVisible()) {
+            return "menu.title.disable.guides";
+        } else {
+            return "menu.title.enable.guides";
+        }
     }
 }

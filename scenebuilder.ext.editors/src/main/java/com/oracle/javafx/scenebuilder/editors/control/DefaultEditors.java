@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -63,6 +64,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.Rectangle2DPr
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.IdStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.SourceStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.StyleStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ToggleGroupPropertyMetadata;
@@ -72,7 +74,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.keycombinatio
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ButtonTypeListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ListValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StringListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StringListPropertyMetadata.SourceStringListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StringListPropertyMetadata.StyleClassStringListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.StringListPropertyMetadata.StylesheetsStringListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.paint.ColorPropertyMetadata;
@@ -103,7 +104,7 @@ public class DefaultEditors implements EditorMapProvider {
         editorsMap.put(ButtonTypeListPropertyMetadata.class, ButtonTypeEditor.class);
         editorsMap.put(StyleClassStringListPropertyMetadata.class, StyleClassEditor.class);
         editorsMap.put(StylesheetsStringListPropertyMetadata.class, StylesheetEditor.class);
-        editorsMap.put(SourceStringListPropertyMetadata.class, IncludeFxmlEditor.class);
+        editorsMap.put(SourceStringPropertyMetadata.class, IncludeFxmlEditor.class);
         editorsMap.put(DividerPositionsDoubleArrayPropertyMetadata.class, DividerPositionsEditor.class);
 
         editorsMap.put(StringListPropertyMetadata.class, StringListEditor.class);

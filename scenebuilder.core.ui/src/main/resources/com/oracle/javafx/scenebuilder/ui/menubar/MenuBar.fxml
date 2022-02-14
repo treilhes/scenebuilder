@@ -43,27 +43,7 @@
   <children>
     <MenuBar fx:id="menuBar">
       <menus>
-        <Menu fx:id="editMenu" mnemonicParsing="true" text="%menu.title.edit">
-          <items>
-            <MenuItem fx:id="undoMenuItem" mnemonicParsing="true" text="%menu.title.undo" />
-            <MenuItem fx:id="redoMenuItem" mnemonicParsing="true" text="%menu.title.redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="cutMenuItem" mnemonicParsing="true" text="%menu.title.cut" />
-            <MenuItem fx:id="copyMenuItem" mnemonicParsing="true" text="%menu.title.copy" />
-            <MenuItem fx:id="pasteMenuItem" mnemonicParsing="true" text="%menu.title.paste" />
-            <MenuItem fx:id="pasteIntoMenuItem" mnemonicParsing="false" text="%menu.title.paste.into" />
-            <MenuItem fx:id="duplicateMenuItem" mnemonicParsing="true" text="%menu.title.duplicate" />
-            <MenuItem fx:id="deleteMenuItem" mnemonicParsing="true" text="%menu.title.delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="selectAllMenuItem" mnemonicParsing="false" text="%menu.title.select.all" />
-            <MenuItem fx:id="selectNoneMenuItem" mnemonicParsing="true" text="%menu.title.select.none" />
-            <MenuItem fx:id="selectParentMenuItem" mnemonicParsing="false" text="%menu.title.select.parent" />
-            <MenuItem fx:id="selectNextMenuItem" mnemonicParsing="true" text="%menu.title.select.next" />
-            <MenuItem fx:id="selectPreviousMenuItem" mnemonicParsing="true" text="%menu.title.select.previous" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="trimMenuItem" mnemonicParsing="false" text="%menu.title.trim" />
-          </items>
-        </Menu>
+
         <Menu fx:id="viewMenu" mnemonicParsing="true" text="%menu.title.view">
           <items>
             <MenuItem fx:id="gotoContentMenuItem" mnemonicParsing="true" text="%menu.title.content" />
@@ -165,11 +145,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
           </items>
         </Menu>
-        <Menu fx:id="helpMenu" mnemonicParsing="false" text="%menu.title.help">
-          <items>
-            <MenuItem fx:id="helpMenuItem" mnemonicParsing="true" text="%menu.title.scene.builder.help" />
-          </items>
-        </Menu>
+        <Menu fx:id="helpMenu" mnemonicParsing="false" text="%menu.title.help" />
       </menus>
     </MenuBar>
   </children>

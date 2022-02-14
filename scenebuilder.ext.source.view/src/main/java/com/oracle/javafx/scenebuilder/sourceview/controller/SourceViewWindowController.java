@@ -52,8 +52,8 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -120,7 +120,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.documentName = Utils.makeTitle(fxomDocument);
+        this.documentName = FXOMDocumentUtils.makeTitle(fxomDocument);
         update();
     }
     @FXML

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -72,16 +73,6 @@ import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.ControlActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.DocumentControlActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.DocumentEditActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.EditActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.RedoActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.SetZoomActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.UndoActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.ZoomInActionController;
-import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController.ZoomOutActionController;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -156,34 +147,34 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //    private MenuItem exitMenuItem;
 
     // Edit
-    @FXML
-    private MenuItem undoMenuItem;
-    @FXML
-    private MenuItem redoMenuItem;
-    @FXML
-    private MenuItem copyMenuItem;
-    @FXML
-    private MenuItem cutMenuItem;
-    @FXML
-    private MenuItem pasteMenuItem;
-    @FXML
-    private MenuItem pasteIntoMenuItem;
-    @FXML
-    private MenuItem duplicateMenuItem;
-    @FXML
-    private MenuItem deleteMenuItem;
-    @FXML
-    private MenuItem selectAllMenuItem;
-    @FXML
-    private MenuItem selectNoneMenuItem;
-    @FXML
-    private MenuItem selectParentMenuItem;
-    @FXML
-    private MenuItem selectNextMenuItem;
-    @FXML
-    private MenuItem selectPreviousMenuItem;
-    @FXML
-    private MenuItem trimMenuItem;
+//    @FXML
+//    private MenuItem undoMenuItem;
+//    @FXML
+//    private MenuItem redoMenuItem;
+//    @FXML
+//    private MenuItem copyMenuItem;
+//    @FXML
+//    private MenuItem cutMenuItem;
+//    @FXML
+//    private MenuItem pasteMenuItem;
+//    @FXML
+//    private MenuItem pasteIntoMenuItem;
+//    @FXML
+//    private MenuItem duplicateMenuItem;
+//    @FXML
+//    private MenuItem deleteMenuItem;
+//    @FXML
+//    private MenuItem selectAllMenuItem;
+//    @FXML
+//    private MenuItem selectNoneMenuItem;
+//    @FXML
+//    private MenuItem selectParentMenuItem;
+//    @FXML
+//    private MenuItem selectNextMenuItem;
+//    @FXML
+//    private MenuItem selectPreviousMenuItem;
+//    @FXML
+//    private MenuItem trimMenuItem;
 
     // View
 //    @FXML
@@ -435,26 +426,28 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
                    Menu target = (Menu)targetCandidate;
 
-                   if (ma.getMenu().getId() == null) {
-                       ma.getMenu().setId(ma.getClass().getSimpleName());
+                   Menu menu = ma.getMenu();
+
+                   if (menu.getId() == null) {
+                       menu.setId(ma.getClass().getSimpleName());
                    }
 
                    try {
                     switch (ma.getPositionRequest()) {
                            case AsFirstSibling: {
-                               menuBar.getMenus().add(0, ma.getMenu());
+                               menuBar.getMenus().add(0, menu);
                                inserted = true;
                                break;
                            }
                            case AsLastSibling: {
-                               menuBar.getMenus().add(ma.getMenu());
+                               menuBar.getMenus().add(menu);
                                inserted = true;
                                break;
                            }
                            case AsPreviousSibling: {
                                if (target != null) {
                                    int index = menuBar.getMenus().indexOf(target);
-                                   menuBar.getMenus().add(index, ma.getMenu());
+                                   menuBar.getMenus().add(index, menu);
                                    inserted = true;
                                }
                                break;
@@ -462,7 +455,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                            case AsNextSibling: {
                                if (target != null) {
                                    int index = menuBar.getMenus().indexOf(target);
-                                   menuBar.getMenus().add(index + 1, ma.getMenu());
+                                   menuBar.getMenus().add(index + 1, menu);
                                    inserted = true;
                                }
                                break;
@@ -475,14 +468,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                            }
                            case AsFirstChild: {
                                if (target == null) {
-                                   menuBar.getMenus().add(0, ma.getMenu());
+                                   menuBar.getMenus().add(0, menu);
                                    inserted = true;
                                }
                                break;
                            }
                            case AsLastChild: {
                                if (target == null) {
-                                   menuBar.getMenus().add(ma.getMenu());
+                                   menuBar.getMenus().add(menu);
                                    inserted = true;
                                }
                                break;
@@ -496,8 +489,8 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                 }
 
                    if (inserted) {
-                       dynamicMenu.add(ma.getMenu());
-                       addToMenuMap(ma.getMenu());
+                       dynamicMenu.add(menu);
+                       addToMenuMap(menu);
                        it.remove();
                        atLeastOneInserted = true;
                    }
@@ -665,6 +658,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
        }
     }
 
+    @Override
     public MenuBar getMenuBar() {
 
         if (menuBar == null) {
@@ -712,20 +706,20 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         //assert showPreferencesMenuItem != null;
         //assert exitMenuItem != null;
 
-        assert undoMenuItem != null;
-        assert redoMenuItem != null;
-        assert copyMenuItem != null;
-        assert cutMenuItem != null;
-        assert pasteMenuItem != null;
-        assert pasteIntoMenuItem != null;
-        assert duplicateMenuItem != null;
-        assert deleteMenuItem != null;
-        assert selectAllMenuItem != null;
-        assert selectNoneMenuItem != null;
-        assert selectParentMenuItem != null;
-        assert selectNextMenuItem != null;
-        assert selectPreviousMenuItem != null;
-        assert trimMenuItem != null;
+//        assert undoMenuItem != null;
+//        assert redoMenuItem != null;
+//        assert copyMenuItem != null;
+//        assert cutMenuItem != null;
+//        assert pasteMenuItem != null;
+//        assert pasteIntoMenuItem != null;
+//        assert duplicateMenuItem != null;
+//        assert deleteMenuItem != null;
+//        assert selectAllMenuItem != null;
+//        assert selectNoneMenuItem != null;
+//        assert selectParentMenuItem != null;
+//        assert selectNextMenuItem != null;
+//        assert selectPreviousMenuItem != null;
+//        assert trimMenuItem != null;
 
         //assert gotoContentMenuItem != null;
         assert gotoPropertiesMenuItem != null;
@@ -886,40 +880,40 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         /*
          * Edit menu
          */
-        undoMenuItem.setUserData(new UndoActionController());
-        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, modifier));
-        redoMenuItem.setUserData(new RedoActionController());
-        if (EditorPlatform.IS_MAC) {
-            // Mac platforms.
-            redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN, modifier));
-        } else {
-            // Windows and Linux platforms.
-            // http://windows.microsoft.com/en-US/windows7/Keyboard-shortcuts
-            redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, modifier));
-        }
-        copyMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.COPY));
-        copyMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C, modifier));
-        cutMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.CUT));
-        cutMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, modifier));
-        pasteMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.PASTE));
-        pasteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.V, modifier));
-        pasteIntoMenuItem.setUserData(new EditActionController(EditAction.PASTE_INTO));
-        pasteIntoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.SHIFT_DOWN, modifier));
-        duplicateMenuItem.setUserData(new EditActionController(EditAction.DUPLICATE));
-        duplicateMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, modifier));
-        deleteMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.DELETE));
-        deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-        selectAllMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SELECT_ALL));
-        selectAllMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, modifier));
-        selectNoneMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SELECT_NONE));
-        selectNoneMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHIFT_DOWN, modifier));
-        selectParentMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_PARENT));
-        selectParentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.UP, modifier));
-        selectNextMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_NEXT));
-        selectNextMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.RIGHT, modifier));
-        selectPreviousMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_PREVIOUS));
-        selectPreviousMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.LEFT, modifier));
-        trimMenuItem.setUserData(new EditActionController(EditAction.TRIM));
+//        undoMenuItem.setUserData(new UndoActionController());
+//        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, modifier));
+//        redoMenuItem.setUserData(new RedoActionController());
+//        if (EditorPlatform.IS_MAC) {
+//            // Mac platforms.
+//            redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN, modifier));
+//        } else {
+//            // Windows and Linux platforms.
+//            // http://windows.microsoft.com/en-US/windows7/Keyboard-shortcuts
+//            redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, modifier));
+//        }
+//        copyMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.COPY));
+//        copyMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C, modifier));
+//        cutMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.CUT));
+//        cutMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, modifier));
+//        pasteMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.PASTE));
+//        pasteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.V, modifier));
+//        pasteIntoMenuItem.setUserData(new EditActionController(EditAction.PASTE_INTO));
+//        pasteIntoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.SHIFT_DOWN, modifier));
+//        duplicateMenuItem.setUserData(new EditActionController(EditAction.DUPLICATE));
+//        duplicateMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, modifier));
+//        deleteMenuItem.setUserData(new DocumentEditActionController(DocumentEditAction.DELETE));
+//        deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+//        selectAllMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SELECT_ALL));
+//        selectAllMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, modifier));
+//        selectNoneMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.SELECT_NONE));
+//        selectNoneMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHIFT_DOWN, modifier));
+//        selectParentMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_PARENT));
+//        selectParentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.UP, modifier));
+//        selectNextMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_NEXT));
+//        selectNextMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.RIGHT, modifier));
+//        selectPreviousMenuItem.setUserData(new ControlActionController(ControlAction.SELECT_PREVIOUS));
+//        selectPreviousMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.LEFT, modifier));
+//        trimMenuItem.setUserData(new EditActionController(EditAction.TRIM));
 
         /*
          * View menu
@@ -1059,7 +1053,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //                return I18N.getString(titleKey);
 //            }
 //        });
-        updateZoomMenu();
+        //updateZoomMenu();
 
         /*
          * Insert menu: it uses specific handlers, which means we initialize it
@@ -1287,45 +1281,45 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
      * Private (zoom menu)
      */
 
-    final static double[] scalingTable = {0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0};
-
-    private void updateZoomMenu() {
-        final double[] scalingTable = {0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0};
-
-        final MenuItem zoomInMenuItem = new MenuItem(I18N.getString("menu.title.zoom.in"));
-        zoomInMenuItem.setUserData(new ZoomInActionController());
-        zoomInMenuItem.setAccelerator(new KeyCharacterCombination("+", modifier)); //NOCHECK
-        zoomMenu.getItems().add(zoomInMenuItem);
-
-        final MenuItem zoomOutMenuItem = new MenuItem(I18N.getString("menu.title.zoom.out"));
-        zoomOutMenuItem.setUserData(new ZoomOutActionController());
-        zoomOutMenuItem.setAccelerator(new KeyCharacterCombination("/", modifier));  //NOCHECK
-        zoomMenu.getItems().add(zoomOutMenuItem);
-
-        zoomMenu.getItems().add(new SeparatorMenuItem());
-
-        for (int i = 0; i < scalingTable.length; i++) {
-            final double scaling = scalingTable[i];
-            final String title = String.format("%.0f%%", scaling * 100); //NOCHECK
-            final RadioMenuItem mi = new RadioMenuItem(title);
-            mi.setUserData(new SetZoomActionController(scaling));
-            zoomMenu.getItems().add(mi);
-        }
-    }
-
-
-    private static int findZoomScaleIndex(double zoomScale) {
-        int result = -1;
-
-        for (int i = 0; i < scalingTable.length; i++) {
-            if (MathUtils.equals(zoomScale, scalingTable[i])) {
-                result = i;
-                break;
-            }
-        }
-
-        return result;
-    }
+//    final static double[] scalingTable = {0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0};
+//
+//    private void updateZoomMenu() {
+//        final double[] scalingTable = {0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0};
+//
+////        final MenuItem zoomInMenuItem = new MenuItem(I18N.getString("menu.title.zoom.in"));
+////        zoomInMenuItem.setUserData(new ZoomInActionController());
+////        zoomInMenuItem.setAccelerator(new KeyCharacterCombination("+", modifier)); //NOCHECK
+////        zoomMenu.getItems().add(zoomInMenuItem);
+////
+////        final MenuItem zoomOutMenuItem = new MenuItem(I18N.getString("menu.title.zoom.out"));
+////        zoomOutMenuItem.setUserData(new ZoomOutActionController());
+////        zoomOutMenuItem.setAccelerator(new KeyCharacterCombination("/", modifier));  //NOCHECK
+////        zoomMenu.getItems().add(zoomOutMenuItem);
+//
+//        zoomMenu.getItems().add(new SeparatorMenuItem());
+//
+//        for (int i = 0; i < scalingTable.length; i++) {
+//            final double scaling = scalingTable[i];
+//            final String title = String.format("%.0f%%", scaling * 100); //NOCHECK
+//            final RadioMenuItem mi = new RadioMenuItem(title);
+//            mi.setUserData(new SetZoomActionController(scaling));
+//            zoomMenu.getItems().add(mi);
+//        }
+//    }
+//
+//
+//    private static int findZoomScaleIndex(double zoomScale) {
+//        int result = -1;
+//
+//        for (int i = 0; i < scalingTable.length; i++) {
+//            if (MathUtils.equals(zoomScale, scalingTable[i])) {
+//                result = i;
+//                break;
+//            }
+//        }
+//
+//        return result;
+//    }
 
     /*
      * Private (window menu)
@@ -1387,69 +1381,69 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     }
 
 
-    class UndoActionController extends MenuItemController {
-
-        @Override
-        public boolean canPerform() {
-            boolean result;
-            if (documentWindowController == null
-                    || documentWindowController.getStage().isFocused() == false) {
-                result = false;
-            } else {
-                result = editor.canUndo();
-            }
-            return result;
-        }
-
-        @Override
-        public void perform() {
-            assert canPerform();
-            editor.undo();
-        }
-
-        @Override
-        public String getTitle() {
-            final StringBuilder result = new StringBuilder();
-            result.append(I18N.getString("menu.title.undo"));
-            if (canPerform()) {
-                result.append(" "); //NOCHECK
-                result.append(editor.getUndoDescription());
-            }
-            return result.toString();
-        }
-    }
-
-    class RedoActionController extends MenuItemController {
-
-        @Override
-        public boolean canPerform() {
-            boolean result;
-            if (documentWindowController == null
-                    || documentWindowController.getStage().isFocused() == false) {
-                result = false;
-            } else {
-                result = editor.canRedo();
-            }
-            return result;
-        }
-
-        @Override
-        public void perform() {
-            assert canPerform();
-            editor.redo();
-        }
-
-        @Override
-        public String getTitle() {
-            final StringBuilder result = new StringBuilder();
-            result.append(I18N.getString("menu.title.redo"));
-            if (canPerform()) {
-                result.append(" "); //NOCHECK
-                result.append(editor.getRedoDescription());
-            }
-            return result.toString();
-        }
-    }
+//    class UndoActionController extends MenuItemController {
+//
+//        @Override
+//        public boolean canPerform() {
+//            boolean result;
+//            if (documentWindowController == null
+//                    || documentWindowController.getStage().isFocused() == false) {
+//                result = false;
+//            } else {
+//                result = editor.canUndo();
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        public void perform() {
+//            assert canPerform();
+//            editor.undo();
+//        }
+//
+//        @Override
+//        public String getTitle() {
+//            final StringBuilder result = new StringBuilder();
+//            result.append(I18N.getString("menu.title.undo"));
+//            if (canPerform()) {
+//                result.append(" "); //NOCHECK
+//                result.append(editor.getUndoDescription());
+//            }
+//            return result.toString();
+//        }
+//    }
+//
+//    class RedoActionController extends MenuItemController {
+//
+//        @Override
+//        public boolean canPerform() {
+//            boolean result;
+//            if (documentWindowController == null
+//                    || documentWindowController.getStage().isFocused() == false) {
+//                result = false;
+//            } else {
+//                result = editor.canRedo();
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        public void perform() {
+//            assert canPerform();
+//            editor.redo();
+//        }
+//
+//        @Override
+//        public String getTitle() {
+//            final StringBuilder result = new StringBuilder();
+//            result.append(I18N.getString("menu.title.redo"));
+//            if (canPerform()) {
+//                result.append(" "); //NOCHECK
+//                result.append(editor.getRedoDescription());
+//            }
+//            return result.toString();
+//        }
+//    }
 
     class EditActionController extends MenuItemController {
 
@@ -1582,89 +1576,89 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     }
 
 
-    class SetZoomActionController extends MenuItemController {
+//    class SetZoomActionController extends MenuItemController {
+//
+//        private final double scaling;
+//
+//        public SetZoomActionController(double scaling) {
+//            this.scaling = scaling;
+//        }
+//
+//        @Override
+//        public boolean canPerform() {
+//            return (documentWindowController != null);
+//        }
+//
+//        @Override
+//        public void perform() {
+//            final double currentScaling = content.getScaling();
+//            if (MathUtils.equals(currentScaling, scaling) == false) {
+//                content.setScaling(scaling);
+//            }
+//        }
+//
+//        @Override
+//        public boolean isSelected() {
+//            boolean result;
+//
+//            if (documentWindowController == null) {
+//                result = false;
+//            } else {
+//                final double currentScaling = content.getScaling();
+//                result = MathUtils.equals(currentScaling, scaling);
+//            }
+//
+//            return result;
+//        }
+//
+//    }
+//
+//    class ZoomInActionController extends MenuItemController {
+//
+//        @Override
+//        public boolean canPerform() {
+//            boolean result;
+//            if (documentWindowController == null) {
+//                result = false;
+//            } else {
+//                final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
+//                result = currentScalingIndex+1 < scalingTable.length;
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        public void perform() {
+//            final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
+//            final double newScaling = scalingTable[currentScalingIndex+1];
+//            content.setScaling(newScaling);
+//        }
+//
+//    }
 
-        private final double scaling;
 
-        public SetZoomActionController(double scaling) {
-            this.scaling = scaling;
-        }
-
-        @Override
-        public boolean canPerform() {
-            return (documentWindowController != null);
-        }
-
-        @Override
-        public void perform() {
-            final double currentScaling = content.getScaling();
-            if (MathUtils.equals(currentScaling, scaling) == false) {
-                content.setScaling(scaling);
-            }
-        }
-
-        @Override
-        public boolean isSelected() {
-            boolean result;
-
-            if (documentWindowController == null) {
-                result = false;
-            } else {
-                final double currentScaling = content.getScaling();
-                result = MathUtils.equals(currentScaling, scaling);
-            }
-
-            return result;
-        }
-
-    }
-
-    class ZoomInActionController extends MenuItemController {
-
-        @Override
-        public boolean canPerform() {
-            boolean result;
-            if (documentWindowController == null) {
-                result = false;
-            } else {
-                final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
-                result = currentScalingIndex+1 < scalingTable.length;
-            }
-            return result;
-        }
-
-        @Override
-        public void perform() {
-            final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
-            final double newScaling = scalingTable[currentScalingIndex+1];
-            content.setScaling(newScaling);
-        }
-
-    }
-
-
-    class ZoomOutActionController extends MenuItemController {
-
-        @Override
-        public boolean canPerform() {
-            boolean result;
-            if (documentWindowController == null) {
-                result = false;
-            } else {
-                final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
-                result = 0 <= currentScalingIndex-1;
-            }
-            return result;
-        }
-
-        @Override
-        public void perform() {
-            final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
-            final double newScaling = scalingTable[currentScalingIndex-1];
-            content.setScaling(newScaling);
-        }
-
-    }
+//    class ZoomOutActionController extends MenuItemController {
+//
+//        @Override
+//        public boolean canPerform() {
+//            boolean result;
+//            if (documentWindowController == null) {
+//                result = false;
+//            } else {
+//                final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
+//                result = 0 <= currentScalingIndex-1;
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        public void perform() {
+//            final int currentScalingIndex = findZoomScaleIndex(content.getScaling());
+//            final double newScaling = scalingTable[currentScalingIndex-1];
+//            content.setScaling(newScaling);
+//        }
+//
+//    }
 
 //    private void updatePreviewWindowSize(Size size) {
 //        if (previewWindowController.getStage().isShowing()) {
@@ -1743,6 +1737,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         return keyToMenu.get(key);
     }
 
+    @Override
     public Set<KeyCombination> getAccelerators() {
         return keyToMenu.keySet();
     }

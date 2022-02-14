@@ -77,4 +77,8 @@ public interface SelectionGroup extends Cloneable {
      * @return the complete list of siblings objects or an empty list if selected objects are not siblings
      */
     List<FXOMObject> getSiblings();
+
+    SelectionGroup selectAll();
+    SelectionGroup selectNext();
+    SelectionGroup selectPrevious();
 }

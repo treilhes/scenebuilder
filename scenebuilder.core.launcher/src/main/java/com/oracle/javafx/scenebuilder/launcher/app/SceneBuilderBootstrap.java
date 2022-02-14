@@ -42,7 +42,7 @@ import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.context.annotation.Bean;
 
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
+import com.oracle.javafx.scenebuilder.api.launcher.SceneBuilderLoadingProgress;
 import com.oracle.javafx.scenebuilder.launcher.splash.SplashScreenPreloader;
 
 import javafx.application.Application;

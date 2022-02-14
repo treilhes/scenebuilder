@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.job.editor.atomic;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
@@ -67,8 +66,7 @@ public final class RemovePropertyJob extends AbstractJob {
     protected RemovePropertyJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            AddPropertyJob.Factory addPropertyJobFactory,
-            SceneBuilderBeanFactory context, FXOMProperty targetProperty, Editor editor) {
+            AddPropertyJob.Factory addPropertyJobFactory) {
         super(extensionFactory);
         this.addPropertyJobFactory = addPropertyJobFactory;
         this.fxomDocument = documentManager.fxomDocument().get();

@@ -179,7 +179,7 @@ public final class SetDocumentRootJob extends BatchSelectionJob {
          * @return the job to execute
          */
         public SetDocumentRootJob getJob(FXOMObject newRoot) {
-            return create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot, false, null));
+            return create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot, false, "Set root"));
         }
     }
 }

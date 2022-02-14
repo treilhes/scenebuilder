@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,7 +58,7 @@ public abstract class MapPreferences<K, V>
     public abstract String valueString(V value);
     public abstract K fromKeyString(String key);
     public abstract V fromValueString(String value);
-    
+
     /***************************************************************************
      * * Methods * *
      **************************************************************************/

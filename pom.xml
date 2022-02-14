@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -66,13 +67,14 @@
         <module>scenebuilder.metadata-maven-plugin</module>
         <module>scenebuilder.metadata.javafx</module>
         <module>scenebuilder.metadata.gluon</module>
-    <module>scenebuilder.ext.javafx.customization</module>
-    <module>scenebuilder.ext.script.graalvm-javascript</module>
-    <module>scenebuilder.ext.script.graalvm-javascript-rt</module>
-    <module>scenebuilder.ext.script</module>
-    <module>scenebuilder.core.core</module>
-    <module>scenebuilder.core.selection</module>
-  </modules>
+        <module>scenebuilder.ext.javafx.customization</module>
+        <module>scenebuilder.ext.script.graalvm-javascript</module>
+        <module>scenebuilder.ext.script.graalvm-javascript-rt</module>
+        <module>scenebuilder.ext.script</module>
+        <module>scenebuilder.core.core</module>
+        <module>scenebuilder.core.selection</module>
+        <module>scenebuilder.ext.menu</module>
+    </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -140,6 +142,12 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.clipboard</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.extension.api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -196,6 +204,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.preferences</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.menu</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -550,7 +563,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore/>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

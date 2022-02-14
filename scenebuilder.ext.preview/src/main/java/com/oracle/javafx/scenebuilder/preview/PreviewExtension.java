@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,7 +42,6 @@ import com.oracle.javafx.scenebuilder.preview.actions.SetPreviewSizeAction;
 import com.oracle.javafx.scenebuilder.preview.actions.SetRootSizeExtension;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewAction;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
-import com.oracle.javafx.scenebuilder.preview.controller.PreviewMenuController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.preview.menu.PreviewMenuProvider;
 
@@ -56,7 +56,6 @@ public class PreviewExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                PreviewMenuController.class,
                 PreviewWindowController.class,
                 PreviewMenuProvider.class,
                 SetRootSizeExtension.class,

@@ -215,7 +215,7 @@ public class DragController implements Drag {
             final FXOMObject currentParent = firstObject.getParentObject();
             final FXOMObject nextParent = getDropTarget().getTargetObject();
 
-            logger.info("Drop accepted from {} to {} for {} objects",
+            logger.debug("Drop accepted from {} to {} for {} objects",
                     currentParent == null ? "null" : currentParent.getClass().getName(),
                     nextParent == null ? "null" : nextParent.getClass().getName(),
                     getDragSource().getDraggedObjects().size());

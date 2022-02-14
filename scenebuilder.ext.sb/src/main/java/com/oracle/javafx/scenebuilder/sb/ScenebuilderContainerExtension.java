@@ -41,8 +41,6 @@ import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssAction;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssPreferencesExtension;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssThemeExtension;
-import com.oracle.javafx.scenebuilder.sb.menu.SceneBuilderMenuProvider;
-import com.oracle.javafx.scenebuilder.sb.menu.controller.SceneBuilderMenuController;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.AccordionAnimationPreference;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.ToolThemePreference;
@@ -67,8 +65,8 @@ public class ScenebuilderContainerExtension extends AbstractExtension {
                 DefaultToolThemesList.Dark.class,
                 DefaultToolThemesList.Default.class,
                 ParentRingColorPreference.class,
-                SceneBuilderMenuController.class,
-                SceneBuilderMenuProvider.class,
+                //SceneBuilderMenuController.class,
+                //SceneBuilderMenuProvider.class,
                 ToolThemePreference.class
             );
      // @formatter:on

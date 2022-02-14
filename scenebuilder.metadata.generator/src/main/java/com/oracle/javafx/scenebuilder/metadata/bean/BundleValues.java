@@ -57,6 +57,7 @@ public interface BundleValues {
 	final String CHILD_LABEL_MUTATION_LAMBDA = "childLabelMutation";
 	final String NULL_EQUIVALENT = "nullEquivalent";
 
+	final String MAIN = "main";
 	final String HIDDEN = "hidden";
 	final String VISIBILITY = "visibility";
 

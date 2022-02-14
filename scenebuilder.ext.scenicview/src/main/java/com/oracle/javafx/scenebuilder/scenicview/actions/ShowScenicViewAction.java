@@ -42,13 +42,23 @@ import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.scenicview.controller.ScenicViewStarter;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
+@MenuItemAttachment(
+        id = ShowScenicViewAction.SCENICVIEW_MENU_ID,
+        targetMenuId = DefaultMenu.HELP_MENU_ID,
+        label = "menu.title.scenicview",
+        positionRequest = PositionRequest.AsLastChild)
 public class ShowScenicViewAction extends AbstractAction {
+
+    public final static String SCENICVIEW_MENU_ID = "scenicMenu"; //NOCHECK
 
     private final SceneBuilderBeanFactory context;
 

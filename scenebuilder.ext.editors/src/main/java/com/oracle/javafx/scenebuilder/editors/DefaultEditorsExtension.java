@@ -69,7 +69,6 @@ import com.oracle.javafx.scenebuilder.editors.control.StylesheetEditor;
 import com.oracle.javafx.scenebuilder.editors.control.TextAlignmentEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
 import com.oracle.javafx.scenebuilder.editors.control.effect.JavaFxEffectsProvider;
-import com.oracle.javafx.scenebuilder.editors.menu.SetEffectsMenuProvider;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.BoundsPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.EffectPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.FontPopupEditor;
@@ -121,7 +120,7 @@ public class DefaultEditorsExtension extends AbstractExtension {
                 Rectangle2DPopupEditor.class,
                 RotateEditor.class,
                 SetEffectAction.class,
-                SetEffectsMenuProvider.class,
+                SetEffectAction.MenuProvider.class,
                 StringEditor.class,
                 StringListEditor.class,
                 StringPopupEditor.class,

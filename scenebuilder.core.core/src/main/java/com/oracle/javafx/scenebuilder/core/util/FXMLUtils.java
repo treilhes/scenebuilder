@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,13 +59,13 @@ import javafx.fxml.FXMLLoader;
 public class FXMLUtils {
 
     private static final PropertyName valueName = new PropertyName("value"); //NOCHECK
-    
+
 	private FXMLUtils() {}
 
 	public static <T> T load(Object controllerInstance, String fxml) {
 		return load(controllerInstance, controllerInstance.getClass(), fxml);
 	}
-	
+
 	public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, String fxml) {
         final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOCHECK
         final FXMLLoader loader = new FXMLLoader();
@@ -72,10 +73,10 @@ public class FXMLUtils {
         loader.setController(controllerInstance);
         loader.setLocation(fxmlURL);
         loader.setResources(I18N.getBundle());
-        
+
         // setting ClassLoader for OSGi environments
         loader.setClassLoader(resourceLoadingClass.getClassLoader());
-        
+
         try {
             return loader.load();
         } catch (RuntimeException | IOException x) {
@@ -85,25 +86,36 @@ public class FXMLUtils {
             throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOCHECK
         }
     }
-	
+
+
+	/**
+	 * Check if the Fxml document has external dependencies.
+	 *
+	 * @param fxmlFile the fxml file
+	 * @param classloader the classloader
+	 * @param resources the resources
+	 * @return true, if successful
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	// FIXME only used by libraries, move this function to libraries common parent if any or create one
 	public static boolean fxmlHasDependencies(File fxmlFile, ClassLoader classloader, ResourceBundle resources) throws IOException {
         boolean res = false;
         URL location;
-        
+
         location = fxmlFile.toURI().toURL();
         FXOMDocument fxomDocument =
                 new FXOMDocument(FXOMDocument.readContentFromURL(location), location,
                         classloader, resources);
         res = hasDependencies(fxomDocument.getFxomRoot());
-        
+
         return res;
     }
-    
+
     public static boolean hasDependencies(FXOMObject rootFxomObject) {
         final List<Path> targetPaths = getDependenciesPaths(rootFxomObject);
         return targetPaths.size() > 0;
     }
-    
+
     private static List<Path> getDependenciesPaths(FXOMObject rootFxomObject) {
 
         final List<Path> targetPaths = new ArrayList<>();
@@ -114,7 +126,7 @@ public class FXMLUtils {
                 targetPaths.add(path);
             }
         }
-        
+
         for (FXOMObject fxomObject : rootFxomObject.collectObjectWithSceneGraphObjectClass(URL.class)) {
             if (fxomObject instanceof FXOMInstance) {
                 final FXOMInstance urlInstance = (FXOMInstance) fxomObject;
@@ -133,11 +145,11 @@ public class FXMLUtils {
 
         return targetPaths;
     }
-    
-    
+
+
     private static Path extractPath(FXOMPropertyT p) {
         Path result;
-        
+
         final PrefixedValue pv = new PrefixedValue(p.getValue());
         if (pv.isPlainString()) {
             try {
@@ -177,12 +189,12 @@ public class FXMLUtils {
                         result = null;
                     }
                 }
-                
+
             }
         } else {
             result = null;
         }
-        
+
         return result;
     }
 }

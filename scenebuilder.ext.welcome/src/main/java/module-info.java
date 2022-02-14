@@ -12,6 +12,7 @@ open module scenebuilder.ext.welcome {
     requires scenebuilder.ext.templates;
     requires scenebuilder.core.filesystem;
     requires scenebuilder.core.launcher;
+    requires scenebuilder.ext.menu;
 
     provides Extension with WelcomeExtension;
 }

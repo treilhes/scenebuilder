@@ -61,7 +61,6 @@ import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
@@ -104,8 +103,6 @@ import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
-import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
-import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
@@ -1635,7 +1632,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private Set<ValuePropertyMetadata> getValuePropertyMetadata() {
         Set<ValuePropertyMetadata> values = Api.get().getMetadata().queryValueProperties(getSelectedClasses());
-        ;
+
         Set<PropertyName> disabledProperties = getDisabledPropertiesFromMetadata();
         return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
     }

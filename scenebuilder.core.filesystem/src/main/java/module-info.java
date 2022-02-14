@@ -38,9 +38,8 @@ open module scenebuilder.core.filesystem {
     exports com.oracle.javafx.scenebuilder.fs.util;
     exports com.oracle.javafx.scenebuilder.fs.preference.global;
     exports com.oracle.javafx.scenebuilder.fs.controller;
+    exports com.oracle.javafx.scenebuilder.fs.job;
     exports com.oracle.javafx.scenebuilder.fs;
-    exports com.oracle.javafx.scenebuilder.fs.menu;
-    exports com.oracle.javafx.scenebuilder.fs.action;
 
     //opens com.oracle.javafx.scenebuilder.fs.preference.global to spring.core;
 
@@ -54,10 +53,11 @@ open module scenebuilder.core.filesystem {
 //    requires javafx.graphics;
 //    requires org.slf4j;
     //requires transitive scenebuilder.core.api;
-    requires transitive scenebuilder.core.core;
+    //requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;
+    requires scenebuilder.core.api;
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.selection;
 

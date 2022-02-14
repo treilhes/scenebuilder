@@ -33,6 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor.actions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -41,10 +44,20 @@ import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.job.editor.UsePredefinedSizeJob;
+
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -89,5 +102,84 @@ public class SetRootSizeAction extends AbstractAction {
         final AbstractJob job = usePredefinedSizeJobFactory.getJob(size);
         jobManager.push(job);
         return ActionStatus.DONE;
+    }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Lazy
+    public static class MenuProvider implements MenuItemProvider {
+
+        private final static String TARGET_MENU_ID = DefaultMenu.MODIFY_MENU_ID;
+        public final static String SET_ROOT_SIZE_MENU_ID = "setRootSize";
+
+        private final ActionFactory actionFactory;
+        private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+
+        public MenuProvider(ActionFactory actionFactory, MenuBarObjectConfigurator menuBarObjectConfigurator) {
+            super();
+            this.actionFactory = actionFactory;
+            this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+        }
+
+        @Override
+        public List<MenuItemAttachment> menuItems() {
+
+            return Arrays.asList(
+                    MenuItemAttachment.create(menuBarObjectConfigurator.separator().build(), TARGET_MENU_ID, PositionRequest.AsLastChild),
+                    new SetRootSizesMenuItemAttachment());
+        }
+
+        public class SetRootSizesMenuItemAttachment implements MenuItemAttachment {
+
+            private Menu menu = null;
+
+            public SetRootSizesMenuItemAttachment() {
+                super();
+            }
+
+            @Override
+            public String getTargetId() {
+                return TARGET_MENU_ID;
+            }
+
+            @Override
+            public PositionRequest getPositionRequest() {
+                return PositionRequest.AsLastChild;
+            }
+
+            @Override
+            public MenuItem getMenuItem() {
+
+                if (menu != null) {
+                    return menu;
+                }
+
+                menu = new Menu(I18N.getString("menu.title.size"));
+                menu.setId(SET_ROOT_SIZE_MENU_ID);
+
+                for (Size size : Size.values()) {
+                    if (size == Size.SIZE_DEFAULT || size == Size.SIZE_PREFERRED) {
+                        continue;
+                    }
+
+                    MenuItem mi = new MenuItem(size.toString());
+                    mi.setUserData(size);
+                    SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
+                    action.setSize(size);
+                    mi.setOnAction(e -> action.perform());
+                    menu.getItems().add(mi);
+                }
+
+                menu.setOnMenuValidation(e -> {
+                    menu.getItems().forEach(i -> {
+                        Size menuSize = (Size)i.getUserData();
+                        SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
+                        action.setSize(menuSize);
+                        i.setDisable(!action.canPerform());
+                    });
+                });
+                return menu;
+            }
+        }
     }
 }

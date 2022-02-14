@@ -532,6 +532,11 @@ public class PropertyMetaData extends AbstractMetaData {
         return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.HIDDEN, "false"));
     }
 
+    public Boolean getMain() {
+        String main = getBundleValue(beanClass, BundleValues.MAIN, "");
+        return main.isEmpty() ? null : Boolean.valueOf(main);
+    }
+
     public Visibility getVisibility() {
         return Visibility.valueOf(getBundleValue(beanClass, BundleValues.VISIBILITY, visibility.name()).toUpperCase());
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -80,6 +81,9 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
     /** The tool stylesheet config. */
     private StylesheetProvider toolStylesheetConfig;
 
+    private CloseHandler closeHandler;
+    private FocusHandler focusHandler;
+
     private final Api api;
 
     /**
@@ -103,9 +107,9 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
         this.api = api;
         this.owner = owner;
         this.sizeToScene = sizeToScene;
-        
+
     }
-    
+
 
     /**
      * Set the root of this panel controller. This routine must be invoked by
@@ -116,7 +120,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
     public void setRoot(Parent root) {
         assert root != null;
         this.root = root;
-        
+
         api.getSceneBuilderManager().stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
             toolStylesheetDidChange(s);
         });
@@ -173,7 +177,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
      */
     public Stage getStage(boolean renew) {
         assert Platform.isFxApplicationThread();
-        
+
         if (stage == null || renew) {
             stage = new Stage();
             stage.initOwner(this.owner == null ? null : this.owner.getStage());
@@ -196,7 +200,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
 
         return stage;
     }
-    
+
     @Override
     public Stage getStage() {
         return getStage(false);
@@ -224,16 +228,29 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
         getStage().close();
     }
 
-    /**
-     * On close request.
-     */
-    public abstract void onCloseRequest();
 
-    /**
-     * On focus.
-     */
-    public abstract void onFocus();
-    
+    @Override
+    public void setCloseHandler(CloseHandler closeHandler) {
+        this.closeHandler = closeHandler;
+    }
+
+    @Override
+    public void setFocusHandler(FocusHandler focusHandler) {
+        this.focusHandler = focusHandler;
+    }
+
+    public void onCloseRequest() {
+        if (closeHandler != null) {
+            closeHandler.onClose();
+        }
+    }
+
+    public void onFocus() {
+        if (focusHandler != null) {
+            focusHandler.onFocus();
+        }
+    }
+
     /**
      * Controller did create scene.
      */
@@ -286,12 +303,12 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
                 root.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
             }
         }
-        
+
         Logger.getLogger(AbstractWindowController.class.getName()).log(Level.INFO,
                 "Applying new tool theme using  {0} on {1}",
                 new Object[] { root.getStylesheets(), this.getClass().getName() });
-        
-        
+
+
     }
 
     /*
@@ -396,5 +413,5 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
 //        }
 //    }
 
-    
+
 }

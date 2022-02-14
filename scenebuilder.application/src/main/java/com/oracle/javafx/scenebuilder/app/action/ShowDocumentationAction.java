@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.app.action;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +52,6 @@ import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 @ActionMeta(
         nameKey = "action.name.show.about",
         descriptionKey = "action.description.show.about",

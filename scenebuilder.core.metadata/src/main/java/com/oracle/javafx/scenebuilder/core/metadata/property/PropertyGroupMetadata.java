@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -57,14 +57,14 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
 //    }
 
     protected PropertyGroupMetadata(AbstractBuilder<?,?> builder) {
-        super(((AbstractBuilder<Builder, PropertyGroupMetadata>)builder)
+        super((AbstractBuilder<?,?>)((AbstractBuilder<PropertyGroupMetadata.AbstractBuilder, PropertyGroupMetadata>)builder)
                 .withInspectorPath(builder.properties.isEmpty() ? null : builder.properties.values().iterator().next().getInspectorPath())
                 .withReadWrite(builder.properties.values().stream().anyMatch(p -> p.isReadWrite()))
                 );
         this.properties.putAll(builder.properties);
     }
 
-    protected Map<String, ValuePropertyMetadata> getPropertiesMap() {
+    public Map<String, ValuePropertyMetadata> getPropertiesMap() {
         return Collections.unmodifiableMap(properties);
     }
 
@@ -74,22 +74,40 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
 
     @Override
     public Object getDefaultValueObject() {
-        return properties.values().stream()
-                .map(it -> it.getDefaultValueObject())
-                .collect(Collectors.toList())
-                .toArray();
+//        return properties.values().stream()
+//                .map(it -> it.getDefaultValueObject())
+//                .collect(Collectors.toList())
+//                .toArray();
+        Map<String, Object> map = new HashMap<>();
+        properties.entrySet().forEach(e -> map.put(e.getKey(), e.getValue().getDefaultValueObject()));
+        return map;
     }
 
     @Override
     public void setValueInSceneGraphObject(FXOMInstance fxomInstance, Object newValue) {
-        assert newValue instanceof Object[];
-        Object[] values = (Object[])newValue;
+//        assert newValue instanceof Object[];
+//        Object[] values = (Object[])newValue;
+//
+//        assert values.length == getProperties().length;
+//
+//        for (int i=0; i<getProperties().length; i++) {
+//            Object value = values[i];
+//            ValuePropertyMetadata property = getProperties()[i];
+//
+//            assert property.getValueClass().isAssignableFrom(value.getClass());
+//
+//            property.setValueInSceneGraphObject(fxomInstance, value);
+//        }
+        assert newValue instanceof Map;
+        Map<String, Object> values = (Map<String, Object>)newValue;
 
-        assert values.length == getProperties().length;
+        assert values.size() == properties.size();
 
-        for (int i=0; i<getProperties().length; i++) {
-            Object value = values[i];
-            ValuePropertyMetadata property = getProperties()[i];
+        for (Entry<String, ValuePropertyMetadata> entry : properties.entrySet()) {
+            String propertyKey = entry.getKey();
+            assert values.containsKey(propertyKey);
+            Object value = values.get(propertyKey);
+            ValuePropertyMetadata property = entry.getValue();
 
             assert property.getValueClass().isAssignableFrom(value.getClass());
 
@@ -100,24 +118,42 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
 
     @Override
     public Object getValueObject(FXOMElement fxomInstance) {
-        Object[] values = new Object[getProperties().length];
-        for (int i=0; i<getProperties().length; i++) {
-            ValuePropertyMetadata property = getProperties()[i];
-            values[i] = property.getValueObject(fxomInstance);
-        }
-        return values;
+//        Object[] values = new Object[getProperties().length];
+//        for (int i=0; i<getProperties().length; i++) {
+//            ValuePropertyMetadata property = getProperties()[i];
+//            values[i] = property.getValueObject(fxomInstance);
+//        }
+//        return values;
+        Map<String, Object> map = new HashMap<>();
+        properties.entrySet().forEach(e -> map.put(e.getKey(), e.getValue().getValueObject(fxomInstance)));
+        return map;
     }
 
     @Override
     public void setValueObject(FXOMElement fxomInstance, Object newValue) {
-        assert newValue instanceof Object[];
-        Object[] values = (Object[])newValue;
+//        assert newValue instanceof Object[];
+//        Object[] values = (Object[])newValue;
+//
+//        assert values.length == getProperties().length;
+//
+//        for (int i=0; i<getProperties().length; i++) {
+//            Object value = values[i];
+//            ValuePropertyMetadata property = getProperties()[i];
+//
+//            assert value == null || property.getValueClass().isAssignableFrom(value.getClass());
+//
+//            property.setValueObject(fxomInstance, value);
+//        }
+        assert newValue instanceof Map;
+        Map<String, Object> values = (Map<String, Object>)newValue;
 
-        assert values.length == getProperties().length;
+        assert values.size() == properties.size();
 
-        for (int i=0; i<getProperties().length; i++) {
-            Object value = values[i];
-            ValuePropertyMetadata property = getProperties()[i];
+        for (Entry<String, ValuePropertyMetadata> entry : properties.entrySet()) {
+            String propertyKey = entry.getKey();
+            assert values.containsKey(propertyKey);
+            Object value = values.get(propertyKey);
+            ValuePropertyMetadata property = entry.getValue();
 
             assert value == null || property.getValueClass().isAssignableFrom(value.getClass());
 
@@ -141,6 +177,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
 
         public AbstractBuilder() {
             super();
+            withGroup(true);
         }
 
         protected SELF withProperty(String key, ValuePropertyMetadata property) {

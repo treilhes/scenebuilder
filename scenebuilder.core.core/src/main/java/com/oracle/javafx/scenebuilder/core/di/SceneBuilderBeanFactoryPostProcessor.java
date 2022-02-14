@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
+import com.oracle.javafx.scenebuilder.api.launcher.SceneBuilderLoadingProgress;
 
 /**
  * The Class SceneBuilderBeanFactoryPostProcessor.

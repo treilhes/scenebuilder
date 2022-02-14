@@ -57,8 +57,8 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
+import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.util.Utils;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -429,7 +429,7 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     private void updateWindowTitle() {
-        getStage().setTitle(fxomDocument == null ? "Undefined" : Utils.makeTitle(fxomDocument));
+        getStage().setTitle(fxomDocument == null ? "Undefined" : FXOMDocumentUtils.makeTitle(fxomDocument));
     }
 
     public void setCameraType(PreviewWindowController.CameraType ct) {

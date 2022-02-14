@@ -37,12 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.core.clipboard.action.CopyAction;
-import com.oracle.javafx.scenebuilder.core.clipboard.action.CutAction;
-import com.oracle.javafx.scenebuilder.core.clipboard.action.PasteAction;
 import com.oracle.javafx.scenebuilder.core.clipboard.controller.ClipboardController;
 import com.oracle.javafx.scenebuilder.core.clipboard.i18n.I18NClipboard;
-import com.oracle.javafx.scenebuilder.core.clipboard.menu.ClipboardMenuProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class ClipboardExtension extends AbstractExtension {
@@ -56,11 +52,7 @@ public class ClipboardExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 ClipboardController.class,
-                ClipboardMenuProvider.class,
-                CopyAction.class,
-                CutAction.class,
-                I18NClipboard.class,
-                PasteAction.class
+                I18NClipboard.class
             );
      // @formatter:on
     }

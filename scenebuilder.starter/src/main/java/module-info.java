@@ -39,5 +39,6 @@ module scenebuilder.starter {
     requires transitive spring.boot;
     requires transitive spring.context;
     requires transitive spring.core;
+    requires transitive spring.expression;
 
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -287,4 +288,17 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
         }
     }
 
+    public static class SourceStringPropertyMetadata extends StringPropertyMetadata {
+
+      public SourceStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+          super(builder);
+      }
+
+      public static final class Builder extends AbstractBuilder<Builder, SourceStringPropertyMetadata> {
+          @Override
+          public SourceStringPropertyMetadata build() {
+              return new SourceStringPropertyMetadata(this);
+          }
+      }
+  }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +45,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
-import com.oracle.javafx.scenebuilder.api.action.Action.ActionStatus;
+import com.oracle.javafx.scenebuilder.api.MenuBar;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
@@ -81,13 +81,11 @@ import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUui
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.fs.action.CloseFileAction;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.PathPreference;
 import com.oracle.javafx.scenebuilder.ui.selectionbar.SelectionBarController;
-import com.oracle.javafx.scenebuilder.util.ResourceUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.event.EventHandler;
@@ -98,8 +96,6 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  *
@@ -111,7 +107,7 @@ public class DocumentController implements Document, InitializingBean {
     private final DocumentWindow documentWindow;
     private final Editor editorController;
     private final FileSystem fileSystem;
-    private final MenuBarController menuBarController;
+    private final MenuBar menuBarController;
     private final Content contentPanelController;
     //private final DocumentPanelController documentPanelController;
     //private final InspectorPanelController inspectorPanelController;
@@ -277,15 +273,9 @@ public class DocumentController implements Document, InitializingBean {
         initializations.forEach(a -> a.initWithDocument());
         editorController.initialize();
 
-        api.getApiDoc().getDocumentManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
-            onCloseRequest();
-            closeWindow();
-        });
+        api.getApiDoc().getDocumentManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
-        api.getSceneBuilderManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> {
-            onCloseRequest();
-            closeWindow();
-        });
+        api.getSceneBuilderManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
         SbPlatform.runForDocumentLater(() -> {
             initializeDocumentWindow();
@@ -497,9 +487,9 @@ public class DocumentController implements Document, InitializingBean {
 //                revert();
 //                break;
 
-        case CLOSE_FILE:
-            performCloseAction();
-            break;
+//        case CLOSE_FILE:
+//            performCloseAction();
+//            break;
 
 //        case GOTO_CONTENT:
 //            contentPanelController.getGlassLayer().requestFocus();
@@ -790,7 +780,7 @@ public class DocumentController implements Document, InitializingBean {
             }
         });
 
-        documentWindow.setCloseHandler(this::onCloseRequest);
+        documentWindow.setCloseHandler(this::close);
         documentWindow.setFocusHandler(this::onFocus);
 
         documentWindow.setMainKeyPressedEvent(mainKeyEventFilter);
@@ -802,29 +792,29 @@ public class DocumentController implements Document, InitializingBean {
     }
 
     @Override
-    public void onCloseRequest() {
+    public void close() {
         onFocus();
-        if (performCloseAction() == ActionStatus.DONE) {
-            // Write java preferences at close time but before losing the current document
-            // scope
 
-            updatePreferences();
+        closeWindow();
+     // Write java preferences at close time but before losing the current document
+        // scope
 
-            // TODO remove after checking the new watching system is operational in
-            // EditorController or in filesystem
-            // finalizations list must handle the case below
-            //// Stops watching
-            // editorController.stopFileWatching();
-            // watchingController.stop();
+        updatePreferences();
 
-            finalizations.forEach(a -> a.disposeWithDocument());
+        // TODO remove after checking the new watching system is operational in
+        // EditorController or in filesystem
+        // finalizations list must handle the case below
+        //// Stops watching
+        // editorController.stopFileWatching();
+        // watchingController.stop();
+
+        finalizations.forEach(a -> a.disposeWithDocument());
 
 
-            // Closes if confirmed
-            main.documentWindowRequestClose(this);
+        // Closes if confirmed
+        main.notifyDocumentClosed(this);
 
-            DocumentScope.removeScope(this);
-        }
+        DocumentScope.removeScope(this);
     }
 
     @Override
@@ -957,66 +947,66 @@ public class DocumentController implements Document, InitializingBean {
         }
     }
 
-    @Override
-    public void performImportFxml() {
-        fetchFXMLFile().ifPresent(fxmlFile -> editorController.performImportFxml(fxmlFile));
-    }
-
-    @Override
-    public void performIncludeFxml() {
-        fetchFXMLFile().ifPresent(fxmlFile -> editorController.performIncludeFxml(fxmlFile));
-    }
-
-    private Optional<File> fetchFXMLFile() {
-        var fileChooser = new FileChooser();
-        var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"),
-                "*.fxml"); // NOI18N
-        fileChooser.getExtensionFilters().add(f);
-        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
-
-        var fxmlFile = fileChooser.showOpenDialog(documentWindow.getStage());
-        if (fxmlFile != null) {
-            // See DTL-5948: on Linux we anticipate an extension less path.
-            final String path = fxmlFile.getPath();
-            if (!path.endsWith(".fxml")) { // NOI18N
-                fxmlFile = new File(path + ".fxml"); // NOI18N
-            }
-
-            // Keep track of the user choice for next time
-            fileSystem.updateNextInitialDirectory(fxmlFile);
-        }
-        return Optional.ofNullable(fxmlFile);
-    }
-
-    @Override
-    public void performImportMedia() {
-
-        final FileChooser fileChooser = new FileChooser();
-        final ExtensionFilter imageFilter = new ExtensionFilter(I18N.getString("file.filter.label.image"),
-                ResourceUtils.getSupportedImageExtensions());
-        final ExtensionFilter audioFilter = new ExtensionFilter(I18N.getString("file.filter.label.audio"),
-                ResourceUtils.getSupportedAudioExtensions());
-        final ExtensionFilter videoFilter = new ExtensionFilter(I18N.getString("file.filter.label.video"),
-                ResourceUtils.getSupportedVideoExtensions());
-        final ExtensionFilter mediaFilter = new ExtensionFilter(I18N.getString("file.filter.label.media"),
-                ResourceUtils.getSupportedMediaExtensions());
-
-        fileChooser.getExtensionFilters().add(mediaFilter);
-        fileChooser.getExtensionFilters().add(imageFilter);
-        fileChooser.getExtensionFilters().add(audioFilter);
-        fileChooser.getExtensionFilters().add(videoFilter);
-
-        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
-
-        File mediaFile = fileChooser.showOpenDialog(documentWindow.getStage());
-        if (mediaFile != null) {
-
-            // Keep track of the user choice for next time
-            fileSystem.updateNextInitialDirectory(mediaFile);
-
-            this.editorController.performImportMedia(mediaFile);
-        }
-    }
+//    @Override
+//    public void performImportFxml() {
+//        fetchFXMLFile().ifPresent(fxmlFile -> editorController.performImportFxml(fxmlFile));
+//    }
+//
+//    @Override
+//    public void performIncludeFxml() {
+//        fetchFXMLFile().ifPresent(fxmlFile -> editorController.performIncludeFxml(fxmlFile));
+//    }
+//
+//    private Optional<File> fetchFXMLFile() {
+//        var fileChooser = new FileChooser();
+//        var f = new ExtensionFilter(I18N.getString("file.filter.label.fxml"),
+//                "*.fxml"); // NOI18N
+//        fileChooser.getExtensionFilters().add(f);
+//        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
+//
+//        var fxmlFile = fileChooser.showOpenDialog(documentWindow.getStage());
+//        if (fxmlFile != null) {
+//            // See DTL-5948: on Linux we anticipate an extension less path.
+//            final String path = fxmlFile.getPath();
+//            if (!path.endsWith(".fxml")) { // NOI18N
+//                fxmlFile = new File(path + ".fxml"); // NOI18N
+//            }
+//
+//            // Keep track of the user choice for next time
+//            fileSystem.updateNextInitialDirectory(fxmlFile);
+//        }
+//        return Optional.ofNullable(fxmlFile);
+//    }
+//
+//    @Override
+//    public void performImportMedia() {
+//
+//        final FileChooser fileChooser = new FileChooser();
+//        final ExtensionFilter imageFilter = new ExtensionFilter(I18N.getString("file.filter.label.image"),
+//                ResourceUtils.getSupportedImageExtensions());
+//        final ExtensionFilter audioFilter = new ExtensionFilter(I18N.getString("file.filter.label.audio"),
+//                ResourceUtils.getSupportedAudioExtensions());
+//        final ExtensionFilter videoFilter = new ExtensionFilter(I18N.getString("file.filter.label.video"),
+//                ResourceUtils.getSupportedVideoExtensions());
+//        final ExtensionFilter mediaFilter = new ExtensionFilter(I18N.getString("file.filter.label.media"),
+//                ResourceUtils.getSupportedMediaExtensions());
+//
+//        fileChooser.getExtensionFilters().add(mediaFilter);
+//        fileChooser.getExtensionFilters().add(imageFilter);
+//        fileChooser.getExtensionFilters().add(audioFilter);
+//        fileChooser.getExtensionFilters().add(videoFilter);
+//
+//        fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
+//
+//        File mediaFile = fileChooser.showOpenDialog(documentWindow.getStage());
+//        if (mediaFile != null) {
+//
+//            // Keep track of the user choice for next time
+//            fileSystem.updateNextInitialDirectory(mediaFile);
+//
+//            this.editorController.performImportMedia(mediaFile);
+//        }
+//    }
 
     /**
      * Returns true if the specified node is part of the main scene and is either a
@@ -1471,11 +1461,6 @@ public class DocumentController implements Document, InitializingBean {
     @Override
     public FileTime getLoadFileTime() {
         return loadFileTime;
-    }
-
-    @Override
-    public ActionStatus performCloseAction() {
-        return SbPlatform.runForDocument(this, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
     }
 
 }

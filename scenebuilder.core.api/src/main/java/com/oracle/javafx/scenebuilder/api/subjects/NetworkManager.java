@@ -38,8 +38,6 @@ import java.security.cert.X509Certificate;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.util.SubjectManager;
-
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;

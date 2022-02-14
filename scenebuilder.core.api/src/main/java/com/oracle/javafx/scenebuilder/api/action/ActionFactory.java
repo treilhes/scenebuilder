@@ -41,13 +41,13 @@ import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public final class ActionFactory extends AbstractFactory<AbstractAction> {
+public final class ActionFactory extends AbstractFactory<Action> {
 
     public ActionFactory(SceneBuilderBeanFactory sbContext) {
         super(sbContext);
     }
 
-    public <T extends AbstractAction> T create(Class<T> actionClass) {
-        return (T)create((Class<AbstractAction>)actionClass, null);
+    public <T extends Action> T create(Class<T> actionClass) {
+        return (T)create((Class<Action>)actionClass, null);
     }
 }

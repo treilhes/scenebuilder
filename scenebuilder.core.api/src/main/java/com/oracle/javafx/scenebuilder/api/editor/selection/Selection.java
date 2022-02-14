@@ -311,4 +311,8 @@ public interface Selection {
      */
     void toggleSelection(FXOMObject hitObject);
 
+    void selectNext();
+    void selectPrevious();
+    void selectAll();
+
 }

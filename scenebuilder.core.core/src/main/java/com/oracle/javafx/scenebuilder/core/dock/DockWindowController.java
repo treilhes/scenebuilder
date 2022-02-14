@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -74,6 +75,9 @@ public class DockWindowController extends AbstractFxmlWindowController {
     private final DockManager dockManager;
     private final DockPanelController dockPanelController;
     private final DockNameHelper dockNameHelper;
+
+    private final DocumentWindow documentWindow;
+
     // @formatter:off
     public DockWindowController(
             @Autowired Api api,
@@ -92,6 +96,7 @@ public class DockWindowController extends AbstractFxmlWindowController {
         this.dockManager = dockManager;
         this.dockPanelController = dockPanelController;
         this.dockNameHelper = dockNameHelper;
+        this.documentWindow = documentWindow;
 
         dockPanelController.setParentWindow(this);
         dockPanelController.notifyDockCreated();
@@ -159,17 +164,4 @@ public class DockWindowController extends AbstractFxmlWindowController {
         dockManager.dockHide().onNext(this.getDock());
         super.closeWindow();
     }
-
-    @Override
-    public void onCloseRequest() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onFocus() {
-        // TODO Auto-generated method stub
-
-    }
-
 }

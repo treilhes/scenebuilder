@@ -43,13 +43,22 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
+@MenuItemAttachment(
+        id = ShowAboutAction.ABOUT_MENU_ID,
+        targetMenuId = ShowAboutAction.HELP_MENU_ID,
+        label = "menu.title.about",
+        positionRequest = PositionRequest.AsLastChild)
 public class ShowAboutAction extends AbstractAction {
+
+    protected final static String HELP_MENU_ID = "helpMenu"; //NOCHECK
+    public final static String ABOUT_MENU_ID = "aboutMenu"; //NOCHECK
 
     private final AboutWindowController aboutWindowController;
     private final IconSetting iconSetting;

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,13 +41,11 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -66,26 +65,25 @@ import javafx.stage.FileChooser;
 /**
  * Editor for including FXML files into the main document (through fx:include).
  */
+// FIXME strange editor : instead of editing the currently selected include, it adds include / FIXED, NEED TESTING
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class IncludeFxmlEditor extends InlineListEditor {
 
     private final StackPane root = new StackPane();
-    
+
     @FXML
     private Button includeFxmlButton;
     @FXML
     private TextField includeFxmlField;
-	
-    private final Editor editorController;
+
     private final FileSystem fileSystem;
 
     public IncludeFxmlEditor(
-            @Autowired Api api,
-            @Autowired Editor editor) {
+            Api api,
+            FileSystem fileSystem) {
         super(api);
-        this.editorController = editor;
         this.fileSystem = api.getFileSystem();
         initialize();
     }
@@ -130,8 +128,9 @@ public class IncludeFxmlEditor extends InlineListEditor {
         File fxmlFile = chooseFxml();
         if (fxmlFile != null) {
         	fileSystem.updateNextInitialDirectory(fxmlFile);
-            editorController.performIncludeFxml(fxmlFile);
-            includeFxmlField.setText(getRelativePath(fxmlFile));
+        	String relativePath = getRelativePath(fxmlFile);
+            userUpdateValueProperty(relativePath);
+            includeFxmlField.setText(relativePath);
         }
     }
 
@@ -159,7 +158,7 @@ public class IncludeFxmlEditor extends InlineListEditor {
         FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
         URL fxmlLocation = fxomDocument == null ? null : fxomDocument.getLocation();
         assert fxmlLocation != null;
-        
+
         String prefixedValue = PrefixedValue.makePrefixedValue(url, fxmlLocation).toString();
         return removeAtSign(prefixedValue);
     }

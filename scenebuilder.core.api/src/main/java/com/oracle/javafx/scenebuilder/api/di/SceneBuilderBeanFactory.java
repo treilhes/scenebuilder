@@ -44,6 +44,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.ResolvableType;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -195,4 +198,17 @@ public class SceneBuilderBeanFactory {
         return context.getBean(string, parameters);
     }
 
+    public Object parseExpression(String spelExpression, Object rootContext) {
+        try {
+            StandardEvaluationContext  stContext  = new StandardEvaluationContext(rootContext);
+            SpelExpressionParser parser = new SpelExpressionParser();
+            return parser.parseRaw(spelExpression).getValue(stContext);
+        } catch (EvaluationException e) {
+            return e.getMessage();
+        }
+    }
+
+    public boolean isExpression(String spelExpression) {
+        return spelExpression != null ? spelExpression.startsWith("#") : false;
+    }
 }

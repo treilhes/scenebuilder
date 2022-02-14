@@ -1,1 +1,0 @@
-package com.oracle.javafx.scenebuilder.template.menu;

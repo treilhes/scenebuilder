@@ -54,7 +54,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.util.SceneBuilderLoadingProgress;
 
 /**
  * The Class SceneBuilderBeanFactoryPostProcessor.
@@ -80,7 +79,7 @@ public class SceneBuilderBeanFactoryPostProcessor implements BeanFactoryPostProc
     public void postProcessBeanFactory(ConfigurableListableBeanFactory factory) throws BeansException {
         factory.registerScope(SceneBuilderBeanFactory.SCOPE_DOCUMENT, new DocumentScope());
         factory.addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
-        factory.addBeanPostProcessor(SceneBuilderLoadingProgress.get().getProgressListener());
+        //factory.addBeanPostProcessor(SceneBuilderLoadingProgress.get().getProgressListener());
         DefaultListableBeanFactory bf = (DefaultListableBeanFactory) factory;
         bf.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver() {
 

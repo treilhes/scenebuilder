@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.ui.dialog.TextViewDialog;
 import com.oracle.javafx.scenebuilder.ui.editor.messagelog.MessageLog;
 import com.oracle.javafx.scenebuilder.ui.i18n.I18NLayout;
 import com.oracle.javafx.scenebuilder.ui.inlineedit.InlineEditController;
-import com.oracle.javafx.scenebuilder.ui.menu.CoreUiMenuProvider;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessagePanelController;
@@ -79,7 +78,6 @@ public class BaseUiExtension extends AbstractExtension {
         return Arrays.asList(
                 AlertDialog.class,
                 BottomDividerVPosPreference.class,
-                CoreUiMenuProvider.class,
                 DialogController.class,
                 DocumentController.class,
                 DocumentWindowController.class,

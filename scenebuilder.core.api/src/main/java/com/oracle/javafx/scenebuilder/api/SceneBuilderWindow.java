@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,4 +39,16 @@ public interface SceneBuilderWindow {
     Stage getStage();
     void closeWindow();
     void openWindow();
+
+    void setCloseHandler(CloseHandler closeHandler);
+    void setFocusHandler(FocusHandler closeHandler);
+
+    @FunctionalInterface
+    public interface CloseHandler{
+        void onClose();
+    }
+    @FunctionalInterface
+    public interface FocusHandler{
+        void onFocus();
+    }
 }

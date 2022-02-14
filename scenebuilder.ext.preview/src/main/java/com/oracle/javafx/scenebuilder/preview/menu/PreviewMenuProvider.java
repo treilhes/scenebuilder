@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,7 +36,6 @@ package com.oracle.javafx.scenebuilder.preview.menu;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -44,13 +44,13 @@ import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.menubar.MenuBarObjectConfigurator;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewAction;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
-import com.oracle.javafx.scenebuilder.preview.controller.PreviewMenuController;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 import javafx.scene.control.Menu;
@@ -64,39 +64,27 @@ import javafx.scene.control.ToggleGroup;
 @Lazy
 public class PreviewMenuProvider implements MenuItemProvider {
 
-    private final static String PREVIEW_MENU_ID = "previewMenu";
-    private final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
-    private final static String SHOW_PREVIEW_IN_DIALOG_ID = "showPreviewInDialog";
-
+    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
     private final DocumentManager documentManager;
-    private final PreviewMenuController previewMenuController;
     private final PreviewWindowController previewWindowController;
     private final ActionFactory actionFactory;
 
     public PreviewMenuProvider(
-            @Autowired ActionFactory actionFactory,
-            @Autowired DocumentManager documentManager,
-            @Autowired  @Lazy PreviewMenuController previewMenuController,
-            @Autowired  @Lazy PreviewWindowController previewWindowController) {
+            MenuBarObjectConfigurator menuBarObjectConfigurator,
+            ActionFactory actionFactory,
+            DocumentManager documentManager,
+            @Lazy PreviewWindowController previewWindowController) {
+        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
         this.actionFactory = actionFactory;
         this.documentManager = documentManager;
-        this.previewMenuController = previewMenuController;
         this.previewWindowController = previewWindowController;
     }
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        
-        MenuItemAttachment launchPreview = MenuItemAttachment.single(PREVIEW_MENU_ID, PositionRequest.AsFirstChild, 
-                "menu.title.show.preview.in.window", SHOW_PREVIEW_IN_WINDOW_ID, actionFactory, ShowPreviewAction.class);
-        
-        MenuItemAttachment launchPreviewDialog = MenuItemAttachment.single(SHOW_PREVIEW_IN_WINDOW_ID, PositionRequest.AsNextSibling, 
-                "menu.title.show.preview.in.dialog", SHOW_PREVIEW_IN_DIALOG_ID, actionFactory, ShowPreviewDialogAction.class);
-        
+
         return Arrays.asList(
-                launchPreview, 
-                launchPreviewDialog,
-                MenuItemAttachment.separator(SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
+                MenuItemAttachment.create(menuBarObjectConfigurator.separator().build(), ShowPreviewDialogAction.SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
                 new ChangePreviewSizeAttachment());
     }
 
@@ -109,7 +97,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
         @Override
         public String getTargetId() {
-            return PREVIEW_MENU_ID;
+            return DefaultMenu.PREVIEW_MENU_ID;
         }
 
         @Override
@@ -145,10 +133,10 @@ public class PreviewMenuProvider implements MenuItemProvider {
                         getStringFromDouble(previewWindowController.getRoot().prefWidth(-1)),
                         getStringFromDouble(previewWindowController.getRoot().prefHeight(-1))));
             });
-            
+
             documentManager.fxomDocument().subscribe(fd -> {
                 boolean disabled = fd == null;
-                
+
                 if (disabled) {
                     menu.getItems().forEach(m -> m.setDisable(disabled));
                 } else {
@@ -178,7 +166,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
         private RadioMenuItem createSizeMenu(Size size, ToggleGroup sizeToggle) {
             RadioMenuItem mi = new RadioMenuItem(size.toString());
             mi.setToggleGroup(sizeToggle);
-            mi.setOnAction(e -> previewMenuController.performChangePreviewSize(size));
+            mi.setOnAction(e -> previewWindowController.setSize(size));
             mi.setUserData(size);
             return mi;
         }

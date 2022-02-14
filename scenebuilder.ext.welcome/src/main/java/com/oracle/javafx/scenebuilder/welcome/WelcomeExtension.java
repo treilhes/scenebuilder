@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.welcome.actions.OpenScenebuilderExtension;
+import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogInitializer;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.welcome.i18n.I18NWelcome;
 
@@ -46,14 +47,14 @@ public class WelcomeExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("b434d2b2-2cf7-4d5b-b31d-99939487cf1c");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
                 I18NWelcome.class,
                 WelcomeDialogWindowController.class,
-                OpenScenebuilderExtension.class
+                WelcomeDialogInitializer.class
             );
      // @formatter:on
     }

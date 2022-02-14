@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,29 +33,30 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DockWindowFactory {
 
     private final SceneBuilderBeanFactory context;
-    private final DockManager dockManager;
+    private final Document document;
 
     protected DockWindowFactory(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired DockManager dockManager) {
+            SceneBuilderBeanFactory context,
+            @Lazy Document document) {
         this.context = context;
-        this.dockManager = dockManager;
+        this.document = document;
     }
 
     public DockWindowController newDockWindow() {
         DockWindowController dwc = context.getBean(DockWindowController.class);
+        dwc.setFocusHandler(document::onFocus);
         return dwc;
     }
 }

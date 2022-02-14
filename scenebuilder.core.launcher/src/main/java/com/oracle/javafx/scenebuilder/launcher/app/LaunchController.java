@@ -50,11 +50,10 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
-import com.oracle.javafx.scenebuilder.launcher.actions.OpenScenebuilderAction;
+import com.oracle.javafx.scenebuilder.api.launcher.SceneBuilderLoadingProgress;
+import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 
 import javafx.application.Application.Parameters;
 import javafx.application.Platform;
@@ -74,20 +73,20 @@ public class LaunchController implements AppPlatform.AppNotificationHandler, App
 
     private final Dialog dialog;
 
-    private final ActionFactory actionFactory;
-
     private final Main main;
+
+    private final List<InitWithSceneBuilder> initializations;
 
     public LaunchController(
             @Autowired FileSystem fileSystem,
-            @Autowired ActionFactory actionFactory,
             @Autowired Main main,
-            @Autowired @Lazy Dialog dialog) {
+            @Autowired @Lazy Dialog dialog,
+            @Lazy @Autowired(required = false) List<InitWithSceneBuilder> initializations) {
 
         this.fileSystem = fileSystem;
         this.dialog = dialog;
-        this.actionFactory = actionFactory;
         this.main = main;
+        this.initializations = initializations;
     }
 
     @Override
@@ -123,9 +122,13 @@ public class LaunchController implements AppPlatform.AppNotificationHandler, App
     @Override
     public void handleLaunch(List<String> files) {
         List<File> lFiles = files.stream().map(s -> new File(s)).filter(f -> f.exists()).collect(Collectors.toList());
-        OpenScenebuilderAction action = actionFactory.create(OpenScenebuilderAction.class);
-        action.setFiles(lFiles);
-        action.checkAndPerform();
+
+        main.open(lFiles);
+
+        SceneBuilderLoadingProgress.get().end();
+
+        initializations.forEach(a -> a.init());
+
     }
 
     @Override
@@ -134,9 +137,8 @@ public class LaunchController implements AppPlatform.AppNotificationHandler, App
         assert files.isEmpty() == false;
 
         List<File> lFiles = files.stream().map(s -> new File(s)).filter(f -> f.exists()).collect(Collectors.toList());
-        OpenFilesAction action = actionFactory.create(OpenFilesAction.class);
-        action.setFxmlFile(lFiles);
-        action.checkAndPerform();
+
+        main.open(lFiles);
     }
 
     @Override

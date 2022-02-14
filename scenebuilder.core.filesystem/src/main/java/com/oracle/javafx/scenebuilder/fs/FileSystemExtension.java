@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,26 +38,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.fs.action.CloseFileAction;
-import com.oracle.javafx.scenebuilder.fs.action.ImportFxmlAction;
-import com.oracle.javafx.scenebuilder.fs.action.ImportMediaAction;
-import com.oracle.javafx.scenebuilder.fs.action.IncludeFxmlAction;
-import com.oracle.javafx.scenebuilder.fs.action.LoadBlankAction;
-import com.oracle.javafx.scenebuilder.fs.action.LoadBlankInNewWindowAction;
-import com.oracle.javafx.scenebuilder.fs.action.LoadFileAction;
-import com.oracle.javafx.scenebuilder.fs.action.LoadUrlAction;
-import com.oracle.javafx.scenebuilder.fs.action.OpenFilesAction;
-import com.oracle.javafx.scenebuilder.fs.action.ReloadFileAction;
-import com.oracle.javafx.scenebuilder.fs.action.RevealFxmlFileAction;
-import com.oracle.javafx.scenebuilder.fs.action.RevertAction;
-import com.oracle.javafx.scenebuilder.fs.action.SaveAction;
-import com.oracle.javafx.scenebuilder.fs.action.SaveAsAction;
-import com.oracle.javafx.scenebuilder.fs.action.SaveOrSaveAsAction;
-import com.oracle.javafx.scenebuilder.fs.action.SelectAndOpenFilesAction;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
-import com.oracle.javafx.scenebuilder.fs.controller.FileSystemMenuController;
-import com.oracle.javafx.scenebuilder.fs.menu.FileSystemMenuProvider;
+import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
+import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
@@ -74,31 +59,15 @@ public class FileSystemExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 FileSystemController.class,
-                FileSystemMenuController.class,
-                FileSystemMenuProvider.class,
+                ImportFileJob.class,
+                ImportFileJob.Factory.class,
+                IncludeFileJob.class,
+                IncludeFileJob.Factory.class,
                 InitialDirectoryPreference.class,
                 RecentItemsPreference.class,
                 RecentItemsSizePreference.class,
                 ClassLoaderController.class,
-                CloseFileAction.class,
-                LoadBlankAction.class,
-                LoadBlankInNewWindowAction.class,
-                LoadFileAction.class,
-                LoadUrlAction.class,
-                SelectAndOpenFilesAction.class,
-                ReloadFileAction.class,
-                RevealFxmlFileAction.class,
-                RevertAction.class,
-                SaveAction.class,
-                SaveAsAction.class,
-                SaveOrSaveAsAction.class,
-                SelectAndOpenFilesAction.class,
-                OpenFilesAction.class,
-                WildcardImportsPreference.class,
-                
-                ImportFxmlAction.class,
-                ImportMediaAction.class,
-                IncludeFxmlAction.class
+                WildcardImportsPreference.class
             );
      // @formatter:on
     }

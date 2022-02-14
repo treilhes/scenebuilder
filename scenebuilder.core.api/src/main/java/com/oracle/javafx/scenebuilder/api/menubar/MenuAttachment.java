@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,4 +39,23 @@ public interface MenuAttachment {
 	String getTargetId();
 	PositionRequest getPositionRequest();
 	Menu getMenu();
+
+	static MenuAttachment create(Menu menu, String targetId, PositionRequest positionRequest) {
+	    return new MenuAttachment() {
+            @Override
+            public String getTargetId() {
+                return targetId;
+            }
+
+            @Override
+            public PositionRequest getPositionRequest() {
+                return positionRequest;
+            }
+
+            @Override
+            public Menu getMenu() {
+                return menu;
+            }
+        };
+	}
 }

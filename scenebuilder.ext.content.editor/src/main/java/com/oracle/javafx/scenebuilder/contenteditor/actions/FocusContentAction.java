@@ -33,7 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor.actions;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -42,13 +41,22 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about",
     accelerator = "CTRL+0")
+@MenuItemAttachment(
+        id = FocusContentAction.FOCUS_CONTENT_MENU_ID,
+        targetMenuId = FocusContentAction.VIEW_MENU_ID,
+        label = "menu.title.content",
+        positionRequest = PositionRequest.AsFirstChild)
 public class FocusContentAction extends AbstractAction {
+
+    protected final static String VIEW_MENU_ID = "viewMenu"; //NOCHECK
+    public final static String FOCUS_CONTENT_MENU_ID = "focusContentMenu"; //NOCHECK
 
     private final Content contentPanelController;
 

@@ -37,6 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.core.accelerator.AcceleratorsController;
+import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.core.dock.DockNameHelper;
@@ -61,6 +63,7 @@ import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.i18n.I18NScenebuilderCore;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.menubar.AnnotatedActionMenuItemProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class ScenebuilderCoreExtension extends AbstractExtension {
@@ -74,6 +77,9 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                AcceleratorsMapPreference.class,
+                AcceleratorsController.class,
+                AnnotatedActionMenuItemProvider.class,
                 BorderPaneHierarchyMask.class,
                 BorderPaneHierarchyMask.Factory.class,
                 ControllerClassEditor.class,

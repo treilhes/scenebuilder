@@ -54,7 +54,7 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 	                .withIsCollection(${property.raw.collection})
 	                <#if property.raw.image??>.withIconUrl(getClass().getResource("${property.raw.image}"))</#if>
 	                <#if property.raw.imageX2??>.withIconX2Url(getClass().getResource("${property.raw.imageX2}"))</#if>
-	                .withIsMain(<#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>)
+	                <#if property.raw.main??>.withIsMain(${property.raw.main})<#else>.withIsMain(<#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>)</#if>
 	                .withOrder(${property.raw.order?c})
 	                .withVisibility(Visibility.${property.raw.visibility.name()})
 	                .build();

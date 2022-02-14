@@ -39,11 +39,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -65,14 +63,11 @@ import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
@@ -96,8 +91,6 @@ import com.oracle.javafx.scenebuilder.selection.job.CutSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.DeleteSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.ImportFileJob;
-import com.oracle.javafx.scenebuilder.selection.job.IncludeFileJob;
 import com.oracle.javafx.scenebuilder.selection.job.PasteIntoJob;
 import com.oracle.javafx.scenebuilder.selection.job.PasteJob;
 import com.oracle.javafx.scenebuilder.selection.job.SendBackwardJob;
@@ -115,8 +108,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.input.Clipboard;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -189,8 +180,8 @@ public class EditorController implements Editor {
     private final TrimSelectionJob.Factory trimSelectionJobFactory;
     private final UnwrapJob.Factory unwrapJobFactory;
     private final UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory;
-    private final ImportFileJob.Factory importFileJobFactory;
-    private final IncludeFileJob.Factory includeFileJobFactory;
+//    private final ImportFileJob.Factory importFileJobFactory;
+//    private final IncludeFileJob.Factory includeFileJobFactory;
     private final AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory;
     private final AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory;
 
@@ -228,8 +219,8 @@ public class EditorController implements Editor {
             TrimSelectionJob.Factory trimSelectionJobFactory,
             UnwrapJob.Factory unwrapJobFactory,
             UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory,
-            ImportFileJob.Factory importFileJobFactory,
-            IncludeFileJob.Factory includeFileJobFactory,
+//            ImportFileJob.Factory importFileJobFactory,
+//            IncludeFileJob.Factory includeFileJobFactory,
             AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory,
             AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory,
 
@@ -274,8 +265,8 @@ public class EditorController implements Editor {
         this.trimSelectionJobFactory = trimSelectionJobFactory;
         this.unwrapJobFactory = unwrapJobFactory;
         this.useComputedSizesSelectionJobFactory = useComputedSizesSelectionJobFactory;
-        this.importFileJobFactory = importFileJobFactory;
-        this.includeFileJobFactory = includeFileJobFactory;
+//        this.importFileJobFactory = importFileJobFactory;
+//        this.includeFileJobFactory = includeFileJobFactory;
         this.addContextMenuToSelectionJobFactory = addContextMenuToSelectionJobFactory;
         this.addTooltipToSelectionJobFactory = addTooltipToSelectionJobFactory;
 
@@ -1448,31 +1439,31 @@ public class EditorController implements Editor {
     @Override
     public void performControlAction(ControlAction controlAction) {
         switch (controlAction) {
-        case COPY: {
-            performCopy();
-            break;
-        }
-
-        case SELECT_ALL: {
-            performSelectAll();
-            break;
-        }
-        case SELECT_NONE: {
-            performSelectNone();
-            break;
-        }
-        case SELECT_PARENT: {
-            performSelectParent();
-            break;
-        }
-        case SELECT_NEXT: {
-            performSelectNext();
-            break;
-        }
-        case SELECT_PREVIOUS: {
-            performSelectPrevious();
-            break;
-        }
+//        case COPY: {
+//            performCopy();
+//            break;
+//        }
+//
+//        case SELECT_ALL: {
+//            performSelectAll();
+//            break;
+//        }
+//        case SELECT_NONE: {
+//            performSelectNone();
+//            break;
+//        }
+//        case SELECT_PARENT: {
+//            performSelectParent();
+//            break;
+//        }
+//        case SELECT_NEXT: {
+//            performSelectNext();
+//            break;
+//        }
+//        case SELECT_PREVIOUS: {
+//            performSelectPrevious();
+//            break;
+//        }
         case TOGGLE_SAMPLE_DATA: {
             setSampleDataEnabled(!isSampleDataEnabled());
             break;
@@ -1497,30 +1488,30 @@ public class EditorController implements Editor {
             return false;
         }
         switch (controlAction) {
-        case COPY: {
-            result = canPerformCopy();
-            break;
-        }
-        case SELECT_ALL: {
-            result = canPerformSelectAll();
-            break;
-        }
-        case SELECT_NONE: {
-            result = canPerformSelectNone();
-            break;
-        }
-        case SELECT_PARENT: {
-            result = canPerformSelectParent();
-            break;
-        }
-        case SELECT_NEXT: {
-            result = canPerformSelectNext();
-            break;
-        }
-        case SELECT_PREVIOUS: {
-            result = canPerformSelectPrevious();
-            break;
-        }
+//        case COPY: {
+//            result = canPerformCopy();
+//            break;
+//        }
+//        case SELECT_ALL: {
+//            result = canPerformSelectAll();
+//            break;
+//        }
+//        case SELECT_NONE: {
+//            result = canPerformSelectNone();
+//            break;
+//        }
+//        case SELECT_PARENT: {
+//            result = canPerformSelectParent();
+//            break;
+//        }
+//        case SELECT_NEXT: {
+//            result = canPerformSelectNext();
+//            break;
+//        }
+//        case SELECT_PREVIOUS: {
+//            result = canPerformSelectPrevious();
+//            break;
+//        }
         case TOGGLE_SAMPLE_DATA: {
             result = true;
             break;
@@ -1533,87 +1524,87 @@ public class EditorController implements Editor {
         return result;
     }
 
-    /**
-     * Performs the 'import' FXML edit action. This action creates an object
-     * matching the root node of the selected FXML file and insert it in the
-     * document (either as root if the document is empty or under the selection
-     * common ancestor node otherwise).
-     *
-     * @param fxmlFile the FXML file to be imported
-     */
-    @Override
-    public void performImportFxml(File fxmlFile) {
-        performImport(fxmlFile);
-    }
+//    /**
+//     * Performs the 'import' FXML edit action. This action creates an object
+//     * matching the root node of the selected FXML file and insert it in the
+//     * document (either as root if the document is empty or under the selection
+//     * common ancestor node otherwise).
+//     *
+//     * @param fxmlFile the FXML file to be imported
+//     */
+//    @Override
+//    public void performImportFxml(File fxmlFile) {
+//        performImport(fxmlFile);
+//    }
 
-    /**
-     * Performs the 'import' media edit action. This action creates an object
-     * matching the type of the selected media file (either ImageView or MediaView)
-     * and insert it in the document (either as root if the document is empty or
-     * under the selection common ancestor node otherwise).
-     *
-     * @param mediaFile the media file to be imported
-     */
-    @Override
-    public void performImportMedia(File mediaFile) {
-        performImport(mediaFile);
-    }
+//    /**
+//     * Performs the 'import' media edit action. This action creates an object
+//     * matching the type of the selected media file (either ImageView or MediaView)
+//     * and insert it in the document (either as root if the document is empty or
+//     * under the selection common ancestor node otherwise).
+//     *
+//     * @param mediaFile the media file to be imported
+//     */
+//    @Override
+//    public void performImportMedia(File mediaFile) {
+//        performImport(mediaFile);
+//    }
 
-    private void performImport(File file) {
-        final ImportFileJob job = importFileJobFactory.getJob(file);
-        if (job.isExecutable()) {
-            jobManager.push(job);
-        } else {
-            final String target;
-            if (job.getTargetObject() == null) {
-                target = null;
-            } else {
-                final Object sceneGraphTarget = job.getTargetObject().getSceneGraphObject();
-                if (sceneGraphTarget == null) {
-                    target = null;
-                } else {
-                    target = sceneGraphTarget.getClass().getSimpleName();
-                }
-            }
-            if (target != null) {
-                getMessageLog().logWarningMessage("import.from.file.failed.target", file.getName(), target);
-            } else {
-                getMessageLog().logWarningMessage("import.from.file.failed", file.getName());
-            }
-        }
-    }
+//    private void performImport(File file) {
+//        final ImportFileJob job = importFileJobFactory.getJob(file);
+//        if (job.isExecutable()) {
+//            jobManager.push(job);
+//        } else {
+//            final String target;
+//            if (job.getTargetObject() == null) {
+//                target = null;
+//            } else {
+//                final Object sceneGraphTarget = job.getTargetObject().getSceneGraphObject();
+//                if (sceneGraphTarget == null) {
+//                    target = null;
+//                } else {
+//                    target = sceneGraphTarget.getClass().getSimpleName();
+//                }
+//            }
+//            if (target != null) {
+//                getMessageLog().logWarningMessage("import.from.file.failed.target", file.getName(), target);
+//            } else {
+//                getMessageLog().logWarningMessage("import.from.file.failed", file.getName());
+//            }
+//        }
+//    }
 
-    /**
-     * Performs the 'include' FXML edit action. As opposed to the 'import' edit
-     * action, the 'include' action does not copy the FXML content but adds an
-     * fx:include element to the FXML document.
-     *
-     * @param fxmlFile the FXML file to be included
-     */
-    @Override
-    public void performIncludeFxml(File fxmlFile) {
-        final IncludeFileJob job = includeFileJobFactory.getJob(fxmlFile);
-        if (job.isExecutable()) {
-            jobManager.push(job);
-        } else {
-            final String target;
-            if (job.getTargetObject() == null) {
-                target = null;
-            } else {
-                final Object sceneGraphTarget = job.getTargetObject().getSceneGraphObject();
-                if (sceneGraphTarget == null) {
-                    target = null;
-                } else {
-                    target = sceneGraphTarget.getClass().getSimpleName();
-                }
-            }
-            if (target != null) {
-                getMessageLog().logWarningMessage("include.file.failed.target", fxmlFile.getName(), target);
-            } else {
-                getMessageLog().logWarningMessage("include.file.failed", fxmlFile.getName());
-            }
-        }
-    }
+//    /**
+//     * Performs the 'include' FXML edit action. As opposed to the 'import' edit
+//     * action, the 'include' action does not copy the FXML content but adds an
+//     * fx:include element to the FXML document.
+//     *
+//     * @param fxmlFile the FXML file to be included
+//     */
+//    @Override
+//    public void performIncludeFxml(File fxmlFile) {
+//        final IncludeFileJob job = includeFileJobFactory.getJob(fxmlFile);
+//        if (job.isExecutable()) {
+//            jobManager.push(job);
+//        } else {
+//            final String target;
+//            if (job.getTargetObject() == null) {
+//                target = null;
+//            } else {
+//                final Object sceneGraphTarget = job.getTargetObject().getSceneGraphObject();
+//                if (sceneGraphTarget == null) {
+//                    target = null;
+//                } else {
+//                    target = sceneGraphTarget.getClass().getSimpleName();
+//                }
+//            }
+//            if (target != null) {
+//                getMessageLog().logWarningMessage("include.file.failed.target", fxmlFile.getName(), target);
+//            } else {
+//                getMessageLog().logWarningMessage("include.file.failed", fxmlFile.getName());
+//            }
+//        }
+//    }
 
 //    /**
 //     * Performs the 'insert' edit action. This action creates an object
@@ -1733,337 +1724,337 @@ public class EditorController implements Editor {
         return job.isExecutable();
     }
 
-    /**
-     * Performs the copy control action.
-     */
-    private void performCopy() {
-        assert canPerformCopy(); // (1)
-        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because of (1)
-        final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-
-        final ClipboardEncoder encoder = new ClipboardEncoder(osg.getSortedItems());
-        assert encoder.isEncodable();
-        Clipboard.getSystemClipboard().setContent(encoder.makeEncoding());
-    }
-
-    /**
-     * Returns true if the selection is not empty.
-     *
-     * @return if the selection is not empty.
-     */
-    private boolean canPerformCopy() {
-        return selection.getGroup() instanceof ObjectSelectionGroup;
-    }
-
-    /**
-     * Performs the select all control action. Select all sub components of the
-     * selection common ancestor.
-     */
-    private void performSelectAll() {
-        assert canPerformSelectAll(); // (1)
-        final FXOMObject rootObject = getFxomDocument().getFxomRoot();
-        if (selection.isEmpty()) { // (1)
-            // If the current selection is empty, we select the root object
-            selection.select(rootObject);
-        } else if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            // Otherwise, select all sub components of the common ancestor ??
-            final FXOMObject ancestor = selection.getAncestor();
-            assert ancestor != null; // Because of (1)
-            final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(ancestor);
-            final Set<FXOMObject> selectableObjects = new HashSet<>();
-            // BorderPane special case : use accessories
-            if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
-                final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
-                final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
-                final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
-                final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
-                final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
-                for (FXOMObject accessoryObject : new FXOMObject[] { top, left, center, right, bottom }) {
-                    if (accessoryObject != null) {
-                        selectableObjects.add(accessoryObject);
-                    }
-                }
-            } else {
-                assert mask.isAcceptingSubComponent(); // Because of (1)
-                selectableObjects.addAll(mask.getSubComponents());
-            }
-            selection.select(selectableObjects);
-        } else if (selection.getGroup() instanceof GridSelectionGroup) {
-            // Select ALL rows / columns
-            final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-            final FXOMObject gridPane = gsg.getHitItem();
-            assert gridPane instanceof FXOMInstance;
-            final GridPaneHierarchyMask gridPaneMask = gridPaneHierarchyMaskFactory.getMask(gridPane);
-            int size = 0;
-            switch (gsg.getType()) {
-            case ROW:
-                size = gridPaneMask.getRowsSize();
-                break;
-            case COLUMN:
-                size = gridPaneMask.getColumnsSize();
-                break;
-            default:
-                assert false;
-                break;
-            }
-            // Select first index
-
-            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), 0));
-            for (int index = 1; index < size; index++) {
-                selection.toggleSelection(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), index));
-            }
-        } else {
-            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
-
-        }
-    }
-
-    /**
-     * Returns true if the root object is not selected and if the sub components of
-     * the selection common ancestor are not all already selected.
-     *
-     * @return if the root object is not selected and if the sub components of the
-     *         selection common ancestor are not all already selected.
-     */
-    private boolean canPerformSelectAll() {
-        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
-        if (selection.isEmpty()) { // (1)
-            return true;
-        } else if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final FXOMObject rootObject = getFxomDocument().getFxomRoot();
-            // Cannot select all if root is selected
-            if (selection.isSelected(rootObject)) { // (1)
-                return false;
-            } else {
-                // Cannot select all if all sub components are already selected
-                final FXOMObject ancestor = selection.getAncestor();
-                assert ancestor != null; // Because of (1)
-                final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(ancestor);
-                // BorderPane special case : use accessories
-                if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
-                    final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
-                    final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
-                    final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
-                    final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
-                    final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
-                    for (FXOMObject bpAccessoryObject : new FXOMObject[] { top, left, center, right, bottom }) {
-                        if (bpAccessoryObject != null && selection.isSelected(bpAccessoryObject) == false) {
-                            return true;
-                        }
-                    }
-                } else if (mask.isAcceptingSubComponent()) {
-                    for (FXOMObject subComponentObject : mask.getSubComponents()) {
-                        if (selection.isSelected(subComponentObject) == false) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        } else if (selection.getGroup() instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-            // GridSelectionGroup => at least 1 row/column is selected
-            assert gsg.getIndexes().isEmpty() == false;
-            return true;
-        } else {
-            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
-        }
-        return false;
-    }
-
-    /**
-     * Performs the select parent control action. If the selection is multiple, we
-     * select the common ancestor.
-     */
-    private void performSelectParent() {
-        assert canPerformSelectParent(); // (1)
-        final FXOMObject ancestor = selection.getAncestor();
-        assert ancestor != null; // Because of (1)
-        selection.select(ancestor);
-    }
-
-    /**
-     * Returns true if the selection is not empty and the root object is not
-     * selected.
-     *
-     * @return if the selection is not empty and the root object is not selected.
-     */
-    private boolean canPerformSelectParent() {
-        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
-        final FXOMObject rootObject = getFxomDocument().getFxomRoot();
-        return !selection.isEmpty() && !selection.isSelected(rootObject);
-    }
-
-    /**
-     * Performs the select next control action.
-     */
-    private void performSelectNext() {
-        assert canPerformSelectNext(); // (1)
-
-        final AbstractSelectionGroup asg = selection.getGroup();
-        if (asg instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
-            final Set<FXOMObject> items = osg.getItems();
-            assert items.size() == 1; // Because of (1)
-            final FXOMObject selectedObject = items.iterator().next();
-            final FXOMObject nextSibling = selectedObject.getNextSlibing();
-            assert nextSibling != null; // Because of (1)
-            selection.select(nextSibling);
-        } else {
-            assert asg instanceof GridSelectionGroup; // Because of (1)
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final FXOMObject gridPane = gsg.getHitItem();
-            final GridPaneHierarchyMask mask = gridPaneHierarchyMaskFactory.getMask(gridPane);
-            assert gridPane instanceof FXOMInstance;
-            final Set<Integer> indexes = gsg.getIndexes();
-            assert indexes.size() == 1; // Because of (1)
-            int selectedIndex = indexes.iterator().next();
-            int nextIndex = selectedIndex + 1;
-            int size = 0;
-            switch (gsg.getType()) {
-            case ROW:
-                size = mask.getRowsSize();
-                break;
-            case COLUMN:
-                size = mask.getColumnsSize();
-                break;
-            default:
-                assert false;
-                break;
-            }
-            assert nextIndex < size; // Because of (1)
-            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), nextIndex));
-        }
-    }
-
-    /**
-     * Returns true if the selection is single and the container of the selected
-     * object container contains a child next to the selected one.
-     *
-     * @return if the selection is single and the container of the selected object
-     *         container contains a child next to the selected one.
-     */
-    private boolean canPerformSelectNext() {
-        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
-        if (selection.isEmpty()) {
-            return false;
-        }
-        final AbstractSelectionGroup asg = selection.getGroup();
-        if (asg instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
-            final Set<FXOMObject> items = osg.getItems();
-            if (items.size() != 1) {
-                return false;
-            }
-            final FXOMObject selectedObject = items.iterator().next();
-            return selectedObject.getNextSlibing() != null;
-        } else if (asg instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final Set<Integer> indexes = gsg.getIndexes();
-            if (indexes.size() != 1) {
-                return false;
-            }
-            final FXOMObject gridPane = gsg.getHitItem();
-            final GridPaneHierarchyMask mask = gridPaneHierarchyMaskFactory.getMask(gridPane);
-            int size = 0;
-            switch (gsg.getType()) {
-            case ROW:
-                size = mask.getRowsSize();
-                break;
-            case COLUMN:
-                size = mask.getColumnsSize();
-                break;
-            default:
-                assert false;
-                break;
-            }
-            final int index = indexes.iterator().next();
-            return index < size - 1;
-        } else {
-            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
-        }
-        return false;
-    }
-
-    /**
-     * Performs the select previous control action.
-     */
-    private void performSelectPrevious() {
-        assert canPerformSelectPrevious(); // (1)
-
-        final AbstractSelectionGroup asg = selection.getGroup();
-        if (asg instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
-            final Set<FXOMObject> items = osg.getItems();
-            assert items.size() == 1; // Because of (1)
-            final FXOMObject selectedObject = items.iterator().next();
-            final FXOMObject previousSibling = selectedObject.getPreviousSlibing();
-            assert previousSibling != null; // Because of (1)
-            selection.select(previousSibling);
-        } else {
-            assert asg instanceof GridSelectionGroup; // Because of (1)
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final FXOMObject gridPane = gsg.getHitItem();
-            assert gridPane instanceof FXOMInstance;
-            final Set<Integer> indexes = gsg.getIndexes();
-            assert indexes.size() == 1; // Because of (1)
-            int selectedIndex = indexes.iterator().next();
-            int previousIndex = selectedIndex - 1;
-            assert previousIndex >= 0; // Because of (1)
-            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), previousIndex));
-        }
-    }
-
-    /**
-     * Returns true if the selection is single and the container of the selected
-     * object container contains a child previous to the selected one.
-     *
-     * @return if the selection is single and the container of the selected object
-     *         container contains a child previous to the selected one.
-     */
-    private boolean canPerformSelectPrevious() {
-        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
-        if (selection.isEmpty()) {
-            return false;
-        }
-        final AbstractSelectionGroup asg = selection.getGroup();
-        if (asg instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
-            final Set<FXOMObject> items = osg.getItems();
-            if (items.size() != 1) {
-                return false;
-            }
-            final FXOMObject selectedObject = items.iterator().next();
-            return selectedObject.getPreviousSlibing() != null;
-        } else if (asg instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-            final Set<Integer> indexes = gsg.getIndexes();
-            if (indexes.size() != 1) {
-                return false;
-            }
-            final int index = indexes.iterator().next();
-            return index > 0;
-        } else {
-            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
-        }
-        return false;
-    }
-
-    /**
-     * Performs the select none control action.
-     */
-    private void performSelectNone() {
-        assert canPerformSelectNone();
-        selection.clear();
-    }
-
-    /**
-     * Returns true if the selection is not empty.
-     *
-     * @return if the selection is not empty.
-     */
-    private boolean canPerformSelectNone() {
-        return getSelection().isEmpty() == false;
-    }
+//    /**
+//     * Performs the copy control action.
+//     */
+//    private void performCopy() {
+//        assert canPerformCopy(); // (1)
+//        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because of (1)
+//        final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+//
+//        final ClipboardEncoder encoder = new ClipboardEncoder(osg.getSortedItems());
+//        assert encoder.isEncodable();
+//        Clipboard.getSystemClipboard().setContent(encoder.makeEncoding());
+//    }
+//
+//    /**
+//     * Returns true if the selection is not empty.
+//     *
+//     * @return if the selection is not empty.
+//     */
+//    private boolean canPerformCopy() {
+//        return selection.getGroup() instanceof ObjectSelectionGroup;
+//    }
+//
+//    /**
+//     * Performs the select all control action. Select all sub components of the
+//     * selection common ancestor.
+//     */
+//    private void performSelectAll() {
+//        assert canPerformSelectAll(); // (1)
+//        final FXOMObject rootObject = getFxomDocument().getFxomRoot();
+//        if (selection.isEmpty()) { // (1)
+//            // If the current selection is empty, we select the root object
+//            selection.select(rootObject);
+//        } else if (selection.getGroup() instanceof ObjectSelectionGroup) {
+//            // Otherwise, select all sub components of the common ancestor ??
+//            final FXOMObject ancestor = selection.getAncestor();
+//            assert ancestor != null; // Because of (1)
+//            final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(ancestor);
+//            final Set<FXOMObject> selectableObjects = new HashSet<>();
+//            // BorderPane special case : use accessories
+//            if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
+//                final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
+//                final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
+//                final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
+//                final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
+//                final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
+//                for (FXOMObject accessoryObject : new FXOMObject[] { top, left, center, right, bottom }) {
+//                    if (accessoryObject != null) {
+//                        selectableObjects.add(accessoryObject);
+//                    }
+//                }
+//            } else {
+//                assert mask.isAcceptingSubComponent(); // Because of (1)
+//                selectableObjects.addAll(mask.getSubComponents());
+//            }
+//            selection.select(selectableObjects);
+//        } else if (selection.getGroup() instanceof GridSelectionGroup) {
+//            // Select ALL rows / columns
+//            final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
+//            final FXOMObject gridPane = gsg.getHitItem();
+//            assert gridPane instanceof FXOMInstance;
+//            final GridPaneHierarchyMask gridPaneMask = gridPaneHierarchyMaskFactory.getMask(gridPane);
+//            int size = 0;
+//            switch (gsg.getType()) {
+//            case ROW:
+//                size = gridPaneMask.getRowsSize();
+//                break;
+//            case COLUMN:
+//                size = gridPaneMask.getColumnsSize();
+//                break;
+//            default:
+//                assert false;
+//                break;
+//            }
+//            // Select first index
+//
+//            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), 0));
+//            for (int index = 1; index < size; index++) {
+//                selection.toggleSelection(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), index));
+//            }
+//        } else {
+//            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
+//
+//        }
+//    }
+//
+//    /**
+//     * Returns true if the root object is not selected and if the sub components of
+//     * the selection common ancestor are not all already selected.
+//     *
+//     * @return if the root object is not selected and if the sub components of the
+//     *         selection common ancestor are not all already selected.
+//     */
+//    private boolean canPerformSelectAll() {
+//        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
+//        if (selection.isEmpty()) { // (1)
+//            return true;
+//        } else if (selection.getGroup() instanceof ObjectSelectionGroup) {
+//            final FXOMObject rootObject = getFxomDocument().getFxomRoot();
+//            // Cannot select all if root is selected
+//            if (selection.isSelected(rootObject)) { // (1)
+//                return false;
+//            } else {
+//                // Cannot select all if all sub components are already selected
+//                final FXOMObject ancestor = selection.getAncestor();
+//                assert ancestor != null; // Because of (1)
+//                final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(ancestor);
+//                // BorderPane special case : use accessories
+//                if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
+//                    final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
+//                    final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
+//                    final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
+//                    final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
+//                    final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
+//                    for (FXOMObject bpAccessoryObject : new FXOMObject[] { top, left, center, right, bottom }) {
+//                        if (bpAccessoryObject != null && selection.isSelected(bpAccessoryObject) == false) {
+//                            return true;
+//                        }
+//                    }
+//                } else if (mask.isAcceptingSubComponent()) {
+//                    for (FXOMObject subComponentObject : mask.getSubComponents()) {
+//                        if (selection.isSelected(subComponentObject) == false) {
+//                            return true;
+//                        }
+//                    }
+//                }
+//            }
+//        } else if (selection.getGroup() instanceof GridSelectionGroup) {
+//            final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
+//            // GridSelectionGroup => at least 1 row/column is selected
+//            assert gsg.getIndexes().isEmpty() == false;
+//            return true;
+//        } else {
+//            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * Performs the select parent control action. If the selection is multiple, we
+//     * select the common ancestor.
+//     */
+//    private void performSelectParent() {
+//        assert canPerformSelectParent(); // (1)
+//        final FXOMObject ancestor = selection.getAncestor();
+//        assert ancestor != null; // Because of (1)
+//        selection.select(ancestor);
+//    }
+//
+//    /**
+//     * Returns true if the selection is not empty and the root object is not
+//     * selected.
+//     *
+//     * @return if the selection is not empty and the root object is not selected.
+//     */
+//    private boolean canPerformSelectParent() {
+//        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
+//        final FXOMObject rootObject = getFxomDocument().getFxomRoot();
+//        return !selection.isEmpty() && !selection.isSelected(rootObject);
+//    }
+//
+//    /**
+//     * Performs the select next control action.
+//     */
+//    private void performSelectNext() {
+//        assert canPerformSelectNext(); // (1)
+//
+//        final AbstractSelectionGroup asg = selection.getGroup();
+//        if (asg instanceof ObjectSelectionGroup) {
+//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+//            final Set<FXOMObject> items = osg.getItems();
+//            assert items.size() == 1; // Because of (1)
+//            final FXOMObject selectedObject = items.iterator().next();
+//            final FXOMObject nextSibling = selectedObject.getNextSlibing();
+//            assert nextSibling != null; // Because of (1)
+//            selection.select(nextSibling);
+//        } else {
+//            assert asg instanceof GridSelectionGroup; // Because of (1)
+//            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+//            final FXOMObject gridPane = gsg.getHitItem();
+//            final GridPaneHierarchyMask mask = gridPaneHierarchyMaskFactory.getMask(gridPane);
+//            assert gridPane instanceof FXOMInstance;
+//            final Set<Integer> indexes = gsg.getIndexes();
+//            assert indexes.size() == 1; // Because of (1)
+//            int selectedIndex = indexes.iterator().next();
+//            int nextIndex = selectedIndex + 1;
+//            int size = 0;
+//            switch (gsg.getType()) {
+//            case ROW:
+//                size = mask.getRowsSize();
+//                break;
+//            case COLUMN:
+//                size = mask.getColumnsSize();
+//                break;
+//            default:
+//                assert false;
+//                break;
+//            }
+//            assert nextIndex < size; // Because of (1)
+//            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), nextIndex));
+//        }
+//    }
+//
+//    /**
+//     * Returns true if the selection is single and the container of the selected
+//     * object container contains a child next to the selected one.
+//     *
+//     * @return if the selection is single and the container of the selected object
+//     *         container contains a child next to the selected one.
+//     */
+//    private boolean canPerformSelectNext() {
+//        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
+//        if (selection.isEmpty()) {
+//            return false;
+//        }
+//        final AbstractSelectionGroup asg = selection.getGroup();
+//        if (asg instanceof ObjectSelectionGroup) {
+//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+//            final Set<FXOMObject> items = osg.getItems();
+//            if (items.size() != 1) {
+//                return false;
+//            }
+//            final FXOMObject selectedObject = items.iterator().next();
+//            return selectedObject.getNextSlibing() != null;
+//        } else if (asg instanceof GridSelectionGroup) {
+//            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+//            final Set<Integer> indexes = gsg.getIndexes();
+//            if (indexes.size() != 1) {
+//                return false;
+//            }
+//            final FXOMObject gridPane = gsg.getHitItem();
+//            final GridPaneHierarchyMask mask = gridPaneHierarchyMaskFactory.getMask(gridPane);
+//            int size = 0;
+//            switch (gsg.getType()) {
+//            case ROW:
+//                size = mask.getRowsSize();
+//                break;
+//            case COLUMN:
+//                size = mask.getColumnsSize();
+//                break;
+//            default:
+//                assert false;
+//                break;
+//            }
+//            final int index = indexes.iterator().next();
+//            return index < size - 1;
+//        } else {
+//            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * Performs the select previous control action.
+//     */
+//    private void performSelectPrevious() {
+//        assert canPerformSelectPrevious(); // (1)
+//
+//        final AbstractSelectionGroup asg = selection.getGroup();
+//        if (asg instanceof ObjectSelectionGroup) {
+//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+//            final Set<FXOMObject> items = osg.getItems();
+//            assert items.size() == 1; // Because of (1)
+//            final FXOMObject selectedObject = items.iterator().next();
+//            final FXOMObject previousSibling = selectedObject.getPreviousSlibing();
+//            assert previousSibling != null; // Because of (1)
+//            selection.select(previousSibling);
+//        } else {
+//            assert asg instanceof GridSelectionGroup; // Because of (1)
+//            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+//            final FXOMObject gridPane = gsg.getHitItem();
+//            assert gridPane instanceof FXOMInstance;
+//            final Set<Integer> indexes = gsg.getIndexes();
+//            assert indexes.size() == 1; // Because of (1)
+//            int selectedIndex = indexes.iterator().next();
+//            int previousIndex = selectedIndex - 1;
+//            assert previousIndex >= 0; // Because of (1)
+//            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), previousIndex));
+//        }
+//    }
+//
+//    /**
+//     * Returns true if the selection is single and the container of the selected
+//     * object container contains a child previous to the selected one.
+//     *
+//     * @return if the selection is single and the container of the selected object
+//     *         container contains a child previous to the selected one.
+//     */
+//    private boolean canPerformSelectPrevious() {
+//        assert getFxomDocument() != null && getFxomDocument().getFxomRoot() != null;
+//        if (selection.isEmpty()) {
+//            return false;
+//        }
+//        final AbstractSelectionGroup asg = selection.getGroup();
+//        if (asg instanceof ObjectSelectionGroup) {
+//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+//            final Set<FXOMObject> items = osg.getItems();
+//            if (items.size() != 1) {
+//                return false;
+//            }
+//            final FXOMObject selectedObject = items.iterator().next();
+//            return selectedObject.getPreviousSlibing() != null;
+//        } else if (asg instanceof GridSelectionGroup) {
+//            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+//            final Set<Integer> indexes = gsg.getIndexes();
+//            if (indexes.size() != 1) {
+//                return false;
+//            }
+//            final int index = indexes.iterator().next();
+//            return index > 0;
+//        } else {
+//            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * Performs the select none control action.
+//     */
+//    private void performSelectNone() {
+//        assert canPerformSelectNone();
+//        selection.clear();
+//    }
+//
+//    /**
+//     * Returns true if the selection is not empty.
+//     *
+//     * @return if the selection is not empty.
+//     */
+//    private boolean canPerformSelectNone() {
+//        return getSelection().isEmpty() == false;
+//    }
 
     /**
      * If selection contains single FXOM object and this an fx:include instance,
@@ -2134,43 +2125,43 @@ public class EditorController implements Editor {
         return null;
     }
 
-    /**
-     * Returns true if the selection is an included file that can be
-     * edited/revealed.
-     *
-     * @return true if the selection is an included file that can be
-     *         edited/revealed.
-     */
-    private boolean canPerformIncludedFileAction() {
-        return getIncludedFile() != null;
-    }
-
-    @Override
-    public void performEditIncludedFxml() {
-        assert canPerformIncludedFileAction(); // (1)
-        final File includedFile = getIncludedFile();
-        assert includedFile != null; // Because of (1)
-        try {
-            fileSystem.open(includedFile.getAbsolutePath());
-        } catch (IOException ioe) {
-            dialog.showErrorAndWait(I18N.getString("error.file.open.title"),
-                    I18N.getString("error.file.open.message", includedFile.getAbsolutePath()), "", ioe);
-        }
-    }
-
-    @Override
-    public void performRevealIncludeFxml() {
-        assert canPerformIncludedFileAction(); // (1)
-        final File includedFile = getIncludedFile();
-        assert includedFile != null; // Because of (1)
-        try {
-            fileSystem.revealInFileBrowser(includedFile);
-        } catch (IOException ioe) {
-            dialog.showErrorAndWait(I18N.getString("error.file.reveal.title"),
-                    I18N.getString("error.file.reveal.message", includedFile.getAbsolutePath()),
-                    I18N.getString("error.write.details"), ioe);
-        }
-    }
+//    /**
+//     * Returns true if the selection is an included file that can be
+//     * edited/revealed.
+//     *
+//     * @return true if the selection is an included file that can be
+//     *         edited/revealed.
+//     */
+//    private boolean canPerformIncludedFileAction() {
+//        return getIncludedFile() != null;
+//    }
+//
+//    @Override
+//    public void performEditIncludedFxml() {
+//        assert canPerformIncludedFileAction(); // (1)
+//        final File includedFile = getIncludedFile();
+//        assert includedFile != null; // Because of (1)
+//        try {
+//            fileSystem.open(includedFile.getAbsolutePath());
+//        } catch (IOException ioe) {
+//            dialog.showErrorAndWait(I18N.getString("error.file.open.title"),
+//                    I18N.getString("error.file.open.message", includedFile.getAbsolutePath()), "", ioe);
+//        }
+//    }
+//
+//    @Override
+//    public void performRevealIncludeFxml() {
+//        assert canPerformIncludedFileAction(); // (1)
+//        final File includedFile = getIncludedFile();
+//        assert includedFile != null; // Because of (1)
+//        try {
+//            fileSystem.revealInFileBrowser(includedFile);
+//        } catch (IOException ioe) {
+//            dialog.showErrorAndWait(I18N.getString("error.file.reveal.title"),
+//                    I18N.getString("error.file.reveal.message", includedFile.getAbsolutePath()),
+//                    I18N.getString("error.write.details"), ioe);
+//        }
+//    }
 
     /**
      * Returns true if the 'add context menu' action is permitted with the current

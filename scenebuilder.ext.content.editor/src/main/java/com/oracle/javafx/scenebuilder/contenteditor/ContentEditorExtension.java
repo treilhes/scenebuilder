@@ -37,13 +37,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.contenteditor.actions.DeleteAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.FocusContentAction;
-import com.oracle.javafx.scenebuilder.contenteditor.actions.SelectAllAction;
-import com.oracle.javafx.scenebuilder.contenteditor.actions.SelectNoneAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleGuidesVisibilityAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleOutlinesVisibilityAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.ZoomAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.ZoomInAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.ZoomOutAction;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
@@ -56,9 +56,6 @@ import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.DebugMouseGest
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
-import com.oracle.javafx.scenebuilder.contenteditor.menu.FocusContentMenuItemProvider;
-import com.oracle.javafx.scenebuilder.contenteditor.menu.SetRootSizesMenuItemProvider;
-import com.oracle.javafx.scenebuilder.contenteditor.menu.ToggleMenuItemProvider;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.contenteditor.report.ErrorReportImpl;
@@ -82,32 +79,31 @@ public class ContentEditorExtension extends AbstractExtension {
                 ContextMenuController.class,
                 DebugMouseGesture.class,
                 DebugMouseGesture.Factory.class,
-                DeleteAction.class,
                 DragGesture.class,
                 DragGesture.Factory.class,
                 EditModeController.class,
                 EditorController.class,
                 ErrorReportImpl.class,
                 FocusContentAction.class,
-                FocusContentMenuItemProvider.class,
                 HudWindowController.class,
                 I18NContentEditor.class,
                 MoveWithKeyGesture.class,
                 MoveWithKeyGesture.Factory.class,
-                SelectAllAction.class,
                 SelectAndMoveGesture.class,
                 SelectAndMoveGesture.Factory.class,
-                SelectNoneAction.class,
                 SelectWithMarqueeGesture.class,
                 SelectWithMarqueeGesture.Factory.class,
                 SetRootSizeAction.class,
-                SetRootSizesMenuItemProvider.class,
+                SetRootSizeAction.MenuProvider.class,
                 ToggleGuidesVisibilityAction.class,
-                ToggleMenuItemProvider.class,
                 ToggleOutlinesVisibilityAction.class,
                 WorkspaceController.class,
                 ZoomGesture.class,
-                ZoomGesture.Factory.class
+                ZoomGesture.Factory.class,
+                ZoomAction.class,
+                ZoomAction.MenuProvider.class,
+                ZoomInAction.class,
+                ZoomOutAction.class
             );
      // @formatter:on
     }

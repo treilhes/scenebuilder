@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,24 +37,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.about.actions.ShowAboutAction;
 import com.oracle.javafx.scenebuilder.about.controller.AboutWindowController;
 import com.oracle.javafx.scenebuilder.about.i18n.I18NAbout;
-import com.oracle.javafx.scenebuilder.about.menu.AboutMenuProvider;
+import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class AboutExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("be3f6ad5-2591-485a-b2e8-8d714cbd6b2a");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
                 I18NAbout.class,
-                AboutMenuProvider.class,
                 AboutWindowController.class,
                 ShowAboutAction.class
             );
