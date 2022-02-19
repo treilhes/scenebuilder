@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
@@ -52,7 +53,7 @@ import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save", accelerator = "CTRL+S")
+@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 
 @MenuItemAttachment(
         id = SaveOrSaveAsAction.MENU_ID,
@@ -60,6 +61,7 @@ import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
         label = "menu.title.save",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
+@Accelerator(accelerator = "CTRL+S")
 public class SaveOrSaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = "saveMenu";

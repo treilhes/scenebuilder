@@ -49,18 +49,19 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.show.about",
-        descriptionKey = "action.description.show.about",
-        accelerator = "F1")
+        descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = ShowDocumentationAction.DOCUMENTATION_MENU_ID,
         targetMenuId = ShowDocumentationAction.HELP_MENU_ID,
         label = "menu.title.scene.builder.help",
         positionRequest = PositionRequest.AsLastChild)
+@Accelerator(accelerator = "F1")
 public class ShowDocumentationAction extends AbstractAction {
 
     public final static String HELP_MENU_ID = "helpMenu"; //NOCHECK

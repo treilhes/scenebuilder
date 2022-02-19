@@ -46,6 +46,7 @@ import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGrou
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -53,14 +54,16 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.show.about",
-        descriptionKey = "action.description.show.about",
-        accelerator = "CTRL+SHIFT+A")
+        descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(
         id = SelectPreviousAction.MENU_ID,
         targetMenuId = SelectNextAction.MENU_ID,
-        label = "menu.title.select.none",
+        label = "menu.title.select.previous",
         positionRequest = PositionRequest.AsNextSibling)
+
+@Accelerator(accelerator = "CTRL+LEFT")
+
 public class SelectPreviousAction extends AbstractAction {
 
     public final static String MENU_ID = "selectNoneMenu";

@@ -45,20 +45,21 @@ import com.oracle.javafx.scenebuilder.api.clipboard.Clipboard;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(
         nameKey = "action.name.paste.into",
-        descriptionKey = "action.description.paste.into",
-        accelerator = "CTRL+SHIFT+V")
+        descriptionKey = "action.description.paste.into")
 
 @MenuItemAttachment(
         id = PasteIntoAction.MENU_ID,
         targetMenuId = PasteAction.MENU_ID,
         label = "menu.title.paste.into",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+SHIFT+V")
 public final class PasteIntoAction extends AbstractAction {
 
     public final static String MENU_ID = "pasteIntoMenu";

@@ -44,20 +44,21 @@ import com.oracle.javafx.scenebuilder.api.clipboard.Clipboard;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(
         nameKey = "action.name.copy",
-        descriptionKey = "action.description.copy",
-        accelerator = "CTRL+C")
+        descriptionKey = "action.description.copy")
 
 @MenuItemAttachment(
         id = CopyAction.COPY_MENU_ID,
         targetMenuId = CutAction.CUT_MENU_ID,
         label = "menu.title.copy",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+C")
 public final class CopyAction extends AbstractAction {
 
     public final static String COPY_MENU_ID = "copyMenu";

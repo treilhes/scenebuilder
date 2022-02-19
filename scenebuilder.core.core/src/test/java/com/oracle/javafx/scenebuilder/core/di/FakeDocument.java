@@ -129,24 +129,6 @@ public class FakeDocument implements Document {
     }
 
     @Override
-    public void performImportFxml() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void performIncludeFxml() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void performImportMedia() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void performControlAction(DocumentControlAction toggleRightPanel) {
         // TODO Auto-generated method stub
 
@@ -168,18 +150,6 @@ public class FakeDocument implements Document {
     public DocumentWindow getDocumentWindow() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public boolean canPerformEditAction(DocumentEditAction editAction) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void performEditAction(DocumentEditAction editAction) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

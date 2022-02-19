@@ -31,47 +31,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.imagelibrary.action;
+package com.oracle.javafx.scenebuilder.api.shortcut;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.oracle.javafx.scenebuilder.api.action.Action;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
-import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
-import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
+import javafx.scene.input.KeyCombination;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
-@ActionMeta(
-		nameKey = "action.name.show.jar.analysis.report",
-		descriptionKey = "action.description.show.jar.analysis.report")
-@Accelerator(accelerator = "CTRL+J", whenFocusing = ImageLibraryPanelController.class)
-public class ShowJarAnalysisReportAction extends AbstractAction {
-
-	private final ImageJarAnalysisReportController jarAnalysisReportController;
-
-	public ShowJarAnalysisReportAction(
-	        ActionExtensionFactory extensionFactory,
-			@Lazy ImageJarAnalysisReportController jarAnalysisReportController) {
-		super(extensionFactory);
-		this.jarAnalysisReportController = jarAnalysisReportController;
-	}
-
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
-
-	@Override
-	public ActionStatus doPerform() {
-        jarAnalysisReportController.openWindow();
-        return ActionStatus.DONE;
-	}
-
+/**
+ *
+ */
+public interface Accelerator {
+    KeyCombination getKeyCombination();
+    Class<? extends AbstractCommonUiController> getAcceleratorTarget();
+    Action getAction();
 }

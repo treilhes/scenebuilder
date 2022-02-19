@@ -46,20 +46,23 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.undo",
-        descriptionKey = "action.description.undo",
-        accelerator = "CTRL+Z")
+        descriptionKey = "action.description.undo")
 
 @MenuItemAttachment(
         id = UndoAction.UNDO_MENU_ID,
         targetMenuId = DefaultMenu.EDIT_MENU_ID,
         label = "#this.getUndoDescription()",
         positionRequest = PositionRequest.AsFirstChild)
+
+@Accelerator(accelerator = "CTRL+Z")
+
 public class UndoAction extends AbstractAction {
 
     public final static String UNDO_MENU_ID = "undoMenuItem"; //NOCHECK

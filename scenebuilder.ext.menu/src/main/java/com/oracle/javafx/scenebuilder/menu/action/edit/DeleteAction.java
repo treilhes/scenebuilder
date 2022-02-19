@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +55,7 @@ import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonI
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.selection.job.DeleteSelectionJob;
@@ -66,24 +65,23 @@ import javafx.scene.control.TextInputControl;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 @ActionMeta(
         nameKey = "action.name.show.about",
-        descriptionKey = "action.description.show.about",
-        accelerator = "Delete")
+        descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(
         id = DeleteAction.MENU_ID,
         targetMenuId = DuplicateAction.MENU_ID,
         label = "menu.title.delete",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "Delete")
+@Accelerator(accelerator = "Backspace")
 public class DeleteAction extends AbstractAction {
 
     public final static String MENU_ID = "deleteMenu";
 
     private final DocumentWindow documentWindow;
     private final InlineEdit inlineEdit;
-    private final DocumentManager documentManager;
     private final Dialog dialog;
     private final Editor editor;
     private final JobManager jobManager;
@@ -92,7 +90,6 @@ public class DeleteAction extends AbstractAction {
     public DeleteAction(
             ActionExtensionFactory extensionFactory,
             DocumentWindow documentWindow,
-            DocumentManager documentManager,
             InlineEdit inlineEdit,
             Editor editor,
             JobManager jobManager,
@@ -100,7 +97,6 @@ public class DeleteAction extends AbstractAction {
             DeleteSelectionJob.Factory deleteSelectionJobFactory) {
         super(extensionFactory);
         this.documentWindow = documentWindow;
-        this.documentManager = documentManager;
         this.inlineEdit = inlineEdit;
         this.editor = editor;
         this.jobManager = jobManager;

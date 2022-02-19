@@ -146,6 +146,7 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private List<MenuAttachment> makeMenuAttachment(Class<?> cls) {
 
         List<MenuAttachment> result = new ArrayList<>();

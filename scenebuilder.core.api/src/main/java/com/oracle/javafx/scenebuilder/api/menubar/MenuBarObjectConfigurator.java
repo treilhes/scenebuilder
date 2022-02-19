@@ -170,13 +170,15 @@ public class MenuBarObjectConfigurator {
             item.setDisable(!action.canPerform());
 
             item.parentMenuProperty().addListener((ob, o, n) ->{
-                n.addEventHandler(Menu.ON_SHOWING, ev -> {
-                    item.setDisable(!action.canPerform());
-                    if (customTitle) {
-                        item.setText(titleFunction == null ? getText(text, action) : titleFunction.apply(action));
-                    }
-                    item.setMnemonicParsing(item.getText().contains("_"));
-                });
+                if (n != null) {
+                    n.addEventHandler(Menu.ON_SHOWING, ev -> {
+                        item.setDisable(!action.canPerform());
+                        if (customTitle) {
+                            item.setText(titleFunction == null ? getText(text, action) : titleFunction.apply(action));
+                        }
+                        item.setMnemonicParsing(item.getText().contains("_"));
+                    });
+                }
             });
 
             acceleratorsController.bind(action, item);

@@ -44,14 +44,14 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(
         nameKey = "action.name.zoom.out",
-        descriptionKey = "action.description.zoom.out",
-        accelerator = "CTRL+/")
+        descriptionKey = "action.description.zoom.out")
 
 @MenuItemAttachment(
         id = ZoomOutAction.ZOOM_OUT_MENU_ID,
@@ -59,6 +59,7 @@ import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
         label = "menu.title.zoom.out",
         positionRequest = PositionRequest.AsNextSibling,
         separatorAfter = true)
+@Accelerator(accelerator = "CTRL+/")
 public class ZoomOutAction extends AbstractAction {
 
     public final static String ZOOM_OUT_MENU_ID = "zoomOutMenu"; //NOCHECK

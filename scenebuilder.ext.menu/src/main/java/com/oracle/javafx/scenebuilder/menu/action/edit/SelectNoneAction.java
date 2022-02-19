@@ -46,6 +46,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 import javafx.scene.Node;
@@ -55,14 +56,16 @@ import javafx.scene.control.TextInputControl;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.show.about",
-        descriptionKey = "action.description.show.about",
-        accelerator = "CTRL+SHIFT+A")
+        descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(
         id = SelectNoneAction.MENU_ID,
         targetMenuId = SelectAllAction.MENU_ID,
         label = "menu.title.select.none",
         positionRequest = PositionRequest.AsNextSibling)
+
+@Accelerator(accelerator = "CTRL+SHIFT+A")
+
 public class SelectNoneAction extends AbstractAction {
 
     public final static String MENU_ID = "selectNoneMenu";

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -72,6 +73,10 @@ public class PreferencesContext {
 
 	public boolean isDocumentScope(Class<?> cls) {
 		String[] names = context.getBeanNamesForType(cls);
+
+		if (names.length == 0) {
+		    return false;
+		}
 		BeanDefinition definition = context.getBeanDefinition(names[0]);
 		return SceneBuilderBeanFactory.SCOPE_DOCUMENT.equals(definition.getScope());
 	}
@@ -228,7 +233,7 @@ public class PreferencesContext {
      * @return
      */
 
-    private static String generateKey(String name) {
+    public static String generateKey(String name) {
 
     	String hash = hash(name);
     	int maxlength = Preferences.MAX_KEY_LENGTH - hash.length() - HASH_PATH_SEPARATOR.length();

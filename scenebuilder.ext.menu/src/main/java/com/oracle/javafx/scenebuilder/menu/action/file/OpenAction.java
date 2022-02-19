@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.menu.action.AbstractOpenFilesAction;
 
@@ -57,14 +58,14 @@ import javafx.stage.FileChooser;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save",
-        accelerator = "CTRL+O")
+@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 @MenuItemAttachment(
         id = OpenAction.OPEN_MENU_ID,
         targetMenuId = NewAction.NEWFILE_MENU_ID,
         label = "menu.title.open",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
+@Accelerator(accelerator = "CTRL+O")
 public class OpenAction extends AbstractOpenFilesAction {
 
     public final static String OPEN_MENU_ID = "openMenu";

@@ -44,18 +44,19 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about",
-        accelerator = "CTRL+E")
+@ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = ToggleOutlinesVisibilityAction.TOGGLE_OUTLINES_MENU_ID,
         targetMenuId = ToggleGuidesVisibilityAction.TOGGLE_GUIDES_MENU_ID,
         label = "#this.getToggleTitle()", // NOCHECK
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+E")
 public class ToggleOutlinesVisibilityAction extends AbstractAction {
 
     public final static String TOGGLE_OUTLINES_MENU_ID = "toggleOutlinesMenu"; // NOCHECK

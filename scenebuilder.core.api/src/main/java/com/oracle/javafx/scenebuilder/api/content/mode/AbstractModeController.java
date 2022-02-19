@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,7 +57,7 @@ public abstract class AbstractModeController implements Mode{
     protected final Content contentPanelController;
 
     private Map<Class<?>, Layer<?>> layers = new HashMap<>();
-    
+
     @Override
     public abstract Object getModeId();
 
@@ -67,9 +68,9 @@ public abstract class AbstractModeController implements Mode{
     public Content getContentPanelController() {
         return contentPanelController;
     }
-    
+
     @Override
-    public <T extends Decoration<?>> void newLayer(Class<T> cls, boolean mouseTransparent, Selection selection, 
+    public <T extends Decoration<?>> void newLayer(Class<T> cls, boolean mouseTransparent, Selection selection,
             LayerItemSelector selector, LayerItemCreator<T> creator) {
         Group layerUi = new Group();
         layerUi.setMouseTransparent(mouseTransparent);
@@ -78,21 +79,22 @@ public abstract class AbstractModeController implements Mode{
         GenericLayer<?> layer = new GenericLayer<>(cls, layerUi, selection, contentPanelController, selector, creator);
         layers.put(cls, layer);
     }
-    
+
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Decoration<?>> Layer<T> getLayer(Class<T> layerId) {
         return (Layer<T>) layers.get(layerId);
     }
-    
+
     @Override
     public Collection<Layer<?>> getLayers() {
         return layers.values();
     }
-    
+
     protected void clearLayers() {
         getLayers().forEach(l -> l.removeAll());
     }
-    
+
     public abstract void willResignActive(AbstractModeController nextModeController);
     public abstract void didBecomeActive(AbstractModeController previousModeController);
 

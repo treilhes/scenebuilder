@@ -83,6 +83,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.script;
     exports com.oracle.javafx.scenebuilder.api.settings;
     exports com.oracle.javafx.scenebuilder.api.shortcut;
+    exports com.oracle.javafx.scenebuilder.api.shortcut.annotation;
     exports com.oracle.javafx.scenebuilder.api.subjects;
     exports com.oracle.javafx.scenebuilder.api.template;
     exports com.oracle.javafx.scenebuilder.api.theme;

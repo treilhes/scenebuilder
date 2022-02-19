@@ -47,6 +47,7 @@ public final class ActionFactory extends AbstractFactory<Action> {
         super(sbContext);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Action> T create(Class<T> actionClass) {
         return (T)create((Class<Action>)actionClass, null);
     }

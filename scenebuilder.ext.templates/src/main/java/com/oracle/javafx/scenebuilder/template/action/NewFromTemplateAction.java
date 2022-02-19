@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.menu.action.file.NewAction;
 import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 
@@ -50,14 +51,14 @@ import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.save",
-        descriptionKey = "action.description.save",
-        accelerator = "CTRL+SHIFT+N")
+        descriptionKey = "action.description.save")
 
 @MenuItemAttachment(
         id = NewFromTemplateAction.NEW_FROM_TEMPLATE_ID,
         targetMenuId = NewAction.NEWFILE_MENU_ID,
         label = "menu.title.new.template",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+SHIFT+N")
 public class NewFromTemplateAction extends AbstractAction {
 
     public final static String NEW_FROM_TEMPLATE_ID = "newTemplateMenuItem";

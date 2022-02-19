@@ -51,8 +51,7 @@ import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save",
-        accelerator = "CTRL+O")
+@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class OpenFilesAction extends AbstractOpenFilesAction {
 
     //private static final Logger logger = LoggerFactory.getLogger(OpenFilesAction.class);

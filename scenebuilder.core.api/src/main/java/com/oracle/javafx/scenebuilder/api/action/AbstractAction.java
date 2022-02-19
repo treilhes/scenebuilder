@@ -39,10 +39,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-
-import javafx.scene.input.KeyCombination;
 
 public abstract class AbstractAction implements Action {
 
@@ -50,7 +47,6 @@ public abstract class AbstractAction implements Action {
 
     private final String nameI18nKey;
     private final String descriptionI18nKey;
-    private final String rawAccelerator;
     private final List<ActionExtension<?>> extensions = new ArrayList<>();
 
     public AbstractAction(ActionExtensionFactory extensionFactory) {
@@ -62,12 +58,6 @@ public abstract class AbstractAction implements Action {
 
         nameI18nKey = actionMeta.nameKey();
         descriptionI18nKey = actionMeta.descriptionKey();
-
-        if (EditorPlatform.IS_MAC && !actionMeta.macosAccelerator().isBlank()) {
-            rawAccelerator = actionMeta.macosAccelerator();
-        } else {
-            rawAccelerator = actionMeta.accelerator().isBlank() ? null : actionMeta.accelerator();
-        }
         extensions.addAll(extensionFactory.getExtensions(this));
     }
 
@@ -84,14 +74,6 @@ public abstract class AbstractAction implements Action {
     @Override
     public String getDescription() {
         return descriptionI18nKey == null ? null : I18N.getString(descriptionI18nKey);
-    }
-
-    @Override
-    public KeyCombination getWishedAccelerator() {
-        if (rawAccelerator == null) {
-            return null;
-        }
-        return KeyCombination.valueOf(rawAccelerator);
     }
 
     @Override

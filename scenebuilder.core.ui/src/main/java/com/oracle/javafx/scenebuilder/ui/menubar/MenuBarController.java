@@ -54,7 +54,6 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Document.DocumentControlAction;
-import com.oracle.javafx.scenebuilder.api.Document.DocumentEditAction;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.Main;
@@ -69,6 +68,7 @@ import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
@@ -323,6 +323,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private final Content content;
     private final Editor editor;
     private final Document document;
+    private final SceneBuilderManager sceneBuilderManager;
     private final List<MenuProvider> menuProviders;
     private final List<MenuItemProvider> menuItemProviders;
 
@@ -335,6 +336,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     public MenuBarController(
             @Autowired SceneBuilderBeanFactory context,
             @Autowired DocumentManager documentManager,
+            @Autowired SceneBuilderManager sceneBuilderManager,
             @Autowired Content content,
             @Autowired Editor editor,
             @Autowired(required = false) List<MenuProvider> menuProviders,
@@ -347,6 +349,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         this.document = document;
         this.content = content;
         this.editor = editor;
+        this.sceneBuilderManager = sceneBuilderManager;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
         this.documentWindowController = documentWindowController;
@@ -1355,7 +1358,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
             result.setText(dwc.getDocumentWindow().getStage().getTitle());
             result.setDisable(false);
             result.setSelected(dwc.getDocumentWindow().getStage().isFocused());
-            result.setOnAction(new WindowMenuEventHandler(dwc));
+            result.setOnAction(new WindowMenuEventHandler(dwc, sceneBuilderManager));
         } else {
             result.setText(I18N.getString("menu.title.no.window"));
             result.setDisable(true);
@@ -1368,14 +1371,19 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private static class WindowMenuEventHandler implements EventHandler<ActionEvent> {
 
         private final Document dwc;
+        private final SceneBuilderManager sceneBuilderManager;
 
-        public WindowMenuEventHandler(Document dwc) {
+        public WindowMenuEventHandler(
+                Document dwc,
+                SceneBuilderManager sceneBuilderManager) {
             this.dwc = dwc;
+            this.sceneBuilderManager = sceneBuilderManager;
         }
 
         @Override
         public void handle(ActionEvent t) {
             DocumentScope.setCurrentScope(dwc); //TODO realy necessary ?, check if onFocus is not sufficient
+            sceneBuilderManager.documentScoped().onNext(dwc);
             dwc.getDocumentWindow().getStage().toFront();
         }
     }
@@ -1500,33 +1508,33 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
     }
 
-    class DocumentEditActionController extends MenuItemController {
-
-        private final DocumentEditAction editAction;
-
-        public DocumentEditActionController(DocumentEditAction editAction) {
-            this.editAction = editAction;
-        }
-
-        @Override
-        public boolean canPerform() {
-            boolean result;
-            if (documentWindowController == null
-                    || documentWindowController.getStage().isFocused() == false) {
-                result = false;
-            } else {
-                result = document.canPerformEditAction(editAction);
-            }
-            return result;
-        }
-
-        @Override
-        public void perform() {
-            assert canPerform() : "editAction=" + editAction;
-            document.performEditAction(editAction);
-        }
-
-    }
+//    class DocumentEditActionController extends MenuItemController {
+//
+//        private final DocumentEditAction editAction;
+//
+//        public DocumentEditActionController(DocumentEditAction editAction) {
+//            this.editAction = editAction;
+//        }
+//
+//        @Override
+//        public boolean canPerform() {
+//            boolean result;
+//            if (documentWindowController == null
+//                    || documentWindowController.getStage().isFocused() == false) {
+//                result = false;
+//            } else {
+//                result = document.canPerformEditAction(editAction);
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        public void perform() {
+//            assert canPerform() : "editAction=" + editAction;
+//            document.performEditAction(editAction);
+//        }
+//
+//    }
 
     class DocumentControlActionController extends MenuItemController {
 

@@ -56,6 +56,7 @@ import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 import javafx.application.Platform;
 
@@ -70,6 +71,7 @@ import javafx.application.Platform;
         label = "menu.title.quit",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
+@Accelerator(accelerator = "CTRL+Q")
 public class QuitScenebuilderAction extends AbstractAction {
 
     private final static Logger logger = LoggerFactory.getLogger(QuitScenebuilderAction.class);

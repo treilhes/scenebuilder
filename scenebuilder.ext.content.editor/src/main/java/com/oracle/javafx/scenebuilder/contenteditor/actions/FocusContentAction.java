@@ -43,16 +43,17 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about",
-    accelerator = "CTRL+0")
+@ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = FocusContentAction.FOCUS_CONTENT_MENU_ID,
         targetMenuId = FocusContentAction.VIEW_MENU_ID,
         label = "menu.title.content",
         positionRequest = PositionRequest.AsFirstChild)
+@Accelerator(accelerator = "CTRL+0")
 public class FocusContentAction extends AbstractAction {
 
     protected final static String VIEW_MENU_ID = "viewMenu"; //NOCHECK

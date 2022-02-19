@@ -43,7 +43,4 @@ import java.lang.annotation.Target;
 public @interface ActionMeta {
 	public String nameKey() default "";
 	public String descriptionKey() default "";
-	public String accelerator() default "";
-	public String macosAccelerator() default "";
-	public Class<?>[] focus() default {};
 }

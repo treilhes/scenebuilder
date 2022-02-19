@@ -153,8 +153,8 @@ public interface Document {
     void close();
     void onFocus();
     DocumentWindow getDocumentWindow();
-    boolean canPerformEditAction(DocumentEditAction editAction);
-    void performEditAction(DocumentEditAction editAction);
+    //boolean canPerformEditAction(DocumentEditAction editAction);
+    //void performEditAction(DocumentEditAction editAction);
     boolean canPerformControlAction(DocumentControlAction controlAction);
     URL getFxmlLocation();
     void closeWindow();

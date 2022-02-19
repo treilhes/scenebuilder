@@ -50,6 +50,7 @@ import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -64,8 +65,7 @@ import javafx.scene.control.TextInputControl;
 @Lazy
 @ActionMeta(
         nameKey = "action.name.show.about",
-        descriptionKey = "action.description.show.about",
-        accelerator = "CTRL+A")
+        descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(
         id = SelectAllAction.MENU_ID,
@@ -73,6 +73,7 @@ import javafx.scene.control.TextInputControl;
         label = "menu.title.select.all",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
+@Accelerator(accelerator = "CTRL+A")
 public class SelectAllAction extends AbstractAction {
 
     public final static String MENU_ID = "selectAllMenu";

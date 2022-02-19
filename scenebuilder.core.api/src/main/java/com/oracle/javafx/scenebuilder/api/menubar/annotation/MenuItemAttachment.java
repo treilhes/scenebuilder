@@ -41,6 +41,7 @@ import java.lang.annotation.Target;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -52,4 +53,5 @@ public @interface MenuItemAttachment {
     public PositionRequest positionRequest();
     public boolean separatorBefore() default false;
     public boolean separatorAfter() default false;
+    public Accelerator accelerator() default @Accelerator();
 }

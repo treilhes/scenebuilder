@@ -81,10 +81,16 @@ public abstract class AbstractCommonUiController  {
 
         this.focusListener = (obj, old, node) -> {
             if (NodeUtils.isDescendantOf(panelRoot, node)) {
-                logger.info("Active component : {}", this.getClass().getName());
-                this.documentManager.focused().set(this);
+                notifyFocused();
             }
         };
+    }
+
+    private void notifyFocused() {
+        if (this.documentManager.focused().get() != this) {
+            logger.info("Active component : {}", this.getClass().getName());
+            this.documentManager.focused().set(this);
+        }
     }
 
     /**
@@ -94,7 +100,7 @@ public abstract class AbstractCommonUiController  {
      */
     public Parent getRoot() {
         assert panelRoot != null;
-        //startListeners();
+        panelRoot.setOnMouseEntered((e) -> notifyFocused());
         return panelRoot;
     }
 

@@ -52,9 +52,9 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDefine;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -542,33 +542,64 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
         if (!containsRoot && selectedItems.size() > 0) {
             FXOMObject item = selectedItems.iterator().next();
 
+            if (item.getParentCollection() != null) {
+                FXOMCollection parent = item.getParentCollection();
+                boolean sameParent = selectedItems.stream().allMatch(i -> parent.equals(i.getParentCollection()));
+                return sameParent ? parent.getChildObjects() : Collections.emptyList();
+            }
+
+            if (item.getParentDefine() != null) {
+                FXOMDefine parent = item.getParentDefine();
+                boolean sameParent = selectedItems.stream().allMatch(i -> parent.equals(i.getParentDefine()));
+                return sameParent ? parent.getChildObjects() : Collections.emptyList();
+            }
+
+            if (item.getParentProperty() != null) {
+                FXOMProperty parent = item.getParentProperty();
+                boolean sameParent = selectedItems.stream().allMatch(i -> parent.equals(i.getParentProperty()));
+                return sameParent ? parent.getChildren() : Collections.emptyList();
+            }
+
+            // at this step, siblings may be single objects across single item accessories
             FXOMObject parent = item.getParentObject();
-            FXOMCollection parentCollection = item.getParentCollection();
-            if (selectedItems.stream().allMatch(it -> it.getParentObject() == parent && it.getParentCollection() == parentCollection)) {
+            boolean sameParent = selectedItems.stream().allMatch(i -> parent.equals(i.getParentObject()));
+            if (sameParent && item.getParentObject() != null) {
 
-                if (parentCollection != null) {
-                    return new ArrayList<>(parentCollection.getChildObjects());
-                } else {
 
-                    final HierarchyMask m = designMaskFactory.getMask(parent);
+                final HierarchyMask m = designMaskFactory.getMask(parent);
+                try {
                     return m.getAccessories().stream()
+                        .peek(a -> {
+                            if (a.isCollection()) {
+                                List<FXOMObject> list = m.getAccessories(a);
+                                List<FXOMObject> remaining = new ArrayList<>(list);
+                                remaining.removeAll(selectedItems);
+
+                                if (list.size() != remaining.size()) {
+                                    throw new RuntimeException("Only single accessiry items must be selected");
+                                }
+                            }
+                        })
                         .filter(a -> a.isCollection() == false)
                         .map(a -> m.getAccessory(a))
                         .filter(fx -> fx != null)
                         .collect(Collectors.toList());
+                } catch (Exception e) {
+                    return Collections.emptyList();
                 }
             }
         }
         return Collections.emptyList();
     }
 
+
     @Override
-    public SelectionGroup selectAll() {
+    public AbstractSelectionGroup selectAll() {
         return objectSelectionGroupFactory.getGroup(this.getSiblings());
     }
 
     @Override
-    public SelectionGroup selectNext() {
+    public AbstractSelectionGroup selectNext() {
         Set<FXOMObject> localIitems = this.getItems();
 
         if (localIitems.size() != 1) {
@@ -594,7 +625,7 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
     }
 
     @Override
-    public SelectionGroup selectPrevious() {
+    public AbstractSelectionGroup selectPrevious() {
         Set<FXOMObject> localIitems = this.getItems();
 
         if (localIitems.size() != 1) {

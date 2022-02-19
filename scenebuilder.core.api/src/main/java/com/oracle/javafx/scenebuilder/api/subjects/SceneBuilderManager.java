@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +37,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
@@ -51,12 +52,14 @@ public interface SceneBuilderManager {
 
     Subject<Boolean> closed();
 
-    Subject<DocumentWindow> documentOpened();
+    Subject<Document> documentOpened();
 
-    Subject<DocumentWindow> documentClosed();
+    Subject<Document> documentClosed();
+
+    Subject<Document> documentScoped();
 
     Subject<StylesheetProvider> stylesheetConfig();
-    
+
     SubjectItem<ClassLoader> classloader();
 
     @Component
@@ -66,6 +69,7 @@ public interface SceneBuilderManager {
         private final SceneBuilderSubjects subjects;
         private final SubjectItem<Boolean> debugMode;
         private final SubjectItem<ClassLoader> classloader;
+
 
         public SceneBuilderManagerImpl() {
             subjects = new SceneBuilderSubjects();
@@ -88,20 +92,25 @@ public interface SceneBuilderManager {
         }
 
         @Override
-        public Subject<DocumentWindow> documentOpened() {
+        public Subject<Document> documentOpened() {
             return subjects.getDocumentOpened();
         }
 
         @Override
-        public Subject<DocumentWindow> documentClosed() {
+        public Subject<Document> documentClosed() {
             return subjects.getDocumentClosed();
+        }
+
+        @Override
+        public Subject<Document> documentScoped() {
+            return subjects.getDocumentScoped();
         }
 
         @Override
         public SubjectItem<Boolean> debugMode() {
             return debugMode;
         }
-        
+
         @Override
         public SubjectItem<ClassLoader> classloader() {
             return classloader;
@@ -112,8 +121,9 @@ public interface SceneBuilderManager {
 
         private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
         private @Getter PublishSubject<Boolean> closed;
-        private @Getter PublishSubject<DocumentWindow> documentOpened;
-        private @Getter PublishSubject<DocumentWindow> documentClosed;
+        private @Getter PublishSubject<Document> documentOpened;
+        private @Getter PublishSubject<Document> documentClosed;
+        private @Getter ReplaySubject<Document> documentScoped;
         private @Getter ReplaySubject<Boolean> debugMode;
         private @Getter ReplaySubject<ClassLoader> classloader;
 
@@ -123,6 +133,7 @@ public interface SceneBuilderManager {
             stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
             documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create()); // NOI18N
             documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create()); // NOI18N
+            documentScoped = wrap(SceneBuilderSubjects.class, "documentScoped", ReplaySubject.create(1)); // NOI18N
             classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
         }
 

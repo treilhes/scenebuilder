@@ -44,14 +44,14 @@ import com.oracle.javafx.scenebuilder.api.clipboard.Clipboard;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 @ActionMeta(
         nameKey = "action.name.cut",
-        descriptionKey = "action.description.cut",
-        accelerator = "CTRL+X")
+        descriptionKey = "action.description.cut")
 
 @MenuItemAttachment(
         id = CutAction.CUT_MENU_ID,
@@ -59,6 +59,7 @@ import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
         label = "menu.title.cut",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
+@Accelerator(accelerator = "CTRL+X")
 public class CutAction extends AbstractAction {
 
     public final static String CUT_MENU_ID = "cutMenu";

@@ -54,8 +54,7 @@ import lombok.Setter;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
 		nameKey = "action.name.show.jar.analysis.report",
-		descriptionKey = "action.description.show.jar.analysis.report",
-		accelerator = "CTRL+J")
+		descriptionKey = "action.description.show.jar.analysis.report")
 public class GenerateSkeletonContentAction extends AbstractAction implements InitWithDocument {
 
 	private ApplyCssContentConfig config;

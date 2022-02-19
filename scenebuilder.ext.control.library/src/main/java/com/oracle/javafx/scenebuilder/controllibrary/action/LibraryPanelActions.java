@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
@@ -63,7 +64,9 @@ public class LibraryPanelActions {
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
     @Lazy
-    @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report", accelerator = "CTRL+J")
+    @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
+
+    @Accelerator(accelerator = "CTRL+J", whenFocusing = LibraryPanelController.class)
     public static class ShowJarAnalysisReportAction extends AbstractAction {
 
         private final JarAnalysisReportController jarAnalysisReportController;

@@ -50,6 +50,7 @@ import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 @Component
@@ -57,14 +58,14 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 @Lazy
 @ActionMeta(
         nameKey = "action.name.save",
-        descriptionKey = "action.description.save",
-        accelerator = "CTRL+W")
+        descriptionKey = "action.description.save")
 
 @MenuItemAttachment(
         id = CloseFileAction.MENU_ID,
         targetMenuId = IncludeProvider.MENU_ID,
         label = "menu.title.close",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+W")
 public class CloseFileAction extends AbstractAction {
 
     public final static String MENU_ID = "closeMenu";

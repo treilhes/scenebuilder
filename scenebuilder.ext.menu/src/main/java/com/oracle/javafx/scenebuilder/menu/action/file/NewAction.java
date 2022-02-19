@@ -47,20 +47,21 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.menu.action.LoadBlankAction;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.save",
-        descriptionKey = "action.description.save",
-        accelerator = "CTRL+N")
+        descriptionKey = "action.description.save")
 
 @MenuItemAttachment(
         id = NewAction.NEWFILE_MENU_ID,
         targetMenuId = DefaultMenu.FILE_MENU_ID,
         label = "menu.title.new",
         positionRequest = PositionRequest.AsFirstChild)
+@Accelerator(accelerator = "CTRL+N")
 public class NewAction extends AbstractAction {
 
     public final static String NEWFILE_MENU_ID = "newMenu";

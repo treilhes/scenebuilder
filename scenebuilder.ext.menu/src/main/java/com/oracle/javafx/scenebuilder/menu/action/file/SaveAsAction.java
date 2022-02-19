@@ -62,6 +62,7 @@ import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonI
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
 
@@ -70,14 +71,14 @@ import javafx.stage.FileChooser;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
-@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save"
-        ,accelerator = "CTRL+SHIFT+S")
+@ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 
 @MenuItemAttachment(
         id = SaveAsAction.MENU_ID,
         targetMenuId = SaveOrSaveAsAction.MENU_ID,
         label = "menu.title.save.as",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+SHIFT+S")
 public class SaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = "saveAsMenu";

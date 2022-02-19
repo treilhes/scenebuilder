@@ -43,19 +43,20 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(
         nameKey = "action.name.zoom.in",
-        descriptionKey = "action.description.zoom.in",
-        accelerator = "CTRL+PLUS")
+        descriptionKey = "action.description.zoom.in")
 
 @MenuItemAttachment(
         id = ZoomInAction.ZOOM_IN_MENU_ID,
         targetMenuId = ZoomInAction.ZOOM_MENU_ID,
         label = "menu.title.zoom.in",
         positionRequest = PositionRequest.AsFirstChild)
+@Accelerator(accelerator = "CTRL+PLUS")
 public class ZoomInAction extends AbstractAction {
 
     public final static String ZOOM_MENU_ID = "zoomMenu"; //NOCHECK

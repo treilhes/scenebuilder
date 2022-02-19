@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.Job;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -476,7 +475,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     }
 
     @Override
-    public SelectionGroup selectAll() {
+    public AbstractSelectionGroup selectAll() {
         List<FXOMObject> siblings = this.getSiblings();
         if (siblings.size() <= 1) {
             return this;
@@ -486,7 +485,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     }
 
     @Override
-    public SelectionGroup selectNext() {
+    public AbstractSelectionGroup selectNext() {
         Set<FXOMObject> localIitems = this.getItems();
 
         if (localIitems.size() != 1) {
@@ -510,7 +509,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     }
 
     @Override
-    public SelectionGroup selectPrevious() {
+    public AbstractSelectionGroup selectPrevious() {
         Set<FXOMObject> localIitems = this.getItems();
 
         if (localIitems.size() != 1) {

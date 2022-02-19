@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
 
 @Component
@@ -52,14 +53,14 @@ import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
 @Lazy
 @ActionMeta(
         nameKey = "action.name.duplicate",
-        descriptionKey = "action.description.duplicate",
-        accelerator = "CTRL+D")
+        descriptionKey = "action.description.duplicate")
 
 @MenuItemAttachment(
         id = DuplicateAction.MENU_ID,
         targetMenuId = PasteIntoAction.MENU_ID,
         label = "menu.title.duplicate",
         positionRequest = PositionRequest.AsNextSibling)
+@Accelerator(accelerator = "CTRL+D")
 public final class DuplicateAction extends AbstractAction {
 
     public final static String MENU_ID = "duplicateMenu";

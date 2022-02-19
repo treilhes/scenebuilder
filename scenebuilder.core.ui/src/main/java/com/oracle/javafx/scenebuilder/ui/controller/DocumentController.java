@@ -77,6 +77,7 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -132,6 +133,7 @@ public class DocumentController implements Document, InitializingBean {
     private final Api api;
     private final ActionFactory actionFactory;
     private final Main main;
+    private final SceneBuilderManager sceneBuilderManager;
     private final MessageBarController messageBarController;
     private final SelectionBarController selectionBarController;
     private FXOMDocument fxomDocument;
@@ -160,7 +162,7 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired DockManager dockManager,
             @Autowired ActionFactory actionFactory,
             @Autowired Main main,
-            //@Lazy @Autowired ThemePreference themePreference,
+            @Autowired SceneBuilderManager sceneBuilderManager,
             @Lazy @Autowired PathPreference pathPreference,
             @Lazy @Autowired LastDockUuidPreference lastDockUuidPreference,
             @Lazy @Autowired(required = false) List<InitWithDocument> initializations,
@@ -174,6 +176,7 @@ public class DocumentController implements Document, InitializingBean {
         this.editorController = editorController;
         this.documentWindow = documentWindow;
         this.main = main;
+        this.sceneBuilderManager = sceneBuilderManager;
         this.recentItemsPreference = recentItemsPreference;
         //this.wildcardImportsPreference = wildcardImportsPreference;
         this.menuBarController = menuBarController;
@@ -213,6 +216,7 @@ public class DocumentController implements Document, InitializingBean {
             // This may be revisit when platform implementation will be more reliable.
             //
             final Node focusOwner = documentWindow.getScene().getFocusOwner();
+
             final KeyCombination accelerator = getAccelerator(event);
             if (isTextInputControlEditing(focusOwner) && accelerator != null) {
 
@@ -252,15 +256,15 @@ public class DocumentController implements Document, InitializingBean {
                 }
             }
 
-            // MenuItems define a single accelerator.
-            // BACK_SPACE key must be handled same way as DELETE key.
-            boolean isBackspace = KeyCode.BACK_SPACE.equals(event.getCode());
-            if (!isTextInputControlEditing(focusOwner) && isBackspace) {
-                if (canPerformEditAction(DocumentEditAction.DELETE)) {
-                    performEditAction(DocumentEditAction.DELETE);
-                }
-                event.consume();
-            }
+//            // MenuItems define a single accelerator.
+//            // BACK_SPACE key must be handled same way as DELETE key.
+//            boolean isBackspace = KeyCode.BACK_SPACE.equals(event.getCode());
+//            if (!isTextInputControlEditing(focusOwner) && isBackspace) {
+//                if (canPerformEditAction(DocumentEditAction.DELETE)) {
+//                    performEditAction(DocumentEditAction.DELETE);
+//                }
+//                event.consume();
+//            }
         };
     }
 
@@ -631,79 +635,79 @@ public class DocumentController implements Document, InitializingBean {
         }
     }
 
-    @Override
-    public boolean canPerformEditAction(DocumentEditAction editAction) {
-
-        final boolean result;
-
-        switch (editAction) {
-        case DELETE:
-            result = canPerformDelete();
-            break;
-
-//        case CUT:
-//            result = canPerformCut();
-//            break;
-
-//            case IMPORT_FXML:
-//            case IMPORT_MEDIA:
-//                result = true;
-//                break;
+//    @Override
+//    public boolean canPerformEditAction(DocumentEditAction editAction) {
 //
-//            case INCLUDE_FXML:
-//                // Cannot include as root or if the document is not saved yet
-//                result = (fxomDocument != null)
-//                        && (fxomDocument.getFxomRoot() != null)
-//                        && (fxomDocument.getLocation() != null);
-//                break;
-
-//        case PASTE:
-//            result = canPerformPaste();
-//            break;
-
-        default:
-            result = false;
-            assert false;
-            break;
-        }
-
-        return result;
-    }
-
-    @Override
-    public void performEditAction(DocumentEditAction editAction) {
-        assert canPerformEditAction(editAction);
-
-        switch (editAction) {
-        case DELETE:
-            performDelete();
-            break;
-
-//        case CUT:
-//            performCut();
-//            break;
-
-//            case IMPORT_FXML:
-//                performImportFxml();
-//                break;
+//        final boolean result;
 //
-//            case IMPORT_MEDIA:
-//                performImportMedia();
-//                break;
-//
-//            case INCLUDE_FXML:
-//                performIncludeFxml();
-//                break;
-
-//        case PASTE:
-//            performPaste();
+//        switch (editAction) {
+//        case DELETE:
+//            result = canPerformDelete();
 //            break;
-
-        default:
-            assert false;
-            break;
-        }
-    }
+//
+////        case CUT:
+////            result = canPerformCut();
+////            break;
+//
+////            case IMPORT_FXML:
+////            case IMPORT_MEDIA:
+////                result = true;
+////                break;
+////
+////            case INCLUDE_FXML:
+////                // Cannot include as root or if the document is not saved yet
+////                result = (fxomDocument != null)
+////                        && (fxomDocument.getFxomRoot() != null)
+////                        && (fxomDocument.getLocation() != null);
+////                break;
+//
+////        case PASTE:
+////            result = canPerformPaste();
+////            break;
+//
+//        default:
+//            result = false;
+//            assert false;
+//            break;
+//        }
+//
+//        return result;
+//    }
+//
+//    @Override
+//    public void performEditAction(DocumentEditAction editAction) {
+//        assert canPerformEditAction(editAction);
+//
+//        switch (editAction) {
+//        case DELETE:
+//            performDelete();
+//            break;
+//
+////        case CUT:
+////            performCut();
+////            break;
+//
+////            case IMPORT_FXML:
+////                performImportFxml();
+////                break;
+////
+////            case IMPORT_MEDIA:
+////                performImportMedia();
+////                break;
+////
+////            case INCLUDE_FXML:
+////                performIncludeFxml();
+////                break;
+//
+////        case PASTE:
+////            performPaste();
+////            break;
+//
+//        default:
+//            assert false;
+//            break;
+//        }
+//    }
 
     @Override
     public boolean isUnused() {
@@ -820,6 +824,7 @@ public class DocumentController implements Document, InitializingBean {
     @Override
     public void onFocus() {
         DocumentScope.setCurrentScope(this);
+        sceneBuilderManager.documentScoped().onNext(this);
     }
 
     /*

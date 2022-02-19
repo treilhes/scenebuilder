@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +41,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import io.reactivex.subjects.PublishSubject;
@@ -48,7 +50,7 @@ import javafx.beans.value.ChangeListener;
 import lombok.Getter;
 
 public interface DocumentManager {
-    
+
     /**
      * The current "dirty" state has changed.
      * The document contains unsaved changes if true
@@ -83,14 +85,14 @@ public interface DocumentManager {
      * The current fxomDocument has changed.
      * Because:<br/>
      * - An empty document is loaded
-     * - An FXML file is loaded 
+     * - An FXML file is loaded
      */
     SubjectItem<FXOMDocument> fxomDocument();
     /**
      * The currently selected objects have changed.
      */
     SubjectItem<SelectionState> selectionDidChange();
-    
+
     /**
      * Revision is incremented each time the fxom document rebuilds the
      * scene graph.
@@ -110,9 +112,9 @@ public interface DocumentManager {
      * The document's dependencies have been loaded if true
      */
     SubjectItem<Boolean> dependenciesLoaded();
-    
-    SubjectItem<Object> focused();
-    
+
+    SubjectItem<AbstractCommonUiController> focused();
+
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
     public class DocumentManagerImpl implements InitializingBean, DocumentManager {
@@ -130,11 +132,11 @@ public interface DocumentManager {
         private final SubjectItem<Integer> sceneGraphRevisionDidChange;
         private final SubjectItem<Integer> cssRevisionDidChange;
         private final SubjectItem<ClassLoader> classLoaderDidChange;
-        private final SubjectItem<Object> focused;
-        
-        private ChangeListener<? super Number> sceneGraphRevisionChangeListener = 
+        private final SubjectItem<AbstractCommonUiController> focused;
+
+        private ChangeListener<? super Number> sceneGraphRevisionChangeListener =
                 (ob, o, n) -> sceneGraphRevisionDidChange().set(n.intValue());
-        private ChangeListener<? super Number> cssRevisionChangeListener = 
+        private ChangeListener<? super Number> cssRevisionChangeListener =
                 (ob, o, n) -> cssRevisionDidChange().set(n.intValue());
 
         public DocumentManagerImpl() {
@@ -147,7 +149,7 @@ public interface DocumentManager {
             stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
             i18nResourceConfig = new SubjectItem<I18nResourceProvider>(subjects.getI18nResourceConfig());
 
-            fxomDocument = new SubjectItem<FXOMDocument>(subjects.getFxomDocument(), 
+            fxomDocument = new SubjectItem<FXOMDocument>(subjects.getFxomDocument(),
                     (o, n) -> {
                         if (o != null) {
                             o.sceneGraphRevisionProperty().removeListener(sceneGraphRevisionChangeListener);
@@ -158,12 +160,12 @@ public interface DocumentManager {
                             n.cssRevisionProperty().addListener(cssRevisionChangeListener);
                         }
                     });
-            
+
             selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionState());
             sceneGraphRevisionDidChange = new SubjectItem<Integer>(subjects.getSceneGraphRevisionDidChange());
             cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
             classLoaderDidChange = new SubjectItem<ClassLoader>(subjects.getClassLoaderDidChange());
-            focused = new SubjectItem<Object>(subjects.getFocused());
+            focused = new SubjectItem<AbstractCommonUiController>(subjects.getFocused());
         }
 
         @Override
@@ -179,7 +181,7 @@ public interface DocumentManager {
         public SubjectItem<Boolean> saved() {
             return saved;
         }
-        
+
         @Override
         public SubjectItem<Boolean> closed() {
             return closed;
@@ -214,19 +216,19 @@ public interface DocumentManager {
         public SubjectItem<Integer> cssRevisionDidChange() {
             return cssRevisionDidChange;
         }
-        
+
 //        @Override
 //        public SubjectItem<ClassLoader> classLoaderDidChange() {
 //            return classLoaderDidChange;
 //        }
-        
+
         @Override
         public SubjectItem<Boolean> dependenciesLoaded() {
             return dependenciesLoaded;
         }
-        
+
         @Override
-        public SubjectItem<Object> focused() {
+        public SubjectItem<AbstractCommonUiController> focused() {
             return focused;
         }
     }
@@ -245,8 +247,8 @@ public interface DocumentManager {
         private @Getter PublishSubject<Integer> sceneGraphRevisionDidChange;
         private @Getter PublishSubject<Integer> cssRevisionDidChange;
         private @Getter ReplaySubject<ClassLoader> classLoaderDidChange;
-        
-        private @Getter ReplaySubject<Object> focused;
+
+        private @Getter ReplaySubject<AbstractCommonUiController> focused;
 
         public DocumentSubjects() {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N

@@ -68,6 +68,7 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
 import javafx.application.Application.Parameters;
@@ -591,8 +592,11 @@ public class MainController implements UILogger, Main {
         DocumentScope.setCurrentScope(null);
 
         final Document result = sceneBuilderFactory.getBean(Document.class);
+        final SceneBuilderManager sceneBuilderManager = sceneBuilderFactory.getBean(SceneBuilderManager.class);
+        final DocumentManager documentManager = sceneBuilderFactory.getBean(DocumentManager.class);
 
-        sceneBuilderFactory.getBean(DocumentManager.class).dependenciesLoaded().set(true);
+        sceneBuilderManager.documentScoped().onNext(result);
+        documentManager.dependenciesLoaded().set(true);
 
         SbPlatform.runForDocumentLater(() -> windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
 

@@ -619,21 +619,21 @@ public class SelectionImpl implements Selection {
     @Override
     public void selectNext() {
         if (!isEmpty()) {
-            this.group.selectNext();
+            select(this.group.selectNext());
         }
     }
 
     @Override
     public void selectPrevious() {
         if (!isEmpty()) {
-            this.group.selectPrevious();
+            select(this.group.selectPrevious());
         }
     }
 
     @Override
     public void selectAll() {
         if (!isEmpty()) {
-            this.group.selectAll();
+            select(this.group.selectAll());
         }
     }
 
