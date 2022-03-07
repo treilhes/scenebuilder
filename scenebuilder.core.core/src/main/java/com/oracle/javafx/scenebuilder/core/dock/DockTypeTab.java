@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -42,9 +43,12 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -59,23 +63,31 @@ public class DockTypeTab implements DockType<Tab> {
 
     private final SceneBuilderBeanFactory context;
 
+    private ObjectProperty<DockContext<Tab>> focusedProperty;
+
     public DockTypeTab(@Autowired SceneBuilderBeanFactory context) {
         this.context = context;
     }
 
     @Override
     public String getNameKey() {
-        return "%viewtype.tabbed";
+        return "viewtype.tabbed";
     }
 
     @Override
-    public DockContext<Tab> computeView(View view) {
+    public DockContext<Tab> computeView(DockContext<Tab> viewContext) {
+        View view = viewContext.getView();
+        ViewAttachment viewAttachment = viewContext.getViewAttachment();
         var ctrl = context.getBean(ViewController.class);
 
         Tab tab = FXMLUtils.load(ctrl, DockTypeTab.class, VIEW_SOURCE);
 
         tab.textProperty().bind(view.getName());
-
+        tab.setOnSelectionChanged(e -> {
+            if (tab.getTabPane() != null && tab.getTabPane().getScene() != null && tab.isSelected()) {
+                view.notifyFocused();
+            }
+        });
         if (view.getSearchController() != null) {
             ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
         }
@@ -84,37 +96,51 @@ public class DockTypeTab implements DockType<Tab> {
         ctrl.getViewContentHost().getChildren().add(content);
         VBox.setVgrow(content, Priority.ALWAYS);
 
-        var menuItems = view.getViewMenus().getMenuItems();
-        if (menuItems != null && menuItems.size() > 0) {
-            ctrl.getViewMenuButton().getItems().addAll(menuItems);
-        }
+        view.populateMenu(ctrl.getViewMenuButton());
 
-        var dockContext = new DockContext<>(view, ctrl, tab, () -> {
+        var dockContext = new DockContext<>(view, viewAttachment, ctrl, tab, () -> {
             tab.textProperty().unbind();
             if (view.getSearchController() != null) {
                 ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
             }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            if (menuItems != null && menuItems.size() > 0) {
-                ctrl.getViewMenuButton().getItems().removeAll(menuItems);
-            }
+            view.clearMenu(ctrl.getViewMenuButton());
         });
 
         return dockContext;
     }
 
     @Override
-    public Node computeRoot(List<DockContext<Tab>> views, DockContext<Tab> focused) {
+    public Node computeRoot(Collection<DockContext<Tab>> views) {//, DockContext<Tab> focused) {
         Tab[] panes = views.stream().map(v -> v.getDockContent()).toArray(Tab[]::new);
         var tabs = new TabPane(panes);
-
-        if (focused == null && !tabs.getTabs().isEmpty()) {
-            tabs.getSelectionModel().select(tabs.getTabs().get(0));
-        } else if (focused != null) {
-            tabs.getSelectionModel().select(focused.getDockContent());
-        }
+//
+//        if (focused == null && !tabs.getTabs().isEmpty()) {
+//            tabs.getSelectionModel().select(tabs.getTabs().get(0));
+//        } else if (focused != null) {
+//            tabs.getSelectionModel().select(focused.getDockContent());
+//        }
 
         return tabs;
     }
 
+    @Override
+    public ObjectProperty<DockContext<Tab>> focusedProperty() {
+        if (focusedProperty == null) {
+            focusedProperty = new SimpleObjectProperty<>() {
+
+                @Override
+                public void set(DockContext<Tab> focused) {
+                    if (focused != null) {
+                        Tab tab = focused.getDockContent();
+                        TabPane tabPane = tab.getTabPane();
+                        tabPane.getSelectionModel().select(tab);
+                    }
+                    super.set(focused);
+                }
+
+            };
+        }
+        return focusedProperty;
+    }
 }

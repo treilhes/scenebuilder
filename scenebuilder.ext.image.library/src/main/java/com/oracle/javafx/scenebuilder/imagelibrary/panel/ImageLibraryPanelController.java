@@ -40,7 +40,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,31 +57,22 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.action.Action;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
-import com.oracle.javafx.scenebuilder.api.library.LibraryPanel;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMArchive;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ImportSelectionAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ManageJarFxmlAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.RevealCustomFolderAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ShowJarAnalysisReportAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsListAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsSectionsAction;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
@@ -91,7 +81,6 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.LibraryItemIm
 import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -102,12 +91,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -123,11 +107,12 @@ import javafx.util.Callback;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = ImageLibraryPanelController.VIEW_NAME, id = ImageLibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = false, selectOnStart = false)
-public class ImageLibraryPanelController extends AbstractFxmlViewController implements LibraryPanel {
+@ViewAttachment(name = ImageLibraryPanelController.VIEW_NAME, id = ImageLibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = false, selectOnStart = false,
+    icon = "ViewIconImageLib.png", iconX2 = "ViewIconImageLib@2x.png")
+public class ImageLibraryPanelController extends AbstractFxmlViewController implements ImageLibraryPanel {
 
     public final static String VIEW_ID = "453fc4cf-eb86-4115-b744-f61103a14d51";
-    public final static String VIEW_NAME = "imglibrary";
+    public final static String VIEW_NAME = "view.name.image.library";
 
     private String searchPattern;
     ArrayList<LibraryItemImpl> searchData = new ArrayList<>();
@@ -156,24 +141,6 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     @FXML
     StackPane libPane;
 
-    private RadioMenuItem viewAsList;
-    private RadioMenuItem viewAsSections;
-    private SeparatorMenuItem separator1;
-    private MenuItem manageJarFxml;
-    private MenuItem libraryImportSelection;
-    private SeparatorMenuItem separator2;
-    private Menu customLibraryMenu;
-    private MenuItem libraryReveal;
-    private MenuItem libraryReport;
-    // private final UserLibrary library;
-
-    private final Action viewAsListAction;
-    private final Action viewAsSectionsAction;
-    private final Action manageJarFxmlAction;
-    private final Action importSelectionAction;
-    private final Action revealCustomFolderAction;
-    private final Action showJarAnalysisReportAction;
-
     private final ImageLibrary userLibrary;
     private final ImageDisplayModePreference displayModePreference;
     private final Dialog dialog;
@@ -184,7 +151,6 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 
     private final ViewSearch viewSearch;
 
-    private List<MenuItem> menuItems;
     private final ThumbnailServiceController thumbnailServiceController;
 
     /*
@@ -207,18 +173,13 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             Dialog dialog,
             ImageDisplayModePreference displayModePreference,
             ImageLibraryController libraryController,
-            ViewAsListAction viewAsListAction,
-            ViewAsSectionsAction viewAsSectionsAction,
-            ManageJarFxmlAction manageJarFxmlAction,
-            ImportSelectionAction importSelectionAction,
-            RevealCustomFolderAction revealCustomFolderAction,
-            ShowJarAnalysisReportAction showJarAnalysisReportAction,
             ViewSearch viewSearch,
             ImageLibrary imageLibrary,
-            ThumbnailServiceController thumbnailServiceController
+            ThumbnailServiceController thumbnailServiceController,
+            ViewMenuController viewMenuController
             ) {
      // @formatter:on
-        super(scenebuilderManager, documentManager, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"),
+        super(scenebuilderManager, documentManager, viewMenuController, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"),
                 I18N.getBundle());
         this.drag = drag;
         this.editorController = editor;
@@ -226,13 +187,6 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         this.userLibrary = imageLibrary;
         this.libraryController = libraryController;
         this.displayModePreference = displayModePreference;
-
-        this.viewAsListAction = viewAsListAction;
-        this.viewAsSectionsAction = viewAsSectionsAction;
-        this.manageJarFxmlAction = manageJarFxmlAction;
-        this.importSelectionAction = importSelectionAction;
-        this.revealCustomFolderAction = revealCustomFolderAction;
-        this.showJarAnalysisReportAction = showJarAnalysisReportAction;
         this.viewSearch = viewSearch;
         this.thumbnailServiceController = thumbnailServiceController;
 
@@ -242,13 +196,8 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
 
     @FXML
     public void initialize() {
-        createLibraryMenu();
-        // animateAccordion(accordionAnimationPreference.getValue());
-        refreshLibraryDisplayOption(displayModePreference.getValue());
-
-//    	accordionAnimationPreference.getObservableValue().addListener(
-//    			(ob, o, n) -> animateAccordion(n));
-        displayModePreference.getObservableValue().addListener((ob, o, n) -> refreshLibraryDisplayOption(n));
+        setDisplayMode(displayModePreference.getValue());
+        displayModePreference.getObservableValue().addListener((ob, o, n) -> setDisplayMode(n));
     }
 
     /**
@@ -816,97 +765,6 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
         return libList;
     }
 
-    private List<MenuItem> createLibraryMenu() {
-        List<MenuItem> items = new ArrayList<>();
-
-        ToggleGroup libraryDisplayOptionTG = new ToggleGroup();
-
-        viewAsList = new RadioMenuItem(getResources().getString("library.panel.menu.view.list"));
-        viewAsList.setToggleGroup(libraryDisplayOptionTG);
-        viewAsSections = new RadioMenuItem(getResources().getString("library.panel.menu.view.sections"));
-        viewAsSections.setToggleGroup(libraryDisplayOptionTG);
-
-        separator1 = new SeparatorMenuItem();
-        manageJarFxml = new MenuItem(getResources().getString("library.panel.menu.manage.jar.fxml"));
-        libraryImportSelection = new MenuItem(getResources().getString("library.panel.menu.import.selection"));
-        separator2 = new SeparatorMenuItem();
-        customLibraryMenu = new Menu(getResources().getString("library.panel.menu.custom"));
-        libraryReveal = new MenuItem("Action 1");
-        libraryReport = new MenuItem(getResources().getString("library.panel.menu.custom.report"));
-
-        // Setup title of the Library Reveal menu item according the underlying o/s.
-        final String revealMenuKey;
-        if (EditorPlatform.IS_MAC) {
-            revealMenuKey = "menu.title.reveal.mac";
-        } else if (EditorPlatform.IS_WINDOWS) {
-            revealMenuKey = "menu.title.reveal.win";
-        } else {
-            assert EditorPlatform.IS_LINUX;
-            revealMenuKey = "menu.title.reveal.linux";
-        }
-        libraryReveal.setText(I18N.getString(revealMenuKey));
-
-        viewAsList.setOnAction((e) -> viewAsListAction.checkAndPerform());
-        viewAsSections.setOnAction((e) -> viewAsSectionsAction.checkAndPerform());
-        manageJarFxml.setOnAction((e) -> manageJarFxmlAction.checkAndPerform());
-        libraryImportSelection.setOnAction((e) -> importSelectionAction.checkAndPerform());
-        libraryReveal.setOnAction((e) -> revealCustomFolderAction.checkAndPerform());
-        libraryReport.setOnAction((e) -> showJarAnalysisReportAction.checkAndPerform());
-
-        customLibraryMenu.getItems().addAll(libraryReveal, libraryReport);
-
-        items.addAll(Arrays.asList(viewAsList, viewAsSections, separator1, manageJarFxml, libraryImportSelection,
-                separator2, customLibraryMenu));
-
-        return items;
-    }
-
-    public void refreshLibraryDisplayOption(ImageLibraryPanelController.DISPLAY_MODE option) {
-        switch (option) {
-        case LIST:
-            viewAsList.setSelected(true);
-            break;
-        case SECTIONS:
-            viewAsSections.setSelected(true);
-            break;
-        default:
-            assert false;
-            break;
-        }
-        setDisplayMode(option);
-    }
-
-    public void tuneLibraryMenuButton() {
-
-        // We need to tune the content of the library menu according if there's
-        // or not a selection likely to be dropped onto Library panel.
-        libraryImportSelection.setOnMenuValidation((e) -> {
-
-            AbstractSelectionGroup asg = getEditorController().getSelection().getGroup();
-            libraryImportSelection.setDisable(true);
-
-            if (asg instanceof ObjectSelectionGroup) {
-                if (((ObjectSelectionGroup) asg).getItems().size() >= 1) {
-                    libraryImportSelection.setDisable(false);
-                }
-            }
-
-            // DTL-6439. The custom library menu shall be enabled only
-            // in the case there is a user library directory on disk.
-            customLibraryMenu.setDisable(!userLibrary.getStore().isReady());
-
-        });
-
-    }
-
-    public MenuItem getLibraryImportSelection() {
-        return libraryImportSelection;
-    }
-
-    public Menu getCustomLibraryMenu() {
-        return customLibraryMenu;
-    }
-
     public Editor getEditorController() {
         return editorController;
     }
@@ -914,14 +772,6 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     @Override
     public ViewSearch getSearchController() {
         return viewSearch;
-    }
-
-    @Override
-    public List<MenuItem> getMenuItems() {
-        if (menuItems == null) {
-            menuItems = createLibraryMenu();
-        }
-        return menuItems;
     }
 
     @Override

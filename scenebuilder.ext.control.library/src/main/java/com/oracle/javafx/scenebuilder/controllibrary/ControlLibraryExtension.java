@@ -37,10 +37,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryPanelActions;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ImportSelectionAsControlAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryFolderMenuProvider;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ManageJarFxmlAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.RevealControlFolderAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ShowControlAnalysisReportAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ToggleControlLibraryVisibilityAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ViewControlAsListAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ViewControlAsSectionsAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.ViewControlAsToggle;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
+import com.oracle.javafx.scenebuilder.controllibrary.i18n.I18NControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryDefaultFilter;
@@ -71,21 +80,25 @@ public class ControlLibraryExtension extends AbstractExtension {
                 ControlLibrary.class,
                 ControlLibraryDefaultFilter.class,
                 ControlLibraryDialogConfiguration.class,
+                ControlLibraryDragSource.Factory.class,
+                ControlLibraryDragSource.class,
                 ControlMavenArtifactExplorer.class,
                 DisplayModePreference.class,
+                I18NControlLibrary.class,
+                ImportSelectionAsControlAction.class,
                 ImportWindowController.class,
                 JarAnalysisReportController.class,
                 LibraryController.class,
-                ControlLibraryDragSource.class,
-                ControlLibraryDragSource.Factory.class,
+                LibraryFolderMenuProvider.class,
                 LibraryMenuProvider.class,
-                LibraryPanelActions.ImportSelectionAction.class,
-                LibraryPanelActions.ManageJarFxmlAction.class,
-                LibraryPanelActions.RevealCustomFolderAction.class,
-                LibraryPanelActions.ShowJarAnalysisReportAction.class,
-                LibraryPanelActions.ViewAsListAction.class,
-                LibraryPanelActions.ViewAsSectionsAction.class,
-                LibraryPanelController.class
+                LibraryPanelController.class,
+                ManageJarFxmlAction.class,
+                RevealControlFolderAction.class,
+                ShowControlAnalysisReportAction.class,
+                ToggleControlLibraryVisibilityAction.class,
+                ViewControlAsListAction.class,
+                ViewControlAsSectionsAction.class,
+                ViewControlAsToggle.class
             );
      // @formatter:on
     }

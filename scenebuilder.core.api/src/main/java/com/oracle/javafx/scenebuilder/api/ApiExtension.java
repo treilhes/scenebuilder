@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class ApiExtension extends AbstractExtension {
@@ -98,7 +99,8 @@ public class ApiExtension extends AbstractExtension {
                 Selection.class,
                 SimilarInlineEditorBounds.class,
                 ViewController.class,
-                ViewManager.ViewManagerImpl.class
+                ViewManager.ViewManagerImpl.class,
+                ViewMenuController.class
         );
     }
 

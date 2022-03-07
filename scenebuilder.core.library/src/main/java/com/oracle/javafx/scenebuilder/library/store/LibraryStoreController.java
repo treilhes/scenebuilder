@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -93,13 +94,13 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     private final Path libraryFoldersFile;
     private final Path libraryThumbnailsRoot;
     private final Path libraryConfigFile;
-    
+
     private State state = State.READY;
     private Thread watcherThread;
     private Exception exception;
     private Consumer<LibraryStore> updateConsumer;
     private WatchService watchService;
-    
+    private Boolean storeReady;
 
     public LibraryStoreController(
             String storeId,
@@ -114,7 +115,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
         this.libraryConfigFile = libraryRoot.resolve(Paths.get(LibraryUtil.CONFIG_LIBRARY_FILENAME));
         this.libraryThumbnailsRoot = libraryRoot.resolve(Paths.get(LibraryUtil.FOLDERS_FOR_THUMBNAILS));
         mavenArtifactsPreferences.readFromJavaPreferences();
-        
+
         if (Files.exists(this.libraryConfigFile)) {
             try (FileInputStream input = new FileInputStream(this.libraryConfigFile.toFile())){
                 configuration.load(input);
@@ -122,7 +123,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
                 e.printStackTrace();
             }
         }
-        
+
     }
 
     @Override
@@ -137,10 +138,13 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     }
     @Override
     public boolean isReady() {
-        return mavenArtifactsPreferences != null && extensionFileSystem != null 
-                && extensionFileSystem.isCreated()
-                && extensionFileSystem.existsDirectory(libraryRoot) 
-                && extensionFileSystem.existsDirectory(libraryFilesRoot);
+        if (storeReady == null) {
+            storeReady = mavenArtifactsPreferences != null && extensionFileSystem != null
+                    && extensionFileSystem.isCreated()
+                    && extensionFileSystem.existsDirectory(libraryRoot)
+                    && extensionFileSystem.existsDirectory(libraryFilesRoot);
+        }
+        return storeReady;
     }
 
     /*
@@ -181,7 +185,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
                     .filter(f -> !LibraryUtil.FOLDERS_LIBRARY_FILENAME.equals(f.getFileName().toString()))
                     .collect(Collectors.toList()));
         }
-        
+
         artifacts.setAll(localArtifacts);
         filesOrFolders.setAll(localFilesAndFolders);
 
@@ -224,7 +228,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 
         return true;
     }
-    
+
     @Override
     public void saveConfiguration() {
         try (FileOutputStream output = new FileOutputStream(this.libraryConfigFile.toFile())) {
@@ -312,7 +316,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 
                         // sleep a bit to allow successive events to be handled as one
                         Thread.sleep( 500 );
-                        
+
                         boolean isDirty = false;
                         for (WatchEvent<?> e : wk.pollEvents()) {
                             final WatchEvent.Kind<?> kind = e.kind();
@@ -343,7 +347,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         }
     }
 
-    
+
 
     @Override
     public Path getRoot() {
@@ -374,13 +378,13 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     @Override
     public boolean addAll(List<Path> pathes) {
         try {
-            
+
             Map<Boolean, List<Path>> partioned = pathes.stream()
                     .collect(Collectors.partitioningBy(path -> Files.isRegularFile(path)));
-            
+
             List<Path> files = partioned.get(true);
             List<Path> folders = partioned.get(false);
-            
+
             if (files.size() > 0) {
                 extensionFileSystem.copy(files, libraryFilesRoot);
             }
@@ -442,7 +446,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         String thumbnailName = name.replace("/", "_") + "_" + width + "x" + height + ".png";
         Path thumbnail = libraryThumbnailsRoot.resolve(thumbnailName);
         Path result = extensionFileSystem.get(thumbnail);
-        
+
         if (result == null || !Files.exists(result)) {
             return null;
         } else {
@@ -459,7 +463,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         String thumbnailName = name.replace("/", "_") + "_" + width + "x" + height + ".png";
         Path thumbnail = libraryThumbnailsRoot.resolve(thumbnailName);
         Path target = extensionFileSystem.get(thumbnail);
-        
+
         if (target != null && !Files.exists(target)) {
             BufferedImage tempImg = SwingFXUtils.fromFXImage(snapshot, null);
             try (FileOutputStream fos = new FileOutputStream(target.toFile())){
@@ -481,7 +485,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     public Properties getConfiguration() {
         return configuration;
     }
-    
-    
+
+
 
 }

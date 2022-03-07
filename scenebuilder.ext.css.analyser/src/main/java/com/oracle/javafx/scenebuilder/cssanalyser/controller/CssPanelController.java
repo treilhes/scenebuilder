@@ -41,7 +41,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -58,30 +57,24 @@ import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.ShowStyledOnlyAction;
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.SplitDefaultsAction;
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewRulesAction;
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTableAction;
-import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTextAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Path;
@@ -119,21 +112,17 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Separator;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Skinnable;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -158,7 +147,8 @@ import javafx.util.Duration;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Dock.BOTTOM_DOCK_ID, openOnStart = false)
+@ViewAttachment(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Dock.BOTTOM_DOCK_ID, openOnStart = false,
+        icon = "ViewIconCss.png", iconX2 = "ViewIconCss@2x.png")
 public class CssPanelController extends AbstractFxmlViewController implements ClipboardHandler {
 
     public final static String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438"; // NOCHECK
@@ -236,30 +226,12 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
 
-    private Menu viewAs;
-    private RadioMenuItem viewAsTable;
-    private RadioMenuItem viewAsRules;
-    private RadioMenuItem viewAsText;
-    private SeparatorMenuItem separator;
-    private MenuItem copyPath;
-    private MenuItem hideDefaultValues;
-    private MenuItem defaultsSplit;
-
-    private Action viewTableAction;
-    private Action viewRulesAction;
-    private Action viewTextAction;
-    private Action copyStyleablePathAction;
-    private Action showStyledOnlyAction;
-    private Action splitDefaultsAction;
-
     private final DocumentManager documentManager;
     private final FileSystem fileSystem;
 
     private final Drag drag;
 
     private final ViewSearch viewSearch;
-
-    private List<MenuItem> menuItems;
 
     /**
      * Should be implemented by the application.
@@ -285,15 +257,11 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
             Drag drag,
             FileSystem fileSystem,
-            ViewTableAction viewTableAction,
-            ViewRulesAction viewRulesAction,
-            ViewTextAction viewTextAction,
-            CopyStyleablePathAction copyStyleablePathAction,
-            ShowStyledOnlyAction showStyledOnlyAction,
-            SplitDefaultsAction splitDefaultsAction,
-            ViewSearch viewSearch) {
+            ViewSearch viewSearch,
+            ViewMenuController viewMenuController) {
      // @formatter:on
-        super(scenebuilderManager, documentManager, CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
+        super(scenebuilderManager, documentManager, viewMenuController,
+                CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
         this.editorController = editor;
         this.documentManager = documentManager;
         this.applicationDelegate = delegate;
@@ -301,16 +269,9 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         this.fileSystem = fileSystem;
         this.cssTableColumnsOrderingReversedPreference = cssTableColumnsOrderingReversedPreference;
         this.viewSearch = viewSearch;
-        this.viewTableAction = viewTableAction;
-        this.viewRulesAction = viewRulesAction;
-        this.viewTextAction = viewTextAction;
-        this.copyStyleablePathAction = copyStyleablePathAction;
-        this.showStyledOnlyAction = showStyledOnlyAction;
-        this.splitDefaultsAction = splitDefaultsAction;
 
         documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        documentManager.sceneGraphRevisionDidChange()
-                .subscribe(c -> sceneGraphRevisionDidChange());
+        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
         documentManager.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
         documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
@@ -368,7 +329,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
         getSearchController().textProperty()
                 .addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
-        createLibraryMenu();
 
         // Remove scrollPane for rules
         root.getChildren().remove(rulesPane);
@@ -446,37 +406,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         changeView(CssPanelController.View.TABLE);
 
         editorSelectionDidChange();
-    }
-
-    private List<MenuItem> createLibraryMenu() {
-        List<MenuItem> items = new ArrayList<>();
-
-        ToggleGroup cssTableTg = new ToggleGroup();
-
-        viewAs = new Menu(getResources().getString("csspanel.view.as"));
-        viewAsTable = new RadioMenuItem(getResources().getString("csspanel.table"));
-        viewAsTable.setToggleGroup(cssTableTg);
-        viewAsRules = new RadioMenuItem(getResources().getString("csspanel.rules"));
-        viewAsRules.setToggleGroup(cssTableTg);
-        viewAsText = new RadioMenuItem(getResources().getString("csspanel.text"));
-        viewAsText.setToggleGroup(cssTableTg);
-
-        separator = new SeparatorMenuItem();
-        copyPath = new MenuItem(getResources().getString("csspanel.copy.path"));
-        hideDefaultValues = new MenuItem(getResources().getString("csspanel.hide.default.values"));
-        defaultsSplit = new MenuItem(getResources().getString("csspanel.defaults.split"));
-
-        viewAsTable.setOnAction((e) -> viewTableAction.checkAndPerform());
-        viewAsRules.setOnAction((e) -> viewRulesAction.checkAndPerform());
-        viewAsText.setOnAction((e) -> viewTextAction.checkAndPerform());
-        copyPath.setOnAction((e) -> copyStyleablePathAction.checkAndPerform());
-        hideDefaultValues.setOnAction((e) -> showStyledOnlyAction.checkAndPerform());
-        defaultsSplit.setOnAction((e) -> splitDefaultsAction.checkAndPerform());
-
-        viewAs.getItems().addAll(viewAsTable, viewAsRules, viewAsText);
-        items.addAll(Arrays.asList(viewAs, separator, copyPath, hideDefaultValues, defaultsSplit));
-
-        return items;
     }
 
     private static class ValueFactory
@@ -716,12 +645,20 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         unmerge();
     }
 
+    public boolean isSplitingDefaults() {
+        return advanced;
+    }
+
     public void showStyledOnly() {
         styledOnly = !styledOnly;
         if (model == null) {
             return;
         }
         showStyled(model);
+    }
+
+    public boolean isShowingStyledOnly() {
+        return styledOnly;
     }
 
     public void toggleTableColumnsOrdering() {
@@ -2283,7 +2220,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         hbox.getChildren().addAll(n, imgView);
         MenuButton lookupMb = new MenuButton();
         lookupMb.setGraphic(hbox);
-        lookupMb.getStyleClass().add("lookup-button"); //NOCHECK
+        lookupMb.getStyleClass().add("lookup-button"); // NOCHECK
         CustomMenuItem popupContentMi = new CustomMenuItem();
         popupContentMi.setHideOnClick(false);
         lookupMb.getItems().add(popupContentMi);
@@ -2333,14 +2270,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         parent.getChildren().add(item);
     }
 
-    public MenuItem getHideDefaultValues() {
-        return hideDefaultValues;
-    }
-
-    public MenuItem getDefaultsSplit() {
-        return defaultsSplit;
-    }
-
     public Editor getEditorController() {
         return editorController;
     }
@@ -2348,14 +2277,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     @Override
     public ViewSearch getSearchController() {
         return viewSearch;
-    }
-
-    @Override
-    public List<MenuItem> getMenuItems() {
-        if (menuItems == null) {
-            menuItems = createLibraryMenu();
-        }
-        return menuItems;
     }
 
     @Override
@@ -2370,7 +2291,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     }
 
-    //ClipboardHandler
+    // ClipboardHandler
     @Override
     public void performCopy() {
         Node focusOwner = this.getRoot().getScene().getFocusOwner();
@@ -2383,10 +2304,12 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     @Override
-    public void performCut() {}
+    public void performCut() {
+    }
 
     @Override
-    public void performPaste() {}
+    public void performPaste() {
+    }
 
     @Override
     public boolean canPerformCopy() {
@@ -2411,19 +2334,25 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return false;
     }
 
-  private boolean isCssRulesEditing(Node node) {
-      final Node cssRules = getRulesPane();
-      if (cssRules != null) {
-          return NodeUtils.isDescendantOf(cssRules, node);
-      }
-      return false;
+    private boolean isCssRulesEditing(Node node) {
+        final Node cssRules = getRulesPane();
+        if (cssRules != null) {
+            return NodeUtils.isDescendantOf(cssRules, node);
+        }
+        return false;
     }
 
-private boolean isCssTextEditing(Node node) {
-  final Node cssText = getTextPane();
-  if (cssText != null) {
-      return NodeUtils.isDescendantOf(cssText, node);
-  }
-  return false;
-}
+    private boolean isCssTextEditing(Node node) {
+        final Node cssText = getTextPane();
+        if (cssText != null) {
+            return NodeUtils.isDescendantOf(cssText, node);
+        }
+        return false;
+    }
+
+    public View getCurrentView() {
+        return currentView;
+    }
+
+
 }

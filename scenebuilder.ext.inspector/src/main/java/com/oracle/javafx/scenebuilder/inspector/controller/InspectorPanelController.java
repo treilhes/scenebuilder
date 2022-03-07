@@ -61,20 +61,20 @@ import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
@@ -98,11 +98,6 @@ import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
-import com.oracle.javafx.scenebuilder.inspector.actions.ShowAllAction;
-import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
-import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
-import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
-import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
@@ -126,13 +121,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
@@ -146,7 +137,8 @@ import javafx.scene.layout.VBox;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = InspectorPanelController.VIEW_NAME, id = InspectorPanelController.VIEW_ID, prefDockId = Dock.RIGHT_DOCK_ID, openOnStart = true, selectOnStart = true)
+@ViewAttachment(name = InspectorPanelController.VIEW_NAME, id = InspectorPanelController.VIEW_ID, prefDockId = Dock.RIGHT_DOCK_ID, openOnStart = true, selectOnStart = true,
+    icon = "ViewIconInspector.png", iconX2 = "ViewIconInspector@2x.png")
 public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
     public final static String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
@@ -228,19 +220,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     // Charsets for the properties of included elements
 //    private Map<String, Charset> availableCharsets;
 
-    private RadioMenuItem showAll;
-    private RadioMenuItem showEdited;
-    private SeparatorMenuItem separator;
-    private RadioMenuItem viewAsSections;
-    private RadioMenuItem viewByPropName;
-    private RadioMenuItem viewByPropType;
-
-    private Action showAllAction;
-    private Action showEditedAction;
-    private Action viewBySectionsAction;
-    private Action viewByPropertyNameAction;
-    private Action viewByPropertyTypeAction;
-
     private final Editor editorController;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
 
@@ -255,8 +234,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private final ViewSearch viewSearch;
 
-    private List<MenuItem> menuItems;
-
     /*
      * Public
      */
@@ -268,18 +245,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             InspectorSectionIdPreference inspectorSectionIdPreference,
             Drag drag,
             PropertyEditorFactory propertyEditorFactory,
-            ShowAllAction showAllAction,
-            ShowEditedAction showEditedAction,
-            ViewBySectionsAction viewBySectionsAction,
-            ViewByPropertyNameAction viewByPropertyNameAction,
-            ViewByPropertyTypeAction viewByPropertyTypeAction,
             ViewSearch viewSearch,
             ModifyCacheHintJob.Factory modifyCacheHintJobFactory,
             ModifySelectionJob.Factory modifySelectionJobFactory,
             ModifyFxIdJob.Factory modifyFxIdJobFactory,
-            ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory) {
+            ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory,
+            ViewMenuController viewMenuController) {
      // @formatter:on
-        super(scenebuilderManager, documentManager, InspectorPanelController.class.getResource(fxmlFile),
+        super(scenebuilderManager, documentManager, viewMenuController, InspectorPanelController.class.getResource(fxmlFile),
                 I18N.getBundle());
         this.drag = drag;
         this.editorController = editorController;
@@ -289,12 +262,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         this.viewSearch = viewSearch;
 
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
-
-        this.showAllAction = showAllAction;
-        this.showEditedAction = showEditedAction;
-        this.viewBySectionsAction = viewBySectionsAction;
-        this.viewByPropertyNameAction = viewByPropertyNameAction;
-        this.viewByPropertyTypeAction = viewByPropertyTypeAction;
 
         this.modifyCacheHintJobFactory = modifyCacheHintJobFactory;
         this.modifySelectionJobFactory = modifySelectionJobFactory;
@@ -320,7 +287,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     @FXML
     protected void initialize() {
-        createLibraryMenu();
 
         // init preferences
 //        animateAccordion(accordionAnimationPreference.getValue());
@@ -564,42 +530,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         updateClassNameInSectionTitles();
         searchResultDividerPosition = inspectorRoot.getDividerPositions()[0];
         searchPatternDidChange();
-    }
-
-    private List<MenuItem> createLibraryMenu() {
-        List<MenuItem> items = new ArrayList<>();
-
-        ToggleGroup showTg = new ToggleGroup();
-        ToggleGroup viewTg = new ToggleGroup();
-
-        showAll = new RadioMenuItem(getResources().getString("inspector.show.all"));
-        showAll.setToggleGroup(showTg);
-        showAll.setSelected(true);
-
-        showEdited = new RadioMenuItem(getResources().getString("inspector.show.edited"));
-        showEdited.setToggleGroup(showTg);
-
-        separator = new SeparatorMenuItem();
-
-        viewAsSections = new RadioMenuItem(getResources().getString("inspector.view.sections"));
-        viewAsSections.setToggleGroup(viewTg);
-        viewAsSections.setSelected(true);
-
-        viewByPropName = new RadioMenuItem(getResources().getString("inspector.by.property.name"));
-        viewByPropName.setToggleGroup(viewTg);
-
-        viewByPropType = new RadioMenuItem(getResources().getString("inspector.by.property.type"));
-        viewByPropType.setToggleGroup(viewTg);
-
-        showAll.setOnAction((e) -> showAllAction.checkAndPerform());
-        showEdited.setOnAction((e) -> showEditedAction.checkAndPerform());
-        viewAsSections.setOnAction((e) -> viewBySectionsAction.checkAndPerform());
-        viewByPropName.setOnAction((e) -> viewByPropertyNameAction.checkAndPerform());
-        viewByPropType.setOnAction((e) -> viewByPropertyTypeAction.checkAndPerform());
-
-        items.addAll(Arrays.asList(showAll, showEdited, separator, viewAsSections, viewByPropName, viewByPropType));
-
-        return items;
     }
 
     /*
@@ -2210,14 +2140,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     @Override
     public ViewSearch getSearchController() {
         return viewSearch;
-    }
-
-    @Override
-    public List<MenuItem> getMenuItems() {
-        if (menuItems == null) {
-            menuItems = createLibraryMenu();
-        }
-        return menuItems;
     }
 
     @Override

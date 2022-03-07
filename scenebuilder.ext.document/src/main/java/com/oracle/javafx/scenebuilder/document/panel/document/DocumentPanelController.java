@@ -33,27 +33,21 @@
  */
 package com.oracle.javafx.scenebuilder.document.panel.document;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
-import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
-import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
-import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.AbstractHierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
@@ -61,10 +55,6 @@ import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionP
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -75,7 +65,14 @@ import javafx.scene.layout.StackPane;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = DocumentPanelController.VIEW_NAME, id=DocumentPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = false, order = 200)
+@ViewAttachment(
+        name = DocumentPanelController.VIEW_NAME,
+        id=DocumentPanelController.VIEW_ID,
+        prefDockId = Dock.LEFT_DOCK_ID,
+        openOnStart = true,
+        selectOnStart = false,
+        order = 200,
+        icon = "Document.png", iconX2 = "Document@2x.png")
 public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
     public final static String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";
@@ -85,20 +82,9 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 	private final InfoPanelController infoPanelController;
 	private final DisplayOptionPreference displayOptionPreference;
 
-	private final Action showInfoAction;
-    private final Action showFxIdAction;
-    private final Action showNodeIdAction;
-
 	@FXML private StackPane hierarchyPanelHost;
 	@FXML private StackPane infoPanelHost;
 	@FXML private Accordion documentAccordion;
-
-	private Menu hierarchyMenu;
-	private RadioMenuItem showInfoMenuItem;
-    private RadioMenuItem showFxIdMenuItem;
-    private RadioMenuItem showNodeIdMenuItem;
-
-    private List<MenuItem> menuItems;
 
     /*
      * Public
@@ -123,24 +109,18 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     		HierarchyPanelController hierarchyPanelController,
     		InfoPanelController infoPanelController,
     		DisplayOptionPreference displayOptionPreference,
-    		ShowInfoAction showInfoAction,
-    		ShowFxIdAction showFxIdAction,
-    		ShowNodeIdAction showNodeIdAction
+            ViewMenuController viewMenuController
     		) {
-        super(scenebuilderManager, documentManager, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
+        super(scenebuilderManager, documentManager, viewMenuController, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
         this.hierarchyPanelController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
         this.displayOptionPreference = displayOptionPreference;
-
-        this.showInfoAction = showInfoAction;
-        this.showFxIdAction = showFxIdAction;
-        this.showNodeIdAction = showNodeIdAction;
 
     }
 
     @FXML
     public void initialize() {
-    	createLibraryMenu();
+
 
 //    	getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(accordionAnimationPreference.getValue()));
 //    	accordionAnimationPreference.getObservableValue().addListener(
@@ -169,31 +149,6 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
     }
 
-    private List<MenuItem> createLibraryMenu() {
-        List<MenuItem> items = new ArrayList<>();
-
-        ToggleGroup hierarchyDisplayOptionTG = new ToggleGroup();
-
-        hierarchyMenu = new Menu(getResources().getString("hierarchy.displays"));
-        showInfoMenuItem = new RadioMenuItem(getResources().getString("hierarchy.show.info"));
-        showInfoMenuItem.setToggleGroup(hierarchyDisplayOptionTG);
-
-        showFxIdMenuItem = new RadioMenuItem(getResources().getString("hierarchy.show.fxid"));
-        showFxIdMenuItem.setToggleGroup(hierarchyDisplayOptionTG);
-
-        showNodeIdMenuItem = new RadioMenuItem(getResources().getString("hierarchy.show.nodeid"));
-        showNodeIdMenuItem.setToggleGroup(hierarchyDisplayOptionTG);
-
-        showInfoMenuItem.setOnAction((e) -> showInfoAction.checkAndPerform());
-        showFxIdMenuItem.setOnAction((e) -> showFxIdAction.checkAndPerform());
-        showNodeIdMenuItem.setOnAction((e) -> showNodeIdAction.checkAndPerform());
-
-        hierarchyMenu.getItems().addAll(showInfoMenuItem, showFxIdMenuItem, showNodeIdMenuItem);
-        items.add(hierarchyMenu);
-
-        return items;
-	}
-
 	@Override
     public AbstractHierarchyPanelController getHierarchyPanelController() {
         return hierarchyPanelController;
@@ -208,34 +163,12 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 	}
 
 	public void refreshHierarchyDisplayOption(DisplayOption option) {
-        switch(option) {
-            case INFO:
-                showInfoMenuItem.setSelected(true);
-                break;
-            case FXID:
-                showFxIdMenuItem.setSelected(true);
-                break;
-            case NODEID:
-                showNodeIdMenuItem.setSelected(true);
-                break;
-            default:
-                assert false;
-                break;
-        }
         hierarchyPanelController.setDisplayOption(option);
     }
 
     @Override
     public ViewSearch getSearchController() {
         return null;
-    }
-
-    @Override
-    public List<MenuItem> getMenuItems() {
-        if (menuItems == null) {
-            menuItems = createLibraryMenu();
-        }
-        return menuItems;
     }
 
     @Override

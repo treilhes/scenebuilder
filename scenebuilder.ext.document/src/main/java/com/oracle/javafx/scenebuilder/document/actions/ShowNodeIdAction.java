@@ -41,6 +41,10 @@ import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.document.actions.AbstractShowAction.ShowActionToggle;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 
@@ -50,7 +54,17 @@ import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionP
 @ActionMeta(
 		nameKey = "action.name.show.node.id",
 		descriptionKey = "action.description.show.node.id")
+@ViewMenuItemAttachment(
+        id = ShowNodeIdAction.MENU_ID,
+        targetMenuId = ShowFxIdAction.MENU_ID,
+        label = "hierarchy.show.nodeid",
+        positionRequest = PositionRequest.AsNextSibling,
+        viewClass = DocumentPanelController.class,
+        toggleClass = ShowActionToggle.class)
+@Accelerator(accelerator = "SHIFT+N", whenFocusing = DocumentPanelController.class)
 public class ShowNodeIdAction extends AbstractShowAction {
+    public final static String MENU_ID = "showNodeMenu";
+
 	public ShowNodeIdAction(
 	        ActionExtensionFactory extensionFactory,
 	        @Lazy DocumentPanelController documentPanelController,

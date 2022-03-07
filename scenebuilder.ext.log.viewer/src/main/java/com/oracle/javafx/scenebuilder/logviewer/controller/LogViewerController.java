@@ -45,17 +45,17 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
@@ -66,11 +66,12 @@ import javafx.scene.input.DataFormat;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = LogViewerController.VIEW_NAME, id = LogViewerController.VIEW_ID)
+@ViewAttachment(name = LogViewerController.VIEW_NAME, id = LogViewerController.VIEW_ID,
+    icon = "ViewIconLog.png", iconX2 = "ViewIconLog@2x.png")
 public class LogViewerController extends AbstractFxmlViewController {
 
     public final static String VIEW_ID = "f0769ce0-08cd-463f-bf6f-c65c96f6c6d0";
-    public final static String VIEW_NAME = "menu.title.show.log";
+    public final static String VIEW_NAME = "view.name.log.viewer";
     public final static int MAX_LINES = 10000;
     private LogReader logReader = new LogReader();
 
@@ -80,8 +81,9 @@ public class LogViewerController extends AbstractFxmlViewController {
     public LogViewerController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
-            Editor editor) {
-        super(scenebuilderManager, documentManager, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle());
+            Editor editor,
+            ViewMenuController viewMenuController) {
+        super(scenebuilderManager, documentManager, viewMenuController, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle());
 
     }
 
@@ -139,11 +141,6 @@ public class LogViewerController extends AbstractFxmlViewController {
 
     @Override
     public ViewSearch getSearchController() {
-        return null;
-    }
-
-    @Override
-    public List<MenuItem> getMenuItems() {
         return null;
     }
 

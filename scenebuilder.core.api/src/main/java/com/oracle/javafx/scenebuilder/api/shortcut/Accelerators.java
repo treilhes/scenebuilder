@@ -54,8 +54,8 @@ public interface Accelerators {
     /**
      * @param action
      * @param menuItem
-     * @param focused
+     * @param focusedClass
      */
-    void bind(Action action, MenuItem menuItem, AbstractCommonUiController focused);
+    void bind(Action action, MenuItem menuItem, Class<? extends AbstractCommonUiController> focusedClass);
 
 }

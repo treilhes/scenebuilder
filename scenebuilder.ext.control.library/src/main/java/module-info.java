@@ -68,6 +68,7 @@ open module scenebuilder.ext.control.library {
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.filesystem;
+    requires scenebuilder.ext.menu;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;

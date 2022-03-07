@@ -40,6 +40,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
 
@@ -49,7 +52,19 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 @ActionMeta(
 		nameKey = "action.name.show.edited",
 		descriptionKey = "action.description.show.edited")
+@ViewMenuItemAttachment(
+        id = ShowEditedAction.MENU_ID,
+        targetMenuId = ShowAllAction.MENU_ID,
+        label = "inspector.show.edited",
+        positionRequest = PositionRequest.AsNextSibling,
+        viewClass = InspectorPanelController.class,
+        toggleClass = ShowInspectorToggle.class,
+        separatorAfter = true)
+@Accelerator(accelerator = "CTRL+E", whenFocusing = InspectorPanelController.class)
 public class ShowEditedAction extends AbstractShowAction {
+
+    public final static String MENU_ID = "inspectorShowEditedMenu";
+
 	public ShowEditedAction(
 	        ActionExtensionFactory extensionFactory,
 	        @Lazy InspectorPanelController inspectorPanelController) {

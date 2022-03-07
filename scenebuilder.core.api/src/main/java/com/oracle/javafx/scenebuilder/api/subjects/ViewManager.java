@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.dock.ViewAttachment;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -49,7 +51,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 public interface ViewManager {
-	
+
 	Subject<DockRequest> dock();
 	Subject<View> undock();
 	Subject<View> close();
@@ -58,18 +60,19 @@ public interface ViewManager {
 	@RequiredArgsConstructor
 	@EqualsAndHashCode
 	public static class DockRequest {
+	    private final @Getter ViewAttachment viewAttachment;
 		private final @Getter View source;
 		private final @Getter UUID target;
 		private @Getter boolean select = true;;
-		
+
 	}
-	
+
 	@Component
 	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 	public class ViewManagerImpl implements InitializingBean, ViewManager {
 
 		private ViewSubjects subjects;
-		
+
 		public ViewManagerImpl() {
 			subjects = new ViewSubjects();
 		}
@@ -95,11 +98,11 @@ public interface ViewManager {
 	}
 
 	public class ViewSubjects extends SubjectManager {
-		
+
 		private @Getter PublishSubject<DockRequest> dock;
 		private @Getter PublishSubject<View> undock;
 		private @Getter PublishSubject<View> close;
-		
+
 		public ViewSubjects() {
 			dock = wrap(ViewSubjects.class, "dock", PublishSubject.create()); // NOI18N
 			undock = wrap(ViewSubjects.class, "undock", PublishSubject.create()); // NOI18N

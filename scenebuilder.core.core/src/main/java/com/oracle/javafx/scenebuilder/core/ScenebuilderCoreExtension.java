@@ -42,6 +42,7 @@ import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.Accele
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
+import com.oracle.javafx.scenebuilder.core.dock.AnnotatedViewAttachmentProvider;
 import com.oracle.javafx.scenebuilder.core.dock.DockNameHelper;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
@@ -51,7 +52,7 @@ import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
 import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
-import com.oracle.javafx.scenebuilder.core.dock.ViewMenuProvider;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
@@ -64,7 +65,8 @@ import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.i18n.I18NScenebuilderCore;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.menubar.AnnotatedActionMenuItemProvider;
+import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionMenuItemProvider;
+import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionViewMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.shortcut.AnnotatedActionAcceleratorProvider;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
@@ -83,10 +85,13 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 AcceleratorsController.class,
                 AnnotatedActionAcceleratorProvider.class,
                 AnnotatedActionMenuItemProvider.class,
+                AnnotatedActionViewMenuItemProvider.class,
+                AnnotatedViewAttachmentProvider.class,
                 BorderPaneHierarchyMask.class,
                 BorderPaneHierarchyMask.Factory.class,
                 ControllerClassEditor.class,
                 CoreEditors.class,
+                DockMinimizedPreference.class,
                 DockNameHelper.class,
                 DockPanelController.class,
                 DockTypeAccordion.class,
@@ -110,8 +115,7 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 LastDockUuidPreference.class,
                 LastViewVisibilityPreference.class,
                 PropertyEditorFactory.class,
-                SceneBuilderBeanFactoryPostProcessor.class,
-                ViewMenuProvider.class
+                SceneBuilderBeanFactoryPostProcessor.class
             );
      // @formatter:on
     }

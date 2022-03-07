@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,14 +38,16 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssViewAsMenuProvider;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssViewToggle;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.ShowStyledOnlyAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.SplitDefaultsAction;
+import com.oracle.javafx.scenebuilder.cssanalyser.actions.ToggleCssAnalyserVisibilityAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewRulesAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTableAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.ViewTextAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelDelegate;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
 import com.oracle.javafx.scenebuilder.cssanalyser.i18n.I18NCssAnalyser;
 import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
@@ -55,7 +58,7 @@ public class CssAnalyserExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("3155d7db-8df0-466c-b19a-8a8b9204fcb4");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
@@ -64,12 +67,14 @@ public class CssAnalyserExtension extends AbstractExtension {
             CssPanelController.class,
             CssTableColumnsOrderingReversedPreference.class,
             CssAnalyserModeProvider.class,
-            CssPanelMenuController.class,
             CssPanelDelegate.class,
+            CssViewAsMenuProvider.class,
+            CssViewToggle.class,
             PickModeController.class,
             CopyStyleablePathAction.class,
             ShowStyledOnlyAction.class,
             SplitDefaultsAction.class,
+            ToggleCssAnalyserVisibilityAction.class,
             ViewRulesAction.class,
             ViewTableAction.class,
             ViewTextAction.class

@@ -33,7 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.actions;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,8 +41,10 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -51,30 +52,33 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuControl
 @ActionMeta(
 		nameKey = "action.name.css.view.table",
 		descriptionKey = "action.description.css.view.table")
+@ViewMenuItemAttachment(
+        id = ViewTableAction.MENU_ID,
+        targetMenuId = CssViewAsMenuProvider.MENU_ID,
+        label = "csspanel.table",
+        positionRequest = PositionRequest.AsFirstChild,
+        viewClass = CssPanelController.class,
+        toggleClass = CssViewToggle.class)
+@Accelerator(accelerator = "CTRL+T", whenFocusing = CssPanelController.class)
 public class ViewTableAction extends AbstractAction {
 
-	private final CssPanelMenuController cssPanelMenuController;
-	private final CssPanelController cssPanelController;
+    public final static String MENU_ID = "cssViewTableMenu";
 
-	public ViewTableAction(
-	        ActionExtensionFactory extensionFactory,
-			@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
-			@Autowired @Lazy CssPanelController cssPanelController) {
-		super(extensionFactory);
-		this.cssPanelMenuController = cssPanelMenuController;
-		this.cssPanelController = cssPanelController;
-	}
+    private final CssPanelController cssPanelController;
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    public ViewTableAction(ActionExtensionFactory extensionFactory, @Lazy CssPanelController cssPanelController) {
+        super(extensionFactory);
+        this.cssPanelController = cssPanelController;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-		cssPanelMenuController.viewTable();
-        cssPanelController.getDefaultsSplit().setDisable(false);
-        cssPanelController.getHideDefaultValues().setDisable(false);
+    @Override
+    public boolean canPerform() {
+        return cssPanelController.getCurrentView() != CssPanelController.View.TABLE;
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        cssPanelController.changeView(CssPanelController.View.TABLE);
         return ActionStatus.DONE;
-	}
+    }
 }

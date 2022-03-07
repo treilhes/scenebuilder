@@ -20,8 +20,9 @@
         </encoder>
     </appender>
 
-    <!-- <logger name="com.oracle.javafx.scenebuilder.api.action" level="DEBUG"/> -->
-
+    <logger name="com.oracle.javafx.scenebuilder.api.action" level="INFO"/>
+    <logger name="com.oracle.javafx.scenebuilder.core.accelerator" level="DEBUG"/>
+    <logger name="com.oracle.javafx.scenebuilder.ui.controller" level="DEBUG"/>
     <root level="INFO">
         <appender-ref ref="TIME_BASED_FILE" />
         <appender-ref ref="STDOUT" />

@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.ui.action.ToggleDockVisibilityAction;
-import com.oracle.javafx.scenebuilder.ui.action.ToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.ui.controller.MainController;
@@ -98,8 +96,6 @@ public class BaseUiExtension extends AbstractExtension {
                 StageHeightPreference.class,
                 StageWidthPreference.class,
                 TextViewDialog.class,
-                ToggleDockVisibilityAction.class,
-                ToggleViewVisibilityAction.class,
                 XPosPreference.class,
                 YPosPreference.class
             );

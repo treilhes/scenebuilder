@@ -42,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import io.reactivex.subjects.PublishSubject;
@@ -114,6 +115,7 @@ public interface DocumentManager {
     SubjectItem<Boolean> dependenciesLoaded();
 
     SubjectItem<AbstractCommonUiController> focused();
+    SubjectItem<AbstractFxmlViewController> focusedView();
 
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -133,6 +135,7 @@ public interface DocumentManager {
         private final SubjectItem<Integer> cssRevisionDidChange;
         private final SubjectItem<ClassLoader> classLoaderDidChange;
         private final SubjectItem<AbstractCommonUiController> focused;
+        private final SubjectItem<AbstractFxmlViewController> focusedView;
 
         private ChangeListener<? super Number> sceneGraphRevisionChangeListener =
                 (ob, o, n) -> sceneGraphRevisionDidChange().set(n.intValue());
@@ -166,6 +169,7 @@ public interface DocumentManager {
             cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
             classLoaderDidChange = new SubjectItem<ClassLoader>(subjects.getClassLoaderDidChange());
             focused = new SubjectItem<AbstractCommonUiController>(subjects.getFocused());
+            focusedView = new SubjectItem<AbstractFxmlViewController>(subjects.getFocusedView());
         }
 
         @Override
@@ -231,6 +235,11 @@ public interface DocumentManager {
         public SubjectItem<AbstractCommonUiController> focused() {
             return focused;
         }
+
+        @Override
+        public SubjectItem<AbstractFxmlViewController> focusedView() {
+            return focusedView;
+        }
     }
 
     public class DocumentSubjects extends SubjectManager {
@@ -249,6 +258,7 @@ public interface DocumentManager {
         private @Getter ReplaySubject<ClassLoader> classLoaderDidChange;
 
         private @Getter ReplaySubject<AbstractCommonUiController> focused;
+        private @Getter ReplaySubject<AbstractFxmlViewController> focusedView;
 
         public DocumentSubjects() {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N
@@ -265,6 +275,7 @@ public interface DocumentManager {
                     PublishSubject.create());
             cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
             focused = wrap(DocumentSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
+            focusedView = wrap(DocumentSubjects.class, "focusedView", ReplaySubject.create(1)); // NOI18N
         }
 
     }

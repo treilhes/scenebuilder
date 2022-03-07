@@ -40,10 +40,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -62,11 +62,11 @@ import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuItemController;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
+import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.MenuItemController;
+import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.action.editor.KeyboardModifier;
@@ -98,6 +98,7 @@ import javafx.scene.layout.StackPane;
 @Lazy
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
 public class MenuBarController implements com.oracle.javafx.scenebuilder.api.MenuBar, InitializingBean {
+    private final static Logger logger = LoggerFactory.getLogger(MenuBarController.class);
 
     private static MenuBarController systemMenuBarController; // For Mac only
 
@@ -179,22 +180,22 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     // View
 //    @FXML
 //    private MenuItem gotoContentMenuItem;
-    @FXML
-    private MenuItem gotoPropertiesMenuItem;
-    @FXML
-    private MenuItem gotoLayoutMenuItem;
-    @FXML
-    private MenuItem gotoCodeMenuItem;
-    @FXML
-    private MenuItem toggleLibraryPanelMenuItem;
-    @FXML
-    private MenuItem toggleHierarchyPanelMenuItem;
-    @FXML
-    private MenuItem toggleCSSPanelMenuItem;
-    @FXML
-    private MenuItem toggleLeftPanelMenuItem;
-    @FXML
-    private MenuItem toggleRightPanelMenuItem;
+//    @FXML
+//    private MenuItem gotoPropertiesMenuItem;
+//    @FXML
+//    private MenuItem gotoLayoutMenuItem;
+//    @FXML
+//    private MenuItem gotoCodeMenuItem;
+//    @FXML
+//    private MenuItem toggleLibraryPanelMenuItem;
+//    @FXML
+//    private MenuItem toggleHierarchyPanelMenuItem;
+//    @FXML
+//    private MenuItem toggleCSSPanelMenuItem;
+//    @FXML
+//    private MenuItem toggleLeftPanelMenuItem;
+//    @FXML
+//    private MenuItem toggleRightPanelMenuItem;
     @FXML
     private MenuItem toggleOutlinesMenuItem;
     @FXML
@@ -369,7 +370,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private void addToMenuMap(MenuItem m) {
         if (m.getId() != null && !m.getId().isEmpty()) {
             if (menuMap.containsKey(m.getId())) {
-                Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, "Duplicate id in menu map : {0}", m.getId());
+                logger.error("Duplicate id in menu map : {}", m.getId());
             } else {
                 menuMap.put(m.getId(), m);
             }
@@ -463,10 +464,10 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                                }
                                break;
                            }
-                           case AfterPreviousSeparator: {
-                               throw new RuntimeException("Invalid position request for menu");
-                           }
-                           case BeforeNextSeparator: {
+                           case BeforePreviousSeparator:
+                           case AfterPreviousSeparator:
+                           case BeforeNextSeparator:
+                           case AfterNextSeparator: {
                                throw new RuntimeException("Invalid position request for menu");
                            }
                            case AsFirstChild: {
@@ -487,8 +488,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                                throw new RuntimeException("Invalid position request for menu");
                        }
                 } catch (Exception e) {
-                    Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                            "Unable to add all the provided menu in the menuBar", e);
+                    logger.error("Unable to add all the provided menu in the menuBar", e);
                 }
 
                    if (inserted) {
@@ -503,17 +503,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
            if (invalidProviders != null) {
                invalidProviders.forEach(mip -> {
-                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                           "Invalid MenuProviders submitted {0}", mip.getClass().getName());
+                   logger.error("Invalid MenuProviders submitted {}", mip.getClass().getName());
                });
            }
            if (validAttachments.size() > 0) {
-               Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                       "Unable to add all the provided menu in the menuBar");
+               logger.error("Unable to add all the provided menu in the menuBar");
                validAttachments.forEach(ma -> {
-                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                           "Unable to attach {0} to id {1} using {2}", new String[] { ma.getClass().getName(),
-                                   ma.getTargetId(), ma.getPositionRequest().toString() });
+                   logger.error("Unable to attach {} to id {} using {}", ma.getClass().getName(),
+                                   ma.getTargetId(), ma.getPositionRequest());
                });
            }
        }
@@ -580,6 +577,20 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                                    inserted = true;
                                    break;
                                }
+                               case BeforePreviousSeparator: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   int index = items.indexOf(target);
+                                   int insertAt = 0;
+                                   for (int i = index; i >= 0; i--) {
+                                       if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
+                                           insertAt = i;
+                                           break;
+                                       }
+                                   }
+                                   items.add(insertAt, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
                                case AfterPreviousSeparator: {
                                    ObservableList<MenuItem> items = target.getParentMenu().getItems();
                                    int index = items.indexOf(target);
@@ -608,6 +619,20 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
                                    inserted = true;
                                    break;
                                }
+                               case AfterNextSeparator: {
+                                   ObservableList<MenuItem> items = target.getParentMenu().getItems();
+                                   int index = items.indexOf(target);
+                                   int insertAt = items.size();
+                                   for (int i = index; i < items.size(); i++) {
+                                       if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
+                                           insertAt = i + 1;
+                                           break;
+                                       }
+                                   }
+                                   items.add(insertAt, ma.getMenuItem());
+                                   inserted = true;
+                                   break;
+                               }
                                case AsFirstChild: {
                                    if (target instanceof Menu) {
                                        Menu m = (Menu)target;
@@ -629,8 +654,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
                            }
                     } catch (Exception e) {
-                        Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                                "Unable to add the provided menuItem in the menuBar", e);
+                        logger.error("Unable to add the provided menuItem in the menuBar", e);
                     }
 
                        if (inserted) {
@@ -645,17 +669,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 
            if (invalidProviders != null) {
                invalidProviders.forEach(mip -> {
-                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                           "Invalid MenuItemProviders submitted {0}", mip.getClass().getName());
+                   logger.error("Invalid MenuItemProviders submitted {}", mip.getClass().getName());
                });
            }
            if (validAttachments.size() > 0) {
-               Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                       "Unable to add all the provided menuItem in the menuBar");
+               logger.error("Unable to add all the provided menuItem in the menuBar");
                validAttachments.forEach(ma -> {
-                   Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE,
-                           "Unable to attach {0} to id {1} using {2}", new String[] { ma.getClass().getName(),
-                                   ma.getTargetId(), ma.getPositionRequest().toString() });
+                   logger.error("Unable to attach {} to id {} using {}", ma.getClass().getName(),
+                                   ma.getTargetId(), ma.getPositionRequest());
                });
            }
        }
@@ -725,14 +746,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //        assert trimMenuItem != null;
 
         //assert gotoContentMenuItem != null;
-        assert gotoPropertiesMenuItem != null;
-        assert gotoLayoutMenuItem != null;
-        assert gotoCodeMenuItem != null;
-        assert toggleLibraryPanelMenuItem != null;
-        assert toggleHierarchyPanelMenuItem != null;
-        assert toggleCSSPanelMenuItem != null;
-        assert toggleLeftPanelMenuItem != null;
-        assert toggleRightPanelMenuItem != null;
+//        assert gotoPropertiesMenuItem != null;
+//        assert gotoLayoutMenuItem != null;
+//        assert gotoCodeMenuItem != null;
+//        assert toggleLibraryPanelMenuItem != null;
+//        assert toggleHierarchyPanelMenuItem != null;
+//        assert toggleCSSPanelMenuItem != null;
+//        assert toggleLeftPanelMenuItem != null;
+//        assert toggleRightPanelMenuItem != null;
         assert toggleOutlinesMenuItem != null;
         assert toggleSampleDataMenuItem != null;
         assert toggleAlignmentGuidesMenuItem != null;
@@ -923,94 +944,94 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
          */
 //        gotoContentMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_CONTENT));
 //        gotoContentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, modifier));
-        gotoPropertiesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_PROPERTIES));
-        gotoPropertiesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, modifier));
-        gotoLayoutMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_LAYOUT));
-        gotoLayoutMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, modifier));
-        gotoCodeMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_CODE));
-        gotoCodeMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, modifier));
+//        gotoPropertiesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_PROPERTIES));
+//        gotoPropertiesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, modifier));
+//        gotoLayoutMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_LAYOUT));
+//        gotoLayoutMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, modifier));
+//        gotoCodeMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.GOTO_CODE));
+//        gotoCodeMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, modifier));
 
-        toggleLibraryPanelMenuItem.setUserData(
-                new DocumentControlActionController(DocumentControlAction.TOGGLE_LIBRARY_PANEL) {
-                    @Override
-                    public String getTitle() {
-                        final String titleKey;
-                        if (documentWindowController == null) {
-                            titleKey = "menu.title.hide.library.panel";
-                        //TODO uncomment and handle with the new view framework when ready
-                        //} else if (documentWindowController.isLibraryPanelVisible()) {
-                        //    titleKey = "menu.title.hide.library.panel";
-                        } else {
-                            titleKey = "menu.title.show.library.panel";
-                        }
-                        return I18N.getString(titleKey);
-                    }
-                });
-        toggleLibraryPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT4, modifier));
-        toggleHierarchyPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_DOCUMENT_PANEL) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.hide.document.panel";
-                  //TODO uncomment and handle with the new view framework when ready
-                    //} else if (documentWindowController.isHierarchyPanelVisible()) {
-                    //titleKey = "menu.title.hide.document.panel";
-                } else {
-                    titleKey = "menu.title.show.document.panel";
-                }
-                return I18N.getString(titleKey);
-            }
-        });
-        toggleHierarchyPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT5, modifier));
-        toggleCSSPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_CSS_PANEL) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.hide.bottom.panel";
-                  //TODO uncomment and handle with the new view framework when ready
-                    //} else if (documentWindowController.isBottomPanelVisible()) {
-                    //titleKey = "menu.title.hide.bottom.panel";
-                } else {
-                    titleKey = "menu.title.show.bottom.panel";
-                }
-                return I18N.getString(titleKey);
-            }
-        });
-        toggleCSSPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT6, modifier));
-        toggleLeftPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_LEFT_PANEL) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.hide.left.panel";
-                  //TODO uncomment and handle with the new view framework when ready
-                    //} else if (documentWindowController.isLeftPanelVisible()) {
-                    //titleKey = "menu.title.hide.left.panel";
-                } else {
-                    titleKey = "menu.title.show.left.panel";
-                }
-                return I18N.getString(titleKey);
-            }
-        });
-        toggleLeftPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT7, modifier));
-        toggleRightPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_RIGHT_PANEL) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.hide.right.panel";
-                  //TODO uncomment and handle with the new view framework when ready
-                    //} else if (documentWindowController.isRightPanelVisible()) {
-                    //titleKey = "menu.title.hide.right.panel";
-                } else {
-                    titleKey = "menu.title.show.right.panel";
-                }
-                return I18N.getString(titleKey);
-            }
-        });
-        toggleRightPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT8, modifier));
+//        toggleLibraryPanelMenuItem.setUserData(
+//                new DocumentControlActionController(DocumentControlAction.TOGGLE_LIBRARY_PANEL) {
+//                    @Override
+//                    public String getTitle() {
+//                        final String titleKey;
+//                        if (documentWindowController == null) {
+//                            titleKey = "menu.title.hide.library.panel";
+//                        //TODO uncomment and handle with the new view framework when ready
+//                        //} else if (documentWindowController.isLibraryPanelVisible()) {
+//                        //    titleKey = "menu.title.hide.library.panel";
+//                        } else {
+//                            titleKey = "menu.title.show.library.panel";
+//                        }
+//                        return I18N.getString(titleKey);
+//                    }
+//                });
+//        toggleLibraryPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT4, modifier));
+//        toggleHierarchyPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_DOCUMENT_PANEL) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.hide.document.panel";
+//                  //TODO uncomment and handle with the new view framework when ready
+//                    //} else if (documentWindowController.isHierarchyPanelVisible()) {
+//                    //titleKey = "menu.title.hide.document.panel";
+//                } else {
+//                    titleKey = "menu.title.show.document.panel";
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
+//        toggleHierarchyPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT5, modifier));
+//        toggleCSSPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_CSS_PANEL) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.hide.bottom.panel";
+//                  //TODO uncomment and handle with the new view framework when ready
+//                    //} else if (documentWindowController.isBottomPanelVisible()) {
+//                    //titleKey = "menu.title.hide.bottom.panel";
+//                } else {
+//                    titleKey = "menu.title.show.bottom.panel";
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
+//        toggleCSSPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT6, modifier));
+//        toggleLeftPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_LEFT_PANEL) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.hide.left.panel";
+//                  //TODO uncomment and handle with the new view framework when ready
+//                    //} else if (documentWindowController.isLeftPanelVisible()) {
+//                    //titleKey = "menu.title.hide.left.panel";
+//                } else {
+//                    titleKey = "menu.title.show.left.panel";
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
+//        toggleLeftPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT7, modifier));
+//        toggleRightPanelMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_RIGHT_PANEL) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.hide.right.panel";
+//                  //TODO uncomment and handle with the new view framework when ready
+//                    //} else if (documentWindowController.isRightPanelVisible()) {
+//                    //titleKey = "menu.title.hide.right.panel";
+//                } else {
+//                    titleKey = "menu.title.show.right.panel";
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
+//        toggleRightPanelMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT8, modifier));
 //        toggleOutlinesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_OUTLINES_VISIBILITY) {
 //            @Override
 //            public String getTitle() {

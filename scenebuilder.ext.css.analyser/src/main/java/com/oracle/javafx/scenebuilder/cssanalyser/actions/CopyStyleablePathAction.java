@@ -41,7 +41,10 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -49,25 +52,34 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuControl
 @ActionMeta(
 		nameKey = "action.name.css.copy.styleable.path",
 		descriptionKey = "action.description.css.copy.styleable.path")
+@ViewMenuItemAttachment(
+        id = CopyStyleablePathAction.MENU_ID,
+        targetMenuId = CssViewAsMenuProvider.MENU_ID,
+        label = "csspanel.copy.path",
+        positionRequest = PositionRequest.AsNextSibling,
+        viewClass = CssPanelController.class,
+        separatorBefore = true)
+@Accelerator(accelerator = "CTRL+C", whenFocusing = CssPanelController.class)
 public class CopyStyleablePathAction extends AbstractAction {
 
-	private final CssPanelMenuController cssPanelMenuController;
+    public final static String MENU_ID = "cssCopyStyleableMenu";
 
-	public CopyStyleablePathAction(
-	        ActionExtensionFactory extensionFactory,
-			@Lazy CssPanelMenuController cssPanelMenuController) {
-		super(extensionFactory);
-		this.cssPanelMenuController = cssPanelMenuController;
-	}
+    private final CssPanelController cssPanelController;
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    public CopyStyleablePathAction(ActionExtensionFactory extensionFactory,
+            @Lazy CssPanelController cssPanelController) {
+        super(extensionFactory);
+        this.cssPanelController = cssPanelController;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-		cssPanelMenuController.copyStyleablePath();
-		return ActionStatus.DONE;
-	}
+    @Override
+    public boolean canPerform() {
+        return true;
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        cssPanelController.copyStyleablePath();
+        return ActionStatus.DONE;
+    }
 }

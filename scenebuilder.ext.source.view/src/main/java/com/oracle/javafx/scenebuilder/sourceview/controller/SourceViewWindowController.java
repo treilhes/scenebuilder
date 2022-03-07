@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.sourceview.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +45,13 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
@@ -61,7 +61,6 @@ import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
@@ -73,11 +72,12 @@ import javafx.util.Duration;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = SourceViewWindowController.VIEW_NAME, id = SourceViewWindowController.VIEW_ID)
+@ViewAttachment(name = SourceViewWindowController.VIEW_NAME, id = SourceViewWindowController.VIEW_ID,
+    icon = "ViewIconSource.png", iconX2 = "ViewIconSource@2x.png")
 public class SourceViewWindowController extends AbstractFxmlViewController {
 
     public final static String VIEW_ID = "d7e4ec15-eabc-4e0c-a9b9-49ed9bb05eed";
-    public final static String VIEW_NAME = "menu.title.show.fxml.source";
+    public final static String VIEW_NAME = "view.name.fxml.source";
 
     @FXML
     TextArea textArea;
@@ -101,8 +101,9 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             @Autowired Editor editor,
-            @Autowired WildcardImportsPreference wildcardImportsPreference) {
-        super(scenebuilderManager, documentManager, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle());
+            @Autowired WildcardImportsPreference wildcardImportsPreference,
+            ViewMenuController viewMenuController) {
+        super(scenebuilderManager, documentManager, viewMenuController, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle());
 
         this.documentManager = documentManager;
         this.editor = editor;
@@ -183,7 +184,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
         assert fxomDocument != null;
 
         // No need to eat CPU if the skeleton window isn't opened
-        if (!isHidden()) {
+        if (isVisible()) {
             updateTitle();
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
@@ -201,11 +202,6 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     @Override
     public ViewSearch getSearchController() {
-        return null;
-    }
-
-    @Override
-    public List<MenuItem> getMenuItems() {
         return null;
     }
 

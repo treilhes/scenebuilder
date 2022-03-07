@@ -41,23 +41,24 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menubar.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAction;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
-        id = FocusContentAction.FOCUS_CONTENT_MENU_ID,
-        targetMenuId = FocusContentAction.VIEW_MENU_ID,
+        id = FocusContentAction.MENU_ID,
+        targetMenuId = ToggleMinimizeLeftDockAction.MENU_ID,
         label = "menu.title.content",
-        positionRequest = PositionRequest.AsFirstChild)
+        positionRequest = PositionRequest.BeforePreviousSeparator)
 @Accelerator(accelerator = "CTRL+0")
+@Accelerator(accelerator = "CTRL+Numpad 0")
 public class FocusContentAction extends AbstractAction {
 
-    protected final static String VIEW_MENU_ID = "viewMenu"; //NOCHECK
-    public final static String FOCUS_CONTENT_MENU_ID = "focusContentMenu"; //NOCHECK
+    public final static String MENU_ID = "gotoContentMenuItem"; //NOCHECK
 
     private final Content contentPanelController;
 

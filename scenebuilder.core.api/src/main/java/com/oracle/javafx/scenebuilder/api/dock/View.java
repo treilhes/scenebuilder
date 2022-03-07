@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,46 +33,76 @@
  */
 package com.oracle.javafx.scenebuilder.api.dock;
 
+import java.net.URL;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.MenuButton;
 
 public interface View {
+
+    public static URL VIEW_ICON_MISSING = View.class.getResource("ViewIconMissing.png");
+    public static URL VIEW_ICON_MISSING_X2 = View.class.getResource("ViewIconMissing@2x.png");
+
     StringProperty getName();
-	ViewManager getViewManager();
+	//ViewManager getViewManager();
 	ViewSearch getSearchController();
 	ViewContent getViewController();
-	ViewMenuProvider getViewMenus();
-	void shown();
-	void hidden();
-	boolean isVisible();
-	
-	public static ViewDescriptor viewDescriptorAnnotation(Class<? extends View> cls) {
-        ViewDescriptor viewDescriptor = cls.getAnnotation(ViewDescriptor.class);
+	void populateMenu(MenuButton menuButton);
+	void clearMenu(MenuButton menuButton);
+
+//	void shown();
+//	void hidden();
+//	boolean isVisible();
+
+	BooleanProperty visibleProperty();
+    default void setVisible(boolean visible) {
+        visibleProperty().set(visible);
+    }
+    default boolean isVisible() {
+        return visibleProperty().get();
+    }
+
+	ObjectProperty<Dock> parentDockProperty();
+	default void setParentDock(Dock dock) {
+	    parentDockProperty().set(dock);
+	}
+	default Dock getParentDock() {
+        return parentDockProperty().get();
+    }
+	/**
+    *
+    */
+    void notifyFocused();
+
+	public static ViewAttachment viewDescriptorAnnotation(Class<? extends View> cls) {
+        ViewAttachment viewDescriptor = cls.getAnnotation(ViewAttachment.class);
         if (viewDescriptor == null) {
             throw new RuntimeException("Class implementing View interface must be annotated with @ViewDescriptor");
         }
         return viewDescriptor;
     }
-	
+
 	public default String getViewName() {
 	    return viewDescriptorAnnotation(this.getClass()).name();
     }
-	
+
 	public default UUID getId() {
 	    return UUID.fromString(viewDescriptorAnnotation(this.getClass()).id());
     }
-	
+
 	public static String getViewName(Class<? extends View> cls) {
         return viewDescriptorAnnotation(cls).name();
     }
-    
+
     public static UUID getId(Class<? extends View> cls) {
         return UUID.fromString(viewDescriptorAnnotation(cls).id());
     }
-    
+
     public static UUID getPrefDockId(Class<? extends View> cls) {
         String pref = viewDescriptorAnnotation(cls).prefDockId();
         return (pref != null && !pref.isEmpty()) ? UUID.fromString(pref) : null;
@@ -82,8 +113,10 @@ public interface View {
     public static boolean isSelectOnStart(Class<? extends View> cls) {
         return viewDescriptorAnnotation(cls).selectOnStart();
     }
-    
+
     public static int getOrder(Class<? extends View> cls) {
         return viewDescriptorAnnotation(cls).order();
     }
+
+
 }

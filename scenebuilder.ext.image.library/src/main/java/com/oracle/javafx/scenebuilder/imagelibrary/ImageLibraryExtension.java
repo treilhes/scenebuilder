@@ -37,19 +37,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ImportSelectionAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ManageJarFxmlAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.RevealCustomFolderAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ShowJarAnalysisReportAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsListAction;
-import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewAsSectionsAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ImageLibraryFolderMenuProvider;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ImportSelectionAsImageAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ManageJarImageAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.RevealImageFolderAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ShowImageAnalysisReportAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewImageAsListAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewImageAsSectionsAction;
+import com.oracle.javafx.scenebuilder.imagelibrary.action.ViewImageAsToggle;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;
 import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.ImageLibraryDragSource;
+import com.oracle.javafx.scenebuilder.imagelibrary.i18n.I18NImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowController;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryDialogConfiguration;
@@ -73,6 +74,7 @@ public class ImageLibraryExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                I18NImageLibrary.class,
                 ImageBuiltinLibrary.class,
                 ImageDefaultLibraryFilter.class,
                 ImageDisplayModePreference.class,
@@ -83,18 +85,20 @@ public class ImageLibraryExtension extends AbstractExtension {
                 ImageLibrary.class,
                 ImageLibraryController.class,
                 ImageLibraryDialogConfiguration.class,
+                ImageLibraryFolderMenuProvider.class,
                 ImageLibraryMenuProvider.class,
                 ImageLibraryPanelController.class,
                 ImageMavenArtifactExplorer.class,
-                ImportSelectionAction.class,
+                ImportSelectionAsImageAction.class,
                 ImageLibraryDragSource.class,
                 ImageLibraryDragSource.Factory.class,
-                ManageJarFxmlAction.class,
-                RevealCustomFolderAction.class,
-                ShowJarAnalysisReportAction.class,
+                ManageJarImageAction.class,
+                RevealImageFolderAction.class,
+                ShowImageAnalysisReportAction.class,
                 ThumbnailServiceController.class,
-                ViewAsListAction.class,
-                ViewAsSectionsAction.class
+                ViewImageAsListAction.class,
+                ViewImageAsSectionsAction.class,
+                ViewImageAsToggle.class
             );
      // @formatter:on
     }

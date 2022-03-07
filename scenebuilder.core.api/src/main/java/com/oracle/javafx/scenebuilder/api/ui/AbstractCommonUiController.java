@@ -100,7 +100,6 @@ public abstract class AbstractCommonUiController  {
      */
     public Parent getRoot() {
         assert panelRoot != null;
-        panelRoot.setOnMouseEntered((e) -> notifyFocused());
         return panelRoot;
     }
 
@@ -121,6 +120,7 @@ public abstract class AbstractCommonUiController  {
                 toolStylesheetDidChange(s);
             });
         }
+        panelRoot.setOnMouseEntered((e) -> notifyFocused());
 
         panelRoot.sceneProperty().addListener((obj, oldScene, newScene) -> {
             if (oldScene != null) {
@@ -130,6 +130,7 @@ public abstract class AbstractCommonUiController  {
                 newScene.focusOwnerProperty().addListener(focusListener);
             }
         });
+
     }
 
     /**

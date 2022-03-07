@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main;
 
-import static com.oracle.javafx.scenebuilder.api.menubar.PositionRequest.AsFirstChild;
-import static com.oracle.javafx.scenebuilder.api.menubar.PositionRequest.AsNextSibling;
+import static com.oracle.javafx.scenebuilder.api.menu.PositionRequest.AsFirstChild;
+import static com.oracle.javafx.scenebuilder.api.menu.PositionRequest.AsNextSibling;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,11 +43,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menubar.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuBarObjectConfigurator;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
-import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 

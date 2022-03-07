@@ -64,6 +64,7 @@ open module scenebuilder.ext.content.editor {
     //requires scenebuilder.ext.sb;
 
     requires scenebuilder.core.extension.api;
+    requires scenebuilder.ext.menu;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;

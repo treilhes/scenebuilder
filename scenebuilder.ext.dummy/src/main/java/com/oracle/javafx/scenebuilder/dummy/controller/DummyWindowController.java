@@ -38,12 +38,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.dock.ViewDescriptor;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 
 /**
  *
@@ -51,7 +52,7 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-@ViewDescriptor(name = DummyWindowController.VIEW_NAME, id = DummyWindowController.VIEW_ID)
+@ViewAttachment(name = DummyWindowController.VIEW_NAME, id = DummyWindowController.VIEW_ID)
 public class DummyWindowController extends AbstractFxmlViewController {
 
     public final static String VIEW_ID = "07a57164-de78-40f0-bb26-7c6b95afc35a";
@@ -59,9 +60,10 @@ public class DummyWindowController extends AbstractFxmlViewController {
 
     public DummyWindowController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager
+            DocumentManager documentManager,
+            ViewMenuController viewMenuController
             ) {
-        super(scenebuilderManager, documentManager, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle());
+        super(scenebuilderManager, documentManager, viewMenuController, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle());
     }
 
     @Override

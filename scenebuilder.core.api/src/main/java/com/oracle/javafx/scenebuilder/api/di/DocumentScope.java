@@ -238,7 +238,8 @@ public class DocumentScope implements Scope {
     }
 
     private static void executeRunnable(Runnable runnable, UUID scopedDocument) {
-        final UUID backupScope = threadScope.get();
+        final UUID backupScope = threadScope.get() == null ? currentScope : threadScope.get();
+
         try {
             threadScope.set(scopedDocument);
             MDC.put(MDC_SCOPE_NAME, scopedDocument.toString());
@@ -250,7 +251,8 @@ public class DocumentScope implements Scope {
     }
 
     private static <T> T executeSupplier(Supplier<T> runnable, UUID scopedDocument) {
-        final UUID backupScope = threadScope.get();
+        final UUID backupScope = threadScope.get() == null ? currentScope : threadScope.get();
+
         try {
             threadScope.set(scopedDocument);
             MDC.put(MDC_SCOPE_NAME, scopedDocument.toString());

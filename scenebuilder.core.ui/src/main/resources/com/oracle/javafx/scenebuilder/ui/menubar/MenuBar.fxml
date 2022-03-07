@@ -46,19 +46,7 @@
 
         <Menu fx:id="viewMenu" mnemonicParsing="true" text="%menu.title.view">
           <items>
-            <MenuItem fx:id="gotoContentMenuItem" mnemonicParsing="true" text="%menu.title.content" />
-            <MenuItem fx:id="gotoPropertiesMenuItem" mnemonicParsing="true" text="%menu.title.properties" />
-            <MenuItem fx:id="gotoLayoutMenuItem" mnemonicParsing="true" text="%menu.title.layout" />
-            <MenuItem fx:id="gotoCodeMenuItem" mnemonicParsing="true" text="%menu.title.code" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="toggleLibraryPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.library.panel" />
-            <MenuItem fx:id="toggleHierarchyPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.document.panel" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="toggleCSSPanelMenuItem" mnemonicParsing="true" text="%menu.title.show.bottom.panel" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="toggleLeftPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.left.panel" />
-            <MenuItem fx:id="toggleRightPanelMenuItem" mnemonicParsing="true" text="%menu.title.hide.right.panel" />
-            <SeparatorMenuItem mnemonicParsing="false" />
+
             <MenuItem fx:id="toggleOutlinesMenuItem" mnemonicParsing="true" text="%menu.title.show.outlines" />
             <MenuItem fx:id="toggleSampleDataMenuItem" mnemonicParsing="true" text="%menu.title.show.sample.data" />
             <MenuItem fx:id="toggleAlignmentGuidesMenuItem" mnemonicParsing="true" text="%menu.title.disable.guides" />

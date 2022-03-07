@@ -65,6 +65,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.di;
     exports com.oracle.javafx.scenebuilder.api.dnd;
     exports com.oracle.javafx.scenebuilder.api.dock;
+    exports com.oracle.javafx.scenebuilder.api.dock.annotation;
     exports com.oracle.javafx.scenebuilder.api.editor.images;
     exports com.oracle.javafx.scenebuilder.api.editor.job;
     exports com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog;
@@ -76,8 +77,8 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.library;
     exports com.oracle.javafx.scenebuilder.api.lifecycle;
     exports com.oracle.javafx.scenebuilder.api.mask;
-    exports com.oracle.javafx.scenebuilder.api.menubar;
-    exports com.oracle.javafx.scenebuilder.api.menubar.annotation;
+    exports com.oracle.javafx.scenebuilder.api.menu;
+    exports com.oracle.javafx.scenebuilder.api.menu.annotation;
     exports com.oracle.javafx.scenebuilder.api.preferences;
     exports com.oracle.javafx.scenebuilder.api.preferences.type;
     exports com.oracle.javafx.scenebuilder.api.script;

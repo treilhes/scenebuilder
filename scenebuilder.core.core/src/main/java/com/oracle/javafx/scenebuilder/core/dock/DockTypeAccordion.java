@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -43,9 +44,12 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
@@ -60,22 +64,28 @@ public class DockTypeAccordion implements DockType<TitledPane> {
 
     private final SceneBuilderBeanFactory context;
 
+    private ObjectProperty<DockContext<TitledPane>> focusedProperty;
+
     public DockTypeAccordion(@Autowired SceneBuilderBeanFactory context) {
         this.context = context;
     }
 
     @Override
     public String getNameKey() {
-        return "%viewtype.accordion";
+        return "viewtype.accordion";
     }
 
     @Override
-    public DockContext<TitledPane> computeView(View view) {
+    public DockContext<TitledPane> computeView(DockContext<TitledPane> viewContext) {
+        View view = viewContext.getView();
+        ViewAttachment viewAttachment = viewContext.getViewAttachment();
+
         var ctrl = context.getBean(ViewController.class);
 
         TitledPane titledPane = FXMLUtils.load(ctrl, DockTypeAccordion.class, VIEW_SOURCE);
 
         ctrl.getViewLabel().textProperty().bind(view.getName());
+        titledPane.setOnMouseEntered(e -> view.notifyFocused());
 
         if (view.getSearchController() != null) {
             ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
@@ -85,27 +95,22 @@ public class DockTypeAccordion implements DockType<TitledPane> {
         ctrl.getViewContentHost().getChildren().add(content);
         VBox.setVgrow(content, Priority.ALWAYS);
 
-        var menuItems = view.getViewMenus().getMenuItems();
-        if (menuItems != null && menuItems.size() > 0) {
-            ctrl.getViewMenuButton().getItems().addAll(menuItems);
-        }
+        view.populateMenu(ctrl.getViewMenuButton());
 
-        var dockContext = new DockContext<>(view, ctrl, titledPane, () -> {
+        var dockContext = new DockContext<>(view, viewAttachment, ctrl, titledPane, () -> {
             ctrl.getViewLabel().textProperty().unbind();
             if (view.getSearchController() != null) {
                 ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
             }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            if (menuItems != null && menuItems.size() > 0) {
-                ctrl.getViewMenuButton().getItems().removeAll(menuItems);
-            }
+            view.clearMenu(ctrl.getViewMenuButton());
         });
 
         return dockContext;
     }
 
     @Override
-    public Node computeRoot(List<DockContext<TitledPane>> views, DockContext<TitledPane> focused) {
+    public Node computeRoot(Collection<DockContext<TitledPane>> views) {//, DockContext<TitledPane> focused) {
         TitledPane[] panes = views.stream().map(v -> v.getDockContent()).toArray(TitledPane[]::new);
 
         if (panes != null && panes.length == 1) {
@@ -115,12 +120,33 @@ public class DockTypeAccordion implements DockType<TitledPane> {
         }
         var accordion = new Accordion(panes);
 
-        if (focused == null && !accordion.getPanes().isEmpty()) {
-            accordion.setExpandedPane(accordion.getPanes().get(0));
-        } else if (focused != null) {
-            accordion.setExpandedPane(focused.getDockContent());
-        }
+//        if (focused == null && !accordion.getPanes().isEmpty()) {
+//            accordion.setExpandedPane(accordion.getPanes().get(0));
+//        } else if (focused != null) {
+//            accordion.setExpandedPane(focused.getDockContent());
+//        }
 
         return accordion;
     }
+
+    @Override
+    public ObjectProperty<DockContext<TitledPane>> focusedProperty() {
+        if (focusedProperty == null) {
+            focusedProperty = new SimpleObjectProperty<>() {
+
+                @Override
+                public void set(DockContext<TitledPane> focused) {
+                    if (focused != null) {
+                        TitledPane titlePane = focused.getDockContent();
+                        Accordion accordion = (Accordion)titlePane.getParent();
+                        accordion.setExpandedPane(titlePane);
+                    }
+                    super.set(focused);
+                }
+
+            };
+        }
+        return focusedProperty;
+    }
+
 }

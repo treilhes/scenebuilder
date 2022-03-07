@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,9 +42,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuProvider;
-import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 
 import javafx.scene.control.Menu;
@@ -54,8 +55,7 @@ import javafx.scene.control.Menu;
 public class DebugMenuMenuProvider implements MenuProvider {
 
     private final static String VIEW_MENU_ID = "viewMenu";
-    private final static String SHOW_FXML_SOURCE_IN_WINDOW_ID = "showFxmlSourceMenuItem";
-    
+
     private final DebugMenuController debugMenuController;
 
     public DebugMenuMenuProvider(

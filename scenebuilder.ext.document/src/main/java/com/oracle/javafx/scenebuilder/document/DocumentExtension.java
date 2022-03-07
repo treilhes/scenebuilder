@@ -37,9 +37,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.document.actions.AbstractShowAction;
+import com.oracle.javafx.scenebuilder.document.actions.HierarchyMenuProvider;
 import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
+import com.oracle.javafx.scenebuilder.document.actions.ToggleDocumentVisibilityAction;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDropTarget;
@@ -61,12 +64,14 @@ public class DocumentExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                AbstractShowAction.ShowActionToggle.class,
                 DisplayOptionPreference.class,
                 DocumentPanelController.class,
                 HierarchyDNDController.class,
                 HierarchyDNDController.Factory.class,
                 HierarchyDropTarget.class,
                 HierarchyDropTarget.Factory.class,
+                HierarchyMenuProvider.class,
                 HierarchyPanelController.class,
                 HierarchyTreeCell.class,
                 HierarchyTreeCell.Factory.class,
@@ -74,7 +79,8 @@ public class DocumentExtension extends AbstractExtension {
                 ShowExpertByDefaultPreference.class,
                 ShowFxIdAction.class,
                 ShowInfoAction.class,
-                ShowNodeIdAction.class
+                ShowNodeIdAction.class,
+                ToggleDocumentVisibilityAction.class
             );
      // @formatter:on
     }

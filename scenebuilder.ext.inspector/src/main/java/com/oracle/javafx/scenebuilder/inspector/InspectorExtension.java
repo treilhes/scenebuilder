@@ -38,12 +38,17 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.inspector.actions.FocusCodeTabAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.FocusLayoutTabAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.FocusPropertyTabAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ShowAllAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ShowEditedAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ShowInspectorToggle;
 import com.oracle.javafx.scenebuilder.inspector.actions.ShowSectionAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyNameAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewByPropertyTypeAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
+import com.oracle.javafx.scenebuilder.inspector.actions.ViewInspectorToggle;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.i18n.I18NInspector;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
@@ -58,15 +63,20 @@ public class InspectorExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                FocusCodeTabAction.class,
+                FocusLayoutTabAction.class,
+                FocusPropertyTabAction.class,
                 I18NInspector.class,
                 InspectorPanelController.class,
                 InspectorSectionIdPreference.class,
                 ShowAllAction.class,
                 ShowEditedAction.class,
+                ShowInspectorToggle.class,
                 ShowSectionAction.class,
                 ViewByPropertyNameAction.class,
                 ViewByPropertyTypeAction.class,
-                ViewBySectionsAction.class
+                ViewBySectionsAction.class,
+                ViewInspectorToggle.class
             );
      // @formatter:on
     }

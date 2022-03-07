@@ -33,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.ui.controller;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -51,6 +49,7 @@ import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.ui.controller.InnerDockManager.DividerPosition;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
@@ -61,6 +60,9 @@ import com.oracle.javafx.scenebuilder.ui.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.YPosPreference;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.event.EventHandler;
@@ -120,8 +122,8 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final DockPanelController rightDockController;
     private final DockPanelController bottomDockController;
     private final DockViewController viewMenuController;
-    private SplitPositionController topBottonController;
-    private SplitPositionController leftRightController;
+//    private SplitPositionController topBottonController;
+//    private SplitPositionController leftRightController;
 
 
     private PreferenceManager preferenceManager;
@@ -130,6 +132,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     //private MessageBarController messageBarController;
     //private SelectionBarController selectionBarController;
 
+    private InnerDockManager leftDockManager;
+    private InnerDockManager rightDockManager;
+    private InnerDockManager bottomDockManager;
     /*
      * DocumentWindowController
      */
@@ -159,9 +164,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDockController = rightDockController;
         this.bottomDockController = bottomDockController;
 
-        this.leftDockController.setId(UUID.fromString(Dock.LEFT_DOCK_ID));
-        this.rightDockController.setId(UUID.fromString(Dock.RIGHT_DOCK_ID));
-        this.bottomDockController.setId(UUID.fromString(Dock.BOTTOM_DOCK_ID));
+        this.leftDockController.setId(Dock.LEFT_DOCK_UUID);
+        this.rightDockController.setId(Dock.RIGHT_DOCK_UUID);
+        this.bottomDockController.setId(Dock.BOTTOM_DOCK_UUID);
 
         this.leftDockController.notifyDockCreated();
         this.rightDockController.notifyDockCreated();
@@ -189,13 +194,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @FXML
     public void initialize() {
 
-        topBottonController = SplitPositionController.of(mainSplitPane, 2).withContent(leftRightSplitPane, true)
-                .withDivider(bottomDividerVPos).withContent(bottomHost, false)
-                .build(SplitPositionController.MAIN_TOP_BOTTOM);
+        leftDockManager = new InnerDockManager(leftDockController, leftHost, leftRightSplitPane, DividerPosition.AFTER, leftDividerHPos);
+        rightDockManager = new InnerDockManager(rightDockController, rightHost, leftRightSplitPane, DividerPosition.BEFORE, rightDividerHPos);
+        bottomDockManager = new InnerDockManager(bottomDockController, bottomHost, mainSplitPane, DividerPosition.BEFORE, bottomDividerVPos);
 
-        leftRightController = SplitPositionController.of(leftRightSplitPane, 3).withContent(leftHost, false)
-                .withDivider(leftDividerHPos).withContent(centerHost, true).withDivider(rightDividerHPos)
-                .withContent(rightHost, false).build(SplitPositionController.MAIN_LEFT_RIGHT);
+//        topBottonController = SplitPositionController.of(mainSplitPane, 2).withContent(leftRightSplitPane)
+//                .withDivider(bottomDividerVPos).withContent(bottomHost)
+//                .build(SplitPositionController.MAIN_TOP_BOTTOM);
+//
+//        leftRightController = SplitPositionController.of(leftRightSplitPane, 3).withContent(leftHost)
+//                .withDivider(leftDividerHPos).withContent(centerHost).withDivider(rightDividerHPos)
+//                .withContent(rightHost).build(SplitPositionController.MAIN_LEFT_RIGHT);
+
     }
 
     /*
@@ -226,11 +236,64 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         setupDockContainer(leftDockController, leftRightSplitPane, leftHost, InsertPosition.First);
         setupDockContainer(rightDockController, leftRightSplitPane, rightHost, InsertPosition.Last);
         setupDockContainer(bottomDockController, mainSplitPane, bottomHost, InsertPosition.Last);
+//
+//        leftDockController.minimizedProperty().addListener((ob, o, n) -> {
+//            leftRightController.setMinimized(leftHost, n);
+//        });
+//        rightDockController.minimizedProperty().addListener((ob, o, n) -> {
+//            leftRightController.setMinimized(rightHost, n);
+//        });
+//        bottomDockController.minimizedProperty().addListener((ob, o, n) -> {
+//            leftRightController.setMinimized(bottomHost, n);
+//        });
 
         messageBarHost.heightProperty().addListener((InvalidationListener) o -> {
             final double h = messageBarHost.getHeight();
             contentPanelHost.setPadding(new Insets(h, 0.0, 0.0, 0.0));
         });
+
+    }
+
+
+
+//    private BooleanProperty leftDockVisibleProperty = new BooleanPropertyBase() {
+//
+//        @Override
+//        public void set(boolean newValue) {
+//            if (newValue) {
+//                if (!leftHost.getChildren().isEmpty()) {
+//                    leftRightSplitPane.getItems().add(0, leftHost);
+//                }
+//            } else {
+//                leftRightSplitPane.getItems().remove(leftHost);
+//                super.set(newValue);
+//            }
+//
+//        }
+//
+//        @Override
+//        public Object getBean() {
+//            return DocumentWindowController.this;
+//        }
+//
+//        @Override
+//        public String getName() {
+//            return "leftDockVisible";
+//        }
+//
+//    };
+//    @Override
+//    public BooleanProperty leftDockVisibleProperty() {
+//        return leftDockVisibleProperty;
+//    }
+
+    private BooleanProperty leftDockVisibleProperty = null;
+    public ReadOnlyBooleanProperty leftDockVisibleProperty() {
+        if (leftDockVisibleProperty == null) {
+            leftDockVisibleProperty = new SimpleBooleanProperty();
+            leftDockVisibleProperty.bind(leftDockController.minimizedProperty());
+        }
+        return leftDockVisibleProperty;
     }
 
     private void setupDockContainer(DockPanelController dock, SplitPane placeHolder, Pane host,
@@ -356,6 +419,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
             getStage().setTitle(FXOMDocumentUtils.makeTitle(fxomDocument));
         } // else controllerDidLoadFxml() will invoke me again
+
     }
 
     @Override
@@ -394,6 +458,39 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void untrack() {
         this.preferenceManager.untrack();
+    }
+//
+//    @Override
+//    public void toggleMinimizedLeft() {
+//        leftDockController.setMinimized(!leftDockController.isMinimized());
+//        leftRightController.toggleMinimized(leftHost);
+//    }
+//
+//    @Override
+//    public void toggleMinimizedRight() {
+//        rightDockController.setMinimized(!rightDockController.isMinimized());
+//        leftRightController.toggleMinimized(rightHost);
+//    }
+//
+//    @Override
+//    public void toggleMinimizedBottom() {
+//        bottomDockController.setMinimized(!bottomDockController.isMinimized());
+//        topBottonController.toggleMinimized(bottomHost);
+//    }
+
+    @Override
+    public Dock getLeftDock() {
+        return leftDockController;
+    }
+
+    @Override
+    public Dock getRightDock() {
+        return rightDockController;
+    }
+
+    @Override
+    public Dock getBottomDock() {
+        return bottomDockController;
     }
 
     private class PreferenceManager {
@@ -457,8 +554,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             if (maximizedWindowPreference.isValid()) {
                 getStage().setMaximized(maximizedWindowPreference.getValue());
             }
-            leftRightController.apply();
-            topBottonController.apply();
+            leftDockManager.applyPreference();
+            rightDockManager.applyPreference();
+            bottomDockManager.applyPreference();
         }
 
         public void track() {
@@ -479,8 +577,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             getStage().maximizedProperty().addListener(maximizedPropertyListener);
             maximizedWindowPreference.getObservableValue().addListener(maximizedPreferenceListener);
 
-            leftRightController.track();
-            topBottonController.track();
+            leftDockManager.trackPreference();
+            rightDockManager.trackPreference();
+            bottomDockManager.trackPreference();
         }
 
         public void untrack() {
@@ -501,8 +600,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             getStage().maximizedProperty().removeListener(maximizedPropertyListener);
             maximizedWindowPreference.getObservableValue().removeListener(maximizedPreferenceListener);
 
-            leftRightController.untrack();
-            topBottonController.untrack();
+            leftDockManager.untrackPreference();
+            rightDockManager.untrackPreference();
+            bottomDockManager.untrackPreference();
         }
 
         /**

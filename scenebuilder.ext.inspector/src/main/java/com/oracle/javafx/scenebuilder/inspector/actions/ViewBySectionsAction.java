@@ -40,6 +40,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
@@ -49,7 +52,18 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 @ActionMeta(
 		nameKey = "action.name.view.by.section",
 		descriptionKey = "action.description.view.by.section")
+@ViewMenuItemAttachment(
+        id = ViewBySectionsAction.MENU_ID,
+        targetMenuId = ShowEditedAction.MENU_ID,
+        label = "inspector.view.sections",
+        positionRequest = PositionRequest.AsLastSibling,
+        viewClass = InspectorPanelController.class,
+        toggleClass = ViewInspectorToggle.class)
+@Accelerator(accelerator = "CTRL+S", whenFocusing = InspectorPanelController.class)
 public class ViewBySectionsAction extends AbstractViewAction {
+
+    public final static String MENU_ID = "inspectorViewBySectionMenu";
+
 	public ViewBySectionsAction(
 	        ActionExtensionFactory extensionFactory,
             @Lazy InspectorPanelController inspectorPanelController) {

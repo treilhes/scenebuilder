@@ -52,7 +52,7 @@ open module scenebuilder.core.core {
     exports com.oracle.javafx.scenebuilder.core.guides;
     exports com.oracle.javafx.scenebuilder.core.i18n;
     exports com.oracle.javafx.scenebuilder.core.mask;
-    exports com.oracle.javafx.scenebuilder.core.menubar;
+    exports com.oracle.javafx.scenebuilder.core.menu;
     exports com.oracle.javafx.scenebuilder.core.util;
     exports com.oracle.javafx.scenebuilder.core;
 

@@ -34,22 +34,27 @@
 package com.oracle.javafx.scenebuilder.api.ui;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewContent;
-import com.oracle.javafx.scenebuilder.api.dock.ViewMenuProvider;
+import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.MenuButton;
 import lombok.Getter;
 
 /**
@@ -62,14 +67,22 @@ import lombok.Getter;
  *
  * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
-public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View, ViewContent, ViewMenuProvider {
+public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View, ViewContent { //, ViewMenuProvider {
 
-	@Autowired
-	private @Getter ViewManager viewManager;
+    /** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(AbstractFxmlViewController.class);
+
+    private final ViewMenuController viewMenuController;
+//	@Autowired
+//	private @Getter ViewManager viewManager;
 
 	private @Getter StringProperty name;
 
-	private boolean hidden = true;
+    private final DocumentManager documentManager;
+
+    private ObjectProperty<Dock> parentDock = new SimpleObjectProperty<>();
+    private BooleanProperty minimizedProperty = new SimpleBooleanProperty();
+
 	/*
      * Public
      */
@@ -82,11 +95,33 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
     public AbstractFxmlViewController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
+            ViewMenuController viewMenuController,
             URL fxmlURL,
             ResourceBundle resources) {
         super(scenebuilderManager, documentManager, fxmlURL, resources); //NOCHECK
+        this.viewMenuController = viewMenuController;
+        this.documentManager = documentManager;
+
         String viewName = getViewName();
         name = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
+
+    }
+
+    @Override
+    public void controllerDidLoadFxml() {
+        documentManager.focused().subscribe((f) -> {
+            if (NodeUtils.isDescendantOf(getRoot(), f.getRoot())) {
+                notifyFocused();
+            }
+        });
+    }
+
+    @Override
+    public void notifyFocused() {
+        if (documentManager.focusedView().get() != this) {
+            logger.info("Active view : {}", this.getClass().getName());
+            documentManager.focusedView().set(this);
+        }
     }
 
     @Override
@@ -94,43 +129,80 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
         return this;
     }
 
-    @Override
-    public ViewMenuProvider getViewMenus() {
-        return this;
-    }
+
+
+//    @Override
+//    public ViewMenuProvider getViewMenus() {
+//        return this;
+//    }
+//
+//    @Override
+//    public List<MenuItem> getMenuItems() {
+//        return null;
+//    }
+
+//    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
+//    // maybe markAsShown
+//    @Override
+//    public void shown() {
+//        this.hidden = false;
+//        onShow();
+//    }
+//
+//    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
+//    // maybe markAsHidden
+//    @Override
+//    public void hidden() {
+//        this.hidden = true;
+//        onHidden();
+//    }
+
+    private BooleanProperty visibleProperty;
 
     @Override
-    public List<MenuItem> getMenuItems() {
-        return null;
+    public BooleanProperty visibleProperty() {
+        if (visibleProperty == null) {
+            visibleProperty = new SimpleBooleanProperty(false);
+            visibleProperty.addListener((ob, o, n) -> {
+                if (n) {
+                    onShow();
+                } else {
+                    onHidden();
+                }
+            });
+        }
+        return visibleProperty;
     }
-
-    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
-    // maybe markAsShown
-    @Override
-    public void shown() {
-        this.hidden = false;
-        onShow();
-    }
-
-    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
-    // maybe markAsHidden
-    @Override
-    public void hidden() {
-        this.hidden = true;
-        onHidden();
-    }
-
     public abstract void onShow();
 
     public abstract void onHidden();
 
-    protected boolean isHidden() {
-        return hidden;
+    @Override
+    public void populateMenu(MenuButton menuButton) {
+        viewMenuController.buildMenu(this, menuButton);
     }
 
     @Override
-    public boolean isVisible() {
-        return !hidden;
+    public void clearMenu(MenuButton menuButton) {
+        viewMenuController.clearMenu(this, menuButton);
     }
+
+    @Override
+    public final ObjectProperty<Dock> parentDockProperty() {
+        return this.parentDock;
+    }
+
+    @Override
+    public ViewSearch getSearchController() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+
+
+
+
+
 
 }

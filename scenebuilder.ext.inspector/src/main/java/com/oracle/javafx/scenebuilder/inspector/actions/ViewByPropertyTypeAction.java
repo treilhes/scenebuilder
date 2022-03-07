@@ -40,6 +40,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
@@ -49,7 +52,18 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 @ActionMeta(
 		nameKey = "action.name.view.by.property.type",
 		descriptionKey = "action.description.view.by.property.type")
+@ViewMenuItemAttachment(
+        id = ViewByPropertyTypeAction.MENU_ID,
+        targetMenuId = ViewByPropertyNameAction.MENU_ID,
+        label = "inspector.by.property.type",
+        positionRequest = PositionRequest.AsNextSibling,
+        viewClass = InspectorPanelController.class,
+        toggleClass = ViewInspectorToggle.class)
+@Accelerator(accelerator = "CTRL+T", whenFocusing = InspectorPanelController.class)
 public class ViewByPropertyTypeAction extends AbstractViewAction {
+
+    public final static String MENU_ID = "inspectorViewByPropTypeMenu";
+
 	public ViewByPropertyTypeAction(
 	        ActionExtensionFactory extensionFactory,
             @Lazy InspectorPanelController inspectorPanelController) {

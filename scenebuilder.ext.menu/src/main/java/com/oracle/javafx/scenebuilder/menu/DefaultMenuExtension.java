@@ -75,8 +75,19 @@ import com.oracle.javafx.scenebuilder.menu.action.file.RevealIncludedFxmlAction;
 import com.oracle.javafx.scenebuilder.menu.action.file.RevertAction;
 import com.oracle.javafx.scenebuilder.menu.action.file.SaveAsAction;
 import com.oracle.javafx.scenebuilder.menu.action.file.SaveOrSaveAsAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.CloseBottomDockAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.CloseLeftDockAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.CloseRightDockAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeBottomDockAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeRightDockAction;
+import com.oracle.javafx.scenebuilder.menu.action.view.ToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.menu.i18n.I18NDefaultMenu;
 import com.oracle.javafx.scenebuilder.menu.main.MainMenuProvider;
+import com.oracle.javafx.scenebuilder.menu.viewmenu.ChangeDockTypeAction;
+import com.oracle.javafx.scenebuilder.menu.viewmenu.CloseViewAction;
+import com.oracle.javafx.scenebuilder.menu.viewmenu.MoveToDockAction;
+import com.oracle.javafx.scenebuilder.menu.viewmenu.UndockViewAction;
 
 public class DefaultMenuExtension extends AbstractExtension {
     @Override
@@ -88,8 +99,14 @@ public class DefaultMenuExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                ChangeDockTypeAction.class,
+                ChangeDockTypeAction.MenuProvider.class,
                 ClearRecentItemsAction.class,
+                CloseBottomDockAction.class,
                 CloseFileAction.class,
+                CloseLeftDockAction.class,
+                CloseRightDockAction.class,
+                CloseViewAction.class,
                 CopyAction.class,
                 CutAction.class,
                 DeleteAction.class,
@@ -108,6 +125,8 @@ public class DefaultMenuExtension extends AbstractExtension {
                 LoadFileAction.class,
                 LoadUrlAction.class,
                 MainMenuProvider.class,
+                MoveToDockAction.class,
+                MoveToDockAction.MenuProvider.class,
                 OpenFilesAction.class,
                 PasteAction.class,
                 PasteIntoAction.class,
@@ -125,10 +144,17 @@ public class DefaultMenuExtension extends AbstractExtension {
                 SelectParentAction.class,
                 SelectNoneAction.class,
                 SelectPreviousAction.class,
+                ToggleMinimizeBottomDockAction.class,
+                ToggleMinimizeLeftDockAction.class,
+                ToggleMinimizeRightDockAction.class,
+                ToggleViewVisibilityAction.class,
+                ToggleViewVisibilityAction.ViewMenuProvider.class,
                 TrimAction.class,
                 OpenAction.class,
                 OpenRecentProvider.class,
-                UndoAction.class
+                UndoAction.class,
+                UndockViewAction.class
+
             );
      // @formatter:on
     }

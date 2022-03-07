@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,32 +42,32 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class DockNameHelper {
-    
+
     private int windowNumber = 1;
     private final Map<UUID, String> dockNames = new HashMap<>();
 
     public DockNameHelper() {
         super();
-        // TODO add i18N value here
-        dockNames.put(UUID.fromString(Dock.LEFT_DOCK_ID), "Left");
-        dockNames.put(UUID.fromString(Dock.RIGHT_DOCK_ID), "Right");
-        dockNames.put(UUID.fromString(Dock.BOTTOM_DOCK_ID), "Bottom");
+        dockNames.put(Dock.LEFT_DOCK_UUID, I18N.getString("dock.name.left"));
+        dockNames.put(Dock.RIGHT_DOCK_UUID, I18N.getString("dock.name.right"));
+        dockNames.put(Dock.BOTTOM_DOCK_UUID, I18N.getString("dock.name.bottom"));
     }
-    
+
     public String getName(UUID uuid) {
         String name = dockNames.get(uuid);
-        
+
         if (name != null) {
             return name;
         }
-        
+
         name = "Window " + windowNumber++;
         dockNames.put(uuid, name);
-        
+
         return name;
     }
 }

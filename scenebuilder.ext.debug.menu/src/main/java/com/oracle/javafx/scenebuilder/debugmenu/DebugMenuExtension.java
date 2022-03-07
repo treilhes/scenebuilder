@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.debugmenu.action.ToggleDebugViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuWindowController;
 import com.oracle.javafx.scenebuilder.debugmenu.i18n.I18NDebugMenu;
 import com.oracle.javafx.scenebuilder.debugmenu.menu.DebugMenuMenuProvider;
+import com.oracle.javafx.scenebuilder.debugmenu.view.DebugPreferencesView;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DebugMenuExtension extends AbstractExtension {
@@ -47,15 +50,19 @@ public class DebugMenuExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("b97afbec-1861-4b39-9cee-4bd4f541afe3");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
             DebugMenuController.class,
             DebugMenuWindowController.class,
+            DebugPreferencesView.class,
             I18NDebugMenu.class,
-            DebugMenuMenuProvider.class
+            DebugMenuMenuProvider.class,
+            DebugPreferencesView.class,
+            ToggleDebugViewVisibilityAction.class,
+            ToggleDebugViewVisibilityAction.ViewMenuProvider.class
             );
      // @formatter:on
     }

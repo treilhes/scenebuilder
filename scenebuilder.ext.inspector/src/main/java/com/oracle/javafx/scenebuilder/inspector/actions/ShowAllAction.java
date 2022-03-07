@@ -40,6 +40,9 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
 
@@ -49,7 +52,17 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 @ActionMeta(
 		nameKey = "action.name.show.all",
 		descriptionKey = "action.description.show.all")
+@ViewMenuItemAttachment(
+        id = ShowAllAction.MENU_ID,
+        label = "inspector.show.all",
+        positionRequest = PositionRequest.AsLastChild,
+        viewClass = InspectorPanelController.class,
+        toggleClass = ShowInspectorToggle.class)
+@Accelerator(accelerator = "CTRL+A", whenFocusing = InspectorPanelController.class)
 public class ShowAllAction extends AbstractShowAction {
+
+    public final static String MENU_ID = "inspectorShowAllMenu";
+
 	public ShowAllAction(
 	        ActionExtensionFactory extensionFactory,
 	        @Lazy InspectorPanelController inspectorPanelController) {

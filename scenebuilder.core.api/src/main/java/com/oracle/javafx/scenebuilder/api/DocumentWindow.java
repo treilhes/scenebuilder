@@ -35,6 +35,8 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.util.Comparator;
 
+import com.oracle.javafx.scenebuilder.api.dock.Dock;
+
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -79,5 +81,40 @@ public interface DocumentWindow extends SceneBuilderWindow {
     void apply();
     void track();
     void untrack();
+
+//    /**
+//     *
+//     */
+//    void toggleMinimizedLeft();
+//
+//    /**
+//     *
+//     */
+//    void toggleMinimizedRight();
+//
+//    /**
+//     *
+//     */
+//    void toggleMinimizedBottom();
+
+    /**
+     * @return
+     */
+    Dock getLeftDock();
+
+    /**
+     * @return
+     */
+    Dock getRightDock();
+
+    /**
+     * @return
+     */
+    Dock getBottomDock();
+
+//    /**
+//     *
+//     */
+//    BooleanProperty leftDockVisibleProperty();
 
 }

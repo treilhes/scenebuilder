@@ -44,9 +44,9 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menubar.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.menubar.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.ext.controller.I18nResourceMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;

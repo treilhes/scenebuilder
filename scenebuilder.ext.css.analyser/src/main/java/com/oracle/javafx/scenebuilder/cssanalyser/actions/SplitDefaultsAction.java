@@ -33,7 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.actions;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,8 +41,11 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
-import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -51,28 +53,43 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelMenuControl
 @ActionMeta(
 		nameKey = "action.name.css.split.defaults",
 		descriptionKey = "action.description.css.split.defaults")
+@ViewMenuItemAttachment(
+        id = SplitDefaultsAction.MENU_ID,
+        targetMenuId = ShowStyledOnlyAction.MENU_ID,
+        label = "#this.getTitle()",
+        positionRequest = PositionRequest.AsNextSibling,
+        viewClass = CssPanelController.class)
+@Accelerator(accelerator = "CTRL+D", whenFocusing = CssPanelController.class)
 public class SplitDefaultsAction extends AbstractAction {
 
-	private final CssPanelMenuController cssPanelMenuController;
-	private final CssPanelController cssPanelController;
+    public final static String MENU_ID = "cssSplitMenu";
 
-	public SplitDefaultsAction(
-	        ActionExtensionFactory extensionFactory,
-			@Autowired @Lazy CssPanelMenuController cssPanelMenuController,
-			@Autowired @Lazy CssPanelController cssPanelController) {
-		super(extensionFactory);
-		this.cssPanelMenuController = cssPanelMenuController;
-		this.cssPanelController = cssPanelController;
-	}
+    private final static String LABEL_ON = "csspanel.defaults.join";
+    private final static String LABEL_OFF = "csspanel.defaults.split";
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    private final CssPanelController cssPanelController;
 
-	@Override
-	public ActionStatus doPerform() {
-		cssPanelMenuController.splitDefaultsAction(cssPanelController.getDefaultsSplit());
-		return ActionStatus.DONE;
-	}
+    public SplitDefaultsAction(ActionExtensionFactory extensionFactory, @Lazy CssPanelController cssPanelController) {
+        super(extensionFactory);
+        this.cssPanelController = cssPanelController;
+    }
+
+    @Override
+    public boolean canPerform() {
+        return cssPanelController.getCurrentView() == CssPanelController.View.TABLE;
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        cssPanelController.splitDefaultsAction();
+        return ActionStatus.DONE;
+    }
+
+    public String getTitle() {
+        if (cssPanelController.isSplitingDefaults()) {
+            return I18N.getStringOrDefault(LABEL_ON, LABEL_ON);
+        } else {
+            return I18N.getStringOrDefault(LABEL_OFF, LABEL_OFF);
+        }
+    }
 }

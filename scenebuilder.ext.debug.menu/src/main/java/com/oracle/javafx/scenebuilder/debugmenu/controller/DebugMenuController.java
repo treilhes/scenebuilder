@@ -50,6 +50,7 @@ import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
@@ -90,6 +91,7 @@ public class DebugMenuController implements DebugMenu {
         this.dialog = dialog;
 
         menu.setVisible(false);
+        menu.setId(DefaultMenu.DEBUG_MENU_ID);
         /*
          * User Library Folder
          */

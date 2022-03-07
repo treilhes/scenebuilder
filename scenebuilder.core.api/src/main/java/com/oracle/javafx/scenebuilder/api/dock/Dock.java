@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,16 +38,61 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.scene.layout.Region;
+
 public interface Dock {
-    
+
     public static final String LEFT_DOCK_ID = "42094e12-3aa8-44e4-bc4c-7633d6bc5b05";
     public static final String RIGHT_DOCK_ID = "18cce02f-3a67-4b96-b5b4-53d7e0145a64";
     public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
-    
+    public static final UUID LEFT_DOCK_UUID = UUID.fromString(LEFT_DOCK_ID);
+    public static final UUID RIGHT_DOCK_UUID = UUID.fromString(RIGHT_DOCK_ID);
+    public static final UUID BOTTOM_DOCK_UUID = UUID.fromString(BOTTOM_DOCK_ID);
+
 	UUID getId();
 
 	boolean isWindow();
 	SceneBuilderWindow getParentWindow();
 
     Collection<View> getViews();
+
+    //temp
+    Region getContent();
+    /**
+     * @param dockType
+     * @param view
+     */
+    //void changedDockType(DockType<?> dockType, View view);
+
+    ObjectProperty<DockType> dockTypeProperty();
+    default void setFocused(DockType dockType) {
+        dockTypeProperty().set(dockType);
+    }
+    default DockType<?> getDockType() {
+        return dockTypeProperty().get();
+    }
+
+    ObjectProperty<View> focusedProperty();
+    default void setFocused(View focused) {
+        focusedProperty().set(focused);
+    }
+    default View getFocused() {
+        return focusedProperty().get();
+    }
+
+    BooleanProperty minimizedProperty();
+    default void setMinimized(boolean visible) {
+        minimizedProperty().set(visible);
+    }
+    default boolean isMinimized() {
+        return minimizedProperty().get();
+    }
+
+    ReadOnlyBooleanProperty visibleProperty();
+    default boolean isVisible() {
+        return visibleProperty().get();
+    }
 }

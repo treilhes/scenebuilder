@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,15 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
@@ -55,19 +60,25 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
 
     private final Orientation orientation;
 
+    private ObjectProperty<DockContext<Node>> focusedProperty;
+
     public AbstractDockTypeSplit(SceneBuilderBeanFactory context, Orientation orientation) {
         this.context = context;
         this.orientation = orientation;
     }
 
     @Override
-    public DockContext<Node> computeView(View view) {
+    public DockContext<Node> computeView(DockContext<Node> viewContext) {
+
+        View view = viewContext.getView();
+        ViewAttachment viewAttachment = viewContext.getViewAttachment();
 
         var ctrl = context.getBean(ViewController.class);
 
         Node node = FXMLUtils.load(ctrl, AbstractDockTypeSplit.class, VIEW_SOURCE);
 
         ctrl.getViewLabel().textProperty().bind(view.getName());
+        node.setOnMouseEntered(e -> view.notifyFocused());
 
         if (view.getSearchController() != null) {
             ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
@@ -77,38 +88,56 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
         ctrl.getViewContentHost().getChildren().add(content);
         VBox.setVgrow(content, Priority.ALWAYS);
 
-        var menuItems = view.getViewMenus().getMenuItems();
-        if (menuItems != null && menuItems.size() > 0) {
-            ctrl.getViewMenuButton().getItems().addAll(menuItems);
-        }
+        view.populateMenu(ctrl.getViewMenuButton());
 
-        var dockContext = new DockContext<>(view, ctrl, node, () -> {
+        var newViewContext = new DockContext<>(view, viewAttachment, ctrl, node, () -> {
             ctrl.getViewLabel().textProperty().unbind();
             if (view.getSearchController() != null) {
                 ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
             }
             ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            if (menuItems != null && menuItems.size() > 0) {
-                ctrl.getViewMenuButton().getItems().removeAll(menuItems);
-            }
+            view.clearMenu(ctrl.getViewMenuButton());
         });
 
-        return dockContext;
+        return newViewContext;
     }
 
     @Override
-    public Node computeRoot(List<DockContext<Node>> views, DockContext<Node> focused) {
+    public Node computeRoot(Collection<DockContext<Node>> views) {//, DockContext<Node> focused) {
         SplitPane sPane = new SplitPane();
         sPane.setOrientation(orientation);
 
         double coef = 1.0 / views.size();
 
-        for (int i = 0; i < views.size(); i++) {
-            var v = views.get(i);
+        AtomicInteger index = new AtomicInteger();
+
+        views.forEach(d -> {
+            int i = index.getAndIncrement();
             sPane.setDividerPosition(i, coef * (i + 1));
-            sPane.getItems().add(v.getDockContent());
-        }
+            sPane.getItems().add(d.getDockContent());
+        });
 
         return sPane;
     }
+
+    @Override
+    public ObjectProperty<DockContext<Node>> focusedProperty() {
+        if (focusedProperty == null) {
+            focusedProperty = new SimpleObjectProperty<>() {
+
+                @Override
+                public void set(DockContext<Node> focused) {
+                    if (focused != null) {
+                        Node node = focused.getDockContent();
+                        node.requestFocus();
+                    }
+                    super.set(focused);
+                }
+
+            };
+        }
+        return focusedProperty;
+    }
+
+
 }

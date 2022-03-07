@@ -33,11 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.document.actions;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
+
+import javafx.scene.control.ToggleGroup;
 
 public abstract class AbstractShowAction extends AbstractAction {
 
@@ -47,8 +53,8 @@ public abstract class AbstractShowAction extends AbstractAction {
 
 	public AbstractShowAction(
 	        ActionExtensionFactory extensionFactory,
-	        DisplayOption option, 
-	        DocumentPanelController documentPanelController, 
+	        DisplayOption option,
+	        DocumentPanelController documentPanelController,
 	        DisplayOptionPreference displayOptionPreference) {
 		super(extensionFactory);
 		this.option = option;
@@ -73,4 +79,7 @@ public abstract class AbstractShowAction extends AbstractAction {
     	return ActionStatus.DONE;
 	}
 
+	@Component
+	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+	public static class ShowActionToggle extends ToggleGroup {}
 }

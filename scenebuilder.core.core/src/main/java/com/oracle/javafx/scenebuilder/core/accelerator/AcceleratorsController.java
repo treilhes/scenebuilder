@@ -56,6 +56,7 @@ import com.oracle.javafx.scenebuilder.api.shortcut.Accelerators;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
 
@@ -129,7 +130,7 @@ public class AcceleratorsController implements Accelerators {
 
     private void setup() {
         initializeProviders(acceleratorProviders);
-        documentManager.focused().subscribe(this::onDocumentPartFocused);
+        documentManager.focusedView().subscribe(this::onViewFocused);
         resetAll(null);
     }
     /**
@@ -168,53 +169,64 @@ public class AcceleratorsController implements Accelerators {
         }
     }
 
-    private void onDocumentPartFocused(AbstractCommonUiController focusedPart) {
-        resetAll(focusedPart);
+    private void onViewFocused(AbstractFxmlViewController focusedView) {
+        resetAll(focusedView);
     }
 
     // FIXME this method seems too cpu intensive for a method executed when hovering on UI elements
-    private void resetAll(AbstractCommonUiController focusedPart) {
+    // FIXME when using goto actions sometimes we get ConcurrentModificationException
+    private void resetAll(AbstractFxmlViewController focusedPart) {
         final Scene scene;
-        final FocusedAcceleratorsMapPreference focusedMapPreference;
-        final Map<Action, List<KeyCombination>> focusedAccelerators;
         if (focusedPart != null) {
             scene = focusedPart.getRoot().getScene();
-            focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(focusedPart.getClass());
-            focusedAccelerators = defaultFocusedAccelerators.get(focusedPart.getClass());
         } else {
             scene = documentWindow.getScene();
-            focusedMapPreference = null;
-            focusedAccelerators = null;
         }
 
         assert scene != null;
 
         scene.getAccelerators().clear();
 
-        logger.info("Accelerators cleared");
+        logger.debug("Accelerators cleared");
         defaultGlobalAccelerators.keySet().forEach(action -> {
             List<KeyCombination> keys = acceleratorsMapPreference.getValue().get(action.getClass());
             if (keys != null) {
                 keys.forEach(key -> {
                     ActionRunner runner = new ActionRunner(action);
-                    logger.info("Global Accelerator set {} for {}", key, action.getClass());
+                    logger.debug("Global Accelerator set {} for {}", key, action.getClass());
                     scene.getAccelerators().put(key, runner);
                 });
             }
         });
 
-        if (focusedMapPreference != null && focusedAccelerators != null) {
-            focusedAccelerators.keySet().forEach(action -> {
-                List<KeyCombination> keys = focusedMapPreference.getValue().get(action.getClass());
-                if (keys != null) {
-                    keys.forEach(key -> {
-                        ActionRunner runner = new ActionRunner(action);
-                        logger.info("Focused Accelerator set {} for {} when in {}", key, action.getClass(), focusedPart.getClass());
-                        scene.getAccelerators().put(key, runner);
+        if (focusedPart != null) { // some view has the focus, we override default accelerators with specific ones if any
+            List<Class<?>> hierarchy = new ArrayList<>();
+            Class<?> cls = focusedPart.getClass();
+            while (cls != null && AbstractCommonUiController.class.isAssignableFrom(cls)) {
+                hierarchy.add(0, cls);
+                cls = cls.getSuperclass();
+            }
+
+            for (Class<?> hierarchyClass:hierarchy) {
+                final FocusedAcceleratorsMapPreference focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(hierarchyClass);
+                final Map<Action, List<KeyCombination>> focusedAccelerators = defaultFocusedAccelerators.get(hierarchyClass);
+
+                if (focusedMapPreference != null && focusedAccelerators != null) {
+                    focusedAccelerators.keySet().forEach(action -> {
+                        List<KeyCombination> keys = focusedMapPreference.getValue().get(action.getClass());
+                        if (keys != null) {
+                            keys.forEach(key -> {
+                                ActionRunner runner = new ActionRunner(action);
+                                logger.debug("Focused Accelerator set {} for {} when in {}", key, action.getClass(), focusedPart.getClass());
+                                scene.getAccelerators().put(key, runner);
+                            });
+                        }
                     });
                 }
-            });
+            }
         }
+
+
     }
 
     private KeyCombination handleCtrlToMetaOnMacOs(KeyCombination keyCombination) {
@@ -250,13 +262,13 @@ public class AcceleratorsController implements Accelerators {
     }
 
     @Override
-    public void bind(Action action, MenuItem menuItem, AbstractCommonUiController focused) {
-        if (action == null || focused == null) {
+    public void bind(Action action, MenuItem menuItem, Class<? extends AbstractCommonUiController> focusedClass) {
+        if (action == null || focusedClass == null) {
             return;
         }
 
         Class<? extends Action> actionClass = action.getClass();
-        FocusedAcceleratorsMapPreference focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(focused.getClass());
+        FocusedAcceleratorsMapPreference focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(focusedClass);
 
         final ObservableList<KeyCombination> accelerators;
         if (!focusedMapPreference.getValue().containsKey(actionClass)) {
