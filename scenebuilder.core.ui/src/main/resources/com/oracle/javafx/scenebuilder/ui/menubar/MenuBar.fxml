@@ -44,22 +44,6 @@
     <MenuBar fx:id="menuBar">
       <menus>
 
-        <Menu fx:id="viewMenu" mnemonicParsing="true" text="%menu.title.view">
-          <items>
-
-            <MenuItem fx:id="toggleOutlinesMenuItem" mnemonicParsing="true" text="%menu.title.show.outlines" />
-            <MenuItem fx:id="toggleSampleDataMenuItem" mnemonicParsing="true" text="%menu.title.show.sample.data" />
-            <MenuItem fx:id="toggleAlignmentGuidesMenuItem" mnemonicParsing="true" text="%menu.title.disable.guides" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu fx:id="zoomMenu" mnemonicParsing="true" text="%menu.title.zoom" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-          </items>
-        </Menu>
-        <Menu fx:id="insertMenu" mnemonicParsing="true" text="%menu.title.insert">
-          <items>
-            <SeparatorMenuItem mnemonicParsing="false" />
-          </items>
-        </Menu>
         <Menu fx:id="modifyMenu" mnemonicParsing="true" text="%menu.title.modify">
           <items>
             <MenuItem fx:id="fitToParentMenuItem" mnemonicParsing="true" text="%menu.title.fit" />

@@ -37,7 +37,7 @@ public interface DefaultMenu {
 	public final static String FILE_MENU_ID = "fileMenu";//NOCHECK
 	public final static String EDIT_MENU_ID = "editMenu";//NOCHECK
 	public final static String VIEW_MENU_ID = "viewMenu";//NOCHECK
-	public final static String INSERT_MENU_ID = "insertMenu";//NOCHECK
+	//public final static String INSERT_MENU_ID = "insertMenu";//NOCHECK
 	public final static String MODIFY_MENU_ID = "modifyMenu";//NOCHECK
 	public final static String ARRANGE_MENU_ID = "arrangeMenu";//NOCHECK
 	public final static String PREVIEW_MENU_ID = "previewMenu";//NOCHECK

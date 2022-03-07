@@ -52,6 +52,7 @@ import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
+import javafx.scene.control.Menu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 
@@ -93,7 +94,7 @@ public class ZoomAction extends AbstractAction {
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
     @Lazy
-    public class MenuProvider implements MenuItemProvider {
+    public static class MenuProvider implements MenuItemProvider {
 
         private final ActionFactory actionFactory;
         private final MenuBarObjectConfigurator menuBarObjectConfigurator;
@@ -107,6 +108,11 @@ public class ZoomAction extends AbstractAction {
         @Override
         public List<MenuItemAttachment> menuItems() {
             List<MenuItemAttachment> result = new ArrayList<>();
+
+            Menu menu = menuBarObjectConfigurator.menu().withId(ZOOM_MENU_ID).withTitle("menu.title.zoom").build();
+            MenuItemAttachment menuAttachment = MenuItemAttachment.create(menu, ToggleGuidesVisibilityAction.MENU_ID,
+                    PositionRequest.AfterNextSeparator);
+            result.add(menuAttachment);
 
             ToggleGroup zoomToggle = new ToggleGroup();
 

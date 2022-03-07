@@ -231,6 +231,11 @@ public interface Editor {
 
     public boolean canUndo();
 
+    /**
+     * @param sampleDataEnabled
+     */
+    void setSampleDataEnabled(boolean sampleDataEnabled);
+
 //    public void performEditIncludedFxml();
 //
 //    public void performRevealIncludeFxml();

@@ -196,14 +196,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //    private MenuItem toggleLeftPanelMenuItem;
 //    @FXML
 //    private MenuItem toggleRightPanelMenuItem;
-    @FXML
-    private MenuItem toggleOutlinesMenuItem;
-    @FXML
-    private MenuItem toggleSampleDataMenuItem;
-    @FXML
-    private MenuItem toggleAlignmentGuidesMenuItem;
-    @FXML
-    private Menu zoomMenu;
+//    @FXML
+//    private MenuItem toggleOutlinesMenuItem;
+//    @FXML
+//    private MenuItem toggleSampleDataMenuItem;
+//    @FXML
+//    private MenuItem toggleAlignmentGuidesMenuItem;
+//    @FXML
+//    private Menu zoomMenu;
 
     // Modify
     @FXML
@@ -754,11 +754,11 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //        assert toggleCSSPanelMenuItem != null;
 //        assert toggleLeftPanelMenuItem != null;
 //        assert toggleRightPanelMenuItem != null;
-        assert toggleOutlinesMenuItem != null;
-        assert toggleSampleDataMenuItem != null;
-        assert toggleAlignmentGuidesMenuItem != null;
-        assert zoomMenu != null;
-        assert zoomMenu.getItems().isEmpty();
+//        assert toggleOutlinesMenuItem != null;
+//        assert toggleSampleDataMenuItem != null;
+//        assert toggleAlignmentGuidesMenuItem != null;
+//        assert zoomMenu != null;
+//        assert zoomMenu.getItems().isEmpty();
 
         assert fitToParentMenuItem != null;
         assert useComputedSizesMenuItem != null;
@@ -1047,20 +1047,20 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //            }
 //        });
 //        toggleOutlinesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, modifier));
-        toggleSampleDataMenuItem.setUserData(new ControlActionController(ControlAction.TOGGLE_SAMPLE_DATA) {
-            @Override
-            public String getTitle() {
-                final String titleKey;
-                if (documentWindowController == null) {
-                    titleKey = "menu.title.hide.sample.data";
-                } else if (editor.isSampleDataEnabled()) {
-                    titleKey = "menu.title.hide.sample.data";
-                } else {
-                    titleKey = "menu.title.show.sample.data";
-                }
-                return I18N.getString(titleKey);
-            }
-        });
+//        toggleSampleDataMenuItem.setUserData(new ControlActionController(ControlAction.TOGGLE_SAMPLE_DATA) {
+//            @Override
+//            public String getTitle() {
+//                final String titleKey;
+//                if (documentWindowController == null) {
+//                    titleKey = "menu.title.hide.sample.data";
+//                } else if (editor.isSampleDataEnabled()) {
+//                    titleKey = "menu.title.hide.sample.data";
+//                } else {
+//                    titleKey = "menu.title.show.sample.data";
+//                }
+//                return I18N.getString(titleKey);
+//            }
+//        });
 //        toggleAlignmentGuidesMenuItem.setUserData(new DocumentControlActionController(DocumentControlAction.TOGGLE_GUIDES_VISIBILITY) {
 //            @Override
 //            public String getTitle() {

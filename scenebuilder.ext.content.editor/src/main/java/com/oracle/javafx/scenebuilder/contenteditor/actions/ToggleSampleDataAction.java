@@ -33,60 +33,66 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor.actions;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
-import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelController;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeBottomDockAction;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
-@ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
+@ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
 @MenuItemAttachment(
-        id = ToggleOutlinesVisibilityAction.MENU_ID,
-        targetMenuId = ToggleMinimizeBottomDockAction.MENU_ID,
-        label = "#this.getToggleTitle()", // NOCHECK
-        positionRequest = PositionRequest.AfterNextSeparator)
-@Accelerator(accelerator = "CTRL+E")
-public class ToggleOutlinesVisibilityAction extends AbstractAction {
+        id = ToggleSampleDataAction.MENU_ID,
+        targetMenuId = ZoomAction.ZOOM_MENU_ID,
+        label = "#this.getTitle()",
+        positionRequest = PositionRequest.AsNextSibling,
+        separatorBefore = true)
+public class ToggleSampleDataAction extends AbstractAction {
 
-    public final static String MENU_ID = "toggleOutlinesMenu"; // NOCHECK
+    public final static String MENU_ID = "toggleSampleDataMenu";
 
-    private final ContentPanelController contentPanelController;
+    private final DocumentManager documentManager;
+    private final Editor editor;
 
-    public ToggleOutlinesVisibilityAction(
+    public ToggleSampleDataAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired @Lazy ContentPanelController contentPanelController) {
+            DocumentManager documentManager,
+            Editor editor) {
         super(extensionFactory);
-        this.contentPanelController = contentPanelController;
+        this.documentManager = documentManager;
+        this.editor = editor;
     }
 
     @Override
     public boolean canPerform() {
-        return true;
+        return documentManager.fxomDocument().get() != null;
     }
 
     @Override
     public ActionStatus doPerform() {
-        contentPanelController.setOutlinesVisible(!contentPanelController.isOutlinesVisible());
+        boolean sampleDataEnabled = editor.isSampleDataEnabled();
+        editor.setSampleDataEnabled(!sampleDataEnabled);
         return ActionStatus.DONE;
     }
 
-    public String getToggleTitle() {
-        if (contentPanelController.isOutlinesVisible()) {
-            return "menu.title.hide.outlines";
+    public String getTitle() {
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+
+        final String titleKey;
+        if (fxomDocument != null && fxomDocument.isSampleDataEnabled()) {
+            titleKey = "menu.title.hide.sample.data";
         } else {
-            return "menu.title.show.outlines";
+            titleKey = "menu.title.show.sample.data";
         }
+        return I18N.getString(titleKey);
     }
 }

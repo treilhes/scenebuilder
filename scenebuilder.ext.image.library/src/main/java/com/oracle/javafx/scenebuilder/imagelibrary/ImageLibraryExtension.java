@@ -59,7 +59,6 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.ImageDefaultL
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFileExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFolderExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageMavenArtifactExplorer;
-import com.oracle.javafx.scenebuilder.imagelibrary.menu.ImageLibraryMenuProvider;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
 
@@ -86,7 +85,6 @@ public class ImageLibraryExtension extends AbstractExtension {
                 ImageLibraryController.class,
                 ImageLibraryDialogConfiguration.class,
                 ImageLibraryFolderMenuProvider.class,
-                ImageLibraryMenuProvider.class,
                 ImageLibraryPanelController.class,
                 ImageMavenArtifactExplorer.class,
                 ImportSelectionAsImageAction.class,

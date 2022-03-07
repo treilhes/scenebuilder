@@ -41,6 +41,7 @@ import com.oracle.javafx.scenebuilder.contenteditor.actions.FocusContentAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleGuidesVisibilityAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleOutlinesVisibilityAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleSampleDataAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ZoomAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ZoomInAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ZoomOutAction;
@@ -97,6 +98,7 @@ public class ContentEditorExtension extends AbstractExtension {
                 SetRootSizeAction.MenuProvider.class,
                 ToggleGuidesVisibilityAction.class,
                 ToggleOutlinesVisibilityAction.class,
+                ToggleSampleDataAction.class,
                 WorkspaceController.class,
                 ZoomGesture.class,
                 ZoomGesture.Factory.class,

@@ -52,15 +52,14 @@ import com.oracle.javafx.scenebuilder.contenteditor.controller.ContentPanelContr
 @ActionMeta(nameKey = "action.name.toggle.guides.visibility", descriptionKey = "action.description.toggle.guides.visibility")
 
 @MenuItemAttachment(
-        id = ToggleGuidesVisibilityAction.TOGGLE_GUIDES_MENU_ID,
-        targetMenuId = ToggleGuidesVisibilityAction.VIEW_MENU_ID,
+        id = ToggleGuidesVisibilityAction.MENU_ID,
+        targetMenuId = ToggleOutlinesVisibilityAction.MENU_ID,
         label = "#this.getToggleTitle()", // NOCHECK
-        positionRequest = PositionRequest.AsLastChild,
-        separatorBefore = true)
+        positionRequest = PositionRequest.AsNextSibling,
+        separatorAfter = true)
 public class ToggleGuidesVisibilityAction extends AbstractAction {
 
-    protected final static String VIEW_MENU_ID = "viewMenu"; // NOCHECK
-    public final static String TOGGLE_GUIDES_MENU_ID = "toggleGuidesMenu"; // NOCHECK
+    public final static String MENU_ID = "toggleGuidesMenu"; // NOCHECK
 
     private final ContentPanelController contentPanelController;
 

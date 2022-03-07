@@ -571,6 +571,7 @@ public class EditorController implements Editor {
      *
      * @param sampleDataEnabled true if sample data should be displayed
      */
+    @Override
     public void setSampleDataEnabled(boolean sampleDataEnabled) {
         setPickModeEnabled(false);
         sampleDataEnabledProperty.setValue(sampleDataEnabled);
