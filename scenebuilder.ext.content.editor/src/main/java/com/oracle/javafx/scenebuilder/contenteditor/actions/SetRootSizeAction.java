@@ -48,7 +48,6 @@ import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
@@ -113,19 +112,19 @@ public class SetRootSizeAction extends AbstractAction {
         public final static String SET_ROOT_SIZE_MENU_ID = "setRootSize";
 
         private final ActionFactory actionFactory;
-        private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+        private final MenuBarObjectConfigurator menuBuilder;
 
         public MenuProvider(ActionFactory actionFactory, MenuBarObjectConfigurator menuBarObjectConfigurator) {
             super();
             this.actionFactory = actionFactory;
-            this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+            this.menuBuilder = menuBarObjectConfigurator;
         }
 
         @Override
         public List<MenuItemAttachment> menuItems() {
 
             return Arrays.asList(
-                    MenuItemAttachment.create(menuBarObjectConfigurator.separator().build(), TARGET_MENU_ID, PositionRequest.AsLastChild),
+                    MenuItemAttachment.create(menuBuilder.separator().build(), TARGET_MENU_ID, PositionRequest.AsLastChild),
                     new SetRootSizesMenuItemAttachment());
         }
 
@@ -154,30 +153,19 @@ public class SetRootSizeAction extends AbstractAction {
                     return menu;
                 }
 
-                menu = new Menu(I18N.getString("menu.title.size"));
-                menu.setId(SET_ROOT_SIZE_MENU_ID);
+                menu = menuBuilder.menu().withId(SET_ROOT_SIZE_MENU_ID).withTitle("menu.title.size").build();
 
                 for (Size size : Size.values()) {
                     if (size == Size.SIZE_DEFAULT || size == Size.SIZE_PREFERRED) {
                         continue;
                     }
 
-                    MenuItem mi = new MenuItem(size.toString());
-                    mi.setUserData(size);
                     SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
                     action.setSize(size);
-                    mi.setOnAction(e -> action.perform());
+                    MenuItem mi = menuBuilder.menuItem().withTitle(size.toString()).withAction(action).build();
                     menu.getItems().add(mi);
                 }
 
-                menu.setOnMenuValidation(e -> {
-                    menu.getItems().forEach(i -> {
-                        Size menuSize = (Size)i.getUserData();
-                        SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
-                        action.setSize(menuSize);
-                        i.setDisable(!action.canPerform());
-                    });
-                });
                 return menu;
             }
         }

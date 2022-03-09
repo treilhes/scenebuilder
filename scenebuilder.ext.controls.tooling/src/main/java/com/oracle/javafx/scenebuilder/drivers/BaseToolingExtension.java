@@ -58,6 +58,19 @@ import com.oracle.javafx.scenebuilder.drivers.gridpane.GridPaneTring;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.ResizeColumnGesture;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.ResizeRowGesture;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.AddColumnAfterAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.AddColumnBeforeAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.AddRowAboveAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.AddRowBelowAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.DecreaseColumnSpanAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.DecreaseRowSpanAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.GridPaneMenuProvider;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.IncreaseColumnSpanAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.IncreaseRowSpanAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.MoveColumnAfterAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.MoveColumnBeforeAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.MoveRowAboveAction;
+import com.oracle.javafx.scenebuilder.drivers.gridpane.action.MoveRowBelowAction;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.gesture.SelectAndMoveInGridGesture;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.job.AddColumnConstraintsJob;
 import com.oracle.javafx.scenebuilder.drivers.gridpane.job.AddColumnJob;
@@ -160,10 +173,14 @@ public class BaseToolingExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                AddColumnAfterAction.class,
+                AddColumnBeforeAction.class,
                 AddColumnConstraintsJob.class,
                 AddColumnConstraintsJob.Factory.class,
                 AddColumnJob.class,
                 AddColumnJob.Factory.class,
+                AddRowAboveAction.class,
+                AddRowBelowAction.class,
                 AddRowConstraintsJob.class,
                 AddRowConstraintsJob.Factory.class,
                 AddRowJob.class,
@@ -178,6 +195,8 @@ public class BaseToolingExtension extends AbstractExtension {
                 CircleResizer.class,
                 CubicCurveEditor.class,
                 CubicCurveHandles.class,
+                DecreaseColumnSpanAction.class,
+                DecreaseRowSpanAction.class,
                 DefaultZDropTargetProvider.class,
                 DeleteColumnJob.class,
                 DeleteColumnJob.Factory.class,
@@ -199,12 +218,15 @@ public class BaseToolingExtension extends AbstractExtension {
                 GridPaneTring.class,
                 GridSelectionGroup.class,
                 GridSelectionGroup.Factory.class,
+                GridPaneMenuProvider.class,
                 HBoxDropTargetProvider.class,
                 HBoxTring.class,
                 ImageViewDropTarget.class,
                 ImageViewDropTarget.Factory.class,
                 ImageViewDropTargetProvider.class,
                 ImageViewResizer.class,
+                IncreaseColumnSpanAction.class,
+                IncreaseRowSpanAction.class,
                 InsertColumnConstraintsJob.class,
                 InsertColumnConstraintsJob.Factory.class,
                 InsertColumnJob.Factory.class,
@@ -217,10 +239,14 @@ public class BaseToolingExtension extends AbstractExtension {
                 MainAccessoryDropTargetProvider.class,
                 MoveCellContentJob.class,
                 MoveCellContentJob.Factory.class,
+                MoveColumnAfterAction.class,
+                MoveColumnBeforeAction.class,
                 MoveColumnContentJob.class,
                 MoveColumnContentJob.Factory.class,
                 MoveColumnJob.class,
                 MoveColumnJob.Factory.class,
+                MoveRowAboveAction.class,
+                MoveRowBelowAction.class,
                 MoveRowContentJob.class,
                 MoveRowContentJob.Factory.class,
                 MoveRowJob.class,

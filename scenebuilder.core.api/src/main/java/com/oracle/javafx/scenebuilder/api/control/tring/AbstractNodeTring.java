@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,6 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.tring;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -65,6 +67,11 @@ public abstract class AbstractNodeTring<T extends Node> extends AbstractGenericT
     @Override
     public Node getSceneGraphObjectProxy() {
         return getSceneGraphObject();
+    }
+
+    @Override
+    public FXOMObject getFxomObjectProxy() {
+        return getFxomObject();
     }
 
     @Override

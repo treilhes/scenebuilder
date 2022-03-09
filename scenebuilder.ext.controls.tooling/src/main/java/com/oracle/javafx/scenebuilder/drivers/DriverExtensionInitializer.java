@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -213,7 +214,7 @@ public class DriverExtensionInitializer {
         // ContextMenu
         // TODO add feature instead of nothing show the parent outline
         registry.registerImplementationClass(Pring.class, ContextMenu.class, null);
-        
+
         // CubicCurve
         registry.registerImplementationClass(CurveEditor.class, CubicCurve.class, CubicCurveEditor.class);
         registry.registerImplementationClass(Handles.class, CubicCurve.class, CubicCurveHandles.class);
@@ -263,7 +264,7 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Relocater.class, Pane.class, PaneRelocater.class);
 
         // Parent
-        
+
 
         // Polygon
         registry.registerImplementationClass(CurveEditor.class, Polygon.class, PolygonEditor.class);
@@ -275,8 +276,8 @@ public class DriverExtensionInitializer {
 
         //PopupWindow
         registry.registerImplementationClass(Handles.class, PopupWindow.class, null);
-        
-        
+
+
         // QuadCurve
         registry.registerImplementationClass(CurveEditor.class, QuadCurve.class, QuadCurveEditor.class);
         registry.registerImplementationClass(Handles.class, QuadCurve.class, QuadCurveHandles.class);
@@ -317,8 +318,8 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(DropTargetProvider.class, Tab.class, MainAccessoryDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, Tab.class, TabInlineEditorBounds.class);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, Tab.class, TabIntersectsBoundsCheck.class);
-        
-        
+
+
 
         // TableColumn
         registry.registerImplementationClass(CurveEditor.class, TableColumn.class, null);
@@ -337,7 +338,7 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(Handles.class, TableView.class, TableViewHandles.class);
         registry.registerImplementationClass(Resizer.class, TableView.class, RegionResizer.class);
         registry.registerImplementationClass(PickRefiner.class, TableView.class, TableViewPickRefiner.class);
-        
+
         // TabPane
         registry.registerImplementationClass(Resizer.class, TabPane.class, RegionResizer.class);
         registry.registerImplementationClass(PickRefiner.class, TabPane.class, TabPanePickRefiner.class);
@@ -361,11 +362,11 @@ public class DriverExtensionInitializer {
         // ToolBar
         registry.registerImplementationClass(DropTargetProvider.class, ToolBar.class, ToolBarDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, ToolBar.class, GenericParentTring.class);
-        
+
         // Tooltip
         // TODO add feature instead of nothing show the parent outline
         registry.registerImplementationClass(Pring.class, Tooltip.class, null);
-        
+
         // TreeTableColumn
         registry.registerImplementationClass(CurveEditor.class, TreeTableColumn.class, null);
         registry.registerImplementationClass(Handles.class, TreeTableColumn.class, TreeTableColumnHandles.class);
@@ -378,12 +379,12 @@ public class DriverExtensionInitializer {
         registry.registerImplementationClass(DropTargetProvider.class, TreeTableColumn.class, DefaultZDropTargetProvider.class);
         registry.registerImplementationClass(InlineEditorBounds.class, TreeTableColumn.class, TreeTableColumnInlineEditorBounds.class);
         registry.registerImplementationClass(IntersectsBoundsCheck.class, TreeTableColumn.class, TreeTableColumnIntersectsBoundsCheck.class);
-        
+
         // TreeTableView
         registry.registerImplementationClass(Handles.class, TreeTableView.class, TreeTableViewHandles.class);
         registry.registerImplementationClass(Resizer.class, TreeTableView.class, RegionResizer.class);
         registry.registerImplementationClass(PickRefiner.class, TreeTableView.class, TreeTableViewPickRefiner.class);
-        
+
         // VBox
         registry.registerImplementationClass(DropTargetProvider.class, VBox.class, VBoxDropTargetProvider.class);
         registry.registerImplementationClass(Tring.class, VBox.class, VBoxTring.class);

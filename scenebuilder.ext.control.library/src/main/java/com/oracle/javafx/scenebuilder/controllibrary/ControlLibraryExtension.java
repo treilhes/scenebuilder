@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.controllibrary.action.ImportSelectionAsControlAction;
+import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryFolderMenuProvider;
 import com.oracle.javafx.scenebuilder.controllibrary.action.ManageJarFxmlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.action.RevealControlFolderAction;
@@ -58,7 +59,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinLibr
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFileExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFolderExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMavenArtifactExplorer;
-import com.oracle.javafx.scenebuilder.controllibrary.menu.LibraryMenuProvider;
+import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
@@ -85,12 +86,14 @@ public class ControlLibraryExtension extends AbstractExtension {
                 ControlMavenArtifactExplorer.class,
                 DisplayModePreference.class,
                 I18NControlLibrary.class,
+                InsertControlAction.class,
+                InsertControlAction.InsertMenuProvider.class,
                 ImportSelectionAsControlAction.class,
                 ImportWindowController.class,
                 JarAnalysisReportController.class,
                 LibraryController.class,
                 LibraryFolderMenuProvider.class,
-                LibraryMenuProvider.class,
+                LibraryListCell.class,
                 LibraryPanelController.class,
                 ManageJarFxmlAction.class,
                 RevealControlFolderAction.class,

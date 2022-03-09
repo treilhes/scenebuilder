@@ -41,17 +41,13 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListItem;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
@@ -95,95 +91,95 @@ public class LibraryController {
         documentManager.selectionDidChange().subscribe(s -> this.selectionState = s);
     }
 
-    /**
-     * Performs the 'insert' edit action. This action creates an object matching the
-     * specified library item and insert it in the document (according the selection
-     * state).
-     *
-     * @param libraryItem the library item describing the object to be inserted.
-     */
-    public void performInsert(LibraryItem libraryItem) {
-        final AbstractJob job;
-        final FXOMObject target;
-
-        assert canPerformInsert(libraryItem); // (1)
-
-     // TODO classloader provided by fxmlDocument, good or not?
-        final FXOMDocument newItemDocument = libraryItem.instantiate(fxomDocument.getClassLoader());
-        assert newItemDocument != null; // Because (1)
-        final FXOMObject newObject = newItemDocument.getFxomRoot();
-        assert newObject != null;
-        newObject.moveToFxomDocument(fxomDocument);
-        final FXOMObject rootObject = fxomDocument.getFxomRoot();
-        if (rootObject == null) { // Empty document
-            final String description = I18N.getString("drop.job.insert.library.item", libraryItem.getName());
-            job = setDocumentRootJobFactory.getJob(newObject, true /* usePredefinedSize */, description);
-
-        } else {
-            Selection selection = selectionState.getSelection();
-            if (selection.isEmpty() || selection.isSelected(rootObject)) {
-                // No selection or root is selected -> we insert below root
-                target = rootObject;
-            } else {
-                // Let's use the common parent of the selected objects.
-                // It might be null if selection holds some non FXOMObject entries
-                target = selection.getAncestor();
-            }
-            job = insertAsSubComponentJobFactory.getJob(newObject, target, -1);
-        }
-
-        jobManager.push(job);
-
-        // TODO remove comment
-        // WarnThemeAlert.showAlertIfRequired(this, newObject, ownerWindow);
-    }
-
-    /**
-     * Returns true if the 'insert' action is permitted with the specified library
-     * item.
-     *
-     * @param libraryItem the library item describing the object to be inserted.
-     * @return true if the 'insert' action is permitted.
-     */
-    public boolean canPerformInsert(LibraryItem libraryItem) {
-        final FXOMObject targetCandidate;
-        final boolean result;
-
-        if (fxomDocument == null || selectionState == null || selectionState.getSelection().isEmpty()) {
-            result = false;
-        } else {
-            assert (fxomDocument.getClassLoader() != null);
-            // TODO classloader provided by fxmlDocument, good or not?
-            final FXOMDocument newItemDocument = libraryItem.instantiate(fxomDocument.getClassLoader());
-            if (newItemDocument == null) {
-                // For some reason, library is unable to instantiate this item
-                result = false;
-            } else {
-                final FXOMObject newItemRoot = newItemDocument.getFxomRoot();
-                newItemRoot.moveToFxomDocument(fxomDocument);
-                assert newItemDocument.getFxomRoot() == null;
-                final FXOMObject rootObject = fxomDocument.getFxomRoot();
-                if (rootObject == null) { // Empty document
-                    final AbstractJob job = setDocumentRootJobFactory.getJob(newItemRoot, true /* usePredefinedSize */, "unused"); // NOI18N
-                    result = job.isExecutable();
-                } else {
-                    Selection selection = selectionState.getSelection();
-                    if (selection.isEmpty() || selection.isSelected(rootObject)) {
-                        // No selection or root is selected -> we insert below root
-                        targetCandidate = rootObject;
-                    } else {
-                        // Let's use the common parent of the selected objects.
-                        // It might be null if selection holds some non FXOMObject entries
-                        targetCandidate = selection.getAncestor();
-                    }
-                    final AbstractJob job = insertAsSubComponentJobFactory.getJob(newItemRoot, targetCandidate, -1);
-                    result = job.isExecutable();
-                }
-            }
-        }
-
-        return result;
-    }
+//    /**
+//     * Performs the 'insert' edit action. This action creates an object matching the
+//     * specified library item and insert it in the document (according the selection
+//     * state).
+//     *
+//     * @param libraryItem the library item describing the object to be inserted.
+//     */
+//    public void performInsert(LibraryItem libraryItem) {
+//        final AbstractJob job;
+//        final FXOMObject target;
+//
+//        assert canPerformInsert(libraryItem); // (1)
+//
+//     // TODO classloader provided by fxmlDocument, good or not?
+//        final FXOMDocument newItemDocument = libraryItem.instantiate(fxomDocument.getClassLoader());
+//        assert newItemDocument != null; // Because (1)
+//        final FXOMObject newObject = newItemDocument.getFxomRoot();
+//        assert newObject != null;
+//        newObject.moveToFxomDocument(fxomDocument);
+//        final FXOMObject rootObject = fxomDocument.getFxomRoot();
+//        if (rootObject == null) { // Empty document
+//            final String description = I18N.getString("drop.job.insert.library.item", libraryItem.getName());
+//            job = setDocumentRootJobFactory.getJob(newObject, true /* usePredefinedSize */, description);
+//
+//        } else {
+//            Selection selection = selectionState.getSelection();
+//            if (selection.isEmpty() || selection.isSelected(rootObject)) {
+//                // No selection or root is selected -> we insert below root
+//                target = rootObject;
+//            } else {
+//                // Let's use the common parent of the selected objects.
+//                // It might be null if selection holds some non FXOMObject entries
+//                target = selection.getAncestor();
+//            }
+//            job = insertAsSubComponentJobFactory.getJob(newObject, target, -1);
+//        }
+//
+//        jobManager.push(job);
+//
+//        // TODO remove comment
+//        // WarnThemeAlert.showAlertIfRequired(this, newObject, ownerWindow);
+//    }
+//
+//    /**
+//     * Returns true if the 'insert' action is permitted with the specified library
+//     * item.
+//     *
+//     * @param libraryItem the library item describing the object to be inserted.
+//     * @return true if the 'insert' action is permitted.
+//     */
+//    public boolean canPerformInsert(LibraryItem libraryItem) {
+//        final FXOMObject targetCandidate;
+//        final boolean result;
+//
+//        if (fxomDocument == null || selectionState == null || selectionState.getSelection().isEmpty()) {
+//            result = false;
+//        } else {
+//            assert (fxomDocument.getClassLoader() != null);
+//            // TODO classloader provided by fxmlDocument, good or not?
+//            final FXOMDocument newItemDocument = libraryItem.instantiate(fxomDocument.getClassLoader());
+//            if (newItemDocument == null) {
+//                // For some reason, library is unable to instantiate this item
+//                result = false;
+//            } else {
+//                final FXOMObject newItemRoot = newItemDocument.getFxomRoot();
+//                newItemRoot.moveToFxomDocument(fxomDocument);
+//                assert newItemDocument.getFxomRoot() == null;
+//                final FXOMObject rootObject = fxomDocument.getFxomRoot();
+//                if (rootObject == null) { // Empty document
+//                    final AbstractJob job = setDocumentRootJobFactory.getJob(newItemRoot, true /* usePredefinedSize */, "unused"); // NOI18N
+//                    result = job.isExecutable();
+//                } else {
+//                    Selection selection = selectionState.getSelection();
+//                    if (selection.isEmpty() || selection.isSelected(rootObject)) {
+//                        // No selection or root is selected -> we insert below root
+//                        targetCandidate = rootObject;
+//                    } else {
+//                        // Let's use the common parent of the selected objects.
+//                        // It might be null if selection holds some non FXOMObject entries
+//                        targetCandidate = selection.getAncestor();
+//                    }
+//                    final AbstractJob job = insertAsSubComponentJobFactory.getJob(newItemRoot, targetCandidate, -1);
+//                    result = job.isExecutable();
+//                }
+//            }
+//        }
+//
+//        return result;
+//    }
 
     public void performDragDetected(LibraryListCell cell) {
 

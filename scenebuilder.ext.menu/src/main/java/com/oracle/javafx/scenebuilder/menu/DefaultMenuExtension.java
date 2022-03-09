@@ -75,6 +75,11 @@ import com.oracle.javafx.scenebuilder.menu.action.file.RevealIncludedFxmlAction;
 import com.oracle.javafx.scenebuilder.menu.action.file.RevertAction;
 import com.oracle.javafx.scenebuilder.menu.action.file.SaveAsAction;
 import com.oracle.javafx.scenebuilder.menu.action.file.SaveOrSaveAsAction;
+import com.oracle.javafx.scenebuilder.menu.action.modify.AddContextMenuAction;
+import com.oracle.javafx.scenebuilder.menu.action.modify.AddPopupControlMenuProvider;
+import com.oracle.javafx.scenebuilder.menu.action.modify.AddTooltipAction;
+import com.oracle.javafx.scenebuilder.menu.action.modify.FitToParentAction;
+import com.oracle.javafx.scenebuilder.menu.action.modify.UseComputedSizeAction;
 import com.oracle.javafx.scenebuilder.menu.action.view.CloseBottomDockAction;
 import com.oracle.javafx.scenebuilder.menu.action.view.CloseLeftDockAction;
 import com.oracle.javafx.scenebuilder.menu.action.view.CloseRightDockAction;
@@ -99,6 +104,9 @@ public class DefaultMenuExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                AddPopupControlMenuProvider.class,
+                AddContextMenuAction.class,
+                AddTooltipAction.class,
                 ChangeDockTypeAction.class,
                 ChangeDockTypeAction.MenuProvider.class,
                 ClearRecentItemsAction.class,
@@ -112,8 +120,7 @@ public class DefaultMenuExtension extends AbstractExtension {
                 DeleteAction.class,
                 DuplicateAction.class,
                 EditIncludedFxmlAction.class,
-                //FileSystemMenuController.class,
-                //FileSystemMenuProvider.class,
+                FitToParentAction.class,
                 I18NDefaultMenu.class,
                 ImportProvider.class,
                 ImportFxmlAction.class,
@@ -153,8 +160,8 @@ public class DefaultMenuExtension extends AbstractExtension {
                 OpenAction.class,
                 OpenRecentProvider.class,
                 UndoAction.class,
-                UndockViewAction.class
-
+                UndockViewAction.class,
+                UseComputedSizeAction.class
             );
      // @formatter:on
     }

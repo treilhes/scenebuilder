@@ -57,6 +57,7 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -70,6 +71,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSectionComparator;
@@ -151,6 +153,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private final Editor editorController;
 
     private final ViewSearch viewSearch;
+    private final SceneBuilderBeanFactory sceneBuilderBeanFactory;
+    private final ActionFactory actionFactory;
 
     /*
      * Public
@@ -174,7 +178,9 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             LibraryController libraryController,
             ViewSearch viewSearch,
             ControlLibrary controlLibrary,
-            ViewMenuController viewMenuController
+            ViewMenuController viewMenuController,
+            SceneBuilderBeanFactory sceneBuilderBeanFactory,
+            ActionFactory actionFactory
             ) {
      // @formatter:on
         super(scenebuilderManager, documentManager, viewMenuController, LibraryPanelController.class.getResource("LibraryPanel.fxml"),
@@ -185,6 +191,8 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         this.userLibrary = controlLibrary;
         this.libraryController = libraryController;
         this.displayModePreference = displayModePreference;
+        this.sceneBuilderBeanFactory = sceneBuilderBeanFactory;
+        this.actionFactory = actionFactory;
 
         this.viewSearch = viewSearch;
 
@@ -380,8 +388,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     // ordering.
     // First TitledPane is expanded.
     private void populateLibraryPanel() {
-        final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb = param -> new LibraryListCell(
-                this.libraryController);
+        final Callback<ListView<LibraryListItem>, ListCell<LibraryListItem>> cb = param -> sceneBuilderBeanFactory.getBean(LibraryListCell.class);
 
         // libData is backend structure for all that we put in the Accordion.
         LinkedHashMap<String, ArrayList<LibraryItemImpl>> libData = new LinkedHashMap<>();
@@ -523,9 +530,10 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             final LibraryListItem listitem = (LibraryListItem) rawItem;
             final LibraryItem item = listitem.getLibItem();
 
-            if (libraryController.canPerformInsert(item)) {
-                libraryController.performInsert(item);
-            }
+            InsertControlAction action = actionFactory.create(InsertControlAction.class);
+            action.setLibraryItem(item);
+            action.checkAndPerform();
+
 
             e.consume();
         }

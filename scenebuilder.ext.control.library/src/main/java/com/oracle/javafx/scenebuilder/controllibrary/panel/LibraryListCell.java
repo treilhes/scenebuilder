@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,10 +35,16 @@ package com.oracle.javafx.scenebuilder.controllibrary.panel;
 
 import java.net.URL;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
@@ -58,6 +65,8 @@ import javafx.scene.layout.Priority;
  * ListCell for the Library panel.
  * Used to dynamically construct items and their graphic, as well as set the cursor.
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class LibraryListCell extends ListCell<LibraryListItem> {
     private final LibraryController libraryController;
 
@@ -67,10 +76,15 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
     private final Label qualifierLabel = new Label();
     private final Label sectionLabel = new Label();
 
+    private final ActionFactory actionFactory;
 
-    public LibraryListCell(final LibraryController libraryController) {
+
+    public LibraryListCell(
+            final LibraryController libraryController,
+            final ActionFactory actionFactory) {
         super();
         this.libraryController = libraryController;
+        this.actionFactory = actionFactory;
 
         graphic.getStyleClass().add("list-cell-graphic"); //NOCHECK
         classNameLabel.getStyleClass().add("library-classname-label"); //NOCHECK
@@ -189,15 +203,15 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
              // On double click ask for addition of the drag able item on Content
             if (me.getClickCount() == 2 && me.getButton() == MouseButton.PRIMARY) {
                 if (!isEmpty() && !isSection && item != null) {
-                    if (libraryController.canPerformInsert(item)) {
-                        libraryController.performInsert(item);
-                    }
+                    InsertControlAction action = actionFactory.create(InsertControlAction.class);
+                    action.setLibraryItem(item);
+                    action.checkAndPerform();
                 }
             }
         }
     }
 
-    private String makeQualifierLabel(Qualifier qualifier) {
+    public static String makeQualifierLabel(Qualifier qualifier) {
         String label = qualifier.getLabel();
         String description = qualifier.getDescription();
 

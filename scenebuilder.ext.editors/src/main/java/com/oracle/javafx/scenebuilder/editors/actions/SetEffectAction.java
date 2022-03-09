@@ -55,7 +55,6 @@ import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
@@ -74,7 +73,6 @@ import javafx.scene.effect.Effect;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 @ActionMeta(nameKey = "action.name.set.effect", descriptionKey = "action.description.set.effect")
 public class SetEffectAction extends AbstractAction {
 
@@ -165,7 +163,7 @@ public class SetEffectAction extends AbstractAction {
 
         private final static String SET_EFFECTS_MENU_ID = "setEffect";
 
-        private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+        private final MenuBarObjectConfigurator menuBuilder;
         private final ActionFactory actionFactory;
         private final List<Class<? extends Effect>> effects;
 
@@ -173,7 +171,7 @@ public class SetEffectAction extends AbstractAction {
                 MenuBarObjectConfigurator menuBarObjectConfigurator,
                 ActionFactory actionFactory,
                 List<EffectProvider> effectProviders) {
-            this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+            this.menuBuilder = menuBarObjectConfigurator;
             this.actionFactory = actionFactory;
             this.effects = effectProviders.stream().flatMap(p -> p.effects().stream()).collect(Collectors.toList());
         }
@@ -181,7 +179,7 @@ public class SetEffectAction extends AbstractAction {
         @Override
         public List<MenuItemAttachment> menuItems() {
             return Arrays.asList(
-                    MenuItemAttachment.create(menuBarObjectConfigurator.separator().build(), DefaultMenu.MODIFY_MENU_ID, PositionRequest.AsLastChild),
+                    MenuItemAttachment.create(menuBuilder.separator().build(), DefaultMenu.MODIFY_MENU_ID, PositionRequest.AsLastChild),
                     new SetEffectsMenuItemAttachment());
         }
 
@@ -210,26 +208,14 @@ public class SetEffectAction extends AbstractAction {
                     return menu;
                 }
 
-                menu = new Menu(I18N.getString("menu.title.add.effect"));
-                menu.setId(SET_EFFECTS_MENU_ID);
+                menu = menuBuilder.menu().withId(SET_EFFECTS_MENU_ID).withTitle("menu.title.add.effect").build();
 
                 for (Class<? extends Effect> c : effects) {
-                    MenuItem mi = new MenuItem(c.getSimpleName());
-                    mi.setUserData(c);
                     SetEffectAction action = actionFactory.create(SetEffectAction.class);
                     action.setEffectClass(c);
-                    mi.setOnAction(e -> action.perform());
+                    MenuItem mi = menuBuilder.menuItem().withTitle(c.getSimpleName()).withAction(action).build();
                     menu.getItems().add(mi);
                 }
-
-                menu.setOnMenuValidation(e -> {
-                    menu.getItems().forEach(i -> {
-                        Class<? extends Effect> c = (Class<? extends Effect>)i.getUserData();
-                        SetEffectAction action = actionFactory.create(SetEffectAction.class);
-                        action.setEffectClass(c);
-                        i.setDisable(!action.canPerform());
-                    });
-                });
                 return menu;
             }
 

@@ -55,18 +55,15 @@ public class SelectionGroupAccessor {
     }
 
     public Node getCheckedHitNode() {
-        // TODO Auto-generated method stub
-        return null;
+        return group == null ? null : group.getCheckedHitNode();
     }
 
     public AbstractSelectionGroup toggle(AbstractSelectionGroup toggleGroup) {
-        // TODO Auto-generated method stub
-        return null;
+        return group == null ? null : group.toggle(toggleGroup);
     }
 
     public boolean isMovable() {
-        // TODO Auto-generated method stub
-        return false;
+        return group == null ? false : group.isMovable();
     }
 
 }

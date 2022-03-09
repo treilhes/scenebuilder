@@ -20,6 +20,7 @@
         </encoder>
     </appender>
 
+    <logger name="com.oracle.javafx.scenebuilder.document.panel.hierarchy" level="DEBUG"/>
     <logger name="com.oracle.javafx.scenebuilder.api.action" level="INFO"/>
     <logger name="com.oracle.javafx.scenebuilder.core.accelerator" level="DEBUG"/>
     <logger name="com.oracle.javafx.scenebuilder.ui.controller" level="DEBUG"/>

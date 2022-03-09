@@ -95,16 +95,17 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         assert fxomObject != null;
         this.fxomObject = fxomObject;
 
-        if (fxomObject.getSceneGraphObject() == null) {
-            logger.warn("FxomObject [{}] has no scenegraph object", getFxomObject());
-            this.componentClassMetadata = null;
-            this.mainAccessory = null;
-            this.subComponents = new HashSet<ComponentPropertyMetadata>();
-            this.accessories = new ArrayList<HierarchyMask.Accessory>();
-        } else {
+        if (fxomObject.getSceneGraphObject() != null) {
+            logger.info("FxomObject [{}] has a scenegraph object of type {}", getFxomObject(), fxomObject.getSceneGraphObject().getClass());
             this.componentClassMetadata = metadata
                     .queryComponentMetadata(getFxomObject().getSceneGraphObject().getClass());
+        } else {
+            logger.info("FxomObject [{}] has no scenegraph object", getFxomObject());
+            this.componentClassMetadata = metadata.queryComponentMetadata(getFxomObject().getClass());
+        }
 
+        if (componentClassMetadata != null) {
+            logger.info("FxomObject [{}] has metadata class of type {}", componentClassMetadata.getClass());
             this.subComponents = componentClassMetadata.getAllSubComponentProperties();
 
             this.accessories = this.subComponents.stream()
@@ -115,6 +116,12 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
             mainAccessory = mainComponent == null ? null : new AccessoryImpl(this.componentClassMetadata, mainComponent);
 
             this.accessories.remove(mainAccessory);
+
+        } else {
+            logger.warn("FxomObject [{}] has metadata class", componentClassMetadata.getClass());
+            this.mainAccessory = null;
+            this.subComponents = new HashSet<ComponentPropertyMetadata>();
+            this.accessories = new ArrayList<HierarchyMask.Accessory>();
         }
     }
 

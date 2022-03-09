@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,7 +54,7 @@ import javafx.scene.transform.Transform;
 
 public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
     private final List<T> activeItems = new ArrayList<>();
-    
+
     private final Class<T> layerId;
     private final Group layerUI;
     private final Group detachableUI;
@@ -62,7 +63,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
     private final LayerItemCreator<T> creator;
     private final LayerItemSelector selector;
 
-    public GenericLayer(Class<T> layerId, Group layerUI, Selection selection, Content content, 
+    public GenericLayer(Class<T> layerId, Group layerUI, Selection selection, Content content,
             LayerItemSelector selector, LayerItemCreator<T> creator) {
         super();
         this.layerId = layerId;
@@ -81,7 +82,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
 
 //    @Override
 //    public abstract void update();
-    
+
     /**
      * Returns null or the layer associated to the specified fxom object.
      *
@@ -100,9 +101,9 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
             }
         }
 
-        return result; 
+        return result;
     }
-    
+
     @Override
     public void removeAll() {
         for (T t : new ArrayList<>(activeItems)) {
@@ -139,7 +140,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
         // Collects fxom objects from selection
         if (content.isContentDisplayable()) {
             incomingObjects.addAll(targets);
-            
+
             // Collects obsolete handles
             for (T h : getActiveItems()) {
                 if (incomingObjects.contains(h.getFxomObject())) {
@@ -160,8 +161,8 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
                             obsoleteItems.add(h);
                             break;
                     }
-                    
-                    
+
+
                     //incomingObjects.remove(h.getFxomObject());
                 } else {
                     // FXOM object associated to these handles is no longer selected
@@ -180,6 +181,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
             if (!incomingObject.isViewable()) {
                 continue;
             }
+
             final T newItem = creator.create(incomingObject);
             if (newItem != null) {
                 detachableUI.getChildren().add(newItem.getRootNode());
@@ -206,7 +208,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
     public void disable() {
         this.layerUI.getChildren().clear();
     }
-    
+
     @Override
     public final void setOnMousePressed(EventHandler<? super MouseEvent> value) {
         detachableUI.onMousePressedProperty().set(value);
@@ -216,7 +218,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
     public final EventHandler<? super MouseEvent> getOnMousePressed() {
         return detachableUI.getOnMousePressed();
     }
-    
+
     /**
      * Computes the transform that projects from local coordinates of a
      * scene graph object to the rudder layer local coordinates.
@@ -227,7 +229,7 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
     public Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject) {
         assert fxomObject != null;
         assert fxomObject.isNode();
-        
+
         assert fxomObject.getSceneGraphObject() != null;
         assert ((Node)fxomObject.getSceneGraphObject()).getScene() == getLayerUI().getScene();
 
@@ -245,9 +247,9 @@ public class GenericLayer<T extends Decoration<?>> implements Layer<T> {
 
         return result;
     }
-    
-    //TEMP 
-    
+
+    //TEMP
+
     @Override
     public void save(File out) {
         IOUtils.saveAsPng(layerUI, new File(out,"layerUI.png"));

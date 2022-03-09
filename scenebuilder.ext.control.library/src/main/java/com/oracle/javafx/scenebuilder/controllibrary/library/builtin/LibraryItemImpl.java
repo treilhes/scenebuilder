@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +37,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
@@ -46,6 +50,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
  */
 public class LibraryItemImpl implements LibraryItem {
 
+    private static Logger logger = LoggerFactory.getLogger(LibraryItemImpl.class);
 
     private final String fxmlText;
     private final String name;
@@ -80,7 +85,7 @@ public class LibraryItemImpl implements LibraryItem {
     public URL getIconURL() {
         return qualifier.getIconUrl();
     }
-    
+
 
     public Qualifier getQualifier() {
         return qualifier;
@@ -93,7 +98,7 @@ public class LibraryItemImpl implements LibraryItem {
         try {
             result = new FXOMDocument(fxmlText, null, classloader, null);
         } catch(Error|IOException x) {
-            x.printStackTrace();
+            logger.error("Unable to instanciate {} with following fxml content : \n{}", getName(), fxmlText, x);
             result = null;
         }
 

@@ -74,6 +74,7 @@ import javafx.scene.transform.Transform;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+// TODO this job class is specific to AnchorPane, maybe moving it is the right choice
 public final class FitToParentObjectJob extends BatchDocumentJob {
 
     private FXOMElement fxomInstance;

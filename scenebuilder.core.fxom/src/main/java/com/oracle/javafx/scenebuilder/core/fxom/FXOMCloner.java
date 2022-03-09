@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -195,9 +196,20 @@ public class FXOMCloner {
         final FXOMObject result;
         if (shallowClone) {
             // We clone the intrinsic itself
-            result = new FXOMIntrinsic(
-                    targetDocument,
-                    source.getType());
+            switch (source.getType()) {
+            case FX_COPY:
+                result = new FXOMCopy(targetDocument);
+                break;
+            case FX_REFERENCE:
+                result = new FXOMReference(targetDocument);
+                break;
+            case FX_INCLUDE:
+                result = new FXOMInclude(targetDocument);
+                break;
+            default:
+                result = null;
+                break;
+            }
 
             result.setFxConstant(source.getFxConstant());
             result.setFxController(source.getFxController());

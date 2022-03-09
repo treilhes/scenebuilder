@@ -36,7 +36,6 @@ import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.control.library {
     exports com.oracle.javafx.scenebuilder.controllibrary.action;
-    exports com.oracle.javafx.scenebuilder.controllibrary.menu;
     exports com.oracle.javafx.scenebuilder.controllibrary.controller;
     exports com.oracle.javafx.scenebuilder.controllibrary.library.builtin;
     exports com.oracle.javafx.scenebuilder.controllibrary.panel;

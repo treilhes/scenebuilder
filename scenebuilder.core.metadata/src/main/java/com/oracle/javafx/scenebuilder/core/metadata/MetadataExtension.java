@@ -39,7 +39,7 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.core.metadata.fx.CommentMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.DefineMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.fx.IntrinsicElementMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.IncludeMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.ScriptMetadata;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
@@ -56,7 +56,7 @@ public class MetadataExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 ScriptMetadata.class,
-                IntrinsicElementMetadata.class,
+                IncludeMetadata.class,
                 CommentMetadata.class,
                 Metadata.class,
                 DefineMetadata.class

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -125,7 +126,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         layoutDecoration();
     }
 
-    
+
     @Override
     public void update() {}
 
@@ -164,6 +165,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 
     public abstract Bounds getSceneGraphObjectBounds();
     public abstract Node getSceneGraphObjectProxy();
+    public abstract FXOMObject getFxomObjectProxy();
     protected abstract void startListeningToSceneGraphObject();
     protected abstract void stopListeningToSceneGraphObject();
     protected abstract void layoutDecoration();
@@ -174,8 +176,8 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
      */
 
     public Point2D sceneGraphObjectToDecoration(double x, double y) {
-//        final Node proxy = getSceneGraphObjectProxy();
-//        
+        final FXOMObject proxy = getFxomObjectProxy();
+//
 //        Point2D resultNew = null;
 //        boolean check = true;
 //        if (check) {
@@ -185,13 +187,14 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 //        }
 //        Point2D resultOld = Deprecation.localToLocal(proxy, x, y, getRootNode());
 //        System.out.println("OLD " + resultOld.getX() + "," + resultOld.getY());
-//        
+//
 //        if (!resultOld.equals(resultNew)) {
 //            System.out.println("BUG");
 //        }
         //return resultOld;
         //return resultNew;
-        return CoordinateHelper.localToLocal(getFxomObject(), x, y, getRootNode());
+        //return CoordinateHelper.localToLocal(getFxomObject(), x, y, getRootNode());
+        return CoordinateHelper.localToLocal(proxy, x, y, getRootNode());
     }
 
     protected void startListeningToLayoutBounds(Node node) {
@@ -246,7 +249,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
     protected void updateSceneGraphObject() {
         this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
     }
-    
+
     /**
      * Computes the transform that projects from local coordinates of a
      * scene graph object to the rudder layer local coordinates.
@@ -256,9 +259,9 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
     public Transform computeSceneGraphToLayerTransform(FXOMObject fxomObject) {
         assert fxomObject != null;
         assert fxomObject.isNode();
-        
+
         assert fxomObject.getSceneGraphObject() != null;
-        
+
         // not needed for now CoordinateHelper does not depend on scene
         // more shapes does not have any scene but clip does
         //assert ((Node)fxomObject.getSceneGraphObject()).getScene() == getRootNode().getScene();
@@ -293,5 +296,5 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 
     private final ChangeListener<Scene> sceneListener
         = (ov, v1, v2) -> layoutDecoration();
-        
+
 }

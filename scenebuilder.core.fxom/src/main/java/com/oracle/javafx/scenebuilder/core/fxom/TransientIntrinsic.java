@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,7 +42,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
  *
  *
  */
-class TransientIntrinsic extends TransientNode {
+abstract class TransientIntrinsic extends TransientNode {
 
     private final FXOMIntrinsic.Type type;
     private final List<FXOMProperty> properties = new ArrayList<>();
@@ -55,9 +56,10 @@ class TransientIntrinsic extends TransientNode {
         this.type = type;
     }
 
+    public abstract FXOMIntrinsic makeFxomIntrinsicInstance(FXOMDocument fxomDocument);
+
     public FXOMIntrinsic makeFxomIntrinsic(FXOMDocument fxomDocument) {
-        final FXOMIntrinsic result
-                = new FXOMIntrinsic(fxomDocument, getGlueElement(), getSceneGraphObject(), properties);
+        final FXOMIntrinsic result = makeFxomIntrinsicInstance(fxomDocument);
         assert result.getType() == type;
         // need to deal with a charset property here
         result.addIntrinsicProperty(fxomDocument);

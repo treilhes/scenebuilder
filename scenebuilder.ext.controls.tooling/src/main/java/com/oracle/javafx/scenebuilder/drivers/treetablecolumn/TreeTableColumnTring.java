@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +41,7 @@ import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractGenericTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.drivers.treetableview.TreeTableViewDesignInfoX;
 
 import javafx.geometry.Bounds;
@@ -61,11 +63,11 @@ public class TreeTableColumnTring extends AbstractGenericTring<Object> {
     public TreeTableColumnTring(Content contentPanelController) {
         super(contentPanelController, Object.class);
     }
-    
+
     @Override
     public void defineDropTarget(DropTarget dropTarget) {
     }
-    
+
     @Override
     public void initialize() {
         assert getFxomInstance().getSceneGraphObject() instanceof TreeTableColumn;
@@ -88,6 +90,11 @@ public class TreeTableColumnTring extends AbstractGenericTring<Object> {
     @Override
     public Node getSceneGraphObjectProxy() {
         return getTreeTableColumn().getTreeTableView();
+    }
+
+    @Override
+    public FXOMObject getFxomObjectProxy() {
+        return getFxomObject().getParentObject();
     }
 
     @Override

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -50,7 +52,7 @@ import javafx.scene.shape.Line;
 * Resize Rudder: <br><img src="doc-files/resize-rudder.png" alt="Resize Rudder"><br>
 * Appears when resizing while preserving aspect ratio in the Editor<br>
 * Appear by default while resizing a <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Circle.html">javafx.scene.shape.Circle</a>
-* or by holding the SHIFT key for others  
+* or by holding the SHIFT key for others
 */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -68,7 +70,7 @@ public class ResizeRudder extends AbstractRudder<Node> {
 
     @Override
     public void initialize() {
-        
+
     }
 
     /*
@@ -82,6 +84,11 @@ public class ResizeRudder extends AbstractRudder<Node> {
     @Override
     public Node getSceneGraphObjectProxy() {
         return getSceneGraphObject();
+    }
+
+    @Override
+    public FXOMObject getFxomObjectProxy() {
+        return getFxomObject();
     }
 
     @Override

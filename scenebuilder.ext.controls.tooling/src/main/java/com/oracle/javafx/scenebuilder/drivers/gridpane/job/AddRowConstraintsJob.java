@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.drivers.gridpane.job;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
      * Key = target GridPane instance
      * Value = list of target row indexes for this GridPane
      */
-    private Map<FXOMObject, Set<Integer>> targetGridPanes;
+    private final Map<FXOMObject, Set<Integer>> targetGridPanes = new HashMap<>();
     private Position position;
 
 

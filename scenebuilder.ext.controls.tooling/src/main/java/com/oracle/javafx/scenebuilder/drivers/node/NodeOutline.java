@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.outline.AbstractOutline;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -49,19 +51,19 @@ import javafx.scene.Node;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodeOutline extends AbstractOutline<Node> {
-    
+
     public NodeOutline(Content contentPanelController) {
         super(contentPanelController, Node.class);
     }
-    
+
     @Override
     public void initialize() {
-        
+
     }
     /*
      * AbstractOutline
      */
-    
+
     @Override
     public Bounds getSceneGraphObjectBounds() {
         return getSceneGraphObject().getLayoutBounds();
@@ -70,6 +72,11 @@ public class NodeOutline extends AbstractOutline<Node> {
     @Override
     public Node getSceneGraphObjectProxy() {
         return getSceneGraphObject();
+    }
+
+    @Override
+    public FXOMObject getFxomObjectProxy() {
+        return getFxomObject();
     }
 
     @Override
@@ -83,5 +90,5 @@ public class NodeOutline extends AbstractOutline<Node> {
         stopListeningToLayoutBounds(getSceneGraphObject());
         stopListeningToLocalToSceneTransform(getSceneGraphObject());
     }
-    
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,7 +55,7 @@ import javafx.collections.ObservableList;
 public class ImageBuiltinLibrary {
 
     protected final ObservableList<LibraryItemImpl> itemsProperty = FXCollections.observableArrayList();
-    
+
     /*
      * Private
      */
@@ -76,11 +77,11 @@ public class ImageBuiltinLibrary {
     }
 
     private void addItem(ComponentClassMetadata<?> ccm, Qualifier qualifier, String fxmlText) {
-        final LibraryItemImpl item = new LibraryItemImpl(ccm.getKlass().getSimpleName(), "", fxmlText);
+        final LibraryItemImpl item = new LibraryItemImpl(ccm.getName(), "", fxmlText);
         itemsProperty.add(item);
     }
 
-    
+
 
     private static String readQualifierFxmlText(Qualifier componentQualifier,
             ComponentClassMetadata<?> componentMetadata) {
@@ -94,10 +95,10 @@ public class ImageBuiltinLibrary {
                     + componentMetadata.getClass().getName(), x); // NOI18N
         }
     }
-    
+
         public ObservableList<LibraryItemImpl> getItems() {
         return itemsProperty;
     }
-    
-    
+
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,7 +46,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
  * FXOM for special elements like includes or references.
  *
  */
-public class FXOMIntrinsic extends FXOMElement {
+public abstract class FXOMIntrinsic extends FXOMElement {
 
     private static final String CHARSET_PROPERTY = "charset";
     private static final String SOURCE_PROPERTY = "source";

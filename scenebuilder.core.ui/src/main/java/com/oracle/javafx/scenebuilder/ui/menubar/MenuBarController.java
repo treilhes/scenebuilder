@@ -206,38 +206,38 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //    private Menu zoomMenu;
 
     // Modify
-    @FXML
-    private MenuItem fitToParentMenuItem;
-    @FXML
-    private MenuItem useComputedSizesMenuItem;
-    @FXML
-    private MenuItem addContextMenuMenuItem;
-    @FXML
-    private MenuItem addTooltipMenuItem;
-    @FXML
-    private MenuItem moveRowAboveMenuItem;
-    @FXML
-    private MenuItem moveRowBelowMenuItem;
-    @FXML
-    private MenuItem moveColumnBeforeMenuItem;
-    @FXML
-    private MenuItem moveColumnAfterMenuItem;
-    @FXML
-    private MenuItem addRowAboveMenuItem;
-    @FXML
-    private MenuItem addRowBelowMenuItem;
-    @FXML
-    private MenuItem addColumnBeforeMenuItem;
-    @FXML
-    private MenuItem addColumnAfterMenuItem;
-    @FXML
-    private MenuItem increaseRowSpanMenuItem;
-    @FXML
-    private MenuItem decreaseRowSpanMenuItem;
-    @FXML
-    private MenuItem increaseColumnSpanMenuItem;
-    @FXML
-    private MenuItem decreaseColumnSpanMenuItem;
+//    @FXML
+//    private MenuItem fitToParentMenuItem;
+//    @FXML
+//    private MenuItem useComputedSizesMenuItem;
+//    @FXML
+//    private MenuItem addContextMenuMenuItem;
+//    @FXML
+//    private MenuItem addTooltipMenuItem;
+//    @FXML
+//    private MenuItem moveRowAboveMenuItem;
+//    @FXML
+//    private MenuItem moveRowBelowMenuItem;
+//    @FXML
+//    private MenuItem moveColumnBeforeMenuItem;
+//    @FXML
+//    private MenuItem moveColumnAfterMenuItem;
+//    @FXML
+//    private MenuItem addRowAboveMenuItem;
+//    @FXML
+//    private MenuItem addRowBelowMenuItem;
+//    @FXML
+//    private MenuItem addColumnBeforeMenuItem;
+//    @FXML
+//    private MenuItem addColumnAfterMenuItem;
+//    @FXML
+//    private MenuItem increaseRowSpanMenuItem;
+//    @FXML
+//    private MenuItem decreaseRowSpanMenuItem;
+//    @FXML
+//    private MenuItem increaseColumnSpanMenuItem;
+//    @FXML
+//    private MenuItem decreaseColumnSpanMenuItem;
 //    @FXML
 //    private MenuItem phoneSetSizeMenuItem;
 //    @FXML
@@ -509,7 +509,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
            if (validAttachments.size() > 0) {
                logger.error("Unable to add all the provided menu in the menuBar");
                validAttachments.forEach(ma -> {
-                   logger.error("Unable to attach {} to id {} using {}", ma.getClass().getName(),
+                   logger.error("Unable to attach {} to id {} using {}", ma.getMenu().getId(),
                                    ma.getTargetId(), ma.getPositionRequest());
                });
            }
@@ -675,7 +675,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
            if (validAttachments.size() > 0) {
                logger.error("Unable to add all the provided menuItem in the menuBar");
                validAttachments.forEach(ma -> {
-                   logger.error("Unable to attach {} to id {} using {}", ma.getClass().getName(),
+                   logger.error("Unable to attach {} to id {} using {}", ma.getMenuItem().getId(),
                                    ma.getTargetId(), ma.getPositionRequest());
                });
            }
@@ -760,22 +760,22 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //        assert zoomMenu != null;
 //        assert zoomMenu.getItems().isEmpty();
 
-        assert fitToParentMenuItem != null;
-        assert useComputedSizesMenuItem != null;
-        assert addContextMenuMenuItem != null;
-        assert addTooltipMenuItem != null;
-        assert moveRowAboveMenuItem != null;
-        assert moveRowBelowMenuItem != null;
-        assert moveColumnBeforeMenuItem != null;
-        assert moveColumnAfterMenuItem != null;
-        assert addRowAboveMenuItem != null;
-        assert addRowBelowMenuItem != null;
-        assert addColumnBeforeMenuItem != null;
-        assert addColumnAfterMenuItem != null;
-        assert increaseRowSpanMenuItem != null;
-        assert decreaseRowSpanMenuItem != null;
-        assert increaseColumnSpanMenuItem != null;
-        assert decreaseColumnSpanMenuItem != null;
+//        assert fitToParentMenuItem != null;
+//        assert useComputedSizesMenuItem != null;
+//        assert addContextMenuMenuItem != null;
+//        assert addTooltipMenuItem != null;
+//        assert moveRowAboveMenuItem != null;
+//        assert moveRowBelowMenuItem != null;
+//        assert moveColumnBeforeMenuItem != null;
+//        assert moveColumnAfterMenuItem != null;
+//        assert addRowAboveMenuItem != null;
+//        assert addRowBelowMenuItem != null;
+//        assert addColumnBeforeMenuItem != null;
+//        assert addColumnAfterMenuItem != null;
+//        assert increaseRowSpanMenuItem != null;
+//        assert decreaseRowSpanMenuItem != null;
+//        assert increaseColumnSpanMenuItem != null;
+//        assert decreaseColumnSpanMenuItem != null;
 //        assert phoneSetSizeMenuItem != null;
 //        assert tabletSetSizeMenuItem != null;
 //        assert qvgaSetSizeMenuItem != null;
@@ -1087,24 +1087,24 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         /*
          * Modify menu
          */
-        fitToParentMenuItem.setUserData(new EditActionController(EditAction.FIT_TO_PARENT));
-        fitToParentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.K, modifier));
-        useComputedSizesMenuItem.setUserData(new EditActionController(EditAction.USE_COMPUTED_SIZES));
-        useComputedSizesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.K, KeyCombination.SHIFT_DOWN, modifier));
-        addContextMenuMenuItem.setUserData(new EditActionController(EditAction.ADD_CONTEXT_MENU));
-        addTooltipMenuItem.setUserData(new EditActionController(EditAction.ADD_TOOLTIP));
-        moveRowAboveMenuItem.setUserData(new EditActionController(EditAction.MOVE_ROW_ABOVE));
-        moveRowBelowMenuItem.setUserData(new EditActionController(EditAction.MOVE_ROW_BELOW));
-        moveColumnBeforeMenuItem.setUserData(new EditActionController(EditAction.MOVE_COLUMN_BEFORE));
-        moveColumnAfterMenuItem.setUserData(new EditActionController(EditAction.MOVE_COLUMN_AFTER));
-        addRowAboveMenuItem.setUserData(new EditActionController(EditAction.ADD_ROW_ABOVE));
-        addRowBelowMenuItem.setUserData(new EditActionController(EditAction.ADD_ROW_BELOW));
-        addColumnBeforeMenuItem.setUserData(new EditActionController(EditAction.ADD_COLUMN_BEFORE));
-        addColumnAfterMenuItem.setUserData(new EditActionController(EditAction.ADD_COLUMN_AFTER));
-        increaseRowSpanMenuItem.setUserData(new EditActionController(EditAction.INCREASE_ROW_SPAN));
-        decreaseRowSpanMenuItem.setUserData(new EditActionController(EditAction.DECREASE_ROW_SPAN));
-        increaseColumnSpanMenuItem.setUserData(new EditActionController(EditAction.INCREASE_COLUMN_SPAN));
-        decreaseColumnSpanMenuItem.setUserData(new EditActionController(EditAction.DECREASE_COLUMN_SPAN));
+//        fitToParentMenuItem.setUserData(new EditActionController(EditAction.FIT_TO_PARENT));
+//        fitToParentMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.K, modifier));
+//        useComputedSizesMenuItem.setUserData(new EditActionController(EditAction.USE_COMPUTED_SIZES));
+//        useComputedSizesMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.K, KeyCombination.SHIFT_DOWN, modifier));
+//        addContextMenuMenuItem.setUserData(new EditActionController(EditAction.ADD_CONTEXT_MENU));
+//        addTooltipMenuItem.setUserData(new EditActionController(EditAction.ADD_TOOLTIP));
+//        moveRowAboveMenuItem.setUserData(new EditActionController(EditAction.MOVE_ROW_ABOVE));
+//        moveRowBelowMenuItem.setUserData(new EditActionController(EditAction.MOVE_ROW_BELOW));
+//        moveColumnBeforeMenuItem.setUserData(new EditActionController(EditAction.MOVE_COLUMN_BEFORE));
+//        moveColumnAfterMenuItem.setUserData(new EditActionController(EditAction.MOVE_COLUMN_AFTER));
+//        addRowAboveMenuItem.setUserData(new EditActionController(EditAction.ADD_ROW_ABOVE));
+//        addRowBelowMenuItem.setUserData(new EditActionController(EditAction.ADD_ROW_BELOW));
+//        addColumnBeforeMenuItem.setUserData(new EditActionController(EditAction.ADD_COLUMN_BEFORE));
+//        addColumnAfterMenuItem.setUserData(new EditActionController(EditAction.ADD_COLUMN_AFTER));
+//        increaseRowSpanMenuItem.setUserData(new EditActionController(EditAction.INCREASE_ROW_SPAN));
+//        decreaseRowSpanMenuItem.setUserData(new EditActionController(EditAction.DECREASE_ROW_SPAN));
+//        increaseColumnSpanMenuItem.setUserData(new EditActionController(EditAction.INCREASE_COLUMN_SPAN));
+//        decreaseColumnSpanMenuItem.setUserData(new EditActionController(EditAction.DECREASE_COLUMN_SPAN));
 
 //        phoneSetSizeMenuItem.setUserData(new EditActionController(EditAction.SET_SIZE_335x600) {
 //            @Override

@@ -145,6 +145,11 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
     }
 
     @Override
+    public FXOMObject getFxomObjectProxy() {
+        return getFxomObject().getParentObject();
+    }
+
+    @Override
     protected void startListeningToSceneGraphObject() {
         assert isReady();
         assert treeTableView != null;

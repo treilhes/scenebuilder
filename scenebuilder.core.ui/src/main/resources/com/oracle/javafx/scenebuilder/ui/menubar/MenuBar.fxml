@@ -44,38 +44,6 @@
     <MenuBar fx:id="menuBar">
       <menus>
 
-        <Menu fx:id="modifyMenu" mnemonicParsing="true" text="%menu.title.modify">
-          <items>
-            <MenuItem fx:id="fitToParentMenuItem" mnemonicParsing="true" text="%menu.title.fit" />
-            <MenuItem fx:id="useComputedSizesMenuItem" mnemonicParsing="true" text="%menu.title.use.computed.sizes" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu fx:id="gridMenu" mnemonicParsing="true" text="%menu.title.grid">
-              <items>
-                <MenuItem fx:id="moveRowAboveMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.row.above" />
-                <MenuItem fx:id="moveRowBelowMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.row.below" />
-                <MenuItem fx:id="moveColumnBeforeMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.column.before" />
-                <MenuItem fx:id="moveColumnAfterMenuItem" mnemonicParsing="false" text="%menu.title.grid.move.column.after" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="addRowAboveMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.row.above" />
-                <MenuItem fx:id="addRowBelowMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.row.below" />
-                <MenuItem fx:id="addColumnBeforeMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.column.before" />
-                <MenuItem fx:id="addColumnAfterMenuItem" mnemonicParsing="false" text="%menu.title.grid.add.column.after" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="increaseRowSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.increase.row.span" />
-                <MenuItem fx:id="decreaseRowSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.decrease.row.span" />
-                <MenuItem fx:id="increaseColumnSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.increase.column.span" />
-                <MenuItem fx:id="decreaseColumnSpanMenuItem" mnemonicParsing="false" text="%menu.title.grid.decrease.column.span" />
-              </items>
-            </Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu fx:id="addPopupControlMenu" mnemonicParsing="true" text="%menu.title.add.popup">
-              <items>
-                <MenuItem fx:id="addContextMenuMenuItem" mnemonicParsing="false" text="%menu.title.add.popup.context.menu" />
-                <MenuItem fx:id="addTooltipMenuItem" mnemonicParsing="false" text="%menu.title.add.popup.tooltip" />
-              </items>
-            </Menu>
-          </items>
-        </Menu>
         <Menu fx:id="arrangeMenu" mnemonicParsing="true" text="%menu.title.arrange">
           <items>
             <MenuItem fx:id="bringToFrontMenuItem" mnemonicParsing="true" text="%menu.title.front" />

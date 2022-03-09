@@ -141,6 +141,11 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
     }
 
     @Override
+    public FXOMObject getFxomObjectProxy() {
+        return getFxomObject().getParentObject();
+    }
+
+    @Override
     protected void startListeningToSceneGraphObject() {
         assert isReady();
         assert tableView != null;

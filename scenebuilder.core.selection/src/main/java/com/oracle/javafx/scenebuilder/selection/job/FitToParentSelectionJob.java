@@ -101,23 +101,25 @@ public final class FitToParentSelectionJob extends BatchDocumentJob {
                     candidates.add((FXOMInstance) fxomObject);
                 }
             }
+
+            for (FXOMInstance candidate : candidates) {
+                final AbstractJob subJob = fitToParentObjectJobFactory.getJob(candidate);
+                if (subJob.isExecutable()) {
+                    result.add(subJob);
+                } else {
+                    // Should we do best effort here ?
+                    // Do not clear subJobs list but keep only executable ones
+                    result.clear(); // -> isExecutable() will return false
+                    break;
+                }
+            }
         } else {
             logger.warn("Not implemented for : " + selection.getGroup());
-            assert selection.getGroup() == null :
-                    "Add implementation for " + selection.getGroup();
+//            assert selection.getGroup() == null :
+//                    "Add implementation for " + selection.getGroup();
         }
 
-        for (FXOMInstance candidate : candidates) {
-            final AbstractJob subJob = fitToParentObjectJobFactory.getJob(candidate);
-            if (subJob.isExecutable()) {
-                result.add(subJob);
-            } else {
-                // Should we do best effort here ?
-                // Do not clear subJobs list but keep only executable ones
-                result.clear(); // -> isExecutable() will return false
-                break;
-            }
-        }
+
         return result;
     }
 

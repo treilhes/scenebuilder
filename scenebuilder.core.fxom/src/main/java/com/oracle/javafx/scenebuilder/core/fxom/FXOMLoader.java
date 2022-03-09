@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -132,7 +133,7 @@ class FXOMLoader implements LoadListener {
                 // boxing of core
                 throw new IOException("Unsupported charset", x); // NOCHECK
             } else
-                throw new IOException(x);
+                throw new IOException("unable to load fxml", x);
         }
     }
 
@@ -230,8 +231,8 @@ class FXOMLoader implements LoadListener {
     public void beginIncludeElement() {
         assert glueCursor.getCurrentElement().getTagName().equals("fx:include"); // NOCHECK
 
-        final TransientIntrinsic transientIntrinsic = new TransientIntrinsic(currentTransientNode,
-                FXOMIntrinsic.Type.FX_INCLUDE, glueCursor.getCurrentElement());
+        final TransientIntrinsic transientIntrinsic = new TransientInclude(currentTransientNode,
+                glueCursor.getCurrentElement());
 
         currentTransientNode = transientIntrinsic;
         glueCursor.moveToNextElement();
@@ -241,8 +242,8 @@ class FXOMLoader implements LoadListener {
     public void beginReferenceElement() {
         assert glueCursor.getCurrentElement().getTagName().equals("fx:reference"); // NOCHECK
 
-        final TransientIntrinsic transientIntrinsic = new TransientIntrinsic(currentTransientNode,
-                FXOMIntrinsic.Type.FX_REFERENCE, glueCursor.getCurrentElement());
+        final TransientIntrinsic transientIntrinsic = new TransientReference(currentTransientNode,
+                glueCursor.getCurrentElement());
 
         currentTransientNode = transientIntrinsic;
         glueCursor.moveToNextElement();
@@ -252,8 +253,8 @@ class FXOMLoader implements LoadListener {
     public void beginCopyElement() {
         assert glueCursor.getCurrentElement().getTagName().equals("fx:copy"); // NOCHECK
 
-        final TransientIntrinsic transientIntrinsic = new TransientIntrinsic(currentTransientNode,
-                FXOMIntrinsic.Type.FX_COPY, glueCursor.getCurrentElement());
+        final TransientIntrinsic transientIntrinsic = new TransientCopy(currentTransientNode,
+                glueCursor.getCurrentElement());
 
         currentTransientNode = transientIntrinsic;
         glueCursor.moveToNextElement();

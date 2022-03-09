@@ -43,6 +43,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.Editor;
@@ -97,6 +100,8 @@ import javafx.scene.layout.Pane;
  *
  */
 public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanelController implements HierarchyPanel {
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractHierarchyPanelController.class);
 
     public static final String CSS_CLASS_HIERARCHY_PROMPT_LABEL = "hierarchy-prompt-label";
 
@@ -822,6 +827,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         accessories.stream()
         .filter(a -> !a.isHidden())
         .forEach(accessory -> {
+            logger.debug("Processing accessory {}", accessory.getName());
 //            if (accessory.isCollection()) {
 //                for (int i = 0, count = mask.getSubComponentCount(accessory); i < count; i++) {
 //                    final FXOMObject value = mask.getSubComponentAtIndex(accessory, i);

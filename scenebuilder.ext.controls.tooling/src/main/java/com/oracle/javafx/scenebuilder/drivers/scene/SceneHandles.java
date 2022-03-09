@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -55,6 +56,7 @@ import javafx.scene.Scene;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SceneHandles extends AbstractGenericHandles<Scene> {
     private Node sceneGraphObject;
+    private FXOMObject root;
     private final DesignHierarchyMask.Factory maskFactory;
 
     public SceneHandles(
@@ -70,7 +72,7 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
     @Override
     public void initialize() {
         final HierarchyMask designHierarchyMask = maskFactory.getMask(getFxomObject());
-        final FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
+        root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
         assert root != null;
         assert root instanceof FXOMInstance;
         assert root.getSceneGraphObject() instanceof Node;
@@ -86,6 +88,11 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
     @Override
     public Node getSceneGraphObjectProxy() {
         return sceneGraphObject;
+    }
+
+    @Override
+    public FXOMObject getFxomObjectProxy() {
+        return root;
     }
 
     @Override
