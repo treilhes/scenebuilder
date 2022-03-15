@@ -43,14 +43,17 @@ import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ToggleDocumentVisibilityAction;
-import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDNDController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyDropTarget;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.HierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeCell;
-import com.oracle.javafx.scenebuilder.document.panel.info.InfoPanelController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDropTarget;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.display.FxIdDisplayOption;
+import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
+import com.oracle.javafx.scenebuilder.document.hierarchy.display.NodeIdDisplayOption;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell;
+import com.oracle.javafx.scenebuilder.document.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
+import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DocumentExtension extends AbstractExtension {
@@ -67,6 +70,7 @@ public class DocumentExtension extends AbstractExtension {
                 AbstractShowAction.ShowActionToggle.class,
                 DisplayOptionPreference.class,
                 DocumentPanelController.class,
+                FxIdDisplayOption.class,
                 HierarchyDNDController.class,
                 HierarchyDNDController.Factory.class,
                 HierarchyDropTarget.class,
@@ -76,6 +80,8 @@ public class DocumentExtension extends AbstractExtension {
                 HierarchyTreeCell.class,
                 HierarchyTreeCell.Factory.class,
                 InfoPanelController.class,
+                MetadataInfoDisplayOption.class,
+                NodeIdDisplayOption.class,
                 ShowExpertByDefaultPreference.class,
                 ShowFxIdAction.class,
                 ShowInfoAction.class,

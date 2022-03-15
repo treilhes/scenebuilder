@@ -38,7 +38,7 @@ import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
+import com.oracle.javafx.scenebuilder.api.dock.DockViewController;
 
 public abstract class AbstractFocusTabAction extends AbstractAction {
 

@@ -37,7 +37,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.contenteditor.actions.BringForwardAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.BringToFrontAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.FocusContentAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.SendBackwardAction;
+import com.oracle.javafx.scenebuilder.contenteditor.actions.SendToBackAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleGuidesVisibilityAction;
 import com.oracle.javafx.scenebuilder.contenteditor.actions.ToggleOutlinesVisibilityAction;
@@ -75,6 +79,8 @@ public class ContentEditorExtension extends AbstractExtension {
         return Arrays.asList(
                 AlignmentGuidesColorPreference.class,
                 BackgroundImagePreference.class,
+                BringForwardAction.class,
+                BringToFrontAction.class,
                 ContentModeProvider.class,
                 ContentPanelController.class,
                 ContextMenuController.class,
@@ -94,6 +100,8 @@ public class ContentEditorExtension extends AbstractExtension {
                 SelectAndMoveGesture.Factory.class,
                 SelectWithMarqueeGesture.class,
                 SelectWithMarqueeGesture.Factory.class,
+                SendBackwardAction.class,
+                SendToBackAction.class,
                 SetRootSizeAction.class,
                 SetRootSizeAction.MenuProvider.class,
                 ToggleGuidesVisibilityAction.class,

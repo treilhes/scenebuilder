@@ -46,10 +46,6 @@
 
         <Menu fx:id="arrangeMenu" mnemonicParsing="true" text="%menu.title.arrange">
           <items>
-            <MenuItem fx:id="bringToFrontMenuItem" mnemonicParsing="true" text="%menu.title.front" />
-            <MenuItem fx:id="sendToBackMenuItem" mnemonicParsing="true" text="%menu.title.back" />
-            <MenuItem fx:id="bringForwardMenuItem" mnemonicParsing="true" text="%menu.title.forward" />
-            <MenuItem fx:id="sendBackwardMenuItem" mnemonicParsing="true" text="%menu.title.backward" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <Menu fx:id="wrapMenu" mnemonicParsing="true" text="%menu.title.wrap">
               <items>

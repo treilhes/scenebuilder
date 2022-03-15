@@ -60,7 +60,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.document.panel.hierarchy.treeview.HierarchyTreeCell;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 import com.oracle.javafx.scenebuilder.test.TestContext;
 
@@ -71,6 +73,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * The Class DocumentUiTest is at least for now a temp test to define starter test usage
+ */
 @ExtendWith(ApplicationExtension.class)
 class DocumentUiTest {
 
@@ -143,7 +148,8 @@ class DocumentUiTest {
                 externalDragSourceFactory,
                 designHierarchyMaskFactory,
                 hierarchyTreeCellFactory,
-                hierarchyDNDControllerFactory);
+                hierarchyDNDControllerFactory,
+                null);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setController(controller);

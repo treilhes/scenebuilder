@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.dock.View;
-import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
 
 public abstract class AbstractCloseDockAction extends AbstractAction {
 

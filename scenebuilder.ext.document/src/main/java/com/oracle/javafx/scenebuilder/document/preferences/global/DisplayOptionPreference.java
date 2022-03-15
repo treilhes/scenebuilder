@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,57 +33,92 @@
  */
 package com.oracle.javafx.scenebuilder.document.preferences.global;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.function.Supplier;
+
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
-import com.oracle.javafx.scenebuilder.api.theme.PreferenceEditorFactory;
+import com.oracle.javafx.scenebuilder.api.preferences.type.BeanPreference;
+import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
+import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 
 @Component
-public class DisplayOptionPreference extends EnumPreference<DisplayOption> implements ManagedGlobalPreference, UserPreference<DisplayOption> {
+public class DisplayOptionPreference extends BeanPreference<DisplayOption>
+        implements ManagedGlobalPreference, UserPreference<Class<DisplayOption>> {
 
     /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
+     * * Static fields * *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "HIERARCHY_DISPLAY_OPTION"; //NOCHECK
-    public static final DisplayOption PREFERENCE_DEFAULT_VALUE = DisplayOption.INFO;
+    public static final String PREFERENCE_KEY = "HIERARCHY_DISPLAY_OPTION"; // NOCHECK
 
-    private final PreferenceEditorFactory preferenceEditorFactory;
+    @SuppressWarnings("unchecked")
+    public static final Class<DisplayOption> PREFERENCE_DEFAULT_VALUE = (Class<DisplayOption>) MetadataInfoDisplayOption.class
+            .asSubclass(DisplayOption.class);
 
-	public DisplayOptionPreference(
-			@Autowired PreferencesContext preferencesContext,
-			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
-		super(preferencesContext, PREFERENCE_KEY, DisplayOption.class, PREFERENCE_DEFAULT_VALUE);
-		this.preferenceEditorFactory = preferenceEditorFactory;
-	}
+    private final List<Class<DisplayOption>> displayOptions;
 
-	@Override
-	public String getLabelI18NKey() {
-		return "prefs.hierarchy.displayoption";
-	}
+    public DisplayOptionPreference(PreferencesContext preferencesContext, SceneBuilderBeanFactory context) {
+        super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE, context);
+        this.displayOptions = context.getBeanClassesForType(DisplayOption.class);
+    }
 
-	@Override
-	public Parent getEditor() {
-		return preferenceEditorFactory.newEnumFieldEditor(this);
-	}
+    @Override
+    public String getLabelI18NKey() {
+        return "prefs.hierarchy.displayoption";
+    }
 
-	@Override
-	public PreferenceGroup getGroup() {
-		return DefaultPreferenceGroups.GLOBAL_GROUP_C;
-	}
+    @Override
+    public Parent getEditor() {
+        ComboBox<Class<DisplayOption>> field = new ComboBox<>();
 
-	@Override
-	public String getOrderKey() {
-		return getGroup().getOrderKey() + "_C";
-	}
+        Supplier<ListCell<Class<DisplayOption>>> cell = () -> {
+            return new ListCell<>() {
+                @Override
+                protected void updateItem(Class<DisplayOption> item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        String name = DisplayOption.getName(item);
+                        name = I18N.getStringOrDefault(name, name);
+                        setText(name);
+                    }
+                }
+
+            };
+        };
+
+        field.setCellFactory((a) -> cell.get());
+        field.setButtonCell(cell.get());
+        field.getItems().setAll(displayOptions);
+        field.setValue(getValue());
+        field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
+            setValue(n).writeToJavaPreferences();
+        });
+        getObservableValue().addListener((ob, o, n) -> {
+            field.setValue(n);
+        });
+        return field;
+    }
+
+    @Override
+    public PreferenceGroup getGroup() {
+        return DefaultPreferenceGroups.GLOBAL_GROUP_C;
+    }
+
+    @Override
+    public String getOrderKey() {
+        return getGroup().getOrderKey() + "_C";
+    }
 }

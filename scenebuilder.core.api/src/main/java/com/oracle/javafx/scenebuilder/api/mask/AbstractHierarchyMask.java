@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -63,6 +64,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -273,11 +275,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
      */
     @Override
     public String getSingleLineDescription() {
-        String result = getDescription();
-        if (result != null && containsLineFeed(result)) {
-            result = result.substring(0, result.indexOf('\n')) + "..."; //NOCHECK
-        }
-        return result;
+        return StringUtils.firstLine(getDescription(), "...");
     }
 
     /**
@@ -572,17 +570,6 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         return (FXOMPropertyC) result;
     }
 
-    // Should be in a shared Utils class ?
-    public static boolean containsLineFeed(String str) {
-        // LF (\n) is used for files generated on UNIX
-        // CR+LF (\r\n) is used for files generated on WINDOWS
-        // So in both cases, a file containing multi lines will contain LF
-        if (str == null) {
-            return false;
-        }
-        return str.contains("\n"); //NOCHECK
-    }
-
     /**
      *
      * @return true if the mask deserves a resizing while used as top element of
@@ -620,6 +607,58 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         }
         return getSubComponents(mainAccessory);
     }
+
+    @Override
+    public ValuePropertyMetadata getPropertyMetadata(PropertyName propertyName) {
+        if (fxomObject instanceof FXOMInstance) {
+            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
+            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, propertyName);
+            return vpm;
+        }
+        return null;
+    }
+
+    @Override
+    public Object getPropertyValue(PropertyName propertyName) {
+        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
+        if (vpm != null) {
+            return vpm.getValueObject((FXOMInstance) fxomObject);
+        }
+        return null;
+    }
+
+    @Override
+    public Object getPropertySceneGraphValue(PropertyName propertyName) {
+        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
+        if (vpm != null) {
+            return vpm.getValueInSceneGraphObject((FXOMInstance) fxomObject);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isReadOnlyProperty(PropertyName propertyName) {
+        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
+        if (vpm != null) {
+            return !vpm.isReadWrite();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isMultilineProperty(PropertyName propertyName) {
+        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
+        if (vpm != null && StringPropertyMetadata.class.isInstance(vpm)) {
+            return ((StringPropertyMetadata)vpm).isMultiline();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasProperty(PropertyName propertyName) {
+        return getPropertyMetadata(propertyName) != null;
+    }
+
     @RequiredArgsConstructor
     public static class AccessoryImpl implements Accessory{
         private final @Getter ComponentClassMetadata<?> owner;

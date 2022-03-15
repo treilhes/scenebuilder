@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
-import com.oracle.javafx.scenebuilder.core.dock.DockViewController;
+import com.oracle.javafx.scenebuilder.core.dock.DockViewControllerImpl;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
 import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
@@ -98,7 +98,7 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 DockTypeSplitH.class,
                 DockTypeSplitV.class,
                 DockTypeTab.class,
-                DockViewController.class,
+                DockViewControllerImpl.class,
                 DockWindowController.class,
                 DockWindowFactory.class,
                 DocumentDragSource.class,

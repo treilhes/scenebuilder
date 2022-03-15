@@ -122,6 +122,12 @@ public class SceneBuilderBeanFactory {
             .collect(Collectors.toList());
     }
 
+    public <T> List<Class<T>> getBeanClassesForType(Class<T> cls) {
+        return Arrays.stream(context.getBeanNamesForType(cls))
+            .map(n -> (Class<T>)context.getType(n))
+            .collect(Collectors.toList());
+    }
+
     /**
      * Gets the.
      *

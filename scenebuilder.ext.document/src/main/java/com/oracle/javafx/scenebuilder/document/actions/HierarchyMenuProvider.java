@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
-import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
+import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
 
 import javafx.scene.control.Menu;
 

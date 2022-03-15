@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.ui.inlineedit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -73,6 +75,8 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
 public class InlineEditController implements InlineEdit{
+
+    private final static Logger logger = LoggerFactory.getLogger(InlineEditController.class);
 
     // Style class used for styling the inline editor (TextInputControl)
 
@@ -220,7 +224,7 @@ public class InlineEditController implements InlineEdit{
         // Open the popup window and inform the editor controller that
         // an editing session has started.
         popupController.openWindow(anchor);
-        requestTextEditingSessionEnd = new EditingSessionDidBeginCallback(this);
+        textEditingSessionDidBegin(new EditingSessionDidBeginCallback(this));
         //editorController.textEditingSessionDidBegin(
         //        new EditingSessionDidBeginCallback(this));
     }
@@ -249,6 +253,10 @@ public class InlineEditController implements InlineEdit{
             textEditingSessionDidEnd();
             // Then close the window
             popupController.closeWindow();
+            popupController = null;
+            logger.debug("inline edit popup disposed after commit success");
+        } else {
+            logger.debug("inline edit popup not disposed after commit failure");
         }
         return commitSucceeded;
     }
@@ -265,6 +273,10 @@ public class InlineEditController implements InlineEdit{
             textEditingSessionDidEnd();
             // Then close the window
             popupController.closeWindow();
+            popupController = null;
+            logger.debug("inline edit popup disposed after revert success");
+        } else {
+            logger.debug("inline edit popup not disposed after revert failure");
         }
         return revertSucceeded;
     }
@@ -347,13 +359,22 @@ public class InlineEditController implements InlineEdit{
             this.requestCommit = requestCommit;
             this.initialValue = editor.getText();
 
+            logger.debug("enabled handling inline edit popup events");
             this.editor.focusedProperty().addListener((ChangeListener<Boolean>) (ov, oldValue, newValue) -> {
+
+                logger.debug("inline edit popup focus changed to : {}", newValue);
+
                 // The inline editing popup auto hide when loosing focus :
                 // need to commit inline editing on focus change
                 //if (getEditorController().isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
                 if (isTextEditingSessionOnGoing() // Editing session has not been ended by ENTER key
                         && newValue == false) {
-                    requestCommitAndClose(requestCommit, editor.getText());
+                    if (editor.getText() != null) {
+                        requestCommitAndClose(requestCommit, editor.getText());
+                    } else {
+                        requestRevertAndClose(null);
+                    }
+
                 }
             });
 
@@ -472,14 +493,14 @@ public class InlineEditController implements InlineEdit{
     public boolean canGetFxmlText() {
         final boolean result;
 
-        if (requestTextEditingSessionEnd == null) {
+        if (!isTextEditingSessionOnGoing()) {
             result = true;
         } else {
             result = requestTextEditingSessionEnd.call(null);
             // If the callback returns true, then it should have call
             // textEditingSessionDidEnd()
             // => requestTextEditingSessionEnd should be null
-            assert (requestTextEditingSessionEnd == null) || (result == false);
+            assert (!isTextEditingSessionOnGoing()) || (result == false);
         }
 
         return result;
@@ -498,6 +519,9 @@ public class InlineEditController implements InlineEdit{
     @Override
     public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd) {
         assert requestTextEditingSessionEnd == null;
+        if (logger.isDebugEnabled()) {
+            logger.debug("Text editing sessions starting {}", requestSessionEnd.hashCode());
+        }
         requestTextEditingSessionEnd = requestSessionEnd;
     }
 
@@ -508,6 +532,9 @@ public class InlineEditController implements InlineEdit{
     @Override
     public void textEditingSessionDidEnd() {
         assert requestTextEditingSessionEnd != null;
+        if (logger.isDebugEnabled()) {
+            logger.debug("Text editing sessions ending {}", requestTextEditingSessionEnd.hashCode());
+        }
         requestTextEditingSessionEnd = null;
     }
 

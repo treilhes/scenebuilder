@@ -36,45 +36,49 @@ package com.oracle.javafx.scenebuilder.document.actions;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
+import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
+import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 
 import javafx.scene.control.ToggleGroup;
 
 public abstract class AbstractShowAction extends AbstractAction {
 
-	private final DocumentPanelController documentPanelController;
+	private final DocumentPanel documentPanel;
+	private final HierarchyPanel hierarchyPanel;
 	private final DisplayOptionPreference displayOptionPreference;
 	private final DisplayOption option;
 
 	public AbstractShowAction(
 	        ActionExtensionFactory extensionFactory,
 	        DisplayOption option,
-	        DocumentPanelController documentPanelController,
+	        DocumentPanel documentPanel,
+	        HierarchyPanel hierarchyPanel,
 	        DisplayOptionPreference displayOptionPreference) {
 		super(extensionFactory);
 		this.option = option;
-		this.documentPanelController = documentPanelController;
+		this.documentPanel = documentPanel;
+		this.hierarchyPanel = hierarchyPanel;
 		this.displayOptionPreference = displayOptionPreference;
 	}
 
 	@Override
 	public boolean canPerform() {
-		return documentPanelController.getHierarchyPanelController().getDisplayOption() != option;
+		return hierarchyPanel.getDisplayOption() != option;
 	}
 
 	@Override
 	public ActionStatus doPerform() {
-		documentPanelController.getHierarchyPanelController().setDisplayOption(option);
-    	documentPanelController.getDocumentAccordion().setExpandedPane(
-    		documentPanelController.getDocumentAccordion().getPanes().get(0));
+	    hierarchyPanel.setDisplayOption(option);
+    	documentPanel.getDocumentAccordion().setExpandedPane(
+    		documentPanel.getDocumentAccordion().getPanes().get(0));
 
     	displayOptionPreference
-    		.setValue(documentPanelController.getHierarchyPanelController().getDisplayOption())
+    		.setBean(hierarchyPanel.getDisplayOption())
     		.writeToJavaPreferences();
     	return ActionStatus.DONE;
 	}

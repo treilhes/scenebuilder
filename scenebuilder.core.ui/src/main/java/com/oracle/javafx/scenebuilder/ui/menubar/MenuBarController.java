@@ -84,7 +84,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -252,14 +251,14 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //    private RadioMenuItem hdSetSizeMenuItem;
 
     // Arrange
-    @FXML
-    private MenuItem bringToFrontMenuItem;
-    @FXML
-    private MenuItem sendToBackMenuItem;
-    @FXML
-    private MenuItem bringForwardMenuItem;
-    @FXML
-    private MenuItem sendBackwardMenuItem;
+//    @FXML
+//    private MenuItem bringToFrontMenuItem;
+//    @FXML
+//    private MenuItem sendToBackMenuItem;
+//    @FXML
+//    private MenuItem bringForwardMenuItem;
+//    @FXML
+//    private MenuItem sendBackwardMenuItem;
     @FXML
     private MenuItem wrapInAnchorPaneMenuItem;
     @FXML
@@ -783,10 +782,10 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
 //        assert touchSetSizeMenuItem != null;
 //        assert hdSetSizeMenuItem != null;
 
-        assert bringToFrontMenuItem != null;
-        assert sendToBackMenuItem != null;
-        assert bringForwardMenuItem != null;
-        assert sendBackwardMenuItem != null;
+//        assert bringToFrontMenuItem != null;
+//        assert sendToBackMenuItem != null;
+//        assert bringForwardMenuItem != null;
+//        assert sendBackwardMenuItem != null;
         assert wrapInAnchorPaneMenuItem != null;
         assert wrapInBorderPaneMenuItem != null;
         assert wrapInButtonBarMenuItem != null;
@@ -1155,18 +1154,18 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
         /*
          * Arrange menu
          */
-        bringToFrontMenuItem.setUserData(new EditActionController(EditAction.BRING_TO_FRONT));
-        bringToFrontMenuItem.setAccelerator(new KeyCharacterCombination("]", //NOCHECK
-                KeyCombination.SHIFT_DOWN, modifier));
-        sendToBackMenuItem.setUserData(new EditActionController(EditAction.SEND_TO_BACK));
-        sendToBackMenuItem.setAccelerator(new KeyCharacterCombination("[", //NOCHECK
-                KeyCombination.SHIFT_DOWN, modifier));
-        bringForwardMenuItem.setUserData(new EditActionController(EditAction.BRING_FORWARD));
-        bringForwardMenuItem.setAccelerator(
-                new KeyCharacterCombination("]", modifier)); //NOCHECK
-        sendBackwardMenuItem.setUserData(new EditActionController(EditAction.SEND_BACKWARD));
-        sendBackwardMenuItem.setAccelerator(
-                new KeyCharacterCombination("[", modifier)); //NOCHECK
+//        bringToFrontMenuItem.setUserData(new EditActionController(EditAction.BRING_TO_FRONT));
+//        bringToFrontMenuItem.setAccelerator(new KeyCharacterCombination("]", //NOCHECK
+//                KeyCombination.SHIFT_DOWN, modifier));
+//        sendToBackMenuItem.setUserData(new EditActionController(EditAction.SEND_TO_BACK));
+//        sendToBackMenuItem.setAccelerator(new KeyCharacterCombination("[", //NOCHECK
+//                KeyCombination.SHIFT_DOWN, modifier));
+//        bringForwardMenuItem.setUserData(new EditActionController(EditAction.BRING_FORWARD));
+//        bringForwardMenuItem.setAccelerator(
+//                new KeyCharacterCombination("]", modifier)); //NOCHECK
+//        sendBackwardMenuItem.setUserData(new EditActionController(EditAction.SEND_BACKWARD));
+//        sendBackwardMenuItem.setAccelerator(
+//                new KeyCharacterCombination("[", modifier)); //NOCHECK
         wrapInAnchorPaneMenuItem.setUserData(new EditActionController(EditAction.WRAP_IN_ANCHOR_PANE));
         wrapInBorderPaneMenuItem.setUserData(new EditActionController(EditAction.WRAP_IN_BORDER_PANE));
         wrapInButtonBarMenuItem.setUserData(new EditActionController(EditAction.WRAP_IN_BUTTON_BAR));

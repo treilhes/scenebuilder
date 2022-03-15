@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyPanel.DisplayOption;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -45,8 +44,11 @@ import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.document.actions.AbstractShowAction.ShowActionToggle;
-import com.oracle.javafx.scenebuilder.document.panel.document.DocumentPanelController;
+import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.document.hierarchy.display.FxIdDisplayOption;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
+import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -68,8 +70,10 @@ public class ShowFxIdAction extends AbstractShowAction {
 
 	public ShowFxIdAction(
 	        ActionExtensionFactory extensionFactory,
-	        @Lazy DocumentPanelController documentPanelController,
+	        DocumentPanel documentPanelController,
+	        HierarchyPanel hierarchyPanel,
+	        FxIdDisplayOption fxIdDisplayOption,
             DisplayOptionPreference displayOptionPreference) {
-		super(extensionFactory, DisplayOption.FXID, documentPanelController, displayOptionPreference);
+		super(extensionFactory, fxIdDisplayOption, documentPanelController, hierarchyPanel, displayOptionPreference);
 	}
 }

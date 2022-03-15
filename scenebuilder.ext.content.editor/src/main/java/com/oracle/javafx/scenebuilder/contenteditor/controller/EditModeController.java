@@ -72,6 +72,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectAndMoveGesture;
@@ -81,7 +82,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
@@ -131,7 +131,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final DesignHierarchyMask.Factory maskFactory;
 
-    private final Metadata metadata;
+    //private final Metadata metadata;
 
     private final SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory;
 
@@ -167,7 +167,6 @@ public class EditModeController extends AbstractModeController implements Gestur
     		@Autowired @Lazy Content contentPanelController,
     		@Autowired @Lazy Editor editor,
     		@Autowired DesignHierarchyMask.Factory maskFactory,
-    		@Autowired Metadata metadata,
     		@Autowired DocumentManager documentManager,
     		@Autowired SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory,
     		@Autowired SelectAndMoveGesture.Factory selectAndMoveGestureFactory,
@@ -186,7 +185,6 @@ public class EditModeController extends AbstractModeController implements Gestur
         this.drag = drag;
         this.editorController = editor;
         this.maskFactory = maskFactory;
-        this.metadata = metadata;
         this.documentManager = documentManager;
 
         this.selectWithMarqueeGestureFactory = selectWithMarqueeGestureFactory;
@@ -546,7 +544,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
             final String text = m.getDescription();
             final InlineEdit.Type type;
-            if (inlineEditingBounds instanceof TextArea || DesignHierarchyMask.containsLineFeed(text)) {
+            if (inlineEditingBounds instanceof TextArea || StringUtils.containsLineFeed(text)) {
                 type = InlineEdit.Type.TEXT_AREA;
             } else {
                 type = InlineEdit.Type.TEXT_FIELD;
@@ -577,7 +575,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
         final PropertyName propertyName = m.getPropertyNameForDescription();
         assert propertyName != null;
-        final ValuePropertyMetadata vpm = metadata.queryValueProperty(inlineEditedObject, propertyName);
+        final ValuePropertyMetadata vpm = m.getPropertyMetadata(propertyName);
 
         final AbstractJob job = modifyObjectJobFactory.getJob(inlineEditedObject, vpm, newValue);
 

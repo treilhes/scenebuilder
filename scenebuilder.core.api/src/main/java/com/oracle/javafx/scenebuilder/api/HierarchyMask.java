@@ -40,6 +40,7 @@ import java.util.List;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.image.Image;
 
@@ -127,4 +128,13 @@ public interface HierarchyMask {
     public String getFxId();
 
     public String getClassNameInfo(Accessory accessory);
+
+
+    public ValuePropertyMetadata getPropertyMetadata(PropertyName propertyName);
+    public Object getPropertyValue(PropertyName propertyName);
+    public Object getPropertySceneGraphValue(PropertyName propertyName);
+    public boolean isReadOnlyProperty(PropertyName propertyName);
+    public boolean isMultilineProperty(PropertyName propertyName);
+    public boolean hasProperty(PropertyName propertyName);
+
 }

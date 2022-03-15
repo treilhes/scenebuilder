@@ -98,24 +98,6 @@ public final class WrapInBorderPaneJob extends AbstractWrapInJob {
         newContainerClass = BorderPane.class;
     }
 
-
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
-    public final static class Factory extends JobFactory<WrapInBorderPaneJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
-            super(sbContext);
-        }
-
-        /**
-         * Create an {@link WrapInBorderPaneJob} job
-         * @return the job to execute
-         */
-        public WrapInBorderPaneJob getJob() {
-            return create(WrapInBorderPaneJob.class, null);
-        }
-    }
-
     @Override
     protected boolean canWrapIn() {
         final boolean result;
@@ -161,4 +143,22 @@ public final class WrapInBorderPaneJob extends AbstractWrapInJob {
 
         return jobs;
     }
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Lazy
+    public final static class Factory extends JobFactory<WrapInBorderPaneJob> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link WrapInBorderPaneJob} job
+         * @return the job to execute
+         */
+        public WrapInBorderPaneJob getJob() {
+            return create(WrapInBorderPaneJob.class, null);
+        }
+    }
+
 }

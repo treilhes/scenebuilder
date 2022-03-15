@@ -141,6 +141,9 @@ public abstract class AbstractCommonUiController  {
      */
     protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
 
+        if (this.getClass().getName().contains("HierarchyPanelController")) {
+            System.out.println();
+        }
         if (panelRoot == null) { // nothing to style so return
             return;
         }

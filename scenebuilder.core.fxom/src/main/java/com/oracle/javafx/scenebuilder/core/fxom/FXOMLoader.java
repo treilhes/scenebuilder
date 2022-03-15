@@ -167,7 +167,7 @@ class FXOMLoader implements LoadListener {
 
     @Override
     public void readImportProcessingInstruction(String data) {
-        System.out.println();
+
     }
 
     @Override
@@ -348,7 +348,7 @@ class FXOMLoader implements LoadListener {
     @Override
     public void readUnknownStaticPropertyAttribute(String string, String string1) {
         // TODO(elp) : implement FXOMLoader.readUnknownStaticPropertyAttribute.
-        System.out.println();
+
     }
 
     @Override
