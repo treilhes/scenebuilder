@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,6 +48,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
@@ -494,9 +496,12 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         //
         if (currentDisplayMode.equals(DISPLAY_MODE.SEARCH)) {
             libSearchList.getItems().clear();
+
+            SearchPredicate searchPredicate = new SearchPredicate(searchPattern);
+
             final ArrayList<LibraryItemImpl> rawFilteredItem = new ArrayList<>();
             for (LibraryItemImpl item : searchData) {
-                if (item.getName().toUpperCase(Locale.ROOT).contains(searchPattern)) {
+                if (searchPredicate.test(item.getName().toUpperCase(Locale.ROOT))) {
                     rawFilteredItem.add(item);
                 }
             }
@@ -510,6 +515,38 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         setDisplayMode(currentDisplayMode);
     }
 
+    private class SearchPredicate implements Predicate<String>{
+        private List<List<String>> orAndAnds = new ArrayList<>();
+
+        SearchPredicate(String search){
+            String[] ors = search.split("\\|");
+            for (String or:ors) {
+                String[] ands = or.split("&");
+                orAndAnds.add(Arrays.asList(ands));
+            }
+        }
+
+        @Override
+        public boolean test(String t) {
+            for (List<String> ands:orAndAnds) {
+                boolean match = ands.stream()
+                        .map(s -> {
+                            if (s.startsWith("!")) {
+                                return !t.contains(s.substring(1));
+                            } else {
+                                return t.contains(s);
+                            }
+                        })
+                        .allMatch(Boolean.TRUE::equals);
+
+                if (match) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
     // Key events listened onto the ListView
     // For some reason the listener when set on the cell (see LibraryListCell)
     // is never called, probably because it is the ListView which has the focus.
