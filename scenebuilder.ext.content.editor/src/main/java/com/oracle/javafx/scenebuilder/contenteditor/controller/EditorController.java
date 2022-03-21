@@ -39,7 +39,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -49,7 +48,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
@@ -57,9 +55,7 @@ import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
-import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
@@ -73,33 +69,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.GridSelectionGroup;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.AddColumnJob;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.AddRowJob;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.GridPaneJobUtils.Position;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.MoveColumnJob;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.MoveRowJob;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.SpanJob;
-import com.oracle.javafx.scenebuilder.drivers.gridpane.job.SpanJob.SpanAction;
-import com.oracle.javafx.scenebuilder.job.editor.UsePredefinedSizeJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.selection.job.AddContextMenuToSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.AddTooltipToSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.BringForwardJob;
-import com.oracle.javafx.scenebuilder.selection.job.BringToFrontJob;
-import com.oracle.javafx.scenebuilder.selection.job.CutSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.DeleteSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.PasteIntoJob;
-import com.oracle.javafx.scenebuilder.selection.job.PasteJob;
-import com.oracle.javafx.scenebuilder.selection.job.SendBackwardJob;
-import com.oracle.javafx.scenebuilder.selection.job.SendToBackJob;
-import com.oracle.javafx.scenebuilder.selection.job.TrimSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.AbstractWrapInJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.UnwrapJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInJobFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -161,32 +131,32 @@ public class EditorController implements Editor {
     private final GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory;
     private final BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
 
-    private final AddColumnJob.Factory addColumnJobFactory;
-    private final AddRowJob.Factory addRowJobFactory;
-    private final BringForwardJob.Factory bringForwardJobFactory;
-    private final BringToFrontJob.Factory bringToFrontJobFactory;
-    private final CutSelectionJob.Factory cutSelectionJobFactory;
-    private final SpanJob.Factory spanJobFactory;
-    private final DeleteSelectionJob.Factory deleteSelectionJobFactory;
-    private final DuplicateSelectionJob.Factory duplicateSelectionJobFactory;
-    private final FitToParentSelectionJob.Factory fitToParentSelectionJobFactory;
-    private final MoveColumnJob.Factory moveColumnJobFactory;
-    private final MoveRowJob.Factory moveRowJobFactory;
-    private final PasteJob.Factory pasteJobFactory;
-    private final PasteIntoJob.Factory pasteIntoJobFactory;
-    private final SendBackwardJob.Factory sendBackwardJobFactory;
-    private final SendToBackJob.Factory sendToBackJobFactory;
-    private final UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory;
-    private final TrimSelectionJob.Factory trimSelectionJobFactory;
-    private final UnwrapJob.Factory unwrapJobFactory;
-    private final UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory;
-//    private final ImportFileJob.Factory importFileJobFactory;
-//    private final IncludeFileJob.Factory includeFileJobFactory;
-    private final AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory;
-    private final AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory;
-
-    private final WrapInJobFactory wrapInJobFactory;
-    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
+//    private final AddColumnJob.Factory addColumnJobFactory;
+//    private final AddRowJob.Factory addRowJobFactory;
+//    private final BringForwardJob.Factory bringForwardJobFactory;
+//    private final BringToFrontJob.Factory bringToFrontJobFactory;
+//    private final CutSelectionJob.Factory cutSelectionJobFactory;
+//    private final SpanJob.Factory spanJobFactory;
+//    private final DeleteSelectionJob.Factory deleteSelectionJobFactory;
+//    private final DuplicateSelectionJob.Factory duplicateSelectionJobFactory;
+//    private final FitToParentSelectionJob.Factory fitToParentSelectionJobFactory;
+//    private final MoveColumnJob.Factory moveColumnJobFactory;
+//    private final MoveRowJob.Factory moveRowJobFactory;
+//    private final PasteJob.Factory pasteJobFactory;
+//    private final PasteIntoJob.Factory pasteIntoJobFactory;
+//    private final SendBackwardJob.Factory sendBackwardJobFactory;
+//    private final SendToBackJob.Factory sendToBackJobFactory;
+//    private final UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory;
+//    private final TrimSelectionJob.Factory trimSelectionJobFactory;
+//    private final UnwrapJob.Factory unwrapJobFactory;
+//    private final UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory;
+////    private final ImportFileJob.Factory importFileJobFactory;
+////    private final IncludeFileJob.Factory includeFileJobFactory;
+//    private final AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory;
+//    private final AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory;
+//
+//    private final WrapInJobFactory wrapInJobFactory;
+//    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
 
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
@@ -198,34 +168,34 @@ public class EditorController implements Editor {
             @Lazy @Autowired ContextMenuController contextMenuController,
 
             GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory,
-            BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory,
+            BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory
 
-            AddColumnJob.Factory addColumnJobFactory,
-            AddRowJob.Factory addRowJobFactory,
-            BringForwardJob.Factory bringForwardJobFactory,
-            BringToFrontJob.Factory bringToFrontJobFactory,
-            CutSelectionJob.Factory cutSelectionJobFactory,
-            SpanJob.Factory spanJobFactory,
-            DeleteSelectionJob.Factory deleteSelectionJobFactory,
-            DuplicateSelectionJob.Factory duplicateSelectionJobFactory,
-            FitToParentSelectionJob.Factory fitToParentSelectionJobFactory,
-            MoveColumnJob.Factory moveColumnJobFactory,
-            MoveRowJob.Factory moveRowJobFactory,
-            PasteJob.Factory pasteJobFactory,
-            PasteIntoJob.Factory pasteIntoJobFactory,
-            SendBackwardJob.Factory sendBackwardJobFactory,
-            SendToBackJob.Factory sendToBackJobFactory,
-            UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory,
-            TrimSelectionJob.Factory trimSelectionJobFactory,
-            UnwrapJob.Factory unwrapJobFactory,
-            UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory,
-//            ImportFileJob.Factory importFileJobFactory,
-//            IncludeFileJob.Factory includeFileJobFactory,
-            AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory,
-            AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory,
-
-            WrapInJobFactory wrapInJobFactory,
-            GridSelectionGroup.Factory gridSelectionGroupFactory
+//            AddColumnJob.Factory addColumnJobFactory,
+//            AddRowJob.Factory addRowJobFactory,
+//            BringForwardJob.Factory bringForwardJobFactory,
+//            BringToFrontJob.Factory bringToFrontJobFactory,
+//            CutSelectionJob.Factory cutSelectionJobFactory,
+//            SpanJob.Factory spanJobFactory,
+//            DeleteSelectionJob.Factory deleteSelectionJobFactory,
+//            DuplicateSelectionJob.Factory duplicateSelectionJobFactory,
+//            FitToParentSelectionJob.Factory fitToParentSelectionJobFactory,
+//            MoveColumnJob.Factory moveColumnJobFactory,
+//            MoveRowJob.Factory moveRowJobFactory,
+//            PasteJob.Factory pasteJobFactory,
+//            PasteIntoJob.Factory pasteIntoJobFactory,
+//            SendBackwardJob.Factory sendBackwardJobFactory,
+//            SendToBackJob.Factory sendToBackJobFactory,
+//            UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory,
+//            TrimSelectionJob.Factory trimSelectionJobFactory,
+//            UnwrapJob.Factory unwrapJobFactory,
+//            UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory,
+////            ImportFileJob.Factory importFileJobFactory,
+////            IncludeFileJob.Factory includeFileJobFactory,
+//            AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory,
+//            AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory,
+//
+//            WrapInJobFactory wrapInJobFactory,
+//            GridSelectionGroup.Factory gridSelectionGroupFactory
         	) {
         // @formatter:on
         // this.api = api;
@@ -241,36 +211,36 @@ public class EditorController implements Editor {
         this.errorReport = api.getApiDoc().getErrorReport();
         this.inlineEditController = inlineEditController;
         this.contextMenuController = contextMenuController;
-        this.gridSelectionGroupFactory = gridSelectionGroupFactory;
+        //this.gridSelectionGroupFactory = gridSelectionGroupFactory;
 
         this.gridPaneHierarchyMaskFactory = gridPaneHierarchyMaskFactory;
         this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;
 
-        this.addColumnJobFactory = addColumnJobFactory;
-        this.addRowJobFactory = addRowJobFactory;
-        this.bringForwardJobFactory = bringForwardJobFactory;
-        this.bringToFrontJobFactory = bringToFrontJobFactory;
-        this.cutSelectionJobFactory = cutSelectionJobFactory;
-        this.spanJobFactory = spanJobFactory;
-        this.deleteSelectionJobFactory = deleteSelectionJobFactory;
-        this.duplicateSelectionJobFactory = duplicateSelectionJobFactory;
-        this.fitToParentSelectionJobFactory = fitToParentSelectionJobFactory;
-        this.moveColumnJobFactory = moveColumnJobFactory;
-        this.moveRowJobFactory = moveRowJobFactory;
-        this.pasteJobFactory = pasteJobFactory;
-        this.pasteIntoJobFactory = pasteIntoJobFactory;
-        this.sendToBackJobFactory = sendToBackJobFactory;
-        this.sendBackwardJobFactory = sendBackwardJobFactory;
-        this.usePredefinedSizeJobFactory = usePredefinedSizeJobFactory;
-        this.trimSelectionJobFactory = trimSelectionJobFactory;
-        this.unwrapJobFactory = unwrapJobFactory;
-        this.useComputedSizesSelectionJobFactory = useComputedSizesSelectionJobFactory;
-//        this.importFileJobFactory = importFileJobFactory;
-//        this.includeFileJobFactory = includeFileJobFactory;
-        this.addContextMenuToSelectionJobFactory = addContextMenuToSelectionJobFactory;
-        this.addTooltipToSelectionJobFactory = addTooltipToSelectionJobFactory;
-
-        this.wrapInJobFactory = wrapInJobFactory;
+//        this.addColumnJobFactory = addColumnJobFactory;
+//        this.addRowJobFactory = addRowJobFactory;
+//        this.bringForwardJobFactory = bringForwardJobFactory;
+//        this.bringToFrontJobFactory = bringToFrontJobFactory;
+//        this.cutSelectionJobFactory = cutSelectionJobFactory;
+//        this.spanJobFactory = spanJobFactory;
+//        this.deleteSelectionJobFactory = deleteSelectionJobFactory;
+//        this.duplicateSelectionJobFactory = duplicateSelectionJobFactory;
+//        this.fitToParentSelectionJobFactory = fitToParentSelectionJobFactory;
+//        this.moveColumnJobFactory = moveColumnJobFactory;
+//        this.moveRowJobFactory = moveRowJobFactory;
+//        this.pasteJobFactory = pasteJobFactory;
+//        this.pasteIntoJobFactory = pasteIntoJobFactory;
+//        this.sendToBackJobFactory = sendToBackJobFactory;
+//        this.sendBackwardJobFactory = sendBackwardJobFactory;
+//        this.usePredefinedSizeJobFactory = usePredefinedSizeJobFactory;
+//        this.trimSelectionJobFactory = trimSelectionJobFactory;
+//        this.unwrapJobFactory = unwrapJobFactory;
+//        this.useComputedSizesSelectionJobFactory = useComputedSizesSelectionJobFactory;
+////        this.importFileJobFactory = importFileJobFactory;
+////        this.includeFileJobFactory = includeFileJobFactory;
+//        this.addContextMenuToSelectionJobFactory = addContextMenuToSelectionJobFactory;
+//        this.addTooltipToSelectionJobFactory = addTooltipToSelectionJobFactory;
+//
+//        this.wrapInJobFactory = wrapInJobFactory;
 
         // libraryProperty = new SimpleObjectProperty<>(builtinLibrary);
         fxmlLocationProperty = new SimpleObjectProperty<>();
@@ -765,28 +735,6 @@ public class EditorController implements Editor {
     }
 
     /**
-     * Returns the list of selected objects
-     *
-     * @return the selected objects
-     */
-    @Override
-    public List<FXOMObject> getSelectedObjects() {
-        // Collects all the selected objects
-        final List<FXOMObject> selectedObjects = new ArrayList<>();
-        final Selection selection = getSelection();
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-            selectedObjects.addAll(osg.getItems());
-        } else if (selection.getGroup() instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-            selectedObjects.addAll(gsg.collectSelectedObjects());
-        } else {
-            assert false;
-        }
-        return selectedObjects;
-    }
-
-    /**
      * @treatAsPrivate Returns the job manager associated to this editor.
      *
      * @return the job manager associated to this editor.
@@ -912,617 +860,6 @@ public class EditorController implements Editor {
      */
     public void clearUndoRedo() {
         jobManager.clear();
-    }
-
-    /**
-     * Performs an edit action.
-     *
-     * @param editAction the edit action to be performed.
-     */
-    @Override
-    public void performEditAction(EditAction editAction) {
-        switch (editAction) {
-        case ADD_CONTEXT_MENU: {
-            performAddContextMenu();
-            break;
-        }
-        case ADD_TOOLTIP: {
-            performAddTooltip();
-            break;
-        }
-        case ADD_COLUMN_BEFORE: {
-            final AbstractJob job = addColumnJobFactory.getJob(Position.BEFORE);
-            jobManager.push(job);
-            break;
-        }
-        case ADD_COLUMN_AFTER: {
-            final AbstractJob job = addColumnJobFactory.getJob(Position.AFTER);
-            jobManager.push(job);
-            break;
-        }
-        case ADD_ROW_ABOVE: {
-            final AbstractJob job = addRowJobFactory.getJob(Position.ABOVE);
-            jobManager.push(job);
-            break;
-        }
-        case ADD_ROW_BELOW: {
-            final AbstractJob job = addRowJobFactory.getJob(Position.BELOW);
-            jobManager.push(job);
-            break;
-        }
-        case BRING_FORWARD: {
-            final AbstractJob job = bringForwardJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case BRING_TO_FRONT: {
-            final AbstractJob job = bringToFrontJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case CUT: {
-            final AbstractJob job = cutSelectionJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case DECREASE_COLUMN_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_COLUMN_SPAN);
-            jobManager.push(job);
-            break;
-        }
-        case DECREASE_ROW_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_ROW_SPAN);
-            jobManager.push(job);
-            break;
-        }
-        case DELETE: {
-            final AbstractJob job = deleteSelectionJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case DUPLICATE: {
-            final AbstractJob job = duplicateSelectionJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case FIT_TO_PARENT: {
-            final AbstractJob job = fitToParentSelectionJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case INCREASE_COLUMN_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_COLUMN_SPAN);
-            jobManager.push(job);
-            break;
-        }
-        case INCREASE_ROW_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_ROW_SPAN);
-            jobManager.push(job);
-            break;
-        }
-        case MOVE_COLUMN_BEFORE: {
-            final AbstractJob job = moveColumnJobFactory.getJob(Position.BEFORE);
-            jobManager.push(job);
-            break;
-        }
-        case MOVE_COLUMN_AFTER: {
-            final AbstractJob job = moveColumnJobFactory.getJob(Position.AFTER);
-            jobManager.push(job);
-            break;
-        }
-        case MOVE_ROW_ABOVE: {
-            final AbstractJob job = moveRowJobFactory.getJob(Position.ABOVE);
-            jobManager.push(job);
-            break;
-        }
-        case MOVE_ROW_BELOW: {
-            final AbstractJob job = moveRowJobFactory.getJob(Position.BELOW);
-            jobManager.push(job);
-            break;
-        }
-        case PASTE: {
-            final AbstractJob job = pasteJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case PASTE_INTO: {
-            final AbstractJob job = pasteIntoJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case SEND_BACKWARD: {
-            final AbstractJob job = sendBackwardJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case SEND_TO_BACK: {
-            final AbstractJob job = sendToBackJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case SET_SIZE_335x600: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_335x600);
-            jobManager.push(job);
-            break;
-        }
-        case SET_SIZE_900x600: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_900x600);
-            jobManager.push(job);
-            break;
-        }
-        case SET_SIZE_320x240: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_320x240);
-            jobManager.push(job);
-            break;
-        }
-        case SET_SIZE_640x480: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_640x480);
-            jobManager.push(job);
-            break;
-        }
-        case SET_SIZE_1280x800: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1280x800);
-            jobManager.push(job);
-            break;
-        }
-        case SET_SIZE_1920x1080: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1920x1080);
-            jobManager.push(job);
-            break;
-        }
-        case TRIM: {
-            final AbstractJob job = trimSelectionJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case UNWRAP: {
-            final AbstractJob job = unwrapJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case USE_COMPUTED_SIZES: {
-            final AbstractJob job = useComputedSizesSelectionJobFactory.getJob();
-            jobManager.push(job);
-            break;
-        }
-        case WRAP_IN_ANCHOR_PANE: {
-            performWrap(javafx.scene.layout.AnchorPane.class);
-            break;
-        }
-        case WRAP_IN_BORDER_PANE: {
-            performWrap(javafx.scene.layout.BorderPane.class);
-            break;
-        }
-        case WRAP_IN_BUTTON_BAR: {
-            performWrap(javafx.scene.control.ButtonBar.class);
-            break;
-        }
-        case WRAP_IN_DIALOG_PANE: {
-            performWrap(javafx.scene.control.DialogPane.class);
-            break;
-        }
-        case WRAP_IN_FLOW_PANE: {
-            performWrap(javafx.scene.layout.FlowPane.class);
-            break;
-        }
-        case WRAP_IN_GRID_PANE: {
-            performWrap(javafx.scene.layout.GridPane.class);
-            break;
-        }
-        case WRAP_IN_GROUP: {
-            performWrap(javafx.scene.Group.class);
-            break;
-        }
-        case WRAP_IN_HBOX: {
-            performWrap(javafx.scene.layout.HBox.class);
-            break;
-        }
-        case WRAP_IN_PANE: {
-            performWrap(javafx.scene.layout.Pane.class);
-            break;
-        }
-        case WRAP_IN_SCROLL_PANE: {
-            performWrap(javafx.scene.control.ScrollPane.class);
-            break;
-        }
-        case WRAP_IN_SPLIT_PANE: {
-            performWrap(javafx.scene.control.SplitPane.class);
-            break;
-        }
-        case WRAP_IN_STACK_PANE: {
-            performWrap(javafx.scene.layout.StackPane.class);
-            break;
-        }
-        case WRAP_IN_TAB_PANE: {
-            performWrap(javafx.scene.control.TabPane.class);
-            break;
-        }
-        case WRAP_IN_TEXT_FLOW: {
-            performWrap(javafx.scene.text.TextFlow.class);
-            break;
-        }
-        case WRAP_IN_TILE_PANE: {
-            performWrap(javafx.scene.layout.TilePane.class);
-            break;
-        }
-        case WRAP_IN_TITLED_PANE: {
-            performWrap(javafx.scene.control.TitledPane.class);
-            break;
-        }
-        case WRAP_IN_TOOL_BAR: {
-            performWrap(javafx.scene.control.ToolBar.class);
-            break;
-        }
-        case WRAP_IN_VBOX: {
-            performWrap(javafx.scene.layout.VBox.class);
-            break;
-        }
-        case WRAP_IN_SCENE: {
-            performWrap(javafx.scene.Scene.class);
-            break;
-        }
-        case WRAP_IN_STAGE: {
-            performWrap(javafx.stage.Stage.class);
-            break;
-        }
-        default:
-            throw new UnsupportedOperationException("Not yet implemented"); // NOCHECK
-        }
-        assert getFxomDocument().isUpdateOnGoing() == false;
-    }
-
-    /**
-     * Returns true if the specified edit action is permitted.
-     *
-     * @param editAction the edit action to be tested.
-     * @return true if the specified edit action is permitted.
-     */
-    @Override
-    public boolean canPerformEditAction(EditAction editAction) {
-        final boolean result;
-        switch (editAction) {
-        case ADD_CONTEXT_MENU: {
-            result = canPerformAddContextMenu();
-            break;
-        }
-        case ADD_TOOLTIP: {
-            result = canPerformAddTooltip();
-            break;
-        }
-        case ADD_COLUMN_BEFORE: {
-            final AbstractJob job = addColumnJobFactory.getJob(Position.BEFORE);
-            result = job.isExecutable();
-            break;
-        }
-        case ADD_COLUMN_AFTER: {
-            final AbstractJob job = addColumnJobFactory.getJob(Position.AFTER);
-            result = job.isExecutable();
-            break;
-        }
-        case ADD_ROW_ABOVE: {
-            final AbstractJob job = addRowJobFactory.getJob(Position.ABOVE);
-            result = job.isExecutable();
-            break;
-        }
-        case ADD_ROW_BELOW: {
-            final AbstractJob job = addRowJobFactory.getJob(Position.BELOW);
-            result = job.isExecutable();
-            break;
-        }
-        case BRING_FORWARD: {
-            final AbstractJob job = bringForwardJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case BRING_TO_FRONT: {
-            final AbstractJob job = bringToFrontJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case CUT: {
-            final AbstractJob job = cutSelectionJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case DECREASE_COLUMN_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_COLUMN_SPAN);
-            result = job.isExecutable();
-            break;
-        }
-        case DECREASE_ROW_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.DECREASE_ROW_SPAN);
-            result = job.isExecutable();
-            break;
-        }
-        case DELETE: {
-            final AbstractJob job = deleteSelectionJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case DUPLICATE: {
-            final AbstractJob job = duplicateSelectionJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case FIT_TO_PARENT: {
-            final AbstractJob job = fitToParentSelectionJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case INCREASE_COLUMN_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_COLUMN_SPAN);
-            result = job.isExecutable();
-            break;
-        }
-        case INCREASE_ROW_SPAN: {
-            final AbstractJob job = spanJobFactory.getJob(SpanAction.INCREASE_ROW_SPAN);
-            result = job.isExecutable();
-            break;
-        }
-        case MOVE_COLUMN_BEFORE: {
-            final AbstractJob job = moveColumnJobFactory.getJob(Position.BEFORE);
-            result = job.isExecutable();
-            break;
-        }
-        case MOVE_COLUMN_AFTER: {
-            final AbstractJob job = moveColumnJobFactory.getJob(Position.AFTER);
-            result = job.isExecutable();
-            break;
-        }
-        case MOVE_ROW_ABOVE: {
-            final AbstractJob job = moveRowJobFactory.getJob(Position.ABOVE);
-            result = job.isExecutable();
-            break;
-        }
-        case MOVE_ROW_BELOW: {
-            final AbstractJob job = moveRowJobFactory.getJob(Position.BELOW);
-            result = job.isExecutable();
-            break;
-        }
-        case PASTE: {
-            final AbstractJob job = pasteJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case PASTE_INTO: {
-            final AbstractJob job = pasteIntoJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case SEND_BACKWARD: {
-            final AbstractJob job = sendBackwardJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case SEND_TO_BACK: {
-            final AbstractJob job = sendToBackJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case SET_SIZE_335x600: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_335x600);
-            result = job.isExecutable();
-            break;
-        }
-        case SET_SIZE_900x600: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_900x600);
-            result = job.isExecutable();
-            break;
-        }
-        case SET_SIZE_320x240: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_320x240);
-            result = job.isExecutable();
-            break;
-        }
-        case SET_SIZE_640x480: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_640x480);
-            result = job.isExecutable();
-            break;
-        }
-        case SET_SIZE_1280x800: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1280x800);
-            result = job.isExecutable();
-            break;
-        }
-        case SET_SIZE_1920x1080: {
-            final AbstractJob job = usePredefinedSizeJobFactory.getJob(Size.SIZE_1920x1080);
-            result = job.isExecutable();
-            break;
-        }
-        case TRIM: {
-            final AbstractJob job = trimSelectionJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case UNWRAP: {
-            final AbstractJob job = unwrapJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case USE_COMPUTED_SIZES: {
-            final AbstractJob job = useComputedSizesSelectionJobFactory.getJob();
-            result = job.isExecutable();
-            break;
-        }
-        case WRAP_IN_ANCHOR_PANE: {
-            result = canPerformWrap(javafx.scene.layout.AnchorPane.class);
-            break;
-        }
-        case WRAP_IN_BORDER_PANE: {
-            result = canPerformWrap(javafx.scene.layout.BorderPane.class);
-            break;
-        }
-        case WRAP_IN_BUTTON_BAR: {
-            result = canPerformWrap(javafx.scene.control.ButtonBar.class);
-            break;
-        }
-        case WRAP_IN_DIALOG_PANE: {
-            result = canPerformWrap(javafx.scene.control.DialogPane.class);
-            break;
-        }
-        case WRAP_IN_FLOW_PANE: {
-            result = canPerformWrap(javafx.scene.layout.FlowPane.class);
-            break;
-        }
-        case WRAP_IN_GRID_PANE: {
-            result = canPerformWrap(javafx.scene.layout.GridPane.class);
-            break;
-        }
-        case WRAP_IN_GROUP: {
-            result = canPerformWrap(javafx.scene.Group.class);
-            break;
-        }
-        case WRAP_IN_HBOX: {
-            result = canPerformWrap(javafx.scene.layout.HBox.class);
-            break;
-        }
-        case WRAP_IN_PANE: {
-            result = canPerformWrap(javafx.scene.layout.Pane.class);
-            break;
-        }
-        case WRAP_IN_SCROLL_PANE: {
-            result = canPerformWrap(javafx.scene.control.ScrollPane.class);
-            break;
-        }
-        case WRAP_IN_SPLIT_PANE: {
-            result = canPerformWrap(javafx.scene.control.SplitPane.class);
-            break;
-        }
-        case WRAP_IN_STACK_PANE: {
-            result = canPerformWrap(javafx.scene.layout.StackPane.class);
-            break;
-        }
-        case WRAP_IN_TAB_PANE: {
-            result = canPerformWrap(javafx.scene.control.TabPane.class);
-            break;
-        }
-        case WRAP_IN_TEXT_FLOW: {
-            result = canPerformWrap(javafx.scene.text.TextFlow.class);
-            break;
-        }
-        case WRAP_IN_TILE_PANE: {
-            result = canPerformWrap(javafx.scene.layout.TilePane.class);
-            break;
-        }
-        case WRAP_IN_TITLED_PANE: {
-            result = canPerformWrap(javafx.scene.control.TitledPane.class);
-            break;
-        }
-        case WRAP_IN_TOOL_BAR: {
-            result = canPerformWrap(javafx.scene.control.ToolBar.class);
-            break;
-        }
-        case WRAP_IN_VBOX: {
-            result = canPerformWrap(javafx.scene.layout.VBox.class);
-            break;
-        }
-        case WRAP_IN_SCENE: {
-            result = canPerformWrap(javafx.scene.Scene.class);
-            break;
-        }
-        case WRAP_IN_STAGE: {
-            result = canPerformWrap(javafx.stage.Stage.class);
-            break;
-        }
-        default:
-            result = false;
-            break;
-        }
-
-        return result;
-    }
-
-    /**
-     * Performs the specified control action.
-     *
-     * @param controlAction the control action to be performed.
-     */
-    @Override
-    public void performControlAction(ControlAction controlAction) {
-        switch (controlAction) {
-//        case COPY: {
-//            performCopy();
-//            break;
-//        }
-//
-//        case SELECT_ALL: {
-//            performSelectAll();
-//            break;
-//        }
-//        case SELECT_NONE: {
-//            performSelectNone();
-//            break;
-//        }
-//        case SELECT_PARENT: {
-//            performSelectParent();
-//            break;
-//        }
-//        case SELECT_NEXT: {
-//            performSelectNext();
-//            break;
-//        }
-//        case SELECT_PREVIOUS: {
-//            performSelectPrevious();
-//            break;
-//        }
-        case TOGGLE_SAMPLE_DATA: {
-            setSampleDataEnabled(!isSampleDataEnabled());
-            break;
-        }
-        default:
-            throw new UnsupportedOperationException("Not yet implemented"); // NOCHECK
-        }
-    }
-
-    /**
-     * Returns true if the specified control action is permitted.
-     *
-     * @param controlAction the control action to be tested.
-     * @return true if the specified control action is permitted.
-     */
-    @Override
-    public boolean canPerformControlAction(ControlAction controlAction) {
-        final boolean result;
-
-        // If there is no document loaded, we cannot perform control actions
-        if (getFxomDocument() == null || getFxomDocument().getFxomRoot() == null) {
-            return false;
-        }
-        switch (controlAction) {
-//        case COPY: {
-//            result = canPerformCopy();
-//            break;
-//        }
-//        case SELECT_ALL: {
-//            result = canPerformSelectAll();
-//            break;
-//        }
-//        case SELECT_NONE: {
-//            result = canPerformSelectNone();
-//            break;
-//        }
-//        case SELECT_PARENT: {
-//            result = canPerformSelectParent();
-//            break;
-//        }
-//        case SELECT_NEXT: {
-//            result = canPerformSelectNext();
-//            break;
-//        }
-//        case SELECT_PREVIOUS: {
-//            result = canPerformSelectPrevious();
-//            break;
-//        }
-        case TOGGLE_SAMPLE_DATA: {
-            result = true;
-            break;
-        }
-        default:
-            result = false;
-            break;
-        }
-
-        return result;
     }
 
 //    /**
@@ -1699,31 +1036,31 @@ public class EditorController implements Editor {
 //        return result;
 //    }
 
-    /**
-     * Performs the 'wrap' edit action. This action creates an object matching the
-     * specified class and reparent all the selected objects below this new object.
-     *
-     * @param wrappingClass the wrapping class
-     */
-    public void performWrap(Class<?> wrappingClass) {
-        assert canPerformWrap(wrappingClass);
-        final AbstractWrapInJob job = wrapInJobFactory.getWrapInJob(wrappingClass);
-        jobManager.push(job);
-    }
-
-    /**
-     * Returns true if the 'wrap' action is permitted with the specified class.
-     *
-     * @param wrappingClass the wrapping class.
-     * @return true if the 'wrap' action is permitted.
-     */
-    public boolean canPerformWrap(Class<?> wrappingClass) {
-        if (WrapInJobFactory.getClassesSupportingWrapping().contains(wrappingClass) == false) {
-            return false;
-        }
-        final AbstractWrapInJob job = wrapInJobFactory.getWrapInJob(wrappingClass);
-        return job.isExecutable();
-    }
+//    /**
+//     * Performs the 'wrap' edit action. This action creates an object matching the
+//     * specified class and reparent all the selected objects below this new object.
+//     *
+//     * @param wrappingClass the wrapping class
+//     */
+//    public void performWrap(Class<?> wrappingClass) {
+//        assert canPerformWrap(wrappingClass);
+//        final AbstractWrapInJob job = wrapInJobFactory.getWrapInJob(wrappingClass);
+//        jobManager.push(job);
+//    }
+//
+//    /**
+//     * Returns true if the 'wrap' action is permitted with the specified class.
+//     *
+//     * @param wrappingClass the wrapping class.
+//     * @return true if the 'wrap' action is permitted.
+//     */
+//    public boolean canPerformWrap(Class<?> wrappingClass) {
+//        if (WrapInJobFactory.getClassesSupportingWrapping().contains(wrappingClass) == false) {
+//            return false;
+//        }
+//        final AbstractWrapInJob job = wrapInJobFactory.getWrapInJob(wrappingClass);
+//        return job.isExecutable();
+//    }
 
 //    /**
 //     * Performs the copy control action.
@@ -2175,16 +1512,16 @@ public class EditorController implements Editor {
         return selection.isSelectionControl();
     }
 
-    /**
-     * Performs the 'add context menu' edit action. This method creates an instance
-     * of ContextMenu and sets it in the contextMenu property of the selected
-     * objects.
-     */
-    public void performAddContextMenu() {
-        assert canPerformAddContextMenu();
-        final AbstractJob addContextMenuJob = addContextMenuToSelectionJobFactory.getJob();
-        getJobManager().push(addContextMenuJob);
-    }
+//    /**
+//     * Performs the 'add context menu' edit action. This method creates an instance
+//     * of ContextMenu and sets it in the contextMenu property of the selected
+//     * objects.
+//     */
+//    public void performAddContextMenu() {
+//        assert canPerformAddContextMenu();
+//        final AbstractJob addContextMenuJob = addContextMenuToSelectionJobFactory.getJob();
+//        getJobManager().push(addContextMenuJob);
+//    }
 
     /**
      * Returns true if the 'add tooltip' action is permitted with the current
@@ -2197,15 +1534,15 @@ public class EditorController implements Editor {
         return selection.isSelectionControl();
     }
 
-    /**
-     * Performs the 'add tooltip' edit action. This method creates an instance of
-     * Tooltip and sets it in the tooltip property of the selected objects.
-     */
-    public void performAddTooltip() {
-        assert canPerformAddTooltip(); // (1)
-        final AbstractJob addTooltipJob = addTooltipToSelectionJobFactory.getJob();
-        getJobManager().push(addTooltipJob);
-    }
+//    /**
+//     * Performs the 'add tooltip' edit action. This method creates an instance of
+//     * Tooltip and sets it in the tooltip property of the selected objects.
+//     */
+//    public void performAddTooltip() {
+//        assert canPerformAddTooltip(); // (1)
+//        final AbstractJob addTooltipJob = addTooltipToSelectionJobFactory.getJob();
+//        getJobManager().push(addTooltipJob);
+//    }
 
     private void updateFxomDocument(String fxmlText, URL fxmlLocation, ResourceBundle resources, boolean checkTheme)
             throws IOException {

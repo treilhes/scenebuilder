@@ -43,8 +43,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
 
 @Component
@@ -56,12 +58,19 @@ import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob
 @MenuItemAttachment(
         id = UseComputedSizeAction.MENU_ID,
         targetMenuId = FitToParentAction.MENU_ID,
-        label = "menu.title.use.computed.sizes",
+        label = UseComputedSizeAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = UseComputedSizeAction.MENU_ID,
+        targetMenuId = FitToParentAction.MENU_ID,
+        label = UseComputedSizeAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+SHIFT+K")
 public class UseComputedSizeAction extends AbstractAction {
 
     public final static String MENU_ID = "useComputedSizesMenuItem";
+    public final static String TITLE = "menu.title.use.computed.sizes";
 
     private final UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory;
     private final JobManager jobManager;

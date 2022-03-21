@@ -43,8 +43,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.clipboard.Clipboard;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -54,15 +56,21 @@ import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
         descriptionKey = "action.description.cut")
 
 @MenuItemAttachment(
-        id = CutAction.CUT_MENU_ID,
-        targetMenuId = UndoAction.UNDO_MENU_ID,
+        id = CutAction.MENU_ID,
+        targetMenuId = UndoAction.MENU_ID,
         label = "menu.title.cut",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = CutAction.MENU_ID,
+        label = "menu.title.cut",
+        positionRequest = PositionRequest.AsFirstChild
+        )
 @Accelerator(accelerator = "CTRL+X")
 public class CutAction extends AbstractAction {
 
-    public final static String CUT_MENU_ID = "cutMenu";
+    public final static String MENU_ID = "cutMenu";
 
     private final Clipboard clipboard;
 

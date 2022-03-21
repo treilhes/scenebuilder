@@ -56,6 +56,7 @@ public interface BundleValues {
 	final String CONTENT_TYPE = "type";
 	final String CHILD_LABEL_MUTATION_LAMBDA = "childLabelMutation";
 	final String NULL_EQUIVALENT = "nullEquivalent";
+	final String DEFAULT_VALUE = "defaultValue";
 
 	final String MAIN = "main";
 	final String HIDDEN = "hidden";

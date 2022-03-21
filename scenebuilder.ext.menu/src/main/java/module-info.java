@@ -39,6 +39,7 @@ open module scenebuilder.ext.menu {
     exports com.oracle.javafx.scenebuilder.menu.action;
     exports com.oracle.javafx.scenebuilder.menu.action.edit;
     exports com.oracle.javafx.scenebuilder.menu.action.file;
+    exports com.oracle.javafx.scenebuilder.menu.action.modify;
     exports com.oracle.javafx.scenebuilder.menu.action.view;
     exports com.oracle.javafx.scenebuilder.menu.i18n;
 

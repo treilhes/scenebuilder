@@ -34,6 +34,8 @@
 package com.oracle.javafx.scenebuilder.selection;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.context.annotation.Lazy;
@@ -635,6 +637,11 @@ public class SelectionImpl implements Selection {
         if (!isEmpty()) {
             select(this.group.selectAll());
         }
+    }
+
+    @Override
+    public Map<String, FXOMObject> collectSelectedFxIds() {
+        return group == null ? Collections.emptyMap() : group.collectSelectedFxIds();
     }
 
 }

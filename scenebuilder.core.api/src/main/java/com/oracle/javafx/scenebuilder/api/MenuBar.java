@@ -33,21 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-import java.util.Set;
-
-import javafx.scene.input.KeyCombination;
-
 public interface MenuBar {
 
     /**
      * @return
      */
     javafx.scene.control.MenuBar getMenuBar();
-
-    /**
-     * @return
-     */
-    Set<KeyCombination> getAccelerators();
-
 
 }

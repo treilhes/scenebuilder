@@ -35,13 +35,12 @@ package com.oracle.javafx.scenebuilder.api.menu;
 
 import javafx.scene.control.Menu;
 
-public interface MenuAttachment {
-	String getTargetId();
-	PositionRequest getPositionRequest();
-	Menu getMenu();
+public interface MenuAttachment extends Attachment {
 
-	static MenuAttachment create(Menu menu, String targetId, PositionRequest positionRequest) {
-	    return new MenuAttachment() {
+    Menu getMenu();
+
+    static MenuAttachment create(Menu menu, String targetId, PositionRequest positionRequest) {
+        return new MenuAttachment() {
             @Override
             public String getTargetId() {
                 return targetId;
@@ -57,5 +56,5 @@ public interface MenuAttachment {
                 return menu;
             }
         };
-	}
+    }
 }

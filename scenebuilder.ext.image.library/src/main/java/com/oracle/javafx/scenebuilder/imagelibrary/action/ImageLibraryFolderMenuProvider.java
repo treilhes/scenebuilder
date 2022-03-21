@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
@@ -60,19 +60,19 @@ public class ImageLibraryFolderMenuProvider implements ViewMenuItemProvider {
 
     public static final String MENU_ID = "libraryFolderMenu";
 
-    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+    private final MenuBuilder menuBuilder;
 
     private final ImageLibrary imageLibrary;
 
-    public ImageLibraryFolderMenuProvider(ImageLibrary controlLibrary, MenuBarObjectConfigurator menuBarObjectConfigurator) {
+    public ImageLibraryFolderMenuProvider(ImageLibrary controlLibrary, MenuBuilder menuBuilder) {
         super();
-        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+        this.menuBuilder = menuBuilder;
         this.imageLibrary = controlLibrary;
     }
 
 
     private ViewMenuItemAttachment newMenu(String targetId, PositionRequest positionRequest, String menuId, String titleKey) {
-        Menu menu = menuBarObjectConfigurator.menu().withId(menuId).withTitle(titleKey).build();
+        Menu menu = menuBuilder.menu().withId(menuId).withTitle(titleKey).build();
 
         // DTL-6439. The custom library menu shall be enabled only
         // in the case there is a user library directory on disk.

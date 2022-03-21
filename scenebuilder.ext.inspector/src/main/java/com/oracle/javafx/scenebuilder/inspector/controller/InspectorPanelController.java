@@ -103,7 +103,7 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
 import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.selection.job.ModifySelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.togglegroup.ModifySelectionToggleGroupJob;
+import com.oracle.javafx.scenebuilder.tools.job.togglegroup.ModifySelectionToggleGroupJob;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.property.ObjectProperty;

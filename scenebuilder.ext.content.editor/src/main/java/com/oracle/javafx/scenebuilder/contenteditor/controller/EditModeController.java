@@ -231,7 +231,6 @@ public class EditModeController extends AbstractModeController implements Gestur
 
         newLayer(Handles.class, false, selection,
                 // object selection
-                //s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems().stream().map(FXOMObject::getClosestNode).collect(Collectors.toSet()),
                 s -> s.isEmpty() ? new HashSet<>() : s.getGroup().getItems(),
                 // Handles creation
                 fxomObject -> driver.makeHandles(fxomObject));

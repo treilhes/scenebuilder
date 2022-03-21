@@ -55,8 +55,8 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
         descriptionKey = "action.description.redo")
 
 @MenuItemAttachment(
-        id = RedoAction.REDO_MENU_ID,
-        targetMenuId = UndoAction.UNDO_MENU_ID,
+        id = RedoAction.MENU_ID,
+        targetMenuId = UndoAction.MENU_ID,
         label = "#this.getRedoDescription()",
         positionRequest = PositionRequest.AsNextSibling)
 
@@ -64,7 +64,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 public class RedoAction extends AbstractAction {
 
-    public final static String REDO_MENU_ID = "redoMenuItem"; //NOCHECK
+    public final static String MENU_ID = "redoMenuItem"; //NOCHECK
 
     private final JobManager jobManager;
     private final DocumentManager documentManager;

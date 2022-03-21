@@ -41,21 +41,7 @@ import javafx.scene.control.MenuItem;
  * The Interface ViewMenuItemAttachment provide the necessary information for the {@link View} implementation to attach a new {@link MenuItem}.<br/>
  * See {@link MenuItemProvider} to provide attachments to the view.
  */
-public interface ViewMenuItemAttachment {
-
-    /**
-     * Gets the target menu id on which the positioning request will apply
-     *
-     * @return the target id
-     */
-    String getTargetId();
-
-    /**
-     * Gets the desired position request.
-     *
-     * @return the position request
-     */
-    PositionRequest getPositionRequest();
+public interface ViewMenuItemAttachment extends Attachment {
 
     Class<? extends View> getViewClass();
     /**

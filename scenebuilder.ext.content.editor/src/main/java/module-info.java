@@ -59,7 +59,7 @@ open module scenebuilder.ext.content.editor {
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.selection;
 
-    requires scenebuilder.ext.controls.tooling;
+    //requires scenebuilder.ext.controls.tooling;
     //requires org.slf4j;
     //requires scenebuilder.ext.sb;
 

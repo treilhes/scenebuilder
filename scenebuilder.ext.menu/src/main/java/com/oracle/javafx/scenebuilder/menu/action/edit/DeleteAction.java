@@ -33,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
@@ -52,12 +50,15 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.DeleteSelectionJob;
 
 import javafx.scene.Node;
@@ -72,19 +73,27 @@ import javafx.scene.control.TextInputControl;
 @MenuItemAttachment(
         id = DeleteAction.MENU_ID,
         targetMenuId = DuplicateAction.MENU_ID,
-        label = "menu.title.delete",
+        label = DeleteAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = DeleteAction.MENU_ID,
+        targetMenuId = DuplicateAction.MENU_ID,
+        label = DeleteAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "Delete")
 @Accelerator(accelerator = "Backspace")
 public class DeleteAction extends AbstractAction {
 
     public final static String MENU_ID = "deleteMenu";
+    public final static String TITLE = "menu.title.delete";
 
     private final DocumentWindow documentWindow;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
     private final Editor editor;
     private final JobManager jobManager;
+    private final Selection selection;
     private final DeleteSelectionJob.Factory deleteSelectionJobFactory;
 
     public DeleteAction(
@@ -93,6 +102,7 @@ public class DeleteAction extends AbstractAction {
             InlineEdit inlineEdit,
             Editor editor,
             JobManager jobManager,
+            Selection selection,
             Dialog dialog,
             DeleteSelectionJob.Factory deleteSelectionJobFactory) {
         super(extensionFactory);
@@ -101,6 +111,7 @@ public class DeleteAction extends AbstractAction {
         this.editor = editor;
         this.jobManager = jobManager;
         this.dialog = dialog;
+        this.selection = selection;
         this.deleteSelectionJobFactory = deleteSelectionJobFactory;
     }
 
@@ -127,14 +138,8 @@ public class DeleteAction extends AbstractAction {
             final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
             tic.deleteNextChar();
         } else {
-            final List<FXOMObject> selectedObjects = editor.getSelectedObjects();
-
-            // Collects fx:ids in selected objects and their descendants.
+            final Map<String, FXOMObject> fxIdMap = selection.collectSelectedFxIds();
             // We filter out toggle groups because their fx:ids are managed automatically.
-            final Map<String, FXOMObject> fxIdMap = new HashMap<>();
-            for (FXOMObject selectedObject : selectedObjects) {
-                fxIdMap.putAll(selectedObject.collectFxIds());
-            }
             FXOMNodes.removeToggleGroups(fxIdMap);
 
             // Checks if deleted objects have some fx:ids and ask for confirmation.
@@ -145,17 +150,9 @@ public class DeleteAction extends AbstractAction {
                 final String message;
 
                 if (fxIdMap.size() == 1) {
-                    if (selectedObjects.size() == 1) {
-                        message = I18N.getString("alert.delete.fxid1of1.message");
-                    } else {
-                        message = I18N.getString("alert.delete.fxid1ofN.message");
-                    }
+                    message = I18N.getString("alert.delete.fxid1ofN.message");
                 } else {
-                    if (selectedObjects.size() == fxIdMap.size()) {
-                        message = I18N.getString("alert.delete.fxidNofN.message");
-                    } else {
-                        message = I18N.getString("alert.delete.fxidKofN.message");
-                    }
+                    message = I18N.getString("alert.delete.fxidKofN.message");
                 }
 
                 final Alert d = dialog.customAlert(documentWindow.getStage());

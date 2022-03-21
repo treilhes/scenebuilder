@@ -33,10 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.api.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.menu.Attachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
 
@@ -85,9 +88,7 @@ public class ViewMenuController {
         }
     };
 
-    public ViewMenuController(
-            @Autowired(required = false) List<ViewMenuItemProvider> menuItemProviders
-            ) {
+    public ViewMenuController(@Autowired(required = false) List<ViewMenuItemProvider> menuItemProviders) {
         this.menuItemProviders = menuItemProviders;
     }
 
@@ -101,7 +102,7 @@ public class ViewMenuController {
         }
 
         if (m instanceof Menu) {
-            ((Menu)m).getItems().forEach(mi -> {
+            ((Menu) m).getItems().forEach(mi -> {
                 addToMenuMap(menuMap, mi);
             });
         }
@@ -111,6 +112,7 @@ public class ViewMenuController {
     private void createListenerForFirstLevelMenu(MenuButton menuButton) {
 
     }
+
     public void clearMenu(View view, MenuButton menuButton) {
         menuButton.getItems().clear();
     }
@@ -122,157 +124,196 @@ public class ViewMenuController {
         if (menuItemProviders != null && !menuItemProviders.isEmpty()) {
 
             List<ViewMenuItemProvider> validProviders = menuItemProviders.stream()
-                   .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
-                   .collect(Collectors.toList());
+                    .filter(mip -> mip != null && mip.menuItems() != null && !mip.menuItems().isEmpty())
+                    .collect(Collectors.toList());
 
-           List<ViewMenuItemAttachment> validAttachments = validProviders.stream()
-                   .flatMap(mip -> mip.menuItems().stream())
-                   .filter(ma -> ma.getViewClass().isAssignableFrom(view.getClass()))
-                   .filter(ma -> ma != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
-                   .sorted(viewClassComparator)
-                   .collect(Collectors.toList());
+//           List<ViewMenuItemAttachment> validAttachments = validProviders.stream()
+//                   .flatMap(mip -> mip.menuItems().stream())
+//                   .filter(ma -> ma.getViewClass().isAssignableFrom(view.getClass()))
+//                   .filter(ma -> ma != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
+//                   .sorted(Comparator.comparing(ViewMenuItemAttachment::getWeight).thenComparing(viewClassComparator))
+//                   .collect(Collectors.toList());
 
-           boolean hasInvalidProviders = menuItemProviders.size() > validProviders.size();
-           List<ViewMenuItemProvider> invalidProviders = hasInvalidProviders
-                   ? menuItemProviders.stream().filter(m -> !validProviders.contains(m)).collect(Collectors.toList())
-                   : null;
+            Map<String, List<ViewMenuItemAttachment>> validAttachments = validProviders.stream()
+                    .flatMap(mip -> mip.menuItems().stream())
+                    .filter(ma -> ma.getViewClass().isAssignableFrom(view.getClass()))
+                    .filter(ma -> ma != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
+                    // .sorted(Comparator.comparing(ViewMenuItemAttachment::getWeight).thenComparing(viewClassComparator))
+                    .collect(Collectors.groupingBy(m -> m.getTargetId() == null ? "" : m.getTargetId(), HashMap::new, Collectors.toList()));
 
-           boolean atLeastOneInserted = true;
-           while (!validAttachments.isEmpty() && atLeastOneInserted) {
-               atLeastOneInserted = false;
+            boolean hasInvalidProviders = menuItemProviders.size() > validProviders.size();
+            List<ViewMenuItemProvider> invalidProviders = hasInvalidProviders
+                    ? menuItemProviders.stream().filter(m -> !validProviders.contains(m)).collect(Collectors.toList())
+                    : null;
 
-               ListIterator<ViewMenuItemAttachment> it = validAttachments.listIterator();
-               while (it.hasNext()) {
-                   boolean inserted = false;
-                   ViewMenuItemAttachment ma = it.next();
-                   MenuItem target = menuMap.get(ma.getTargetId());
-                   boolean rootTarget = ma.getTargetId() == null || ma.getTargetId().isBlank();
-                   if (target != null || rootTarget) {
+            boolean atLeastOneInserted = true;
+            long iteration = 0;
 
-                       if (ma.getMenuItem().getId() == null) {
-                           ma.getMenuItem().setId(ma.getClass().getSimpleName());
-                       }
+            List<String> keys = Arrays.asList("", (String) null);
+            List<String> nextKeys = new ArrayList<>();
+            while (!validAttachments.isEmpty() && atLeastOneInserted) {
+                atLeastOneInserted = false;
 
-                       try {
-                        switch (ma.getPositionRequest()) {
-                               case AsFirstSibling: {
-                                   ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null ? menuButton.getItems() : target.getParentMenu().getItems();
-                                   items.add(0, ma.getMenuItem());
-                                   inserted = true;
-                                   break;
-                               }
-                               case AsLastSibling: {
-                                   ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null ? menuButton.getItems() : target.getParentMenu().getItems();
-                                   items.add(ma.getMenuItem());
-                                   inserted = true;
-                                   break;
-                               }
-                               case AsPreviousSibling: {
-                                   ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null ? menuButton.getItems() : target.getParentMenu().getItems();
-                                   int index = items.indexOf(target);
-                                   items.add(index, ma.getMenuItem());
-                                   inserted = true;
-                                   break;
-                               }
-                               case AsNextSibling: {
-                                   ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null ? menuButton.getItems() : target.getParentMenu().getItems();
-                                   int index = items.indexOf(target);
-                                   items.add(index + 1, ma.getMenuItem());
-                                   inserted = true;
-                                   break;
-                               }
-                               case AfterPreviousSeparator: {
-                                   ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null ? menuButton.getItems() : target.getParentMenu().getItems();
-                                   int index = items.indexOf(target);
-                                   int insertAt = 0;
-                                   for (int i = index; i >= 0; i--) {
-                                       if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
-                                           insertAt = i + 1;
-                                           break;
-                                       }
-                                   }
-                                   items.add(insertAt, ma.getMenuItem());
-                                   inserted = true;
-                                   break;
-                               }
-                               case BeforeNextSeparator: {
-                                   ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null ? menuButton.getItems() : target.getParentMenu().getItems();
-                                   int index = items.indexOf(target);
-                                   int insertAt = items.size();
-                                   for (int i = index; i < items.size(); i++) {
-                                       if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
-                                           insertAt = i;
-                                           break;
-                                       }
-                                   }
-                                   items.add(insertAt, ma.getMenuItem());
-                                   inserted = true;
-                                   break;
-                               }
-                               case AsFirstChild: {
-                                   if (target instanceof Menu || rootTarget) {
-                                       if (rootTarget) {
-                                           menuButton.getItems().add(0, ma.getMenuItem());
-                                       } else {
-                                           Menu m = (Menu)target;
-                                           m.getItems().add(0, ma.getMenuItem());
-                                       }
-                                       inserted = true;
-                                   }
-                                   break;
-                               }
-                               case AsLastChild: {
-                                   if (target instanceof Menu || rootTarget) {
-                                       if (rootTarget) {
-                                           menuButton.getItems().add(ma.getMenuItem());
-                                       } else {
-                                           Menu m = (Menu)target;
-                                           m.getItems().add(ma.getMenuItem());
-                                       }
-                                       inserted = true;
-                                   }
-                                   break;
-                               }
-                               default:
-                                   throw new RuntimeException("Invalid position request for menuItem");
+                for (String key : keys) {
 
-                           }
-                    } catch (Exception e) {
-                        logger.error("Unable to add the provided menuItem in the view", e);
+                    List<ViewMenuItemAttachment> attachments = validAttachments.remove(key);
+                    if (attachments == null) {
+                        continue;
                     }
 
-                       if (inserted) {
-                           addToMenuMap(menuMap, ma.getMenuItem());
-                           it.remove();
-                           atLeastOneInserted = true;
-                       }
-                   }
-               }
-           }
+                    Collections.sort(attachments, Comparator.comparing(Attachment::getWeight));
 
-           if (invalidProviders != null) {
-               invalidProviders.forEach(mip -> {
-                   logger.error("Invalid ViewMenuItemProviders submitted {}", mip.getClass().getName());
-               });
-           }
-           if (validAttachments.size() > 0) {
-               logger.error("Unable to add all the provided menuItem in the view");
-               validAttachments.forEach(ma -> {
-                   logger.error("Unable to attach {} to id {} using {}", ma.getClass().getName(),
-                                   ma.getTargetId(), ma.getPositionRequest());
-               });
-           }
+                    for (ViewMenuItemAttachment ma : attachments) {
+                        iteration++;
+                        boolean inserted = false;
+                        // ViewMenuItemAttachment ma = it.next();
+                        MenuItem target = menuMap.get(ma.getTargetId());
+                        boolean rootTarget = ma.getTargetId() == null || ma.getTargetId().isBlank();
+                        if (target != null || rootTarget) {
 
-           //link menu button showing event to menu item validation event
-           menuButton.setOnShowing((e) -> {
-               for (MenuItem item:menuButton.getItems()) {
-                   EventHandler<Event> handler = item.getOnMenuValidation();
-                   if (handler != null) {
-                       handler.handle(e);
-                   }
-               }
-           });
-       }
+                            if (ma.getMenuItem().getId() == null) {
+                                ma.getMenuItem().setId(ma.getClass().getSimpleName());
+                            }
+
+                            try {
+                                switch (ma.getPositionRequest()) {
+                                case AsFirstSibling: {
+                                    ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
+                                            ? menuButton.getItems()
+                                            : target.getParentMenu().getItems();
+                                    items.add(0, ma.getMenuItem());
+                                    inserted = true;
+                                    break;
+                                }
+                                case AsLastSibling: {
+                                    ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
+                                            ? menuButton.getItems()
+                                            : target.getParentMenu().getItems();
+                                    items.add(ma.getMenuItem());
+                                    inserted = true;
+                                    break;
+                                }
+                                case AsPreviousSibling: {
+                                    ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
+                                            ? menuButton.getItems()
+                                            : target.getParentMenu().getItems();
+                                    int index = items.indexOf(target);
+                                    items.add(index, ma.getMenuItem());
+                                    inserted = true;
+                                    break;
+                                }
+                                case AsNextSibling: {
+                                    ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
+                                            ? menuButton.getItems()
+                                            : target.getParentMenu().getItems();
+                                    int index = items.indexOf(target);
+                                    items.add(index + 1, ma.getMenuItem());
+                                    inserted = true;
+                                    break;
+                                }
+                                case AfterPreviousSeparator: {
+                                    ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
+                                            ? menuButton.getItems()
+                                            : target.getParentMenu().getItems();
+                                    int index = items.indexOf(target);
+                                    int insertAt = 0;
+                                    for (int i = index; i >= 0; i--) {
+                                        if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
+                                            insertAt = i + 1;
+                                            break;
+                                        }
+                                    }
+                                    items.add(insertAt, ma.getMenuItem());
+                                    inserted = true;
+                                    break;
+                                }
+                                case BeforeNextSeparator: {
+                                    ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
+                                            ? menuButton.getItems()
+                                            : target.getParentMenu().getItems();
+                                    int index = items.indexOf(target);
+                                    int insertAt = items.size();
+                                    for (int i = index; i < items.size(); i++) {
+                                        if (SeparatorMenuItem.class.isAssignableFrom(items.get(i).getClass())) {
+                                            insertAt = i;
+                                            break;
+                                        }
+                                    }
+                                    items.add(insertAt, ma.getMenuItem());
+                                    inserted = true;
+                                    break;
+                                }
+                                case AsFirstChild: {
+                                    if (target instanceof Menu || rootTarget) {
+                                        if (rootTarget) {
+                                            menuButton.getItems().add(0, ma.getMenuItem());
+                                        } else {
+                                            Menu m = (Menu) target;
+                                            m.getItems().add(0, ma.getMenuItem());
+                                        }
+                                        inserted = true;
+                                    }
+                                    break;
+                                }
+                                case AsLastChild: {
+                                    if (target instanceof Menu || rootTarget) {
+                                        if (rootTarget) {
+                                            menuButton.getItems().add(ma.getMenuItem());
+                                        } else {
+                                            Menu m = (Menu) target;
+                                            m.getItems().add(ma.getMenuItem());
+                                        }
+                                        inserted = true;
+                                    }
+                                    break;
+                                }
+                                default:
+                                    throw new RuntimeException("Invalid position request for menuItem");
+
+                                }
+                            } catch (Exception e) {
+                                logger.error("Unable to add the provided menuItem in the view", e);
+                            }
+
+                            if (inserted) {
+                                addToMenuMap(menuMap, ma.getMenuItem());
+                                nextKeys.add(ma.getMenuItem().getId());
+                                atLeastOneInserted = true;
+                            }
+                        }
+                    }
+                }
+
+                keys = nextKeys;
+                nextKeys = new ArrayList<>();
+
+            }
+
+            if (invalidProviders != null) {
+                invalidProviders.forEach(mip -> {
+                    logger.error("Invalid ViewMenuItemProviders submitted {}", mip.getClass().getName());
+                });
+            }
+            if (validAttachments.size() > 0) {
+                logger.error("Unable to add all the provided menuItem in the view");
+                validAttachments.values().stream().flatMap(l -> l.stream()).forEach(ma -> {
+                    logger.error("Unable to attach {} to id {} using {}", ma.getClass().getName(), ma.getTargetId(),
+                            ma.getPositionRequest());
+                });
+            }
+
+            logger.debug("Creation of the view menu completed after {} iterations", iteration);
+
+            // link menu button showing event to menu item validation event
+            menuButton.setOnShowing((e) -> {
+                for (MenuItem item : menuButton.getItems()) {
+                    EventHandler<Event> handler = item.getOnMenuValidation();
+                    if (handler != null) {
+                        handler.handle(e);
+                    }
+                }
+            });
+        }
 
     }
 

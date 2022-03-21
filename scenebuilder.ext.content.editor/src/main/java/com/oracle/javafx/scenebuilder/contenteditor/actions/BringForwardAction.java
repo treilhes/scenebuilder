@@ -43,8 +43,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.BringForwardJob;
 
 @Component
@@ -56,12 +58,19 @@ import com.oracle.javafx.scenebuilder.selection.job.BringForwardJob;
 @MenuItemAttachment(
         id = BringForwardAction.MENU_ID,
         targetMenuId = SendToBackAction.MENU_ID,
-        label = "menu.title.forward",
+        label = BringForwardAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = BringForwardAction.MENU_ID,
+        targetMenuId = SendToBackAction.MENU_ID,
+        label = BringForwardAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+]")
 public class BringForwardAction extends AbstractAction {
 
-    public final static String MENU_ID = "bringForwardMenuItem";
+    public final static String MENU_ID = "bringForwardMenuItem"; //NOCHECK
+    public final static String TITLE = "menu.title.forward";
 
     private final BringForwardJob.Factory bringForwardJobFactory;
     private final JobManager jobManager;

@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 
@@ -55,16 +55,16 @@ import javafx.scene.control.Menu;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class MainMenuProvider implements MenuProvider {
 
-    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+    private final MenuBuilder menuBuilder;
 
-    public MainMenuProvider(MenuBarObjectConfigurator menuBarObjectConfigurator) {
+    public MainMenuProvider(MenuBuilder menuBuilder) {
         super();
-        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+        this.menuBuilder = menuBuilder;
     }
 
 
     private MenuAttachment newMenu(String targetId, PositionRequest positionRequest, String menuId, String titleKey) {
-        Menu menu = menuBarObjectConfigurator.menu().withId(menuId).withTitle(titleKey).build();
+        Menu menu = menuBuilder.menu().withId(menuId).withTitle(titleKey).build();
         return MenuAttachment.create(menu, targetId, positionRequest);
     }
 
@@ -78,7 +78,7 @@ public class MainMenuProvider implements MenuProvider {
                 newMenu(DefaultMenu.VIEW_MENU_ID, AsNextSibling, DefaultMenu.MODIFY_MENU_ID, "menu.title.modify"),
                 newMenu(DefaultMenu.MODIFY_MENU_ID, AsNextSibling, DefaultMenu.ARRANGE_MENU_ID, "menu.title.arrange"),
                 newMenu(DefaultMenu.ARRANGE_MENU_ID, AsNextSibling, DefaultMenu.PREVIEW_MENU_ID, "menu.title.preview"),
-                newMenu(DefaultMenu.PREVIEW_MENU_ID, AsNextSibling, DefaultMenu.WINDOW_MENU_ID, "menu.title.window"),
+                //newMenu(DefaultMenu.PREVIEW_MENU_ID, AsNextSibling, DefaultMenu.WINDOW_MENU_ID, "menu.title.window"),
                 newMenu(DefaultMenu.WINDOW_MENU_ID, AsNextSibling, DefaultMenu.HELP_MENU_ID, "menu.title.help")
                 );
     }

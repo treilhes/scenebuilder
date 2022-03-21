@@ -56,7 +56,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
         descriptionKey = "action.description.undo")
 
 @MenuItemAttachment(
-        id = UndoAction.UNDO_MENU_ID,
+        id = UndoAction.MENU_ID,
         targetMenuId = DefaultMenu.EDIT_MENU_ID,
         label = "#this.getUndoDescription()",
         positionRequest = PositionRequest.AsFirstChild)
@@ -65,7 +65,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 public class UndoAction extends AbstractAction {
 
-    public final static String UNDO_MENU_ID = "undoMenuItem"; //NOCHECK
+    public final static String MENU_ID = "undoMenuItem"; //NOCHECK
 
     private final JobManager jobManager;
     private final DocumentManager documentManager;

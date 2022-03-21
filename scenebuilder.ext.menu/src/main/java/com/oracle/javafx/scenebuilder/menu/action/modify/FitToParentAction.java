@@ -44,8 +44,11 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.menu.action.edit.SelectParentAction;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
 
 @Component
@@ -57,12 +60,20 @@ import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
 @MenuItemAttachment(
         id = FitToParentAction.MENU_ID,
         targetMenuId = DefaultMenu.MODIFY_MENU_ID,
-        label = "menu.title.fit",
+        label = FitToParentAction.TITLE,
         positionRequest = PositionRequest.AsFirstChild)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = FitToParentAction.MENU_ID,
+        targetMenuId = SelectParentAction.MENU_ID,
+        label = FitToParentAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling,
+        separatorBefore = true)
 @Accelerator(accelerator = "CTRL+K")
 public class FitToParentAction extends AbstractAction {
 
     public final static String MENU_ID = "fitToParentMenuItem";
+    public final static String TITLE = "menu.title.fit";
 
     private final FitToParentSelectionJob.Factory fitToParentSelectionJobFactory;
     private final JobManager jobManager;

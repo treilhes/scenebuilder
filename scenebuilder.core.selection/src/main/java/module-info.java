@@ -38,8 +38,6 @@ open module scenebuilder.core.selection {
     exports com.oracle.javafx.scenebuilder.selection;
     exports com.oracle.javafx.scenebuilder.selection.i18n;
     exports com.oracle.javafx.scenebuilder.selection.job;
-    exports com.oracle.javafx.scenebuilder.selection.job.togglegroup;
-    exports com.oracle.javafx.scenebuilder.selection.job.wrap;
 
     requires transitive scenebuilder.core.api;
     requires transitive scenebuilder.core.jobs;

@@ -36,8 +36,10 @@ package com.oracle.javafx.scenebuilder.selection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -648,6 +650,21 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
         FXOMObject newSelected = siblings.get(index);
 
         return objectSelectionGroupFactory.getGroup(newSelected, null);
+    }
+
+    @Override
+    public Set<? extends Object> getInnerItems() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public Map<String, FXOMObject> collectSelectedFxIds() {
+        // Collects fx:ids in selected objects and their descendants.
+        final Map<String, FXOMObject> fxIdMap = new HashMap<>();
+        for (FXOMObject selectedObject : getItems()) {
+            fxIdMap.putAll(selectedObject.collectFxIds());
+        }
+        return fxIdMap;
     }
 
 

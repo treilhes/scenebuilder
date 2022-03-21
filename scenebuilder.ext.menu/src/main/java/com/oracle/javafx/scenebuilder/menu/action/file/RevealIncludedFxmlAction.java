@@ -49,7 +49,9 @@ import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -59,11 +61,18 @@ import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 @MenuItemAttachment(
         id = RevealIncludedFxmlAction.MENU_ID,
         targetMenuId = EditIncludedFxmlAction.MENU_ID,
-        label = "menu.title.reveal.included.default",
+        label = RevealIncludedFxmlAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = RevealIncludedFxmlAction.MENU_ID,
+        targetMenuId = EditIncludedFxmlAction.MENU_ID,
+        label = RevealIncludedFxmlAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 public class RevealIncludedFxmlAction extends AbstractAction {
 
     public final static String MENU_ID = "revealIncludedFxmlMenu"; //NOCHECK
+    public final static String TITLE = "menu.title.reveal.included.default";
 
     private final FileSystem fileSystem;
     private final Editor editor;

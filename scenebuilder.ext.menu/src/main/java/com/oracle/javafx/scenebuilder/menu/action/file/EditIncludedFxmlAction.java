@@ -48,7 +48,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.menu.action.modify.UseComputedSizeAction;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -58,11 +61,18 @@ import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 @MenuItemAttachment(
         id = EditIncludedFxmlAction.MENU_ID,
         targetMenuId = IncludeFxmlAction.MENU_ID,
-        label = "menu.title.edit.included.default",
+        label = EditIncludedFxmlAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = EditIncludedFxmlAction.MENU_ID,
+        targetMenuId = UseComputedSizeAction.MENU_ID,
+        label = EditIncludedFxmlAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 public class EditIncludedFxmlAction extends AbstractAction {
 
     public final static String MENU_ID = "editIncludedFxmlMenu"; //NOCHECK
+    public final static String TITLE = "menu.title.edit.included.default";
 
     private final FileSystem fileSystem;
     private final Editor editor;

@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -65,18 +65,18 @@ public class OpenRecentProvider implements MenuItemProvider {
 
     public final static String MENU_ID = "openRecentMenu";
 
-    private final MenuBarObjectConfigurator builder;
+    private final MenuBuilder builder;
 
     private final RecentItemsPreference recentItemsPreference;
 
     private final ActionFactory actionFactory;
 
     public OpenRecentProvider(
-            MenuBarObjectConfigurator menuBarObjectConfigurator,
+            MenuBuilder menuBuilder,
             RecentItemsPreference recentItemsPreference,
             ActionFactory actionFactory
             ) {
-        this.builder = menuBarObjectConfigurator;
+        this.builder = menuBuilder;
         this.recentItemsPreference = recentItemsPreference;
         this.actionFactory = actionFactory;
     }

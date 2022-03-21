@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
@@ -54,16 +54,16 @@ public class CssViewAsMenuProvider implements ViewMenuItemProvider {
 
     public final static String MENU_ID = "cssViewAsMenu";
 
-    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+    private final MenuBuilder menuBuilder;
 
-    public CssViewAsMenuProvider(MenuBarObjectConfigurator menuBarObjectConfigurator) {
+    public CssViewAsMenuProvider(MenuBuilder menuBuilder) {
         super();
-        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+        this.menuBuilder = menuBuilder;
     }
 
     private ViewMenuItemAttachment newMenu(String targetId, PositionRequest positionRequest, String menuId,
             String titleKey) {
-        Menu menu = menuBarObjectConfigurator.menu().withId(menuId).withTitle(titleKey).build();
+        Menu menu = menuBuilder.menu().withId(menuId).withTitle(titleKey).build();
         return ViewMenuItemAttachment.create(menu, targetId, positionRequest, CssPanelController.class);
     }
 

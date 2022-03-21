@@ -43,8 +43,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.SendBackwardJob;
 
 @Component
@@ -56,12 +58,19 @@ import com.oracle.javafx.scenebuilder.selection.job.SendBackwardJob;
 @MenuItemAttachment(
         id = SendBackwardAction.MENU_ID,
         targetMenuId = BringForwardAction.MENU_ID,
-        label = "menu.title.backward",
+        label = SendBackwardAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = SendBackwardAction.MENU_ID,
+        targetMenuId = BringForwardAction.MENU_ID,
+        label = SendBackwardAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+[")
 public class SendBackwardAction extends AbstractAction {
 
-    public final static String MENU_ID = "sendBackwardMenuItem";
+    public final static String MENU_ID = "sendBackwardMenuItem"; //NOCHECK
+    public final static String TITLE = "menu.title.backward";
 
     private final SendBackwardJob.Factory sendBackwardJobFactory;
     private final JobManager jobManager;

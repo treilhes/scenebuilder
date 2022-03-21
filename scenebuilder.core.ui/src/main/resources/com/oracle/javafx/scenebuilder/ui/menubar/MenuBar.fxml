@@ -43,45 +43,11 @@
   <children>
     <MenuBar fx:id="menuBar">
       <menus>
-
-        <Menu fx:id="arrangeMenu" mnemonicParsing="true" text="%menu.title.arrange">
-          <items>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu fx:id="wrapMenu" mnemonicParsing="true" text="%menu.title.wrap">
-              <items>
-                <MenuItem fx:id="wrapInAnchorPaneMenuItem" mnemonicParsing="false" text="AnchorPane" />
-                <MenuItem fx:id="wrapInBorderPaneMenuItem" mnemonicParsing="false" text="BorderPane" />
-                <MenuItem fx:id="wrapInButtonBarMenuItem" mnemonicParsing="false" text="ButtonBar" />
-                <MenuItem fx:id="wrapInDialogPaneMenuItem" mnemonicParsing="false" text="DialogPane" />
-                <MenuItem fx:id="wrapInFlowPaneMenuItem" mnemonicParsing="false" text="FlowPane" />
-                <MenuItem fx:id="wrapInGridPaneMenuItem" mnemonicParsing="false" text="GridPane" />
-                <MenuItem fx:id="wrapInGroupMenuItem" mnemonicParsing="false" text="Group" />
-                <MenuItem fx:id="wrapInHBoxMenuItem" mnemonicParsing="false" text="HBox" />
-                <MenuItem fx:id="wrapInPaneMenuItem" mnemonicParsing="false" text="Pane" />
-                <MenuItem fx:id="wrapInScrollPaneMenuItem" mnemonicParsing="false" text="ScrollPane" />
-                <MenuItem fx:id="wrapInSplitPaneMenuItem" mnemonicParsing="false" text="SplitPane" />
-                <MenuItem fx:id="wrapInStackPaneMenuItem" mnemonicParsing="false" text="StackPane" />
-                <MenuItem fx:id="wrapInTabPaneMenuItem" mnemonicParsing="false" text="TabPane" />
-                <MenuItem fx:id="wrapInTextFlowMenuItem" mnemonicParsing="false" text="TextFlow" />
-                <MenuItem fx:id="wrapInTilePaneMenuItem" mnemonicParsing="false" text="TilePane" />
-                <MenuItem fx:id="wrapInTitledPaneMenuItem" mnemonicParsing="false" text="TitledPane" />
-                <MenuItem fx:id="wrapInToolBarMenuItem" mnemonicParsing="false" text="ToolBar" />
-                <MenuItem fx:id="wrapInVBoxMenuItem" mnemonicParsing="false" text="VBox" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="wrapInSceneMenuItem" mnemonicParsing="false" text="Scene" />
-                <MenuItem fx:id="wrapInStageMenuItem" mnemonicParsing="false" text="Stage" />
-              </items>
-            </Menu>
-            <MenuItem fx:id="unwrapMenuItem" mnemonicParsing="true" text="%menu.title.unwrap" />
-          </items>
-        </Menu>
-        <Menu fx:id="previewMenu" mnemonicParsing="true" text="%menu.title.preview" />
         <Menu fx:id="windowMenu" mnemonicParsing="true" text="%menu.title.window">
           <items>
             <SeparatorMenuItem mnemonicParsing="false" />
           </items>
         </Menu>
-        <Menu fx:id="helpMenu" mnemonicParsing="false" text="%menu.title.help" />
       </menus>
     </MenuBar>
   </children>

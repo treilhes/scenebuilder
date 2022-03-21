@@ -86,7 +86,7 @@ public interface Document {
 //    //void performRevealAction();
 //    void performImportMedia();
     //boolean isRightPanelVisible();
-    void performControlAction(DocumentControlAction toggleRightPanel);
+//    void performControlAction(DocumentControlAction toggleRightPanel);
 
     public static class TitleComparator implements Comparator<Document> {
 
@@ -155,7 +155,7 @@ public interface Document {
     DocumentWindow getDocumentWindow();
     //boolean canPerformEditAction(DocumentEditAction editAction);
     //void performEditAction(DocumentEditAction editAction);
-    boolean canPerformControlAction(DocumentControlAction controlAction);
+    //boolean canPerformControlAction(DocumentControlAction controlAction);
     URL getFxmlLocation();
     void closeWindow();
     Editor getEditorController();

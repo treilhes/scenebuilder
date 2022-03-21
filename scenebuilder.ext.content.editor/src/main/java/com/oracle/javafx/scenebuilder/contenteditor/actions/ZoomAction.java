@@ -46,7 +46,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -97,19 +97,19 @@ public class ZoomAction extends AbstractAction {
     public static class MenuProvider implements MenuItemProvider {
 
         private final ActionFactory actionFactory;
-        private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+        private final MenuBuilder menuBuilder;
 
-        public MenuProvider(ActionFactory actionFactory, MenuBarObjectConfigurator menuBarObjectConfigurator) {
+        public MenuProvider(ActionFactory actionFactory, MenuBuilder menuBuilder) {
             super();
             this.actionFactory = actionFactory;
-            this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+            this.menuBuilder = menuBuilder;
         }
 
         @Override
         public List<MenuItemAttachment> menuItems() {
             List<MenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBarObjectConfigurator.menu().withId(ZOOM_MENU_ID).withTitle("menu.title.zoom").build();
+            Menu menu = menuBuilder.menu().withId(ZOOM_MENU_ID).withTitle("menu.title.zoom").build();
             MenuItemAttachment menuAttachment = MenuItemAttachment.create(menu, ToggleGuidesVisibilityAction.MENU_ID,
                     PositionRequest.AfterNextSeparator);
             result.add(menuAttachment);
@@ -128,7 +128,7 @@ public class ZoomAction extends AbstractAction {
                 RadioMenuItem mi = new RadioMenuItem();
                 mi.setToggleGroup(zoomToggle);
 
-                mi = menuBarObjectConfigurator.radioMenuItem().withMenuItem(mi).withId(menuId).withAction(zAction)
+                mi = menuBuilder.radioMenuItem().withMenuItem(mi).withId(menuId).withAction(zAction)
                         .withTitle(title).build();
 
                 MenuItemAttachment attachment = MenuItemAttachment.create(mi, target, positionRequest);

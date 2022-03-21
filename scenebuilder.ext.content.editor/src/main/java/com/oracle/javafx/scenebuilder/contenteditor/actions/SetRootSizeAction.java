@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -112,12 +112,12 @@ public class SetRootSizeAction extends AbstractAction {
         public final static String SET_ROOT_SIZE_MENU_ID = "setRootSize";
 
         private final ActionFactory actionFactory;
-        private final MenuBarObjectConfigurator menuBuilder;
+        private final MenuBuilder menuBuilder;
 
-        public MenuProvider(ActionFactory actionFactory, MenuBarObjectConfigurator menuBarObjectConfigurator) {
+        public MenuProvider(ActionFactory actionFactory, MenuBuilder menuBuilder) {
             super();
             this.actionFactory = actionFactory;
-            this.menuBuilder = menuBarObjectConfigurator;
+            this.menuBuilder = menuBuilder;
         }
 
         @Override

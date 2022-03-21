@@ -33,12 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
+import com.oracle.javafx.scenebuilder.api.action.AbstractJobAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -46,10 +45,10 @@ import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.selection.job.TrimSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.TrimSelectionJob.Factory;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 @ActionMeta(
         nameKey = "action.name.duplicate",
         descriptionKey = "action.description.duplicate")
@@ -60,32 +59,16 @@ import com.oracle.javafx.scenebuilder.selection.job.TrimSelectionJob;
         label = "menu.title.trim",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
-public final class TrimAction extends AbstractAction {
+public final class TrimAction extends AbstractJobAction<TrimSelectionJob.Factory> {
 
     public final static String MENU_ID = "trimMenu";
 
-    private final TrimSelectionJob.Factory trimSelectionJobFactory;
-    private final JobManager jobManager;
-
-    public TrimAction(
-            ActionExtensionFactory extensionFactory,
-            TrimSelectionJob.Factory trimSelectionJobFactory,
-            JobManager jobManager) {
-        super(extensionFactory);
-        this.trimSelectionJobFactory = trimSelectionJobFactory;
-        this.jobManager = jobManager;
+    public TrimAction(ActionExtensionFactory extensionFactory, Factory factory, JobManager jobManager) {
+        super(extensionFactory, factory, jobManager);
     }
 
     @Override
-    public boolean canPerform() {
-        final AbstractJob job = trimSelectionJobFactory.getJob();
-        return job.isExecutable();
-    }
-
-    @Override
-    public ActionStatus doPerform() {
-        final AbstractJob job = trimSelectionJobFactory.getJob();
-        jobManager.push(job);
-        return ActionStatus.DONE;
+    protected AbstractJob createJob(Factory factory) {
+        return factory.getJob();
     }
 }

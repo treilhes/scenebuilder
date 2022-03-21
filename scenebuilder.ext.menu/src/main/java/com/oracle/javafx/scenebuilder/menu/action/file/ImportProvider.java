@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -58,16 +58,16 @@ public class ImportProvider implements MenuItemProvider {
 
     private static final String IMPORT_TITLE = "menu.title.import";
 
-    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+    private final MenuBuilder menuBuilder;
 
-    public ImportProvider(MenuBarObjectConfigurator menuBarObjectConfigurator) {
-        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+    public ImportProvider(MenuBuilder menuBuilder) {
+        this.menuBuilder = menuBuilder;
     }
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        Menu menu = menuBarObjectConfigurator.menu().withId(MENU_ID).withTitle(IMPORT_TITLE).build();
-        SeparatorMenuItem separator = menuBarObjectConfigurator.separator().build();
+        Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(IMPORT_TITLE).build();
+        SeparatorMenuItem separator = menuBuilder.separator().build();
 
         return Arrays.asList(
                 MenuItemAttachment.create(separator, MENU_ID, PositionRequest.AsPreviousSibling),

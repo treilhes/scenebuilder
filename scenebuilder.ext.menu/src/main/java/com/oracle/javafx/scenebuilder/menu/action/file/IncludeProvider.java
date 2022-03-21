@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -57,15 +57,15 @@ public class IncludeProvider implements MenuItemProvider {
 
     private static final String INCLUDE_TITLE = "menu.title.include";
 
-    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+    private final MenuBuilder menuBuilder;
 
-    public IncludeProvider(MenuBarObjectConfigurator menuBarObjectConfigurator) {
-        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+    public IncludeProvider(MenuBuilder menuBuilder) {
+        this.menuBuilder = menuBuilder;
     }
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        Menu menu = menuBarObjectConfigurator.menu().withId(MENU_ID).withTitle(INCLUDE_TITLE).build();
+        Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(INCLUDE_TITLE).build();
 
         return Arrays.asList(
                 MenuItemAttachment.create(menu, ImportProvider.MENU_ID, PositionRequest.AsNextSibling));

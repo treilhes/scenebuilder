@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -88,7 +88,7 @@ public class ApiExtension extends AbstractExtension {
                 I18N.class,
                 JobExtensionFactory.class,
                 MavenSetting.class,
-                MenuBarObjectConfigurator.class,
+                MenuBuilder.class,
                 ModeManagerController.class,
                 NetworkManager.NetworkManagerImpl.class,
                 NoPickRefiner.class,

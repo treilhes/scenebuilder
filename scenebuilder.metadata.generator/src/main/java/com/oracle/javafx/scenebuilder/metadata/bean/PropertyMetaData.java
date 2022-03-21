@@ -409,7 +409,12 @@ public class PropertyMetaData extends AbstractMetaData {
 
 
     public Object getDefaultValue() {
-        return isReadWrite() && propertyType != Type.EVENT ? defaultValue : null;
+        String overridedDefaultValue = getBundleValue(beanClass, BundleValues.DEFAULT_VALUE, null);
+
+        if (isReadWrite() && propertyType != Type.EVENT) {
+            return overridedDefaultValue != null ? overridedDefaultValue : defaultValue;
+        }
+        return null;
     }
 
     public boolean isStatic() {

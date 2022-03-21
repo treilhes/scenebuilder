@@ -63,30 +63,6 @@ import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.selection.job.TrimSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.UpdateSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.togglegroup.ModifySelectionToggleGroupJob;
-import com.oracle.javafx.scenebuilder.selection.job.togglegroup.ModifyToggleGroupJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.UnwrapJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInAnchorPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInBorderPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInButtonBarJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInDialogPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInFlowPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInGridPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInGroupJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInHBoxJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInJobFactory;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInSceneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInScrollPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInSplitPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInStackPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInStageJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInTabPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInTextFlowJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInTilePaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInTitledPaneJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInToolBarJob;
-import com.oracle.javafx.scenebuilder.selection.job.wrap.WrapInVBoxJob;
 
 public class SelectionExtension extends AbstractExtension {
     @Override
@@ -131,10 +107,6 @@ public class SelectionExtension extends AbstractExtension {
                 ModifyCacheHintJob.Factory.class,
                 ModifySelectionJob.class,
                 ModifySelectionJob.Factory.class,
-                ModifySelectionToggleGroupJob.class,
-                ModifySelectionToggleGroupJob.Factory.class,
-                ModifyToggleGroupJob.class,
-                ModifyToggleGroupJob.Factory.class,
                 ObjectSelectionGroup.class,
                 ObjectSelectionGroup.Factory.class,
                 PasteIntoJob.class,
@@ -150,53 +122,11 @@ public class SelectionExtension extends AbstractExtension {
                 SetDocumentRootJob.Factory.class,
                 TrimSelectionJob.class,
                 TrimSelectionJob.Factory.class,
-                UnwrapJob.class,
-                UnwrapJob.Factory.class,
                 UpdateSelectionJob.class,
                 UpdateSelectionJob.Factory.class,
                 UseComputedSizesSelectionJob.class,
-                UseComputedSizesSelectionJob.Factory.class,
-                WrapInAnchorPaneJob.class,
-                WrapInAnchorPaneJob.Factory.class,
-                WrapInBorderPaneJob.class,
-                WrapInBorderPaneJob.Factory.class,
-                WrapInButtonBarJob.class,
-                WrapInButtonBarJob.Factory.class,
-                WrapInDialogPaneJob.class,
-                WrapInDialogPaneJob.Factory.class,
-                WrapInFlowPaneJob.class,
-                WrapInFlowPaneJob.Factory.class,
-                WrapInGridPaneJob.class,
-                WrapInGridPaneJob.Factory.class,
-                WrapInGroupJob.class,
-                WrapInGroupJob.Factory.class,
-                WrapInHBoxJob.class,
-                WrapInHBoxJob.Factory.class,
-                WrapInJobFactory.class,
-                WrapInPaneJob.class,
-                WrapInPaneJob.Factory.class,
-                WrapInSceneJob.class,
-                WrapInSceneJob.Factory.class,
-                WrapInScrollPaneJob.class,
-                WrapInScrollPaneJob.Factory.class,
-                WrapInSplitPaneJob.class,
-                WrapInSplitPaneJob.Factory.class,
-                WrapInStackPaneJob.class,
-                WrapInStackPaneJob.Factory.class,
-                WrapInStageJob.class,
-                WrapInStageJob.Factory.class,
-                WrapInTabPaneJob.class,
-                WrapInTabPaneJob.Factory.class,
-                WrapInTextFlowJob.class,
-                WrapInTextFlowJob.Factory.class,
-                WrapInTilePaneJob.class,
-                WrapInTilePaneJob.Factory.class,
-                WrapInTitledPaneJob.class,
-                WrapInTitledPaneJob.Factory.class,
-                WrapInToolBarJob.class,
-                WrapInToolBarJob.Factory.class,
-                WrapInVBoxJob.class,
-                WrapInVBoxJob.Factory.class
+                UseComputedSizesSelectionJob.Factory.class
+
             );
      // @formatter:on
     }

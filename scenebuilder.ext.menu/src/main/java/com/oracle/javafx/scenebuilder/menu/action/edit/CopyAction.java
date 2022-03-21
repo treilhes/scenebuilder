@@ -43,8 +43,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.clipboard.Clipboard;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -54,14 +56,21 @@ import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
         descriptionKey = "action.description.copy")
 
 @MenuItemAttachment(
-        id = CopyAction.COPY_MENU_ID,
-        targetMenuId = CutAction.CUT_MENU_ID,
+        id = CopyAction.MENU_ID,
+        targetMenuId = CutAction.MENU_ID,
         label = "menu.title.copy",
         positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = CopyAction.MENU_ID,
+        targetMenuId = CutAction.MENU_ID,
+        label = "menu.title.copy",
+        positionRequest = PositionRequest.AsNextSibling
+        )
 @Accelerator(accelerator = "CTRL+C")
 public final class CopyAction extends AbstractAction {
 
-    public final static String COPY_MENU_ID = "copyMenu";
+    public final static String MENU_ID = "copyMenu";
 
     private final Clipboard clipboard;
 

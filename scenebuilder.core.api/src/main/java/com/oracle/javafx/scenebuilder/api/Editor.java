@@ -36,11 +36,9 @@ package com.oracle.javafx.scenebuilder.api;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
@@ -71,13 +69,13 @@ public interface Editor {
 
 	//public Library getLibrary();
 
-	public boolean canPerformControlAction(ControlAction copy);
+//	public boolean canPerformControlAction(ControlAction copy);
 
-	public void performEditAction(EditAction editAction);
+//	public void performEditAction(EditAction editAction);
 
 	public JobManager getJobManager();
 
-	public void performControlAction(ControlAction copy);
+//	public void performControlAction(ControlAction copy);
 
 	//public Drag getDragController();
 
@@ -195,7 +193,7 @@ public interface Editor {
         WRAP_IN_STAGE
     }
 
-    public boolean canPerformEditAction(EditAction editAction);
+//    public boolean canPerformEditAction(EditAction editAction);
 
     public String getFxmlText(boolean wildcardImports);
 
@@ -205,7 +203,7 @@ public interface Editor {
 
     public void setOwnerWindow(Stage stage);
 
-    public List<FXOMObject> getSelectedObjects();
+//    public List<FXOMObject> getSelectedObjects();
 
 //    public void performImportFxml(File fxmlFile);
 //

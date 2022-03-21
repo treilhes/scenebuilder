@@ -42,9 +42,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +52,10 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.ControlAction;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.Editor.EditAction;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.MenuBar;
@@ -69,9 +65,6 @@ import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.View;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
@@ -80,8 +73,6 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.ui.menubar.MenuBarController;
 import com.oracle.javafx.scenebuilder.ui.message.MessageBarController;
@@ -217,7 +208,7 @@ public class DocumentController implements Document, InitializingBean {
             //
             final Node focusOwner = documentWindow.getScene().getFocusOwner();
 
-            final KeyCombination accelerator = getAccelerator(event);
+            final KeyCombination accelerator = null;//getAccelerator(event);
             if (isTextInputControlEditing(focusOwner) && accelerator != null) {
 
 //                focusOwner.getInputMap()
@@ -250,9 +241,11 @@ public class DocumentController implements Document, InitializingBean {
                 event.consume();
                 // When using system menu bar, the control action is performed by the app.
                 if (!menuBarController.getMenuBar().isUseSystemMenuBar()) {
-                    if (canPerformControlAction(DocumentControlAction.SELECT_ALL)) {
-                        performControlAction(DocumentControlAction.SELECT_ALL);
-                    }
+                    // TODO ensure select all is still working
+
+//                    if (canPerformControlAction(DocumentControlAction.SELECT_ALL)) {
+//                        performControlAction(DocumentControlAction.SELECT_ALL);
+//                    }
                 }
             }
 
@@ -354,286 +347,286 @@ public class DocumentController implements Document, InitializingBean {
 //        return editorController.getFxmlText(wildcardImportsPreference.getValue());
 //    }
 
-    @Override
-    public boolean canPerformControlAction(DocumentControlAction controlAction) {
-
-        final boolean result;
-
-        switch (controlAction) {
-//        case COPY:
-//            result = canPerformCopy();
+//    @Override
+//    public boolean canPerformControlAction(DocumentControlAction controlAction) {
+//
+//        final boolean result;
+//
+//        switch (controlAction) {
+////        case COPY:
+////            result = canPerformCopy();
+////            break;
+//
+//        case SELECT_ALL:
+//            result = canPerformSelectAll();
 //            break;
-
-        case SELECT_ALL:
-            result = canPerformSelectAll();
-            break;
-
-        case SELECT_NONE:
-            result = canPerformSelectNone();
-            break;
-
-        case TOGGLE_LIBRARY_PANEL:
-        case TOGGLE_DOCUMENT_PANEL:
-        case TOGGLE_CSS_PANEL:
-        case TOGGLE_LEFT_PANEL:
-        case TOGGLE_RIGHT_PANEL:
-//        case TOGGLE_OUTLINES_VISIBILITY:
-//        case TOGGLE_GUIDES_VISIBILITY:
-            result = true;
-            break;
-//            case SHOW_PREVIEW_WINDOW:
-//                result = true;
-//                break;
 //
-//            case SHOW_PREVIEW_DIALOG:
-//                final FXOMDocument fxomDocument = editorController.getFxomDocument();
-//                if (fxomDocument != null) {
-//                    Object sceneGraphRoot = fxomDocument.getSceneGraphRoot();
-//                    return sceneGraphRoot instanceof DialogPane;
-//                }
-//                result = false;
-//                break;
-
-//            case SAVE_FILE:
-//                result = isDocumentDirty() || fxomDocument.getLocation() == null; // Save new empty document
-//                break;
+//        case SELECT_NONE:
+//            result = canPerformSelectNone();
+//            break;
 //
-//            case SAVE_AS_FILE:
-        case CLOSE_FILE:
-            result = true;
-            break;
-
-//            case REVERT_FILE:
-//                result = isDocumentDirty()
-//                        && fxomDocument.getLocation() != null;
-//                break;
-//
-//            case REVEAL_FILE:
-//                result = (fxomDocument != null) && (fxomDocument.getLocation() != null);
-//                break;
-
-        //case GOTO_CONTENT:
-        case GOTO_PROPERTIES:
-        case GOTO_LAYOUT:
-        case GOTO_CODE:
-            result = true;
-            break;
-
-        case ADD_SCENE_STYLE_SHEET:
-            result = true;
-            break;
-
-        case SET_RESOURCE:
-            result = true;
-            break;
-//
-//            case REMOVE_RESOURCE:
-//            case REVEAL_RESOURCE:
-//                result = resourceController.getResourceFile() != null;
-//                break;
-
-//        case HELP:
+//        case TOGGLE_LIBRARY_PANEL:
+//        case TOGGLE_DOCUMENT_PANEL:
+//        case TOGGLE_CSS_PANEL:
+//        case TOGGLE_LEFT_PANEL:
+//        case TOGGLE_RIGHT_PANEL:
+////        case TOGGLE_OUTLINES_VISIBILITY:
+////        case TOGGLE_GUIDES_VISIBILITY:
 //            result = true;
 //            break;
-
-        default:
-            result = false;
-            assert false;
-            break;
-        }
-
-        return result;
-    }
-
-    @Override
-    public void performControlAction(DocumentControlAction controlAction) {
-        assert canPerformControlAction(controlAction);
-
-        switch (controlAction) {
-//        case COPY:
-//            performCopy();
-//            break;
-
-        case SELECT_ALL:
-            performSelectAll();
-            break;
-
-        case SELECT_NONE:
-            performSelectNone();
-            break;
-
-//            case SHOW_PREVIEW_WINDOW:
-//                if (previewWindowController == null) {
-//                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, documentWindow.getStage());
-//                    //previewWindowController.setToolStylesheet(getToolStylesheet());
-//                }
-//                previewWindowController.documentWindow.getStage().centerOnScreen();
-//                previewWindowController.openWindow();
-//                break;
+////            case SHOW_PREVIEW_WINDOW:
+////                result = true;
+////                break;
+////
+////            case SHOW_PREVIEW_DIALOG:
+////                final FXOMDocument fxomDocument = editorController.getFxomDocument();
+////                if (fxomDocument != null) {
+////                    Object sceneGraphRoot = fxomDocument.getSceneGraphRoot();
+////                    return sceneGraphRoot instanceof DialogPane;
+////                }
+////                result = false;
+////                break;
 //
-//            case SHOW_PREVIEW_DIALOG:
-//                if (previewWindowController == null) {
-//                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, documentWindow.getStage());
-//                    //previewWindowController.setToolStylesheet(getToolStylesheet());
-//                }
-//                previewWindowController.openDialog();
-//                break;
-
-//            case SAVE_FILE:
-//                save();
-//                break;
-//
-//            case SAVE_AS_FILE:
-//                saveAs();
-//                break;
-//
-//            case REVERT_FILE:
-//                revert();
-//                break;
-
+////            case SAVE_FILE:
+////                result = isDocumentDirty() || fxomDocument.getLocation() == null; // Save new empty document
+////                break;
+////
+////            case SAVE_AS_FILE:
 //        case CLOSE_FILE:
-//            performCloseAction();
+//            result = true;
 //            break;
-
-//        case GOTO_CONTENT:
-//            contentPanelController.getGlassLayer().requestFocus();
-//            break;
-
+//
+////            case REVERT_FILE:
+////                result = isDocumentDirty()
+////                        && fxomDocument.getLocation() != null;
+////                break;
+////
+////            case REVEAL_FILE:
+////                result = (fxomDocument != null) && (fxomDocument.getLocation() != null);
+////                break;
+//
+//        //case GOTO_CONTENT:
 //        case GOTO_PROPERTIES:
-//            performGoToSection(SectionId.PROPERTIES);
-//            break;
-//
 //        case GOTO_LAYOUT:
-//            performGoToSection(SectionId.LAYOUT);
-//            break;
-//
 //        case GOTO_CODE:
-//            performGoToSection(SectionId.CODE);
-//            break;
-
-//            case TOGGLE_LEFT_PANEL:
-//                if (leftSplitController.isTargetVisible()) {
-//                    assert librarySplitController.isTargetVisible()
-//                            || documentSplitController.isTargetVisible();
-//                    // Hide Left => hide both Library + Document
-//                    librarySplitController.hideTarget();
-//                    documentSplitController.hideTarget();
-//                    leftSplitController.hideTarget();
-//                } else {
-//                    assert !librarySplitController.isTargetVisible()
-//                            && !documentSplitController.isTargetVisible();
-//                    // Show Left => show both Library + Document
-//                    librarySplitController.showTarget();
-//                    documentSplitController.showTarget();
-//                    leftSplitController.showTarget();
-//
-//                    // This workarounds layout issues when showing Left
-//                    libraryDocumentSplitPane.layout();
-//                    libraryDocumentSplitPane.setDividerPositions(0.5);
-//                }
-//                // Update preferences
-//                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
-//                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
-//                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
-//                break;
-//
-//            case TOGGLE_RIGHT_PANEL:
-//                rightSplitController.toggleTarget();
-//                // Update preferences
-//                rightVisiblePreference.setValue(rightSplitController.isTargetVisible());
-//                break;
-//
-//            case TOGGLE_CSS_PANEL:
-//                // CSS panel is built lazely : initialize the CSS panel first
-//                initializeCssPanel();
-//                bottomSplitController.toggleTarget();
-//                if (bottomSplitController.isTargetVisible()) {
-//                    // CSS panel is built lazely
-//                    // Need to update its table column ordering with preference value
-//                    //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
-//                    // Enable pick mode
-//                    editorController.setPickModeEnabled(true);
-//                } else {
-//                    // Disable pick mode
-//                    editorController.setPickModeEnabled(false);
-//                }
-//                // Update preferences
-//                bottomVisiblePreference.setValue(bottomSplitController.isTargetVisible());
-//                break;
-//
-//            case TOGGLE_LIBRARY_PANEL:
-//                if (librarySplitController.isTargetVisible()) {
-//                    assert leftSplitController.isTargetVisible();
-//                    librarySplitController.hideTarget();
-//                    if (!documentSplitController.isTargetVisible()) {
-//                        leftSplitController.hideTarget();
-//                    }
-//                } else {
-//                    if (!leftSplitController.isTargetVisible()) {
-//                        leftSplitController.showTarget();
-//                    }
-//                    librarySplitController.showTarget();
-//                }
-//                // Update preferences
-//                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
-//                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
-//                break;
-//
-//            case TOGGLE_DOCUMENT_PANEL:
-//                if (documentSplitController.isTargetVisible()) {
-//                    assert leftSplitController.isTargetVisible();
-//                    documentSplitController.hideTarget();
-//                    if (!librarySplitController.isTargetVisible()) {
-//                        leftSplitController.hideTarget();
-//                    }
-//                } else {
-//                    if (!leftSplitController.isTargetVisible()) {
-//                        leftSplitController.showTarget();
-//                    }
-//                    documentSplitController.showTarget();
-//                }
-//                // Update preferences
-//                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
-//                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
-//                break;
-
-//        case TOGGLE_OUTLINES_VISIBILITY:
-//            contentPanelController.setOutlinesVisible(!contentPanelController.isOutlinesVisible());
+//            result = true;
 //            break;
 //
-//        case TOGGLE_GUIDES_VISIBILITY:
-//            contentPanelController.setGuidesVisible(!contentPanelController.isGuidesVisible());
+//        case ADD_SCENE_STYLE_SHEET:
+//            result = true;
 //            break;
-
-//            case ADD_SCENE_STYLE_SHEET:
-//                sceneStyleSheetMenuController.performAddSceneStyleSheet();
-//                break;
-
-//            case SET_RESOURCE:
-//                resourceController.performSetResource();
-//                // Update preferences
-//                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
-//                break;
 //
-//            case REMOVE_RESOURCE:
-//                resourceController.performRemoveResource();
-//                // Update preferences
-//                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
-//                break;
-//
-//            case REVEAL_RESOURCE:
-//                resourceController.performRevealResource();
-//                break;
-
-//        case HELP:
-//            performHelp();
+//        case SET_RESOURCE:
+//            result = true;
 //            break;
-
-        default:
-            assert false;
-            break;
-        }
-    }
+////
+////            case REMOVE_RESOURCE:
+////            case REVEAL_RESOURCE:
+////                result = resourceController.getResourceFile() != null;
+////                break;
+//
+////        case HELP:
+////            result = true;
+////            break;
+//
+//        default:
+//            result = false;
+//            assert false;
+//            break;
+//        }
+//
+//        return result;
+//    }
+//
+//    @Override
+//    public void performControlAction(DocumentControlAction controlAction) {
+//        assert canPerformControlAction(controlAction);
+//
+//        switch (controlAction) {
+////        case COPY:
+////            performCopy();
+////            break;
+//
+//        case SELECT_ALL:
+//            performSelectAll();
+//            break;
+//
+//        case SELECT_NONE:
+//            performSelectNone();
+//            break;
+//
+////            case SHOW_PREVIEW_WINDOW:
+////                if (previewWindowController == null) {
+////                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, documentWindow.getStage());
+////                    //previewWindowController.setToolStylesheet(getToolStylesheet());
+////                }
+////                previewWindowController.documentWindow.getStage().centerOnScreen();
+////                previewWindowController.openWindow();
+////                break;
+////
+////            case SHOW_PREVIEW_DIALOG:
+////                if (previewWindowController == null) {
+////                    previewWindowController = new PreviewWindowController(sceneBuilderManager, editorController, documentManager, documentWindow.getStage());
+////                    //previewWindowController.setToolStylesheet(getToolStylesheet());
+////                }
+////                previewWindowController.openDialog();
+////                break;
+//
+////            case SAVE_FILE:
+////                save();
+////                break;
+////
+////            case SAVE_AS_FILE:
+////                saveAs();
+////                break;
+////
+////            case REVERT_FILE:
+////                revert();
+////                break;
+//
+////        case CLOSE_FILE:
+////            performCloseAction();
+////            break;
+//
+////        case GOTO_CONTENT:
+////            contentPanelController.getGlassLayer().requestFocus();
+////            break;
+//
+////        case GOTO_PROPERTIES:
+////            performGoToSection(SectionId.PROPERTIES);
+////            break;
+////
+////        case GOTO_LAYOUT:
+////            performGoToSection(SectionId.LAYOUT);
+////            break;
+////
+////        case GOTO_CODE:
+////            performGoToSection(SectionId.CODE);
+////            break;
+//
+////            case TOGGLE_LEFT_PANEL:
+////                if (leftSplitController.isTargetVisible()) {
+////                    assert librarySplitController.isTargetVisible()
+////                            || documentSplitController.isTargetVisible();
+////                    // Hide Left => hide both Library + Document
+////                    librarySplitController.hideTarget();
+////                    documentSplitController.hideTarget();
+////                    leftSplitController.hideTarget();
+////                } else {
+////                    assert !librarySplitController.isTargetVisible()
+////                            && !documentSplitController.isTargetVisible();
+////                    // Show Left => show both Library + Document
+////                    librarySplitController.showTarget();
+////                    documentSplitController.showTarget();
+////                    leftSplitController.showTarget();
+////
+////                    // This workarounds layout issues when showing Left
+////                    libraryDocumentSplitPane.layout();
+////                    libraryDocumentSplitPane.setDividerPositions(0.5);
+////                }
+////                // Update preferences
+////                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
+////                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
+////                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
+////                break;
+////
+////            case TOGGLE_RIGHT_PANEL:
+////                rightSplitController.toggleTarget();
+////                // Update preferences
+////                rightVisiblePreference.setValue(rightSplitController.isTargetVisible());
+////                break;
+////
+////            case TOGGLE_CSS_PANEL:
+////                // CSS panel is built lazely : initialize the CSS panel first
+////                initializeCssPanel();
+////                bottomSplitController.toggleTarget();
+////                if (bottomSplitController.isTargetVisible()) {
+////                    // CSS panel is built lazely
+////                    // Need to update its table column ordering with preference value
+////                    //refreshCssTableColumnsOrderingReversed(preferences.isCssTableColumnsOrderingReversed());
+////                    // Enable pick mode
+////                    editorController.setPickModeEnabled(true);
+////                } else {
+////                    // Disable pick mode
+////                    editorController.setPickModeEnabled(false);
+////                }
+////                // Update preferences
+////                bottomVisiblePreference.setValue(bottomSplitController.isTargetVisible());
+////                break;
+////
+////            case TOGGLE_LIBRARY_PANEL:
+////                if (librarySplitController.isTargetVisible()) {
+////                    assert leftSplitController.isTargetVisible();
+////                    librarySplitController.hideTarget();
+////                    if (!documentSplitController.isTargetVisible()) {
+////                        leftSplitController.hideTarget();
+////                    }
+////                } else {
+////                    if (!leftSplitController.isTargetVisible()) {
+////                        leftSplitController.showTarget();
+////                    }
+////                    librarySplitController.showTarget();
+////                }
+////                // Update preferences
+////                libraryVisiblePreference.setValue(librarySplitController.isTargetVisible());
+////                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
+////                break;
+////
+////            case TOGGLE_DOCUMENT_PANEL:
+////                if (documentSplitController.isTargetVisible()) {
+////                    assert leftSplitController.isTargetVisible();
+////                    documentSplitController.hideTarget();
+////                    if (!librarySplitController.isTargetVisible()) {
+////                        leftSplitController.hideTarget();
+////                    }
+////                } else {
+////                    if (!leftSplitController.isTargetVisible()) {
+////                        leftSplitController.showTarget();
+////                    }
+////                    documentSplitController.showTarget();
+////                }
+////                // Update preferences
+////                documentVisiblePreference.setValue(documentSplitController.isTargetVisible());
+////                leftVisiblePreference.setValue(leftSplitController.isTargetVisible());
+////                break;
+//
+////        case TOGGLE_OUTLINES_VISIBILITY:
+////            contentPanelController.setOutlinesVisible(!contentPanelController.isOutlinesVisible());
+////            break;
+////
+////        case TOGGLE_GUIDES_VISIBILITY:
+////            contentPanelController.setGuidesVisible(!contentPanelController.isGuidesVisible());
+////            break;
+//
+////            case ADD_SCENE_STYLE_SHEET:
+////                sceneStyleSheetMenuController.performAddSceneStyleSheet();
+////                break;
+//
+////            case SET_RESOURCE:
+////                resourceController.performSetResource();
+////                // Update preferences
+////                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
+////                break;
+////
+////            case REMOVE_RESOURCE:
+////                resourceController.performRemoveResource();
+////                // Update preferences
+////                i18NResourcePreference.setValue(getResourceFile().getAbsolutePath());
+////                break;
+////
+////            case REVEAL_RESOURCE:
+////                resourceController.performRevealResource();
+////                break;
+//
+////        case HELP:
+////            performHelp();
+////            break;
+//
+//        default:
+//            assert false;
+//            break;
+//        }
+//    }
 
 //    @Override
 //    public boolean canPerformEditAction(DocumentEditAction editAction) {
@@ -827,130 +820,130 @@ public class DocumentController implements Document, InitializingBean {
         sceneBuilderManager.documentScoped().onNext(this);
     }
 
-    /*
-     * Private
-     */
-
-    private boolean canPerformSelectAll() {
-        final boolean result;
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (isPopupEditing(focusOwner)) {
-            return false;
-        } else if (isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = getTextInputControl(focusOwner);
-            final String text = tic.getText();
-            final String selectedText = tic.getSelectedText();
-            if (text == null || text.isEmpty()) {
-                result = false;
-            } else {
-                // Check if the TextInputControl is not already ALL selected
-                result = selectedText == null || selectedText.length() < tic.getText().length();
-            }
-        } else {
-            result = editorController.canPerformControlAction(ControlAction.SELECT_ALL);
-        }
-        return result;
-    }
-
-    private void performSelectAll() {
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = getTextInputControl(focusOwner);
-            tic.selectAll();
-        } else {
-            editorController.performControlAction(ControlAction.SELECT_ALL);
-        }
-    }
-
-    private boolean canPerformSelectNone() {
-        boolean result;
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (isPopupEditing(focusOwner)) {
-            return false;
-        } else if (isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = getTextInputControl(focusOwner);
-            result = tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
-        } else {
-            result = editorController.canPerformControlAction(ControlAction.SELECT_NONE);
-        }
-        return result;
-    }
-
-    private void performSelectNone() {
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = getTextInputControl(focusOwner);
-            tic.deselect();
-        } else {
-            this.editorController.performControlAction(ControlAction.SELECT_NONE);
-        }
-    }
-
-
-
-    private boolean canPerformDelete() {
-        boolean result;
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = getTextInputControl(focusOwner);
-            result = tic.getCaretPosition() < tic.getLength();
-        } else {
-            result = editorController.canPerformEditAction(EditAction.DELETE);
-        }
-        return result;
-    }
-
-    private void performDelete() {
-
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = getTextInputControl(focusOwner);
-            tic.deleteNextChar();
-        } else {
-            final List<FXOMObject> selectedObjects = editorController.getSelectedObjects();
-
-            // Collects fx:ids in selected objects and their descendants.
-            // We filter out toggle groups because their fx:ids are managed automatically.
-            final Map<String, FXOMObject> fxIdMap = new HashMap<>();
-            for (FXOMObject selectedObject : selectedObjects) {
-                fxIdMap.putAll(selectedObject.collectFxIds());
-            }
-            FXOMNodes.removeToggleGroups(fxIdMap);
-
-            // Checks if deleted objects have some fx:ids and ask for confirmation.
-            final boolean deleteConfirmed;
-            if (fxIdMap.isEmpty()) {
-                deleteConfirmed = true;
-            } else {
-                final String message;
-
-                if (fxIdMap.size() == 1) {
-                    if (selectedObjects.size() == 1) {
-                        message = I18N.getString("alert.delete.fxid1of1.message");
-                    } else {
-                        message = I18N.getString("alert.delete.fxid1ofN.message");
-                    }
-                } else {
-                    if (selectedObjects.size() == fxIdMap.size()) {
-                        message = I18N.getString("alert.delete.fxidNofN.message");
-                    } else {
-                        message = I18N.getString("alert.delete.fxidKofN.message");
-                    }
-                }
-
-                final Alert d = dialog.customAlert(documentWindow.getStage());
-                d.setMessage(message);
-                d.setDetails(I18N.getString("alert.delete.fxid.details"));
-                d.setOKButtonTitle(I18N.getString("label.delete"));
-
-                deleteConfirmed = (d.showAndWait() == ButtonID.OK);
-            }
-
-            if (deleteConfirmed) {
-                editorController.performEditAction(EditAction.DELETE);
-            }
-        }
-    }
+//    /*
+//     * Private
+//     */
+//
+//    private boolean canPerformSelectAll() {
+//        final boolean result;
+//        final Node focusOwner = documentWindow.getScene().getFocusOwner();
+//        if (isPopupEditing(focusOwner)) {
+//            return false;
+//        } else if (isTextInputControlEditing(focusOwner)) {
+//            final TextInputControl tic = getTextInputControl(focusOwner);
+//            final String text = tic.getText();
+//            final String selectedText = tic.getSelectedText();
+//            if (text == null || text.isEmpty()) {
+//                result = false;
+//            } else {
+//                // Check if the TextInputControl is not already ALL selected
+//                result = selectedText == null || selectedText.length() < tic.getText().length();
+//            }
+//        } else {
+//            result = editorController.canPerformControlAction(ControlAction.SELECT_ALL);
+//        }
+//        return result;
+//    }
+//
+//    private void performSelectAll() {
+//        final Node focusOwner = documentWindow.getScene().getFocusOwner();
+//        if (isTextInputControlEditing(focusOwner)) {
+//            final TextInputControl tic = getTextInputControl(focusOwner);
+//            tic.selectAll();
+//        } else {
+//            editorController.performControlAction(ControlAction.SELECT_ALL);
+//        }
+//    }
+//
+//    private boolean canPerformSelectNone() {
+//        boolean result;
+//        final Node focusOwner = documentWindow.getScene().getFocusOwner();
+//        if (isPopupEditing(focusOwner)) {
+//            return false;
+//        } else if (isTextInputControlEditing(focusOwner)) {
+//            final TextInputControl tic = getTextInputControl(focusOwner);
+//            result = tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
+//        } else {
+//            result = editorController.canPerformControlAction(ControlAction.SELECT_NONE);
+//        }
+//        return result;
+//    }
+//
+//    private void performSelectNone() {
+//        final Node focusOwner = documentWindow.getScene().getFocusOwner();
+//        if (isTextInputControlEditing(focusOwner)) {
+//            final TextInputControl tic = getTextInputControl(focusOwner);
+//            tic.deselect();
+//        } else {
+//            this.editorController.performControlAction(ControlAction.SELECT_NONE);
+//        }
+//    }
+//
+//
+//
+//    private boolean canPerformDelete() {
+//        boolean result;
+//        final Node focusOwner = documentWindow.getScene().getFocusOwner();
+//        if (isTextInputControlEditing(focusOwner)) {
+//            final TextInputControl tic = getTextInputControl(focusOwner);
+//            result = tic.getCaretPosition() < tic.getLength();
+//        } else {
+//            result = editorController.canPerformEditAction(EditAction.DELETE);
+//        }
+//        return result;
+//    }
+//
+//    private void performDelete() {
+//
+//        final Node focusOwner = documentWindow.getScene().getFocusOwner();
+//        if (isTextInputControlEditing(focusOwner)) {
+//            final TextInputControl tic = getTextInputControl(focusOwner);
+//            tic.deleteNextChar();
+//        } else {
+//            final List<FXOMObject> selectedObjects = editorController.getSelectedObjects();
+//
+//            // Collects fx:ids in selected objects and their descendants.
+//            // We filter out toggle groups because their fx:ids are managed automatically.
+//            final Map<String, FXOMObject> fxIdMap = new HashMap<>();
+//            for (FXOMObject selectedObject : selectedObjects) {
+//                fxIdMap.putAll(selectedObject.collectFxIds());
+//            }
+//            FXOMNodes.removeToggleGroups(fxIdMap);
+//
+//            // Checks if deleted objects have some fx:ids and ask for confirmation.
+//            final boolean deleteConfirmed;
+//            if (fxIdMap.isEmpty()) {
+//                deleteConfirmed = true;
+//            } else {
+//                final String message;
+//
+//                if (fxIdMap.size() == 1) {
+//                    if (selectedObjects.size() == 1) {
+//                        message = I18N.getString("alert.delete.fxid1of1.message");
+//                    } else {
+//                        message = I18N.getString("alert.delete.fxid1ofN.message");
+//                    }
+//                } else {
+//                    if (selectedObjects.size() == fxIdMap.size()) {
+//                        message = I18N.getString("alert.delete.fxidNofN.message");
+//                    } else {
+//                        message = I18N.getString("alert.delete.fxidKofN.message");
+//                    }
+//                }
+//
+//                final Alert d = dialog.customAlert(documentWindow.getStage());
+//                d.setMessage(message);
+//                d.setDetails(I18N.getString("alert.delete.fxid.details"));
+//                d.setOKButtonTitle(I18N.getString("label.delete"));
+//
+//                deleteConfirmed = (d.showAndWait() == ButtonID.OK);
+//            }
+//
+//            if (deleteConfirmed) {
+//                editorController.performEditAction(EditAction.DELETE);
+//            }
+//        }
+//    }
 
 //    @Override
 //    public void performImportFxml() {
@@ -1049,16 +1042,16 @@ public class DocumentController implements Document, InitializingBean {
                 || editorController.getInlineEditController().isWindowOpened();
     }
 
-    private KeyCombination getAccelerator(final KeyEvent event) {
-        KeyCombination result = null;
-        for (KeyCombination kc : menuBarController.getAccelerators()) {
-            if (kc.match(event)) {
-                result = kc;
-                break;
-            }
-        }
-        return result;
-    }
+//    private KeyCombination getAccelerator(final KeyEvent event) {
+//        KeyCombination result = null;
+//        for (KeyCombination kc : menuBarController.getAccelerators()) {
+//            if (kc.match(event)) {
+//                result = kc;
+//                break;
+//            }
+//        }
+//        return result;
+//    }
 
 //    @Override
 //    public ActionStatus save() {

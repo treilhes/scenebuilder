@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.dock.View;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
@@ -108,16 +108,16 @@ public class ChangeDockTypeAction extends AbstractAction {
     public class MenuProvider implements ViewMenuItemProvider {
 
         private final ActionFactory actionFactory;
-        private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+        private final MenuBuilder menuBuilder;
         private final List<DockType<?>> dockTypes;
 
         public MenuProvider(
                 ActionFactory actionFactory,
-                MenuBarObjectConfigurator menuBarObjectConfigurator,
+                MenuBuilder menuBuilder,
                 List<DockType<?>> dockTypes) {
             super();
             this.actionFactory = actionFactory;
-            this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+            this.menuBuilder = menuBuilder;
             this.dockTypes = dockTypes;
         }
 
@@ -125,7 +125,7 @@ public class ChangeDockTypeAction extends AbstractAction {
         public List<ViewMenuItemAttachment> menuItems() {
             List<ViewMenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBarObjectConfigurator.menu().withTitle("view.menu.title.dock").withId(MENU_ID).build();
+            Menu menu = menuBuilder.menu().withTitle("view.menu.title.dock").withId(MENU_ID).build();
             ViewMenuItemAttachment attachment = ViewMenuItemAttachment
                     .create(menu, null, PositionRequest.AsFirstChild, AbstractFxmlViewController.class);
             result.add(attachment);
@@ -144,7 +144,7 @@ public class ChangeDockTypeAction extends AbstractAction {
                 RadioMenuItem mi = new RadioMenuItem();
                 mi.setToggleGroup(typeToggle);
 
-                mi = menuBarObjectConfigurator.radioMenuItem().withMenuItem(mi)
+                mi = menuBuilder.radioMenuItem().withMenuItem(mi)
                         .withId(menuId).withAction(changeViewTypeAction)
                         .withTitle(title).build();
 

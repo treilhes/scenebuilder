@@ -43,8 +43,10 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.SendToBackJob;
 
 @Component
@@ -56,12 +58,19 @@ import com.oracle.javafx.scenebuilder.selection.job.SendToBackJob;
 @MenuItemAttachment(
         id = SendToBackAction.MENU_ID,
         targetMenuId = BringToFrontAction.MENU_ID,
-        label = "menu.title.back",
+        label = SendToBackAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = SendToBackAction.MENU_ID,
+        targetMenuId = BringToFrontAction.MENU_ID,
+        label = SendToBackAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+SHIFT+[")
 public class SendToBackAction extends AbstractAction {
 
-    public final static String MENU_ID = "sendToBackMenuItem";
+    public final static String MENU_ID = "sendToBackMenuItem"; //NOCHECK
+    public final static String TITLE = "menu.title.back";
 
     private final SendToBackJob.Factory sendToBackJobFactory;
     private final JobManager jobManager;

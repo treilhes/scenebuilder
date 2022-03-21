@@ -55,7 +55,7 @@ import com.oracle.javafx.scenebuilder.api.dock.View;
 import com.oracle.javafx.scenebuilder.api.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -87,7 +87,7 @@ public class ToggleViewVisibilityAction extends AbstractToggleViewVisibilityActi
         public final static String MENU_ID = "showViewsMenuItem";
 
         private final DockViewController dockViewController;
-        private final MenuBarObjectConfigurator menuBuiler;
+        private final MenuBuilder menuBuiler;
 
         private final ActionFactory actionFactory;
         private final SceneBuilderBeanFactory context;
@@ -96,7 +96,7 @@ public class ToggleViewVisibilityAction extends AbstractToggleViewVisibilityActi
                 ActionFactory actionFactory,
                 SceneBuilderBeanFactory context,
                 @Lazy DockViewController dockViewController,
-                MenuBarObjectConfigurator menuBuiler
+                MenuBuilder menuBuiler
                 ) {
             this.dockViewController = dockViewController;
             this.menuBuiler = menuBuiler;

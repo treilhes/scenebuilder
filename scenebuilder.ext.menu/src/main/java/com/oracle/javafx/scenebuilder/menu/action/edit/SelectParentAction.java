@@ -42,11 +42,13 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -57,14 +59,21 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 @MenuItemAttachment(
         id = SelectParentAction.MENU_ID,
         targetMenuId = SelectNoneAction.MENU_ID,
-        label = "menu.title.select.parent",
+        label = SelectParentAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
-
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = SelectParentAction.MENU_ID,
+        targetMenuId = DeleteAction.MENU_ID,
+        label = SelectParentAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling,
+        separatorBefore = true)
 @Accelerator(accelerator = "CTRL+UP")
 
 public class SelectParentAction extends AbstractAction {
 
     public final static String MENU_ID = "selectParentMenu";
+    public final static String TITLE = "menu.title.select.parent";
 
     private final DocumentManager documentManager;
     private final Selection selection;

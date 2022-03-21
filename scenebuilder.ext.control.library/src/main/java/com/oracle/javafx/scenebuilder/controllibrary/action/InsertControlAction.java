@@ -58,7 +58,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -222,11 +222,11 @@ public class InsertControlAction extends AbstractAction {
         private final LibraryController libraryMenuController;
         private final ControlLibrary library;
 
-        private final MenuBarObjectConfigurator menuBuilder;
+        private final MenuBuilder menuBuilder;
         private final ActionFactory actionFactory;
 
         public InsertMenuProvider(
-                MenuBarObjectConfigurator menuBuilder,
+                MenuBuilder menuBuilder,
                 ActionFactory actionFactory,
                 @Lazy LibraryController libraryMenuController,
                 @Lazy ControlLibrary library

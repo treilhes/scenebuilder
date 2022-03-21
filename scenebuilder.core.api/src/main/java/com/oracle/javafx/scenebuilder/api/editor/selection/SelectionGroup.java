@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.editor.selection;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -78,7 +79,11 @@ public interface SelectionGroup extends Cloneable {
      */
     List<FXOMObject> getSiblings();
 
+    Set<? extends Object> getInnerItems();
+
     AbstractSelectionGroup selectAll();
     AbstractSelectionGroup selectNext();
     AbstractSelectionGroup selectPrevious();
+
+    Map<String, FXOMObject> collectSelectedFxIds();
 }

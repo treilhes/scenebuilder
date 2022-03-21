@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.dock.View;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
@@ -109,18 +109,18 @@ public class MoveToDockAction extends AbstractAction {
     public class MenuProvider implements ViewMenuItemProvider {
 
         private final ActionFactory actionFactory;
-        private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+        private final MenuBuilder menuBuilder;
         private final DockManager dockManager;
         private final DockNameHelper dockNameHelper;
 
         public MenuProvider(
                 ActionFactory actionFactory,
-                MenuBarObjectConfigurator menuBarObjectConfigurator,
+                MenuBuilder menuBuilder,
                 DockManager dockManager,
                 DockNameHelper dockNameHelper) {
             super();
             this.actionFactory = actionFactory;
-            this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+            this.menuBuilder = menuBuilder;
             this.dockManager = dockManager;
             this.dockNameHelper = dockNameHelper;
         }
@@ -129,7 +129,7 @@ public class MoveToDockAction extends AbstractAction {
         public List<ViewMenuItemAttachment> menuItems() {
             List<ViewMenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBarObjectConfigurator.menu().withTitle("view.menu.title.move").withId(MENU_ID).build();
+            Menu menu = menuBuilder.menu().withTitle("view.menu.title.move").withId(MENU_ID).build();
             ViewMenuItemAttachment attachment = ViewMenuItemAttachment
                     .create(menu, ChangeDockTypeAction.MENU_ID, PositionRequest.AsNextSibling, AbstractFxmlViewController.class);
             result.add(attachment);
@@ -143,7 +143,7 @@ public class MoveToDockAction extends AbstractAction {
                     final MoveToDockAction moveToAction = actionFactory.create(MoveToDockAction.class);
                     moveToAction.setTargetDockId(dock.getId());
 
-                    MenuItem mi = menuBarObjectConfigurator.menuItem()
+                    MenuItem mi = menuBuilder.menuItem()
                             .withId(menuId).withAction(moveToAction)
                             .withTitle(title).build();
                     menu.getItems().add(mi);

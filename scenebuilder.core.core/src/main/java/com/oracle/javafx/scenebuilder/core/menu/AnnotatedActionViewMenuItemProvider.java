@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.ViewMenuItemProvider;
@@ -62,15 +62,15 @@ public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider
     private static Logger logger = LoggerFactory.getLogger(AnnotatedActionViewMenuItemProvider.class);
 
     private final SceneBuilderBeanFactory context;
-    private final MenuBarObjectConfigurator builder;
+    private final MenuBuilder builder;
 
     private List<ViewMenuItemAttachment> menuItemsCache;
 
     public AnnotatedActionViewMenuItemProvider(SceneBuilderBeanFactory context,
-            MenuBarObjectConfigurator menuBarObjectConfigurator) {
+            MenuBuilder menuBuilder) {
         super();
         this.context = context;
-        this.builder = menuBarObjectConfigurator;
+        this.builder = menuBuilder;
     }
 
     @Override

@@ -56,7 +56,7 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -163,15 +163,15 @@ public class SetEffectAction extends AbstractAction {
 
         private final static String SET_EFFECTS_MENU_ID = "setEffect";
 
-        private final MenuBarObjectConfigurator menuBuilder;
+        private final MenuBuilder menuBuilder;
         private final ActionFactory actionFactory;
         private final List<Class<? extends Effect>> effects;
 
         public MenuProvider(
-                MenuBarObjectConfigurator menuBarObjectConfigurator,
+                MenuBuilder menuBuilder,
                 ActionFactory actionFactory,
                 List<EffectProvider> effectProviders) {
-            this.menuBuilder = menuBarObjectConfigurator;
+            this.menuBuilder = menuBuilder;
             this.actionFactory = actionFactory;
             this.effects = effectProviders.stream().flatMap(p -> p.effects().stream()).collect(Collectors.toList());
         }

@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -64,17 +64,17 @@ import javafx.scene.control.ToggleGroup;
 @Lazy
 public class PreviewMenuProvider implements MenuItemProvider {
 
-    private final MenuBarObjectConfigurator menuBarObjectConfigurator;
+    private final MenuBuilder menuBuilder;
     private final DocumentManager documentManager;
     private final PreviewWindowController previewWindowController;
     private final ActionFactory actionFactory;
 
     public PreviewMenuProvider(
-            MenuBarObjectConfigurator menuBarObjectConfigurator,
+            MenuBuilder menuBuilder,
             ActionFactory actionFactory,
             DocumentManager documentManager,
             @Lazy PreviewWindowController previewWindowController) {
-        this.menuBarObjectConfigurator = menuBarObjectConfigurator;
+        this.menuBuilder = menuBuilder;
         this.actionFactory = actionFactory;
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;
@@ -84,7 +84,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
     public List<MenuItemAttachment> menuItems() {
 
         return Arrays.asList(
-                MenuItemAttachment.create(menuBarObjectConfigurator.separator().build(), ShowPreviewDialogAction.SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
+                MenuItemAttachment.create(menuBuilder.separator().build(), ShowPreviewDialogAction.SHOW_PREVIEW_IN_DIALOG_ID, PositionRequest.AsNextSibling),
                 new ChangePreviewSizeAttachment());
     }
 

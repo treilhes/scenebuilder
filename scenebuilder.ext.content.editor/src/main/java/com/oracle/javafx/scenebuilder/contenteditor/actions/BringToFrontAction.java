@@ -44,8 +44,11 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.menu.action.file.RevealIncludedFxmlAction;
+import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.BringToFrontJob;
 
 @Component
@@ -57,12 +60,20 @@ import com.oracle.javafx.scenebuilder.selection.job.BringToFrontJob;
 @MenuItemAttachment(
         id = BringToFrontAction.MENU_ID,
         targetMenuId = DefaultMenu.ARRANGE_MENU_ID,
-        label = "menu.title.front",
+        label = BringToFrontAction.TITLE,
         positionRequest = PositionRequest.AsFirstChild)
+@ContextMenuItemAttachment(
+        selectionGroup = ObjectSelectionGroup.class,
+        id = BringToFrontAction.MENU_ID,
+        targetMenuId = RevealIncludedFxmlAction.MENU_ID,
+        label = BringToFrontAction.TITLE,
+        positionRequest = PositionRequest.AsNextSibling,
+        separatorBefore = true)
 @Accelerator(accelerator = "CTRL+SHIFT+]")
 public class BringToFrontAction extends AbstractAction {
 
-    public final static String MENU_ID = "bringToFrontMenuItem";
+    public final static String MENU_ID = "bringToFrontMenuItem"; //NOCHECK
+    public final static String TITLE = "menu.title.front";
 
     private final BringToFrontJob.Factory bringToFrontJobFactory;
     private final JobManager jobManager;

@@ -65,6 +65,7 @@ import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.i18n.I18NScenebuilderCore;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionContextMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionViewMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.shortcut.AnnotatedActionAcceleratorProvider;
@@ -84,6 +85,7 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 AcceleratorsMapPreference.class,
                 AcceleratorsController.class,
                 AnnotatedActionAcceleratorProvider.class,
+                AnnotatedActionContextMenuItemProvider.class,
                 AnnotatedActionMenuItemProvider.class,
                 AnnotatedActionViewMenuItemProvider.class,
                 AnnotatedViewAttachmentProvider.class,

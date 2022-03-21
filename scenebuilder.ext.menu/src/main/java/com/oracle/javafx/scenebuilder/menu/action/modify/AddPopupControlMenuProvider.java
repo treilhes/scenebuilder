@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBarObjectConfigurator;
+import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
@@ -59,9 +59,9 @@ public class AddPopupControlMenuProvider implements MenuItemProvider {
     private final static String MENU_LABEL = "menu.title.add.popup";
     private final static String TARGET_MENU_ID = DefaultMenu.MODIFY_MENU_ID;
 
-    private final MenuBarObjectConfigurator menuBuilder;
+    private final MenuBuilder menuBuilder;
 
-    public AddPopupControlMenuProvider(MenuBarObjectConfigurator menuBuilder) {
+    public AddPopupControlMenuProvider(MenuBuilder menuBuilder) {
         super();
         this.menuBuilder = menuBuilder;
     }

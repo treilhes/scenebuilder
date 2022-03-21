@@ -41,11 +41,8 @@ import java.nio.file.attribute.FileTime;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Document.DocumentControlAction;
-import com.oracle.javafx.scenebuilder.api.Document.DocumentEditAction;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.action.Action.ActionStatus;
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 
 /**
@@ -130,35 +127,6 @@ public class CustomAnnotationConfigApplicationContext extends AnnotationConfigAp
 
             }
 
-            @Override
-            public void performImportFxml() {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void performIncludeFxml() {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void performImportMedia() {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void performControlAction(DocumentControlAction toggleRightPanel) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onCloseRequest() {
-                // TODO Auto-generated method stub
-
-            }
 
             @Override
             public void onFocus() {
@@ -170,24 +138,6 @@ public class CustomAnnotationConfigApplicationContext extends AnnotationConfigAp
             public DocumentWindow getDocumentWindow() {
                 // TODO Auto-generated method stub
                 return null;
-            }
-
-            @Override
-            public boolean canPerformEditAction(DocumentEditAction editAction) {
-                // TODO Auto-generated method stub
-                return false;
-            }
-
-            @Override
-            public void performEditAction(DocumentEditAction editAction) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public boolean canPerformControlAction(DocumentControlAction controlAction) {
-                // TODO Auto-generated method stub
-                return false;
             }
 
             @Override
@@ -221,10 +171,11 @@ public class CustomAnnotationConfigApplicationContext extends AnnotationConfigAp
             }
 
             @Override
-            public ActionStatus performCloseAction() {
+            public void close() {
                 // TODO Auto-generated method stub
-                return null;
+
             }
+
         });
     }
 }
