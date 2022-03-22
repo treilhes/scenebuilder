@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.library.maven.repository;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.maven.MavenRepositorySystem;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
@@ -62,7 +63,6 @@ import javafx.stage.Modality;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class RepositoryDialogController extends AbstractFxmlWindowController {
 
     @FXML
@@ -121,12 +121,13 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
 
 
     protected RepositoryDialogController(
-            Api api,
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, RepositoryDialogController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner);
+        super(sceneBuilderManager, iconSetting, RepositoryDialogController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner);
         this.owner = owner;
         this.editorController = editorController;
         this.mavenSetting = mavenSetting;

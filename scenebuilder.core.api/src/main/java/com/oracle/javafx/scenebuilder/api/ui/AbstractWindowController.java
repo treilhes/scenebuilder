@@ -37,9 +37,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -84,7 +85,8 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
     private CloseHandler closeHandler;
     private FocusHandler focusHandler;
 
-    private final Api api;
+    private final SceneBuilderManager sceneBuilderManager;
+    private final IconSetting iconSetting;
 
     /**
      * Instantiates a new abstract window controller.
@@ -92,8 +94,8 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
      * @param api the scene builder api
      * @param owner the owner
      */
-    public AbstractWindowController(Api api, SceneBuilderWindow owner) {
-        this(api, owner, true);
+    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, SceneBuilderWindow owner) {
+        this(sceneBuilderManager, iconSetting, owner, true);
     }
 
     /**
@@ -103,8 +105,9 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
      * @param owner the owner
      * @param sizeToScene the size to scene
      */
-    public AbstractWindowController(Api api, SceneBuilderWindow owner, boolean sizeToScene) {
-        this.api = api;
+    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, SceneBuilderWindow owner, boolean sizeToScene) {
+        this.sceneBuilderManager = sceneBuilderManager;
+        this.iconSetting = iconSetting;
         this.owner = owner;
         this.sizeToScene = sizeToScene;
 
@@ -121,7 +124,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
         assert root != null;
         this.root = root;
 
-        api.getSceneBuilderManager().stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+        sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
             toolStylesheetDidChange(s);
         });
     }
@@ -191,8 +194,8 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
             // By default we set the same icons as the owner
             if (this.owner != null) {
                 stage.getIcons().addAll(this.owner.getStage().getIcons());
-            } else if (api.getIconSetting() != null) {
-                api.getIconSetting().setWindowIcon(stage);
+            } else if (iconSetting != null) {
+                iconSetting.setWindowIcon(stage);
             }
 
             controllerDidCreateStage();
@@ -392,9 +395,9 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
         return res;
     }
 
-    public Api getApi() {
-        return api;
-    }
+//    public Api getApi() {
+//        return api;
+//    }
 
     // Compute the percentage of the surface of stageRect which is rendered in
     // the given screen and write the result in sortedScreens (percentage is

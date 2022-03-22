@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,12 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
@@ -72,10 +74,10 @@ public class Point3DEditor extends AbstractPropertyEditor {
     private DoubleField zDf;
     DoubleField[] doubleFields = new DoubleField[3];
 
-    public Point3DEditor(
-            @Autowired Api api
-            ) {
-        super(api);
+    public Point3DEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         initialize();
     }
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,17 +47,20 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
@@ -75,8 +79,33 @@ import javafx.scene.text.Font;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class FontPopupEditor extends PopupEditor {
+
+    private final static Map<String, Object> fontSizeConstants = new HashMap<>();
+    static {
+        fontSizeConstants.put(" 9", 9.0);
+        fontSizeConstants.put("10", 10.0);
+        fontSizeConstants.put("11", 11.0);
+        fontSizeConstants.put("12", 12.0);
+        fontSizeConstants.put("13", 13.0);
+        fontSizeConstants.put("14", 14.0);
+        fontSizeConstants.put("18", 18.0);
+        fontSizeConstants.put("24", 24.0);
+        fontSizeConstants.put("36", 36.0);
+        fontSizeConstants.put("48", 48.0);
+        fontSizeConstants.put("64", 64.0);
+        fontSizeConstants.put("72", 72.0);
+        fontSizeConstants.put("96", 96.0);
+    }
+
+    private final static DoublePropertyMetadata.CustomizableDoublePropertyMetadata sizeMetadata =
+            new DoublePropertyMetadata.CustomizableDoublePropertyMetadata.Builder()
+                .withName(PropertyName.EMPTY)
+                .withReadWrite(true)
+                .withMin(1.0)
+                .withMax(96.0)
+                .withLenientBoundary(true)
+                .withConstants(fontSizeConstants).build();
 
     @FXML
     private StackPane familySp;
@@ -89,14 +118,27 @@ public class FontPopupEditor extends PopupEditor {
     private Font font = Font.getDefault();
     private FontFamilyEditor familyEditor;
     private FontStyleEditor fontStyleEditor;
-    private BoundedDoubleEditor sizeEditor;
+    private final BoundedDoubleEditor sizeEditor;
+
     private final MessageLogger messageLogger;
 
+    private final FontStyleEditor.Factory fontStyleEditorFactory;
+    private final FontFamilyEditor.Factory fontFamilyEditorFactory;
+
     public FontPopupEditor(
-            @Autowired Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            MessageLogger messageLogger,
+            BoundedDoubleEditor sizeEditor,
+            FontStyleEditor.Factory fontStyleEditorFactory,
+            FontFamilyEditor.Factory fontFamilyEditorFactory
             ) {
-        super(api);
-        this.messageLogger = api.getApiDoc().getMessageLogger();
+        super(dialog, documentation, fileSystem);
+        this.messageLogger = messageLogger;
+        this.sizeEditor = sizeEditor;
+        this.fontStyleEditorFactory = fontStyleEditorFactory;
+        this.fontFamilyEditorFactory = fontFamilyEditorFactory;
     }
 
 //    private void initialize(Editor editorController) {
@@ -152,12 +194,18 @@ public class FontPopupEditor extends PopupEditor {
     public void initializePopupContent() {
         root = FXMLUtils.load(this, "FontPopupEditor.fxml");
         // Add the editors in the scene graph
-        familyEditor = new FontFamilyEditor(getApi(), "", "", getFamilies(messageLogger), messageLogger);//NOCHECK
+
+        //TODO remove those editor factories and use metadata like sizeEditor
+        familyEditor = fontFamilyEditorFactory.getEditor("", "", getFamilies(messageLogger));//NOCHECK
         familySp.getChildren().add(familyEditor.getValueEditor());
-        fontStyleEditor = new FontStyleEditor(getApi(), "", "", new ArrayList<>(), messageLogger);//NOCHECK
+
+        //TODO remove those editor factories and use metadata like sizeEditor
+        fontStyleEditor = fontStyleEditorFactory.getEditor("", "", new ArrayList<>());//NOCHECK
         styleSp.getChildren().add(fontStyleEditor.getValueEditor());
-        sizeEditor = new BoundedDoubleEditor(getApi(), "", "", getPredefinedFontSizes(), 1.0, 96.0, true);//NOCHECK
-        sizeEditor.setMinMaxForSliderOnly(true);
+
+
+        sizeEditor.reset(sizeMetadata, null);
+
         commitOnFocusLost(sizeEditor);
         sizeSp.getChildren().add(sizeEditor.getValueEditor());
 
@@ -222,20 +270,25 @@ public class FontPopupEditor extends PopupEditor {
         return root;
     }
 
-    private static class FontFamilyEditor extends AutoSuggestEditor {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+    public static class FontFamilyEditor extends AutoSuggestEditor {
 
+        private final MessageLogger messageLogger;
         private List<String> families;
         private String family = null;
 
-        public FontFamilyEditor(Api api, String name, String defaultValue, List<String> families, MessageLogger messageLogger) {
-            super(api);
-            preInit(Type.ALPHA, families);
-            initialize(families, messageLogger);
-            this.reset(name, defaultValue);
+        public FontFamilyEditor(Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem,
+                MessageLogger messageLogger) {
+            super(dialog, documentation, fileSystem);
+            this.messageLogger = messageLogger;
         }
 
-        private void initialize(List<String> families, MessageLogger messageLogger) {
+        private void initialize(String name, String defaultValue, List<String> families) {
             this.families = families;
+            preInit(Type.ALPHA, families);
             EventHandler<ActionEvent> onActionListener = event -> {
                 if (Objects.equals(family, getTextField().getText())) {
                     // no change
@@ -253,6 +306,7 @@ public class FontPopupEditor extends PopupEditor {
 
             setTextEditorBehavior(this, getTextField(), onActionListener);
             commitOnFocusLost(this);
+            this.reset(name, defaultValue);
         }
 
         @Override
@@ -264,24 +318,42 @@ public class FontPopupEditor extends PopupEditor {
         public List<String> getFamilies() {
             return families;
         }
+
+        @Component
+        @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+        public static class Factory extends AbstractFactory<FontFamilyEditor> {
+            public Factory(SceneBuilderBeanFactory sbContext) {
+                super(sbContext);
+            }
+
+            public FontFamilyEditor getEditor(String name, String defaultValue, List<String> families) {
+                return create(FontFamilyEditor.class, (e) -> e.initialize(name, defaultValue, families));
+            }
+        }
     }
 
-    private static class FontStyleEditor extends AutoSuggestEditor {
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+    public static class FontStyleEditor extends AutoSuggestEditor {
 
         private String style = null;
+        private final MessageLogger messageLogger;
 
-        public FontStyleEditor(Api api, String name, String defaultValue, List<String> suggestedList, MessageLogger messageLogger) {
-            super(api);
-            preInit(Type.ALPHA, suggestedList);
-            initialize(messageLogger);
-            this.reset(name, defaultValue);
+        public FontStyleEditor(Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem,
+                MessageLogger messageLogger) {
+            super(dialog, documentation, fileSystem);
+            this.messageLogger = messageLogger;
         }
 
         public void reset(List<String> suggestedList) {
             super.reset("", "", suggestedList);
         }
 
-        private void initialize(MessageLogger messageLogger) {
+        private void initialize(String name, String defaultValue, List<String> suggestedList) {
+            preInit(Type.ALPHA, suggestedList);
+
             EventHandler<ActionEvent> onActionListener = event -> {
                 if (Objects.equals(style, getTextField().getText())) {
                     // no change
@@ -297,11 +369,25 @@ public class FontPopupEditor extends PopupEditor {
 
             setTextEditorBehavior(this, getTextField(), onActionListener);
             commitOnFocusLost(this);
+
+            this.reset(name, defaultValue);
         }
 
         @Override
         public Object getValue() {
             return getTextField().getText();
+        }
+
+        @Component
+        @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+        public static class Factory extends AbstractFactory<FontStyleEditor> {
+            public Factory(SceneBuilderBeanFactory sbContext) {
+                super(sbContext);
+            }
+
+            public FontStyleEditor getEditor(String name, String defaultValue, List<String> suggestedList) {
+                return create(FontStyleEditor.class, (e) -> e.initialize(name, defaultValue, suggestedList));
+            }
         }
     }
 

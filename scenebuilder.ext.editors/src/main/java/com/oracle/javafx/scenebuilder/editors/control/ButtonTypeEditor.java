@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,12 +43,13 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
@@ -84,8 +86,10 @@ public class ButtonTypeEditor extends InlineListEditor {
     private Collection<ButtonType> buttonList = new TreeSet<ButtonType>(getButtonTypeComparator());
 
     public ButtonTypeEditor(
-            @Autowired Api api) {
-        super(api);
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         initialize();
     }
 
@@ -299,12 +303,12 @@ public class ButtonTypeEditor extends InlineListEditor {
         public void reset() {
             buttonTypeCb.getSelectionModel().clearSelection();
         }
-        
+
         public void reset(Collection<ButtonType> buttonList) {
             buttonTypeCb.getItems().clear();
             updateButtonList(buttonList);
         }
-        
+
 
         // Please findBugs
         public void requestFocus() {

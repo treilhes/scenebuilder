@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,31 +33,38 @@
  */
 package com.oracle.javafx.scenebuilder.ui.dialog;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 import javafx.stage.Window;
 
 @Component
 public class DialogController implements Dialog {
 
-    private final Api api;
+    private final SceneBuilderBeanFactory context;
+    private final SceneBuilderManager sceneBuilderManager;
+    private final IconSetting iconSetting;
 
     public DialogController(
-            @Autowired @Lazy Api api) {
-	    this.api = api;
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            SceneBuilderBeanFactory context) {
+	    this.sceneBuilderManager = sceneBuilderManager;
+	    this.iconSetting = iconSetting;
+	    this.context = context;
 	}
 
-    
+
     @Override
     public void showErrorAndWait(Window owner, String title, String message, String detail, Throwable cause) {
-        final ErrorDialog errorDialog = (ErrorDialog)api.getContext().getBean("errorDialog", api, owner);
+        final ErrorDialog errorDialog = (ErrorDialog)context.getBean("errorDialog", sceneBuilderManager, iconSetting, context, owner);
+
         errorDialog.setTitle(title);
         errorDialog.setMessage(message);
         errorDialog.setDetails(detail);
@@ -82,9 +90,9 @@ public class DialogController implements Dialog {
     }
     @Override
     public Alert customAlert(Window owner) {
-        return (Alert)api.getContext().getBean("alertDialog", api, owner);
+        return (Alert)context.getBean("alertDialog", sceneBuilderManager, iconSetting, owner);
     }
-    
+
 	@Override
     public void showAlertAndWait(Window owner, String title, String message, String detail) {
         Alert alert = customAlert();
@@ -98,7 +106,7 @@ public class DialogController implements Dialog {
         alert.setCancelButtonTitle(I18N.getString("label.close"));
         alert.showAndWait();
     }
-	
+
 	@Override
     public void showAlertAndWait(String title, String message, String detail) {
 	    showAlertAndWait(null, title, message, detail);

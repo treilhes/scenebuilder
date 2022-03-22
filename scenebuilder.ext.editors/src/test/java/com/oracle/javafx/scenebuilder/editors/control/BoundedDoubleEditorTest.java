@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -65,14 +66,14 @@ public class BoundedDoubleEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
+        BoundedDoubleEditor o = new BoundedDoubleEditor(null, null, null);
 
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
+        BoundedDoubleEditor o = new BoundedDoubleEditor(null, null, null);
 
         assertNotNull(o.getMenu());
     }
@@ -82,7 +83,7 @@ public class BoundedDoubleEditorTest {
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
 
-        BoundedDoubleEditor o = new BoundedDoubleEditor(MockObjects.buildApiMock());
+        BoundedDoubleEditor o = new BoundedDoubleEditor(null, null, null);
 
         o.reset(someDoubleProp(), selectionState);
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,12 +42,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
@@ -98,7 +100,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
     private KeyCombination.ModifierValue shift;
     private KeyCombination.ModifierValue shortcut;
     private MainKey mainKey;
-    private final MessageLogger messageLogger;
+
     private final KeyCombination.Modifier[] keyCombinationModifiers = {
         KeyCombination.ALT_ANY, KeyCombination.ALT_DOWN,
         KeyCombination.CONTROL_ANY, KeyCombination.CONTROL_DOWN,
@@ -106,11 +108,22 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         KeyCombination.SHIFT_ANY, KeyCombination.SHIFT_DOWN,
         KeyCombination.SHORTCUT_ANY, KeyCombination.SHORTCUT_DOWN};
 
+    private final MessageLogger messageLogger;
+    private final Dialog dialog;
+    private final Documentation documentation;
+    private final FileSystem fileSystem;
+
     public KeyCombinationPopupEditor(
-            @Autowired Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            MessageLogger messageLogger
             ) {
-        super(api);
-        this.messageLogger = api.getApiDoc().getMessageLogger();
+        super(dialog, documentation, fileSystem);
+        this.dialog = dialog;
+        this.documentation = documentation;
+        this.fileSystem = fileSystem;
+        this.messageLogger = messageLogger;
     }
 
     //
@@ -129,7 +142,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
             keyCodesStr.add(keyCode.getName());
         }
 
-        mainKey = new MainKey(getApi(), keyCodesStr, messageLogger);
+        mainKey = new MainKey(dialog, documentation, fileSystem, messageLogger, keyCodesStr);
         mainKeySp.getChildren().add(mainKey.getNode());
 
         clearAllBt.setText(I18N.getString("inspector.keycombination.clear"));
@@ -429,14 +442,19 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         private MessageLogger messageLogger;
         String mainKey = null;
 
-        public MainKey(Api api, List<String> suggestedKeys, MessageLogger messageLogger) {
-            super(api); //NOCHECK
-            preInit(Type.ALPHA, suggestedKeys);
-            initialize(messageLogger);
+        public MainKey(
+                Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem,
+                MessageLogger messageLogger,
+                List<String> suggestedKeys) {
+            super(dialog, documentation, fileSystem);
+            this.messageLogger = messageLogger;
+            initialize(suggestedKeys);
         }
 
-        private void initialize(MessageLogger messageLogger) {
-            this.messageLogger = messageLogger;
+        private void initialize(List<String> suggestedKeys) {
+            preInit(Type.ALPHA, suggestedKeys);
             EventHandler<ActionEvent> onActionListener = t -> {
                 if (Objects.equals(mainKey, getTextField().getText())) {
                     // no change
@@ -484,6 +502,7 @@ public class KeyCombinationPopupEditor extends PopupEditor {
         public boolean isEmpty() {
             return getKeyCode() == null;
         }
+
     }
 
     private static void commitOnFocusLost(AutoSuggestEditor autoSuggestEditor) {

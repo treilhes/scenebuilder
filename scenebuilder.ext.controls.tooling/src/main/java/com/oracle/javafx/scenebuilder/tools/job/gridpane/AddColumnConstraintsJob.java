@@ -57,9 +57,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
+import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.ColumnConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
 
 import javafx.scene.layout.ColumnConstraints;
@@ -195,8 +195,8 @@ public final class AddColumnConstraintsJob extends BatchDocumentJob {
                 // Create new constraints with default values for the new added column
                 final FXOMInstance addedConstraints = makeColumnConstraintsInstance();
 
-                JobUtils.setMinWidth(addedConstraints, ColumnConstraints.class, defaultMinWidth);
-                JobUtils.setPrefWidth(addedConstraints, ColumnConstraints.class, defaultPrefWidth);
+                ColumnConstraintsMetadata.minWidthPropertyMetadata.setValue(addedConstraints, defaultMinWidth);
+                ColumnConstraintsMetadata.prefWidthPropertyMetadata.setValue(addedConstraints, defaultPrefWidth);
                 final AddPropertyValueJob addValueJob = addPropertyValueJobFactory.getJob(addedConstraints,
                         (FXOMPropertyC) constraintsProperty, addedIndex);
                 result.add(addValueJob);
@@ -237,23 +237,25 @@ public final class AddColumnConstraintsJob extends BatchDocumentJob {
         final FXOMInstance result = makeColumnConstraintsInstance();
 
         // Set the new column constraints values with the values of the specified instance
-        final boolean fillWidth = JobUtils.getFillWidth(constraints, ColumnConstraints.class);
-        final double maxWidth = JobUtils.getMaxWidth(constraints, ColumnConstraints.class);
-        final double minWidth = JobUtils.getMinWidth(constraints, ColumnConstraints.class);
-        final double percentWidth = JobUtils.getPercentWidth(constraints, ColumnConstraints.class);
-        final double prefWidth = JobUtils.getPrefWidth(constraints, ColumnConstraints.class);
-        final String halignment = JobUtils.getHAlignment(constraints, ColumnConstraints.class);
-        final String hgrow = JobUtils.getHGrow(constraints, ColumnConstraints.class);
+        //
 
-        JobUtils.setFillWidth(result, ColumnConstraints.class, fillWidth);
-        JobUtils.setMaxWidth(result, ColumnConstraints.class, maxWidth);
+        final boolean fillWidth = ColumnConstraintsMetadata.fillWidthPropertyMetadata.getValue(constraints);
+        final double maxWidth = ColumnConstraintsMetadata.maxWidthPropertyMetadata.getValue(constraints);
+        final double minWidth = ColumnConstraintsMetadata.minWidthPropertyMetadata.getValue(constraints);
+        final double percentWidth = ColumnConstraintsMetadata.percentWidthPropertyMetadata.getValue(constraints);
+        final double prefWidth = ColumnConstraintsMetadata.prefWidthPropertyMetadata.getValue(constraints);
+        final String halignment = ColumnConstraintsMetadata.halignmentPropertyMetadata.getValue(constraints);
+        final String hgrow = ColumnConstraintsMetadata.hgrowPropertyMetadata.getValue(constraints);
+
+        ColumnConstraintsMetadata.fillWidthPropertyMetadata.setValue(result, fillWidth);
+        ColumnConstraintsMetadata.maxWidthPropertyMetadata.setValue(result, maxWidth);
         // If the existing constraints minWidth is too small, we use the default one
-        JobUtils.setMinWidth(result, ColumnConstraints.class, Math.max(minWidth, defaultMinWidth));
-        JobUtils.setPercentWidth(result, ColumnConstraints.class, percentWidth);
+        ColumnConstraintsMetadata.minWidthPropertyMetadata.setValue(result, Math.max(minWidth, defaultMinWidth));
+        ColumnConstraintsMetadata.percentWidthPropertyMetadata.setValue(result, percentWidth);
         // If the existing constraints prefWidth is too small, we use the default one
-        JobUtils.setPrefWidth(result, ColumnConstraints.class, Math.max(prefWidth, defaultPrefWidth));
-        JobUtils.setHAlignment(result, ColumnConstraints.class, halignment);
-        JobUtils.setHGrow(result, ColumnConstraints.class, hgrow);
+        ColumnConstraintsMetadata.prefWidthPropertyMetadata.setValue(result, Math.max(prefWidth, defaultPrefWidth));
+        ColumnConstraintsMetadata.halignmentPropertyMetadata.setValue(result, halignment);
+        ColumnConstraintsMetadata.hgrowPropertyMetadata.setValue(result, hgrow);
 
         return result;
     }

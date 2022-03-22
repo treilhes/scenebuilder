@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,13 +38,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.About;
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import javafx.fxml.FXML;
@@ -73,12 +74,15 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
     private String sbAboutCopyrightKeyName;
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
     private final String LOG_FILE_NAME;
+    private final SceneBuilderManager sceneBuilderManager;
 
     public AboutWindowController(
-            @Autowired @Lazy Api api
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting
             ) {
-        super(api, AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
-        
+        super(sceneBuilderManager, iconSetting, AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
+        this.sceneBuilderManager = sceneBuilderManager;
+
         try (InputStream in = getClass().getResourceAsStream("about.properties")) {
 
             if (in != null) {
@@ -100,8 +104,8 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
     @FXML
     public void onMousePressed(MouseEvent event) {
         if ((event.getClickCount() == 2) && event.isAltDown()) {
-            boolean debug = getApi().getSceneBuilderManager().debugMode().get();
-            getApi().getSceneBuilderManager().debugMode().set(!debug);
+            boolean debug = sceneBuilderManager.debugMode().get();
+            sceneBuilderManager.debugMode().set(!debug);
         }
     }
 
@@ -208,7 +212,7 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
         sb.append(System.getProperty("javafx.version")).append("\n\n"); //NOCHECK
         return sb;
     }
-    
+
     private StringBuilder getJavaParagraph() {
         StringBuilder sb = new StringBuilder("Java\n"); //NOCHECK
         sb.append(System.getProperty("java.runtime.version")).append(", ") //NOCHECK

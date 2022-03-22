@@ -35,6 +35,11 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.content.editor</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.metadata.javafx15</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- JavaFX -->
         <dependency>

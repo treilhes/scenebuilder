@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,11 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState.CssStyle;
@@ -120,7 +121,7 @@ public class CssContentMaker {
     }
 
     @SuppressWarnings("rawtypes")
-    public static <N extends Node> PropertyState modelValue(N node, CssMetaData<?, ?> cssMeta, FXOMObject fxomObject) {
+    public static <N extends Node> PropertyState modelValue(Metadata metadata, N node, CssMetaData<?, ?> cssMeta, FXOMObject fxomObject) {
         PropertyState val = null;
 
         if (fxomObject == null) {
@@ -137,7 +138,7 @@ public class CssContentMaker {
         PropertyName beanPropertyName = new PropertyName(beanPropName);
         assert fxomObject instanceof FXOMInstance;
         FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        ValuePropertyMetadata propMeta = Api.get().getMetadata().queryValueProperty(fxomInstance, beanPropertyName);
+        ValuePropertyMetadata propMeta = metadata.queryValueProperty(fxomInstance, beanPropertyName);
         if (propMeta == null) {
             // No corresponding metadata
             return null;
@@ -228,7 +229,7 @@ public class CssContentMaker {
         return style.contains(prop.getCssProperty());
     }
 
-    public static NodeCssState getCssState(Object selectedObject) {
+    public static NodeCssState getCssState(Metadata metadata, Object selectedObject) {
         Node node = CssUtils.getSelectedNode(selectedObject);
         if (node == null) {
             return null;
@@ -250,7 +251,7 @@ public class CssContentMaker {
                 node.setOpacity(0);
                 CssUtils.addToParent(p, node);
             }
-            NodeCssState state = new NodeCssState(CssInternal.collectCssState(node), node,
+            NodeCssState state = new NodeCssState(metadata, CssInternal.collectCssState(node), node,
                     getFXOMObject(selectedObject));
             return state;
         } finally {

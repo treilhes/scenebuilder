@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,12 +37,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
@@ -61,15 +62,14 @@ import javafx.scene.layout.VBox;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class DividerPositionsEditor extends AbstractPropertyEditor {
 
     private final VBox vbox = new VBox(5);
 
-    public DividerPositionsEditor(
-            @Autowired Api api
-            ) {
-        super(api);
+    public DividerPositionsEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         setLayoutFormat(AbstractPropertyEditor.LayoutFormat.SIMPLE_LINE_TOP);
     }
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,12 +36,13 @@ package com.oracle.javafx.scenebuilder.editors.popupeditors;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -62,17 +64,20 @@ import javafx.scene.effect.Effect;
 public class EffectPopupEditor extends PopupEditor {
 
     private final MessageLogger messageLogger;
-    
+
     private EffectPicker effectPicker;
     private List<MenuItem> effectMenuItems;
     private List<Class<? extends Effect>> effects;
-    
+
     public EffectPopupEditor(
-            @Autowired Api api,
-            @Autowired List<EffectProvider> effectProviders
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            MessageLogger messageLogger,
+            List<EffectProvider> effectProviders
             ) {
-        super(api);
-        this.messageLogger = api.getApiDoc().getMessageLogger();
+        super(dialog, documentation, fileSystem);
+        this.messageLogger = messageLogger;
         this.effects = effectProviders.stream().flatMap(p -> p.effects().stream()).collect(Collectors.toList());
     }
 
@@ -102,7 +107,7 @@ public class EffectPopupEditor extends PopupEditor {
         }
     };
 
-    
+
 
     @Override
     public void setPopupContentValue(Object value) {

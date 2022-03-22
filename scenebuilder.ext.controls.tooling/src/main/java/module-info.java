@@ -99,6 +99,7 @@ open module scenebuilder.ext.controls.tooling {
     requires scenebuilder.core.utils;
     requires scenebuilder.ext.menu;
     requires scenebuilder.ext.content.editor;
+    requires scenebuilder.metadata.javafx;
 
     provides Extension with BaseToolingExtension;
 }

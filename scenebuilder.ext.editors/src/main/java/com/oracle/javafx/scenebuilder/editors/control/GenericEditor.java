@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
@@ -56,18 +57,17 @@ import javafx.scene.control.TextField;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class GenericEditor extends AbstractPropertyEditor {
 
     private TextField textField;
 
-    public GenericEditor(
-            @Autowired Api api
-            ) {
-        super(api);
+    public GenericEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         initialize();
     }
-    
+
     private void initialize() {
         textField = new TextField();
         EventHandler<ActionEvent> onActionListener = event -> userUpdateValueProperty(getValue());

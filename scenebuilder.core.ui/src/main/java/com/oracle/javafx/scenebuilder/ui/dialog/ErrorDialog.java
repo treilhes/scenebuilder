@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,9 +39,10 @@ import java.io.StringWriter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 import javafx.stage.Window;
 
@@ -53,13 +55,16 @@ import javafx.stage.Window;
 public class ErrorDialog extends AlertDialog {
 
     private final SceneBuilderBeanFactory context;
-    //private final SceneBuilderManager sceneBuilderManager;
 
     private String debugInfo;
 
-    protected ErrorDialog(Api api, Window owner) {
-        super(api, owner);
-        this.context = api.getContext();
+    protected ErrorDialog(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            SceneBuilderBeanFactory context,
+            Window owner) {
+        super(sceneBuilderManager, iconSetting, owner);
+        this.context = context;
     }
 
     @Override

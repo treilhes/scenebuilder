@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,15 +36,15 @@ package com.oracle.javafx.scenebuilder.extlibrary.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import javafx.event.ActionEvent;
@@ -65,12 +66,13 @@ public class ExtensionLibraryWindowController extends AbstractFxmlWindowControll
 
     private boolean dirty = false;
 
-    
+
     public ExtensionLibraryWindowController(
-            @Autowired Api api,
-            @Autowired DocumentWindow document
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentWindow document
             ) {
-        super(api, ExtensionLibraryWindowController.class.getResource("ExtensionLibraryWindow.fxml"), I18N.getBundle(),
+        super(sceneBuilderManager, iconSetting, ExtensionLibraryWindowController.class.getResource("ExtensionLibraryWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N
     }
 

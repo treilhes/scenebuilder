@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -52,46 +53,51 @@ public class ColumnResizePolicyEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static TableViewResizePolicyPropertyMetadata someTableViewResizePolicyProp() {
-        return new TableViewResizePolicyPropertyMetadata(new PropertyName("tv"), true,
-                TableView.UNCONSTRAINED_RESIZE_POLICY, null);
+        return new TableViewResizePolicyPropertyMetadata.Builder()
+                .withName(new PropertyName("tv"))
+                .withReadWrite(true)
+                .withDefaultValue(TableView.UNCONSTRAINED_RESIZE_POLICY)
+                .build();
     }
 
     static TreeTableViewResizePolicyPropertyMetadata someTreeTableViewResizePolicyProp() {
-        return new TreeTableViewResizePolicyPropertyMetadata(new PropertyName("ttv"), true,
-                TreeTableView.UNCONSTRAINED_RESIZE_POLICY, null);
+        return new TreeTableViewResizePolicyPropertyMetadata.Builder()
+                .withName(new PropertyName("ttv"))
+                .withReadWrite(true)
+                .withDefaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY).build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        
+
         ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        
+
         ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstanceForTableView() {
-        
+
         ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someTableViewResizePolicyProp(), null);
     }
-    
+
     @Test
     public void shouldResetTheInstanceForTreeTableView() {
-        
+
         ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someTreeTableViewResizePolicyProp(), null);
     }
 

@@ -51,7 +51,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
@@ -74,6 +73,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
@@ -232,6 +232,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private final Drag drag;
 
     private final ViewSearch viewSearch;
+    private final Metadata metadata;
 
     /**
      * Should be implemented by the application.
@@ -252,6 +253,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     public CssPanelController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
+            Metadata metadata,
             Editor editor,
             Delegate delegate,
             CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
@@ -264,6 +266,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                 CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
         this.editorController = editor;
         this.documentManager = documentManager;
+        this.metadata = metadata;
         this.applicationDelegate = delegate;
         this.drag = drag;
         this.fileSystem = fileSystem;
@@ -728,7 +731,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private void collectCss() {
         if (selectedObject != null) {
-            NodeCssState state = CssContentMaker.getCssState(selectedObject);
+            NodeCssState state = CssContentMaker.getCssState(metadata, selectedObject);
             if (state == null) {
                 return;
             }
@@ -1627,7 +1630,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private ValuePropertyMetadata getValuePropertyMeta(PropertyName propName) {
         ValuePropertyMetadata valuePropMeta = null;
         if (selectedObject instanceof FXOMInstance) {
-            valuePropMeta = Api.get().getMetadata().queryValueProperty((FXOMInstance) selectedObject, propName);
+            valuePropMeta = metadata.queryValueProperty((FXOMInstance) selectedObject, propName);
         }
         return valuePropMeta;
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,11 +55,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform;
@@ -105,18 +107,18 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class ImageImportWindowController extends AbstractModalDialog {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ImageImportWindowController.class);
 
     public enum PrefSize {
 
-        DEFAULT(-1, -1), 
-        TWO_HUNDRED_BY_ONE_HUNDRED(200, 100), 
+        DEFAULT(-1, -1),
+        TWO_HUNDRED_BY_ONE_HUNDRED(200, 100),
         TWO_HUNDRED_BY_TWO_HUNDRED(200, 200),
         THREE_HUNDRED_TWENTY_BY_TWO_HUNDRED_FIFTY_SIX(320, 256),
-        SCREEN_640_480(640, 480), 
-        SCREEN_800_600(800, 600), 
-        SCREEN_1024_768(1024, 768), 
+        SCREEN_640_480(640, 480),
+        SCREEN_800_600(800, 600),
+        SCREEN_1024_768(1024, 768),
         CUSTOM(-2, -2);
 
         private double width;
@@ -216,20 +218,18 @@ public class ImageImportWindowController extends AbstractModalDialog {
 //        this(api, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
 //    }
 
-    protected ImageImportWindowController(Api api
-            // List<File> files,
-            // MavenArtifactsPreferences mavenPreferences,
-            // boolean copyFilesToUserLibraryDir,
-            // List<String> artifactsFilter,
-            ) {
-        super(api, ImageImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
+    protected ImageImportWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            Dialog dialog) {
+        super(sceneBuilderManager, iconSetting, ImageImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
         // libPanelController = lpc;
         // importFiles = new ArrayList<>(files);
         // this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
         // this.artifactsFilter = artifactsFilter;
         this.owner = owner;
         // this.mavenPreferences = mavenPreferences;
-        this.dialog = api.getApiDoc().getDialog();
+        this.dialog = dialog;
     }
 
     public ImageFilterTransform editTransform(List<ImageReport> reports, ImageFilterTransform controlFilter, ClassLoader classLoader) {
@@ -250,7 +250,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
         importList.getItems().clear();
         this.importClassLoader = classLoader;
         this.filter = controlFilter;
-        
+
         List<ImageReport> jarReportList = reports; // blocking call
         final Callback<ImportRow, ObservableValue<Boolean>> importRequired = row -> row.importRequired();
         importList.setCellFactory(CheckBoxListCell.forListView(importRequired));
@@ -265,13 +265,13 @@ public class ImageImportWindowController extends AbstractModalDialog {
                 sb.append("> ").append(e.toString()).append("\n");
                 if ((e.getStatus() == ImageReportEntry.Status.OK)) {
                     boolean checked = true;
-                    
+
                     switch (e.getType()) {
                     case FONT_ICONS:
                     {
                         FontImage font = controlFilter.getOrCreateFontImage(e.getFontName());
                         checked = font.isImported();
-                        
+
                         final ImportRow importRow = new ImportRow(checked, jarReport, e, null);
                         importList.getItems().add(importRow);
                         importRow.importRequired().addListener((ChangeListener<Boolean>) (ov, oldValue, newValue) -> {
@@ -286,7 +286,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
                     {
                         StandardImage img = controlFilter.getOrCreateStandardImage(e.getName());
                         checked = img.isImported();
-                        
+
                         final ImportRow importRow = new ImportRow(checked, jarReport, e, null);
                         importList.getItems().add(importRow);
                         importRow.importRequired().addListener((ChangeListener<Boolean>) (ov, oldValue, newValue) -> {
@@ -300,7 +300,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
                     default:
                         break;
                     }
-                    
+
                 } else {
                     if (e.getException() != null) {
                         StringWriter sw = new StringWriter();
@@ -348,7 +348,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
     protected void okButtonPressed(ActionEvent e) {
         getStage().close();
 //        exploringTask = null;
-//        
+//
 
 //        try {
 //            closeClassLoader();
@@ -538,7 +538,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
 
         importList.getSelectionModel().selectedItemProperty().addListener((ChangeListener<ImportRow>) (ov, t, t1) -> {
             previewGroup.getChildren().clear();
-            
+
 //            String fxmlText;
 //            if (LibraryUtil.isFxmlPath(t1.getReport().getSource())) {
 //                try {
@@ -550,28 +550,28 @@ public class ImageImportWindowController extends AbstractModalDialog {
 //            } else {
 //                fxmlText = ImageBuiltinLibrary.makeFxmlText(t1.getReportEntry().getKlass());
 //            }
-            
-            
+
+
             try {
-                 
+
                 InputStream is = null;
                 if (LibraryUtil.isJarPath(t1.getReport().getSource()) || Files.isDirectory(t1.getReport().getSource())) {
                     is = importClassLoader.getResourceAsStream(t1.getReportEntry().getResourceName());
                 } else {
                     is = new FileInputStream(t1.getReport().getSource().toFile());
                 }
-                
+
                 switch (t1.getReportEntry().getType()) {
                 case IMAGE:
                 {
                     //temp until viewbox management
                     StandardImage img = filter.getOrCreateStandardImage(t1.getReportEntry().getName());
-                                        
+
                     ImageView imv = new ImageView(new Image(is));
                     zeNode = imv;
-                    
+
                     if (builtinPrefWidth == 0 || builtinPrefHeight == 0) {
-                        if (zeNode instanceof ImageView) { 
+                        if (zeNode instanceof ImageView) {
                             updateSize(PrefSize.TWO_HUNDRED_BY_TWO_HUNDRED);
                         } else if (zeNode instanceof FlowPane) {
                             updateSize(PrefSize.THREE_HUNDRED_TWENTY_BY_TWO_HUNDRED_FIFTY_SIX);
@@ -599,43 +599,43 @@ public class ImageImportWindowController extends AbstractModalDialog {
                 {
                     FontImage fontImage = filter.getOrCreateFontImage(t1.getReportEntry().getFontName());
                     Font bgFont = Font.loadFont(is, 62);
-                    
+
                     FlowPane flowbox = new FlowPane();
                     flowbox.setHgap(5);
                     flowbox.setVgap(5);
 
-                    String selectedStyle = 
+                    String selectedStyle =
                             "-fx-background-color: red, white;"
                             + "-fx-background-insets: 0, 1;"
                             + "-fx-background-radius: 5, 4;"
                             + "-fx-border-color: red, red;"
                             + "-fx-border-radius: 5, 4;";
-                            
+
                     String unselectedStyle = "-fx-background-color: grey, grey;"
                             + "-fx-background-insets: 0, 1;"
                             + "-fx-background-radius: 5, 4;"
                             + "-fx-border-color: grey, grey;"
                             + "-fx-border-radius: 5, 4;";
-                    
+
                     t1.getReportEntry().getUnicodePoints().forEach(unicodePoint -> {
-                        
+
                         FontImageItem fontImageItem = filter.getOrCreateFontImageItem(fontImage, unicodePoint);
-                        
+
                         System.out.println("\\u" + Integer.toHexString(unicodePoint));
                         String txt = Character.toString(unicodePoint);
                         VBox item = new VBox();
                         item.setStyle(unselectedStyle);
                         item.setAlignment(Pos.CENTER);
-                        
+
                         Text textCtrl = new Text(txt);
                         textCtrl.setFont(bgFont);
-                        
+
                         CheckBox selected = new CheckBox(ImageExplorerUtil.unicodePointToXmlEntity(unicodePoint));
 
                         boolean select = fontImageItem.isImported();
                         selected.setSelected(select);
                         item.setStyle(select ? selectedStyle : unselectedStyle);
-                        
+
                         selected.selectedProperty().addListener((ob, o , n) -> {
                             fontImageItem.setImported(n);
                             if (n) {
@@ -655,19 +655,19 @@ public class ImageImportWindowController extends AbstractModalDialog {
                 default:
                     break;
                 }
-                
+
                 is.close();
 
-                 
+
             } catch (IOException ioe) {
                 showErrorDialog(ioe);
             }
 
-            
+
             updateZeNodeSize();
             previewGroup.getChildren().add(zeNode);
             defSizeChoice.setDisable(false);
-            
+
             String name = t1.getReport().getSource().getFileName().toString();
             if (t1.getReportEntry().getResourceName() != null) {
                 name += " > " + t1.getReportEntry().getResourceName();
@@ -684,19 +684,19 @@ public class ImageImportWindowController extends AbstractModalDialog {
         }
     }
 
-    
+
     private void refreshItems(ImportRow row) {
-        
-        
+
+
         final ImageReport report = row.getReport();
         final ImageReportEntry entry = row.getReportEntry();
         ImageReport ir = new ImageReport(report.getSource());
         ir.getEntries().add(entry);
-        
+
         List<ImageReport> list = filter.filter(List.of(ir));
     }
 
-    
+
     private URLClassLoader getClassLoaderForFiles(List<File> files) {
         return new URLClassLoader(makeURLArrayFromFiles(files));
     }
@@ -849,7 +849,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
                 ((Region) zeNode).setPrefSize(witdh, height);
                 ((Region) zeNode).setMaxSize(witdh, height);
             }
-            
+
         } catch (NumberFormatException e) {
             logger.warn("Unable to set the component size due to invalid format", e);
         }

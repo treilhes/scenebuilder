@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,10 +44,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 
 import javafx.concurrent.Task;
@@ -86,10 +88,12 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     private List<Task<?>> currentTasks;
 
     protected ImportProgressDialogController(
-            Api api
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            Dialog dialog
             ) {
-        super(api, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), I18N.getBundle(), null);
-        this.dialog = api.getApiDoc().getDialog();
+        super(sceneBuilderManager, iconSetting, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), I18N.getBundle(), null);
+        this.dialog = dialog;
     }
 
 

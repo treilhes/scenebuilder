@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +38,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
 import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
@@ -92,12 +95,14 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
         DOUBLE, // DoubleField
         INTEGER // IntegerField
     }
-    
-    
-    public AutoSuggestEditor(Api api) {
-        super(api);
+
+
+    public AutoSuggestEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
     }
-    
+
 //    public AutoSuggestEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, List<String> suggestedList) {
 //        super();
 //        preInit(suggestedList);
@@ -112,15 +117,15 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
 //    public AutoSuggestEditor(String name, String defaultValue, List<String> suggestedList) {
 //        this(name, defaultValue, suggestedList, Type.ALPHA, true);
 //    }
-//    
+//
 //    public AutoSuggestEditor(String name, String defaultValue, List<String> suggestedList, Type type) {
 //        this(name, defaultValue, suggestedList, type, true);
 //    }
-//    
+//
 //    public AutoSuggestEditor(String name, String defaultValue, List<String> suggestedList, boolean showMenuButton) {
 //        this(name, defaultValue, suggestedList, Type.ALPHA, showMenuButton);
 //    }
-//    
+//
 //    public AutoSuggestEditor(String name, String defaultValue, List<String> suggestedList, Type type, boolean showMenuButton) {
 //        super(name, defaultValue);
 //        this.type = type;
@@ -228,11 +233,11 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
         updateMenuButtonIfNeeded();
         entryField.setPromptText(null);
     }
-    
+
     protected List<String> getSuggestedList() {
         return suggestedList;
     }
-    
+
     private void setSuggestedList(List<String> suggestedList) {
         Collections.sort(suggestedList);
         this.suggestedList = suggestedList;
@@ -345,7 +350,7 @@ public abstract class AutoSuggestEditor extends AbstractPropertyEditor {
         if (entryField.getContextMenu().isShowing() == false) {
 //                System.out.println("showPopup");
             suggestedLv.getSelectionModel().clearSelection();
-            // popup x coordinate need to be slightly moved, so that the popup is centered 
+            // popup x coordinate need to be slightly moved, so that the popup is centered
             entryField.getContextMenu().show(entryField, Side.BOTTOM, 0, 0);
         }
     }

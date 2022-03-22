@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,10 +41,11 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
@@ -61,30 +63,31 @@ import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 
 public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowController {
-    
+
     private final static double TEMPLATE_MAX_WIDTH = 240;
-    private final static double TEMPLATE_MAX_HEIGHT = 180; 
+    private final static double TEMPLATE_MAX_HEIGHT = 180;
 
     private Consumer<Template> onTemplateChosen;
-    
+
     private List<TemplateGroup> templateGroups;
-    
+
     private List<Template> templates;
-    
+
     @FXML
     private VBox templateContainer;
 
     public TemplatesBaseWindowController(
-            Api api,
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
             URL fxmlURL,
             ResourceBundle resources,
             SceneBuilderWindow owner,
             List<TemplateGroup> templateGroups,
             List<Template> templates) {
-        super(api, fxmlURL, resources, owner);
+        super(sceneBuilderManager, iconSetting, fxmlURL, resources, owner);
         this.templates = templates;
         this.templateGroups = templateGroups;
-        
+
     }
 
     @Override
@@ -103,37 +106,37 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     }
 
     private void buildTemplateCategory(TemplateGroup templateGroup) {
-        
+
         TemplateHeader header = new TemplateHeader();
         templateContainer.getChildren().add((Node)FXMLUtils.load(header, TemplateHeader.SOURCE));
-        
+
         header.getLabel().setText(I18N.getStringOrDefault(templateGroup.getName(), templateGroup.getName()));
-        
+
     }
-    
+
     private void buildTemplate(TemplateCategoryContent category, Template template) {
         Node itemNode = null;
         double ratio = 1;
-        
+
         if (template.getWidth() > template.getHeight()) {
             ratio = template.getWidth() / TEMPLATE_MAX_WIDTH;
         } else {
             ratio = template.getHeight() / TEMPLATE_MAX_HEIGHT;
         }
-        
+
         double width = template.getWidth() / ratio;
         double height = template.getHeight() / ratio;
-        
+
         String sizeString = " " + template.getWidth() + "x" + template.getHeight();
-        
+
         if (template.getFxmlUrl() != null && template.getIconUrl() != null) {
             TemplateItem item = new TemplateItem();
             itemNode = (Node)FXMLUtils.load(item, TemplateItem.SOURCE);
-            
+
             item.getImage().setImage(ImageUtils.getImage(template.getIconUrl()));
             item.getButton().setUserData(template);
             item.getButton().setText(I18N.getStringOrDefault(template.getName(), template.getName()) + sizeString);
-            
+
             item.getImage().setFitWidth(width);
             item.getImage().setFitHeight(height);
         } else {
@@ -141,36 +144,36 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
             itemNode = (Node)FXMLUtils.load(item, TemplateEmptyItem.SOURCE);
             item.getButton().setUserData(template);
             item.getButton().setText(I18N.getStringOrDefault(template.getName(), template.getName()) + sizeString);
-            
+
             item.getRectangle().setWidth(width);
             item.getRectangle().setHeight(height);
         }
-        
-        
+
+
         category.getFlowPane().getChildren().add(itemNode);
     }
     @Override
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert templateContainer != null;
-        
-        
-        
+
+
+
         templateGroups.stream()
             .sorted(Comparator.comparing(TemplateGroup::getOrderKey).thenComparing(Comparator.comparing(TemplateGroup::getName)))
             .forEachOrdered(tg -> {
-                
+
                 List<Template> subTemplates = templates.stream().filter(t -> t.getGroup().equals(tg))
                         .sorted(Comparator.comparing(Template::getOrderKey).thenComparing(Comparator.comparing(Template::getName)))
                         .collect(Collectors.toList());
-                
+
                 if (!subTemplates.isEmpty()) {
-                    
+
                     buildTemplateCategory(tg);
-                    
+
                     TemplateCategoryContent category = new TemplateCategoryContent();
                     templateContainer.getChildren().add((Node)FXMLUtils.load(category, TemplateCategoryContent.SOURCE));
-                    
+
                     subTemplates.stream().filter(t -> t.getGroup().equals(tg))
                     .sorted(Comparator.comparing(Template::getOrderKey).thenComparing(Comparator.comparing(Template::getName)))
                     .forEachOrdered(t -> buildTemplate(category, t));
@@ -208,27 +211,27 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
         @FXML
         private @Getter ImageView image;
     }
-    
+
     public static class TemplateEmptyItem {
         public static final String SOURCE = "TemplateEmptyItem.fxml";
         @FXML
         private @Getter Button button;
         @FXML
         private @Getter Rectangle rectangle;
-        
+
     }
-    
+
     public static class TemplateCategoryContent {
         public static final String SOURCE = "TemplateCategoryContent.fxml";
         @FXML
         private @Getter FlowPane flowPane;
-        
+
     }
-    
+
     public static class TemplateHeader {
         public static final String SOURCE = "TemplateHeader.fxml";
         @FXML
         private @Getter Label label;
-        
+
     }
 }

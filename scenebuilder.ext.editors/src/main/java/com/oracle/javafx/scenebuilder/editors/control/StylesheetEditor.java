@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,17 +43,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
@@ -104,11 +106,15 @@ public class StylesheetEditor extends InlineListEditor {
     private Type type;
     private URL fxmlFileLocation;
 	private final FileSystem fileSystem;
-
+	private final DocumentManager documentManager;
     public StylesheetEditor(
-            @Autowired Api api) {
-        super(api);
-        this.fileSystem = api.getFileSystem();
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            DocumentManager documentManager) {
+        super(dialog, documentation, fileSystem);
+        this.fileSystem = fileSystem;
+        this.documentManager = documentManager;
         initialize(null);
     }
 
@@ -201,7 +207,7 @@ public class StylesheetEditor extends InlineListEditor {
     @Override
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         super.reset(propMeta, selectionState, true);
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         this.fxmlFileLocation = fxomDocument == null ? null : fxomDocument.getLocation();
         switchToInitialButton();
     }
@@ -235,7 +241,7 @@ public class StylesheetEditor extends InlineListEditor {
         }
 
         try {
-            getApi().getFileSystem().open(urlStr);
+            fileSystem.open(urlStr);
         } catch (IOException ex) {
             System.err.println(I18N.getString("inspector.stylesheet.cannotopen", urlStr + " : " + ex)); // should go to message panel
         }
@@ -252,7 +258,7 @@ public class StylesheetEditor extends InlineListEditor {
             if (file == null) { // urlStr is not a file URL
                 return;
             }
-            getApi().getFileSystem().revealInFileBrowser(file);
+            fileSystem.revealInFileBrowser(file);
         } catch (URISyntaxException | IOException ex) {
             System.err.println(I18N.getString("inspector.stylesheet.cannotreveal", urlStr + " : " + ex)); // should go to message panel
         }

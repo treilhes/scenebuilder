@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,19 +43,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
@@ -98,18 +100,29 @@ public class StyleClassEditor extends InlineListEditor {
     private List<String> themeClasses;
     private Set<FXOMInstance> selectedInstances;
 
-    private final Editor editorController;
+    //private final Editor editorController;
 
     private final Dialog dialog;
 
-    public StyleClassEditor(
-            @Autowired Api api,
-            @Autowired Editor editorController) {
-        super(api);
-        this.dialog = api.getApiDoc().getDialog();
-        this.editorController = editorController;
+    private final MessageLogger messageLogger;
 
-        api.getApiDoc().getDocumentManager().stylesheetConfig().subscribe(s -> {
+    private final Documentation documentation;
+
+    private final FileSystem fileSystem;
+
+    public StyleClassEditor(
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            MessageLogger messageLogger,
+            DocumentManager documentManager) {
+        super(dialog, documentation, fileSystem);
+        this.dialog = dialog;
+        this.documentation = documentation;
+        this.fileSystem = fileSystem;
+        this.messageLogger = messageLogger;
+
+        documentManager.stylesheetConfig().subscribe(s -> {
         	stylesheetConfig = s;
         	themeClasses = CssInternal.getThemeStyleClasses(s);
         });
@@ -119,7 +132,7 @@ public class StyleClassEditor extends InlineListEditor {
 
     private void initialize(Set<FXOMInstance> selectedInstances) {
     	this.selectedInstances = selectedInstances;
-        
+
 
         setLayoutFormat(AbstractPropertyEditor.LayoutFormat.DOUBLE_LINE);
 //        themeClasses = CssInternal.getThemeStyleClasses(editorController.getTheme());
@@ -134,13 +147,13 @@ public class StyleClassEditor extends InlineListEditor {
 
     private StyleClassItem getNewStyleClassItem() {
         if (cssClassesMap == null) {
-            cssClassesMap = CssInternal.getStyleClassesMap(stylesheetConfig, editorController, selectedInstances);
+            cssClassesMap = CssInternal.getStyleClassesMap(stylesheetConfig, selectedInstances);
             // We don't want the theme classes to be suggested: remove them from the list
             for (String themeClass : themeClasses) {
                 cssClassesMap.remove(themeClass);
             }
         }
-        return new StyleClassItem(this, cssClassesMap);
+        return new StyleClassItem(dialog, documentation, fileSystem, this, cssClassesMap);
     }
 
     @Override
@@ -258,12 +271,18 @@ public class StyleClassEditor extends InlineListEditor {
         private String currentValue;
         private Map<String, String> cssClassesMap;
         private EditorItemDelegate editor;
+        private final FileSystem fileSystem;
 
-        public StyleClassItem(EditorItemDelegate editor, Map<String, String> cssClassesMap) {
+        public StyleClassItem(
+                Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem,
+                EditorItemDelegate editor, Map<String, String> cssClassesMap) {
 //            System.out.println("New StyleClassItem.");
             // It is an AutoSuggestEditor without MenuButton
             //super("", "", new ArrayList<>(cssClassesMap.keySet()), false); //NOCHECK
-            super(StyleClassEditor.this.getApi());
+            super(dialog, documentation, fileSystem);
+            this.fileSystem = fileSystem;
             preInit(Type.ALPHA, new ArrayList<>(cssClassesMap.keySet()));
             initialize(editor, cssClassesMap);
         }
@@ -437,10 +456,9 @@ public class StyleClassEditor extends InlineListEditor {
             }
 
             try {
-                getApi().getFileSystem().open(urlStr);
+                fileSystem.open(urlStr);
             } catch (IOException ex) {
-                editorController.getMessageLog().logWarningMessage(
-                        "inspector.stylesheet.cannotopen", urlStr); //NOCHECK
+                messageLogger.logWarningMessage("inspector.stylesheet.cannotopen", urlStr); //NOCHECK
             }
         }
 
@@ -456,11 +474,10 @@ public class StyleClassEditor extends InlineListEditor {
                 if (file == null) { // urlStr is not a file URL
                     return;
                 }
-                getApi().getFileSystem().revealInFileBrowser(file);
-                
+                fileSystem.revealInFileBrowser(file);
+
             } catch (URISyntaxException | IOException ex) {
-                editorController.getMessageLog().logWarningMessage(
-                        "inspector.stylesheet.cannotreveal", urlStr); //NOCHECK
+                messageLogger.logWarningMessage("inspector.stylesheet.cannotreveal", urlStr); //NOCHECK
             }
         }
 

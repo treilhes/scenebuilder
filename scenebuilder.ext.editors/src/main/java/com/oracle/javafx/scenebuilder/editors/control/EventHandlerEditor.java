@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,16 +38,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
@@ -70,7 +72,6 @@ import javafx.scene.layout.StackPane;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class EventHandlerEditor extends AutoSuggestEditor {
 
     private static final String HASH_STR = "#"; //NOCHECK
@@ -80,15 +81,21 @@ public class EventHandlerEditor extends AutoSuggestEditor {
     private StackPane root = new StackPane();
     private HBox hbox = null;
     private List<String> suggestedMethods;
-    
+
     private final Glossary glossary;
+    private final DocumentManager documentManager;
 
     public EventHandlerEditor(
-            @Autowired Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            Glossary glossary,
+            DocumentManager documentManager
             ) {
-        super(api); //NOCHECK
-        this.glossary = api.getGlossary();
-        
+        super(dialog, documentation, fileSystem);
+        this.glossary = glossary;
+        this.documentManager = documentManager;
+
         suggestedMethods = new ArrayList<>();
         preInit(Type.ALPHA, suggestedMethods);
         initialize(suggestedMethods);
@@ -135,7 +142,7 @@ public class EventHandlerEditor extends AutoSuggestEditor {
         // methodeName mode by default
         switchToMethodNameMode();
     }
-    
+
     @Override
     public Object getValue() {
         String valueTf = getTextField().getText();
@@ -221,20 +228,20 @@ public class EventHandlerEditor extends AutoSuggestEditor {
         replaceMenuItem(scriptMenuItem, controllerMethodMenuItem);
         unwrapHBox();
     }
-    
+
     private String getControllerClass() {
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         return fxomDocument == null ? null : fxomDocument.getFxomRoot().getFxController();
     }
-    
+
     // "getSuggestedEventHandlers" (a method that already existed in SB code) isn't working right. It simply
     // returns all the methods in the Controller class regardless of if they are good candidates for
     // EventHandlers. We use if because at least this way we'll present all the methods available as
     // auto-suggestions.
     // TODO Must be updated after Glossary update
     private List<String> getSuggestedEventHandlers(String controllerClass) {
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
-        
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+
         if (controllerClass == null) {
             return Collections.emptyList();
         }

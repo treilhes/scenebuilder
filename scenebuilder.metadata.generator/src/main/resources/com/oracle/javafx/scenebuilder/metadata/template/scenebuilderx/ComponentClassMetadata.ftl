@@ -19,7 +19,7 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 
 <#list properties as property>${logger.info("Processing " + component.raw.name + "." + property.raw.name)}
 <#if property.type == "VALUE">
-    public final ${property.raw.metadataClass.name?replace("$", ".")} ${property.custom["memberName"]}PropertyMetadata =
+    public static final ${property.raw.metadataClass.name?replace("$", ".")} ${property.custom["memberName"]}PropertyMetadata =
             new ${property.raw.metadataClass.name?replace("$", ".")}.Builder<#if property.raw.type.enum == true><>(${property.raw.type.name?replace("$", ".")}.class)<#else>()</#if>
                 .withName(PropertyNames.${property.custom["memberName"]}Name)
                 .withReadWrite(${property.raw.readWrite})

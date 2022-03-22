@@ -45,10 +45,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
@@ -79,12 +81,16 @@ public class IncludeFxmlEditor extends InlineListEditor {
     private TextField includeFxmlField;
 
     private final FileSystem fileSystem;
+    private final DocumentManager documentManager;
 
     public IncludeFxmlEditor(
-            Api api,
-            FileSystem fileSystem) {
-        super(api);
-        this.fileSystem = api.getFileSystem();
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            DocumentManager documentManager) {
+        super(dialog, documentation, fileSystem);
+        this.fileSystem = fileSystem;
+        this.documentManager = documentManager;
         initialize();
     }
 
@@ -155,7 +161,7 @@ public class IncludeFxmlEditor extends InlineListEditor {
         } catch (MalformedURLException ex) {
             Logger.getLogger(IncludeFxmlEditor.class.getName()).log(Level.SEVERE, "Path could not be determined.", ex);
         }
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         URL fxmlLocation = fxomDocument == null ? null : fxomDocument.getLocation();
         assert fxmlLocation != null;
 

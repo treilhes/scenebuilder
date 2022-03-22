@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +37,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -48,15 +51,17 @@ import javafx.scene.layout.VBox;
 
 /**
  * Generic class for property editors based on a list of inline items.
- * 
- * 
+ *
+ *
  */
 public abstract class InlineListEditor extends AbstractPropertyEditor implements EditorItemDelegate {
     private final VBox vbox = new VBox(1);
     private final List<EditorItem> editorItems = new ArrayList<>();
 
-    public InlineListEditor(Api api) {
-        super(api);
+    public InlineListEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         setLayoutFormat(AbstractPropertyEditor.LayoutFormat.DOUBLE_LINE);
     }
 
@@ -69,7 +74,7 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         reset(propMeta, selectionState, true);
     }
-    
+
     protected void reset(ValuePropertyMetadata propMeta, SelectionState selectionState, boolean removeAll) {
         super.reset(propMeta, selectionState);
         setLayoutFormat(AbstractPropertyEditor.LayoutFormat.DOUBLE_LINE);
@@ -108,7 +113,7 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
         // By default, keep 1 item
         remove(source, false);
     }
-    
+
     public void remove(EditorItem source, boolean removeAll) {
 //        System.out.println("REMOVE");
         removeItem(source, removeAll);
@@ -132,7 +137,7 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
     final protected List<EditorItem> getEditorItems() {
         return editorItems;
     }
-    
+
     final protected EditorItem addItem(EditorItem newItem) {
         return addItem(null, newItem);
     }
@@ -158,7 +163,7 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
         // By default, keep 1 item
         removeItem(editorItem, false);
     }
-    
+
     protected void removeItem(EditorItem editorItem, boolean removeAll) {
         if (!removeAll && editorItems.size() == 1) {
             // Do not remove last item, but reset it
@@ -198,7 +203,7 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
         // By default, keep 1 item
         reset(false);
     }
-    
+
     protected void reset(boolean removeAll) {
         List<EditorItem> items = new ArrayList<>(editorItems);
         for (EditorItem editorItem : items) {

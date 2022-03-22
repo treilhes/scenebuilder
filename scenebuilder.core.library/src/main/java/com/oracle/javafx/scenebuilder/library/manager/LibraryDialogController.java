@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,20 +40,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStoreConfiguration;
@@ -122,7 +122,6 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     // TODO may be replaced by editorcontroller after moving
     // libraryPanelController.copyFilesToUserLibraryDir(files)
     private final FileSystem fileSystem;
-    private final Dialog dialog;
     private final SceneBuilderBeanFactory context;
 
     private final ListChangeListener<? super MavenArtifact> artifactListener = c -> loadLibraryList();
@@ -130,24 +129,32 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     private AbstractLibrary<?, ?> library;
 
+    private final SceneBuilderManager sceneBuilderManager;
+
+    private final IconSetting iconSetting;
+
 
     public LibraryDialogController(
-            @Autowired Api api,
-            @Autowired Editor editorController,
-            @Autowired MavenSetting mavenSetting,
-            @Autowired MavenArtifactsPreferences mavenPreferences,
-            @Autowired MavenRepositoriesPreferences repositoryPreferences,
-            @Autowired DocumentWindow document) {
-        super(api, LibraryDialogController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            SceneBuilderBeanFactory context,
+            Editor editorController,
+            MavenSetting mavenSetting,
+            MavenArtifactsPreferences mavenPreferences,
+            MavenRepositoriesPreferences repositoryPreferences,
+            DocumentWindow document,
+            FileSystem fileSystem) {
+        super(sceneBuilderManager, iconSetting, LibraryDialogController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
                 document); // NOI18N
         this.owner = document.getStage();
-        this.context = api.getContext();
+        this.context = context;
+        this.sceneBuilderManager = sceneBuilderManager;
+        this.iconSetting = iconSetting;
         this.editorController = editorController;
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
         this.mavenSetting = mavenSetting;
-        this.fileSystem = api.getFileSystem();
-        this.dialog = api.getApiDoc().getDialog();
+        this.fileSystem = fileSystem;
     }
 
     public void initForLibrary(AbstractLibrary<?, ?> library) {
@@ -259,7 +266,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     @FXML
     private void manage() {
         RepositoryManagerController repositoryDialogController = context.getBean(RepositoryManagerController.class,
-                getApi(), editorController, mavenSetting, repositoryPreferences, this);
+                sceneBuilderManager, iconSetting, editorController, mavenSetting, repositoryPreferences, this);
         repositoryDialogController.openWindow();
     }
 
@@ -281,7 +288,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     @FXML
     private void addRelease() {
-        SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class, getApi(),
+        SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class,
+                sceneBuilderManager, iconSetting,
                 editorController, library, mavenSetting, mavenPreferences, repositoryPreferences,
                 this);
         mavenDialogController.openWindow();
@@ -298,7 +306,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     @FXML
     private void addManually() {
-        MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class, getApi(), editorController,
+        MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class,
+                sceneBuilderManager, iconSetting, editorController,
                 library, mavenSetting, mavenPreferences, repositoryPreferences, this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {

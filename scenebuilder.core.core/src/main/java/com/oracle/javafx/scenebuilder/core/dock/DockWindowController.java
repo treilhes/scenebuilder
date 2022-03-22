@@ -33,20 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import javafx.collections.ListChangeListener.Change;
@@ -66,37 +63,24 @@ public class DockWindowController extends AbstractFxmlWindowController {
 
     @FXML
     private VBox mainHost;
-
-    private final DocumentManager documentManager;
-    private final Dialog dialog;
-    private final SceneBuilderBeanFactory context;
-
-    private final ViewManager viewManager;
     private final DockManager dockManager;
     private final DockPanelController dockPanelController;
     private final DockNameHelper dockNameHelper;
 
-    private final DocumentWindow documentWindow;
-
     // @formatter:off
     public DockWindowController(
-            @Autowired Api api,
-            @Autowired DocumentWindow documentWindow,
-            @Autowired DockPanelController dockPanelController,
-            @Autowired ViewManager viewManager,
-            @Autowired DockManager dockManager,
-            @Autowired DockNameHelper dockNameHelper) {
-        super(api, DockWindowController.class.getResource("DockWindow.fxml"), I18N.getBundle(), documentWindow);
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentWindow documentWindow,
+            DockPanelController dockPanelController,
+            DockManager dockManager,
+            DockNameHelper dockNameHelper) {
+        super(sceneBuilderManager, iconSetting, DockWindowController.class.getResource("DockWindow.fxml"), I18N.getBundle(), documentWindow);
      // @formatter:on
 
-        this.context = api.getContext();
-        this.dialog = api.getApiDoc().getDialog();
-        this.documentManager = api.getApiDoc().getDocumentManager();
-        this.viewManager = viewManager;
         this.dockManager = dockManager;
         this.dockPanelController = dockPanelController;
         this.dockNameHelper = dockNameHelper;
-        this.documentWindow = documentWindow;
 
         dockPanelController.setParentWindow(this);
         dockPanelController.notifyDockCreated();

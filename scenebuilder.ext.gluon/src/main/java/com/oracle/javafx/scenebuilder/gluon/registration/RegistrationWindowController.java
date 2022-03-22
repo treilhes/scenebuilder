@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,13 +42,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
@@ -88,13 +89,14 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     private final RegistrationOptInPreference registrationOptInPreference;
 
     public RegistrationWindowController(
-            @Autowired Api api,
-            @Autowired DocumentWindow window,
-            @Autowired TrackingController tracking,
-            @Autowired RegistrationHashPreference registrationHashPreference,
-            @Autowired RegistrationEmailPreference registrationEmailPreference,
-            @Autowired RegistrationOptInPreference registrationOptInPreference) {
-        super(api, RegistrationWindowController.class.getResource("Registration.fxml"), // NOI18N
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentWindow window,
+            TrackingController tracking,
+            RegistrationHashPreference registrationHashPreference,
+            RegistrationEmailPreference registrationEmailPreference,
+            RegistrationOptInPreference registrationOptInPreference) {
+        super(sceneBuilderManager, iconSetting, RegistrationWindowController.class.getResource("Registration.fxml"), // NOI18N
                 I18N.getBundle(), window);
         this.owner = window.getStage();
         this.tracking = tracking;

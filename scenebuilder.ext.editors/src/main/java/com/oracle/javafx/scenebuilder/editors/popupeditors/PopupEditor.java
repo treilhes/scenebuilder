@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,7 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -64,11 +67,13 @@ public abstract class PopupEditor extends AbstractPropertyEditor implements Popu
     private Object value;
     private boolean initialized = false;
 
-    public PopupEditor(Api api) {
-        super(api);
+    public PopupEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         initializeEditor();
     }
-    
+
     // Separate method to please FindBugs
     private void initializeEditor() {
         FXMLUtils.load(this, PopupEditor.class, "PopupEditor.fxml");

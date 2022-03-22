@@ -25,6 +25,11 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.metadata.javafx15</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter.test</artifactId>
             <scope>test</scope>
         </dependency>

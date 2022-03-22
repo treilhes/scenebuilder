@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,30 +36,28 @@ package com.oracle.javafx.scenebuilder.certmngr.controller;
 import java.io.File;
 import java.security.Security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableTrustManagerProvider;
 
 @Component
 public class CertificateManagerController {
-    
+
     protected final static String KEYSTORE_PASSWORD = "scenebuilder";
     protected final static String KEYSTORE_FILENAME = "truststore.jks";
-    protected final static long USER_TIMEOUT = 30;//seconds
-    private final Api api;
+    protected final static long USER_TIMEOUT = 30;// seconds
+    private final FileSystem fileSystem;
 
-    public CertificateManagerController(
-            @Autowired Api api
-            ) {
-        this.api = api;
-        Security.insertProviderAt(new ReloadableTrustManagerProvider(api.getNetworkManager(), keystoreFile(),
+    public CertificateManagerController(FileSystem fileSystem, NetworkManager networkManager) {
+        this.fileSystem = fileSystem;
+        Security.insertProviderAt(new ReloadableTrustManagerProvider(networkManager, keystoreFile(),
                 KEYSTORE_PASSWORD.toCharArray(), USER_TIMEOUT), 1);
     }
-    
+
     private File keystoreFile() {
-        return new File(api.getFileSystem().getApplicationDataFolder(), KEYSTORE_FILENAME);
+        return new File(fileSystem.getApplicationDataFolder(), KEYSTORE_FILENAME);
     }
-    
+
 }

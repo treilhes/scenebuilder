@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,15 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.helpfeatures.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -61,15 +62,16 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
     TextArea textArea;
 
     private FXOMDocument fxomDocument;
-    
+
     public JavaFxFeaturesWindowController(
-            @Autowired Api api,
-            @Autowired DocumentWindow document) {
-        super(api, JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), I18N.getBundle(),
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentWindow document) {
+        super(sceneBuilderManager, iconSetting, JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N
     }
 
-    
+
     @Override
     public void onCloseRequest() {
         getStage().close();
@@ -93,7 +95,7 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
         super.controllerDidLoadFxml();
         assert textArea != null;
     }
-    
+
     private void updateTitle() {
         final String title = I18N.getString("javafxfeatures.window.title");
         getStage().setTitle(title);

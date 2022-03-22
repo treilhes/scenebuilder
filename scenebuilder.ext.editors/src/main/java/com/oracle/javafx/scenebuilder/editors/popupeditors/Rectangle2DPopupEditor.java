@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,12 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
@@ -73,9 +75,11 @@ public class Rectangle2DPopupEditor extends PopupEditor {
     private Rectangle2D rectangle2D;
 
     public Rectangle2DPopupEditor(
-            @Autowired Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem
             ) {
-        super(api);
+        super(dialog, documentation, fileSystem);
     }
 
     @Override

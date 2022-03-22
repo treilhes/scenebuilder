@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,16 +36,16 @@ package com.oracle.javafx.scenebuilder.debugmenu.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -70,15 +71,17 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     private String documentName;
     private boolean dirty = false;
     private final DocumentManager documentManager;
-    
+
     public DebugMenuWindowController(
-            @Autowired Api api,
-            @Autowired DocumentWindow document
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentWindow document,
+            DocumentManager documentManager
             ) {
-        super(api, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
+        super(sceneBuilderManager, iconSetting, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N
-        
-        this.documentManager = api.getApiDoc().getDocumentManager();
+
+        this.documentManager = documentManager;
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {

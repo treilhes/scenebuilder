@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
@@ -75,9 +76,12 @@ public class PaintPopupEditor extends PopupEditor {
     };
 
     public PaintPopupEditor(
-            @Autowired Api api) {
-        super(api);
-        this.messageLogger = api.getApiDoc().getMessageLogger();
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            MessageLogger messageLogger) {
+        super(dialog, documentation, fileSystem);
+        this.messageLogger = messageLogger;
     }
 
 

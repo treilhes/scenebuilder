@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.BasicSelection;
  */
 public abstract class NumberPropertyMetadata<T extends Number> extends TextEncodablePropertyMetadata<T> {
 
+    private boolean lenientBoundary = false;
     private T min;
     private T max;
 
@@ -51,6 +52,7 @@ public abstract class NumberPropertyMetadata<T extends Number> extends TextEncod
         super(builder);
         setMin(builder.min);
         setMax(builder.max);
+        setLenientBoundary(builder.lenientBoundary);
     }
 
     public T getMin(BasicSelection selectionState) {
@@ -71,7 +73,17 @@ public abstract class NumberPropertyMetadata<T extends Number> extends TextEncod
         return this;
     }
 
+    public boolean hasLenientBoundary() {
+        return lenientBoundary;
+    }
+
+    protected NumberPropertyMetadata<T> setLenientBoundary(boolean lenientBoundary) {
+        this.lenientBoundary = lenientBoundary;
+        return this;
+    }
+
     protected static abstract class AbstractBuilder<SELF, TOBUILD, T> extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, T> {
+        protected boolean lenientBoundary;
         protected T min;
         protected T max;
 
@@ -82,6 +94,11 @@ public abstract class NumberPropertyMetadata<T extends Number> extends TextEncod
 
         protected SELF withMax(T max) {
             this.max = max;
+            return self();
+        }
+
+        protected SELF withLenientBoundary(boolean lenientBoundary) {
+            this.lenientBoundary = lenientBoundary;
             return self();
         }
     }

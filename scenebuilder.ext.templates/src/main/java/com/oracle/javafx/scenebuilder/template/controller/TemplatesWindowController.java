@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,10 +41,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 
@@ -54,11 +56,12 @@ import javafx.stage.Modality;
 @Lazy
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     public TemplatesWindowController(
-            @Autowired Api api,
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
             @Autowired DocumentWindow document,
             @Autowired List<TemplateGroup> templateGroups,
             @Autowired List<Template> templates) {
-        super(api, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"),
+        super(sceneBuilderManager, iconSetting, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"),
                 I18N.getBundle(), document, templateGroups, templates);
     }
 

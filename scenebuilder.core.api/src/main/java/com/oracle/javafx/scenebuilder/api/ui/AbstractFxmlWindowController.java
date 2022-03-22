@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,9 +36,10 @@ package com.oracle.javafx.scenebuilder.api.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.FxmlController;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 /**
  *
@@ -48,23 +50,38 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
     private final URL fxmlURL;
     private final ResourceBundle resources;
 
-    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources) {
-        this(api, fxmlURL, resources, null);
+    public AbstractFxmlWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            URL fxmlURL,
+            ResourceBundle resources) {
+        this(sceneBuilderManager, iconSetting, fxmlURL, resources, null);
     }
 
-    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, boolean sizeToScene) {
-        this(api, fxmlURL, resources, null, sizeToScene);
+    public AbstractFxmlWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            URL fxmlURL,
+            ResourceBundle resources,
+            boolean sizeToScene) {
+        this(sceneBuilderManager, iconSetting, fxmlURL, resources, null, sizeToScene);
     }
 
-    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, SceneBuilderWindow owner) {
-        super(api, owner);
+    public AbstractFxmlWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            URL fxmlURL, ResourceBundle resources, SceneBuilderWindow owner) {
+        super(sceneBuilderManager, iconSetting, owner);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.resources = resources;
     }
 
-    public AbstractFxmlWindowController(Api api, URL fxmlURL, ResourceBundle resources, SceneBuilderWindow owner, boolean sizeToScene) {
-        super(api, owner, sizeToScene);
+    public AbstractFxmlWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            URL fxmlURL, ResourceBundle resources, SceneBuilderWindow owner, boolean sizeToScene) {
+        super(sceneBuilderManager, iconSetting, owner, sizeToScene);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.resources = resources;

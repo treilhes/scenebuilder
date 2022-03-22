@@ -53,7 +53,8 @@ import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAct
         id = FocusContentAction.MENU_ID,
         targetMenuId = ToggleMinimizeLeftDockAction.MENU_ID,
         label = "menu.title.content",
-        positionRequest = PositionRequest.BeforePreviousSeparator)
+        positionRequest = PositionRequest.AsNextSibling,
+        separatorBefore = true)
 @Accelerator(accelerator = "CTRL+0")
 @Accelerator(accelerator = "CTRL+Numpad 0")
 public class FocusContentAction extends AbstractAction {

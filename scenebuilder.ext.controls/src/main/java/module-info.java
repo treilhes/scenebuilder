@@ -67,6 +67,7 @@ open module scenebuilder.ext.controls {
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.fxom;
     requires scenebuilder.core.metadata;
+    requires scenebuilder.metadata.javafx;
 
 //    requires spring.beans;
 //    requires spring.context;

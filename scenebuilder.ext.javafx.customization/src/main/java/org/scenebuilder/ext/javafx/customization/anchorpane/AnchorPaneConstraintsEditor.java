@@ -37,14 +37,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -70,7 +71,6 @@ import javafx.scene.layout.Region;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
     private static final String ANCHOR_ENABLED_COLOR = "-sb-line-art-accent";
@@ -102,29 +102,25 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
     private ChangeListener<Object> constraintListener;
 
     public AnchorPaneConstraintsEditor(
-            @Autowired Api api
+            AnchorPaneConstraintsEditor.ConstraintEditor.Factory constraintEditorFactory
             ) {
         super("Anchor constraints xxx");
         root = FXMLUtils.load(this, "AnchorPaneConstraintsEditor.fxml");
-        initialize(api);
+        initialize(constraintEditorFactory);
     }
 
     // Method to please findBugs
-    private void initialize(Api api) {
+    private void initialize(AnchorPaneConstraintsEditor.ConstraintEditor.Factory factory) {
 
         constraintListener = (ov, prevValue, newValue) -> {
             propertyChanged();
             styleRegions();
         };
 
-        constraintEditors.add(
-                new ConstraintEditor(api, topTf, topTb, constraintListener));
-        constraintEditors.add(
-                new ConstraintEditor(api, rightTf, rightTb, constraintListener));
-        constraintEditors.add(
-                new ConstraintEditor(api, bottomTf, bottomTb, constraintListener));
-        constraintEditors.add(
-                new ConstraintEditor(api, leftTf, leftTb, constraintListener));
+        constraintEditors.add(factory.getEditor(topTf, topTb, constraintListener));
+        constraintEditors.add(factory.getEditor(rightTf, rightTb, constraintListener));
+        constraintEditors.add(factory.getEditor(bottomTf, bottomTb, constraintListener));
+        constraintEditors.add(factory.getEditor(leftTf, leftTb, constraintListener));
 
         // Select all text when this editor textfield is selected
         topTf.setOnMousePressed(event -> topTf.selectAll());
@@ -213,7 +209,6 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
      */
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-    @Lazy
     public static class ConstraintEditor extends AbstractPropertyEditor {
 
         private ToggleButton toggleButton;
@@ -223,16 +218,16 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
         private boolean updateFromTextField = false;
 
-        public ConstraintEditor(Api api, TextField textField, ToggleButton toggleButton, ChangeListener<Object> listener) {
-            super(api);
+        private ConstraintEditor(Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem) {
+            super(dialog, documentation, fileSystem);
+        }
+
+        private void initialize(TextField textField, ToggleButton toggleButton, ChangeListener<Object> listener) {
             super.addValueListener(listener);
             this.textField = textField;
             this.toggleButton = toggleButton;
-
-            initialize();
-        }
-
-        private void initialize() {
             //
             // Text field
             //
@@ -381,6 +376,18 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
         private FXOMInstance getFirstInstance() {
             return (FXOMInstance) selectedInstances.toArray()[0];
+        }
+
+        @Component
+        @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+        public static class Factory extends AbstractFactory<ConstraintEditor> {
+            public Factory(SceneBuilderBeanFactory sbContext) {
+                super(sbContext);
+            }
+
+            public ConstraintEditor getEditor(TextField textField, ToggleButton toggleButton, ChangeListener<Object> listener) {
+                return create(ConstraintEditor.class, c -> c.initialize(textField, toggleButton, listener));
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,12 +42,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Size;
@@ -54,7 +53,9 @@ import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
@@ -123,12 +124,14 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     public PreviewWindowController(
-            @Autowired Api api,
-            @Autowired Editor editorController,
-            @Autowired DocumentWindow document) {
-        super(api, document);
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            Editor editorController,
+            DocumentWindow document,
+            DocumentManager documentManager) {
+        super(sceneBuilderManager, iconSetting, document);
         this.editorController = editorController;
-        this.documentManager = api.getApiDoc().getDocumentManager();
+        this.documentManager = documentManager;
 
     }
 

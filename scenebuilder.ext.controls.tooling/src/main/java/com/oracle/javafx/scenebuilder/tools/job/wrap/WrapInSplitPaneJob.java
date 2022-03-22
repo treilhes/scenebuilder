@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
-import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
@@ -58,6 +57,7 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
+import com.oracle.javafx.scenebuilder.metadata.javafx.containers.SplitPaneMetadata;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
@@ -99,7 +99,7 @@ public final class WrapInSplitPaneJob extends AbstractWrapInSubComponentJob {
 
         // Update the SplitPane orientation depending on its children positionning
         final Orientation orientation = getOrientation(children);
-        JobUtils.setOrientation(newContainer, SplitPane.class, orientation.name());
+        SplitPaneMetadata.orientationPropertyMetadata.setValue(newContainer, orientation.name());
     }
 
     @Override

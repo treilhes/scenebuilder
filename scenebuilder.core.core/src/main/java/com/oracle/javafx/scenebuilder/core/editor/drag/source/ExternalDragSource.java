@@ -44,7 +44,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
@@ -56,10 +55,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.javafx.controls.ImageViewMetadata;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -373,25 +371,9 @@ public final class ExternalDragSource extends AbstractDragSource {
         final FXOMDocument result = new FXOMDocument();
         final FXOMInstance imageView = new FXOMInstance(result, ImageView.class);
 
-        final ComponentClassMetadata<?> imageViewMeta
-                = Api.get().getMetadata().queryComponentMetadata(ImageView.class);
-        final PropertyMetadata imagePropMeta
-                = imageViewMeta.lookupProperty(imageName);
-        final PropertyMetadata fitWidthPropMeta
-                = imageViewMeta.lookupProperty(fitWidthName);
-        final PropertyMetadata fitHeightPropMeta
-                = imageViewMeta.lookupProperty(fitHeightName);
-
-        assert imagePropMeta instanceof ImagePropertyMetadata;
-        assert fitWidthPropMeta instanceof DoublePropertyMetadata;
-        assert fitHeightPropMeta instanceof DoublePropertyMetadata;
-
-        final ImagePropertyMetadata imageMeta
-                = (ImagePropertyMetadata) imagePropMeta;
-        final DoublePropertyMetadata fitWidthMeta
-                = (DoublePropertyMetadata) fitWidthPropMeta;
-        final DoublePropertyMetadata fitHeightMeta
-                = (DoublePropertyMetadata) fitHeightPropMeta;
+        final ImagePropertyMetadata imageMeta = ImageViewMetadata.imagePropertyMetadata;
+        final DoublePropertyMetadata fitWidthMeta = ImageViewMetadata.fitWidthPropertyMetadata;
+        final DoublePropertyMetadata fitHeightMeta = ImageViewMetadata.fitHeightPropertyMetadata;
 
         imageMeta.setValue(imageView, new DesignImage(image));
         fitWidthMeta.setValue(imageView, fitWidth);

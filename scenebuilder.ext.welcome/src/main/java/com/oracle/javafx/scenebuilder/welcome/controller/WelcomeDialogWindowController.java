@@ -43,7 +43,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
@@ -51,6 +50,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -92,7 +92,8 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private final ActionFactory actionFactory;
 
     private WelcomeDialogWindowController(
-            @Autowired Api api,
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
     		@Autowired Main sceneBuilderApp,
     		@Autowired ActionFactory actionFactory,
     		@Autowired IconSetting windowIconSetting,
@@ -101,7 +102,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     		@Autowired TemplateController templateController,
     		@Autowired List<TemplateGroup> templateGroups,
             @Autowired List<Template> templates) {
-        super(api, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
+        super(sceneBuilderManager, iconSetting, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
                 I18N.getBundle(),
                 null, templateGroups, templates); // We want it to be a top level window so we're setting the owner to null.
 

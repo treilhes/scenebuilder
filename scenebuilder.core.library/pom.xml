@@ -26,10 +26,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.jobs</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.sb</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter</artifactId>

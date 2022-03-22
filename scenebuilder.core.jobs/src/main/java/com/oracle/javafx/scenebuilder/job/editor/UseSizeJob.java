@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -164,8 +165,8 @@ public final class UseSizeJob extends AbstractJob {
     @Override
     public String getDescription() {
         if (description == null) {
-            description = I18N.getString("job.set.size", JobUtils.getStringFromDouble(width),
-                    JobUtils.getStringFromDouble(height));
+            description = I18N.getString("job.set.size", StringUtils.getStringFromDouble(width),
+                    StringUtils.getStringFromDouble(height));
         }
         return description;
     }

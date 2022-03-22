@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,15 +36,17 @@ package com.oracle.javafx.scenebuilder.core.editors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -64,16 +67,21 @@ public class ControllerClassEditor extends AutoSuggestEditor {
     private static final String PROPERTY_NAME = "Controller class"; //NOCHECK
     private static final String DEFAULT_VALUE = null;
     private final Glossary glossary;
+    private final DocumentManager documentManager;
 
     public ControllerClassEditor(
-            @Autowired Api api
-            ) {
-        super(api);
-        this.glossary = api.getGlossary();
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            Glossary glossary,
+            DocumentManager documentManager) {
+        super(dialog, documentation, fileSystem);
+        this.glossary = glossary;
+        this.documentManager = documentManager;
         preInit(Type.ALPHA, new ArrayList<>());
         initialize();
     }
-    
+
     private void initialize() {
         // text field events handling
         EventHandler<ActionEvent> onActionListener = event -> {
@@ -81,16 +89,16 @@ public class ControllerClassEditor extends AutoSuggestEditor {
                 // Event received because of focus lost due to error dialog
                 return;
             }
-            
+
             String value = textField.getText();
-            
+
             if (value != null && !value.isEmpty()) {
                 if (!JavaLanguage.isClassName(value)) {
                     handleInvalidValue(value);
                     return;
                 }
             }
-            
+
             userUpdateValueProperty((value == null || value.isEmpty()) ? null : value);
             textField.selectAll();
         };
@@ -114,9 +122,9 @@ public class ControllerClassEditor extends AutoSuggestEditor {
             getTextField().setText((String) value);
         }
     }
-    
+
     private List<String> getSuggestedControllerClasses() {
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         return glossary.queryControllerClasses(fxomDocument == null ? null : fxomDocument.getLocation());
     }
 }

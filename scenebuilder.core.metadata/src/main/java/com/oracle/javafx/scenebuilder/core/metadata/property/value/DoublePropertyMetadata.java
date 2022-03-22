@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,6 +32,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
+
+import java.util.Map;
 
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Region;
@@ -450,4 +453,51 @@ public abstract class DoublePropertyMetadata extends NumberPropertyMetadata<java
         }
     }
 
+    public static class CustomizableDoublePropertyMetadata extends CoordinateDoublePropertyMetadata {
+
+      protected CustomizableDoublePropertyMetadata(AbstractBuilder<?, ?> builder) {
+          super(builder);
+      }
+
+      protected static abstract class AbstractBuilder<SELF, TOBUILD> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
+
+        @Override
+        public SELF withMin(Double min) {
+            return super.withMin(min);
+        }
+
+        @Override
+        public SELF withMax(Double max) {
+            return super.withMax(max);
+        }
+
+        @Override
+        public SELF withLenientBoundary(boolean lenientBoundary) {
+            return super.withLenientBoundary(lenientBoundary);
+        }
+
+        @Override
+        public SELF withDefaultValue(Double defaultValue) {
+            return super.withDefaultValue(defaultValue);
+        }
+
+        @Override
+        public SELF withConstant(String constantName, Object constantValue) {
+            return super.withConstant(constantName, constantValue);
+        }
+
+        @Override
+        public SELF withConstants(Map<String, Object> constants) {
+            return super.withConstants(constants);
+        }
+
+      }
+
+      public static final class Builder extends AbstractBuilder<Builder, CustomizableDoublePropertyMetadata> {
+          @Override
+          public CustomizableDoublePropertyMetadata build() {
+              return new CustomizableDoublePropertyMetadata(this);
+          }
+      }
+  }
 }

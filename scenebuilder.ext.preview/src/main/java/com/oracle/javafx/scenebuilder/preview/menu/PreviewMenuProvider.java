@@ -41,7 +41,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
@@ -50,6 +49,7 @@ import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
@@ -67,15 +67,12 @@ public class PreviewMenuProvider implements MenuItemProvider {
     private final MenuBuilder menuBuilder;
     private final DocumentManager documentManager;
     private final PreviewWindowController previewWindowController;
-    private final ActionFactory actionFactory;
 
     public PreviewMenuProvider(
             MenuBuilder menuBuilder,
-            ActionFactory actionFactory,
             DocumentManager documentManager,
             @Lazy PreviewWindowController previewWindowController) {
         this.menuBuilder = menuBuilder;
-        this.actionFactory = actionFactory;
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;
     }
@@ -130,8 +127,8 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
             menu.setOnMenuValidation((e) -> {
                 mi.setText(I18N.getString("menu.title.size.preferred.with.value",
-                        getStringFromDouble(previewWindowController.getRoot().prefWidth(-1)),
-                        getStringFromDouble(previewWindowController.getRoot().prefHeight(-1))));
+                        StringUtils.getStringFromDouble(previewWindowController.getRoot().prefWidth(-1)),
+                        StringUtils.getStringFromDouble(previewWindowController.getRoot().prefHeight(-1))));
             });
 
             documentManager.fxomDocument().subscribe(fd -> {
@@ -151,17 +148,6 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
             return menu;
         }
-
-        // Returns a String with no trailing zero; if decimal part is non zero then
-        // it is kept.
-        private String getStringFromDouble(double value) {
-            String res = Double.toString(value);
-            if(res.endsWith(".0")) { //NOCHECK
-                res = Integer.toString((int)value);
-            }
-            return res;
-        }
-
 
         private RadioMenuItem createSizeMenu(Size size, ToggleGroup sizeToggle) {
             RadioMenuItem mi = new RadioMenuItem(size.toString());

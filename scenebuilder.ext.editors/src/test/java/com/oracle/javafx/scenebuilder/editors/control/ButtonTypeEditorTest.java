@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,29 +51,33 @@ public class ButtonTypeEditorTest {
     static {
         I18N.initForTest();
     }
-    
+
     static ButtonTypeListPropertyMetadata someButtonTypeListProp() {
-        return new ButtonTypeListPropertyMetadata(new PropertyName("buttontypelist"), true, Collections.emptyList(), null);
+        return new ButtonTypeListPropertyMetadata.Builder()
+            .withName(new PropertyName("buttontypelist"))
+            .withReadWrite(true)
+            .withDefaultValue(Collections.emptyList())
+            .build();
     }
 
     @Test
     public void shouldCreateAnEmptyInstance() {
         ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
         ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
-        
+
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
         ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
-        
+
         o.reset(someButtonTypeListProp(), null);
     }
 

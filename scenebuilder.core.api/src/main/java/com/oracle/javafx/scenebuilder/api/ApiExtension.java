@@ -75,8 +75,6 @@ public class ApiExtension extends AbstractExtension {
         return Arrays.asList(
                 ActionExtensionFactory.class,
                 ActionFactory.class,
-                Api.class,
-                ApiDoc.class,
                 DesignHierarchyMask.class,
                 DesignHierarchyMask.Factory.class,
                 DiscardGesture.class,

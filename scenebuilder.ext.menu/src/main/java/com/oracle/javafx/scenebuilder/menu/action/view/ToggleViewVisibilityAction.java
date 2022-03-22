@@ -106,9 +106,7 @@ public class ToggleViewVisibilityAction extends AbstractToggleViewVisibilityActi
 
         @Override
         public List<MenuItemAttachment> menuItems() {
-            return Arrays.asList(
-                    new ViewsAttachment(),
-                    MenuItemAttachment.create(menuBuiler.separator().build(), MENU_ID, PositionRequest.AsNextSibling));
+            return Arrays.asList(new ViewsAttachment());
         }
 
         public class ViewsAttachment implements MenuItemAttachment {

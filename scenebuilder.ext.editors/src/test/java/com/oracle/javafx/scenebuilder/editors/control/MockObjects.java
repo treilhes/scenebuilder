@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +38,6 @@ import java.io.File;
 import org.mockito.Mockito;
 
 import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.ApiDoc;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -50,7 +50,7 @@ public class MockObjects {
 
         try {
             Api api = Mockito.mock(Api.class);
-            ApiDoc apiDoc = Mockito.mock(ApiDoc.class);
+            //ApiDoc apiDoc = Mockito.mock(ApiDoc.class);
 
             FileSystem fs = Mockito.mock(FileSystem.class);
             SceneBuilderBeanFactory ctx = Mockito.mock(SceneBuilderBeanFactory.class);
@@ -59,10 +59,10 @@ public class MockObjects {
             MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
             DocumentManager dm = new DocumentManager.DocumentManagerImpl();
 
-            Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
-            Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
-            Mockito.when(apiDoc.getMessageLogger()).thenReturn(messageLogger);
-            Mockito.when(api.getApiDoc()).thenReturn(apiDoc);
+//            Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
+//            Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
+//            Mockito.when(apiDoc.getMessageLogger()).thenReturn(messageLogger);
+//            Mockito.when(api.getApiDoc()).thenReturn(apiDoc);
             Mockito.when(api.getFileSystem()).thenReturn(fs);
             Mockito.when(api.getContext()).thenReturn(ctx);
             Mockito.when(editor.getFxmlLocation()).thenReturn(new File(".").toURI().toURL());

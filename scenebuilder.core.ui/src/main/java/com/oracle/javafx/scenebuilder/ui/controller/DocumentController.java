@@ -50,16 +50,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.MenuBar;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
@@ -98,7 +94,6 @@ public class DocumentController implements Document, InitializingBean {
 
     private final DocumentWindow documentWindow;
     private final Editor editorController;
-    private final FileSystem fileSystem;
     private final MenuBar menuBarController;
     private final Content contentPanelController;
     //private final DocumentPanelController documentPanelController;
@@ -119,10 +114,7 @@ public class DocumentController implements Document, InitializingBean {
     private final DocumentManager documentManager;
     private final List<InitWithDocument> initializations;
     private final List<DisposeWithDocument> finalizations;
-    private final Dialog dialog;
 
-    private final Api api;
-    private final ActionFactory actionFactory;
     private final Main main;
     private final SceneBuilderManager sceneBuilderManager;
     private final MessageBarController messageBarController;
@@ -135,7 +127,6 @@ public class DocumentController implements Document, InitializingBean {
      */
     // @formatter:off
     public DocumentController(
-            @Autowired Api api,
             @Autowired RecentItemsPreference recentItemsPreference,
             //@Autowired WildcardImportsPreference wildcardImportsPreference,
             @Autowired Preferences documentPreferencesController,
@@ -145,13 +136,13 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired MenuBarController menuBarController,
             @Lazy @Autowired MessageBarController messageBarController,
             @Autowired SelectionBarController selectionBarController,
-
+            DocumentManager documentManager,
             //@Autowired DocumentPanelController documentPanelController,
             //@Autowired InspectorPanelController inspectorPanelController,
             //@Autowired LibraryPanel libraryPanelController,
             //@Autowired @Lazy CssPanelController cssPanelController,
             @Autowired DockManager dockManager,
-            @Autowired ActionFactory actionFactory,
+
             @Autowired Main main,
             @Autowired SceneBuilderManager sceneBuilderManager,
             @Lazy @Autowired PathPreference pathPreference,
@@ -163,7 +154,6 @@ public class DocumentController implements Document, InitializingBean {
     ) {
      // @formatter:on
         super();
-        this.api = api;
         this.editorController = editorController;
         this.documentWindow = documentWindow;
         this.main = main;
@@ -174,14 +164,12 @@ public class DocumentController implements Document, InitializingBean {
         this.messageBarController = messageBarController;
         this.selectionBarController = selectionBarController;
 
-        this.fileSystem = api.getFileSystem();
-        this.dialog = api.getApiDoc().getDialog();
         this.contentPanelController = contentPanelController;
-        this.documentManager = api.getApiDoc().getDocumentManager();
+        this.documentManager = documentManager;
         this.documentPreferencesController = documentPreferencesController;
         //this.inspectorPanelController = inspectorPanelController;
         //this.libraryPanelController = libraryPanelController;
-        this.actionFactory = actionFactory;
+
         this.pathPreference = pathPreference;
         this.initializations = initializations;
         this.finalizations = finalizations;
@@ -261,18 +249,14 @@ public class DocumentController implements Document, InitializingBean {
         };
     }
 
-    private Api getApi() {
-        return api;
-    }
-
     @Override
     public void afterPropertiesSet() throws Exception {
         initializations.forEach(a -> a.initWithDocument());
         editorController.initialize();
 
-        api.getApiDoc().getDocumentManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
+        documentManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
-        api.getSceneBuilderManager().closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
+        sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
         SbPlatform.runForDocumentLater(() -> {
             initializeDocumentWindow();
@@ -1428,7 +1412,7 @@ public class DocumentController implements Document, InitializingBean {
 
     @Override
     public boolean isDocumentDirty() {
-        return getApi().getApiDoc().getDocumentManager().dirty().get();
+        return documentManager.dirty().get();
     }
 
     @Override

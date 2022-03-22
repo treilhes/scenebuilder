@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,18 +39,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
@@ -89,13 +90,22 @@ public class StyleEditor extends InlineListEditor {
 
     private List<String> cssProperties;
     private Set<Class<?>> selectedClasses;
-    private MessageLogger messageLogger;
+    private final MessageLogger messageLogger;
+    private final Dialog dialog;
+    private final Documentation documentation;
+    private final FileSystem fileSystem;
 
     public StyleEditor(
-            @Autowired Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            MessageLogger messageLogger
             ) {
-        super(api);
-        this.messageLogger = api.getApiDoc().getMessageLogger();
+        super(dialog, documentation, fileSystem);
+        this.dialog = dialog;
+        this.documentation = documentation;
+        this.fileSystem = fileSystem;
+        this.messageLogger = messageLogger;
         initialize();
     }
 
@@ -108,7 +118,7 @@ public class StyleEditor extends InlineListEditor {
         if (cssProperties == null) {
             cssProperties = CssInternal.getCssProperties(selectedClasses);
         }
-        return new StyleItem(this, cssProperties);
+        return new StyleItem(dialog, documentation, fileSystem, this, cssProperties);
     }
 
     @Override
@@ -250,11 +260,15 @@ public class StyleEditor extends InlineListEditor {
         private boolean parsingError = false;
         private ListChangeListener<CssParser.ParseError> errorListener;
 
-        public StyleItem(EditorItemDelegate editor, List<String> suggestedList) {
+        public StyleItem(
+                Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem,
+                EditorItemDelegate editor, List<String> suggestedList) {
 //            System.out.println("New StyleItem.");
             // It is an AutoSuggestEditor without MenuButton
             //super("", "", suggestedList, false);
-            super(StyleEditor.this.getApi());
+            super(dialog, documentation, fileSystem);
             preInit(Type.ALPHA, suggestedList);
             initialize(editor);
         }

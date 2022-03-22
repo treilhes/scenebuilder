@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,11 +54,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlFilterTransform;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -205,20 +207,18 @@ public class ImportWindowController extends AbstractModalDialog {
 //        this(api, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
 //    }
 
-    protected ImportWindowController(Api api
-            // List<File> files,
-            // MavenArtifactsPreferences mavenPreferences,
-            // boolean copyFilesToUserLibraryDir,
-            // List<String> artifactsFilter,
-            ) {
-        super(api, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
+    protected ImportWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            Dialog dialog) {
+        super(sceneBuilderManager, iconSetting, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
         // libPanelController = lpc;
         // importFiles = new ArrayList<>(files);
         // this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
         // this.artifactsFilter = artifactsFilter;
         //this.owner = owner;
         // this.mavenPreferences = mavenPreferences;
-        this.dialog = api.getApiDoc().getDialog();
+        this.dialog = dialog;
     }
 
     public ControlFilterTransform editTransform(List<ControlReportImpl> reports, ControlFilterTransform controlFilter, ClassLoader classLoader) {

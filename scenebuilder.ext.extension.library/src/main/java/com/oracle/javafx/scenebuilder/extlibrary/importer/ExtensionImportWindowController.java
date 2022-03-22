@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,11 +52,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionFilterTransform;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
@@ -84,14 +86,14 @@ import javafx.util.Callback;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class ExtensionImportWindowController extends AbstractModalDialog {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ExtensionImportWindowController.class);
 
     ClassLoader importClassLoader;
     Node zeNode = new Label(I18N.getString("import.preview.unable"));
 
     private int numOfImportedJar;
-    
+
     private Stage owner;
 
     @FXML
@@ -121,20 +123,18 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
     private final Dialog dialog;
     private ExtensionFilterTransform filter;
 
-    protected ExtensionImportWindowController(Api api
-            // List<File> files,
-            // MavenArtifactsPreferences mavenPreferences,
-            // boolean copyFilesToUserLibraryDir,
-            // List<String> artifactsFilter,
-            ) {
-        super(api, ExtensionImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
+    protected ExtensionImportWindowController(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            Dialog dialog) {
+        super(sceneBuilderManager, iconSetting, ExtensionImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
         // libPanelController = lpc;
         // importFiles = new ArrayList<>(files);
         // this.copyFilesToUserLibraryDir = copyFilesToUserLibraryDir;
         // this.artifactsFilter = artifactsFilter;
         this.owner = owner;
         // this.mavenPreferences = mavenPreferences;
-        this.dialog = api.getApiDoc().getDialog();
+        this.dialog = dialog;
     }
 
     public ExtensionFilterTransform editTransform(List<ExtensionReport> reports, ExtensionFilterTransform controlFilter, ClassLoader classLoader) {
@@ -155,7 +155,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
         importList.getItems().clear();
         this.importClassLoader = classLoader;
         this.filter = controlFilter;
-        
+
         List<ExtensionReport> jarReportList = reports; // blocking call
         final Callback<ImportRow, ObservableValue<Boolean>> importRequired = row -> row.importRequired();
         importList.setCellFactory(CheckBoxListCell.forListView(importRequired));
@@ -164,7 +164,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
             Path file = jarReport.getSource();
             String jarName = file.getName(file.getNameCount() - 1).toString();
             StringBuilder sb = new StringBuilder();
-            
+
             if (Files.isDirectory(file)) {
                 sb.append(I18N.getString("log.info.explore.folder.results", jarName));
             } else {
@@ -175,7 +175,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
                 sb.append("> ").append(e.toString()).append("\n"); //NOCHECK
                 if ((e.getStatus() == ExtensionReportEntry.Status.OK)) {
                     boolean checked = true;
-                    
+
                     final ImportRow importRow = new ImportRow(checked, jarReport, e);
                     importList.getItems().add(importRow);
                     importRow.importRequired().addListener((ChangeListener<Boolean>) (ov, oldValue, newValue) -> {
@@ -183,7 +183,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
                         updateOKButtonTitle(numOfComponentToImport);
                         updateSelectionToggleText(numOfComponentToImport);
                     });
-                    
+
                 } else {
                     if (e.getException() != null) {
                         StringWriter sw = new StringWriter();
@@ -343,7 +343,7 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
 
         importList.getSelectionModel().selectedItemProperty().addListener((ChangeListener<ImportRow>) (ov, t, t1) -> {
             previewGroup.getChildren().clear();
-            
+
 //            try {
 //                InputStream is = null;
 //                //create zenode here
@@ -353,10 +353,10 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
 //                showErrorDialog(ioe);
 //            }
 
-            
+
             previewGroup.getChildren().add(zeNode);
 
-            
+
             String name = t1.getReport().getSource().getFileName().toString();
             if (t1.getReportEntry().getClassName() != null) {
                 name += " > " + t1.getReportEntry().getClassName(); //NOCHECK
@@ -373,19 +373,19 @@ public class ExtensionImportWindowController extends AbstractModalDialog {
         }
     }
 
-    
+
     private void refreshItems(ImportRow row) {
-        
-        
+
+
         final ExtensionReport report = row.getReport();
         final ExtensionReportEntry entry = row.getReportEntry();
         ExtensionReport ir = new ExtensionReport(report.getSource());
         ir.getEntries().add(entry);
-        
+
         List<ExtensionReport> list = filter.filter(List.of(ir));
     }
 
-    
+
     private URLClassLoader getClassLoaderForFiles(List<File> files) {
         return new URLClassLoader(makeURLArrayFromFiles(files));
     }

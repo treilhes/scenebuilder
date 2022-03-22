@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,6 +47,7 @@ import java.util.TreeSet;
 
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
 import com.sun.javafx.scene.NodeHelper;
 
@@ -86,11 +88,13 @@ public class NodeCssState {
     private Map<MatchingRule, List<MatchingDeclaration>> matchingRules;
     private List<MatchingRule> sortedMatchingRules = new ArrayList<>();
     private Collection<CssProperty> props;
+    private final Metadata metadata;
 
     // private TestCssNode tsn;
 
     @SuppressWarnings("rawtypes")
-    protected NodeCssState(Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
+    protected NodeCssState(Metadata metadata, Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
+        this.metadata = metadata;
         this.map = map;
         this.node = node;
         this.fxomObject = fxomObject;
@@ -125,11 +129,11 @@ public class NodeCssState {
         private final ObjectProperty<CssContentMaker.PropertyState> fxmlModel = new SimpleObjectProperty<>();
         private CssContentMaker.PropertyState currentState;
 
-        CssProperty(NodeCssState nodeCssState, CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
-            this(nodeCssState, null, cssMeta, target, fxomObject);
+        CssProperty(Metadata metadata, NodeCssState nodeCssState, CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
+            this(metadata, nodeCssState, null, cssMeta, target, fxomObject);
         }
 
-        CssProperty(NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
+        CssProperty(Metadata metadata, NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
                 FXOMObject fxomObject) {
             this.mainProperty = mainProperty;
             this.cssMeta = cssMeta;
@@ -156,7 +160,7 @@ public class NodeCssState {
             assert builtinState != null;
             builtin.setValue(builtinState);
 
-            CssContentMaker.PropertyState modelState = CssContentMaker.modelValue(target, cssMeta, fxomObject);
+            CssContentMaker.PropertyState modelState = CssContentMaker.modelValue(metadata, target, cssMeta, fxomObject);
             if (modelState != null) {
                 fxmlModel.setValue(modelState);
             }
@@ -368,11 +372,11 @@ public class NodeCssState {
             props = new TreeSet<>();
             List<CssMetaData<? extends Styleable, ?>> cssMetaList = node.getCssMetaData();
             for (CssMetaData<? extends Styleable, ?> cssMeta : cssMetaList) {
-                CssProperty mainProp = new CssProperty(this, cssMeta, node, fxomObject);
+                CssProperty mainProp = new CssProperty(metadata, this, cssMeta, node, fxomObject);
                 props.add(mainProp);
                 if (cssMeta.getSubProperties() != null) {
                     for (CssMetaData sub : cssMeta.getSubProperties()) {
-                        CssProperty subProp = new CssProperty(this, mainProp, sub, node, fxomObject);
+                        CssProperty subProp = new CssProperty(metadata, this, mainProp, sub, node, fxomObject);
                         mainProp.getSubProperties().add(subProp);
                     }
                 }
@@ -391,11 +395,11 @@ public class NodeCssState {
                         }
                     }
                     if (!found) {
-                        CssProperty mainProp = new CssProperty(this, skinCssMeta, skinNode, fxomObject);
+                        CssProperty mainProp = new CssProperty(metadata, this, skinCssMeta, skinNode, fxomObject);
                         props.add(mainProp);
                         if (skinCssMeta.getSubProperties() != null) {
                             for (CssMetaData<? extends Styleable, ?> sub : skinCssMeta.getSubProperties()) {
-                                CssProperty subProp = new CssProperty(this, sub, node, fxomObject);
+                                CssProperty subProp = new CssProperty(metadata, this, sub, node, fxomObject);
                                 mainProp.getSubProperties().add(subProp);
                             }
                         }

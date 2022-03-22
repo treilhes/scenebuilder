@@ -62,4 +62,19 @@ public class StringUtils {
         }
         return result;
     }
+
+    /**
+     * Returns a String with no trailing zero; if decimal part is non zero then it
+     * is kept.
+     *
+     * @param value the value
+     * @return the string from double
+     */
+    public static String getStringFromDouble(double value) {
+        String res = Double.toString(value);
+        if (res.endsWith(".0")) { // NOCHECK
+            res = Integer.toString((int) value);
+        }
+        return res;
+    }
 }

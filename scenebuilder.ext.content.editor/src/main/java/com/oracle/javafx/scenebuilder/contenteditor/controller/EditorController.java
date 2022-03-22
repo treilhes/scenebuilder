@@ -47,8 +47,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
@@ -117,9 +115,7 @@ public class EditorController implements Editor {
 
     private Stage ownerWindow;
 
-    private final SceneBuilderBeanFactory context;
     private final FileSystem fileSystem;
-    private final Dialog dialog;
     private I18nResourceProvider resourceConfig;
     private final DocumentManager documentManager;
 
@@ -131,84 +127,35 @@ public class EditorController implements Editor {
     private final GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory;
     private final BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
 
-//    private final AddColumnJob.Factory addColumnJobFactory;
-//    private final AddRowJob.Factory addRowJobFactory;
-//    private final BringForwardJob.Factory bringForwardJobFactory;
-//    private final BringToFrontJob.Factory bringToFrontJobFactory;
-//    private final CutSelectionJob.Factory cutSelectionJobFactory;
-//    private final SpanJob.Factory spanJobFactory;
-//    private final DeleteSelectionJob.Factory deleteSelectionJobFactory;
-//    private final DuplicateSelectionJob.Factory duplicateSelectionJobFactory;
-//    private final FitToParentSelectionJob.Factory fitToParentSelectionJobFactory;
-//    private final MoveColumnJob.Factory moveColumnJobFactory;
-//    private final MoveRowJob.Factory moveRowJobFactory;
-//    private final PasteJob.Factory pasteJobFactory;
-//    private final PasteIntoJob.Factory pasteIntoJobFactory;
-//    private final SendBackwardJob.Factory sendBackwardJobFactory;
-//    private final SendToBackJob.Factory sendToBackJobFactory;
-//    private final UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory;
-//    private final TrimSelectionJob.Factory trimSelectionJobFactory;
-//    private final UnwrapJob.Factory unwrapJobFactory;
-//    private final UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory;
-////    private final ImportFileJob.Factory importFileJobFactory;
-////    private final IncludeFileJob.Factory includeFileJobFactory;
-//    private final AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory;
-//    private final AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory;
-//
-//    private final WrapInJobFactory wrapInJobFactory;
-//    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
-
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
     // @formatter:off
     public EditorController(
-            @Autowired Api api,
+            SceneBuilderManager sceneBuilderManager,
+            JobManager jobManager,
+            FileSystem fileSystem,
+            MessageLogger messageLogger,
+            Selection selection,
+            DocumentManager documentManager,
+            ErrorReport errorReport,
             @Lazy @Autowired InlineEdit inlineEditController,
             @Lazy @Autowired ContextMenuController contextMenuController,
 
             GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory,
             BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory
 
-//            AddColumnJob.Factory addColumnJobFactory,
-//            AddRowJob.Factory addRowJobFactory,
-//            BringForwardJob.Factory bringForwardJobFactory,
-//            BringToFrontJob.Factory bringToFrontJobFactory,
-//            CutSelectionJob.Factory cutSelectionJobFactory,
-//            SpanJob.Factory spanJobFactory,
-//            DeleteSelectionJob.Factory deleteSelectionJobFactory,
-//            DuplicateSelectionJob.Factory duplicateSelectionJobFactory,
-//            FitToParentSelectionJob.Factory fitToParentSelectionJobFactory,
-//            MoveColumnJob.Factory moveColumnJobFactory,
-//            MoveRowJob.Factory moveRowJobFactory,
-//            PasteJob.Factory pasteJobFactory,
-//            PasteIntoJob.Factory pasteIntoJobFactory,
-//            SendBackwardJob.Factory sendBackwardJobFactory,
-//            SendToBackJob.Factory sendToBackJobFactory,
-//            UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory,
-//            TrimSelectionJob.Factory trimSelectionJobFactory,
-//            UnwrapJob.Factory unwrapJobFactory,
-//            UseComputedSizesSelectionJob.Factory useComputedSizesSelectionJobFactory,
-////            ImportFileJob.Factory importFileJobFactory,
-////            IncludeFileJob.Factory includeFileJobFactory,
-//            AddContextMenuToSelectionJob.Factory addContextMenuToSelectionJobFactory,
-//            AddTooltipToSelectionJob.Factory addTooltipToSelectionJobFactory,
-//
-//            WrapInJobFactory wrapInJobFactory,
-//            GridSelectionGroup.Factory gridSelectionGroupFactory
         	) {
         // @formatter:on
         // this.api = api;
-        this.context = api.getContext();
-        this.sceneBuilderManager = api.getSceneBuilderManager();
-        this.jobManager = api.getApiDoc().getJobManager();
-        this.fileSystem = api.getFileSystem();
-        this.dialog = api.getApiDoc().getDialog();
+        this.sceneBuilderManager = sceneBuilderManager;
+        this.jobManager = jobManager;
+        this.fileSystem = fileSystem;
 //    	this.dragController = dragController;
-        this.messageLogger = api.getApiDoc().getMessageLogger();
-        this.selection = api.getApiDoc().getSelection();
-        this.documentManager = api.getApiDoc().getDocumentManager();
-        this.errorReport = api.getApiDoc().getErrorReport();
+        this.messageLogger = messageLogger;
+        this.selection = selection;
+        this.documentManager = documentManager;
+        this.errorReport = errorReport;
         this.inlineEditController = inlineEditController;
         this.contextMenuController = contextMenuController;
         //this.gridSelectionGroupFactory = gridSelectionGroupFactory;
@@ -248,7 +195,7 @@ public class EditorController implements Editor {
         // TODO remove below
         // libraryProperty = new SimpleObjectProperty<Library>(builtinLibrary);
 
-        api.getApiDoc().getJobManager().revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
+        jobManager.revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
 
 //	@Override

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +37,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import javafx.event.ActionEvent;
@@ -87,8 +89,11 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
      * Public
      */
 
-    public AbstractModalDialog(Api api, URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
-        super(api, getContainerFxmlURL(), I18N.getBundle());
+    public AbstractModalDialog(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
+        super(sceneBuilderManager, iconSetting, getContainerFxmlURL(), I18N.getBundle());
         this.owner = owner;
         this.contentFxmlURL = contentFxmlURL;
         this.contentResources = contentResources;

@@ -42,7 +42,6 @@ import java.util.Map;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
@@ -76,15 +75,18 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
 	private final JobManager jobManager;
 	private final BatchJob.Factory batchJobFactory;
 	private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final Metadata metadata;
 
 	protected ResizeTableColumnGesture(
     		Content contentPanelController,
     		JobManager jobManager,
+    		Metadata metadata,
             BatchJob.Factory batchJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory
             ) {
         super(contentPanelController);
         this.jobManager = jobManager;
+        this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
         this.modifyObjectJobFactory = modifyObjectJobFactory;
 
@@ -197,7 +199,6 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
 
         final List<AbstractJob> result = new ArrayList<>();
 
-        final Metadata metadata = Api.get().getMetadata();
         final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
         for (Map.Entry<PropertyName,Object> e : changeMap.entrySet()) {
             final ValuePropertyMetadata vpm = metadata.queryValueProperty(columnInstance, e.getKey());

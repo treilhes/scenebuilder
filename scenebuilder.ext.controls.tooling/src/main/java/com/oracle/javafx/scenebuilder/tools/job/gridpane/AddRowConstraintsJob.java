@@ -56,9 +56,9 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
+import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.RowConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
 
 import javafx.scene.layout.RowConstraints;
@@ -189,8 +189,10 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
                 }
                 // Create new constraints with default values for the new added row
                 final FXOMInstance addedConstraints = makeRowConstraintsInstance();
-                JobUtils.setMinHeight(addedConstraints, RowConstraints.class, defaultMinHeight);
-                JobUtils.setPrefHeight(addedConstraints, RowConstraints.class, defaultPrefHeight);
+
+                RowConstraintsMetadata.minHeightPropertyMetadata.setValue(addedConstraints, defaultMinHeight);
+                RowConstraintsMetadata.prefHeightPropertyMetadata.setValue(addedConstraints, defaultPrefHeight);
+
                 final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(addedConstraints,
                         (FXOMPropertyC) constraintsProperty, addedIndex);
                 result.add(addValueJob);
@@ -231,23 +233,23 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
         final FXOMInstance result = makeRowConstraintsInstance();
 
         // Set the new row constraints values with the values of the specified instance
-        final boolean fillHeight = JobUtils.getFillHeight(constraints, RowConstraints.class);
-        final double maxHeight = JobUtils.getMaxHeight(constraints, RowConstraints.class);
-        final double minHeight = JobUtils.getMinHeight(constraints, RowConstraints.class);
-        final double percentHeight = JobUtils.getPercentHeight(constraints, RowConstraints.class);
-        final double prefHeight = JobUtils.getPrefHeight(constraints, RowConstraints.class);
-        final String valignment = JobUtils.getVAlignment(constraints, RowConstraints.class);
-        final String vgrow = JobUtils.getVGrow(constraints, RowConstraints.class);
+        final boolean fillHeight = RowConstraintsMetadata.fillHeightPropertyMetadata.getValue(constraints);
+        final double maxHeight = RowConstraintsMetadata.maxHeightPropertyMetadata.getValue(constraints);
+        final double minHeight = RowConstraintsMetadata.minHeightPropertyMetadata.getValue(constraints);
+        final double percentHeight = RowConstraintsMetadata.percentHeightPropertyMetadata.getValue(constraints);
+        final double prefHeight = RowConstraintsMetadata.prefHeightPropertyMetadata.getValue(constraints);
+        final String valignment = RowConstraintsMetadata.valignmentPropertyMetadata.getValue(constraints);
+        final String vgrow = RowConstraintsMetadata.vgrowPropertyMetadata.getValue(constraints);
 
-        JobUtils.setFillHeight(result, RowConstraints.class, fillHeight);
-        JobUtils.setMaxHeight(result, RowConstraints.class, maxHeight);
+        RowConstraintsMetadata.fillHeightPropertyMetadata.setValue(result, fillHeight);
+        RowConstraintsMetadata.maxHeightPropertyMetadata.setValue(result, maxHeight);
         // If the existing constraints minHeight is too small, we use the default one
-        JobUtils.setMinHeight(result, RowConstraints.class, Math.max(minHeight, defaultMinHeight));
-        JobUtils.setPercentHeight(result, RowConstraints.class, percentHeight);
+        RowConstraintsMetadata.minHeightPropertyMetadata.setValue(result, Math.max(minHeight, defaultMinHeight));
+        RowConstraintsMetadata.percentHeightPropertyMetadata.setValue(result, percentHeight);
         // If the existing constraints prefHeight is too small, we use the default one
-        JobUtils.setPrefHeight(result, RowConstraints.class, Math.max(prefHeight, defaultPrefHeight));
-        JobUtils.setVAlignment(result, RowConstraints.class, valignment);
-        JobUtils.setVGrow(result, RowConstraints.class, vgrow);
+        RowConstraintsMetadata.prefHeightPropertyMetadata.setValue(result, Math.max(prefHeight, defaultPrefHeight));
+        RowConstraintsMetadata.valignmentPropertyMetadata.setValue(result, valignment);
+        RowConstraintsMetadata.vgrowPropertyMetadata.setValue(result, vgrow);
 
         return result;
     }

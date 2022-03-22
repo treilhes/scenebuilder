@@ -54,13 +54,13 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
+import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.NodeMetadata;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
@@ -376,8 +376,8 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             final HierarchyMask oldContainerMask = designMaskFactory.getMask(oldContainer);
             if (oldContainerMask.getMainAccessory() != null && oldContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 final Bounds unionOfBounds = WrapJobUtils.getUnionOfBounds(children);
-                JobUtils.setLayoutX(newContainer, Node.class, unionOfBounds.getMinX());
-                JobUtils.setLayoutY(newContainer, Node.class, unionOfBounds.getMinY());
+                NodeMetadata.layoutXPropertyMetadata.setValue(newContainer, unionOfBounds.getMinX());
+                NodeMetadata.layoutYPropertyMetadata.setValue(newContainer, unionOfBounds.getMinY());
 //            JobUtils.setMinHeight(newContainer, Region.class, unionOfBounds.getHeight());
 //            JobUtils.setMinWidth(newContainer, Region.class, unionOfBounds.getMinY());
             }

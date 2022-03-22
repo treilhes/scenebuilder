@@ -118,16 +118,6 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
         return Collections.unmodifiableMap(constants);
     }
 
-    /**
-     * Add a constant for a specific instance and the corresponding value
-     * @return
-     */
-    //TODO disable mutability and clone instead
-    public PropertyMetadata addConstant(String key, Object value) {
-        constants.put(key, value);
-        return this;
-    }
-
     /*
      * Comparable
      */
@@ -195,6 +185,11 @@ public abstract class PropertyMetadata implements Comparable<PropertyMetadata> {
 
         protected SELF withConstant(String constantName, Object constantValue) {
             this.constants.put(constantName, constantValue);
+            return self();
+        }
+
+        protected SELF withConstants(Map<String, Object> constants) {
+            this.constants.putAll(constants);
             return self();
         }
         public abstract TOBUILD build();

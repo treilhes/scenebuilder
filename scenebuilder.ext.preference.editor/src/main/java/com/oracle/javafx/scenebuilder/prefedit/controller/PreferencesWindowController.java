@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,11 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -51,6 +50,8 @@ import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.Pr
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import javafx.event.ActionEvent;
@@ -91,11 +92,12 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     private List<UserPreference<?>> documentPreferences;
 
     public PreferencesWindowController(
-            @Autowired Api api,
-            @Autowired DocumentWindow documentWindowController,
-            @Autowired List<ManagedGlobalPreference> globalPreferences,
-            @Autowired List<ManagedDocumentPreference> documentPreferences) {
-        super(api, PreferencesWindowController.class.getResource("Preferences.fxml"),
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentWindow documentWindowController,
+            List<ManagedGlobalPreference> globalPreferences,
+            List<ManagedDocumentPreference> documentPreferences) {
+        super(sceneBuilderManager, iconSetting, PreferencesWindowController.class.getResource("Preferences.fxml"),
                 I18N.getBundle(), documentWindowController);
         this.ownerWindow = documentWindowController;
 

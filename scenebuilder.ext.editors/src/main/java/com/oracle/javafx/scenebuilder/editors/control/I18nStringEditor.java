@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,17 +35,16 @@ package com.oracle.javafx.scenebuilder.editors.control;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
-import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -71,7 +71,6 @@ import javafx.scene.layout.Priority;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class I18nStringEditor extends AbstractPropertyEditor {
 
     private static final String PERCENT_STR = "%"; //NOCHECK
@@ -89,13 +88,13 @@ public class I18nStringEditor extends AbstractPropertyEditor {
     private boolean i18nMode = false;
     private boolean multiLineMode = false;
 
-    public I18nStringEditor(
-            @Autowired Api api
-            ) {
-        super(api);
+    public I18nStringEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         initialize(true);
     }
-    
+
     private void initialize(boolean multiLineSupported) {
         this.multiLineSupported = multiLineSupported;
         valueListener = event -> {
@@ -304,14 +303,14 @@ public class I18nStringEditor extends AbstractPropertyEditor {
             multilineMenuItem.setText(MULTI_LINE);
             i18nMenuItem.setDisable(false);
         }
-        
+
         if (!multiLineSupported) {
             multilineMenuItem.setDisable(true);
         }
     }
-    
+
     private boolean isMultiLinesSupported(Set<Class<?>> selectedClasses, PropertyMetadata propMeta) {
-        
+
         //FIXME no way to know if the the text property is multiline or not
         // so we keep this special case
         String propertyNameStr = propMeta.getName().getName();
@@ -320,7 +319,7 @@ public class I18nStringEditor extends AbstractPropertyEditor {
                 return false;
             }
         }
-        
+
         if (propMeta instanceof I18nStringPropertyMetadata) {
             return ((I18nStringPropertyMetadata)propMeta).isMultiline();
         }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,9 +38,10 @@ import java.net.URL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 
 import javafx.event.ActionEvent;
@@ -61,8 +63,11 @@ public class AlertDialog extends AbstractModalDialog  implements Alert {
 
     private Runnable actionRunnable;
 
-    public AlertDialog(Api api, Window owner) {
-        super(api, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner);
+    public AlertDialog(
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            Window owner) {
+        super(sceneBuilderManager, iconSetting, AlertDialog.class.getResource("AlertDialog.fxml"), null, owner);
     }
 
     @Override

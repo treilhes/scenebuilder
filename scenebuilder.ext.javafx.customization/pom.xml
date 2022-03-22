@@ -23,18 +23,15 @@
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.metadata.javafx15</artifactId>
-            <version>${scenebuilder.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.core</artifactId>
-            <version>${scenebuilder.version}</version>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter.test</artifactId>
-            <version>${scenebuilder.version}</version>
             <scope>test</scope>
         </dependency>
 

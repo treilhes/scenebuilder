@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +39,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
@@ -127,25 +130,29 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     private final MenuItem resetvalueMenuItem = new MenuItem(I18N.getString("inspector.editors.resetvalue"));
     private FadeTransition fadeTransition = null;
     private boolean genericModesHandled = false;
-    //private final Dialog dialog;
-    private final Api api;
+
     private Set<Class<?>> selectedClasses;
+
+    private final Documentation documentation;
+    private final FileSystem fileSystem;
+    private final Dialog dialog;
 
 
     public AbstractPropertyEditor(
-            Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem
             ) {
-        this.api = api;
-        //this.dialog = api.getApiDoc().getDialog();
+        this.dialog = dialog;
+        this.documentation = documentation;
+        this.fileSystem = fileSystem;
         initialize();
     }
 
     private void initialize() {
         // Create a property link with a pretty name (e.g. layoutX ==> Layout X)
         propName = new Hyperlink();
-        propName.setOnAction(event -> {
-            getApi().getDocumentation().openDocumentationUrl(selectedClasses, propMeta);
-        });
+        propName.setOnAction(event -> documentation.openDocumentationUrl(selectedClasses, propMeta));
         propName.getStyleClass().add("property-link"); //NOCHECK
         propName.setFocusTraversable(false);
 
@@ -568,7 +575,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
                         // Open the css file
                         if (cssInfo.getMainUrl() != null) {
                         	try {
-                        	    getApi().getFileSystem().open(cssInfo.getMainUrl().toString());
+                        	    fileSystem.open(cssInfo.getMainUrl().toString());
                             } catch (IOException ex) {
                                 System.out.println(ex.getMessage() + ex);
                             }
@@ -627,7 +634,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
             source = propName;
         }
 
-        Alert alertDialog = api.getApiDoc().getDialog().customAlert(source.getScene().getWindow());
+        Alert alertDialog = dialog.customAlert(source.getScene().getWindow());
         alertDialog.setTitle(I18N.getString("inspector.error.title"));
         alertDialog.setMessage(I18N.getString("inspector.error.message"));
         alertDialog.setDetails(I18N.getString("inspector.error.details", value, getPropertyNameText()));
@@ -810,7 +817,4 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         resetvalueMenuItem.setDisable(true);
     }
 
-    public Api getApi() {
-        return api;
-    }
 }

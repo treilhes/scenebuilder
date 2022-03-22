@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +36,16 @@ package com.oracle.javafx.scenebuilder.editors.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMFxIdIndex;
@@ -65,12 +68,18 @@ public class ToggleGroupEditor extends AutoSuggestEditor {
 
     List<String> suggestedTgs;
 
+    private final DocumentManager documentManager;
+
     public ToggleGroupEditor(
-            @Autowired Api api) {
-        super(api);
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            DocumentManager documentManager) {
+        super(dialog, documentation, fileSystem);
+        this.documentManager = documentManager;
         initialize(new ArrayList<>());
     }
-    
+
     private void initialize(List<String> suggestedTgs) {
         this.suggestedTgs = suggestedTgs;
 
@@ -99,9 +108,9 @@ public class ToggleGroupEditor extends AutoSuggestEditor {
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         super.reset(propMeta, selectionState, getSuggestedToggleGroups());
     }
-    
+
     private List<String> getSuggestedToggleGroups() {
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         if (fxomDocument == null) {
             return new ArrayList<>();
         }

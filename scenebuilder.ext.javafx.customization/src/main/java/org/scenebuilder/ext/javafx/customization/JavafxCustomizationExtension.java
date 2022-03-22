@@ -56,6 +56,7 @@ public class JavafxCustomizationExtension extends AbstractExtension {
         return Arrays.asList(
                 AnchorPaneConstraintsEditor.class,
                 AnchorPaneConstraintsEditor.ConstraintEditor.class,
+                AnchorPaneConstraintsEditor.ConstraintEditor.Factory.class,
                 AnchorPaneEditorProvider.class,
                 I18NJavafxCustomization.class,
                 NodeMetadataAddin.class

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,16 +39,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -74,7 +75,6 @@ import javafx.scene.layout.StackPane;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class BoundedDoubleEditor extends AutoSuggestEditor {
 
     @FXML
@@ -91,41 +91,15 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     private int roundingFactor = 1; // no decimals
     private boolean updateFromTextField = false;
     private boolean updateFromSlider = false;
+    private final Metadata metadata;
 
-//    public BoundedDoubleEditor(String name, String defaultValue, List<String> suggestedList) {
-//        this(name, defaultValue, suggestedList, null, null, false);
-//    }
-
-    public BoundedDoubleEditor(Api api, String name, String defaultValue, List<String> suggestedList, Double min, Double max, boolean minMaxForSliderOnly) {
-        //super(name, defaultValue, suggestedList, AutoSuggestEditor.Type.DOUBLE);
-        super(api);
-        this.constants = new TreeMap<>();
-        
-        preInit(Type.DOUBLE, suggestedList);
-        reset(name, defaultValue, suggestedList);
-        if (min != null) {
-            this.min = min;
-        }
-        if (max != null) {
-            this.max = max;
-        }
-        this.minMaxForSliderOnly = minMaxForSliderOnly;
-        
-        initialize();
-    }
-    
-//    public BoundedDoubleEditor(ValuePropertyMetadata propMeta, Set<Class<?>> selectedClasses, Set<FXOMInstance> selectedInstances) {
-//        super(propMeta, selectedClasses, new ArrayList<>(propMeta.getConstants().keySet()), AutoSuggestEditor.Type.DOUBLE);
-//        this.constants = propMeta.getConstants();
-//        handleSpecificCases(propMeta, selectedInstances);
-//        initialize();
-//    }
-
-    @Autowired
     public BoundedDoubleEditor(
-            @Autowired Api api 
-            ) {
-        super(api);
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            Metadata metadata) {
+        super(dialog, documentation, fileSystem);
+        this.metadata = metadata;
         preInit(Type.DOUBLE, new ArrayList<>());
         initialize();
     }
@@ -262,7 +236,8 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         super.reset(propMeta, selectionState, new ArrayList<>(propMeta.getConstants().keySet()));
         this.constants = propMeta.getConstants();
-        handleSpecificCases(propMeta, selectionState.getSelectedInstances());
+        //TODO check those specific cases and delete
+        handleSpecificCases(propMeta, null);//selectionState.getSelectedInstances());
         configureSlider(propMeta, selectionState);
     }
 
@@ -278,7 +253,7 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
                 DoublePropertyMetadata doublePropMeta = (DoublePropertyMetadata) propMeta;
                 min = doublePropMeta.getMin(selectionState);
                 max = doublePropMeta.getMax(selectionState);
-                
+
                 if (max <= 1) {
                     roundingFactor = 100; // 2 decimals
                 } else if (max <= 10) {
@@ -286,16 +261,18 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
                 } else {
                     roundingFactor = 1; // no decimal
                 }
+
+                setMinMaxForSliderOnly(doublePropMeta.hasLenientBoundary());
 //            }
 //            if (propMeta instanceof DoubleBoundedPropertyGroupMetadata) {
 //                assert propMeta instanceof DoubleBoundedPropertyGroupMetadata;
 //                DoubleBoundedPropertyGroupMetadata doublePropMeta = (DoubleBoundedPropertyGroupMetadata) propMeta;
-//                
+//
 //                selectionState.getSelectedInstances().stream().forEach(i -> {
 //                    min = Math.max(min, (Double)doublePropMeta.getMinPropertyMetadata().getValueObject(i));
 //                    max = Math.min(max, (Double)doublePropMeta.getMaxPropertyMetadata().getValueObject(i));
 //                });
-//                
+//
 //                if (max <= 1) {
 //                    roundingFactor = 100; // 2 decimals
 //                } else if (max <= 10) {
@@ -314,12 +291,12 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     public void requestFocus() {
         EditorUtils.doNextFrame(() -> getTextField().requestFocus());
     }
-    
+
     private void handleSpecificCases(PropertyMetadata propMeta, Set<FXOMInstance> selectedInstances) {
         //TODO handle using groups
         if (true)
             return;
-        
+
         // Specific case for ScrollPane hValue/vValue, that have their bounds
         // related to properties (hMin/hMax, vMin/Vmax)
         // Since we only have one case of this, the generic case
@@ -345,7 +322,7 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
             Object propValue = null;
             boolean different = false;
             for (FXOMInstance instance : selectedInstances) {
-                Object valueCurr = Api.get().getMetadata().queryValueProperty(instance, new PropertyName(minMaxProp))
+                Object valueCurr = metadata.queryValueProperty(instance, new PropertyName(minMaxProp))
                         .getValueInSceneGraphObject(instance);
                 if (propValue != null && valueCurr != propValue) {
                     different = true;
@@ -371,6 +348,18 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     public void setMinMaxForSliderOnly(boolean minMaxForSliderOnly) {
         this.minMaxForSliderOnly = minMaxForSliderOnly;
     }
-    
-    
+
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    public static class Factory extends AbstractFactory<BoundedDoubleEditor> {
+        public Factory(SceneBuilderBeanFactory sbContext) {
+            super(sbContext);
+        }
+
+
+        public BoundedDoubleEditor getEditor(String name, String defaultValue, List<String> suggestedList, Double min, Double max, boolean minMaxForSliderOnly) {
+            return sbContext.getBean(BoundedDoubleEditor.class, name, defaultValue, suggestedList, min, max, minMaxForSliderOnly);
+        }
+    }
+
 }

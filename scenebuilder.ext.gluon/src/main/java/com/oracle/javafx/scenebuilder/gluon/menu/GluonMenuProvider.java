@@ -62,7 +62,6 @@ import javafx.scene.control.ToggleGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
 public class GluonMenuProvider implements MenuItemProvider {
 
     private final static String THEME_MENU_ID = "themeMenu";

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,16 +35,16 @@ package com.oracle.javafx.scenebuilder.library.maven.repository;
 
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.maven.preset.MavenPresets;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
@@ -61,7 +62,6 @@ import javafx.stage.Modality;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     @FXML
@@ -77,16 +77,24 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     private final SceneBuilderBeanFactory context;
 
+    private final SceneBuilderManager sceneBuilderManager;
+
+    private final IconSetting iconSetting;
+
     //private final SceneBuilderManager sceneBuilderManager;
 
     protected RepositoryManagerController(
-            Api api,
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            SceneBuilderBeanFactory context,
     		Editor editorController,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, RepositoryManagerController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner);
-        this.context = api.getContext();
+        super(sceneBuilderManager, iconSetting, RepositoryManagerController.class.getResource("RepositoryManager.fxml"), I18N.getBundle(), owner);
+        this.sceneBuilderManager = sceneBuilderManager;
+        this.iconSetting = iconSetting;
+        this.context = context;
         this.owner = owner;
         this.editorController = editorController;
         this.repositoryPreferences = repositoryPreferences;
@@ -155,7 +163,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     private void repositoryDialog(Repository repository) {
         RepositoryDialogController repositoryDialogController = context.getBean(RepositoryDialogController.class,
-                getApi(), editorController, mavenSetting, repositoryPreferences, this);
+                sceneBuilderManager, iconSetting, editorController, mavenSetting, repositoryPreferences, this);
         repositoryDialogController.openWindow();
         repositoryDialogController.setRepository(repository);
         repositoryDialogController.getStage().showingProperty().addListener(new InvalidationListener() {

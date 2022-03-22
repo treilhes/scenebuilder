@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +36,15 @@ package com.oracle.javafx.scenebuilder.certmngr.controller;
 import java.security.cert.X509Certificate;
 import java.util.Stack;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -60,20 +62,26 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
 
     @FXML
     private TextArea textArea;
-    
+
     private final NetworkManager networkManager;
-    
+
     private final Stack<X509Certificate[]> pendingCertificates = new Stack<>();
-    
+
     private X509Certificate[] currentCertificates = null;
 
+    private final SceneBuilderBeanFactory context;
+
     public CertificateManagerWindowController(
-            @Autowired Api api) {
-        super(api, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), I18N.getBundle(),
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            NetworkManager networManager,
+            SceneBuilderBeanFactory context) {
+        super(sceneBuilderManager, iconSetting, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), I18N.getBundle(),
                 null); // NOI18N
-        this.networkManager = api.getNetworkManager();
+        this.networkManager = networManager;
+        this.context = context;
     }
-    
+
 
     /*
      * AbstractFxmlWindowController
@@ -86,33 +94,33 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
         networkManager.trustRequest().observeOn(JavaFxScheduler.platform()).subscribe(certificates -> {
             pendingCertificates.add(certificates);
             if (!this.getStage().isShowing()) {
-                this.getStage(true).initOwner(getApi().getContext().getBean(DocumentWindow.class).getStage());
+                this.getStage(true).initOwner(context.getBean(DocumentWindow.class).getStage());
                 this.openWindow();
             }
         });
     }
-    
+
     private void update() {
         if (currentCertificates == null && pendingCertificates.isEmpty()) {
             onCloseRequest();
             return;
         }
-        
+
         if (currentCertificates != null) {
             return;
         }
-        
+
         currentCertificates = pendingCertificates.pop();
-        
+
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < currentCertificates.length; i++) {
             X509Certificate certificate = currentCertificates[i];
             builder.append(certificate.getSubjectX500Principal().toString()).append("\n");
         }
-        
+
         textArea.setText(builder.toString());
     }
-    
+
     @FXML
     void cancelAction(ActionEvent event) {
         if (currentCertificates != null) {
@@ -140,7 +148,7 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
         update();
     }
 
-    
+
     @Override
     public void onCloseRequest() {
         getStage().close();

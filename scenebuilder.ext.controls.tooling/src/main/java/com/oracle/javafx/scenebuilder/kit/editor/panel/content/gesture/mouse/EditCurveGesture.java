@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
@@ -271,7 +270,6 @@ public class EditCurveGesture extends AbstractMouseGesture {
             }
             userDidCancel();
 
-            final Metadata metadata = Api.get().getMetadata();
             if (points != null) {
                 final ValuePropertyMetadata pointsMeta = metadata.queryValueProperty(fxomInstance, POINTS_NAME);
                 final AbstractJob job = modifyObjectJobFactory.getJob(fxomInstance,pointsMeta,points);

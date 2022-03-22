@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,16 +38,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMFxIdIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
@@ -62,7 +64,6 @@ import javafx.event.EventHandler;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class FxIdEditor extends AutoSuggestEditor {
 
     private static final String PROPERTY_NAME = "fx:id";
@@ -70,18 +71,25 @@ public class FxIdEditor extends AutoSuggestEditor {
     //private Editor editorController;
     private final MessageLogger messageLog;
     private final Glossary glossary;
+    private final DocumentManager documentManager;
 
 //    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
 //        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOCHECK
 //        initialize(editorController);
 //    }
-    
+
     public FxIdEditor(
-            @Autowired Api api) {
-        super(api); //NOCHECK
-        this.messageLog = api.getApiDoc().getMessageLogger();
-        this.glossary = api.getGlossary();
-        
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem,
+            Glossary glossary,
+            DocumentManager documentManager,
+            MessageLogger messageLogger) {
+        super(dialog, documentation, fileSystem);
+        this.messageLog = messageLogger;
+        this.glossary = glossary;
+        this.documentManager = documentManager;
+
         preInit(Type.ALPHA, new ArrayList<>());
         initialize();
     }
@@ -116,7 +124,7 @@ public class FxIdEditor extends AutoSuggestEditor {
         };
         setTextEditorBehavior(this, textField, onActionListener);
     }
-    
+
     @Override
     public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
         super.reset(PROPERTY_NAME, DEFAULT_VALUE, getSuggestedFxIds(getControllerClass(), selectionState));
@@ -128,22 +136,22 @@ public class FxIdEditor extends AutoSuggestEditor {
 //    }
 
     private List<String> getFxIdsInUse() {
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         FXOMFxIdIndex fxomIndex = new FXOMFxIdIndex(fxomDocument);
         return new ArrayList<>(fxomIndex.getFxIds().keySet());
     }
 
     private String getControllerClass() {
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         return fxomDocument == null ? null : fxomDocument.getFxomRoot().getFxController();
     }
-    
+
     private List<String> getSuggestedFxIds(String controllerClass, SelectionState selectionState) {
         // Is not needed if multiple selection.
         if (controllerClass == null || hasMultipleSelection(selectionState)) {
             return Collections.emptyList();
         }
-        FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         URL location = null;
         if (fxomDocument != null) {
             location = fxomDocument.getLocation();
@@ -153,7 +161,7 @@ public class FxIdEditor extends AutoSuggestEditor {
         fxIds.removeAll(getFxIdsInUse());
         return fxIds;
     }
-    
+
     private boolean hasMultipleSelection(SelectionState selectionState) {
         return selectionState.getSelectedInstances().size() > 1;
     }

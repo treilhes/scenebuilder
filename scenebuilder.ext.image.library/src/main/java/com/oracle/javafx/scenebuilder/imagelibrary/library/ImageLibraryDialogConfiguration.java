@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +39,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -59,12 +59,9 @@ public class ImageLibraryDialogConfiguration implements LibraryStoreConfiguratio
     private LibraryStore store;
     private SceneBuilderBeanFactory context;
 
-    private final Api api;
-
     // @formatter:off
     public ImageLibraryDialogConfiguration(
             @Autowired SceneBuilderBeanFactory context,
-            @Autowired Api api,
             @Autowired LibraryStoreFactory libraryStoreFactory,
             @Autowired ClassLoaderController classLoaderController,
             @Autowired FileSystem fileSystem,
@@ -72,7 +69,6 @@ public class ImageLibraryDialogConfiguration implements LibraryStoreConfiguratio
             @Autowired Dialog dialog) {
      // @formatter:on
         this.context = context;
-        this.api = api;
         this.classLoaderController = classLoaderController;
 
     }

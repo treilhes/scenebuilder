@@ -201,11 +201,6 @@ public abstract class ValuePropertyMetadata extends PropertyMetadata {
         return super.equals(obj);
     }
 
-    @Override
-    public ValuePropertyMetadata addConstant(String key, Object value) {
-        return (ValuePropertyMetadata)super.addConstant(key, value);
-    }
-
     protected static abstract class AbstractBuilder<SELF, TOBUILD> extends PropertyMetadata.AbstractBuilder<SELF, TOBUILD> {
         /** Is property writable. */
         private boolean readWrite;

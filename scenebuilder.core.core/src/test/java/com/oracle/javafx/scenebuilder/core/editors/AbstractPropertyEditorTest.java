@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +39,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -59,25 +62,25 @@ public class AbstractPropertyEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(null, null, null);
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(null, null, null);
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(null, null, null);
         o.reset(someIntProp(), null);
     }
 
     @Test
     public void shouldResetTheInstanceForGroup() {
-        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(MockObjects.buildApiMock());
+        AbstractPropertyEditorImpl o = new AbstractPropertyEditorImpl(null, null, null);
         o.reset(someGroupProp(), null);
     }
 
@@ -106,8 +109,10 @@ public class AbstractPropertyEditorTest {
     private class AbstractPropertyEditorImpl extends AbstractPropertyEditor {
         boolean localIndeterminate = false;
 
-        public AbstractPropertyEditorImpl(Api api) {
-            super(api);
+        public AbstractPropertyEditorImpl(Dialog dialog,
+                Documentation documentation,
+                FileSystem fileSystem) {
+            super(dialog, documentation, fileSystem);
         }
 
         @Override

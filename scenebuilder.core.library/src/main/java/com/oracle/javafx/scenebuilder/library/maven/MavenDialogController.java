@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,12 +47,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
@@ -120,15 +122,17 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     private final SceneBuilderBeanFactory context;
 
     public MavenDialogController(
-            Api api,
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            SceneBuilderBeanFactory context,
     		Editor editorController,
     		AbstractLibrary<?, ?> library,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
-        super(api, MavenDialogController.class.getResource("MavenDialog.fxml"), I18N.getBundle(), owner);
-        this.context = api.getContext();
+        super(sceneBuilderManager, iconSetting, MavenDialogController.class.getResource("MavenDialog.fxml"), I18N.getBundle(), owner);
+        this.context = context;
         this.userLibrary = library;
         this.owner = owner;
         this.editorController = editorController;

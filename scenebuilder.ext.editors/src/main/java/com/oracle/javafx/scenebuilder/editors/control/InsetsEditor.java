@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,16 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
-import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
@@ -60,11 +60,10 @@ import javafx.scene.input.KeyEvent;
 /**
  * Insets editor (for top/right/bottom/left fields).
  *
- * 
+ *
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class InsetsEditor extends AbstractPropertyEditor {
 
     private Parent root;
@@ -81,10 +80,10 @@ public class InsetsEditor extends AbstractPropertyEditor {
     TextField[] textFields = new TextField[4];
     TextField errorTf;
 
-    public InsetsEditor(
-            @Autowired Api api
-            ) {
-        super(api);
+    public InsetsEditor(Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem) {
+        super(dialog, documentation, fileSystem);
         initialize();
     }
 
@@ -101,7 +100,7 @@ public class InsetsEditor extends AbstractPropertyEditor {
                     // Event received because of focus lost due to error dialog
                     return;
                 }
-                // !! Should check if invalid value ! 
+                // !! Should check if invalid value !
                 userUpdateValueProperty(getValue());
             };
             setNumericEditorBehavior(this, tf, valueListener, false);

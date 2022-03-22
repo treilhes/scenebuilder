@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,7 +48,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -218,8 +218,7 @@ public class CssInternal {
 //        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
 //    }
 
-    public static Map<String, String> getStyleClassesMap(StylesheetProvider stylesheetConfig, Editor editorController,
-            Set<FXOMInstance> instances) {
+    public static Map<String, String> getStyleClassesMap(StylesheetProvider stylesheetConfig, Set<FXOMInstance> instances) {
         Map<String, String> classesMap = new TreeMap<>();
         Object fxRoot = null;
         for (FXOMInstance instance : instances) {

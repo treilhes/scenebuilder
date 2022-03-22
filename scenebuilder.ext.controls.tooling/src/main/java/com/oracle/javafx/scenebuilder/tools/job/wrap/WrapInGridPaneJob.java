@@ -55,10 +55,11 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.job.editor.JobUtils;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
@@ -66,6 +67,8 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
+import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.ColumnConstraintsMetadata;
+import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.RowConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
@@ -157,27 +160,31 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
         // COLUMNS
         for (int index = 0; index <= maxcol; index++) {
             final FXOMInstance constraint = makeConstraintsInstance(ColumnConstraints.class);
-            JobUtils.setHGrow(constraint, ColumnConstraints.class, Priority.SOMETIMES.name());
+            ColumnConstraintsMetadata.hgrowPropertyMetadata.setValue(constraint, Priority.SOMETIMES.name());
+
+            ColumnConstraintsMetadata.minWidthPropertyMetadata.setValue(constraint, DEFAULT_MIN_WIDTH);
+
             if (columnWidth[index] >= DEFAULT_MIN_WIDTH) {
-                JobUtils.setMinWidth(constraint, ColumnConstraints.class, DEFAULT_MIN_WIDTH);
+                ColumnConstraintsMetadata.minWidthPropertyMetadata.setValue(constraint, DEFAULT_MIN_WIDTH);
             } else {
-                JobUtils.setMinWidth(constraint, ColumnConstraints.class, columnWidth[index]);
+                ColumnConstraintsMetadata.minWidthPropertyMetadata.setValue(constraint, columnWidth[index]);
             }
 
-            JobUtils.addColumnConstraints(fxomDocument, newContainer, constraint, index);
+            addColumnConstraints(fxomDocument, newContainer, constraint, index);
         }
 
         // ROWS
         for (int index = 0; index <= maxrow; index++) {
             final FXOMInstance constraint = makeConstraintsInstance(RowConstraints.class);
-            JobUtils.setVGrow(constraint, RowConstraints.class, Priority.SOMETIMES.name());
+
+            RowConstraintsMetadata.vgrowPropertyMetadata.setValue(constraint, Priority.SOMETIMES.name());
             if (rowHeight[index] >= DEFAULT_MIN_HEIGHT) {
-                JobUtils.setMinHeight(constraint, RowConstraints.class, DEFAULT_MIN_HEIGHT);
+                RowConstraintsMetadata.minHeightPropertyMetadata.setValue(constraint, DEFAULT_MIN_HEIGHT);
             } else {
-                JobUtils.setMinHeight(constraint, RowConstraints.class, rowHeight[index]);
+                RowConstraintsMetadata.minHeightPropertyMetadata.setValue(constraint, rowHeight[index]);
             }
 
-            JobUtils.addRowConstraints(fxomDocument, newContainer, constraint, index);
+            addRowConstraints(fxomDocument, newContainer, constraint, index);
         }
     }
 
@@ -259,6 +266,38 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
         result.moveToFxomDocument(fxomDocument);
 
         return result;
+    }
+
+    private static void addColumnConstraints(
+            final FXOMDocument fxomDocument,
+            final FXOMInstance gridPane,
+            final FXOMInstance constraints, int index) {
+        final PropertyName propertyName = new PropertyName("columnConstraints"); //NOCHECK
+        FXOMProperty property = gridPane.getProperties().get(propertyName);
+        if (property == null) {
+            property = new FXOMPropertyC(fxomDocument, propertyName);
+        }
+        if (property.getParentInstance() == null) {
+            property.addToParentInstance(-1, gridPane);
+        }
+        assert property instanceof FXOMPropertyC;
+        constraints.addToParentProperty(index, property);
+    }
+
+    private static void addRowConstraints(
+            final FXOMDocument fxomDocument,
+            final FXOMInstance gridPane,
+            final FXOMInstance constraints, int index) {
+        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOCHECK
+        FXOMProperty property = gridPane.getProperties().get(propertyName);
+        if (property == null) {
+            property = new FXOMPropertyC(fxomDocument, propertyName);
+        }
+        if (property.getParentInstance() == null) {
+            property.addToParentInstance(-1, gridPane);
+        }
+        assert property instanceof FXOMPropertyC;
+        constraints.addToParentProperty(index, property);
     }
 
     @Component

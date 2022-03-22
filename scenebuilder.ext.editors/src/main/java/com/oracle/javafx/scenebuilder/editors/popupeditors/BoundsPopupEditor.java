@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,12 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
@@ -79,16 +81,18 @@ public class BoundsPopupEditor extends PopupEditor {
     private Bounds bounds;
 
     public BoundsPopupEditor(
-            @Autowired Api api
+            Dialog dialog,
+            Documentation documentation,
+            FileSystem fileSystem
             ) {
-        super(api);
+        super(dialog, documentation, fileSystem);
     }
 
     //
     // Interface from PopupEditor.
     // Methods called by PopupEditor.
     //
-    
+
     @Override
     public void initializePopupContent() {
         root = FXMLUtils.load(this, "BoundsPopupEditor.fxml");
@@ -127,7 +131,7 @@ public class BoundsPopupEditor extends PopupEditor {
     public Node getPopupContentNode() {
         return root;
     }
-    
+
     private void updateValues() {
         minX.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinX() : ""));//NOCHECK
         minY.setText(EditorUtils.valAsStr((bounds != null) ? bounds.getMinY() : ""));//NOCHECK

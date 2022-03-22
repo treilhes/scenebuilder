@@ -38,13 +38,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
@@ -135,14 +137,16 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private InnerDockManager leftDockManager;
     private InnerDockManager rightDockManager;
     private InnerDockManager bottomDockManager;
+    private final DocumentManager documentManager;
     /*
      * DocumentWindowController
      */
 
     // @formatter:off
     public DocumentWindowController(
-            @Autowired Api api,
-
+            SceneBuilderManager sceneBuilderManager,
+            IconSetting iconSetting,
+            DocumentManager documentManager,
             @Lazy @Autowired XPosPreference xPos,
             @Lazy @Autowired YPosPreference yPos,
             @Lazy @Autowired StageHeightPreference stageHeight,
@@ -157,8 +161,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             @Autowired DockPanelController rightDockController,
             @Autowired DockPanelController bottomDockController,
             @Autowired DockViewController viewMenuController) {
-        super(api, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false);
+        super(sceneBuilderManager, iconSetting, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false);
         // @formatter:on
+        this.documentManager = documentManager;
 
         this.leftDockController = leftDockController;
         this.rightDockController = rightDockController;
@@ -416,7 +421,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void updateStageTitle() {
         if (contentPanelHost != null) {
-            final FXOMDocument fxomDocument = getApi().getApiDoc().getDocumentManager().fxomDocument().get();
+            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             getStage().setTitle(FXOMDocumentUtils.makeTitle(fxomDocument));
         } // else controllerDidLoadFxml() will invoke me again
 

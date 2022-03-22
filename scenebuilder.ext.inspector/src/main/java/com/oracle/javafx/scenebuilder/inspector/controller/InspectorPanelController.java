@@ -56,7 +56,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Api;
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
@@ -89,6 +88,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -233,6 +233,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private PropertyEditorFactorySession session;
 
     private final ViewSearch viewSearch;
+    private final Metadata metadata;
 
     /*
      * Public
@@ -242,6 +243,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             Editor editorController,
+            Metadata metadata,
             InspectorSectionIdPreference inspectorSectionIdPreference,
             Drag drag,
             PropertyEditorFactory propertyEditorFactory,
@@ -257,6 +259,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         this.drag = drag;
         this.editorController = editorController;
         this.documentManager = documentManager;
+        this.metadata = metadata;
         this.session = propertyEditorFactory.newSession();
 
         this.viewSearch = viewSearch;
@@ -671,7 +674,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         Set<ValuePropertyMetadata> propMetaAll = getValuePropertyMetadata();
 
         SortedMap<InspectorPath, ValuePropertyMetadata> propMetaSection = new TreeMap<>(
-                Api.get().getMetadata().INSPECTOR_PATH_COMPARATOR);
+                metadata.INSPECTOR_PATH_COMPARATOR);
         assert propMetaAll != null;
 
         for (ValuePropertyMetadata valuePropMeta : propMetaAll) {
@@ -1329,7 +1332,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // General case
         boolean first = true;
         for (FXOMInstance instance : getSelectedInstances()) {
-            ValuePropertyMetadata propMeta = Api.get().getMetadata().queryValueProperty(instance, propName);
+            ValuePropertyMetadata propMeta = metadata.queryValueProperty(instance, propName);
             assert propMeta != null;
             Object newVal = propMeta.getValueObject(instance);
 //            System.out.println(propName + " value : " + newVal);
@@ -1561,7 +1564,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private Set<ValuePropertyMetadata> getValuePropertyMetadata() {
-        Set<ValuePropertyMetadata> values = Api.get().getMetadata().queryValueProperties(getSelectedClasses());
+        Set<ValuePropertyMetadata> values = metadata.queryValueProperties(getSelectedClasses());
 
         Set<PropertyName> disabledProperties = getDisabledPropertiesFromMetadata();
         return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
@@ -1573,7 +1576,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                 .forEach(fxi -> {
                     FXOMObject parent = fxi.getParentObject();
                     FXOMProperty property = fxi.getParentProperty();
-                    ComponentPropertyMetadata cpm = Api.get().getMetadata()
+                    ComponentPropertyMetadata cpm = metadata
                             .queryComponentProperty(parent.getSceneGraphObject().getClass(), property.getName());
                     if (cpm != null) {
                         disabled.addAll(cpm.getDisabledProperties());
