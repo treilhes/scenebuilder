@@ -19,6 +19,11 @@
             <artifactId>scenebuilder.core.api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.metadata.javafx15</artifactId>
+        </dependency>
+
         <!-- <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.jobs</artifactId>

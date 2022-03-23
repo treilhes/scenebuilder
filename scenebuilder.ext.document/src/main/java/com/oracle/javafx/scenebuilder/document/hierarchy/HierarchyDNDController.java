@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -72,6 +73,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
     private AbstractHierarchyPanelController panelController;
     private HierarchyTaskScheduler scheduler;
+    private final DocumentManager documentManager;
 
 
     /**
@@ -87,11 +89,13 @@ public class HierarchyDNDController implements HierarchyDND {
 
     protected HierarchyDNDController(
             Drag drag,
+            DocumentManager documentManager,
             RootDropTarget.Factory rootDropTargetFactory,
             DesignHierarchyMask.Factory designHierarchyMaskFactory,
             AccessoryDropTarget.Factory accessoryDropTargetFactory
             ) {
         this.drag = drag;
+        this.documentManager = documentManager;
         this.rootDropTargetFactory = rootDropTargetFactory;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
         this.accessoryDropTargetFactory = accessoryDropTargetFactory;
@@ -273,7 +277,7 @@ public class HierarchyDNDController implements HierarchyDND {
         Accessory accessory = null; // Used if we insert as accessory (drop over a place holder)
         int targetIndex = -1; // Used if we insert as sub components
 
-        final FXOMDocument document = panelController.getEditorController().getFxomDocument();
+        final FXOMDocument document = documentManager.fxomDocument().get();
         if (document == null || document.getFxomRoot() == null) {
             return rootDropTargetFactory.getDropTarget();
         }

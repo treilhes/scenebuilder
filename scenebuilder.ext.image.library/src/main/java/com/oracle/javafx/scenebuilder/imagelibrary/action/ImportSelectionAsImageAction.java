@@ -36,17 +36,16 @@ package com.oracle.javafx.scenebuilder.imagelibrary.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
@@ -72,15 +71,15 @@ public class ImportSelectionAsImageAction extends AbstractAction {
 
     public final static String MENU_ID = "importSelectionMenu";
 
-	private final Editor editorController;
+	private final Selection selection;
 	private final ImageLibraryPanelController libraryPanelController;
 
 	public ImportSelectionAsImageAction(
 	        ActionExtensionFactory extensionFactory,
-			@Autowired @Lazy Editor editorController,
-			@Autowired @Lazy ImageLibraryPanelController libraryPanelController) {
+			Selection selection,
+			ImageLibraryPanelController libraryPanelController) {
 		super(extensionFactory);
-		this.editorController = editorController;
+		this.selection = selection;
 		this.libraryPanelController = libraryPanelController;
 	}
 
@@ -88,12 +87,12 @@ public class ImportSelectionAsImageAction extends AbstractAction {
 	public boolean canPerform() {
 		// This method cannot be called if there is not a valid selection, a selection
 	    // eligible for being dropped onto Library panel.
-	    return editorController.getSelection().getGroup() instanceof ObjectSelectionGroup;
+	    return selection.getGroup() instanceof ObjectSelectionGroup;
 	}
 
 	@Override
 	public ActionStatus doPerform() {
-		AbstractSelectionGroup asg = editorController.getSelection().getGroup();
+		AbstractSelectionGroup asg = selection.getGroup();
         ObjectSelectionGroup osg = (ObjectSelectionGroup)asg;
         assert !osg.getItems().isEmpty();
         List<FXOMObject> selection = new ArrayList<>(osg.getItems());

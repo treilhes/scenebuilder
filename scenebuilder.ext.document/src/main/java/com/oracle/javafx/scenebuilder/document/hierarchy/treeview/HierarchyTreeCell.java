@@ -42,7 +42,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry.CSSParsingReport;
@@ -162,13 +161,17 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     private final InlineEdit inlineEdit;
     private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
 
+    private final ErrorReport errorReport;
+
     protected HierarchyTreeCell(
             InlineEdit inlineEdit,
+            ErrorReport errorReport,
             Drag drag,
             DesignHierarchyMask.Factory designHierarchyMaskFactory) {
         super();
         this.drag = drag;
         this.inlineEdit = inlineEdit;
+        this.errorReport = errorReport;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
 
         iconsStack.getChildren().setAll(
@@ -620,8 +623,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
         editor = inlineEdit.createTextInputControl(type, displayInfoLabel, initialValue);
         // CSS
-        final ObservableList<String> styleSheets
-                = panelController.getRoot().getStylesheets();
+        final ObservableList<String> styleSheets = panelController.getRoot().getStylesheets();
         editor.getStylesheets().addAll(styleSheets);
         editor.getStyleClass().add("theme-presets"); //NOCHECK
         editor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
@@ -733,8 +735,6 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         if (item == null || item.isEmpty()) {
             return null;
         }
-        final Editor editorController = panelController.getEditorController();
-        final ErrorReport errorReport = editorController.getErrorReport();
         final FXOMObject fxomObject = item.getFxomObject();
         assert fxomObject != null;
         return errorReport.query(fxomObject, !getTreeItem().isExpanded());

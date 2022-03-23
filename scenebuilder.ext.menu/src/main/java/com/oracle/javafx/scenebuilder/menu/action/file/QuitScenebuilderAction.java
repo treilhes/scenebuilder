@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.file;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,25 +101,14 @@ public class QuitScenebuilderAction extends AbstractAction {
     @Override
     public ActionStatus doPerform() {
 
-
         // Check if an editing session is on going
-        for (Document dwc : main.getDocumentWindowControllers()) {
-            if (dwc.getEditorController().isTextEditingSessionOnGoing()) {
-                // Check if we can commit the editing session
-                if (dwc.getEditorController().canGetFxmlText() == false) {
-                    // Commit failed
-                    return ActionStatus.CANCELLED;
-                }
-            }
+        if (main.getDocuments().stream().anyMatch(Document::isEditing)) {
+            return ActionStatus.CANCELLED;
         }
 
         // Collects the documents with pending changes
-        final List<Document> pendingDocs = new ArrayList<>();
-        for (Document dwc : main.getDocumentWindowControllers()) {
-            if (dwc.isDocumentDirty()) {
-                pendingDocs.add(dwc);
-            }
-        }
+        final List<Document> pendingDocs = main.getDocuments().stream().filter(Document::isDocumentDirty)
+                .collect(Collectors.toList());
 
         // Notifies the user if some documents are dirty
         final boolean exitConfirmed;

@@ -40,13 +40,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -81,7 +80,6 @@ import javafx.stage.Stage;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
 public class LibraryDialogController extends AbstractFxmlWindowController{
 
     @FXML
@@ -105,7 +103,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     @FXML
     private Hyperlink classesLink;
 
-    private final Editor editorController;
+
     //private LibraryStoreConfiguration libraryConfiguration;
     //private LibraryStore libraryStore;
     private final Stage owner;
@@ -133,12 +131,13 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     private final IconSetting iconSetting;
 
+    private final MessageLogger messageLogger;
 
     public LibraryDialogController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             SceneBuilderBeanFactory context,
-            Editor editorController,
+            MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenArtifactsPreferences mavenPreferences,
             MavenRepositoriesPreferences repositoryPreferences,
@@ -150,7 +149,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         this.context = context;
         this.sceneBuilderManager = sceneBuilderManager;
         this.iconSetting = iconSetting;
-        this.editorController = editorController;
+        this.messageLogger = messageLogger;
         this.mavenPreferences = mavenPreferences;
         this.repositoryPreferences = repositoryPreferences;
         this.mavenSetting = mavenSetting;
@@ -266,7 +265,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     @FXML
     private void manage() {
         RepositoryManagerController repositoryDialogController = context.getBean(RepositoryManagerController.class,
-                sceneBuilderManager, iconSetting, editorController, mavenSetting, repositoryPreferences, this);
+                sceneBuilderManager, iconSetting, messageLogger, mavenSetting, repositoryPreferences, this);
         repositoryDialogController.openWindow();
     }
 
@@ -290,7 +289,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     private void addRelease() {
         SearchMavenDialogController mavenDialogController = context.getBean(SearchMavenDialogController.class,
                 sceneBuilderManager, iconSetting,
-                editorController, library, mavenSetting, mavenPreferences, repositoryPreferences,
+                messageLogger, library, mavenSetting, mavenPreferences, repositoryPreferences,
                 this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -307,7 +306,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     @FXML
     private void addManually() {
         MavenDialogController mavenDialogController = context.getBean(MavenDialogController.class,
-                sceneBuilderManager, iconSetting, editorController,
+                sceneBuilderManager, iconSetting, messageLogger,
                 library, mavenSetting, mavenPreferences, repositoryPreferences, this);
         mavenDialogController.openWindow();
         mavenDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -357,7 +356,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     // TODO find usage in previous version reimplement then delete
     private void logInfoMessage(String key, Object... args) {
-        editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
     private void updatePreferences(MavenArtifact mavenArtifact) {

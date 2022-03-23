@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -79,9 +80,9 @@ import javafx.stage.Stage;
 @ExtendWith(ApplicationExtension.class)
 class DocumentUiTest {
 
-//    static {
-//        I18N.initForTest();
-//    }
+    static {
+        I18N.initForTest();
+    }
 
     private Stage stage;
     /**
@@ -95,7 +96,7 @@ class DocumentUiTest {
     }
 
     @Test
-    void testIfJavaFXIssueHasBeenSolved() {
+    void testForTest() {
 
         //ContextMenu
         ContextMenu ctxMenu = Mockito.mock(ContextMenu.class);
@@ -123,7 +124,6 @@ class DocumentUiTest {
         HierarchyDNDController.Factory hierarchyDNDControllerFactory = Mockito.mock(HierarchyDNDController.Factory.class);
 
         //setup
-        Mockito.when(editor.getContextMenuController()).thenReturn(ctxMenu);
         Mockito.when(jobManager.revisionProperty()).thenReturn(new SimpleIntegerProperty());
         Mockito.when(designHierarchyMaskFactory.getMask(any())).thenReturn(mask);
 

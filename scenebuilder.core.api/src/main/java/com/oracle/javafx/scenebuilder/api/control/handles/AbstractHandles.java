@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture.Factory
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -66,8 +68,12 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
     private boolean enabled = true;
     protected final Factory discardGestureFactory;
 
-    public AbstractHandles(Content contentPanelController, DiscardGesture.Factory discardGestureFactory, Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+    public AbstractHandles(
+            Content content,
+            DocumentManager documentManager,
+            DiscardGesture.Factory discardGestureFactory,
+            Class<T> sceneGraphClass) {
+        super(content, documentManager, sceneGraphClass);
         this.discardGestureFactory = discardGestureFactory;
     }
 

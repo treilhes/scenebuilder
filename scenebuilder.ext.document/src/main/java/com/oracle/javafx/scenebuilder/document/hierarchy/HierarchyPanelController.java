@@ -37,8 +37,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
@@ -67,7 +68,8 @@ public class HierarchyPanelController extends HierarchyTreeViewController {
     public HierarchyPanelController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
-            Editor editor,
+            InlineEdit inlineEdit,
+            ContextMenu contextMenu,
             JobManager jobManager,
             Drag drag,
             Selection selection,
@@ -78,7 +80,7 @@ public class HierarchyPanelController extends HierarchyTreeViewController {
             HierarchyTreeCell.Factory hierarchyTreeCellFactory,
             HierarchyDNDController.Factory hierarchyDNDControllerFactory,
             MetadataInfoDisplayOption defaultDisplayOptions) {
-        super(scenebuilderManager, documentManager, editor, jobManager, drag, selection, showExpertByDefaultPreference,
+        super(scenebuilderManager, documentManager, inlineEdit, contextMenu, jobManager, drag, selection, showExpertByDefaultPreference,
                 documentDragSourceFactory, externalDragSourceFactory, designHierarchyMaskFactory,
                 hierarchyTreeCellFactory, hierarchyDNDControllerFactory, defaultDisplayOptions);
     }

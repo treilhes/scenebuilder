@@ -58,8 +58,10 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.JobManager;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
@@ -68,6 +70,7 @@ import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -220,7 +223,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     // Charsets for the properties of included elements
 //    private Map<String, Charset> availableCharsets;
 
-    private final Editor editorController;
+    private final Selection selection;
+    private final InlineEdit inlineEdit;
+    private final JobManager jobManager;
+    private final MessageLogger messageLogger;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
 
     private final DocumentManager documentManager;
@@ -242,7 +248,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     public InspectorPanelController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
-            Editor editorController,
+            Selection selection,
+            InlineEdit inlineEdit,
+            JobManager jobManager,
+            MessageLogger messageLogger,
             Metadata metadata,
             InspectorSectionIdPreference inspectorSectionIdPreference,
             Drag drag,
@@ -257,7 +266,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         super(scenebuilderManager, documentManager, viewMenuController, InspectorPanelController.class.getResource(fxmlFile),
                 I18N.getBundle());
         this.drag = drag;
-        this.editorController = editorController;
+        this.selection = selection;
+        this.inlineEdit = inlineEdit;
+        this.jobManager = jobManager;
+        this.messageLogger = messageLogger;
         this.documentManager = documentManager;
         this.metadata = metadata;
         this.session = propertyEditorFactory.newSession();
@@ -520,7 +532,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Listen the Scene stylesheets changes
         documentManager.stylesheetConfig().subscribe(s -> updateInspector());
 
-        selectionState = new SelectionStateImpl(editorController.getSelection());
+        selectionState = new SelectionStateImpl(selection);
         viewModeChanged(null, getViewMode());
         expandedSectionChanged();
 
@@ -540,7 +552,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      */
     private void updateInspector() {
         if (isInspectorLoaded() && hasFxomDocument()) {
-            SelectionState newSelectionState = new SelectionStateImpl(editorController.getSelection());
+            SelectionState newSelectionState = new SelectionStateImpl(selection);
             if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
                 selectionState = newSelectionState;
                 rebuild();
@@ -1155,7 +1167,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                 updateValueInModel(propertyEditor, oldValue, newValue);
             }
             if (propertyEditor.isRuledByCss()) {
-                editorController.getMessageLog().logWarningMessage("inspector.css.overridden",
+                messageLogger.logWarningMessage("inspector.css.overridden",
                         propertyEditor.getPropertyNameText());
             }
         });
@@ -1195,7 +1207,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             if (newValue) {
                 // Editing session starting
 //                    System.out.println("textEditingSessionDidBegin() called.");
-                editorController.textEditingSessionDidBegin(p -> {
+                inlineEdit.textEditingSessionDidBegin(p -> {
                     // requestSessionEnd
                     if (propertyEditor.getCommitListener() != null) {
                         propertyEditor.getCommitListener().handle(null);
@@ -1203,8 +1215,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                     boolean hasError = propertyEditor.isInvalidValue();
                     if (!hasError) {
 //                                System.out.println("textEditingSessionDidEnd() called (from callback).");
-                        if (editorController.isTextEditingSessionOnGoing()) {
-                            editorController.textEditingSessionDidEnd();
+                        if (inlineEdit.isTextEditingSessionOnGoing()) {
+                            inlineEdit.textEditingSessionDidEnd();
                         }
                     }
 //                            System.out.println("textEditingSessionDidBegin callback returns : " + !hasError);
@@ -1212,9 +1224,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                 });
             } else {
                 // Editing session completed
-                if (editorController.isTextEditingSessionOnGoing()) {
+                if (inlineEdit.isTextEditingSessionOnGoing()) {
 //                        System.out.println("textEditingSessionDidEnd() called.");
-                    editorController.textEditingSessionDidEnd();
+                    inlineEdit.textEditingSessionDidEnd();
                     if (propertyEditor.getCommitListener() != null) {
                         propertyEditor.getCommitListener().handle(null);
                     }
@@ -1261,7 +1273,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private void pushJob(AbstractJob job) {
         if (job.isExecutable()) {
-            getEditorController().getJobManager().push(job);
+            jobManager.push(job);
         } else {
             System.out.println("Modify job not executable (because no value change?)");
         }
@@ -1553,7 +1565,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private boolean hasFxomDocument() {
-        return getEditorController().getFxomDocument() != null;
+        return documentManager.fxomDocument().get() != null;
     }
 
     private void addMessage(GridPane gridPane, String mess) {
@@ -2134,10 +2146,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         // Set the focus to the editor
         editorToFocus.requestFocus();
-    }
-
-    public Editor getEditorController() {
-        return editorController;
     }
 
     @Override

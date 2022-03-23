@@ -44,6 +44,7 @@ import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -64,14 +65,19 @@ import javafx.scene.input.MouseEvent;
 public class PickModeController extends AbstractModeController {
 
     private final Driver driver;
+    private final DocumentManager documentManager;
+    private final Selection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
             @Autowired Driver driver,
+            @Autowired DocumentManager documentManager,
             @Autowired Selection selection,
     		@Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);
         this.driver = driver;
+        this.documentManager = documentManager;
+        this.selection = selection;
 
         newLayer(HitNodeChrome.class, false, selection,
                 // object selection
@@ -101,18 +107,18 @@ public class PickModeController extends AbstractModeController {
 
     @Override
     public void willResignActive(AbstractModeController nextModeController) {
-        contentPanelController.getGlassLayer().setCursor(Cursor.DEFAULT);
+        content.getGlassLayer().setCursor(Cursor.DEFAULT);
         stopListeningToInputEvents();
         clearLayers();
     }
 
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
-        assert contentPanelController.getGlassLayer() != null;
+        assert content.getGlassLayer() != null;
         getLayers().forEach(l -> l.enable());
         getLayer(HitNodeChrome.class).update();
         startListeningToInputEvents();
-        contentPanelController.getGlassLayer().setCursor(ImageUtils.getCSSCursor());
+        content.getGlassLayer().setCursor(ImageUtils.getCSSCursor());
     }
 
     @Override
@@ -145,14 +151,14 @@ public class PickModeController extends AbstractModeController {
 
 
     private void startListeningToInputEvents() {
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = content.getGlassLayer();
         assert glassLayer.getOnMousePressed() == null;
 
         glassLayer.setOnMousePressed(mousePressedOnGlassLayerListener);
     }
 
     private void stopListeningToInputEvents() {
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = content.getGlassLayer();
         glassLayer.setOnMousePressed(null);
     }
 
@@ -162,12 +168,7 @@ public class PickModeController extends AbstractModeController {
 
     private void mousePressedOnGlassLayer(MouseEvent e) {
 
-
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
-
-        final FXOMDocument fxomDocument
-                = contentPanelController.getEditorController().getFxomDocument();
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
 
         final FXOMObject hitObject;
         final Node hitNode;
@@ -228,8 +229,8 @@ public class PickModeController extends AbstractModeController {
             } else {
                 assert closestNodeObject.getSceneGraphObject() instanceof Node;
                 final Node closestNode = (Node)closestNodeObject.getSceneGraphObject();
-                if (closestNode.getScene() == contentPanelController.getRoot().getScene()) {
-                    result = new HitNodeChrome(contentPanelController, hitNode);
+                if (closestNode.getScene() == content.getRoot().getScene()) {
+                    result = new HitNodeChrome(content, documentManager, hitNode);
                     result.setFxomObject(hitItem);
                     result.initialize();
                 } else {

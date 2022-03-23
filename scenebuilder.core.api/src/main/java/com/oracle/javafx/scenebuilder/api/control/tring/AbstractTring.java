@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +37,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 import javafx.scene.paint.Paint;
 
@@ -48,8 +50,11 @@ public abstract class AbstractTring<T> extends AbstractDecoration<T> implements 
     public static final String TARGET_RING_CLASS = "target-ring"; //NOCHECK
     public static final String TARGET_CRACK_CLASS = "target-crack"; //NOCHECK
 
-    public AbstractTring(Content contentPanelController, Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+    public AbstractTring(
+            Content contentPanelController, 
+            DocumentManager documentManager,
+            Class<T> sceneGraphClass) {
+        super(contentPanelController, documentManager, sceneGraphClass);
     }
 
     @Override

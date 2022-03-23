@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -67,7 +67,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     @FXML
     private ListView<RepositoryListItem> repositoryListView;
 
-    private final Editor editorController;
+    private final MessageLogger messageLogger;
     private final SceneBuilderWindow owner;
 
     private ObservableList<RepositoryListItem> listItems;
@@ -87,7 +87,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             SceneBuilderBeanFactory context,
-    		Editor editorController,
+    		MessageLogger messageLogger,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
@@ -96,7 +96,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
         this.iconSetting = iconSetting;
         this.context = context;
         this.owner = owner;
-        this.editorController = editorController;
+        this.messageLogger = messageLogger;
         this.repositoryPreferences = repositoryPreferences;
         this.mavenSetting = mavenSetting;
 
@@ -163,7 +163,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
 
     private void repositoryDialog(Repository repository) {
         RepositoryDialogController repositoryDialogController = context.getBean(RepositoryDialogController.class,
-                sceneBuilderManager, iconSetting, editorController, mavenSetting, repositoryPreferences, this);
+                sceneBuilderManager, iconSetting, messageLogger, mavenSetting, repositoryPreferences, this);
         repositoryDialogController.openWindow();
         repositoryDialogController.setRepository(repository);
         repositoryDialogController.getStage().showingProperty().addListener(new InvalidationListener() {
@@ -189,7 +189,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController {
     }
 
     private void logInfoMessage(String key, Object... args) {
-        editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
 }

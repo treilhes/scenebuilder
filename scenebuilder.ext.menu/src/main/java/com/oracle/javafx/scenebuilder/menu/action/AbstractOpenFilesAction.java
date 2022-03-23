@@ -86,20 +86,20 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
         //build dependency injections first
         for (File fxmlFile : fxmlFiles) {
                 try {
-                    final Document dwc = main.lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
+                    final Document dwc = main.lookupDocument(fxmlFile.toURI().toURL());
                     if (dwc != null) {
                         // fxmlFile is already opened
                         dwc.getDocumentWindow().getStage().toFront();
                     } else {
                         // Open fxmlFile
                         final Document hostWindow;
-                        final Document unusedWindow = main.lookupUnusedDocumentWindowController(documents.values());
+                        final Document unusedWindow = main.lookupUnusedDocument(documents.values());
                         if (unusedWindow != null) {
                             logger.info("Assign {} to unused document", fxmlFile.getName());
                             hostWindow = unusedWindow;
                         } else {
                             logger.info("Assign {} to new document", fxmlFile.getName());
-                            hostWindow = main.makeNewWindow();
+                            hostWindow = main.makeNewDocument();
                         }
                         documents.put(fxmlFile, hostWindow);
                     }

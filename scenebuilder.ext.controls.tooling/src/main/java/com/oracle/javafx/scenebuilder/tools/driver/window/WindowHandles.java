@@ -43,6 +43,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -63,11 +64,12 @@ public class WindowHandles extends AbstractGenericHandles<Window> {
     public WindowHandles(
             Driver driver,
             Content contentPanelController,
+            DocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             @Autowired DesignHierarchyMask.Factory maskFactory) {
 
-        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, Window.class);
+        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory, Window.class);
         this.maskFactory = maskFactory;
     }
 

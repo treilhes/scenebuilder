@@ -43,7 +43,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -56,6 +55,7 @@ import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
 import com.oracle.javafx.scenebuilder.menu.action.OpenFilesAction;
+import com.oracle.javafx.scenebuilder.menu.action.file.OpenAction;
 import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 import com.oracle.javafx.scenebuilder.template.controller.TemplatesBaseWindowController;
 
@@ -168,19 +168,9 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
             recentDocument.setTooltip(new Tooltip(recentItem));
         }
 
-        //emptyApp.setUserData(TemplateImpl.EMPTY_APP);
-
         setOnTemplateChosen(templateController::loadTemplateInCurrentWindow);
         setupTemplateButtonHandlers();
     }
-
-//    public static WelcomeDialogWindowController getInstance() {
-//        if (instance == null){
-//            instance = new WelcomeDialogWindowController();
-//            windowIconSetting.setWindowIcon((Stage)instance.getStage());
-//        }
-//        return instance;
-//    }
 
     private void fireOpenRecentProject(ActionEvent event, String projectPath) {
         OpenFilesAction action = actionFactory.create(OpenFilesAction.class);
@@ -191,9 +181,8 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
 
     @FXML
     private void openDocument() {
-        // Right now there is only one window open by default
-        Document documentWC = sceneBuilderApp.getDocumentWindowControllers().get(0);
-        sceneBuilderApp.performControlAction(Main.ApplicationControlAction.OPEN_FILE, documentWC);
+        OpenAction action = actionFactory.create(OpenAction.class);
+        action.checkAndPerform();
         getStage().hide();
     }
 

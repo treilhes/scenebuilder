@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.decoration;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.Decoration;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 
@@ -53,18 +54,23 @@ import javafx.scene.transform.Transform;
  */
 public abstract class AbstractDecoration<T> implements Decoration<T> {
 
-    private final Content contentPanelController;
+    private final Content content;
+    private final DocumentManager documentManager;
     private final Class<T> sceneGraphClass;
     private final Group rootNode = new Group();
     private FXOMObject fxomObject;
     private T sceneGraphObject;
 
 
-    public AbstractDecoration(Content contentPanelController, Class<T> sceneGraphClass) {
-        assert contentPanelController != null;
+    public AbstractDecoration(
+            Content content,
+            DocumentManager documentManager,
+            Class<T> sceneGraphClass) {
+        assert content != null;
         assert sceneGraphClass != null;
 
-        this.contentPanelController = contentPanelController;
+        this.content = content;
+        this.documentManager = documentManager;
         this.sceneGraphClass = sceneGraphClass;
 
         this.rootNode.sceneProperty().addListener((ChangeListener<Scene>) (ov, v1, v2) -> rootNodeSceneDidChange());
@@ -75,14 +81,14 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         assert fxomObject != null;
         assert fxomObject.getSceneGraphObject() != null;
         assert sceneGraphClass.isAssignableFrom(fxomObject.getSceneGraphObject().getClass());
-        assert fxomObject.getFxomDocument() == contentPanelController.getEditorController().getFxomDocument();
+        assert fxomObject.getFxomDocument() == documentManager.fxomDocument().get();
         this.fxomObject = fxomObject;
         this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
     }
 
-    public Content getContentPanelController() {
-        return contentPanelController;
-    }
+//    public Content getContentPanelController() {
+//        return content;
+//    }
 
     @Override
     public FXOMObject getFxomObject() {
@@ -147,7 +153,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 
     public Transform getSceneGraphObjectToDecorationTransform() {
         final Node proxy = getSceneGraphObjectProxy();
-        final SubScene contentSubScene = contentPanelController.getContentSubScene();
+        final SubScene contentSubScene = content.getContentSubScene();
         final Transform t0 = proxy.getLocalToSceneTransform();
         final Transform t1 = contentSubScene.getLocalToSceneTransform();
         final Transform t2 = getRootNode().getLocalToSceneTransform();
@@ -221,7 +227,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         assert node != null;
         node.localToSceneTransformProperty().addListener(localToSceneTransformListener);
         node.sceneProperty().addListener(sceneListener);
-        final SubScene contentSubScene = contentPanelController.getContentSubScene();
+        final SubScene contentSubScene = content.getContentSubScene();
         contentSubScene.localToSceneTransformProperty().addListener(localToSceneTransformListener);
     }
 
@@ -229,7 +235,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         assert node != null;
         node.localToSceneTransformProperty().removeListener(localToSceneTransformListener);
         node.sceneProperty().removeListener(sceneListener);
-        final SubScene contentSubScene = contentPanelController.getContentSubScene();
+        final SubScene contentSubScene = content.getContentSubScene();
         contentSubScene.localToSceneTransformProperty().removeListener(localToSceneTransformListener);
     }
 
@@ -267,7 +273,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         //assert ((Node)fxomObject.getSceneGraphObject()).getScene() == getRootNode().getScene();
 
         final Transform t1 = CoordinateHelper.localToSceneTransform(fxomObject);
-        final Transform t2 = contentPanelController.getContentSubScene().getLocalToSceneTransform();
+        final Transform t2 = content.getContentSubScene().getLocalToSceneTransform();
         final Transform t3 = getRootNode().getLocalToSceneTransform();
         final Transform result;
 

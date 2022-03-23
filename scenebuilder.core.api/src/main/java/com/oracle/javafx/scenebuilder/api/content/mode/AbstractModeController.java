@@ -54,7 +54,7 @@ import javafx.scene.Group;
 
 public abstract class AbstractModeController implements Mode{
 
-    protected final Content contentPanelController;
+    protected final Content content;
 
     private Map<Class<?>, Layer<?>> layers = new HashMap<>();
 
@@ -62,11 +62,11 @@ public abstract class AbstractModeController implements Mode{
     public abstract Object getModeId();
 
     public AbstractModeController(Content contentPanelController) {
-        this.contentPanelController = contentPanelController;
+        this.content = contentPanelController;
     }
 
-    public Content getContentPanelController() {
-        return contentPanelController;
+    public Content getContent() {
+        return content;
     }
 
     @Override
@@ -75,8 +75,8 @@ public abstract class AbstractModeController implements Mode{
         Group layerUi = new Group();
         layerUi.setMouseTransparent(mouseTransparent);
         layerUi.setManaged(false);
-        contentPanelController.getGlassLayer().getChildren().add(layerUi);
-        GenericLayer<?> layer = new GenericLayer<>(cls, layerUi, selection, contentPanelController, selector, creator);
+        content.getGlassLayer().getChildren().add(layerUi);
+        GenericLayer<?> layer = new GenericLayer<>(cls, layerUi, selection, content, selector, creator);
         layers.put(cls, layer);
     }
 

@@ -152,113 +152,6 @@ public class MainController implements UILogger, Main {
 
     }
 
-    @Override
-    public void performControlAction(ApplicationControlAction a, Document source) {
-        switch (a) {
-//            case ABOUT:
-//                AboutWindowController aboutWindowController = context.getBean(AboutWindowController.class);
-//                //aboutWindowController.setToolStylesheet(getToolStylesheet());
-//                aboutWindowController.openWindow();
-//                windowIconSetting.setWindowIcon(aboutWindowController.getStage());
-//                break;
-
-//            case REGISTER:
-//                final RegistrationWindowController registrationWindowController = context.getBean(RegistrationWindowController.class);
-//                registrationWindowController.openWindow();
-//                break;
-
-//            case CHECK_UPDATES:
-//                checkUpdates(source);
-//                break;
-
-//            case NEW_FILE:
-//                final DocumentWindowController newWindow = makeNewWindow();
-//                newWindow.updateWithDefaultContent();
-//                newWindow.openWindow();
-//                break;
-
-//            case NEW_TEMPLATE:
-//                performNewFromTemplate();
-//                break;
-
-        case OPEN_FILE:
-            //performOpenFile(source);
-            break;
-
-//            case CLOSE_FRONT_WINDOW:
-//                performCloseFrontWindow();
-//                break;
-
-//            case USE_DEFAULT_THEME:
-//                performUseToolTheme(ToolTheme.DEFAULT);
-//                break;
-//
-//            case USE_DARK_THEME:
-//                performUseToolTheme(ToolTheme.DARK);
-//                break;
-
-//            case SHOW_PREFERENCES:
-//                PreferencesWindowController preferencesWindowController = context.getBean(PreferencesWindowController.class);
-//                //preferencesWindowController.setToolStylesheet(getToolStylesheet());
-//                preferencesWindowController.openWindow();
-//                break;
-
-//        case EXIT:
-//            performExit();
-//            break;
-        }
-    }
-
-//    @Override
-//    public void performNewFromTemplate() {
-//        final TemplatesWindowController templatesWindowController = context.getBean(TemplatesWindowController.class);
-//        templatesWindowController.setOnTemplateChosen(this::performNewTemplateInNewWindow);
-//        templatesWindowController.openWindow();
-//    }
-
-    @Override
-    public boolean canPerformControlAction(ApplicationControlAction a, Document source) {
-        final boolean result;
-        switch (a) {
-        // case ABOUT:
-        case REGISTER:
-        case CHECK_UPDATES:
-            // case NEW_FILE:
-            // case NEW_TEMPLATE:
-        case OPEN_FILE:
-            // case SHOW_PREFERENCES:
-        case EXIT:
-            result = true;
-            break;
-
-//            case CLOSE_FRONT_WINDOW:
-//                result = windowList.isEmpty() == false;
-//                break;
-
-//            case USE_DEFAULT_THEME:
-//                result = toolTheme != ToolTheme.DEFAULT;
-//                break;
-//
-//            case USE_DARK_THEME:
-//                result = toolTheme != ToolTheme.DARK;
-//                break;
-
-        default:
-            result = false;
-            assert false;
-            break;
-        }
-        return result;
-    }
-
-//    @Override
-//    public void performOpenRecent(Document source, final File fxmlFile) {
-//        assert fxmlFile != null && fxmlFile.exists();
-//
-//        final List<File> fxmlFiles = new ArrayList<>();
-//        fxmlFiles.add(fxmlFile);
-//        performOpenFiles(fxmlFiles, source);
-//    }
 
     @Override
     public void notifyDocumentClosed(Document document) {
@@ -272,7 +165,7 @@ public class MainController implements UILogger, Main {
 //    }
 
     @Override
-    public List<Document> getDocumentWindowControllers() {
+    public List<Document> getDocuments() {
         return Collections.unmodifiableList(windowList);
     }
 
@@ -282,7 +175,7 @@ public class MainController implements UILogger, Main {
     }
 
     @Override
-    public Document lookupDocumentWindowControllers(URL fxmlLocation) {
+    public Document lookupDocument(URL fxmlLocation) {
         assert fxmlLocation != null;
 
         Document result = null;
@@ -304,12 +197,12 @@ public class MainController implements UILogger, Main {
     }
 
     @Override
-    public Document lookupUnusedDocumentWindowController() {
-        return lookupUnusedDocumentWindowController(Collections.emptyList());
+    public Document lookupUnusedDocument() {
+        return lookupUnusedDocument(Collections.emptyList());
     }
 
     @Override
-    public Document lookupUnusedDocumentWindowController(Collection<Document> ignored) {
+    public Document lookupUnusedDocument(Collection<Document> ignored) {
         Document result = null;
 
         for (Document dwc : windowList) {
@@ -326,7 +219,7 @@ public class MainController implements UILogger, Main {
     public void open(List<File> fxmlFiles) {
 
         if (fxmlFiles == null || fxmlFiles.isEmpty()) {
-            final Document newWindow = makeNewWindow();
+            final Document newWindow = makeNewDocument();
             newWindow.openWindow();
             try {
                 newWindow.getEditorController().setFxmlTextAndLocation("", null, true); //NOCHECK
@@ -345,20 +238,20 @@ public class MainController implements UILogger, Main {
         //build dependency injections first
         for (File fxmlFile : fxmlFiles) {
                 try {
-                    final Document dwc = lookupDocumentWindowControllers(fxmlFile.toURI().toURL());
+                    final Document dwc = lookupDocument(fxmlFile.toURI().toURL());
                     if (dwc != null) {
                         // fxmlFile is already opened
                         dwc.getDocumentWindow().getStage().toFront();
                     } else {
                         // Open fxmlFile
                         final Document hostWindow;
-                        final Document unusedWindow = lookupUnusedDocumentWindowController(documents.values());
+                        final Document unusedWindow = lookupUnusedDocument(documents.values());
                         if (unusedWindow != null) {
                             logger.info("Assign {} to unused document", fxmlFile.getName());
                             hostWindow = unusedWindow;
                         } else {
                             logger.info("Assign {} to new document", fxmlFile.getName());
-                            hostWindow = makeNewWindow();
+                            hostWindow = makeNewDocument();
                         }
                         documents.put(fxmlFile, hostWindow);
                     }
@@ -588,7 +481,7 @@ public class MainController implements UILogger, Main {
      * Private
      */
     @Override
-    public Document makeNewWindow() {
+    public Document makeNewDocument() {
         DocumentScope.setCurrentScope(null);
 
         final Document result = sceneBuilderFactory.getBean(Document.class);
@@ -774,22 +667,16 @@ public class MainController implements UILogger, Main {
 
     @Override
     public void logInfoMessage(String key) {
-        for (Document dwc : windowList) {
-            dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle());
-        }
+        applyToAllDocuments(d -> d.logInfoMessage(key));
     }
 
     @Override
     public void logInfoMessage(String key, Object... args) {
-        for (Document dwc : windowList) {
-            dwc.getEditorController().getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
-        }
+        applyToAllDocuments(d -> d.logInfoMessage(key, args));
     }
 
-    public void applyToAllDocumentWindows(Consumer<Document> consumer) {
-        for (Document dwc : getDocumentWindowControllers()) {
-            consumer.accept(dwc);
-        }
+    public void applyToAllDocuments(Consumer<Document> consumer) {
+        windowList.stream().forEach(consumer::accept);
     }
 
     public HostServices getHostServices() {

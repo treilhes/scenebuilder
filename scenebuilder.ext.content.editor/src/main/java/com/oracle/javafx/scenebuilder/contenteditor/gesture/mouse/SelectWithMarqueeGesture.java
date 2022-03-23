@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -55,6 +54,7 @@ import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.contenteditor.controller.EditModeController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -81,14 +81,20 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private Layer<Rudder> rudderLayer;
     private ModeManager modeManager;
     private final DesignHierarchyMask.Factory maskFactory;
+    private final Selection selection;
+    private final DocumentManager documentManager;
 
     protected SelectWithMarqueeGesture(
-            @Autowired Driver driver,
-            @Autowired DesignHierarchyMask.Factory maskFactory,
-            @Autowired @Lazy Content contentPanelController,
-            @Autowired @Lazy EditModeController editMode) {
+            DocumentManager documentManager,
+            Driver driver,
+            Selection selection,
+            DesignHierarchyMask.Factory maskFactory,
+            @Lazy Content contentPanelController,
+            @Lazy EditModeController editMode) {
         super(contentPanelController);
+        this.documentManager = documentManager;
         this.driver = driver;
+        this.selection = selection;
         this.maskFactory = maskFactory;
         rudderLayer = editMode.getLayer(Rudder.class);
         assert rudderLayer != null;
@@ -119,7 +125,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
     @Override
     protected void mouseDragStarted() {
-        contentPanelController.getEditorController().getSelection().clear();
+        selection.clear();
         collectCandidates();
         showScopeHilit();
         showMarqueeRect();
@@ -144,8 +150,6 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
         // If an object is below the mouse, then we select it.
         // Else we unselect all.
         if (isMouseDidDrag() == false) {
-            final Selection selection
-                    = contentPanelController.getEditorController().getSelection();
             if (hitObject != null) {
                 selection.select(hitObject);
             } else {
@@ -239,8 +243,6 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
             }
         }
 
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
         selection.select(winners);
     }
 
@@ -248,8 +250,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private void collectCandidates() {
         if (scopeObject == null) {
             // Only one candidate : the root object
-            final FXOMDocument fxomDocument
-                    = contentPanelController.getEditorController().getFxomDocument();
+            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
                 candidates.add(fxomDocument.getFxomRoot());
             }

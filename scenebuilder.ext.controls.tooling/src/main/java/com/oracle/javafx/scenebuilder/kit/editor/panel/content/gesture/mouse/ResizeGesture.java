@@ -42,9 +42,9 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
@@ -117,17 +117,20 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     private boolean matchWidth;
     private boolean matchHeight;
+    private final JobManager jobManager;
 
     protected ResizeGesture(
             Content contentPanelController,
             Metadata metadata,
             Driver driver,
+            JobManager jobManager,
             DesignHierarchyMask.Factory designMaskFactory,
             ModeManager modeManager,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(contentPanelController);
         this.metadata = metadata;
         this.driver = driver;
+        this.jobManager = jobManager;
         this.designMaskFactory = designMaskFactory;
         this.modifyObjectJobFactory = modifyObjectJobFactory;
 
@@ -245,12 +248,10 @@ public class ResizeGesture extends AbstractMouseGesture {
             metaValueMap.put(vpm, e.getValue());
         }
         if (changeMap.isEmpty() == false) {
-            final Editor editorController
-                    = contentPanelController.getEditorController();
             for (Map.Entry<ValuePropertyMetadata, Object> e : metaValueMap.entrySet()) {
                 final AbstractJob job = modifyObjectJobFactory.getJob("Resize",fxomInstance,e.getKey(),e.getValue());
                 if (job.isExecutable()) {
-                    editorController.getJobManager().push(job);
+                    jobManager.push(job);
                 }
             }
         }

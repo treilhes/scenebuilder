@@ -193,7 +193,7 @@ public class SaveAsAction extends AbstractAction {
                 }
 
                 // Checks if fxmlFile is the name of an already opened document
-                final Document dwc = main.lookupDocumentWindowControllers(newLocation);
+                final Document dwc = main.lookupDocument(newLocation);
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());
                     final String fileName = fxmlPath.getFileName().toString();

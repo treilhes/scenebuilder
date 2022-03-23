@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
@@ -48,8 +49,11 @@ import javafx.scene.Node;
  */
 public abstract class AbstractCurveHandles<T extends Node> extends AbstractHandles<T> {
 
-    public AbstractCurveHandles(Content contentPanelController, DiscardGesture.Factory discardGestureFactory, Class<T> sceneGraphClass) {
-        super(contentPanelController, discardGestureFactory, sceneGraphClass);
+    public AbstractCurveHandles(
+            Content contentPanelController,
+            DocumentManager documentManager,
+            DiscardGesture.Factory discardGestureFactory, Class<T> sceneGraphClass) {
+        super(contentPanelController, documentManager, discardGestureFactory, sceneGraphClass);
     }
 
     protected final ChangeListener<Number> coordinateListener

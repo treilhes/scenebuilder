@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.content.util.RegionRectangle;
 
 import javafx.scene.Node;
@@ -53,8 +55,10 @@ public class NodeShadow extends AbstractShadow<Node> {
 
     private RegionRectangle shadow;
 
-    public NodeShadow(Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    public NodeShadow(
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Node.class);
         
     }
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 import javafx.scene.Node;
 
@@ -50,8 +52,10 @@ import javafx.scene.Node;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class NodeTring extends AbstractNodeTring<Node> {
 
-    public NodeTring(Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    public NodeTring(
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Node.class);
     }
     
     @Override

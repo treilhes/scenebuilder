@@ -47,7 +47,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -105,7 +105,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     private Service<ObservableList<Version>> versionsService;
     private final Service<MavenArtifact> installService;
     private final SceneBuilderWindow owner;
-    private final Editor editorController;
+    private final MessageLogger messageLogger;
 
     private final ChangeListener<Version> comboBoxListener = (obs, ov, nv) -> {
         remoteRepository = maven.getRemoteRepository(nv);
@@ -125,7 +125,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             SceneBuilderBeanFactory context,
-    		Editor editorController,
+            MessageLogger messageLogger,
     		AbstractLibrary<?, ?> library,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
@@ -135,7 +135,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
         this.context = context;
         this.userLibrary = library;
         this.owner = owner;
-        this.editorController = editorController;
+        this.messageLogger = messageLogger;
         this.mavenPreferences = mavenPreferences;
 
         maven = new MavenRepositorySystem(false, mavenSetting, repositoryPreferences);
@@ -319,7 +319,7 @@ public class MavenDialogController extends AbstractFxmlWindowController {
     }
 
     private void logInfoMessage(String key, Object... args) {
-        editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
     private String getArtifactCoordinates() {

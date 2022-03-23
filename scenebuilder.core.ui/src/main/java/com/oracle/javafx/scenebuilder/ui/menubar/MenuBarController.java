@@ -529,7 +529,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.Men
     private void handleOnWindowMenuValidation() {
         windowMenu.getItems().clear();
 
-        final List<Document> documentWindowControllers = main.getDocumentWindowControllers();
+        final List<Document> documentWindowControllers = main.getDocuments();
         if (documentWindowControllers.isEmpty()) {
             // Adds the "No window" menu item
             windowMenu.getItems().add(makeWindowMenuItem(null));

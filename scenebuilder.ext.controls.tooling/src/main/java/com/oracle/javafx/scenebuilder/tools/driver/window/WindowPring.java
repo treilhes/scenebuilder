@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -56,9 +58,10 @@ public class WindowPring extends AbstractNodePring<Node> {
 
     public WindowPring(
             Content contentPanelController,
+            DocumentManager documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             DesignHierarchyMask.Factory maskFactory) {
-        super(contentPanelController, selectWithPringGestureFactory, Node.class);
+        super(contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
         this.maskFactory = maskFactory;
     }
 

@@ -38,7 +38,6 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +54,7 @@ import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.contenteditor.guides.MovingGuideController;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
@@ -108,17 +108,21 @@ public class DragGesture extends AbstractGesture {
     private final ExternalDragSource.Factory externalDragSourceFactory;
     private final RootDropTarget.Factory rootDropTargetFactory;
 
+    private final DocumentManager documentManager;
+
     protected DragGesture(
-            @Autowired Content contentPanelController,
-            @Autowired Drag dragController,
-            @Autowired ModeManager modeManager,
-            @Autowired Driver driver,
+            Content contentPanelController,
+            Drag dragController,
+            ModeManager modeManager,
+            Driver driver,
+            DocumentManager documentManager,
             DesignHierarchyMask.Factory maskFactory,
             ExternalDragSource.Factory externalDragSourceFactory,
             RootDropTarget.Factory rootDropTargetFactory) {
         super(contentPanelController);
         this.dragController = dragController;
         this.driver = driver;
+        this.documentManager = documentManager;
         this.maskFactory = maskFactory;
         this.externalDragSourceFactory = externalDragSourceFactory;
         this.rootDropTargetFactory = rootDropTargetFactory;
@@ -237,8 +241,7 @@ public class DragGesture extends AbstractGesture {
         final double hitY = lastDragEvent.getSceneY();
         FXOMObject hitObject = contentPanelController.pick(hitX, hitY, pickExcludes);
         if (hitObject == null) {
-            final FXOMDocument fxomDocument
-                = contentPanelController.getEditorController().getFxomDocument();
+            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             hitObject = fxomDocument.getFxomRoot();
         }
 
@@ -261,7 +264,7 @@ public class DragGesture extends AbstractGesture {
 
         logger.debug("dragOverHitObject {}", hitObject == null ? "null" : hitObject.getSceneGraphObject().getClass().getName());
 
-        final FXOMDocument fxomDocument = contentPanelController.getEditorController().getFxomDocument();
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         final DragSource dragSource = dragController.getDragSource();
         final double hitX = lastDragEvent.getSceneX();
         final double hitY = lastDragEvent.getSceneY();

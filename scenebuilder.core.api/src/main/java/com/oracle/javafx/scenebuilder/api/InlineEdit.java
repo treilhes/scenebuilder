@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,18 +38,36 @@ import javafx.scene.control.TextInputControl;
 import javafx.util.Callback;
 
 public interface InlineEdit {
-    
+
     public static final String INLINE_EDITOR_CLASS = "inline-editor"; //NOCHECK
-    
+
 	public enum Type {
 
         TEXT_AREA, TEXT_FIELD
     }
 
+	/**
+     * Helper method to create a TextInputControl using the specified target
+     * bounds and initial value.
+     *
+     * @param type the edit field type
+     * @param inlineEditingBounds target
+     * @param text initial value
+     * @return the editable field
+     */
 	public TextInputControl createTextInputControl(Type type, Node inlineEditingBounds, String text);
 
+	/**
+     * Start an inline editing session. Display the specified TextInputControl
+     * within a new popup window at the specified anchor node position.
+     *
+     * @param editor
+     * @param anchor
+     * @param requestCommit
+     * @param requestRevert
+     */
 	public void startEditingSession(TextInputControl inlineEditor, Node inlineEditingBounds,
-			Callback<String, Boolean> requestCommit, Callback<Void, Boolean> requestRevert);
+			Callback<String, Boolean> requestCommit, Callback<String, Boolean> requestRevert);
 
     public boolean isWindowOpened();
 
@@ -77,6 +96,9 @@ public interface InlineEdit {
      */
     void textEditingSessionDidEnd();
 
+    /**
+     * Returns true if a text editing session is currently on going.
+     */
     boolean isTextEditingSessionOnGoing();
 
     /**
@@ -88,6 +110,13 @@ public interface InlineEdit {
      */
     boolean isTextInputControlEditing(Node node);
 
+    /**
+     * Gets the text input control from the node.
+     * Works only if {@link InlineEdit#isTextInputControlEditing(Node)} return true
+     *
+     * @param node the focused node of the main scene
+     * @return the text input control
+     */
     TextInputControl getTextInputControl(Node node);
 
     /**

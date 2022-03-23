@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +36,7 @@ package com.oracle.javafx.scenebuilder.api.control.pring;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -58,8 +60,11 @@ public abstract class AbstractGenericPring<T> extends AbstractPring<T> {
     private final LineTo lineTo2 = new LineTo();
     private final LineTo lineTo3 = new LineTo();
 
-    public AbstractGenericPring(Content contentPanelController, Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+    public AbstractGenericPring(
+            Content contentPanelController, 
+            DocumentManager documentManager,
+            Class<T> sceneGraphClass) {
+        super(contentPanelController, documentManager, sceneGraphClass);
 
         final List<PathElement> ringElements = ringPath.getElements();
         ringElements.add(moveTo0);

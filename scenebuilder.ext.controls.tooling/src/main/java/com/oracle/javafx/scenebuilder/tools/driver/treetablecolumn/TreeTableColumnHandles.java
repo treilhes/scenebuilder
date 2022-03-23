@@ -46,6 +46,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -95,11 +96,12 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
     public TreeTableColumnHandles(
             Driver driver,
             Content contentPanelController,
+            DocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             DesignHierarchyMask.Factory maskFactory,
             ResizeTreeTableColumnGesture.Factory resizeTreeTableColumnGestureFactory) {
-        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory,  Object.class);
+        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory,  Object.class);
         //this.context = context;
         this.maskFactory = maskFactory;
         this.resizeTreeTableColumnGestureFactory = resizeTreeTableColumnGestureFactory;

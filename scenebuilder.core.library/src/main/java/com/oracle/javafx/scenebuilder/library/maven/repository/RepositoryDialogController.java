@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.library.maven.repository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -111,7 +111,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     private Label resultLabel;
 //
     private final SceneBuilderWindow owner;
-    private final Editor editorController;
+    private final MessageLogger messageLogger;
     private MavenRepositorySystem maven;
     private Repository oldRepository;
     private final Service<String> testService;
@@ -123,13 +123,13 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     protected RepositoryDialogController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-    		Editor editorController,
+    		MessageLogger messageLogger,
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		SceneBuilderWindow owner) {
         super(sceneBuilderManager, iconSetting, RepositoryDialogController.class.getResource("RepositoryDialog.fxml"), I18N.getBundle(), owner);
         this.owner = owner;
-        this.editorController = editorController;
+        this.messageLogger = messageLogger;
         this.mavenSetting = mavenSetting;
         this.repositoryPreferences = repositoryPreferences;
 
@@ -238,7 +238,7 @@ public class RepositoryDialogController extends AbstractFxmlWindowController {
     }
 
     private void logInfoMessage(String key, Object... args) {
-        editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
     private void updatePreferences(Repository repository) {

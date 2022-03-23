@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.content.util.RegionRectangle;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -54,8 +55,11 @@ public class HitNodeChrome extends AbstractDecoration<Object> {
     private final RegionRectangle chrome = new RegionRectangle();
     private Node closestNode;
 
-    public HitNodeChrome(Content contentPanelController, Node hitNode) {
-        super(contentPanelController, Object.class);
+    public HitNodeChrome(
+            Content contentPanelController, 
+            DocumentManager documentManager,
+            Node hitNode) {
+        super(contentPanelController, documentManager, Object.class);
 
         assert hitNode != null;
         assert hitNode.getScene() != null;

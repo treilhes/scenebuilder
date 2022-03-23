@@ -102,7 +102,7 @@ public class TemplateController {
      * @param template the template
      */
     public void loadTemplateInNewWindow(Template template) {
-        final Document newTemplateWindow = main.makeNewWindow();
+        final Document newTemplateWindow = main.makeNewDocument();
         loadTemplateInWindow(template, newTemplateWindow);
     }
 

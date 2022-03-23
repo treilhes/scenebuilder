@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.node;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -54,9 +55,10 @@ public abstract class AbstractNodePring<T extends Node> extends AbstractGenericP
 
     public AbstractNodePring(
             Content contentPanelController,
+            DocumentManager documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+        super(contentPanelController, documentManager, sceneGraphClass);
         this.selectWithPringGestureFactory = selectWithPringGestureFactory;
     }
 

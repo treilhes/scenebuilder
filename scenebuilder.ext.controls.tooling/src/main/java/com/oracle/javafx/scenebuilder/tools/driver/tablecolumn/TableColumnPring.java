@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -65,9 +66,10 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
 
     public TableColumnPring(
             Content contentPanelController,
+            DocumentManager documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory
             ) {
-        super(contentPanelController, Object.class);
+        super(contentPanelController, documentManager, Object.class);
         this.selectWithPringGestureFactory = selectWithPringGestureFactory;
     }
 

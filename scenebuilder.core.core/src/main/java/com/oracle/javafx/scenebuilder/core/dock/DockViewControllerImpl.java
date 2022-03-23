@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +149,9 @@ public class DockViewControllerImpl implements InitWithDocument, DockViewControl
     @Override
     public void performLoadDockAndViewsPreferences() {
         var pref = new HashMap<>(lastViewVisibilityPreference.getValue());
-        activeDocks.values().forEach(d -> d.getViews().forEach(v -> performCloseView(v)));
+        List<View> views = activeDocks.values().stream().flatMap(d -> d.getViews().stream()).collect(Collectors.toList());
+        views.forEach(this::performCloseView);
+
         if (!pref.isEmpty()) {
             viewItems.values().stream()
             .filter( vi -> Boolean.TRUE.equals(pref.get(vi.getId())))

@@ -40,48 +40,17 @@ import java.util.List;
 
 public interface Main {
 
-    public enum ApplicationControlAction {
-
-        //ABOUT,
-        CHECK_UPDATES,
-        REGISTER,
-        //NEW_FILE,
-        //NEW_TEMPLATE,
-        OPEN_FILE,
-        //CLOSE_FRONT_WINDOW,
-        //USE_DEFAULT_THEME,
-        //USE_DARK_THEME,
-        //SHOW_PREFERENCES,
-        EXIT
-    }
-
-    Document lookupUnusedDocumentWindowController();
-    Document lookupUnusedDocumentWindowController(Collection<Document> ignored);
-
-//    void performOpenRecent(Document documentWindowController, File file);
-
-    //void performNewFromTemplate();
-
+    Document makeNewDocument();
+    Document lookupDocument(URL newLocation);
+    Document lookupUnusedDocument();
+    Document lookupUnusedDocument(Collection<Document> ignored);
     Document getFrontDocumentWindow();
 
-    List<Document> getDocumentWindowControllers();
+    List<Document> getDocuments();
+    int getOpenDocuments();
 
-    //void handleOpenFilesAction(List<String> files);
-
-    //void performNewTemplate(Template template);
-
-    void performControlAction(ApplicationControlAction openFile, Document documentWC);
-
-    Document makeNewWindow();
-
-//    void performOpenFile(Document document);
-
-    boolean canPerformControlAction(ApplicationControlAction controlAction, Document document);
-
-    Document lookupDocumentWindowControllers(URL newLocation);
 
     void notifyDocumentClosed(Document document);
-    int getOpenDocuments();
 
     /**
      * @param fxmlFiles

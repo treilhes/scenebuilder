@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
 
@@ -85,8 +86,9 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
     public BorderPaneTring(
             Content contentPanelController,
+            DocumentManager documentManager,
             BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory) {
-        super(contentPanelController, BorderPane.class);
+        super(contentPanelController, documentManager, BorderPane.class);
         this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;
     }
 

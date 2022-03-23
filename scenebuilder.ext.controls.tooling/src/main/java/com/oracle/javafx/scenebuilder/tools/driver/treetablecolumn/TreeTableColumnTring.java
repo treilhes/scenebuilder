@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractGenericTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.treetableview.TreeTableViewDesignInfoX;
@@ -60,8 +61,10 @@ public class TreeTableColumnTring extends AbstractGenericTring<Object> {
     private final TreeTableViewDesignInfoX tableViewDesignInfo
             = new TreeTableViewDesignInfoX();
 
-    public TreeTableColumnTring(Content contentPanelController) {
-        super(contentPanelController, Object.class);
+    public TreeTableColumnTring(
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Object.class);
     }
 
     @Override

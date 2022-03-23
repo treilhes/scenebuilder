@@ -40,6 +40,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -59,8 +60,10 @@ public class TabTring extends AbstractTring<Tab> {
 
     private TabOutline tabOutline;
 
-    public TabTring(Content contentPanelController) {
-        super(contentPanelController, Tab.class);
+    public TabTring(
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Tab.class);
     }
 
     @Override

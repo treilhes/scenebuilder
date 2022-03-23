@@ -48,9 +48,9 @@ import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -166,7 +166,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
 
     private Disposable selectionSubscription;
 
-    private final Editor editor;
+    //private final Editor editor;
     private final DocumentManager documentManager;
     private final Drag drag;
     private final Selection selection;
@@ -175,6 +175,10 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
     private final ShowExpertByDefaultPreference showExpertByDefaultPreference;
 
+    private final InlineEdit inlineEdit;
+
+    private final ContextMenu contextMenu;
+
     /*
      * Public
      */
@@ -182,7 +186,8 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             URL fxmlURL,
-            Editor editor,
+            InlineEdit inlineEdit,
+            ContextMenu contextMenu,
             JobManager jobManager,
             Drag drag,
             Selection selection,
@@ -193,7 +198,8 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
             HierarchyDNDController.Factory hierarchyDNDControllerFactory,
             MetadataInfoDisplayOption defaultDisplayOptions) {
         super(scenebuilderManager, documentManager, fxmlURL, I18N.getBundle());
-        this.editor = editor;
+        this.inlineEdit = inlineEdit;
+        this.contextMenu = contextMenu;
         this.documentManager = documentManager;
         this.drag = drag;
         this.selection = selection;
@@ -665,7 +671,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
          * Before updating the selection, we test if a text session is on-going
          * and can be completed cleanly. If not, we do not update the selection.
          */
-        if (editor.canGetFxmlText()) {
+        if (inlineEdit.canGetFxmlText()) {
             final Set<FXOMObject> selectedFxomObjects = new HashSet<>();
             for (TreeItem<HierarchyItem> selectedItem : getSelectedItems()) {
                 // TreeItems may be null when selection is updating
@@ -1024,9 +1030,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         getPanelControl().setOnMousePressed(event -> handleOnMousePressed(event));
 
         // Setup the context menu
-        final ContextMenu contextMenuController
-                = editor.getContextMenuController();
-        getPanelControl().setContextMenu(contextMenuController.getContextMenu());
+        getPanelControl().setContextMenu(contextMenu.getContextMenu());
 
         // Set default parent ring color
         //setParentRingColor(DEFAULT_PARENT_RING_COLOR);
@@ -1036,11 +1040,10 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         final ObservableList<TreeItem<HierarchyItem>> selectedTreeItems = getSelectedItems();
 
         // Do not start a DND gesture if there is an editing session on-going
-        if (!editor.canGetFxmlText()) {
+        if (!inlineEdit.canGetFxmlText()) {
             return;
         }
 
-        final Selection selection = editor.getSelection();
         if (selection.isEmpty() == false) { // (1)
             if (selection.getGroup() instanceof ObjectSelectionGroup) {
                 // A set of regular component (ie fxom objects) are selected
@@ -1092,7 +1095,7 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private void handleOnDragDropped(final DragEvent event) {
         // If there is no document loaded
         // Should we allow to start with empty document in SB 2.0 ?
-        if (editor.getFxomDocument() == null) {
+        if (documentManager.fxomDocument().get() == null) {
             return;
         }
 
@@ -1221,11 +1224,9 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
     private void handleOnMousePressed(final MouseEvent event) {
 
         if (event.getButton() == MouseButton.SECONDARY) {
-            final ContextMenu contextMenuController
-                    = editor.getContextMenuController();
             // The context menu items depend on the selection so
             // we need to rebuild it each time it is invoked.
-            contextMenuController.updateContextMenuItems();
+            contextMenu.updateContextMenuItems();
         }
     }
 
@@ -1265,10 +1266,5 @@ public abstract class AbstractHierarchyPanelController extends AbstractFxmlPanel
         }
         return (Cell<?>) node;
     }
-
-    public Editor getEditorController() {
-        return editor;
-    }
-
 
 }

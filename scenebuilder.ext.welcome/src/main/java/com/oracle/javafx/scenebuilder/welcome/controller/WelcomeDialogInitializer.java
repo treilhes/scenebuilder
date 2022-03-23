@@ -61,7 +61,7 @@ public class WelcomeDialogInitializer implements InitWithSceneBuilder {
 
         // Unless we're on a Mac we're starting SB directly (fresh start)
         // so we're not opening any file and as such we should show the Welcome Dialog
-        if (main.lookupUnusedDocumentWindowController() != null) {
+        if (main.lookupUnusedDocument() != null) {
             SbPlatform.runLater(() -> {
                 wdwc.getStage().show();
             });

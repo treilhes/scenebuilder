@@ -54,13 +54,16 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.MenuBar;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.DocumentScope;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
@@ -79,7 +82,6 @@ import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
@@ -120,7 +122,8 @@ public class DocumentController implements Document, InitializingBean {
     private final MessageBarController messageBarController;
     private final SelectionBarController selectionBarController;
     private FXOMDocument fxomDocument;
-
+    private final InlineEdit inlineEdit;
+    private final MessageLogger messageLogger;
 
     /*
      * DocumentWindowController
@@ -132,6 +135,8 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired Preferences documentPreferencesController,
             @Autowired Content contentPanelController,
             @Autowired Editor editorController,
+            InlineEdit inlineEdit,
+            MessageLogger messageLogger,
             @Autowired DocumentWindow documentWindow,
             @Autowired MenuBarController menuBarController,
             @Lazy @Autowired MessageBarController messageBarController,
@@ -163,6 +168,8 @@ public class DocumentController implements Document, InitializingBean {
         this.menuBarController = menuBarController;
         this.messageBarController = messageBarController;
         this.selectionBarController = selectionBarController;
+        this.inlineEdit = inlineEdit;
+        this.messageLogger = messageLogger;
 
         this.contentPanelController = contentPanelController;
         this.documentManager = documentManager;
@@ -1014,17 +1021,7 @@ public class DocumentController implements Document, InitializingBean {
         return tic;
     }
 
-    /**
-     * Returns true if we are editing within a popup window : either the specified
-     * node is showing a popup window or the inline editing popup is showing.
-     *
-     * @param node the focused node of the main scene
-     * @return
-     */
-    private boolean isPopupEditing(Node node) {
-        return (node instanceof MenuButton && ((MenuButton) node).isShowing())
-                || editorController.getInlineEditController().isWindowOpened();
-    }
+
 
 //    private KeyCombination getAccelerator(final KeyEvent event) {
 //        KeyCombination result = null;
@@ -1443,6 +1440,28 @@ public class DocumentController implements Document, InitializingBean {
     @Override
     public FileTime getLoadFileTime() {
         return loadFileTime;
+    }
+
+    @Override
+    public boolean isEditing() {
+        if (inlineEdit.isTextEditingSessionOnGoing()) {
+            // Check if we can commit the editing session
+            if (inlineEdit.canGetFxmlText() == false) {
+                // Commit failed
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void logInfoMessage(String key) {
+        messageLogger.logInfoMessage(key, I18N.getBundle());
+    }
+
+    @Override
+    public void logInfoMessage(String key, Object... args) {
+        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
 }

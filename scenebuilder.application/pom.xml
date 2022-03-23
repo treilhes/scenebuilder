@@ -199,36 +199,34 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.metadata.javafx15</artifactId>
+            <artifactId>scenebuilder.metadata.gluon5</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.metadata.gluon5</artifactId>
+            <artifactId>scenebuilder.ext.script</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.javafx.customization</artifactId>
         </dependency>
-
         <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.script</artifactId>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.metadata.javafx15</artifactId>
         </dependency>
 
-<!--  SCRIPT ENGINE javascript START -->
+        <!-- SCRIPT ENGINE javascript START -->
         <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
-<dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js</artifactId>
-      <version>21.3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js-scriptengine</artifactId>
-      <version>21.3.0</version>
-    </dependency>
-<!--  SCRIPT ENGINE javascript END -->
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js</artifactId>
+            <version>21.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js-scriptengine</artifactId>
+            <version>21.3.0</version>
+        </dependency>
+        <!-- SCRIPT ENGINE javascript END -->
 
     </dependencies>
 
@@ -240,25 +238,10 @@
             </resource>
         </resources>
         <plugins>
-            <!-- <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
-                <executions>
-                    <execution>
-                        <id>list-deps</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>list</goal>
-                        </goals>
-                        <configuration>
-                            configure the plugin here
-                            <outputFile>${project.build.directory}/generated-resources/core.libs</outputFile>
-                            <includeScope>runtime</includeScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin> -->
+            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> <version>3.1.2</version>
+                <executions> <execution> <id>list-deps</id> <phase>generate-sources</phase> <goals> <goal>list</goal> </goals> <configuration>
+                configure the plugin here <outputFile>${project.build.directory}/generated-resources/core.libs</outputFile> <includeScope>runtime</includeScope>
+                </configuration> </execution> </executions> </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

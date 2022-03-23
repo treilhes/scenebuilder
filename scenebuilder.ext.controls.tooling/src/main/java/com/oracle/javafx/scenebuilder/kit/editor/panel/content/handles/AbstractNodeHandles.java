@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -52,10 +53,11 @@ public abstract class AbstractNodeHandles<T extends Node> extends AbstractGeneri
     public AbstractNodeHandles(
             Driver driver,
     		Content contentPanelController,
+    		DocumentManager documentManager,
     		DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             Class<T> sceneGraphObjectClass) {
-        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory, sceneGraphObjectClass);
+        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory, sceneGraphObjectClass);
     }
 
     public FXOMInstance getFxomInstance() {

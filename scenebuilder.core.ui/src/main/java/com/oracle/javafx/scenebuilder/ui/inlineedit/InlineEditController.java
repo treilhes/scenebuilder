@@ -106,19 +106,15 @@ public class InlineEditController implements InlineEdit{
     }
 
     public TextInputControl getEditor() {
-        return popupController.getEditor();
+        return popupController == null ? null : popupController.getEditor();
     }
 
     /**
-     * Helper method to create a TextInputControl using the specified target
-     * bounds and initial value. The created TextInputControl will get same
+     * {@inheritDoc}
+     * <br/><br/>
+     * The created TextInputControl will get same
      * width and height as the specified target node. It will be styled using
      * the INLINE_EDITOR style class defined in the panel root style sheet.
-     *
-     * @param type
-     * @param target
-     * @param initialValue
-     * @return
      */
     @Override
     public TextInputControl createTextInputControl(final Type type, final Node target, final String initialValue) {
@@ -168,18 +164,12 @@ public class InlineEditController implements InlineEdit{
     }
 
     /**
-     * Start an inline editing session. Display the specified TextInputControl
-     * within a new popup window at the specified anchor node position.
-     *
-     * @param editor
-     * @param anchor
-     * @param requestCommit
-     * @param requestRevert
+     * {@inheritDoc}
      */
     @Override
     public void startEditingSession(final TextInputControl editor, final Node anchor,
             final Callback<String, Boolean> requestCommit,
-            final Callback<Void, Boolean> requestRevert) {
+            final Callback<String, Boolean> requestRevert) {
 
         assert editor != null && anchor != null && requestCommit != null;
         //assert getEditorController().isTextEditingSessionOnGoing() == false;
@@ -212,7 +202,7 @@ public class InlineEditController implements InlineEdit{
                     break;
                 // STOP inline editing session without COMMIT on ESCAPE key pressed
                 case ESCAPE:
-                    requestRevertAndClose(requestRevert);
+                    requestRevertAndClose(requestRevert, editor.getText());
                     // Consume the event so it is not received by the underlyting panel controller
                     event.consume();
                     break;
@@ -262,9 +252,9 @@ public class InlineEditController implements InlineEdit{
     }
 
     private boolean requestRevertAndClose(
-            final Callback<Void, Boolean> requestRevert) {
+            final Callback<String, Boolean> requestRevert, String currentValue) {
 
-        boolean revertSucceeded = requestRevert == null ? true : requestRevert.call(null);
+        boolean revertSucceeded = requestRevert == null ? true : requestRevert.call(currentValue);
         // If the revert succeeded, stop the editing session,
         // otherwise keeps the editing session on-going
         if (revertSucceeded) {
@@ -372,7 +362,7 @@ public class InlineEditController implements InlineEdit{
                     if (editor.getText() != null) {
                         requestCommitAndClose(requestCommit, editor.getText());
                     } else {
-                        requestRevertAndClose(null);
+                        requestRevertAndClose(null, null);
                     }
 
                 }
@@ -384,11 +374,6 @@ public class InlineEditController implements InlineEdit{
         TextInputControl getEditor() {
             return editor;
         }
-//
-//        //@Override
-//        protected void makeRoot() {
-//
-//        }
 
         @Override
         protected void onHidden(WindowEvent event) {
@@ -482,13 +467,10 @@ public class InlineEditController implements InlineEdit{
 
 
     private Callback<Void, Boolean> requestTextEditingSessionEnd;
-    /**
-     * Returns true if fxml content being edited can be returned safely.
-     * This method will return false if there is a text editing session on-going.
-     *
-     * @return true if fxml content being edited can be returned safely.
-     */
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canGetFxmlText() {
         final boolean result;
@@ -507,14 +489,7 @@ public class InlineEditController implements InlineEdit{
     }
 
     /**
-     * Tells this editor that a text editing session has started.
-     * The editor controller may invoke the requestSessionEnd() callback
-     * if it needs the text editing session to stop. The callback should;
-     *   - either stop the text editing session, invoke textEditingSessionDidEnd()
-     *     and return true
-     *   - either keep the text editing session on-going and return false
-     *
-     * @param requestSessionEnd Callback that should end the text editing session or return false
+     * {@inheritDoc}
      */
     @Override
     public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd) {
@@ -527,7 +502,7 @@ public class InlineEditController implements InlineEdit{
 
 
     /**
-     * Tells this editor that the text editing session has ended.
+     * {@inheritDoc}
      */
     @Override
     public void textEditingSessionDidEnd() {
@@ -538,8 +513,8 @@ public class InlineEditController implements InlineEdit{
         requestTextEditingSessionEnd = null;
     }
 
-    /*
-     * Returns true if a text editing session is currently on going.
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isTextEditingSessionOnGoing() {
@@ -548,17 +523,16 @@ public class InlineEditController implements InlineEdit{
 
 
     /**
-     * Returns true if the specified node is part of the main scene and is either a
-     * TextInputControl or a ComboBox.
-     *
-     * @param node the focused node of the main scene
-     * @return
+     * {@inheritDoc}
      */
     @Override
     public boolean isTextInputControlEditing(Node node) {
         return (node instanceof TextInputControl || node instanceof ComboBox);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TextInputControl getTextInputControl(Node node) {
         assert isTextInputControlEditing(node);
@@ -574,11 +548,7 @@ public class InlineEditController implements InlineEdit{
     }
 
     /**
-     * Returns true if we are editing within a popup window : either the specified
-     * node is showing a popup window or the inline editing popup is showing.
-     *
-     * @param node the focused node of the main scene
-     * @return
+     * {@inheritDoc}
      */
     @Override
     public boolean isPopupEditing(Node node) {

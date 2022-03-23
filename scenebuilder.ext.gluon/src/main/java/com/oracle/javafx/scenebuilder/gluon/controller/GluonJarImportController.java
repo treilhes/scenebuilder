@@ -100,7 +100,7 @@ public class GluonJarImportController {
                     Document dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         //TODO when started to fast will throw IndexOutOfBoundsException
-                        dwc = main.getDocumentWindowControllers().get(0);
+                        dwc = main.getDocuments().get(0);
                     }
                     ImportingGluonControlsAlert alert = new ImportingGluonControlsAlert(dwc.getDocumentWindow().getStage());
                     iconSetting.setWindowIcon(alert);

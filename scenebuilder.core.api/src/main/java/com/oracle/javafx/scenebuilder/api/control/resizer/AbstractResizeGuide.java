@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.api.control.resizer;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
@@ -47,8 +48,11 @@ import javafx.scene.Node;
  */
 public abstract class AbstractResizeGuide<T extends Node> extends AbstractDecoration<T> implements ResizeGuide<T>{
 
-    public AbstractResizeGuide(Content contentPanelController, Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+    public AbstractResizeGuide(
+            Content contentPanelController, 
+            DocumentManager documentManager,
+            Class<T> sceneGraphClass) {
+        super(contentPanelController, documentManager, sceneGraphClass);
     }
 
     @Override

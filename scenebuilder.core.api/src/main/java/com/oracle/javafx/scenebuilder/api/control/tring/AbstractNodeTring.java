@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.control.tring;
 
 import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -46,8 +47,11 @@ import javafx.scene.Node;
  */
 public abstract class AbstractNodeTring<T extends Node> extends AbstractGenericTring<T> {
 
-    public AbstractNodeTring(Content contentPanelController, Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+    public AbstractNodeTring(
+            Content contentPanelController, 
+            DocumentManager documentManager,
+            Class<T> sceneGraphClass) {
+        super(contentPanelController, documentManager, sceneGraphClass);
     }
 
     public FXOMInstance getFxomInstance() {

@@ -49,11 +49,11 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Gesture;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
@@ -127,7 +127,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     // private final Api api;
 
-    private final Editor editorController;
+    private final JobManager jobManager;
 
     private final DesignHierarchyMask.Factory maskFactory;
 
@@ -165,7 +165,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     		@Autowired MessageLogger messageLogger,
     		@Autowired InlineEdit inlineEdit,
     		@Autowired @Lazy Content contentPanelController,
-    		@Autowired @Lazy Editor editor,
+    		@Autowired JobManager jobManager,
     		@Autowired DesignHierarchyMask.Factory maskFactory,
     		@Autowired DocumentManager documentManager,
     		@Autowired SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory,
@@ -183,7 +183,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         this.dragGestureFactory = dragGestureFactory;
         this.driver = driver;
         this.drag = drag;
-        this.editorController = editor;
+        this.jobManager = jobManager;
         this.maskFactory = maskFactory;
         this.documentManager = documentManager;
 
@@ -263,7 +263,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         assert activeGesture == gesture;
         activeGesture = null;
         startListeningToInputEvents();
-        contentPanelController.endInteraction();
+        content.endInteraction();
 
         // Object below the mouse may have changed : current glass gesture
         // must be searched again.
@@ -282,7 +282,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
-        assert contentPanelController.getGlassLayer() != null;
+        assert content.getGlassLayer() != null;
 
         if (this.selectWithMarqueeGesture == null) {
             this.selectWithMarqueeGesture = selectWithMarqueeGestureFactory.getGesture();
@@ -331,19 +331,19 @@ public class EditModeController extends AbstractModeController implements Gestur
     private void makeSelectionVisible() {
 
         // Scrolls the content panel so that selected objects are visible.
-        contentPanelController.scrollToSelection();
+        content.scrollToSelection();
 
         // Walks trough the ancestor nodes of the first selected object and
         // makes sure that TabPane and Accordion are setup for displaying
         // this selected object.
         Layer<Handles> layer = getLayer(Handles.class);
         if (layer.getActiveItems().isEmpty() == false) {
-            contentPanelController.reveal(layer.getActiveItems().get(0).getFxomObject());
+            content.reveal(layer.getActiveItems().get(0).getFxomObject());
         }
     }
 
     private void startListeningToInputEvents() {
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = content.getGlassLayer();
         assert glassLayer.getOnMouseEntered() == null;
         assert glassLayer.getOnMouseExited() == null;
         assert glassLayer.getOnMouseMoved() == null;
@@ -371,7 +371,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private void stopListeningToInputEvents() {
 
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = content.getGlassLayer();
         glassLayer.setOnMouseEntered(null);
         glassLayer.setOnMouseExited(null);
         glassLayer.setOnMouseMoved(null);
@@ -403,7 +403,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     private void mouseMovedOnGlassLayer(MouseEvent e) {
         assert activeGesture == null : "activeGesture=" + activeGesture;
 
-        final FXOMObject hitObject = contentPanelController.pick(e.getSceneX(), e.getSceneY());
+        final FXOMObject hitObject = content.pick(e.getSceneX(), e.getSceneY());
         final FXOMObject selectionAncestor = selection.getAncestor();
 
         // The code below handles selction of detached graph objects
@@ -459,7 +459,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     private void mousePressedOnGlassLayer(MouseEvent e) {
 
         // Make sure that glass layer has keyboard focus
-        contentPanelController.getGlassLayer().requestFocus();
+        content.getGlassLayer().requestFocus();
 
         /*
          * At that point, is expected that a "mouse entered" or "mouse moved" event was
@@ -548,24 +548,23 @@ public class EditModeController extends AbstractModeController implements Gestur
             } else {
                 type = InlineEdit.Type.TEXT_FIELD;
             }
-            final TextInputControl inlineEditor = inlineEdit.createTextInputControl(type, inlineEditingBounds,
-                    text);
+            final TextInputControl inlineEditor = inlineEdit.createTextInputControl(type, inlineEditingBounds, text);
+
             // CSS
-            final ObservableList<String> styleSheets = getContentPanelController().getRoot().getStylesheets();
+            final ObservableList<String> styleSheets = getContent().getRoot().getStylesheets();
             inlineEditor.getStylesheets().addAll(styleSheets);
             inlineEditor.getStyleClass().add("theme-presets"); // NOCHECK
             inlineEditor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
-            final Callback<String, Boolean> requestCommit = value -> inlineEditingDidRequestCommit(value);
-            final Callback<Void, Boolean> requestRevert = value -> {
-                inlineEditingDidRequestRevert();
-                return true;
-            };
+
+            final Callback<String, Boolean> requestCommit = this::inlineEditingDidRequestCommit;
+            final Callback<String, Boolean> requestRevert = this::inlineEditingDidRequestRevert;
+
             inlineEdit.startEditingSession(inlineEditor, inlineEditingBounds, requestCommit, requestRevert);
         } else {
             logger.debug("Beep");
         }
 
-        assert editorController.isTextEditingSessionOnGoing() || (inlineEditedObject == null);
+        assert inlineEdit.isTextEditingSessionOnGoing() || (inlineEditedObject == null);
     }
 
     private boolean inlineEditingDidRequestCommit(String newValue) {
@@ -579,7 +578,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         final AbstractJob job = modifyObjectJobFactory.getJob(inlineEditedObject, vpm, newValue);
 
         if (job.isExecutable()) {
-            editorController.getJobManager().push(job);
+            jobManager.push(job);
         }
 
         inlineEditedObject = null;
@@ -587,9 +586,10 @@ public class EditModeController extends AbstractModeController implements Gestur
         return true;
     }
 
-    private void inlineEditingDidRequestRevert() {
+    private boolean inlineEditingDidRequestRevert(String currentValue) {
         assert inlineEditedObject != null;
         inlineEditedObject = null;
+        return true;
     }
 
     private void keyPressedOnGlassLayer(KeyEvent e) {
@@ -690,9 +690,9 @@ public class EditModeController extends AbstractModeController implements Gestur
          * cleanly. If not, we do not activate the gesture.
          */
 
-        if (contentPanelController.isContentDisplayable() && editorController.canGetFxmlText()) {
+        if (content.isContentDisplayable() && inlineEdit.canGetFxmlText()) {
 
-            contentPanelController.beginInteraction();
+            content.beginInteraction();
 
             stopListeningToInputEvents();
             activeGesture = gesture;

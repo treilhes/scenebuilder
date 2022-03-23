@@ -41,6 +41,7 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.RowArea;
 
@@ -58,8 +59,10 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
                     false /* shouldShowTray */,
                     false /* shouldCreateSensors */ );
 
-    public GridPaneTring(Content contentPanelController) {
-        super(contentPanelController, GridPane.class);
+    public GridPaneTring(
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, GridPane.class);
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }
 

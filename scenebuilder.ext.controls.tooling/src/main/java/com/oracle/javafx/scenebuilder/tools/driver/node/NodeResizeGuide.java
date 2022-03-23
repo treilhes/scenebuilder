@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -64,8 +66,11 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
     private ResizingGuideController resizingGuideController;
     private DesignHierarchyMask.Factory maskFactory;
 
-    public NodeResizeGuide(DesignHierarchyMask.Factory maskFactory, Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    public NodeResizeGuide(
+            DesignHierarchyMask.Factory maskFactory, 
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Node.class);
         this.maskFactory = maskFactory;
 
     }

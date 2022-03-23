@@ -87,7 +87,7 @@ public class NewAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        final Document newWindow = main.makeNewWindow();
+        final Document newWindow = main.makeNewDocument();
         newWindow.openWindow();
         return actionFactory.create(LoadBlankAction.class).perform();
     }

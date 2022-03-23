@@ -41,8 +41,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
@@ -86,7 +87,8 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     public HierarchyTreeViewController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
-            Editor editor,
+            InlineEdit inlineEdit,
+            ContextMenu contextMenu,
             JobManager jobManager,
             Drag drag,
             Selection selection,
@@ -97,7 +99,8 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
             HierarchyTreeCell.Factory hierarchyTreeCellFactory,
             HierarchyDNDController.Factory hierarchyDNDControllerFactory,
             MetadataInfoDisplayOption defaultDisplayOptions) {
-        super(scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), editor,
+        super(scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"),
+                inlineEdit, contextMenu,
                 jobManager, drag, selection, showExpertByDefaultPreference, documentDragSourceFactory,
                 externalDragSourceFactory, designHierarchyMaskFactory, hierarchyDNDControllerFactory, defaultDisplayOptions);
         this.hierarchyTreeCellFactory = hierarchyTreeCellFactory;

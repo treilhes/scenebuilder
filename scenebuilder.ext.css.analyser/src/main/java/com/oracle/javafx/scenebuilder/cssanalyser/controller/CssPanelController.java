@@ -219,8 +219,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private Object selectedObject; // Can be either an FXOMObject (selection mode), or a Node (pick mode)
-    private Selection selection;
-    private final Editor editorController;
+    private final Selection selection;
+    private final Editor editor;
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
@@ -254,6 +254,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             Metadata metadata,
+            Selection selection,
             Editor editor,
             Delegate delegate,
             CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
@@ -264,7 +265,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
      // @formatter:on
         super(scenebuilderManager, documentManager, viewMenuController,
                 CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
-        this.editorController = editor;
+        this.editor = editor;
+        this.selection = selection;
         this.documentManager = documentManager;
         this.metadata = metadata;
         this.applicationDelegate = delegate;
@@ -338,12 +340,12 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         root.getChildren().remove(textPane);
         root.getChildren().remove(table);
 
-        pick.setOnAction(t -> editorController.setPickModeEnabled(true));
-        edit.setOnAction(t -> editorController.setPickModeEnabled(false));
-        editorController.pickModeEnabledProperty()
+        pick.setOnAction(t -> editor.setPickModeEnabled(true));
+        edit.setOnAction(t -> editor.setPickModeEnabled(false));
+        editor.pickModeEnabledProperty()
                 .addListener((ChangeListener<Boolean>) (ov, oldVal, newVal) -> setPickMode(newVal));
         // Initialize the pick mode from the editorController value
-        setPickMode(editorController.isPickModeEnabled());
+        setPickMode(editor.isPickModeEnabled());
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -384,9 +386,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                 selectedObject = selectedSubNode;
                 refresh();
                 // Switch to pick mode
-                editorController.setPickModeEnabled(true);
-//                    // Select the sub node
-                selection = editorController.getSelection();
+                editor.setPickModeEnabled(true);
+                // Select the sub node
                 selection.select(getFXOMInstance(selection), selectedSubNode);
             }
         };
@@ -697,7 +698,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private void updateSelectedObject() {
-        selection = editorController.getSelection();
+
         if (!isMultipleSelection()) {
             if (isPickMode()) {
                 // In pick mode:
@@ -776,7 +777,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private boolean isPickMode() {
-        return editorController.isPickModeEnabled();
+        return editor.isPickModeEnabled();
     }
 
     private void setPickMode(boolean pickMode) {
@@ -2274,7 +2275,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     public Editor getEditorController() {
-        return editorController;
+        return editor;
     }
 
     @Override

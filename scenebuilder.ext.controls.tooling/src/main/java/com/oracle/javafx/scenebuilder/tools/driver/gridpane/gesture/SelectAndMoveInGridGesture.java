@@ -60,7 +60,7 @@ import javafx.scene.layout.GridPane;
 public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     private final static Logger logger = LoggerFactory.getLogger(SelectAndMoveInGridGesture.class);
-
+    private final Selection selection;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
 
     private FXOMInstance gridPaneInstance;
@@ -70,8 +70,10 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     protected SelectAndMoveInGridGesture(
             Content content,
+            Selection selection,
             GridSelectionGroup.Factory gridSelectionGroupFactory) {
         super(content);
+        this.selection = selection;
         this.gridSelectionGroupFactory = gridSelectionGroupFactory;
     }
 
@@ -128,8 +130,6 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
          * ------------+--------------------+--------------------+--------------------+--------------------+
          */
 
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
         final boolean extendKeyDown
                 = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);
@@ -149,8 +149,6 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     @Override
     protected void mouseDragDetected(MouseEvent e) {
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
 
         /*
          *             |        Object      |                      GridSelectionGroup                      |

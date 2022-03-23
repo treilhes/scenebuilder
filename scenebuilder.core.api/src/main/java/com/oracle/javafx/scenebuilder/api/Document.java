@@ -44,9 +44,13 @@ public interface Document {
     boolean isInited();
     boolean isUnused();
     boolean isDocumentDirty();
+    boolean isEditing();
     boolean hasContent();
     boolean hasName();
     String getName();
+
+    void logInfoMessage(String key);
+    void logInfoMessage(String key, Object... args);
 
 //    ActionStatus save();
 //    ActionStatus saveAs();

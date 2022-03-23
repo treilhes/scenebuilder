@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -60,8 +61,10 @@ public class ResizeRudder extends AbstractRudder<Node> {
 
     private final Line diagonalLine = new Line();
 
-    public ResizeRudder(Content contentPanelController) {
-        super(contentPanelController, Node.class);
+    public ResizeRudder(
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Node.class);
 
         diagonalLine.setMouseTransparent(true);
         diagonalLine.getStyleClass().add("resize-rudder"); //NOCHECK

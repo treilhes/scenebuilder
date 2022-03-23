@@ -49,7 +49,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -106,7 +106,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     @FXML
     private Button installButton;
 
-    private final Editor editorController;
+    private final MessageLogger messageLogger;
     private final MavenArtifactsPreferences mavenPreferences;
     private final AbstractLibrary<?, ?> userLibrary;
 
@@ -124,7 +124,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             SceneBuilderBeanFactory context,
-    		Editor editorController,
+    		MessageLogger messageLogger,
     		AbstractLibrary<?, ?> library,
     		MavenSetting mavenSetting,
     		MavenArtifactsPreferences mavenPreferences,
@@ -134,7 +134,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
         this.context = context;
         this.userLibrary = library;
         this.owner = owner;
-        this.editorController = editorController;
+        this.messageLogger = messageLogger;
         this.mavenPreferences = mavenPreferences;
 
         maven = new MavenRepositorySystem(true, mavenSetting, repositoryPreferences); // only releases
@@ -330,7 +330,7 @@ public class SearchMavenDialogController extends AbstractFxmlWindowController {
     }
 
     private void logInfoMessage(String key, Object... args) {
-        editorController.getMessageLog().logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
     private String getArtifactCoordinates() {

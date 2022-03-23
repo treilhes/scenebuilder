@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,6 +42,7 @@ import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
@@ -68,8 +70,11 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
     private int targetIndex = Integer.MIN_VALUE;
     private final Line crackLine = new Line();
 
-    public GenericParentTring(DesignHierarchyMask.Factory maskFactory, Content contentPanelController) {
-        super(contentPanelController, Parent.class);
+    public GenericParentTring(
+            DesignHierarchyMask.Factory maskFactory, 
+            Content contentPanelController,
+            DocumentManager documentManager) {
+        super(contentPanelController, documentManager, Parent.class);
         this.maskFactory = maskFactory;
 
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);

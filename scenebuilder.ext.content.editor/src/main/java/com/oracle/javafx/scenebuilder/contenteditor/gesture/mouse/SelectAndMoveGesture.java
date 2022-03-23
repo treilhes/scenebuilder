@@ -67,13 +67,16 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
     private final Drag drag;
     private final DocumentDragSource.Factory documentDragSourceFactory;
+    private final Selection selection;
 
     protected SelectAndMoveGesture(
             @Autowired @Lazy Content contentPanelController,
             @Autowired Drag drag,
+            Selection selection,
             DocumentDragSource.Factory documentDragSourceFactory) {
         super(contentPanelController);
         this.drag = drag;
+        this.selection = selection;
         this.documentDragSourceFactory = documentDragSourceFactory;
     }
 
@@ -125,8 +128,6 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
          * ------------+--------------------+--------------------+--------------------+
          */
 
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
         final boolean extendKeyDown
                 = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);
@@ -153,9 +154,6 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
     @Override
     protected void mouseDragDetected(MouseEvent e) {
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
-
         /*
          *             |      hitObject     |                hitObject                |
          *             |      selected      |                unselected               |
@@ -233,8 +231,6 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
         // Click but no move : in that case, we make sure that
         // the hit object *only* is selected when shift is up.
 
-        final Selection selection
-                = contentPanelController.getEditorController().getSelection();
         final boolean extendKeyDown
                 = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);

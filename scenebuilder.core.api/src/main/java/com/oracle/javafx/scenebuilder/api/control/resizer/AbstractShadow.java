@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.api.control.resizer;
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
@@ -47,8 +48,11 @@ import javafx.scene.Node;
  */
 public abstract class AbstractShadow<T extends Node> extends AbstractDecoration<T> implements Shadow<T>{
 
-    public AbstractShadow(Content contentPanelController, Class<T> sceneGraphClass) {
-        super(contentPanelController, sceneGraphClass);
+    public AbstractShadow(
+            Content contentPanelController, 
+            DocumentManager documentManager,
+            Class<T> sceneGraphClass) {
+        super(contentPanelController, documentManager, sceneGraphClass);
     }
 
     @Override

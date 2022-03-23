@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,6 +47,7 @@ import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.gesture.SelectAndMoveInGridGesture;
@@ -73,13 +75,14 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> implements In
     public GridPaneHandles(
             Driver driver,
             Content contentPanelController,
+            DocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
     		Selection selection,
     		SelectAndMoveInGridGesture.Factory selectAndMoveInGridGestureFactory,
     		ResizeColumnGesture.Factory resizeColumnGestureFactory,
     		ResizeRowGesture.Factory resizeRowGestureFactory) {
-        super(driver, contentPanelController, discardGestureFactory, resizeGestureFactory,  GridPane.class);
+        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory,  GridPane.class);
 
         this.selection = selection;
         this.selectAndMoveInGridGestureFactory = selectAndMoveInGridGestureFactory;
