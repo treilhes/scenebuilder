@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,43 +37,63 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.Glossary;
+import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
-@ExtendWith(ApplicationExtension.class)
+@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class FxIdEditorTest {
 
     static {
         I18N.initForTest();
     }
 
+    @Mock
+    private Dialog dialog;
+    @Mock
+    private Documentation documentation;
+    @Mock
+    private FileSystem fileSystem;
+    @Mock
+    private Glossary glossary;
+
+    @Spy
+    private DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+
+    @Mock
+    private MessageLogger messageLogger;
+
+    @InjectMocks
+    private FxIdEditor o;
+
     @Test
     public void shouldCreateAnEmptyInstance() {
-        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
-        
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
-        
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
-        
         o.reset((ValuePropertyMetadata)null, null);
     }
 
     @Test
     public void shouldResetTheInstanceForGroup() {
-        FxIdEditor o = new FxIdEditor(MockObjects.buildApiMock());
-        
         o.reset((ValuePropertyMetadata)null, null);
     }
 

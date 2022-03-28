@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,19 +37,33 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
-@ExtendWith(ApplicationExtension.class)
+@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class BooleanEditorTest {
 
     static {
         I18N.initForTest();
     }
+
+    @Mock
+    Dialog dialog;
+
+    @Mock
+    Documentation documentation;
+
+    @Mock
+    FileSystem fileSystem;
 
     static BooleanPropertyMetadata someBoolProp() {
         return new BooleanPropertyMetadata.Builder()
@@ -60,21 +75,21 @@ public class BooleanEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        BooleanEditor o = new BooleanEditor(MockObjects.buildApiMock());
+        BooleanEditor o = new BooleanEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        BooleanEditor o = new BooleanEditor(MockObjects.buildApiMock());
+        BooleanEditor o = new BooleanEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        BooleanEditor o = new BooleanEditor(MockObjects.buildApiMock());
+        BooleanEditor o = new BooleanEditor(dialog, documentation, fileSystem);
 
         o.reset(someBoolProp(), null);
     }

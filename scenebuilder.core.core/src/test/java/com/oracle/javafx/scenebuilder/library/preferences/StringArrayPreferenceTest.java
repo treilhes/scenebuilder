@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,6 +43,7 @@ import java.util.prefs.Preferences;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.type.StringArrayPreference;
 
@@ -64,6 +66,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldCreateValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.writeToJavaPreferences();
 		assertEquals("", globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
@@ -71,6 +75,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldCreateDocumentValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.writeToJavaPreferences();
 		assertEquals("", documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
@@ -79,6 +85,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldNotCreateRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(globalPreferenceContext, LIST_NAME_1, null);
 		sp.writeToJavaPreferences();
 		assertEquals(NO_VALUE, globalPreferenceContext.getRootNode().getNode().get(LIST_NAME_1, NO_VALUE));
@@ -86,6 +94,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldNotCreateDocumentRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(documentPreferenceContext, LIST_NAME_1, null);
 		sp.writeToJavaPreferences();
 		assertEquals(NO_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
@@ -94,6 +104,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldSaveRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.setValue(LIST_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -102,6 +114,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldSaveDocumentRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.setValue(LIST_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -111,6 +125,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldDeleteValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.setValue(LIST_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -122,6 +138,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldDeleteDocumentValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.setValue(LIST_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -134,6 +152,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldInitValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(globalPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.setValue(LIST_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -145,6 +165,8 @@ public class StringArrayPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldInitDocumentValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringArrayPreference sp = new StringArrayPreference(documentPreferenceContext, LIST_NAME_1, DEFAULT_VALUE);
 		sp.setValue(LIST_VALUE_1);
 		sp.writeToJavaPreferences();

@@ -421,7 +421,7 @@
                                 <option>--add-exports</option>
                                 <option>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core</option>
                                 <option>--add-exports</option>
-                                <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.css.analyser</option>
+                                <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
                             </additionalOptions>
                             <!-- This property does not work for the aggregate goal, doc-files are not present in the generated
                                 javadoc, see workaround below -->
@@ -493,7 +493,36 @@
                                 <version>${lombok.version}</version>
                             </path>
                         </annotationProcessorPaths>
+                        <compilerArgs>
+                            <arg>--add-exports</arg>
+                            <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
+                            <arg>--add-exports</arg>
+                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
+                            <arg>--add-exports</arg>
+                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
+                            <arg>--add-exports</arg>
+                            <arg>javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.fxom</arg>
+                            <arg>--add-exports</arg>
+                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</arg>
+                        </compilerArgs>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>test</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                            <configuration>
+                                <compilerArgs>
+                                    <arg>--add-exports</arg>
+                                    <arg>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
+                                    <arg>--add-exports</arg>
+                                    <arg>javafx.base/com.sun.javafx.beans=spring.core</arg>
+                                </compilerArgs>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->

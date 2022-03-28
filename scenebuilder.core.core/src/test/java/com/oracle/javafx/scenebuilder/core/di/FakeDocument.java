@@ -129,12 +129,6 @@ public class FakeDocument implements Document {
     }
 
     @Override
-    public void performControlAction(DocumentControlAction toggleRightPanel) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void close() {
         // TODO Auto-generated method stub
 
@@ -150,12 +144,6 @@ public class FakeDocument implements Document {
     public DocumentWindow getDocumentWindow() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public boolean canPerformControlAction(DocumentControlAction controlAction) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override
@@ -184,6 +172,24 @@ public class FakeDocument implements Document {
 
     @Override
     public void updateLoadFileTime() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean isEditing() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void logInfoMessage(String key) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void logInfoMessage(String key, Object... args) {
         // TODO Auto-generated method stub
 
     }

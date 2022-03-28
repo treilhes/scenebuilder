@@ -39,8 +39,12 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ButtonTypeListPropertyMetadata;
@@ -60,23 +64,32 @@ public class ButtonTypeEditorTest {
             .build();
     }
 
+    @Mock
+    Dialog dialog;
+
+    @Mock
+    Documentation documentation;
+
+    @Mock
+    FileSystem fileSystem;
+
     @Test
     public void shouldCreateAnEmptyInstance() {
-        ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
+        ButtonTypeEditor o = new ButtonTypeEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
+        ButtonTypeEditor o = new ButtonTypeEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o.getMenu());
     }
 
     @Test
     public void shouldResetTheInstance() {
-        ButtonTypeEditor o = new ButtonTypeEditor(MockObjects.buildApiMock());
+        ButtonTypeEditor o = new ButtonTypeEditor(dialog, documentation, fileSystem);
 
         o.reset(someButtonTypeListProp(), null);
     }

@@ -965,11 +965,6 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
     @Override
-    public Editor getEditorController() {
-        return editorController;
-    }
-
-    @Override
     public ModeManager getModeManager() {
         return modeManager;
     }

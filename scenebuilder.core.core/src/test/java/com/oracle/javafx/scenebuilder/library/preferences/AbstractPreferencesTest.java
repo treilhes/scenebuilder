@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,109 +33,115 @@
  */
 package com.oracle.javafx.scenebuilder.library.preferences;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.prefs.Preferences;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.mockito.Mockito;
 
+import com.oracle.javafx.scenebuilder.api.Editor;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
-import com.oracle.javafx.scenebuilder.core.editors.MockObjects;
 
 class AbstractPreferencesTest {
 
-	private static RootPreferencesNode root = null;
+    private static RootPreferencesNode root = null;
 
-	protected static String DOCUMENT_NODE_NAME = "DOCUMENTS";
+    protected static String DOCUMENT_NODE_NAME = "DOCUMENTS";
 
-	protected static String DOCUMENT_ITEM_NODE_NAME = "DOCUMENTID";
+    protected static String DOCUMENT_ITEM_NODE_NAME = "DOCUMENTID";
 
-	public static void defineRoot(RootPreferencesNode newRoot) {
-		root = newRoot;
-	}
+    public static void defineRoot(RootPreferencesNode newRoot) {
+        root = newRoot;
+    }
 
-	private static RootPreferencesNode testRootNode(String qualifier) {
-		return new RootPreferencesNode() {
-			@Override
-			public Preferences getNode() {
-				return root.getNode().node(qualifier);
-			}
-		};
-	}
+    private static RootPreferencesNode testRootNode(String qualifier) {
+        return new RootPreferencesNode() {
+            @Override
+            public Preferences getNode() {
+                return root.getNode().node(qualifier);
+            }
+        };
+    }
 
-	private static DocumentPreferencesNode testDocumentNode(String qualifier) {
-		return new DocumentPreferencesNode() {
-			@Override
-			public Preferences getNode() {
-				return root.getNode().node(qualifier).node(DOCUMENT_NODE_NAME);
-			}
+    private static DocumentPreferencesNode testDocumentNode(String qualifier) {
+        return new DocumentPreferencesNode() {
+            @Override
+            public Preferences getNode() {
+                return root.getNode().node(qualifier).node(DOCUMENT_NODE_NAME);
+            }
 
-			@Override
-			public void cleanupCorruptedNodes() {}
+            @Override
+            public void cleanupCorruptedNodes() {
+            }
 
-			@Override
-			public void clearAllDocumentNodes() {}
-		};
-	}
+            @Override
+            public void clearAllDocumentNodes() {
+            }
+        };
+    }
 
-	private static PreferencesContext testGlobalPreferencesContext(TestInfo testInfo) {
-		return new PreferencesContext(
-				MockObjects.buildApiMock().getContext(),
-				testRootNode(testInfo.getTestMethod().get().getName()),
-				testDocumentNode(testInfo.getTestMethod().get().getName())) {
-			@Override
-			public boolean isDocumentScope(Class<?> cls) {
-				return false;
-			}
-		};
-	}
+    public static PreferencesContext testGlobalPreferencesContext(TestInfo testInfo) {
 
-	private static PreferencesContext testDocumentPreferencesContext(TestInfo testInfo) {
+        SceneBuilderBeanFactory context = Mockito.mock(SceneBuilderBeanFactory.class);
 
-		return new PreferencesContext(
-		        MockObjects.buildApiMock().getContext(),
-				testRootNode(testInfo.getTestMethod().get().getName()),
-				testDocumentNode(testInfo.getTestMethod().get().getName())) {
-			@Override
-			public boolean isDocumentScope(Class<?> cls) {
-				return true;
-			}
+        return new PreferencesContext(context, testRootNode(testInfo.getTestMethod().get().getName()),
+                testDocumentNode(testInfo.getTestMethod().get().getName())) {
+            @Override
+            public boolean isDocumentScope(Class<?> cls) {
+                return false;
+            }
+        };
+    }
 
-			@Override
-			public String computeDocumentNodeName() {
-				return DOCUMENT_ITEM_NODE_NAME;
-			}
+    public static PreferencesContext testDocumentPreferencesContext(TestInfo testInfo) {
 
-		};
-	}
+        URL wd = null;
+        try {
+            wd = new File(".").toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        SceneBuilderBeanFactory context = Mockito.mock(SceneBuilderBeanFactory.class);
+        Editor editor = Mockito.mock(Editor.class);
+        Mockito.when(editor.getFxmlLocation()).thenReturn(wd);
+        Mockito.when(context.getBean(Editor.class)).thenReturn(editor);
 
-	private static void removeNode(String qualifier) throws Exception {
-		root.getNode().node(qualifier).removeNode();
-		root.getNode().flush();
-	}
+        return new PreferencesContext(context, testRootNode(testInfo.getTestMethod().get().getName()),
+                testDocumentNode(testInfo.getTestMethod().get().getName())) {
+            @Override
+            public boolean isDocumentScope(Class<?> cls) {
+                return true;
+            }
 
-	@AfterAll
-	public static void end() throws Exception {
-		Preferences.userNodeForPackage(AbstractPreferencesTest.class).removeNode();
-	}
+            @Override
+            public String computeDocumentNodeName() {
+                return DOCUMENT_ITEM_NODE_NAME;
+            }
 
-	protected PreferencesContext globalPreferenceContext;
-	protected PreferencesContext documentPreferenceContext;
+        };
+    }
 
-	@BeforeEach
-	public void setUp(TestInfo testInfo) {
-		globalPreferenceContext = testGlobalPreferencesContext(testInfo);
-		documentPreferenceContext = testDocumentPreferencesContext(testInfo);
-	}
+    private static void removeNode(String qualifier) throws Exception {
+        root.getNode().node(qualifier).removeNode();
+        root.getNode().flush();
+    }
 
-	@AfterEach
-	public void tearDown(TestInfo testInfo) throws Exception {
-		globalPreferenceContext = null;
-		documentPreferenceContext = null;
-		removeNode(testInfo.getTestMethod().get().getName());
-	}
+    @AfterAll
+    public static void end() throws Exception {
+        Preferences.userNodeForPackage(AbstractPreferencesTest.class).removeNode();
+    }
+
+    @AfterEach
+    public void tearDown(TestInfo testInfo) throws Exception {
+        removeNode(testInfo.getTestMethod().get().getName());
+    }
 
 }
+

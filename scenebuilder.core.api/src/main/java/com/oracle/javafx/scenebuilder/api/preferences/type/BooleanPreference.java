@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,8 +38,8 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class BooleanPreference extends AbstractPreference<Boolean> {
-	
+public abstract class BooleanPreference extends AbstractPreference<Boolean> {
+
 	public BooleanPreference(PreferencesContext preferencesContext, String name, Boolean defaultValue) {
 		super(preferencesContext, name, defaultValue, new SimpleBooleanProperty(), false);
 	}

@@ -31,47 +31,61 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.editors.control;
+package com.oracle.javafx.scenebuilder.sb.api;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.mockito.Mockito;
+import com.oracle.javafx.scenebuilder.api.preferences.Preference;
+import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssPreferencesExtension;
 
-import com.oracle.javafx.scenebuilder.api.Api;
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+/**
+ * The Interface CssPreference must be implemented by {@link Preference} which aim to modify the scenebuilder tool css.<br/>
+ * The method {@link CssPreference#getClasses()} must return css classes and properties according to the preference current value.<br/>
+ * Those classes are inserted into the tool css using {@link ApplyToolCssPreferencesExtension}<br/>
+ * @param <T> the generic type
+ */
+public interface CssPreference<T> extends Preference<T> {
 
-public class MockObjects {
-    public static Api buildApiMock() {
+    List<CssClass> getClasses();
 
-        try {
-            Api api = Mockito.mock(Api.class);
-            //ApiDoc apiDoc = Mockito.mock(ApiDoc.class);
+    public static class CssClass {
+        private final String className;
+        private final List<CssProperty> properties = new ArrayList<>();
 
-            FileSystem fs = Mockito.mock(FileSystem.class);
-            SceneBuilderBeanFactory ctx = Mockito.mock(SceneBuilderBeanFactory.class);
-            Editor editor = Mockito.mock(Editor.class);
-            Dialog dialog = Mockito.mock(Dialog.class);
-            MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-            DocumentManager dm = new DocumentManager.DocumentManagerImpl();
-
-//            Mockito.when(apiDoc.getDialog()).thenReturn(dialog);
-//            Mockito.when(apiDoc.getDocumentManager()).thenReturn(dm);
-//            Mockito.when(apiDoc.getMessageLogger()).thenReturn(messageLogger);
-//            Mockito.when(api.getApiDoc()).thenReturn(apiDoc);
-            Mockito.when(api.getFileSystem()).thenReturn(fs);
-            Mockito.when(api.getContext()).thenReturn(ctx);
-            Mockito.when(editor.getFxmlLocation()).thenReturn(new File(".").toURI().toURL());
-            Mockito.when(ctx.getBean(Editor.class)).thenReturn(editor);
-            return api;
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        public CssClass(String className) {
+            this.className = className;
         }
-        return null;
+
+        public boolean add(CssProperty e) {
+            return properties.add(e);
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        public List<CssProperty> getProperties() {
+            return properties;
+        }
+    }
+
+    public static class CssProperty {
+        private final String propertyName;
+        private final String propertyValue;
+
+        public CssProperty(String propertyName, String propertyValue) {
+            super();
+            this.propertyName = propertyName;
+            this.propertyValue = propertyValue;
+        }
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        public String getPropertyValue() {
+            return propertyValue;
+        }
     }
 }

@@ -73,7 +73,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -154,13 +153,14 @@ public class EditorController implements Editor {
 
         fxmlLocationProperty = new SimpleObjectProperty<>();
 
-        jobManager.revisionProperty().addListener((ob, o, n) -> setPickModeEnabled(false));
     }
 
+    /**
+     * Initialize events handling.
+     */
     @Override
     public void initialize() {
-        jobManager.revisionProperty()
-                .addListener((ChangeListener<Number>) (ov, t, t1) -> jobManagerRevisionDidChange());
+        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
         documentManager.i18nResourceConfig().subscribe(s -> {
             resourceConfig = s;
             resourcesDidChange();
@@ -573,6 +573,7 @@ public class EditorController implements Editor {
     }
 
     private void jobManagerRevisionDidChange() {
+        setPickModeEnabled(false);
         errorReport.forget();
         updateFileWatcher(getFxomDocument());
 //        setPickModeEnabled(false);

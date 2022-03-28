@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,9 +37,13 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -62,11 +67,23 @@ public class ColorPopupEditorTest {
                 .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
+    @Mock
+    Dialog dialog;
+
+    @Mock
+    Documentation documentation;
+
+    @Mock
+    FileSystem fileSystem;
+
+    @Mock
+    MessageLogger messageLogger;
+
     @Test
     public void shouldCreateAnEmptyInstance() {
 
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
+        ColorPopupEditor o = new ColorPopupEditor(dialog, documentation, fileSystem, messageLogger);
 
         assertNotNull(o);
     }
@@ -75,7 +92,7 @@ public class ColorPopupEditorTest {
     public void shouldCreateAnEmptyMenu() {
 
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
+        ColorPopupEditor o = new ColorPopupEditor(dialog, documentation, fileSystem, messageLogger);
 
         assertNotNull(o.getMenu());
     }
@@ -84,7 +101,7 @@ public class ColorPopupEditorTest {
     public void shouldResetTheInstance() {
 
         MessageLogger messageLogger = Mockito.mock(MessageLogger.class);
-        ColorPopupEditor o = new ColorPopupEditor(MockObjects.buildApiMock());
+        ColorPopupEditor o = new ColorPopupEditor(dialog, documentation, fileSystem, messageLogger);
 
         o.reset(someColorProp(), null);
     }

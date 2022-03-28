@@ -176,6 +176,24 @@ public class CustomAnnotationConfigApplicationContext extends AnnotationConfigAp
 
             }
 
+            @Override
+            public boolean isEditing() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public void logInfoMessage(String key) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void logInfoMessage(String key, Object... args) {
+                // TODO Auto-generated method stub
+
+            }
+
         });
     }
 }

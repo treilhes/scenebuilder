@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,10 +36,15 @@ package org.scenebuilder.ext.javafx.customization.anchorpane;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashSet;
+import java.util.function.Supplier;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraintsEditor.ConstraintEditor;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
@@ -48,7 +54,10 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropert
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
-@ExtendWith(ApplicationExtension.class)
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+
+@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class AnchorPaneConstraintsEditorTest {
 
     static {
@@ -71,16 +80,31 @@ public class AnchorPaneConstraintsEditorTest {
                 .withLeftAnchorProperty(someAnchorProp("left")).build();
     }
 
+    @Mock
+    AnchorPaneConstraintsEditor.ConstraintEditor.Factory constraintEditorFactory;
+
+    @BeforeEach
+    public void setup() {
+        Supplier<ConstraintEditor> supplier = () -> {
+            ConstraintEditor ct = new ConstraintEditor(null, null, null);
+            ct.initialize(new TextField(), new ToggleButton(), (ob, o, n) -> {});
+            return ct;
+        };
+
+        Mockito.when(constraintEditorFactory.getEditor(Mockito.any(), Mockito.any(), Mockito.any()))
+            .thenReturn(supplier.get());
+    }
+
     @Test
     public void shouldCreateAnEmptyInstance() {
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(constraintEditorFactory);
 
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(constraintEditorFactory);
 
         assertNotNull(o.getMenu());
     }
@@ -90,7 +114,7 @@ public class AnchorPaneConstraintsEditorTest {
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
 
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(MockObjects.buildApiMock());
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(constraintEditorFactory);
 
         o.reset(someAnchorGroupProp(), selectionState);
     }

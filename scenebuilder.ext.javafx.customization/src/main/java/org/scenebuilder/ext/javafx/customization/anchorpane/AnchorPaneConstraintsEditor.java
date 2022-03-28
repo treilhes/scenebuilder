@@ -218,13 +218,13 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
         private boolean updateFromTextField = false;
 
-        private ConstraintEditor(Dialog dialog,
+        protected ConstraintEditor(Dialog dialog,
                 Documentation documentation,
                 FileSystem fileSystem) {
             super(dialog, documentation, fileSystem);
         }
 
-        private void initialize(TextField textField, ToggleButton toggleButton, ChangeListener<Object> listener) {
+        protected void initialize(TextField textField, ToggleButton toggleButton, ChangeListener<Object> listener) {
             super.addValueListener(listener);
             this.textField = textField;
             this.toggleButton = toggleButton;

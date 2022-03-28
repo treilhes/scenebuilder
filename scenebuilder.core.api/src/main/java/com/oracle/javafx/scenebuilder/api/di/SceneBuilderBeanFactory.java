@@ -217,4 +217,14 @@ public class SceneBuilderBeanFactory {
     public boolean isExpression(String spelExpression) {
         return spelExpression != null ? spelExpression.startsWith("#") : false;
     }
+
+    public boolean isDocumentScope(Class<?> cls) {
+        String[] names = context.getBeanNamesForType(cls);
+
+        if (names.length == 0) {
+            return false;
+        }
+        BeanDefinition definition = context.getBeanDefinition(names[0]);
+        return SceneBuilderBeanFactory.SCOPE_DOCUMENT.equals(definition.getScope());
+    }
 }

@@ -100,6 +100,7 @@ open module scenebuilder.core.api {
     requires transitive scenebuilder.core.utils;
 
     requires static lombok;
+    requires javafx.graphics;
 
     provides Extension with ApiExtension;
 }

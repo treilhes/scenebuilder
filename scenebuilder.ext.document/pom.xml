@@ -16,10 +16,6 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.sb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.jobs</artifactId>
         </dependency>
         <dependency>
@@ -47,44 +43,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>test</id>
-                            <phase>test-compile</phase>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                            <configuration>
-                                <compilerArgs>
-                                    <arg>--add-exports</arg>
-                                    <arg>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
-                                    <arg>--add-exports</arg>
-                                    <arg>javafx.base/com.sun.javafx.beans=spring.core</arg>
-                                </compilerArgs>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <compilerArgs>
-                            <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
-                            <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
-                            <arg>--add-exports</arg>
-                            <arg>javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.fxom</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

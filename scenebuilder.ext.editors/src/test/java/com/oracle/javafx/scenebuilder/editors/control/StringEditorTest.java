@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +37,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata;
@@ -59,10 +64,19 @@ public class StringEditorTest {
                 .withInspectorPath(InspectorPath.UNUSED).build();
     }
 
+    @Mock
+    Dialog dialog;
+
+    @Mock
+    Documentation documentation;
+
+    @Mock
+    FileSystem fileSystem;
+
     @Test
     public void shouldCreateAnEmptyInstance() {
 
-        StringEditor o = new StringEditor(MockObjects.buildApiMock());
+        StringEditor o = new StringEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o);
     }
@@ -70,7 +84,7 @@ public class StringEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
 
-        StringEditor o = new StringEditor(MockObjects.buildApiMock());
+        StringEditor o = new StringEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o.getMenu());
     }
@@ -78,7 +92,7 @@ public class StringEditorTest {
     @Test
     public void shouldResetTheInstance() {
 
-        StringEditor o = new StringEditor(MockObjects.buildApiMock());
+        StringEditor o = new StringEditor(dialog, documentation, fileSystem);
 
         o.reset(someMultilineStringProp(), null);
     }

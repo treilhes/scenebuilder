@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,16 +39,25 @@ import java.util.prefs.Preferences;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.type.StringPreference;
 
+@ExtendWith({MockitoExtension.class})
 public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	private static final String STRING_NAME_1 = "string1";
 	private static final String STRING_VALUE_1 = "value1";
 	private static final String DEFAULT_VALUE = "DEFAULT";
 	private static final String NO_VALUE = "NO_VALUE";
+
+	@Mock
+    SceneBuilderBeanFactory context;
 
 	static {
 		defineRoot(new RootPreferencesNode() {
@@ -61,6 +71,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldCreateValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(globalPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.writeToJavaPreferences();
 		assertEquals(DEFAULT_VALUE, globalPreferenceContext.getRootNode().getNode().get(STRING_NAME_1, NO_VALUE));
@@ -68,6 +80,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldCreateDocumentValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(documentPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.writeToJavaPreferences();
 		assertEquals(DEFAULT_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
@@ -76,6 +90,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldNotCreateRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(globalPreferenceContext, STRING_NAME_1, null);
 		sp.writeToJavaPreferences();
 		assertEquals(NO_VALUE, globalPreferenceContext.getRootNode().getNode().get(STRING_NAME_1, NO_VALUE));
@@ -83,6 +99,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldNotCreateDocumentRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(documentPreferenceContext, STRING_NAME_1, null);
 		sp.writeToJavaPreferences();
 		assertEquals(NO_VALUE, documentPreferenceContext.getDocumentsNode().getNode().node(DOCUMENT_ITEM_NODE_NAME)
@@ -91,6 +109,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldSaveRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(globalPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.setValue(STRING_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -99,6 +119,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	void shouldSaveDocumentRecordValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(documentPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.setValue(STRING_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -108,6 +130,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldDeleteValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(globalPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.setValue(STRING_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -119,6 +143,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldDeleteDocumentValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(documentPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.setValue(STRING_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -131,6 +157,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldInitValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext globalPreferenceContext = testGlobalPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(globalPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.setValue(STRING_VALUE_1);
 		sp.writeToJavaPreferences();
@@ -142,6 +170,8 @@ public class StringPreferenceTest extends AbstractPreferencesTest {
 
 	@Test
 	public void shouldInitDocumentValue(TestInfo testInfo) throws Exception {
+	    PreferencesContext documentPreferenceContext = testDocumentPreferencesContext(testInfo);
+
 		StringPreference sp = new StringPreference(documentPreferenceContext, STRING_NAME_1, DEFAULT_VALUE);
 		sp.setValue(STRING_VALUE_1);
 		sp.writeToJavaPreferences();

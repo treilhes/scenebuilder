@@ -39,12 +39,17 @@ import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
@@ -56,6 +61,18 @@ public class BoundedDoubleEditorTest {
         I18N.initForTest();
     }
 
+    @Mock
+    Dialog dialog;
+
+    @Mock
+    Documentation documentation;
+
+    @Mock
+    FileSystem fileSystem;
+
+    @Mock
+    Metadata metadata;
+
     static DoublePropertyMetadata someDoubleProp() {
         return new CoordinateDoublePropertyMetadata.Builder()
                 .withName(new PropertyName("somdouble"))
@@ -66,14 +83,14 @@ public class BoundedDoubleEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        BoundedDoubleEditor o = new BoundedDoubleEditor(null, null, null);
+        BoundedDoubleEditor o = new BoundedDoubleEditor(dialog, documentation, fileSystem, metadata);
 
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        BoundedDoubleEditor o = new BoundedDoubleEditor(null, null, null);
+        BoundedDoubleEditor o = new BoundedDoubleEditor(dialog, documentation, fileSystem, metadata);
 
         assertNotNull(o.getMenu());
     }
@@ -83,7 +100,7 @@ public class BoundedDoubleEditorTest {
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
 
-        BoundedDoubleEditor o = new BoundedDoubleEditor(null, null, null);
+        BoundedDoubleEditor o = new BoundedDoubleEditor(dialog, documentation, fileSystem, metadata);
 
         o.reset(someDoubleProp(), selectionState);
     }

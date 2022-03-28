@@ -37,8 +37,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.oracle.javafx.scenebuilder.api.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
@@ -69,10 +73,19 @@ public class ColumnResizePolicyEditorTest {
                 .withDefaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY).build();
     }
 
+    @Mock
+    Dialog dialog;
+
+    @Mock
+    Documentation documentation;
+
+    @Mock
+    FileSystem fileSystem;
+
     @Test
     public void shouldCreateAnEmptyInstance() {
 
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o);
     }
@@ -80,7 +93,7 @@ public class ColumnResizePolicyEditorTest {
     @Test
     public void shouldCreateAnEmptyMenu() {
 
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog, documentation, fileSystem);
 
         assertNotNull(o.getMenu());
     }
@@ -88,7 +101,7 @@ public class ColumnResizePolicyEditorTest {
     @Test
     public void shouldResetTheInstanceForTableView() {
 
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog, documentation, fileSystem);
 
         o.reset(someTableViewResizePolicyProp(), null);
     }
@@ -96,7 +109,7 @@ public class ColumnResizePolicyEditorTest {
     @Test
     public void shouldResetTheInstanceForTreeTableView() {
 
-        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(MockObjects.buildApiMock());
+        ColumnResizePolicyEditor o = new ColumnResizePolicyEditor(dialog, documentation, fileSystem);
 
         o.reset(someTreeTableViewResizePolicyProp(), null);
     }
