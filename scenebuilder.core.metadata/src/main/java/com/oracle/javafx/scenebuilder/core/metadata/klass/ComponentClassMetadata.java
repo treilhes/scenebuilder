@@ -55,7 +55,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener.Change;
 import javafx.scene.Node;
-import lombok.Getter;
 
 /**
  * This class describes an fxml component class
@@ -70,7 +69,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
     private final ObservableSet<PropertyMetadata> properties = FXCollections.observableSet(new HashSet<>());
 
     /** The shadowed properties subset. */
-    private final Set<PropertyMetadata> shadowedProperties = new HashSet<>();
+    private final Set<PropertyName> shadowedProperties = new HashSet<>();
 
     /** The component properties values subset. */
     private final Set<ValuePropertyMetadata> values = new HashSet<>();
@@ -164,7 +163,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
      *
      * @return the properties
      */
-    public Set<PropertyMetadata> getShadowedProperties() {
+    public Set<PropertyName> getShadowedProperties() {
         return shadowedProperties;
     }
 
@@ -198,7 +197,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
 
         while (current != null) {
             current.getSubComponentProperties().stream()
-                .filter(p -> !shadowedProperties.contains(p))
+                .filter(p -> !shadowedProperties.contains(p.getName()))
                 .forEach(p -> result.add(p));
             current = current.getParentMetadata();
         }
@@ -217,7 +216,7 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         while (current != null) {
             Optional<ComponentPropertyMetadata> optional = current.getSubComponentProperties().stream()
                 .filter(p -> p.isMain())
-                .filter(p -> !shadowedProperties.contains(p))
+                .filter(p -> !shadowedProperties.contains(p.getName()))
                 .findFirst();
             if (optional.isPresent()) {
                 return optional.get();
@@ -351,14 +350,14 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
         public static final String DEFAULT = "";
         public static final String EMPTY = "empty";
 
-        @Getter private final URL fxmlUrl;
-        @Getter private final String label;
-        @Getter private final String description;
-        @Getter private final URL iconUrl;
-        @Getter private final URL iconX2Url;
-        @Getter private final String category;
+        private final URL fxmlUrl;
+        private final String label;
+        private final String description;
+        private final URL iconUrl;
+        private final URL iconX2Url;
+        private final String category;
         @SuppressWarnings("rawtypes")
-        @Getter private final ApplicabilityCheck applicabilityCheck;
+        private final ApplicabilityCheck applicabilityCheck;
 
         public Qualifier(URL fxmlUrl, String label, String description, URL iconUrl, URL iconX2Url, String category) {
             this(fxmlUrl, label, description, iconUrl, iconX2Url, category, (o) -> true);
@@ -372,13 +371,43 @@ public class ComponentClassMetadata<T> extends ClassMetadata<T> {
             this.iconUrl = iconUrl != null ? iconUrl : getClass().getResource("MissingIcon.png");
             this.iconX2Url = iconX2Url != null ? iconX2Url : getClass().getResource("MissingIcon@2x.png");
             this.category = category != null ? category : "Custom";
-            this.applicabilityCheck = applicabilityCheck;
+            this.applicabilityCheck = applicabilityCheck == null ? (o) -> true : applicabilityCheck;
         }
 
         @SuppressWarnings("unchecked")
         public boolean isApplicable(Object object) {
             return applicabilityCheck.isApplicable(object);
         }
+
+        public URL getFxmlUrl() {
+            return fxmlUrl;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public URL getIconUrl() {
+            return iconUrl;
+        }
+
+        public URL getIconX2Url() {
+            return iconX2Url;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public ApplicabilityCheck getApplicabilityCheck() {
+            return applicabilityCheck;
+        }
+
+
     }
 
     @FunctionalInterface

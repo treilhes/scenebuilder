@@ -56,11 +56,11 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
+import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 import javafx.scene.layout.RowConstraints;
 

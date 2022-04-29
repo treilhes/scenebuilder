@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.sun.javafx.scene.NodeHelper;
@@ -218,10 +218,10 @@ public class CssInternal {
 //        return new ArrayList<>(getStyleClassesMap(editorController, instances).keySet());
 //    }
 
-    public static Map<String, String> getStyleClassesMap(StylesheetProvider stylesheetConfig, Set<FXOMInstance> instances) {
+    public static Map<String, String> getStyleClassesMap(StylesheetProvider stylesheetConfig, Set<FXOMElement> instances) {
         Map<String, String> classesMap = new TreeMap<>();
         Object fxRoot = null;
-        for (FXOMInstance instance : instances) {
+        for (FXOMElement instance : instances) {
             if (fxRoot == null) {
                 fxRoot = instance.getFxomDocument().getSceneGraphRoot();
             }

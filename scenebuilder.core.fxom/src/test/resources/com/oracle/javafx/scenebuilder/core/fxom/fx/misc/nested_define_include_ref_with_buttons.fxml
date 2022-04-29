@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/xxx" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <fx:define>
+         <fx:include fx:id="inc1" source="included_pane.fxml">
+            <Button layoutX="100" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ButtonInclude" />
+         </fx:include>
+      </fx:define>
+      <fx:reference source="inc1">
+        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ButtonRef" />
+      </fx:reference>
+   </children>
+</Pane>

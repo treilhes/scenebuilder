@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +36,49 @@ package com.oracle.javafx.scenebuilder.extension;
 import java.io.File;
 import java.util.UUID;
 
-import lombok.Data;
-
-@Data
 public class ExtensionMetadata {
-    
+
     private UUID id;
     private File extensionFolder;
     private Dependency main;
     private TargetEnvironment editorEnvironment = new TargetEnvironment();
     private TargetEnvironment runtimeEnvironment = new TargetEnvironment();
+
+    public ExtensionMetadata() {
+        super();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public File getExtensionFolder() {
+        return extensionFolder;
+    }
+
+    public void setExtensionFolder(File extensionFolder) {
+        this.extensionFolder = extensionFolder;
+    }
+
+    public Dependency getMain() {
+        return main;
+    }
+
+    public void setMain(Dependency main) {
+        this.main = main;
+    }
+
+    public TargetEnvironment getEditorEnvironment() {
+        return editorEnvironment;
+    }
+
+    public TargetEnvironment getRuntimeEnvironment() {
+        return runtimeEnvironment;
+    }
+
+
 }

@@ -50,8 +50,7 @@ public class CommentMetadata extends ComponentClassMetadata<FXOMComment> {
                         "",
                         getClass().getResource("Comment.png"),
                         getClass().getResource("Comment@2x.png"),
-                        "Fx",
-                        null
+                        "Fx"
                         ));
     }
 

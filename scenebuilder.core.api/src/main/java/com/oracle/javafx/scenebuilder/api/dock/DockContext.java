@@ -33,14 +33,36 @@
  */
 package com.oracle.javafx.scenebuilder.api.dock;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class DockContext<T> {
-    private final @Getter View view;
-    private final @Getter ViewAttachment viewAttachment;
-    private final @Getter ViewController controller;
-    private final @Getter T dockContent;
-    private final @Getter DockContextDisposer disposer;
+    private final View view;
+    private final ViewAttachment viewAttachment;
+    private final ViewController controller;
+    private final T dockContent;
+    private final DockContextDisposer disposer;
+
+    public DockContext(View view, ViewAttachment viewAttachment, ViewController controller, T dockContent,
+            DockContextDisposer disposer) {
+        super();
+        this.view = view;
+        this.viewAttachment = viewAttachment;
+        this.controller = controller;
+        this.dockContent = dockContent;
+        this.disposer = disposer;
+    }
+
+    public View getView() {
+        return view;
+    }
+    public ViewAttachment getViewAttachment() {
+        return viewAttachment;
+    }
+    public ViewController getController() {
+        return controller;
+    }
+    public T getDockContent() {
+        return dockContent;
+    }
+    public DockContextDisposer getDisposer() {
+        return disposer;
+    }
 }

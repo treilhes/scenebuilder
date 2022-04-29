@@ -49,6 +49,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMVirtual;
 import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
 import com.oracle.javafx.scenebuilder.job.editor.reference.DeleteRefereeObjectJob;
 
@@ -150,7 +151,7 @@ public final class DeleteObjectJob extends InlineDocumentJob {
             }
         } else if (targetFxomObject instanceof FXOMCollection) {
             sb.append("Collection");
-        } else if (targetFxomObject instanceof FXOMIntrinsic) {
+        } else if (targetFxomObject instanceof FXOMIntrinsic || targetFxomObject instanceof FXOMVirtual) {
             sb.append(targetFxomObject.getGlueElement().getTagName());
         } else {
             assert false;

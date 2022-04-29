@@ -45,7 +45,7 @@ import com.oracle.javafx.scenebuilder.api.menu.annotation.ViewMenuItemAttachment
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.document.actions.AbstractShowAction.ShowActionToggle;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
-import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.NodeIdDisplayOption;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
@@ -70,7 +70,7 @@ public class ShowNodeIdAction extends AbstractShowAction {
 	public ShowNodeIdAction(
 	        ActionExtensionFactory extensionFactory,
 	        DocumentPanel documentPanelController,
-	        HierarchyPanel hierarchyPanel,
+	        Hierarchy hierarchyPanel,
 	        NodeIdDisplayOption nodeIdDisplayOption,
             DisplayOptionPreference displayOptionPreference) {
 		super(extensionFactory, nodeIdDisplayOption, documentPanelController, hierarchyPanel, displayOptionPreference);

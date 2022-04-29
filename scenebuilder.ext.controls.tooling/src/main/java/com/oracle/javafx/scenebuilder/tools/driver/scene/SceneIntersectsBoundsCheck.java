@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +63,11 @@ public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Scene;
         HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
-        FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
+
+        List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
+        assert !children.isEmpty();
+        FXOMObject root = children.get(0);
+
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         Node rootNode = (Node) root.getSceneGraphObject();

@@ -85,6 +85,7 @@ import com.oracle.javafx.scenebuilder.core.editors.PropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory.PropertyEditorFactorySession;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -1179,7 +1180,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         propertyEditor.addTransientValueListener((ov, oldValue, newValue) -> {
 //                System.out.println("Transient value change : " + newValue);
             lastPropertyEditorValueChanged = propertyEditor;
-            for (FXOMInstance fxomInstance : getSelectedInstances()) {
+            for (FXOMElement fxomInstance : getSelectedInstances()) {
                 propertyEditor.getPropertyMeta().setValueInSceneGraphObject(fxomInstance, newValue);
             }
         });
@@ -1281,7 +1282,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     // Check if a property is edited
     private boolean isPropertyEdited(ValuePropertyMetadata propMeta) {
-        for (FXOMInstance instance : getSelectedInstances()) {
+        for (FXOMElement instance : getSelectedInstances()) {
             if (!propMeta.isReadWrite()) {
                 continue;
             }
@@ -1343,7 +1344,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         // General case
         boolean first = true;
-        for (FXOMInstance instance : getSelectedInstances()) {
+        for (FXOMElement instance : getSelectedInstances()) {
             ValuePropertyMetadata propMeta = metadata.queryValueProperty(instance, propName);
             assert propMeta != null;
             Object newVal = propMeta.getValueObject(instance);
@@ -1589,7 +1590,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                     FXOMObject parent = fxi.getParentObject();
                     FXOMProperty property = fxi.getParentProperty();
                     ComponentPropertyMetadata cpm = metadata
-                            .queryComponentProperty(parent.getSceneGraphObject().getClass(), property.getName());
+                            .queryComponentProperty(parent.getMetadataClass(), property.getName());
                     if (cpm != null) {
                         disabled.addAll(cpm.getDisabledProperties());
                     }
@@ -2039,7 +2040,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     //
     // Helper methods for SelectionState class
     //
-    private Set<FXOMInstance> getSelectedInstances() {
+    private Set<FXOMElement> getSelectedInstances() {
         return selectionState.getSelectedInstances();
     }
 
@@ -2052,7 +2053,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         return null;
     }
 
-    private Set<FXOMInstance> getUnresolvedInstances() {
+    private Set<FXOMElement> getUnresolvedInstances() {
         return selectionState.getUnresolvedInstances();
     }
 

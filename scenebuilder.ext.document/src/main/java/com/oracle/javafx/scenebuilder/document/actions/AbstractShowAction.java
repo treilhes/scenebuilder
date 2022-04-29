@@ -41,7 +41,7 @@ import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
-import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 
 import javafx.scene.control.ToggleGroup;
@@ -49,7 +49,7 @@ import javafx.scene.control.ToggleGroup;
 public abstract class AbstractShowAction extends AbstractAction {
 
 	private final DocumentPanel documentPanel;
-	private final HierarchyPanel hierarchyPanel;
+	private final Hierarchy hierarchy;
 	private final DisplayOptionPreference displayOptionPreference;
 	private final DisplayOption option;
 
@@ -57,28 +57,28 @@ public abstract class AbstractShowAction extends AbstractAction {
 	        ActionExtensionFactory extensionFactory,
 	        DisplayOption option,
 	        DocumentPanel documentPanel,
-	        HierarchyPanel hierarchyPanel,
+	        Hierarchy hierarchy,
 	        DisplayOptionPreference displayOptionPreference) {
 		super(extensionFactory);
 		this.option = option;
 		this.documentPanel = documentPanel;
-		this.hierarchyPanel = hierarchyPanel;
+		this.hierarchy = hierarchy;
 		this.displayOptionPreference = displayOptionPreference;
 	}
 
 	@Override
 	public boolean canPerform() {
-		return hierarchyPanel.getDisplayOption() != option;
+		return hierarchy.getDisplayOption() != option;
 	}
 
 	@Override
 	public ActionStatus doPerform() {
-	    hierarchyPanel.setDisplayOption(option);
+	    hierarchy.setDisplayOption(option);
     	documentPanel.getDocumentAccordion().setExpandedPane(
     		documentPanel.getDocumentAccordion().getPanes().get(0));
 
     	displayOptionPreference
-    		.setBean(hierarchyPanel.getDisplayOption())
+    		.setBean(hierarchy.getDisplayOption())
     		.writeToJavaPreferences();
     	return ActionStatus.DONE;
 	}

@@ -48,6 +48,7 @@ import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
@@ -168,7 +169,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
         AnchorPropertyGroupMetadata anchorsMeta = (AnchorPropertyGroupMetadata)propMeta;
 
-        Set<FXOMInstance> selectedInstances = selectionState.getSelectedInstances();
+        Set<FXOMElement> selectedInstances = selectionState.getSelectedInstances();
 
         constraintEditors.get(0).reset(selectedInstances, anchorsMeta.getTopAnchorPropertyPropertyMetadata());
         constraintEditors.get(1).reset(selectedInstances, anchorsMeta.getRightAnchorPropertyPropertyMetadata());
@@ -213,7 +214,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
         private ToggleButton toggleButton;
         private TextField textField;
-        private Set<FXOMInstance> selectedInstances;
+        private Set<FXOMElement> selectedInstances;
         private ValuePropertyMetadata propMeta;
 
         private boolean updateFromTextField = false;
@@ -350,7 +351,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
             }
         }
 
-        public void reset(Set<FXOMInstance> selectedInstances, ValuePropertyMetadata propMeta) {
+        public void reset(Set<FXOMElement> selectedInstances, ValuePropertyMetadata propMeta) {
             assert propMeta instanceof DoublePropertyMetadata;
             super.reset(propMeta, null);
             this.selectedInstances = selectedInstances;

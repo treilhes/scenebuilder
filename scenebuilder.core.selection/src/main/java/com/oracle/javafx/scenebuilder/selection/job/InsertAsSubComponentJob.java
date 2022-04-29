@@ -69,10 +69,11 @@ import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 /**
  * Job used to insert new FXOM objects into a sub component location.
- *
+ * @deprecated in favor of generic usage of {@link InsertAsAccessoryJob}
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Deprecated(forRemoval = true)
 public final class InsertAsSubComponentJob extends BatchSelectionJob {
 
     private final RemovePropertyJob.Factory removePropertyJobFactory;
@@ -98,14 +99,14 @@ public final class InsertAsSubComponentJob extends BatchSelectionJob {
             AddPropertyJob.Factory addPropertyJobFactory,
             PrunePropertiesJob.Factory prunePropertiesJobFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
-     // @formatter:on
+        // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
+        this.designMaskFactory = designMaskFactory;
         this.removePropertyJobFactory = removePropertyJobFactory;
         this.addPropertyValueJobFactory = addPropertyValueJobFactory;
         this.addPropertyJobFactory = addPropertyJobFactory;
         this.prunePropertiesJobFactory = prunePropertiesJobFactory;
-        this.designMaskFactory = designMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 
@@ -143,14 +144,17 @@ public final class InsertAsSubComponentJob extends BatchSelectionJob {
             assert subComponentName != null;
 
             /*
-             * Two cases: 1) targetObject has no sub component yet => a new FXOMProperty
-             * must created => newObject must be added to this property using
-             * AddPropertyValueJob => new property must be added to targetObject using
-             * AddPropertyJob 2) targetObject has already some sub components 2.1) property
-             * is an FXOMPropertyC => newObject must be inserted amongst the existing values
-             * 2.2) property is an empty FXOMPropertyT (see DTL-6206) => property must be
-             * replaced by an FXOMPropertyC => newObject must be inserted in the
-             * FXOMPropertyC
+             * Two cases:
+             *  1) targetObject has no sub component yet
+             *      => a new FXOMProperty must created
+             *      => newObject must be added to this property using AddPropertyValueJob
+             *      => new property must be added to targetObject using AddPropertyJob
+             *  2) targetObject has already some sub components
+             *      2.1) property is an FXOMPropertyC
+             *          => newObject must be inserted amongst the existing values
+             *      2.2) property is an empty FXOMPropertyT (see DTL-6206)
+             *          => property must be replaced by an FXOMPropertyC
+             *          => newObject must be inserted in the FXOMPropertyC
              */
 
             final FXOMProperty currentProperty = targetInstance.getProperties().get(subComponentName);

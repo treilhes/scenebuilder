@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,16 +33,22 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy;
 
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
-import com.oracle.javafx.scenebuilder.document.hierarchy.AbstractHierarchyPanelController.BorderSide;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
 
-import javafx.scene.control.Cell;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -55,17 +62,27 @@ import javafx.scene.control.TreeItem;
  * p
  * @treatAsPrivate
  */
+@Component
+@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class HierarchyTaskScheduler {
 
-    private final AbstractHierarchyPanelController panelController;
+    private final TreeItemFactory treeItemFactory;
+
+
     private final long timerDelay = 1000;
     private Timer timer;
     private TimerTask timerTask;
     private boolean isAddEmptyGraphicTaskScheduled = false;
 
-    public HierarchyTaskScheduler(final AbstractHierarchyPanelController c) {
+
+    private final HierarchyCellAssignment cellAssignment;
+
+    public HierarchyTaskScheduler(
+            final TreeItemFactory treeItemFactory,
+            final HierarchyCellAssignment cellAssignment) {
         super();
-        this.panelController = c;
+        this.treeItemFactory = treeItemFactory;
+        this.cellAssignment = cellAssignment;
     }
 
     public void scheduleExpandTask(final TreeItem<HierarchyItem> treeItem) {
@@ -82,22 +99,24 @@ public class HierarchyTaskScheduler {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                // JavaFX data should only be accessed on the JavaFX thread. 
+                // JavaFX data should only be accessed on the JavaFX thread.
                 // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
                 SbPlatform.runLater(() -> {
-                    
+
                     for (Accessory accessory:owner.getAccessories()) {
                       //TODO may be deletable
 //                      final TreeItem<HierarchyItem> graphicTreeItem
 //                              = panelController.makeTreeItemGraphic(owner, null);
-                      final TreeItem<HierarchyItem> graphicTreeItem = panelController.makeTreeItemAccessory(owner, null, accessory);
+                      final TreeItem<HierarchyItem> graphicTreeItem = treeItemFactory.makeTreeItemAccessory(owner, accessory);
                       // Add Graphic at first position
                       treeItem.getChildren().add(0, graphicTreeItem);
                       treeItem.setExpanded(true);
-                      final Cell<?> cell = panelController.getCell(treeItem);
-                      assert cell != null;
-                      panelController.setBorder(cell, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                      isAddEmptyGraphicTaskScheduled = false;                        
+
+                      Optional<HierarchyCell> cell = cellAssignment.getCell(treeItem);
+                      assert cell.isPresent();
+                      cell.ifPresent((c) -> c.setBorder(BorderSide.TOP_RIGHT_BOTTOM_LEFT));
+
+                      isAddEmptyGraphicTaskScheduled = false;
                     }
                 });
             }
@@ -142,7 +161,7 @@ public class HierarchyTaskScheduler {
 
         @Override
         public void run() {
-            // JavaFX data should only be accessed on the JavaFX thread. 
+            // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
             SbPlatform.runLater(() -> treeItem.setExpanded(true));
         }

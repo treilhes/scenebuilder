@@ -68,7 +68,7 @@ public class TestContext {
         List<Class<?>> sources = new ArrayList<>();
 
         loader.loadExtensions().values().forEach(e -> {
-            System.out.println("Loaded : " + e.getClass().getName());
+            System.out.println("Loaded : " + e.getClass().getModule().getName() + "/" + e.getClass().getName());
             sources.add(e.getClass());
             sources.addAll(e.explicitClassToRegister());
         });

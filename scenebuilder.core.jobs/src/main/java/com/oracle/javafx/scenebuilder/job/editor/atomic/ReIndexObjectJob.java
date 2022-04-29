@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMVirtual;
 
 /**
  * Add an {@link FXOMObject} before 'beforeObject' into 'beforeObject''s parent
@@ -122,6 +123,8 @@ public final class ReIndexObjectJob extends AbstractJob {
                 }
             } else if (reindexedObject instanceof FXOMCollection) {
                 sb.append("Collection");
+            } else if (reindexedObject instanceof FXOMVirtual) {
+                sb.append(reindexedObject.getClass().getSimpleName());
             } else {
                 assert false;
                 sb.append(reindexedObject.getClass().getSimpleName());

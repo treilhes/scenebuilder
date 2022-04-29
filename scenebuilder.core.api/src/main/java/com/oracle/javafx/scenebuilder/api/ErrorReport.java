@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -43,35 +45,84 @@ import javafx.css.CssParser;
 
 public interface ErrorReport {
 
-	List<ErrorReportEntry> query(FXOMObject fxomObject, boolean b);
+    /**
+     * List all errors found relative to the provided {@link FXOMObject}
+     * @param fxomObject the {@link FXOMObject}
+     * @param recursive if true children errors are added into the returned list
+     * @return the error list
+     */
+    List<ErrorReportEntry> query(FXOMObject fxomObject, boolean recursive);
 
-	void forget();
-	
-	void cssFileDidChange(Path target);
-	
-	public interface ErrorReportEntry {
+    /**
+     * get the string representation of the provided error
+     * @param entry
+     * @return
+     */
+    String getText(ErrorReportEntry entry);
 
-		public enum Type {
-	        UNRESOLVED_CLASS,
-	        UNRESOLVED_LOCATION,
-	        UNRESOLVED_RESOURCE,
-	        INVALID_CSS_CONTENT,
-	        UNSUPPORTED_EXPRESSION
-	    }
 
-		public FXOMNode getFxomNode();
+    void forget();
 
-		public Type getType();
+    void cssFileDidChange(Path target);
 
-		public CSSParsingReport getCssParsingReport();
+    public interface ErrorReportEntry {
 
-		public interface CSSParsingReport {
+        public enum Type {
+            UNRESOLVED_CLASS("sb.error.unresolved.class"),
+            UNRESOLVED_LOCATION("sb.error.unresolved.location"),
+            UNRESOLVED_RESOURCE("sb.error.unresolved.resource"),
+            INVALID_CSS_CONTENT("sb.error.invalid.css"),
+            UNSUPPORTED_EXPRESSION("sb.error.unsupported.expression"),
+            UNRESOLVED_REFERENCE("sb.error.unresolved.reference");
 
-			IOException getIOException();
+            private String message;
 
-			List<CssParser.ParseError> getParseErrors();
+            Type(String message) {
+                this.message = message;
+            }
 
-		}
-	}
+            public String getMessage() {
+                return I18N.getString(message, message);
+            }
+        }
+
+        public FXOMNode getFxomNode();
+
+        public Type getType();
+
+        public CSSParsingReport getCssParsingReport();
+
+        public interface CSSParsingReport {
+
+            IOException getIOException();
+
+            List<CssParser.ParseError> getParseErrors();
+
+            public default String asString(int maxErrors, String separator, String elipsis) {
+
+                final StringBuilder result = new StringBuilder();
+
+                if (getIOException() != null) {
+                    result.append(getIOException());
+                } else {
+                    assert getParseErrors().isEmpty() == false;
+                    int errorCount = 0;
+                    for (CssParser.ParseError e : getParseErrors()) {
+                        result.append(e.getMessage());
+                        errorCount++;
+                        if (errorCount < maxErrors) {
+                            result.append(separator);
+                        } else {
+                            result.append(elipsis);
+                            break;
+                        }
+                    }
+                }
+
+                return result.toString();
+            }
+
+        }
+    }
 
 }

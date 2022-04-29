@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -87,8 +88,8 @@ public class InspectorPathComparator implements Comparator<InspectorPath> {
                 final int subSectionIndex1 = subSections.indexOf(p1.getSubSectionTag());
                 final int subSectionIndex2 = subSections.indexOf(p2.getSubSectionTag());
 
-                assert subSectionIndex1 != -1 : "subSectionTag=" + p1.getSubSectionTag(); // NOI18N
-                assert subSectionIndex2 != -1 : "subSectionTag=" + p2.getSubSectionTag(); // NOI18N
+                //assert subSectionIndex1 != -1 : "subSectionTag=" + p1.getSubSectionTag(); // NOI18N
+                //assert subSectionIndex2 != -1 : "subSectionTag=" + p2.getSubSectionTag(); // NOI18N
 
                 if (subSectionIndex1 < subSectionIndex2) {
                     result = -1;

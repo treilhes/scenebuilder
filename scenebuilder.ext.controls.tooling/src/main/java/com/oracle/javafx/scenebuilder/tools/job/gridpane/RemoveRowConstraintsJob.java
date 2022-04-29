@@ -47,8 +47,8 @@ import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.selection.job.DeleteObjectJob;
+import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 import javafx.scene.layout.GridPane;
 

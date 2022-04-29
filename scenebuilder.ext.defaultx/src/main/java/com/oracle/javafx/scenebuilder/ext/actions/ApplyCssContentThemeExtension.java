@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,30 +47,26 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ApplyCssContentThemeExtension extends AbstractActionExtension<ApplyCssContentAction> {
 
-	private final ThemeDocumentPreference themePreference;
-	private final SceneBuilderBeanFactory context;
+    private final ThemeDocumentPreference themePreference;
+    private final SceneBuilderBeanFactory context;
 
-	public ApplyCssContentThemeExtension(
-			@Autowired SceneBuilderBeanFactory context,
-			@Autowired @Lazy ThemeDocumentPreference themePreference
-			) {
-		super();
-		this.context = context;
-		this.themePreference = themePreference;
-	}
+    public ApplyCssContentThemeExtension(@Autowired SceneBuilderBeanFactory context,
+            @Autowired @Lazy ThemeDocumentPreference themePreference) {
+        super();
+        this.context = context;
+        this.themePreference = themePreference;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return themePreference.getValue() != null;
-	}
+    @Override
+    public boolean canPerform() {
+        return themePreference.getValue() != null;
+    }
 
-	@Override
-	public void prePerform() {
-		Theme theme = context.getBean(themePreference.getValue());
-		getExtendedAction().getActionConfig().setUserAgentStylesheet(theme.getUserAgentStylesheet());
-		getExtendedAction().getActionConfig().getStylesheets().addAll(theme.getStylesheets());
-	}
-
-
+    @Override
+    public void prePerform() {
+        Theme theme = context.getBean(themePreference.getValue());
+        getExtendedAction().getActionConfig().setUserAgentStylesheet(theme.getUserAgentStylesheet());
+        getExtendedAction().getActionConfig().getStylesheets().addAll(theme.getStylesheets());
+    }
 
 }

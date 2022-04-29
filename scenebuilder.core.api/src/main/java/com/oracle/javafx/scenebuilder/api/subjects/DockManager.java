@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
-import lombok.Getter;
 
 public interface DockManager {
 
@@ -96,10 +96,10 @@ public interface DockManager {
 
     public class DockSubjects extends SubjectManager {
 
-        private @Getter PublishSubject<Dock> dockCreated;
-        private @Getter PublishSubject<Dock> dockShow;
-        private @Getter PublishSubject<Dock> dockHide;
-        private @Getter ReplaySubject<Collection<Dock>> availableDocks;
+        private PublishSubject<Dock> dockCreated;
+        private PublishSubject<Dock> dockShow;
+        private PublishSubject<Dock> dockHide;
+        private ReplaySubject<Collection<Dock>> availableDocks;
 
         public DockSubjects() {
             dockCreated = wrap(DockSubjects.class, "dockCreated", PublishSubject.create()); // NOI18N
@@ -107,5 +107,22 @@ public interface DockManager {
             dockHide = wrap(DockSubjects.class, "dockHide", PublishSubject.create()); // NOI18N
             availableDocks = wrap(DockSubjects.class, "availableDocks", ReplaySubject.create(1)); // NOI18N
         }
+
+        public PublishSubject<Dock> getDockCreated() {
+            return dockCreated;
+        }
+
+        public PublishSubject<Dock> getDockShow() {
+            return dockShow;
+        }
+
+        public PublishSubject<Dock> getDockHide() {
+            return dockHide;
+        }
+
+        public ReplaySubject<Collection<Dock>> getAvailableDocks() {
+            return availableDocks;
+        }
+
     }
 }

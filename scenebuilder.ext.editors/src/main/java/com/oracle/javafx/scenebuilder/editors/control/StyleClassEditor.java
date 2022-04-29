@@ -60,7 +60,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
@@ -98,7 +98,7 @@ public class StyleClassEditor extends InlineListEditor {
 
     private StylesheetProvider stylesheetConfig;
     private List<String> themeClasses;
-    private Set<FXOMInstance> selectedInstances;
+    private Set<FXOMElement> selectedInstances;
 
     //private final Editor editorController;
 
@@ -130,7 +130,7 @@ public class StyleClassEditor extends InlineListEditor {
         initialize(new HashSet<>());
     }
 
-    private void initialize(Set<FXOMInstance> selectedInstances) {
+    private void initialize(Set<FXOMElement> selectedInstances) {
     	this.selectedInstances = selectedInstances;
 
 

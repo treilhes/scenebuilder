@@ -55,6 +55,7 @@ import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -89,6 +90,7 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
     private final PrunePropertiesJob.Factory prunePropertiesJobFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
+    // @formatter:off
     protected InsertAsAccessoryJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
@@ -98,8 +100,8 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             PrunePropertiesJob.Factory prunePropertiesJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory
-            ) {
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+        // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.designMaskFactory = designMaskFactory;
@@ -113,11 +115,11 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
     protected void setJobParameters(FXOMObject newObject,FXOMObject targetObject,Accessory accessory,int targetIndex) {
         assert newObject != null;
         assert targetObject != null;
-        assert accessory != null;
+        //assert accessory != null;
         assert targetIndex >= -1;
         assert newObject.getFxomDocument() == fxomDocument;
         assert targetObject.getFxomDocument() == fxomDocument;
-        assert accessory != null;
+
 
         this.newObject = newObject;
         this.targetObject = targetObject;
@@ -133,7 +135,7 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
             return result;
         }
 
-        if (targetObject instanceof FXOMInstance) {
+        if (targetObject instanceof FXOMElement) {
 
             final HierarchyMask mask = designMaskFactory.getMask(targetObject);
 
@@ -141,91 +143,66 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
                 return result;
             }
 
-            final FXOMInstance targetInstance = (FXOMInstance) targetObject;
+            final FXOMElement targetInstance = (FXOMElement) targetObject;
             final PropertyName accessoryName = mask.getPropertyNameForAccessory(accessory);
             assert accessoryName != null;
 
-            // Property has no value yet because of (1) or is a collection
 
-            if (accessory.isCollection()) {
-                /*
-                 * If accessory is a collection
-                 * Two cases:
-                 *  1) targetObject has no sub component yet
-                 *      => a new FXOMProperty must created
-                 *      => newObject must be added to this property using AddPropertyValueJob
-                 *      => new property must be added to targetObject using AddPropertyJob
-                 *  2) targetObject has already some sub components
-                 *      2.1) property is an FXOMPropertyC
-                 *          => newObject must be inserted amongst the existing values
-                 *      2.2) property is an empty FXOMPropertyT (see DTL-6206)
-                 *          => property must be replaced by an FXOMPropertyC
-                 *          => newObject must be inserted in the FXOMPropertyC
-                 */
+            /*
+             * If accessory is a collection or not
+             * Two cases:
+             *  1) targetObject has no sub component yet
+             *      => a new FXOMProperty must created
+             *      => newObject must be added to this property using AddPropertyValueJob
+             *      => new property must be added to targetObject using AddPropertyJob
+             *  2) targetObject has already some sub components
+             *      2.1) property is an FXOMPropertyC
+             *          => newObject must be inserted amongst the existing values
+             *      2.2) property is an empty FXOMPropertyT (see DTL-6206)
+             *          => property must be replaced by an FXOMPropertyC
+             *          => newObject must be inserted in the FXOMPropertyC
+             */
 
-                final FXOMProperty currentProperty
-                    = targetInstance.getProperties().get(accessoryName);
+            final FXOMProperty currentProperty = targetInstance.getProperties().get(accessoryName);
 
-                final FXOMPropertyC targetProperty;
-                if (currentProperty instanceof FXOMPropertyC) {
-                    targetProperty = (FXOMPropertyC) currentProperty;
-                } else {
-                    targetProperty = new FXOMPropertyC(fxomDocument, accessoryName);
-                }
-
-                /*
-                 * RemovePropertyJob
-                 */
-                if (currentProperty instanceof FXOMPropertyT) {
-                    result.add(removePropertyJobFactory.getJob(currentProperty));
-                }
-
-                /*
-                 * AddPropertyValueJob
-                 */
-                final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(newObject,targetProperty,targetIndex);
-                result.add(addValueJob);
-
-                /*
-                 * AddPropertyJob
-                 */
-                if (targetProperty.getParentInstance() == null) {
-                    assert targetObject instanceof FXOMInstance;
-                    final AbstractJob addPropertyJob = addPropertyJobFactory.getJob(targetProperty, targetInstance, -1);
-                    result.add(addPropertyJob);
-                }
-
-                /*
-                 * PrunePropertiesJob
-                 */
-                final AbstractJob pruneJob = prunePropertiesJobFactory.getJob(newObject, targetObject);
-                if (pruneJob.isExecutable()) {
-                    result.add(0, pruneJob);
-                }
-
+            final FXOMPropertyC targetProperty;
+            if (currentProperty instanceof FXOMPropertyC) {
+                targetProperty = (FXOMPropertyC) currentProperty;
             } else {
-                /*
-                 * If accessory is not a collection
-                 *      => a new FXOMProperty must created
-                 *      => newObject must be added to this property using AddPropertyValueJob
-                 *      => new property must be added to targetObject using AddPropertyJob
-                 */
-                FXOMProperty targetProperty = new FXOMPropertyC(fxomDocument, accessoryName);
-
-                final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(newObject,(FXOMPropertyC) targetProperty,-1);
-                result.add(addValueJob);
-
-                if (targetProperty.getParentInstance() == null) {
-                    assert targetObject instanceof FXOMInstance;
-                    final AbstractJob addPropertyJob = addPropertyJobFactory.getJob(targetProperty, targetInstance,-1);
-                    result.add(addPropertyJob);
-                }
-
-                final AbstractJob pruneJob = prunePropertiesJobFactory.getJob(newObject, targetObject);
-                if (pruneJob.isExecutable()) {
-                    result.add(0, pruneJob);
-                }
+                targetProperty = new FXOMPropertyC(fxomDocument, accessoryName);
             }
+
+            /*
+             * RemovePropertyJob
+             */
+            if (currentProperty instanceof FXOMPropertyT) {
+                result.add(removePropertyJobFactory.getJob(currentProperty));
+            }
+
+            /*
+             * AddPropertyValueJob
+             */
+            final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(newObject,targetProperty,targetIndex);
+            result.add(addValueJob);
+
+            /*
+             * AddPropertyJob
+             */
+            if (targetProperty.getParentInstance() == null) {
+                assert targetObject instanceof FXOMElement;
+                final AbstractJob addPropertyJob = addPropertyJobFactory.getJob(targetProperty, targetInstance, -1);
+                result.add(addPropertyJob);
+            }
+
+            /*
+             * PrunePropertiesJob
+             */
+            final AbstractJob pruneJob = prunePropertiesJobFactory.getJob(newObject, targetObject);
+            if (pruneJob.isExecutable()) {
+                result.add(0, pruneJob);
+            }
+
+
 
         }
         return result;
@@ -233,7 +210,6 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        final String result;
         final StringBuilder sb = new StringBuilder();
 
         sb.append("Insert ");
@@ -252,8 +228,8 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
         } else {
             sb.append(newObject.getClass().getSimpleName());
         }
-        result = sb.toString();
-        return result;
+
+        return sb.toString();
     }
 
     @Override

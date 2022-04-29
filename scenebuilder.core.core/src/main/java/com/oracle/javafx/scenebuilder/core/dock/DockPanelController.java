@@ -76,8 +76,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import lombok.Getter;
-import lombok.Setter;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -91,8 +89,8 @@ public class DockPanelController implements Dock {
     private final LastDockDockTypePreference lastDockDockTypePreference;
     private final DockMinimizedPreference dockMinimizedPreference;
 
-    private @Getter @Setter UUID id;
-    private @Getter VBox content;
+    private UUID id;
+    private VBox content;
 
     private final ObservableMap<View, DockContext<?>> views = FXCollections.observableHashMap();
     private SceneBuilderWindow parentWindow;
@@ -333,4 +331,20 @@ public class DockPanelController implements Dock {
     public ReadOnlyBooleanProperty visibleProperty() {
         return visibleProperty;
     }
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    @Override
+    public VBox getContent() {
+        return content;
+    }
+
+
 }

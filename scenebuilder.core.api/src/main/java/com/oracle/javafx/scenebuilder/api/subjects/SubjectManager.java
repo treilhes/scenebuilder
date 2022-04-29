@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,32 +51,28 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.reactivex.subjects.Subject;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class SubjectManager {
-	private static Logger logger = LoggerFactory.getLogger(SubjectManager.class);
+    private static Logger logger = LoggerFactory.getLogger(SubjectManager.class);
 
-	public static Recorder RECORDER = new Recorder();
-	public static Player PLAYER = new Player();
+    public static Recorder RECORDER = new Recorder();
+    public static Player PLAYER = new Player();
 
-	@SuppressWarnings("rawtypes")
-	private static Map<String, Map<String, Subject>> subjects = new ConcurrentHashMap<>();
+    @SuppressWarnings("rawtypes")
+    private static Map<String, Map<String, Subject>> subjects = new ConcurrentHashMap<>();
 
-	private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
-	public SubjectManager() {
-	}
+    public SubjectManager() {
+    }
 
-	@SuppressWarnings("rawtypes")
-	protected <T extends Subject<?>> T wrap(Class<?> subjectClass, String subjectName, T rsubject) {
-		String clsName = subjectClass.getName();
-		if (!subjects.containsKey(clsName)) {
-			subjects.put(clsName, new ConcurrentHashMap<String, Subject>());
-		}
-		subjects.get(clsName).put(subjectName, rsubject);
+    @SuppressWarnings("rawtypes")
+    protected <T extends Subject<?>> T wrap(Class<?> subjectClass, String subjectName, T rsubject) {
+        String clsName = subjectClass.getName();
+        if (!subjects.containsKey(clsName)) {
+            subjects.put(clsName, new ConcurrentHashMap<String, Subject>());
+        }
+        subjects.get(clsName).put(subjectName, rsubject);
 
         rsubject.subscribe(o -> {
 //			if (RECORDER.isRecording()) {
@@ -104,146 +101,182 @@ public class SubjectManager {
 //			}
 //		});
 
-		return rsubject;
-	}
+        return rsubject;
+    }
 
+    private static class DataEvent {
+        private Long timecode;
+        private String subjectClass;
+        private String subjectName;
+        private String subjectEventClass;
 
-	@NoArgsConstructor
-	@AllArgsConstructor
-	private static class DataEvent {
-		private @Getter @Setter Long timecode;
-		private @Getter String subjectClass;
-		private @Getter String subjectName;
-		private @Getter String subjectEventClass;
+        @JsonTypeInfo(use = Id.CLASS, property = "subjectEventClass", include = As.EXTERNAL_PROPERTY)
+        private Object subjectEventValue;
 
-		@JsonTypeInfo(use = Id.CLASS, property = "subjectEventClass", include = As.EXTERNAL_PROPERTY)
-		private @Getter Object subjectEventValue;
-	}
+        public DataEvent() {
+            super();
+        }
 
-	public static class Recorder {
-		private long startTimecode;
-		private OutputStream recordStream;
-		private ObjectMapper mapper;
+        public DataEvent(Long timecode, String subjectClass, String subjectName, String subjectEventClass,
+                Object subjectEventValue) {
+            super();
+            this.timecode = timecode;
+            this.subjectClass = subjectClass;
+            this.subjectName = subjectName;
+            this.subjectEventClass = subjectEventClass;
+            this.subjectEventValue = subjectEventValue;
+        }
 
-		protected Recorder() {
-			this.mapper = new ObjectMapper();
-		}
+        public Long getTimecode() {
+            return timecode;
+        }
 
-		public boolean isRecording() {
-			return recordStream != null;
-		}
+        public void setTimecode(Long timecode) {
+            this.timecode = timecode;
+        }
 
-		public void startRecord(OutputStream recordStream) {
-			this.recordStream = recordStream;
-			this.startTimecode = new Date().getTime();
-		}
+        public String getSubjectClass() {
+            return subjectClass;
+        }
 
-		public void stopRecord() {
-			if (this.recordStream != null) {
-				try {
-					this.recordStream.flush();
-					this.recordStream.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				this.recordStream = null;
-			}
-		}
+        public String getSubjectName() {
+            return subjectName;
+        }
 
-		private void record(DataEvent event) {
-			if (isRecording()) {
-				try {
-					long timecode = new Date().getTime() - this.startTimecode;
-					event.setTimecode(timecode);
-					byte[] jsonString = mapper.writeValueAsBytes(event);
-					this.recordStream.write(jsonString);
-					this.recordStream.write('\n');
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+        public String getSubjectEventClass() {
+            return subjectEventClass;
+        }
 
-	public static class Player {
-		private long startTimecode;
-		private long timecode;
-		private InputStream recordStream;
-		private Thread playingThread;
+        public Object getSubjectEventValue() {
+            return subjectEventValue;
+        }
 
-		public boolean isPlaying() {
-			return recordStream != null;
-		}
+    }
 
-		@SuppressWarnings("unchecked")
-		public void startPlay(InputStream recordStream) {
-			this.recordStream = recordStream;
-			this.startTimecode = new Date().getTime();
-			this.timecode = 0;
+    public static class Recorder {
+        private long startTimecode;
+        private OutputStream recordStream;
+        private ObjectMapper mapper;
 
-			playingThread = new Thread(() -> {
-				try {
-					ObjectMapper mapper = new ObjectMapper();
-					InputStreamReader isr = new InputStreamReader(recordStream);
-					BufferedReader br = new BufferedReader(isr);
-					String line = null;
-					long start = new Date().getTime();
-					long now = 0;
-					while ((line = br.readLine()) != null) {
-						DataEvent evt = mapper.readValue(line.getBytes(), DataEvent.class);
+        protected Recorder() {
+            this.mapper = new ObjectMapper();
+        }
 
-						now = evt.getTimecode() - (new Date().getTime() - start);
+        public boolean isRecording() {
+            return recordStream != null;
+        }
 
-						if (now > 0) {
-							synchronized (Thread.currentThread()) {
-								try {
-									Thread.currentThread().wait(now);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
+        public void startRecord(OutputStream recordStream) {
+            this.recordStream = recordStream;
+            this.startTimecode = new Date().getTime();
+        }
 
-						}
+        public void stopRecord() {
+            if (this.recordStream != null) {
+                try {
+                    this.recordStream.flush();
+                    this.recordStream.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                this.recordStream = null;
+            }
+        }
 
-						SubjectManager.subjects.get(evt.getSubjectClass()).get(evt.getSubjectName())
-								.onNext(evt.getSubjectEventValue());
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
+        private void record(DataEvent event) {
+            if (isRecording()) {
+                try {
+                    long timecode = new Date().getTime() - this.startTimecode;
+                    event.setTimecode(timecode);
+                    byte[] jsonString = mapper.writeValueAsBytes(event);
+                    this.recordStream.write(jsonString);
+                    this.recordStream.write('\n');
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-			playingThread.start();
-		}
+    public static class Player {
+        private long startTimecode;
+        private long timecode;
+        private InputStream recordStream;
+        private Thread playingThread;
 
-		public void waitPlay() {
-			if (this.playingThread != null) {
-				try {
-					playingThread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+        public boolean isPlaying() {
+            return recordStream != null;
+        }
 
-		public void stopPlay() {
-			if (this.recordStream != null) {
-				try {
-					playingThread = null;
-					this.recordStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				this.recordStream = null;
-			}
-		}
+        @SuppressWarnings("unchecked")
+        public void startPlay(InputStream recordStream) {
+            this.recordStream = recordStream;
+            this.startTimecode = new Date().getTime();
+            this.timecode = 0;
 
-		private void processEvent(DataEvent event) {
-			long timecode = new Date().getTime() - this.startTimecode;
-			event.setTimecode(timecode);
-		}
-	}
+            playingThread = new Thread(() -> {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    InputStreamReader isr = new InputStreamReader(recordStream);
+                    BufferedReader br = new BufferedReader(isr);
+                    String line = null;
+                    long start = new Date().getTime();
+                    long now = 0;
+                    while ((line = br.readLine()) != null) {
+                        DataEvent evt = mapper.readValue(line.getBytes(), DataEvent.class);
+
+                        now = evt.getTimecode() - (new Date().getTime() - start);
+
+                        if (now > 0) {
+                            synchronized (Thread.currentThread()) {
+                                try {
+                                    Thread.currentThread().wait(now);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+
+                        SubjectManager.subjects.get(evt.getSubjectClass()).get(evt.getSubjectName())
+                                .onNext(evt.getSubjectEventValue());
+                    }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            });
+
+            playingThread.start();
+        }
+
+        public void waitPlay() {
+            if (this.playingThread != null) {
+                try {
+                    playingThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void stopPlay() {
+            if (this.recordStream != null) {
+                try {
+                    playingThread = null;
+                    this.recordStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                this.recordStream = null;
+            }
+        }
+
+        private void processEvent(DataEvent event) {
+            long timecode = new Date().getTime() - this.startTimecode;
+            event.setTimecode(timecode);
+        }
+    }
 }

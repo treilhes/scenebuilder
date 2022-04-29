@@ -117,10 +117,11 @@ public class InlineEditController implements InlineEdit{
      * the INLINE_EDITOR style class defined in the panel root style sheet.
      */
     @Override
-    public TextInputControl createTextInputControl(final Type type, final Node target, final String initialValue) {
+    public TextInputControl createTextInputControl( Type type, final Node target, final String initialValue) {
 
         TextInputControl editor = null;
         double minHeight = 0;
+        type = Type.TEXT_FIELD;
         switch (type) {
             case TEXT_AREA:
                 editor = new TextArea(initialValue);

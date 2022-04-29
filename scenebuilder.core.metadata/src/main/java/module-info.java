@@ -60,7 +60,5 @@ open module scenebuilder.core.metadata {
 //
     requires scenebuilder.core.utils;
 
-    requires static lombok;
-
     provides Extension with MetadataExtension;
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,45 +55,42 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class ApplyI18nContentWatchExtension extends AbstractActionExtension<ApplyI18nContentAction> implements DisposeWithDocument, WatchingCallback{
+public class ApplyI18nContentWatchExtension extends AbstractActionExtension<ApplyI18nContentAction>
+        implements DisposeWithDocument, WatchingCallback {
 
-	private final I18NResourcePreference i18NResourcePreference;
-	private final FileSystem fileSystem;
+    private final I18NResourcePreference i18NResourcePreference;
+    private final FileSystem fileSystem;
     private final I18nResourceMenuController i18nResourceMenuController;
     private final SceneBuilderBeanFactory context;
 
-	public ApplyI18nContentWatchExtension(
-	        @Autowired FileSystem fileSystem,
-	        @Autowired SceneBuilderBeanFactory context,
+    public ApplyI18nContentWatchExtension(@Autowired FileSystem fileSystem, @Autowired SceneBuilderBeanFactory context,
             @Autowired I18nResourceMenuController i18nResourceMenuController,
-			@Autowired @Lazy I18NResourcePreference i18NResourcePreference
-			) {
-		super();
-		this.fileSystem = fileSystem;
-		this.context = context;
+            @Autowired @Lazy I18NResourcePreference i18NResourcePreference) {
+        super();
+        this.fileSystem = fileSystem;
+        this.context = context;
         this.i18nResourceMenuController = i18nResourceMenuController;
-		this.i18NResourcePreference = i18NResourcePreference;
-	}
+        this.i18NResourcePreference = i18NResourcePreference;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    @Override
+    public boolean canPerform() {
+        return true;
+    }
 
-	@Override
-	public void prePerform() {
-	    fileSystem.unwatch(this);
-	}
+    @Override
+    public void prePerform() {
+        fileSystem.unwatch(this);
+    }
 
     @Override
     public void postPerform() {
         if (i18NResourcePreference.getValue() != null) {
-            List<File> toWatch = i18NResourcePreference.getValue().stream()
-                    .map(s -> new File(URI.create(s)))
+            List<File> toWatch = i18NResourcePreference.getValue().stream().map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
             fileSystem.watch(context.getBean(DocumentWindow.class), toWatch, this);
         }
-	}
+    }
 
     @Override
     public void deleted(Path path) {

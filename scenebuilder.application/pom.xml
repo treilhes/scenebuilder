@@ -46,6 +46,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.core.error</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.extension.store</artifactId>
         </dependency>
         <dependency>
@@ -216,18 +220,15 @@
 
         <!-- SCRIPT ENGINE javascript START -->
         <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-            <version>21.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js-scriptengine</artifactId>
-            <version>21.3.0</version>
-        </dependency>
+        <!-- <dependency> <groupId>org.graalvm.js</groupId> <artifactId>js</artifactId> <version>21.3.0</version> </dependency>
+            <dependency> <groupId>org.graalvm.js</groupId> <artifactId>js-scriptengine</artifactId> <version>21.3.0</version> </dependency> -->
         <!-- SCRIPT ENGINE javascript END -->
-
+        <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.3</version>
+        </dependency>
     </dependencies>
 
     <build>

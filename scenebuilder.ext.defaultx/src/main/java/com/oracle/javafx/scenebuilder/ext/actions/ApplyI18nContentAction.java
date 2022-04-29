@@ -48,55 +48,55 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
-import lombok.Getter;
-
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@ActionMeta(
-		nameKey = "action.name.show.jar.analysis.report",
-		descriptionKey = "action.description.show.jar.analysis.report")
+@ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 public class ApplyI18nContentAction extends AbstractAction implements InitWithDocument {
 
-	private ApplyI18nContentConfig config;
+    private ApplyI18nContentConfig config;
 
-	private final DocumentManager documentManager;
+    private final DocumentManager documentManager;
 
-	public ApplyI18nContentAction(
-	        ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
+    public ApplyI18nContentAction(ActionExtensionFactory extensionFactory, DocumentManager documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
-	}
+    }
 
-	public synchronized ApplyI18nContentConfig getActionConfig() {
-		if (config == null) {
-			config = new ApplyI18nContentConfig();
-		}
-		return config;
-	}
+    public synchronized ApplyI18nContentConfig getActionConfig() {
+        if (config == null) {
+            config = new ApplyI18nContentConfig();
+        }
+        return config;
+    }
 
-	public synchronized void resetActionConfig() {
-		config = null;
-	}
+    public synchronized void resetActionConfig() {
+        config = null;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    @Override
+    public boolean canPerform() {
+        return true;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-		assert getActionConfig() != null;
-		documentManager.i18nResourceConfig().set(getActionConfig());
-		return ActionStatus.DONE;
-	}
+    @Override
+    public ActionStatus doPerform() {
+        assert getActionConfig() != null;
+        documentManager.i18nResourceConfig().set(getActionConfig());
+        return ActionStatus.DONE;
+    }
 
-	public static class ApplyI18nContentConfig implements I18nResourceProvider {
-		private @Getter List<ResourceBundle> bundles = new ArrayList<>();
-	}
+    public static class ApplyI18nContentConfig implements I18nResourceProvider {
+        private List<ResourceBundle> bundles = new ArrayList<>();
 
-	@Override
-	public void initWithDocument() {
-		checkAndPerform();
-	}
+        @Override
+        public List<ResourceBundle> getBundles() {
+            return bundles;
+        }
+
+    }
+
+    @Override
+    public void initWithDocument() {
+        checkAndPerform();
+    }
 }

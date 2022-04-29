@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -74,7 +76,11 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
     @Override
     public void initialize() {
         final HierarchyMask designHierarchyMask = maskFactory.getMask(getFxomObject());
-        root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
+        List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
+        assert !children.isEmpty();
+
+        root = children.get(0);
+
         assert root != null;
         assert root instanceof FXOMInstance;
         assert root.getSceneGraphObject() instanceof Node;

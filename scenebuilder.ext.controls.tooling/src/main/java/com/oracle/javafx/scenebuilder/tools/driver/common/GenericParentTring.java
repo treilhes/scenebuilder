@@ -71,7 +71,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
     private final Line crackLine = new Line();
 
     public GenericParentTring(
-            DesignHierarchyMask.Factory maskFactory, 
+            DesignHierarchyMask.Factory maskFactory,
             Content contentPanelController,
             DocumentManager documentManager) {
         super(contentPanelController, documentManager, Parent.class);
@@ -110,7 +110,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
 
         final Parent parent = (Parent) fxomObject.getSceneGraphObject();
         final Point2D hitPoint = CoordinateHelper.sceneToLocal(fxomObject, sceneX, sceneY, true /* rootScene */);
-        final int childCount = fxomObjectMask.getSubComponentCount();
+        final int childCount = fxomObjectMask.getSubComponentCount(fxomObjectMask.getMainAccessory(), false);
 
         final int targetIndex;
         if (childCount == 0) {
@@ -160,7 +160,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
         super.layoutDecoration();
 
         final HierarchyMask m = maskFactory.getMask(getFxomObject());
-        final int childCount = m.getSubComponentCount();
+        final int childCount = m.getSubComponentCount(m.getMainAccessory(), false);
 
         if (childCount == 0) {
             // No crack line
@@ -194,13 +194,13 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
 
     private static Bounds computeCrackBounds(HierarchyMask m, int childIndex) {
         assert m != null;
-        assert m.isAcceptingSubComponent();
+        assert m.hasMainAccessory();
         assert childIndex >= -1;
-        assert childIndex < m.getSubComponentCount();
+        assert childIndex < m.getSubComponentCount(m.getMainAccessory(), false);
 
 
         final double crackX, crackY0, crackY1, crackWidth;
-        final int childCount = m.getSubComponentCount();
+        final int childCount = m.getSubComponentCount(m.getMainAccessory(), false);
         final Node child, skinParent;
         if (childIndex == -1) {
             child = getChildNode(m, childCount-1);
@@ -323,11 +323,11 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
 
     private static Node getChildNode(HierarchyMask m, int childIndex) {
         assert m != null;
-        assert m.isAcceptingSubComponent();
+        assert m.hasMainAccessory();
         assert 0 <= childIndex;
-        assert childIndex < m.getSubComponentCount();
+        assert childIndex < m.getSubComponentCount(m.getMainAccessory(), false);
 
-        final FXOMObject childObject = m.getSubComponentAtIndex(childIndex);
+        final FXOMObject childObject = m.getSubComponentAtIndex(m.getMainAccessory(), childIndex, false);
         assert childObject.getSceneGraphObject() instanceof Node;
 
         return (Node)childObject.getSceneGraphObject();

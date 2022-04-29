@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.api.editor.selection;
 import java.util.Collection;
 import java.util.Map;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -317,4 +318,7 @@ public interface Selection {
     void selectAll();
 
     public Map<String, FXOMObject> collectSelectedFxIds();
+
+    public Accessory getTargetAccessory();
+    public void select(Accessory targetAccessory);
 }

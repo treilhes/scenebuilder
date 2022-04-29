@@ -50,8 +50,7 @@ public class ScriptMetadata extends ComponentClassMetadata<FXOMScript> {
                         "",
                         getClass().getResource("Script.png"),
                         getClass().getResource("Script@2x.png"),
-                        "Fx",
-                        null
+                        "Fx"
                         ));
     }
 

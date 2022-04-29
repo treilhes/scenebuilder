@@ -41,6 +41,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.fx.CommentMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.CopyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.DefineMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.IncludeMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.IntrinsicMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.ReferenceMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.fx.ScriptMetadata;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
@@ -57,10 +58,12 @@ public class MetadataExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                IntrinsicMetadata.class,
                 CopyMetadata.class,
                 ReferenceMetadata.class,
                 ScriptMetadata.class,
                 IncludeMetadata.class,
+
                 CommentMetadata.class,
                 Metadata.class,
                 DefineMetadata.class

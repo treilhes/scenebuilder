@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -78,6 +80,8 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     public final static String VIEW_ID = "d7e4ec15-eabc-4e0c-a9b9-49ed9bb05eed";
     public final static String VIEW_NAME = "view.name.fxml.source";
+
+    private final static Logger logger = LoggerFactory.getLogger(SourceViewWindowController.class);
 
     @FXML
     TextArea textArea;
@@ -153,12 +157,27 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             labelFadeTransition.play();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Unable to update fxomDocument", e);
             updateResultLabel.setOpacity(1.0);
-            updateResultLabel.setText(e.getMessage());
+            updateResultLabel.setText(concatenateStackMessage(e));
         }
     }
 
+    private String concatenateStackMessage(Exception e) {
+        StringBuilder builder = new StringBuilder();
+        if (e != null) {
+            builder.append(e.getMessage());
+            Throwable cause = e;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+
+                if (cause.getMessage() != null && !cause.getMessage().isBlank()) {
+                    builder.append("\n").append(cause.getMessage());
+                }
+            }
+        }
+        return builder.toString();
+    }
 
     /*
      * AbstractFxmlWindowController
@@ -177,7 +196,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     private void updateTitle() {
         final String title = I18N.getString("sourceview.window.title", documentName);
-        getName().set(title);
+        setName(title);
     }
 
     private void update() {

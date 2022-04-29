@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,8 +45,10 @@ import java.util.Objects;
  *
  */
 public class GlueElement extends GlueNode {
+    public static final String IGNORED_PREFIX = "ignored";
     private final static String FX_PREFIX = "fx:";
     private final static int INDENT_STEP = 3;
+
 
     private GlueDocument document;
     // The XML tag name. Example: "Image"

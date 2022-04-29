@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -73,7 +75,11 @@ public class ScenePring extends AbstractNodePring<Node> {
 
         assert fxomObject.getSceneGraphObject() instanceof Scene;
         HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
-        FXOMObject root = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
+
+        List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
+        assert !children.isEmpty();
+        FXOMObject root = children.get(0);
+
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         assert root instanceof FXOMInstance;

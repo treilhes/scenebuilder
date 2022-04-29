@@ -158,7 +158,7 @@ public final class ContainerZDropTargetBck extends AbstractDropTarget {
             int targetIndex;
             if (beforeChild == null) {
                 final HierarchyMask m = designMaskFactory.getMask(targetContainer);
-                targetIndex = m.getSubComponentCount();
+                targetIndex = m.getSubComponentCount(true);
             } else {
                 targetIndex = beforeChild.getIndexInParentProperty();
                 assert targetIndex != -1;

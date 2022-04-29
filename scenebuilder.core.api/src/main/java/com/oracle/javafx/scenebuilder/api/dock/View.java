@@ -48,7 +48,7 @@ public interface View {
     public static URL VIEW_ICON_MISSING = View.class.getResource("ViewIconMissing.png");
     public static URL VIEW_ICON_MISSING_X2 = View.class.getResource("ViewIconMissing@2x.png");
 
-    StringProperty getName();
+    StringProperty nameProperty();
 	//ViewManager getViewManager();
 	ViewSearch getSearchController();
 	ViewContent getViewController();

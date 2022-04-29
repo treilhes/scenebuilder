@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.window;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -73,12 +75,20 @@ public class WindowPring extends AbstractNodePring<Node> {
     public void setFxomObject(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
         HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
-        FXOMObject scene = windowDesignHierarchyMask.getAccessory(windowDesignHierarchyMask.getMainAccessory());
+        List<FXOMObject> sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
+
+        assert !sceneContent.isEmpty();
+
+        FXOMObject scene = sceneContent.get(0);
         assert scene != null : "makePring should have only been called if the Window has a scene";
         assert scene.getSceneGraphObject() instanceof Scene;
         assert scene instanceof FXOMInstance;
         HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
-        FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
+        List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
+
+        assert !rootContent.isEmpty();
+
+        FXOMObject root = rootContent.get(0);
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         assert root instanceof FXOMInstance;

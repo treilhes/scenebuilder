@@ -198,7 +198,7 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
         if (gripIndex != -1) {
             final FXOMObject parentObject = getFxomInstance().getParentObject();
             final HierarchyMask m = maskFactory.getMask(parentObject);
-            final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
+            final FXOMObject columnObject = m.getSubComponentAtIndex(m.getMainAccessory(), gripIndex, false);
             assert columnObject instanceof FXOMInstance;
             result = resizeTreeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {

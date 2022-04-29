@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.metadata.property.value;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.BasicSelection;
 
@@ -148,7 +148,7 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
 
         public static int getRowSpanPropertyMaxIndex(BasicSelection selectionState) {
             int maxIndex = 0;
-            for (FXOMInstance instance : selectionState.getSelectedInstances()) {
+            for (FXOMElement instance : selectionState.getSelectedInstances()) {
                 assert instance.getSceneGraphObject() instanceof Node;
                 Integer index;
                 Node node = (Node) instance.getSceneGraphObject();
@@ -165,7 +165,7 @@ public class IntegerPropertyMetadata extends NumberPropertyMetadata<Integer> {
 
         public static int getColumnSpanPropertyMaxIndex(BasicSelection selectionState) {
             int maxIndex = 0;
-            for (FXOMInstance instance : selectionState.getSelectedInstances()) {
+            for (FXOMElement instance : selectionState.getSelectedInstances()) {
                 assert instance.getSceneGraphObject() instanceof Node;
                 Integer index;
                 Node node = (Node) instance.getSceneGraphObject();

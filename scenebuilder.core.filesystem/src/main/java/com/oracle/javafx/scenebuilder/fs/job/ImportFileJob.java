@@ -139,7 +139,7 @@ public final class ImportFileJob extends BatchSelectionJob {
                     final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
                     if (targetMask.isAcceptingSubComponent(newObject)) {
                         result.add(insertAsSubComponentJobFactory.getJob(newObject, targetObject,
-                                targetMask.getSubComponentCount()));
+                                targetMask.getSubComponentCount(true)));
                     }
                 }
             }

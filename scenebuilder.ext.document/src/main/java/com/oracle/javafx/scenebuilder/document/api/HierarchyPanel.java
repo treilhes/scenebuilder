@@ -33,32 +33,76 @@
  */
 package com.oracle.javafx.scenebuilder.document.api;
 
+import java.util.List;
+
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
-import javafx.scene.control.Cell;
-import javafx.scene.control.Control;
+import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
 public interface HierarchyPanel {
 
-    Control getPanelControl();
+    /**
+     * Gets the tree view.
+     *
+     * @return the tree view
+     */
+    TreeView<HierarchyItem> getTreeView();
 
+    /**
+     * Gets the treeview root item.
+     *
+     * @return the root item
+     */
+    TreeItem<HierarchyItem> getRootItem();
+
+    /**
+     * Lookup tree item associated with the provided {@link FXOMObject}.
+     *
+     * @param fxomObject the fxom object
+     * @return the tree item
+     */
     TreeItem<HierarchyItem> lookupTreeItem(FXOMObject fxomObject);
 
-    Cell<?> getCell(final TreeItem<?> treeItem);
+    /**
+     * Returns the last visible TreeItem
+     * @return the last visible TreeItem
+     */
+    TreeItem<HierarchyItem> getLastVisibleTreeItem();
 
-    TreeItem<HierarchyItem> getRootItem();
+    /**
+     * Returns the last visible TreeItem descendant of the specified parent
+     * TreeItem.
+     *
+     * @param parentTreeItem the parent TreeItem
+     * @return the last visible TreeItem
+     */
+    TreeItem<HierarchyItem> getLastVisibleTreeItem(TreeItem<HierarchyItem> parentTreeItem);
+
+    /**
+     * Gets the common parent TreeItem of the specified TreeItems.
+     *
+     * @param treeItems the tree items
+     * @return the common parent tree item
+     */
+    TreeItem<HierarchyItem> getCommonParentTreeItem(List<TreeItem<HierarchyItem>> treeItems);
 
     void scrollTo(TreeItem<HierarchyItem> treeItem);
 
     /**
      * @return
      */
-    DisplayOption getDisplayOption();
+    Parent getRoot();
 
     /**
-     * @param option
+     * @return
      */
-    void setDisplayOption(DisplayOption option);
+    double getContentTopY();
+
+    /**
+     * @return
+     */
+    double getContentBottomY();
 
 }

@@ -60,7 +60,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import lombok.Getter;
 
 public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowController {
 
@@ -76,13 +75,8 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     @FXML
     private VBox templateContainer;
 
-    public TemplatesBaseWindowController(
-            SceneBuilderManager sceneBuilderManager,
-            IconSetting iconSetting,
-            URL fxmlURL,
-            ResourceBundle resources,
-            SceneBuilderWindow owner,
-            List<TemplateGroup> templateGroups,
+    public TemplatesBaseWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, URL fxmlURL,
+            ResourceBundle resources, SceneBuilderWindow owner, List<TemplateGroup> templateGroups,
             List<Template> templates) {
         super(sceneBuilderManager, iconSetting, fxmlURL, resources, owner);
         this.templates = templates;
@@ -108,7 +102,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     private void buildTemplateCategory(TemplateGroup templateGroup) {
 
         TemplateHeader header = new TemplateHeader();
-        templateContainer.getChildren().add((Node)FXMLUtils.load(header, TemplateHeader.SOURCE));
+        templateContainer.getChildren().add((Node) FXMLUtils.load(header, TemplateHeader.SOURCE));
 
         header.getLabel().setText(I18N.getStringOrDefault(templateGroup.getName(), templateGroup.getName()));
 
@@ -131,7 +125,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
 
         if (template.getFxmlUrl() != null && template.getIconUrl() != null) {
             TemplateItem item = new TemplateItem();
-            itemNode = (Node)FXMLUtils.load(item, TemplateItem.SOURCE);
+            itemNode = (Node) FXMLUtils.load(item, TemplateItem.SOURCE);
 
             item.getImage().setImage(ImageUtils.getImage(template.getIconUrl()));
             item.getButton().setUserData(template);
@@ -141,7 +135,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
             item.getImage().setFitHeight(height);
         } else {
             TemplateEmptyItem item = new TemplateEmptyItem();
-            itemNode = (Node)FXMLUtils.load(item, TemplateEmptyItem.SOURCE);
+            itemNode = (Node) FXMLUtils.load(item, TemplateEmptyItem.SOURCE);
             item.getButton().setUserData(template);
             item.getButton().setText(I18N.getStringOrDefault(template.getName(), template.getName()) + sizeString);
 
@@ -149,36 +143,36 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
             item.getRectangle().setHeight(height);
         }
 
-
         category.getFlowPane().getChildren().add(itemNode);
     }
+
     @Override
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert templateContainer != null;
 
+        templateGroups.stream().sorted(Comparator.comparing(TemplateGroup::getOrderKey)
+                .thenComparing(Comparator.comparing(TemplateGroup::getName))).forEachOrdered(tg -> {
 
+                    List<Template> subTemplates = templates.stream().filter(t -> t.getGroup().equals(tg))
+                            .sorted(Comparator.comparing(Template::getOrderKey)
+                                    .thenComparing(Comparator.comparing(Template::getName)))
+                            .collect(Collectors.toList());
 
-        templateGroups.stream()
-            .sorted(Comparator.comparing(TemplateGroup::getOrderKey).thenComparing(Comparator.comparing(TemplateGroup::getName)))
-            .forEachOrdered(tg -> {
+                    if (!subTemplates.isEmpty()) {
 
-                List<Template> subTemplates = templates.stream().filter(t -> t.getGroup().equals(tg))
-                        .sorted(Comparator.comparing(Template::getOrderKey).thenComparing(Comparator.comparing(Template::getName)))
-                        .collect(Collectors.toList());
+                        buildTemplateCategory(tg);
 
-                if (!subTemplates.isEmpty()) {
+                        TemplateCategoryContent category = new TemplateCategoryContent();
+                        templateContainer.getChildren()
+                                .add((Node) FXMLUtils.load(category, TemplateCategoryContent.SOURCE));
 
-                    buildTemplateCategory(tg);
-
-                    TemplateCategoryContent category = new TemplateCategoryContent();
-                    templateContainer.getChildren().add((Node)FXMLUtils.load(category, TemplateCategoryContent.SOURCE));
-
-                    subTemplates.stream().filter(t -> t.getGroup().equals(tg))
-                    .sorted(Comparator.comparing(Template::getOrderKey).thenComparing(Comparator.comparing(Template::getName)))
-                    .forEachOrdered(t -> buildTemplate(category, t));
-                }
-            });
+                        subTemplates.stream().filter(t -> t.getGroup().equals(tg))
+                                .sorted(Comparator.comparing(Template::getOrderKey)
+                                        .thenComparing(Comparator.comparing(Template::getName)))
+                                .forEachOrdered(t -> buildTemplate(category, t));
+                    }
+                });
     }
 
     protected void setupTemplateButtonHandlers() {
@@ -207,31 +201,56 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     public static class TemplateItem {
         public static final String SOURCE = "TemplateItem.fxml";
         @FXML
-        private @Getter Button button;
+        private Button button;
         @FXML
-        private @Getter ImageView image;
+        private ImageView image;
+
+        public Button getButton() {
+            return button;
+        }
+
+        public ImageView getImage() {
+            return image;
+        }
+
     }
 
     public static class TemplateEmptyItem {
         public static final String SOURCE = "TemplateEmptyItem.fxml";
         @FXML
-        private @Getter Button button;
+        private Button button;
         @FXML
-        private @Getter Rectangle rectangle;
+        private Rectangle rectangle;
+
+        public Button getButton() {
+            return button;
+        }
+
+        public Rectangle getRectangle() {
+            return rectangle;
+        }
 
     }
 
     public static class TemplateCategoryContent {
         public static final String SOURCE = "TemplateCategoryContent.fxml";
         @FXML
-        private @Getter FlowPane flowPane;
+        private FlowPane flowPane;
+
+        public FlowPane getFlowPane() {
+            return flowPane;
+        }
 
     }
 
     public static class TemplateHeader {
         public static final String SOURCE = "TemplateHeader.fxml";
         @FXML
-        private @Getter Label label;
+        private Label label;
+
+        public Label getLabel() {
+            return label;
+        }
 
     }
 }

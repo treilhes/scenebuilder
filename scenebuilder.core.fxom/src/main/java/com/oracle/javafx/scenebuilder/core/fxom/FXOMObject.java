@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -59,7 +60,7 @@ public abstract class FXOMObject extends FXOMNode {
     private final GlueElement glueElement;
     private FXOMProperty parentProperty;
     private FXOMCollection parentCollection;
-    private FXOMDefine parentDefine;
+    //private FXOMDefine parentDefine;
     private Object sceneGraphObject;
 
     FXOMObject(FXOMDocument fxomDocument, GlueElement glueElement, Object sceneGraphObject) {
@@ -88,10 +89,10 @@ public abstract class FXOMObject extends FXOMNode {
     public FXOMCollection getParentCollection() {
         return parentCollection;
     }
-
-    public FXOMDefine getParentDefine() {
-        return parentDefine;
-    }
+//
+//    public FXOMDefine getParentDefine() {
+//        return parentDefine;
+//    }
 
     public void addToParentProperty(int index, FXOMProperty newParentProperty) {
 
@@ -110,9 +111,10 @@ public abstract class FXOMObject extends FXOMNode {
             }
         } else if (parentCollection != null) {
             removeFromParentCollection();
-        } else if (parentDefine != null) {
-            removeFromParentDefine();
         }
+//        else if (parentDefine != null) {
+//            removeFromParentDefine();
+//        }
 
         parentProperty = newParentProperty;
         newParentProperty.addChild(index, this);
@@ -162,9 +164,10 @@ public abstract class FXOMObject extends FXOMNode {
             removeFromParentProperty();
         } else if (parentCollection != null) {
             removeFromParentCollection();
-        } else if (parentDefine != null) {
-            removeFromParentDefine();
         }
+//        else if (parentDefine != null) {
+//            removeFromParentDefine();
+//        }
 
         parentCollection = newParentCollection;
         newParentCollection.addValue(index, this);
@@ -200,55 +203,55 @@ public abstract class FXOMObject extends FXOMNode {
 
         return result;
     }
-
-    public void addToParentDefine(int index, FXOMDefine newParentDefine) {
-
-        assert newParentDefine != null;
-        assert -1 <= index;
-        assert index <= newParentDefine.getItems().size();
-
-        if (parentProperty != null) {
-            removeFromParentProperty();
-        } else if (parentCollection != null) {
-            removeFromParentCollection();
-        } else if (parentDefine != null) {
-            removeFromParentDefine();
-        }
-
-        parentDefine = newParentDefine;
-        newParentDefine.addValue(index, this);
-
-        final GlueElement newParentElement = parentDefine.getGlueElement();
-        glueElement.addToParent(index, newParentElement);
-
-        // May be this object was a root : properties like fx:controller must
-        // be reset to preserve FXML validity.
-        resetRootProperties();
-    }
-
-    public void removeFromParentDefine() {
-        assert parentDefine != null;
-
-        assert glueElement.getParent() == parentDefine.getGlueElement();
-        glueElement.removeFromParent();
-
-        final FXOMDefine keepParentDefine = parentDefine;
-        parentDefine = null;
-        keepParentDefine.removeValue(this);
-    }
-
-    public int getIndexInParentDefine() {
-        final int result;
-
-        if (parentDefine == null) {
-            result = -1;
-        } else {
-            result = parentDefine.getItems().indexOf(this);
-            assert result != -1;
-        }
-
-        return result;
-    }
+//
+//    public void addToParentDefine(int index, FXOMDefine newParentDefine) {
+//
+//        assert newParentDefine != null;
+//        assert -1 <= index;
+//        assert index <= newParentDefine.getItems().size();
+//
+//        if (parentProperty != null) {
+//            removeFromParentProperty();
+//        } else if (parentCollection != null) {
+//            removeFromParentCollection();
+//        } else if (parentDefine != null) {
+//            removeFromParentDefine();
+//        }
+//
+//        parentDefine = newParentDefine;
+//        newParentDefine.addValue(index, this);
+//
+//        final GlueElement newParentElement = parentDefine.getGlueElement();
+//        glueElement.addToParent(index, newParentElement);
+//
+//        // May be this object was a root : properties like fx:controller must
+//        // be reset to preserve FXML validity.
+//        resetRootProperties();
+//    }
+//
+//    public void removeFromParentDefine() {
+//        assert parentDefine != null;
+//
+//        assert glueElement.getParent() == parentDefine.getGlueElement();
+//        glueElement.removeFromParent();
+//
+//        final FXOMDefine keepParentDefine = parentDefine;
+//        parentDefine = null;
+//        keepParentDefine.removeValue(this);
+//    }
+//
+//    public int getIndexInParentDefine() {
+//        final int result;
+//
+//        if (parentDefine == null) {
+//            result = -1;
+//        } else {
+//            result = parentDefine.getItems().indexOf(this);
+//            assert result != -1;
+//        }
+//
+//        return result;
+//    }
 
     public Object getSceneGraphObject() {
         return sceneGraphObject;
@@ -545,6 +548,8 @@ public abstract class FXOMObject extends FXOMNode {
             result = parentProperty.getParentInstance();
         } else if (parentCollection != null) {
             result = parentCollection;
+//        } else if (parentDefine != null) {
+//            result = parentDefine;
         } else {
             result = null;
         }
@@ -918,4 +923,15 @@ public abstract class FXOMObject extends FXOMNode {
         setNameSpaceFXML(null);
     }
 
+    /**
+     * A virtual object does not have any graphic representation into the scenegraph
+     * It simply does not count
+     *
+     * @return true, if it is virtual
+     */
+    public boolean isVirtual() {
+        return false;
+    }
+
+    public abstract Class<?> getMetadataClass();
 }

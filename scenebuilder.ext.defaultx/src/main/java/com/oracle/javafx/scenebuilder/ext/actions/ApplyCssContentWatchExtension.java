@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,41 +54,38 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreferen
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class ApplyCssContentWatchExtension extends AbstractActionExtension<ApplyCssContentAction> implements WatchingCallback{
+public class ApplyCssContentWatchExtension extends AbstractActionExtension<ApplyCssContentAction>
+        implements WatchingCallback {
 
-	private final UserStylesheetsPreference userStylesheetsPreference;
+    private final UserStylesheetsPreference userStylesheetsPreference;
     private final FileSystem fileSystem;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
     private final SceneBuilderBeanFactory context;
 
-	public ApplyCssContentWatchExtension(
-	        @Autowired FileSystem fileSystem,
-	        @Autowired SceneBuilderBeanFactory context,
-	        @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
-			@Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference
-			) {
-		super();
-		this.fileSystem = fileSystem;
-		this.context = context;
-		this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
-		this.userStylesheetsPreference = userStylesheetsPreference;
-	}
+    public ApplyCssContentWatchExtension(@Autowired FileSystem fileSystem, @Autowired SceneBuilderBeanFactory context,
+            @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
+            @Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference) {
+        super();
+        this.fileSystem = fileSystem;
+        this.context = context;
+        this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
+        this.userStylesheetsPreference = userStylesheetsPreference;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    @Override
+    public boolean canPerform() {
+        return true;
+    }
 
-	@Override
-	public void prePerform() {
-	    fileSystem.unwatch(this);
-	}
+    @Override
+    public void prePerform() {
+        fileSystem.unwatch(this);
+    }
 
     @Override
     public void postPerform() {
         if (userStylesheetsPreference.getValue() != null) {
-            List<File> toWatch = userStylesheetsPreference.getValue().stream()
-                    .map(s -> new File(URI.create(s)))
+            List<File> toWatch = userStylesheetsPreference.getValue().stream().map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
             fileSystem.watch(context.getBean(DocumentWindow.class), toWatch, this);
         }
@@ -112,6 +110,5 @@ public class ApplyCssContentWatchExtension extends AbstractActionExtension<Apply
     public Object getOwnerKey() {
         return this;
     }
-
 
 }

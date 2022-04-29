@@ -118,7 +118,7 @@ public class LogViewerController extends AbstractFxmlViewController {
 
     private void updateTitle() {
         final String title = "logfile";//;I18N.getString("sourceview.window.title", documentName);
-        getName().set(title);
+        setName(title);
     }
 
     private void update(List<String> newLines) {

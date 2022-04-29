@@ -77,7 +77,7 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
 
         Node node = FXMLUtils.load(ctrl, AbstractDockTypeSplit.class, VIEW_SOURCE);
 
-        ctrl.getViewLabel().textProperty().bind(view.getName());
+        ctrl.getViewLabel().textProperty().bind(view.nameProperty());
         node.setOnMouseEntered(e -> view.notifyFocused());
 
         if (view.getSearchController() != null) {

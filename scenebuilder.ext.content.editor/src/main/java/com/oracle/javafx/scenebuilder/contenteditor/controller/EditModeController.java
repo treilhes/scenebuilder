@@ -195,7 +195,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
         newLayer(Outline.class, true, selection,
                 // object selection
-                s -> collectNodes(),
+                s -> collectNodesToOutline(),
                 // Handles creation
                 fxomObject -> driver.makeOutline(fxomObject));
 
@@ -704,7 +704,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         }
     }
 
-    private Set<FXOMObject> collectNodes() {
+    private Set<FXOMObject> collectNodesToOutline() {
         final Set<FXOMObject> result = new HashSet<>();
 
         final List<FXOMObject> candidates = new ArrayList<>();
@@ -725,14 +725,14 @@ public class EditModeController extends AbstractModeController implements Gestur
                 }
             }
             final HierarchyMask m = maskFactory.getMask(candidate);
-            if (m.isAcceptingSubComponent()) {
-                for (int i = 0, c = m.getSubComponentCount(); i < c; i++) {
-                    final FXOMObject subComponent = m.getSubComponentAtIndex(i);
-                    candidates.add(subComponent);
-                }
+
+            List<Accessory> allAccessories = new ArrayList<>(m.getAccessories());
+            if (m.getMainAccessory() != null && !allAccessories.contains(m.getMainAccessory())) {
+                allAccessories.add(0, m.getMainAccessory());
             }
-            for (Accessory a : m.getAccessories()) {
-                final List<FXOMObject> accessoryObjects = m.getAccessories(a);
+
+            for (Accessory a : allAccessories) {
+                final List<FXOMObject> accessoryObjects = m.getAccessories(a, false);
                 if (accessoryObjects != null) {
                     accessoryObjects.stream().filter(accessoryObject -> accessoryObject != null && accessoryObject.isNode())
                     .forEach(accessoryObject -> {

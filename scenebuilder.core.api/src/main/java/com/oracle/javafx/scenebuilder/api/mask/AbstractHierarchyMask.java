@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -49,12 +50,12 @@ import org.slf4j.LoggerFactory;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.util.StringUtils;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMVirtual;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
@@ -68,8 +69,6 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropert
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -100,14 +99,14 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         if (fxomObject.getSceneGraphObject() != null) {
             logger.info("FxomObject [{}] has a scenegraph object of type {}", getFxomObject(), fxomObject.getSceneGraphObject().getClass());
             this.componentClassMetadata = metadata
-                    .queryComponentMetadata(getFxomObject().getSceneGraphObject().getClass());
+                    .queryComponentMetadata(getFxomObject().getMetadataClass());
         } else {
             logger.info("FxomObject [{}] has no scenegraph object", getFxomObject());
             this.componentClassMetadata = metadata.queryComponentMetadata(getFxomObject().getClass());
         }
 
         if (componentClassMetadata != null) {
-            logger.info("FxomObject [{}] has metadata class of type {}", componentClassMetadata.getClass());
+            logger.info("FxomObject [{}] has metadata class of type {}", getFxomObject(), componentClassMetadata.getClass());
             this.subComponents = componentClassMetadata.getAllSubComponentProperties();
 
             this.accessories = this.subComponents.stream()
@@ -174,9 +173,13 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     private Qualifier findFxomObjectQualifier() {
         final Object sceneGraphObject;
 
-        // For FXOMIntrinsic, we use the source sceneGraphObject
-        if (fxomObject instanceof FXOMIntrinsic) {
-            sceneGraphObject = ((FXOMIntrinsic) fxomObject).getSourceSceneGraphObject();
+        if (fxomObject.isVirtual() || fxomObject instanceof FXOMIntrinsic) {
+            ComponentClassMetadata<?> cm = metadata.queryComponentMetadata(fxomObject.getClass());
+            return cm.applicableQualifiers(fxomObject).stream().findFirst().orElse(Qualifier.UNKNOWN);
+//        }
+//        // For FXOMIntrinsic, we use the source sceneGraphObject
+//        else if (fxomObject instanceof FXOMIntrinsic) {
+//            sceneGraphObject = ((FXOMIntrinsic) fxomObject).getSourceSceneGraphObject();
         } else {
             sceneGraphObject = fxomObject.getSceneGraphObject();
         }
@@ -218,10 +221,26 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         if (fxomObject instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomObject;
             sceneGraphObject = fxomIntrinsic.getSourceSceneGraphObject();
-            if (fxomIntrinsic.getType() == FXOMIntrinsic.Type.FX_INCLUDE) {
+            switch (fxomIntrinsic.getType()) {
+            case FX_COPY:
                 // Add FXML prefix for included FXML file
+                prefix += "COPY "; //NOCHECK
+                break;
+            case FX_INCLUDE:
                 prefix += "FXML "; //NOCHECK
+                break;
+            case FX_REFERENCE:
+                prefix += "REF "; //NOCHECK
+                break;
+            default:
+                assert false;
+                break;
+
             }
+//            if (fxomIntrinsic.getType() == FXOMIntrinsic.Type.FX_INCLUDE) {
+//                // Add FXML prefix for included FXML file
+//                prefix += "FXML "; //NOCHECK
+//            }
         } else {
             sceneGraphObject = fxomObject.getSceneGraphObject();
         }
@@ -258,11 +277,10 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         if (propertyName != null) { // (1)
 
             assert propertyName != null; // Because of (1)
-            assert fxomObject instanceof FXOMInstance; // Because of (1)
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final ValuePropertyMetadata vpm
-                    = metadata.queryValueProperty(fxomInstance, propertyName);
-            final Object description = vpm.getValueInSceneGraphObject(fxomInstance); // resolved value
+            assert fxomObject instanceof FXOMElement;
+            final FXOMElement fxomElement = (FXOMElement) fxomObject;
+            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomElement, propertyName);
+            final Object description = vpm.getValueInSceneGraphObject(fxomElement); // resolved value
             return description == null ? null : description.toString();
         }
         return null;
@@ -285,12 +303,11 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
      */
     public Object getNodeIdValue() {
         Object result = null;
-        if (fxomObject instanceof FXOMInstance) {
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
+        if (fxomObject instanceof FXOMElement) {
+            final FXOMElement fxomElement = (FXOMElement) fxomObject;
             final PropertyName propertyName = new PropertyName("id"); //NOCHECK
-            final ValuePropertyMetadata vpm
-                    = metadata.queryValueProperty(fxomInstance, propertyName);
-            result = vpm.getValueObject(fxomInstance);
+            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomElement, propertyName);
+            result = vpm.getValueObject(fxomElement);
         }
         return result;
     }
@@ -313,9 +330,9 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     @Override
     public String getFxId() {
         String result = null;
-        if (fxomObject instanceof FXOMInstance) { // Can be null for place holder items
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final String fxId = fxomInstance.getFxId();
+        if (fxomObject instanceof FXOMElement) { // Can be null for place holder items
+            final FXOMElement fxomElement = (FXOMElement) fxomObject;
+            final String fxId = fxomElement.getFxId();
             result = fxId == null ? "" : fxId; //NOCHECK
         }
         return result;
@@ -346,7 +363,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
             return false;
         }
 
-        if (fxomObject instanceof FXOMVirtual) {
+        if (fxomObject.isVirtual()) {
             logger.info("virtual object {} accepted into accessory: {}", getFxomObject(), accessory.getName());
             return true;
         } else {
@@ -385,27 +402,26 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 
         if (accessory != null && fxomObjects != null) {
             final boolean forbidenItemExists = fxomObjects.stream().anyMatch(fo -> !isAcceptingAccessory(accessory, fo));
-            return !forbidenItemExists;
+
+            if (forbidenItemExists) {
+                return false;
+            }
+
+            // handle case when accessory is not a collection and more than one non virtual objects in fxomObjects
+            if (!accessory.isCollection()
+                    && fxomObjects.stream().filter(Predicate.not(FXOMObject::isVirtual)).count() > 1) {
+                return false;
+            }
+
+            return true;
         }
 
         return false;
     }
 
 
-    @Override
-    public FXOMObject getAccessory(Accessory accessory) {
-        assert !accessory.isCollection();
-        final List<FXOMObject> results = getAccessories(accessory);
-
-        if (results != null) {
-            assert results.size() >= 1 : "accessory=" + accessory;
-            return results.stream().filter(f -> !FXOMVirtual.class.isInstance(f)).findFirst().orElse(null);
-        } else {
-            return null;
-        }
-    }
-//
-//    public FXOMObject getAccessory(Accessory accessory, boolean includeVirtualElements) {
+//    @Override
+//    public FXOMObject getAccessory(Accessory accessory) {
 //        assert !accessory.isCollection();
 //        final List<FXOMObject> results = getAccessories(accessory);
 //
@@ -417,29 +433,31 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 //        }
 //    }
 
-    @Override
-    public List<FXOMObject> getAccessories(Accessory accessory) {
-        assert isAcceptingAccessory(accessory);
-        assert fxomObject instanceof FXOMInstance;
 
-        final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
+    @Override
+    public List<FXOMObject> getAccessories(Accessory accessory, boolean includeVirtuals) {
+        assert isAcceptingAccessory(accessory);
+        assert fxomObject instanceof FXOMElement;
+
+        final FXOMElement fxomElement = (FXOMElement) fxomObject;
         final PropertyName propertyName = getPropertyNameForAccessory(accessory);
-        final FXOMProperty fxomProperty = fxomInstance.getProperties().get(propertyName);
-        final List<FXOMObject> result;
+        final FXOMProperty fxomProperty = fxomElement.getProperties().get(propertyName);
+        final List<FXOMObject> result = new ArrayList<>();
 
         if (fxomProperty instanceof FXOMPropertyC) {
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
             assert fxomPropertyC.getChildren() != null : "accessory=" + accessory;
-            result = fxomPropertyC.getChildren();
-        } else {
-            result = null;
+            result.addAll(fxomPropertyC.getChildren());
         }
 
+        if (!includeVirtuals) {
+            result.removeIf(FXOMObject::isVirtual);
+        }
         return result;
     }
 
     @Override
-    public boolean isAcceptingSubComponent() {
+    public boolean hasMainAccessory() {
         return mainAccessory != null;
     }
 
@@ -452,7 +470,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     @Override
     public boolean isAcceptingSubComponent(FXOMObject obj) {
         assert obj != null;
-        return isAcceptingSubComponent() && isAcceptingAccessory(mainAccessory, obj);
+        return hasMainAccessory() && isAcceptingAccessory(mainAccessory, obj);
     }
 
     /**
@@ -465,7 +483,9 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public boolean isAcceptingSubComponent(final Collection<FXOMObject> fxomObjects) {
         if (mainAccessory != null) {
 
-            if (!mainAccessory.isCollection() && getSubComponentCount(mainAccessory) >= 1) {
+            boolean hasRealObjects = fxomObjects.stream().anyMatch(Predicate.not(FXOMObject::isVirtual));
+
+            if (!mainAccessory.isCollection() && hasRealObjects && getSubComponentCount(mainAccessory, false) >= 1) {
                 return false;
             }
 
@@ -476,39 +496,40 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     }
 
     @Override
-    public int getSubComponentCount(Accessory accessory) {
+    public int getSubComponentCount(Accessory accessory, boolean includeVirtuals) {
         final PropertyName name = accessory.getName();
-        return (name == null) ? 0 : getSubComponents(accessory).size();
+        return (name == null) ? 0 : getSubComponents(accessory, includeVirtuals).size();
     }
 
     @Override
-    public FXOMObject getSubComponentAtIndex(Accessory accessory, int i) {
+    public FXOMObject getSubComponentAtIndex(Accessory accessory, int i, boolean includeVirtuals) {
         assert 0 <= i;
-        assert i < getSubComponentCount(accessory);
+        assert i < getSubComponentCount(accessory, includeVirtuals);
         assert accessory.getName() != null;
 
-        return getSubComponents(accessory).get(i);
+        return getSubComponents(accessory, includeVirtuals).get(i);
     }
 
-    public List<FXOMObject> getSubComponents(Accessory accessory) {
+    public List<FXOMObject> getSubComponents(Accessory accessory, boolean includeVirtuals) {
 
         assert accessory.getName() != null;
         // not true anymore main component can be a single element
         //assert accessory.isCollection();
-        assert fxomObject instanceof FXOMInstance;
+        assert fxomObject instanceof FXOMElement;
 
         final PropertyName subComponentPropertyName = accessory.getName();
-        final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        final FXOMProperty fxomProperty
-                = fxomInstance.getProperties().get(subComponentPropertyName);
+        final FXOMElement fxomInstance = (FXOMElement) fxomObject;
+        final FXOMProperty fxomProperty = fxomInstance.getProperties().get(subComponentPropertyName);
 
         final List<FXOMObject> result;
         if (fxomProperty instanceof FXOMPropertyC) {
             result = ((FXOMPropertyC) fxomProperty).getChildren();
-        //} if (fxomProperty instanceof FXOMPropertyT) {
-        //    result = ((FXOMPropertyT) fxomProperty).getValues();
         } else {
             result = Collections.emptyList();
+        }
+
+        if (!includeVirtuals) {
+            result.removeIf(FXOMObject::isVirtual);
         }
 
         return result;
@@ -558,12 +579,11 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public FXOMPropertyC getAccessoryProperty(Accessory accessory) {
 
         assert getPropertyNameForAccessory(accessory) != null;
-        assert fxomObject instanceof FXOMInstance;
+        assert fxomObject instanceof FXOMElement;
 
         final PropertyName accessoryPropertyName = getPropertyNameForAccessory(accessory);
-        final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        final FXOMProperty result
-                = fxomInstance.getProperties().get(accessoryPropertyName);
+        final FXOMElement fxomElement = (FXOMElement) fxomObject;
+        final FXOMProperty result = fxomElement.getProperties().get(accessoryPropertyName);
 
         assert (result == null) || (result instanceof FXOMPropertyC);
 
@@ -585,34 +605,34 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     // new from here
 
     @Override
-    public int getSubComponentCount() {
+    public int getSubComponentCount(boolean includeVirtuals) {
         if (mainAccessory == null) {
             return 0;
         }
-        return getSubComponents(mainAccessory).size();
+        return getSubComponents(mainAccessory, includeVirtuals).size();
     }
 
     @Override
-    public FXOMObject getSubComponentAtIndex(int i) {
+    public FXOMObject getSubComponentAtIndex(int i, boolean includeVirtuals) {
         if (mainAccessory == null) {
             return null;
         }
-        return getSubComponents(mainAccessory).get(i);
+        return getSubComponents(mainAccessory, includeVirtuals).get(i);
     }
 
     @Override
-    public List<FXOMObject> getSubComponents() {
+    public List<FXOMObject> getSubComponents(boolean includeVirtuals) {
         if (mainAccessory == null) {
             return Collections.emptyList();
         }
-        return getSubComponents(mainAccessory);
+        return getSubComponents(mainAccessory, includeVirtuals);
     }
 
     @Override
     public ValuePropertyMetadata getPropertyMetadata(PropertyName propertyName) {
-        if (fxomObject instanceof FXOMInstance) {
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, propertyName);
+        if (fxomObject instanceof FXOMElement) {
+            final FXOMElement fxomElement = (FXOMElement) fxomObject;
+            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomElement, propertyName);
             return vpm;
         }
         return null;
@@ -622,7 +642,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public Object getPropertyValue(PropertyName propertyName) {
         ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
         if (vpm != null) {
-            return vpm.getValueObject((FXOMInstance) fxomObject);
+            return vpm.getValueObject((FXOMElement) fxomObject);
         }
         return null;
     }
@@ -631,7 +651,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public Object getPropertySceneGraphValue(PropertyName propertyName) {
         ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
         if (vpm != null) {
-            return vpm.getValueInSceneGraphObject((FXOMInstance) fxomObject);
+            return vpm.getValueInSceneGraphObject((FXOMElement) fxomObject);
         }
         return null;
     }
@@ -659,10 +679,24 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         return getPropertyMetadata(propertyName) != null;
     }
 
-    @RequiredArgsConstructor
     public static class AccessoryImpl implements Accessory{
-        private final @Getter ComponentClassMetadata<?> owner;
-        private final @Getter ComponentPropertyMetadata propertyMetadata;
+        private final ComponentClassMetadata<?> owner;
+        private final ComponentPropertyMetadata propertyMetadata;
+
+        public AccessoryImpl(ComponentClassMetadata<?> owner, ComponentPropertyMetadata propertyMetadata) {
+            super();
+            this.owner = owner;
+            this.propertyMetadata = propertyMetadata;
+        }
+
+        public ComponentClassMetadata<?> getOwner() {
+            return owner;
+        }
+
+        @Override
+        public ComponentPropertyMetadata getPropertyMetadata() {
+            return propertyMetadata;
+        }
 
         @Override
         public PropertyName getName() {
@@ -671,7 +705,10 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 
         @Override
         public Class<?> getContentType() {
-            return propertyMetadata.getClassMetadata().getKlass();
+            if (propertyMetadata != null && propertyMetadata.getClassMetadata() != null) {
+                return propertyMetadata.getClassMetadata().getKlass();
+            }
+            return null;
         }
 
         @Override
@@ -692,6 +729,8 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
             final boolean result;
             if (propertyMetadata == null) {
                 result = false;
+            } else if (getContentType() == null) {
+                result = true;
             } else {
                 result = getContentType().isAssignableFrom(valueClass);
             }

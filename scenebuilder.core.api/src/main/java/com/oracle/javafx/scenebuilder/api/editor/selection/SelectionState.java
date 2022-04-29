@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.metadata.BasicSelection;
@@ -49,7 +49,7 @@ public interface SelectionState extends BasicSelection {
 
     void clearSelectionCssState();
 
-    Map<StyleableProperty, List<Style>> getCssState(FXOMInstance instance);
+    Map<StyleableProperty, List<Style>> getCssState(FXOMElement instance);
     // TEMP CSS PERF ADD
 
     void initialize();
@@ -64,11 +64,11 @@ public interface SelectionState extends BasicSelection {
     FXOMObject getCommonParentObject();
 
     @Override
-    Set<FXOMInstance> getSelectedInstances();
+    Set<FXOMElement> getSelectedInstances();
 
     Set<FXOMIntrinsic> getSelectedIntrinsics();
 
-    Set<FXOMInstance> getUnresolvedInstances();
+    Set<FXOMElement> getUnresolvedInstances();
 
     Selection getSelection();
 

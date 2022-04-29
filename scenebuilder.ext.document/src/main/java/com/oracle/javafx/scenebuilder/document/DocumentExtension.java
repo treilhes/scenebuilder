@@ -43,13 +43,22 @@ import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowInfoAction;
 import com.oracle.javafx.scenebuilder.document.actions.ShowNodeIdAction;
 import com.oracle.javafx.scenebuilder.document.actions.ToggleDocumentVisibilityAction;
+import com.oracle.javafx.scenebuilder.document.actions.ToggleExpertViewAction;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyAnimationScheduler;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDropTarget;
-import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyInsertLine;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyTaskScheduler;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.FxIdDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.NodeIdDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
+import com.oracle.javafx.scenebuilder.document.i18n.I18NDocument;
 import com.oracle.javafx.scenebuilder.document.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
@@ -71,22 +80,31 @@ public class DocumentExtension extends AbstractExtension {
                 DisplayOptionPreference.class,
                 DocumentPanelController.class,
                 FxIdDisplayOption.class,
+                HierarchyAnimationScheduler.class,
+                HierarchyCellAssignment.class,
+                HierarchyController.class,
                 HierarchyDNDController.class,
-                HierarchyDNDController.Factory.class,
                 HierarchyDropTarget.class,
                 HierarchyDropTarget.Factory.class,
+                HierarchyInsertLine.class,
                 HierarchyMenuProvider.class,
-                HierarchyPanelController.class,
+                HierarchyParentRing.class,
+                HierarchyTaskScheduler.class,
                 HierarchyTreeCell.class,
                 HierarchyTreeCell.Factory.class,
+                HierarchyController.class,
+                HierarchyTreeViewController.class,
                 InfoPanelController.class,
+                I18NDocument.class,
                 MetadataInfoDisplayOption.class,
                 NodeIdDisplayOption.class,
+                TreeItemFactory.class,
                 ShowExpertByDefaultPreference.class,
                 ShowFxIdAction.class,
                 ShowInfoAction.class,
                 ShowNodeIdAction.class,
-                ToggleDocumentVisibilityAction.class
+                ToggleDocumentVisibilityAction.class,
+                ToggleExpertViewAction.class
             );
      // @formatter:on
     }

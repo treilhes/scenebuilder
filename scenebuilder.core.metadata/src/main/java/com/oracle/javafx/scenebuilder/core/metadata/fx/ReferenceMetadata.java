@@ -35,15 +35,36 @@ package com.oracle.javafx.scenebuilder.core.metadata.fx;
 
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic.Type;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMReference;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.fx.defaults.NullReference;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @Component
 public class ReferenceMetadata extends ComponentClassMetadata<FXOMReference> {
-    protected ReferenceMetadata() {
-        super(FXOMReference.class, null);
+
+    static {
+        FXOMDocument.DEFAULT_NAMESPACE.put("sb_nullReference", new NullReference());
+    }
+
+    private final I18nStringPropertyMetadata sourceMetadata = new I18nStringPropertyMetadata.Builder()
+            .withName(new PropertyName("source"))
+            .withReadWrite(true)
+            .withDefaultValue("sb_nullReference")
+            .withInspectorPath(new InspectorPath("Properties", "Reference", 1))
+            .withVisibility(Visibility.STANDARD)
+            .build();
+
+    protected ReferenceMetadata(IntrinsicMetadata parent) {
+        super(FXOMReference.class, parent);
+
+        getProperties().add(sourceMetadata);
 
         getQualifiers().put("reference",
                 new Qualifier(

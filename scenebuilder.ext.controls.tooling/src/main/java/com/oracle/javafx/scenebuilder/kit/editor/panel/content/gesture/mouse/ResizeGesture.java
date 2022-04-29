@@ -574,9 +574,9 @@ public class ResizeGesture extends AbstractMouseGesture {
             }
 
             final HierarchyMask m = designMaskFactory.getMask(fxomObject);
-            if (m.isAcceptingSubComponent()) {
-                for (int i = 0, count = m.getSubComponentCount(); i < count; i++) {
-                    addToResizingGuideController(m.getSubComponentAtIndex(i));
+            if (m.hasMainAccessory()) {
+                for (FXOMObject child:m.getAccessories(m.getMainAccessory(), false)) {
+                    addToResizingGuideController(child);
                 }
             }
         }

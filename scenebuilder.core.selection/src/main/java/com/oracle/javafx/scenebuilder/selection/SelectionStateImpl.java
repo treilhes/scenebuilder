@@ -42,6 +42,7 @@ import java.util.Set;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -61,22 +62,22 @@ import javafx.css.StyleableProperty;
 public class SelectionStateImpl implements BasicSelection, SelectionState {
 
     private final Selection selection;
-    private final Set<FXOMInstance> selectedInstances = new HashSet<>();
+    private final Set<FXOMElement> selectedInstances = new HashSet<>();
     private final Set<FXOMIntrinsic> selectedIntrinsics = new HashSet<>();
     private final Set<Class<?>> selectedClasses = new HashSet<>();
     private Class<?> commonParentClass;
     private FXOMObject commonParentObject;
-    private final Set<FXOMInstance> unresolvedInstances = new HashSet<>();
+    private final Set<FXOMElement> unresolvedInstances = new HashSet<>();
 
     // TEMP CSS PERF ADD
-    private final Map<FXOMInstance, Map<StyleableProperty, List<Style>>> selectionCssState = new HashMap<>();
+    private final Map<FXOMElement, Map<StyleableProperty, List<Style>>> selectionCssState = new HashMap<>();
 
     @Override
     public void clearSelectionCssState() {
         selectionCssState.clear();
     }
     @Override
-    public Map<StyleableProperty, List<Style>> getCssState(FXOMInstance instance) {
+    public Map<StyleableProperty, List<Style>> getCssState(FXOMElement instance) {
         if (selectionCssState.containsKey(instance)) {
             return selectionCssState.get(instance);
         } else {
@@ -106,14 +107,14 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
         }
 
         selectedClasses.clear();
-        for (FXOMInstance instance : selectedInstances) {
-            if (instance.getDeclaredClass() != null) { // null means unresolved instance
-                selectedClasses.add(instance.getDeclaredClass());
+        for (FXOMElement instance : selectedInstances) {
+            if (instance.getMetadataClass() != null) { // null means unresolved instance
+                selectedClasses.add(instance.getMetadataClass());
             }
         }
 
         commonParentClass = null;
-        for (FXOMInstance instance : selectedInstances) {
+        for (FXOMElement instance : selectedInstances) {
             if (commonParentClass == null) {
                 // first instance
                 commonParentClass = getParentClass(instance);
@@ -138,7 +139,7 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
         }
 
         commonParentObject = null;
-        for (FXOMInstance instance : selectedInstances) {
+        for (FXOMElement instance : selectedInstances) {
             if (commonParentObject == null) {
                 // first instance
                 commonParentObject = instance.getParentObject();
@@ -163,7 +164,7 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
         }
 
         unresolvedInstances.clear();
-        for (FXOMInstance instance : selectedInstances) {
+        for (FXOMElement instance : selectedInstances) {
             if (instance.getSceneGraphObject() == null) {
                 unresolvedInstances.add(instance);
             }
@@ -225,7 +226,7 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
     }
 
     @Override
-    public Set<FXOMInstance> getSelectedInstances() {
+    public Set<FXOMElement> getSelectedInstances() {
         return selectedInstances;
     }
 
@@ -235,7 +236,7 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
     }
 
     @Override
-    public Set<FXOMInstance> getUnresolvedInstances() {
+    public Set<FXOMElement> getUnresolvedInstances() {
         return unresolvedInstances;
     }
 
@@ -250,9 +251,9 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
             // root
             return null;
         }
-        // A parent is always a FXOMInstance
-        assert parent instanceof FXOMInstance;
-        return ((FXOMInstance) parent).getDeclaredClass();
+        // A parent is always a FXOMElement
+        assert parent instanceof FXOMElement;
+        return ((FXOMElement) parent).getDeclaredClass();
     }
 
 }

@@ -73,7 +73,7 @@ public final class ModifyFxIdJob extends AbstractJob {
 
     protected void setJobParameters(FXOMObject fxomObject, String newValue) {
         assert fxomObject != null;
-        assert fxomObject.getSceneGraphObject() != null;
+        //assert fxomObject.getSceneGraphObject() != null || fxomObject.isVirtual();
 
         this.fxomObject = fxomObject;
         this.newValue = newValue;

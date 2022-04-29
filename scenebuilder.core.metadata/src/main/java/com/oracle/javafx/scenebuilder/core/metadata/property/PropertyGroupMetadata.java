@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 
 // TODO check if complexmetadata is not a valid substitute of this one
 public class PropertyGroupMetadata extends ValuePropertyMetadata {
@@ -84,7 +83,7 @@ public class PropertyGroupMetadata extends ValuePropertyMetadata {
     }
 
     @Override
-    public void setValueInSceneGraphObject(FXOMInstance fxomInstance, Object newValue) {
+    public void setValueInSceneGraphObject(FXOMElement fxomInstance, Object newValue) {
 //        assert newValue instanceof Object[];
 //        Object[] values = (Object[])newValue;
 //

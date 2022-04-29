@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+
+<fx:define xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.2">
+   <Button mnemonicParsing="false" text="Button" />
+   <Button mnemonicParsing="false" text="Button" />
+</fx:define>

@@ -262,9 +262,12 @@ public class FXOMCloner {
 
         final FXOMDefine result = new FXOMDefine(targetDocument);
 
-        for (FXOMObject sourceItem : source.getItems()) {
-            final FXOMObject newItem = cloneObject(sourceItem);
-            newItem.addToParentDefine(-1, result);
+        for (Map.Entry<PropertyName, FXOMProperty> e : source.getProperties().entrySet()) {
+            final FXOMProperty newProperty = cloneProperty(e.getValue());
+            // Note: cloneProperty() may
+            if (newProperty != null) {
+                newProperty.addToParentInstance(-1, result);
+            }
         }
 
         return result;

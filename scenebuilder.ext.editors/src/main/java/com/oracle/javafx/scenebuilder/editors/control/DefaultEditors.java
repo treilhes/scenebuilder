@@ -64,6 +64,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.value.Rectangle2DPr
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.IdStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.ResourceStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.SourceStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.StyleStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.TableViewResizePolicyPropertyMetadata;
@@ -105,6 +106,7 @@ public class DefaultEditors implements EditorMapProvider {
         editorsMap.put(StyleClassStringListPropertyMetadata.class, StyleClassEditor.class);
         editorsMap.put(StylesheetsStringListPropertyMetadata.class, StylesheetEditor.class);
         editorsMap.put(SourceStringPropertyMetadata.class, IncludeFxmlEditor.class);
+        editorsMap.put(ResourceStringPropertyMetadata.class, ResourceFileEditor.class);
         editorsMap.put(DividerPositionsDoubleArrayPropertyMetadata.class, DividerPositionsEditor.class);
 
         editorsMap.put(StringListPropertyMetadata.class, StringListEditor.class);

@@ -451,9 +451,10 @@ public class DragGesture extends AbstractGesture {
 
         movingGuideController.clearSampleBounds();
 
+        // FIXME moving guides only handles main accessory items, it may need to handle all accessories items ?
+
         // Adds N, S, E, W and center lines for each child of the hitParent
-        for (int i = 0, c = hitParentMask.getSubComponentCount(); i < c; i++) {
-            final FXOMObject child = hitParentMask.getSubComponentAtIndex(i);
+        for (final FXOMObject child:hitParentMask.getSubComponents(false)) {
             final boolean isNode = child.getSceneGraphObject() instanceof Node;
             if ((pickExcludes.contains(child) == false) && isNode) {
                 final Node childNode = (Node) child.getSceneGraphObject();

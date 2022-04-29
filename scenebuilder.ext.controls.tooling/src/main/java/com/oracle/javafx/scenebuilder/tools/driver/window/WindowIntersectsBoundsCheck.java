@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.window;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -62,14 +65,20 @@ public class WindowIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject() instanceof Window;
         HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
-        FXOMObject scene = windowDesignHierarchyMask.getAccessory(windowDesignHierarchyMask.getMainAccessory());
-        if (scene == null) {
+        List<FXOMObject> sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
+        if (sceneContent.isEmpty()) {
             return false;
         }
+        FXOMObject scene = sceneContent.get(0);
         assert scene.getSceneGraphObject() instanceof Scene;
         assert scene instanceof FXOMInstance;
         HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
-        FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
+        List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
+
+        assert !rootContent.isEmpty();
+
+        FXOMObject root = rootContent.get(0);
+
         assert root != null;
         assert root.getSceneGraphObject() instanceof Node;
         Node rootNode = (Node) root.getSceneGraphObject();

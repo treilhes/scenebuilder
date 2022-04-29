@@ -67,9 +67,12 @@ import javafx.scene.input.Clipboard;
  * This job try to paste the current clipboard content (if valid {@link FXOMObject})
  * into the main accessory of the selected objects common ancestor
  * or into the first accepting accesory of the selected object
+ *
+ * @deprecated in favor of {@link PasteIntoJob}
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Deprecated(forRemoval = true)
 public final class PasteJob extends BatchSelectionJob {
 
     private FXOMObject targetObject;
@@ -114,8 +117,7 @@ public final class PasteJob extends BatchSelectionJob {
         if (fxomDocument != null) {
 
             // Retrieve the FXOMObjects from the clipboard
-            final ClipboardDecoder clipboardDecoder
-                    = new ClipboardDecoder(Clipboard.getSystemClipboard());
+            final ClipboardDecoder clipboardDecoder = new ClipboardDecoder(Clipboard.getSystemClipboard());
             newObjects = clipboardDecoder.decode(fxomDocument);
             assert newObjects != null; // But possible empty
 
@@ -160,7 +162,7 @@ public final class PasteJob extends BatchSelectionJob {
                             relocateDelta = 0.0;
                         }
                         for (FXOMObject newObject : newObjects) {
-                            final AbstractJob subJob = insertAsSubComponentJobFactory.getJob(newObject,targetObject,targetMask.getSubComponentCount());
+                            final AbstractJob subJob = insertAsSubComponentJobFactory.getJob(newObject,targetObject,targetMask.getSubComponentCount(true));
                             result.add(0, subJob);
                             if ((relocateDelta != 0.0) && newObject.isNode()) {
                                 final Node sceneGraphNode = (Node) newObject.getSceneGraphObject();

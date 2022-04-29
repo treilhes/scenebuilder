@@ -47,58 +47,66 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@ActionMeta(
-		nameKey = "action.name.show.jar.analysis.report",
-		descriptionKey = "action.description.show.jar.analysis.report")
+@ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 public class ApplyToolCssAction extends AbstractAction implements InitWithDocument {
 
-	private ApplyToolCssConfig config;
+    private ApplyToolCssConfig config;
 
-	private final SceneBuilderManager sceneBuilderManager;
+    private final SceneBuilderManager sceneBuilderManager;
 
-	public ApplyToolCssAction(
-	        ActionExtensionFactory extensionFactory,
-	        SceneBuilderManager sceneBuilderManager) {
+    public ApplyToolCssAction(ActionExtensionFactory extensionFactory, SceneBuilderManager sceneBuilderManager) {
         super(extensionFactory);
-		this.sceneBuilderManager = sceneBuilderManager;
-	}
+        this.sceneBuilderManager = sceneBuilderManager;
+    }
 
-	public synchronized ApplyToolCssConfig getActionConfig() {
-		if (config == null) {
-			config = new ApplyToolCssConfig();
-		}
-		return config;
-	}
+    public synchronized ApplyToolCssConfig getActionConfig() {
+        if (config == null) {
+            config = new ApplyToolCssConfig();
+        }
+        return config;
+    }
 
-	public synchronized void resetActionConfig() {
-		config = null;
-	}
+    public synchronized void resetActionConfig() {
+        config = null;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    @Override
+    public boolean canPerform() {
+        return true;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-		assert getActionConfig() != null;
-		sceneBuilderManager.stylesheetConfig().onNext(getActionConfig());
-		return ActionStatus.DONE;
-	}
+    @Override
+    public ActionStatus doPerform() {
+        assert getActionConfig() != null;
+        sceneBuilderManager.stylesheetConfig().onNext(getActionConfig());
+        return ActionStatus.DONE;
+    }
 
-	public static class ApplyToolCssConfig implements StylesheetProvider {
-		private @Getter @Setter String userAgentStylesheet;
-		private @Getter List<String> stylesheets = new ArrayList<>();
-	}
+    public static class ApplyToolCssConfig implements StylesheetProvider {
+        private String userAgentStylesheet;
+        private List<String> stylesheets = new ArrayList<>();
 
-	@Override
-	public void initWithDocument() {
-		checkAndPerform();
-	}
+        @Override
+        public String getUserAgentStylesheet() {
+            return userAgentStylesheet;
+        }
+
+        public void setUserAgentStylesheet(String userAgentStylesheet) {
+            this.userAgentStylesheet = userAgentStylesheet;
+        }
+
+        @Override
+        public List<String> getStylesheets() {
+            return stylesheets;
+        }
+
+    }
+
+    @Override
+    public void initWithDocument() {
+        checkAndPerform();
+    }
 
 }

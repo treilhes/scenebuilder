@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,15 +50,14 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 
+//FIXME We are now using java 11 so check if deprecation still apply ?
 @SuppressWarnings("deprecation")
 public class Deprecation {
 
     private static Logger logger = LoggerFactory.getLogger(Deprecation.class);
-    
+
     private Deprecation() {
         assert false;
     }
@@ -112,7 +112,7 @@ public class Deprecation {
 
     // Deprecated stuff in Parent
 
-    
+
 
     // RT-20184 : FX should provide a Parent.pick() routine
     public static Node pick(Node node, double sceneX, double sceneY) {
@@ -169,11 +169,4 @@ public class Deprecation {
         }
     }
 
-    // Deprecated as of FX 8 u20, and replaced by new method getTreeItemLevel:
-    // using it would break ability to compile over JDK 8 GA, not an option for now.
-    public static int getNodeLevel(TreeItem<?> item) {
-        return TreeView.getNodeLevel(item);
-    }
-
-    
 }

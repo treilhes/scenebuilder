@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.editors.control.InsetsEditor;
 import com.oracle.javafx.scenebuilder.editors.control.IntegerEditor;
 import com.oracle.javafx.scenebuilder.editors.control.NullableDoubleEditor;
 import com.oracle.javafx.scenebuilder.editors.control.Point3DEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ResourceFileEditor;
 import com.oracle.javafx.scenebuilder.editors.control.RotateEditor;
 import com.oracle.javafx.scenebuilder.editors.control.StringEditor;
 import com.oracle.javafx.scenebuilder.editors.control.StringListEditor;
@@ -69,6 +70,7 @@ import com.oracle.javafx.scenebuilder.editors.control.StylesheetEditor;
 import com.oracle.javafx.scenebuilder.editors.control.TextAlignmentEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
 import com.oracle.javafx.scenebuilder.editors.control.effect.JavaFxEffectsProvider;
+import com.oracle.javafx.scenebuilder.editors.i18n.I18NDefaultEditors;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.BoundsPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.EffectPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.FontPopupEditor;
@@ -89,6 +91,7 @@ public class DefaultEditorsExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                I18NDefaultEditors.class,
                 BooleanEditor.class,
                 BoundedDoubleEditor.class,
                 BoundsPopupEditor.class,
@@ -122,6 +125,7 @@ public class DefaultEditorsExtension extends AbstractExtension {
                 NullableDoubleEditor.class,
                 Point3DEditor.class,
                 Rectangle2DPopupEditor.class,
+                ResourceFileEditor.class,
                 RotateEditor.class,
                 SetEffectAction.class,
                 SetEffectAction.MenuProvider.class,

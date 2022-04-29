@@ -127,7 +127,11 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
         final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
         assert newContainerMask.isAcceptingAccessory(newContainerMask.getMainAccessory());
 
-        final FXOMObject dummyPane = newContainerMask.getAccessory(newContainerMask.getMainAccessory());
+        final List<FXOMObject> containerContent = newContainerMask.getAccessories(newContainerMask.getMainAccessory(), false);
+
+        assert !containerContent.isEmpty();
+
+        final FXOMObject dummyPane = containerContent.get(0);
         assert dummyPane != null;
 
         // Update children before adding them to the new container

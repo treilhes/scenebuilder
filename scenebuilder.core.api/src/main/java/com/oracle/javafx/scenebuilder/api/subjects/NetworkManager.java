@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,10 +42,9 @@ import org.springframework.stereotype.Component;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
-import lombok.Getter;
 
 public interface NetworkManager {
-    
+
     SubjectItem<Proxy> proxy();
     SubjectItem<X509Certificate[]> trustRequest();
     SubjectItem<X509Certificate[]> trustedTemporarily();
@@ -94,7 +94,7 @@ public interface NetworkManager {
         public SubjectItem<X509Certificate[]> trustedPermanently() {
             return trustedPermanently;
         }
-        
+
         @Override
         public SubjectItem<X509Certificate[]> untrusted() {
             return untrusted;
@@ -103,11 +103,11 @@ public interface NetworkManager {
 
     public class NetworkSubjects extends SubjectManager {
 
-        private @Getter ReplaySubject<Proxy> proxy;
-        private @Getter Subject<X509Certificate[]> trustRequest;
-        private @Getter Subject<X509Certificate[]> trustedTemporarily;
-        private @Getter Subject<X509Certificate[]> trustedPermanently;
-        private @Getter Subject<X509Certificate[]> untrusted;
+        private ReplaySubject<Proxy> proxy;
+        private Subject<X509Certificate[]> trustRequest;
+        private Subject<X509Certificate[]> trustedTemporarily;
+        private Subject<X509Certificate[]> trustedPermanently;
+        private Subject<X509Certificate[]> untrusted;
 
         public NetworkSubjects() {
             proxy = wrap(NetworkSubjects.class, "proxy", ReplaySubject.create(1)); // NOI18N
@@ -115,6 +115,26 @@ public interface NetworkManager {
             trustedTemporarily = wrap(NetworkSubjects.class, "trustedTemporarily", PublishSubject.create()); // NOI18N
             trustedPermanently = wrap(NetworkSubjects.class, "trustedPermanently", PublishSubject.create()); // NOI18N
             untrusted = wrap(NetworkSubjects.class, "untrusted", PublishSubject.create()); // NOI18N
+        }
+
+        public ReplaySubject<Proxy> getProxy() {
+            return proxy;
+        }
+
+        public Subject<X509Certificate[]> getTrustRequest() {
+            return trustRequest;
+        }
+
+        public Subject<X509Certificate[]> getTrustedTemporarily() {
+            return trustedTemporarily;
+        }
+
+        public Subject<X509Certificate[]> getTrustedPermanently() {
+            return trustedPermanently;
+        }
+
+        public Subject<X509Certificate[]> getUntrusted() {
+            return untrusted;
         }
 
     }

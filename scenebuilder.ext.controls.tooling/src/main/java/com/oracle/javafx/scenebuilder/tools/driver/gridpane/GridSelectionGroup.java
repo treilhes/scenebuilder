@@ -338,10 +338,9 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
         final List<FXOMObject> result = new ArrayList<>();
 
         final DesignHierarchyMask m = designHierarchyMaskFactory.getMask(parentObject);
-        assert m.isAcceptingSubComponent();
+        assert m.getMainAccessory() != null;
 
-        for (int i = 0, count = m.getSubComponentCount(); i < count; i++) {
-            final FXOMObject childObject = m.getSubComponentAtIndex(i);
+        for (FXOMObject childObject:m.getSubComponents(m.getMainAccessory(), false)) {
             if (childObject instanceof FXOMInstance) {
                 final FXOMInstance childInstance = (FXOMInstance) childObject;
                 if (indexes.contains(columnIndexMeta.getValue(childInstance))) {
@@ -362,10 +361,9 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
         final List<FXOMObject> result = new ArrayList<>();
 
         final DesignHierarchyMask m = designHierarchyMaskFactory.getMask(parentObject);
-        assert m.isAcceptingSubComponent();
+        assert m.getMainAccessory() != null;
 
-        for (int i = 0, count = m.getSubComponentCount(); i < count; i++) {
-            final FXOMObject childObject = m.getSubComponentAtIndex(i);
+        for (FXOMObject childObject:m.getSubComponents(m.getMainAccessory(), false)) {
             if (childObject instanceof FXOMInstance) {
                 final FXOMInstance childInstance = (FXOMInstance) childObject;
                 if (indexes.contains(rowIndexMeta.getValue(childInstance))) {

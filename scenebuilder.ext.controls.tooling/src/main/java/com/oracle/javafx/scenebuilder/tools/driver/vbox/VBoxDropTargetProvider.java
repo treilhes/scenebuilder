@@ -105,8 +105,8 @@ public final class VBoxDropTargetProvider extends AbstractDropTargetProvider {
             beforeChild = null;
         } else {
             final HierarchyMask m = maskFactory.getMask(fxomObject);
-            if (targetIndex < m.getSubComponentCount()) {
-                beforeChild = m.getSubComponentAtIndex(targetIndex);
+            if (targetIndex < m.getSubComponentCount(m.getMainAccessory(), false)) {
+                beforeChild = m.getSubComponentAtIndex(m.getMainAccessory(), targetIndex, false);
             } else {
                 beforeChild = null;
             }

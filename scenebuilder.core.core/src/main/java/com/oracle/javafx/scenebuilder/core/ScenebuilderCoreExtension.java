@@ -63,8 +63,6 @@ import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.i18n.I18NScenebuilderCore;
-import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionContextMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionViewMenuItemProvider;
@@ -89,8 +87,6 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 AnnotatedActionMenuItemProvider.class,
                 AnnotatedActionViewMenuItemProvider.class,
                 AnnotatedViewAttachmentProvider.class,
-                BorderPaneHierarchyMask.class,
-                BorderPaneHierarchyMask.Factory.class,
                 ControllerClassEditor.class,
                 CoreEditors.class,
                 DockMinimizedPreference.class,
@@ -110,8 +106,6 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 ExternalDragSource.Factory.class,
                 FocusedAcceleratorsMapPreference.Factory.class,
                 FxIdEditor.class,
-                GridPaneHierarchyMask.class,
-                GridPaneHierarchyMask.Factory.class,
                 I18NScenebuilderCore.class,
                 LastDockDockTypePreference.class,
                 LastDockUuidPreference.class,

@@ -35,46 +35,54 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 
 import static javafx.geometry.Orientation.HORIZONTAL;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.ContextMenu;
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
-import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
-import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
+import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
-import com.oracle.javafx.scenebuilder.document.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
-import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
+import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAccessory;
 
 import javafx.collections.ObservableList;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 /**
  * Hierarchy panel controller based on the TreeView control.
  */
-public class HierarchyTreeViewController extends AbstractHierarchyPanelController {
+@Component
+@Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Lazy
+public class HierarchyTreeViewController extends AbstractFxmlPanelController implements HierarchyPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyTreeViewController.class);
 
@@ -82,51 +90,30 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     protected TreeView<HierarchyItem> treeView;
 
 	private final HierarchyTreeCell.Factory hierarchyTreeCellFactory;
-
+	private final HierarchyCellAssignment cellAssignments;
 
     public HierarchyTreeViewController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
-            InlineEdit inlineEdit,
-            ContextMenu contextMenu,
-            JobManager jobManager,
-            Drag drag,
-            Selection selection,
-            ShowExpertByDefaultPreference showExpertByDefaultPreference,
-            DocumentDragSource.Factory documentDragSourceFactory,
-            ExternalDragSource.Factory externalDragSourceFactory,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory,
+            HierarchyCellAssignment cellAssignments,
             HierarchyTreeCell.Factory hierarchyTreeCellFactory,
-            HierarchyDNDController.Factory hierarchyDNDControllerFactory,
             MetadataInfoDisplayOption defaultDisplayOptions) {
-        super(scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"),
-                inlineEdit, contextMenu,
-                jobManager, drag, selection, showExpertByDefaultPreference, documentDragSourceFactory,
-                externalDragSourceFactory, designHierarchyMaskFactory, hierarchyDNDControllerFactory, defaultDisplayOptions);
+        super(scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), I18N.getBundle());
+
         this.hierarchyTreeCellFactory = hierarchyTreeCellFactory;
+        this.cellAssignments = cellAssignments;
+
     }
 
-    @FXML
-    public void initialize() {
-//    	setParentRingColor(parentRingColorPreference.getValue());
-//
-//    	parentRingColorPreference.getObservableValue().addListener((ob,o,n) -> setParentRingColor(n));
-    }
-
-    @Override
-    public Control getPanelControl() {
-        return treeView;
-    }
-
-    @Override
-    public ObservableList<TreeItem<HierarchyItem>> getSelectedItems() {
-        return treeView.getSelectionModel().getSelectedItems();
-    }
-
-    @Override
     protected void initializePanel() {
         assert treeView != null;
-        super.initializePanel();
+
+        // Panel may be either a TreeView or a TreeTableView
+        assert getTreeView() != null;
+
+        // Set default parent ring color
+        //setParentRingColor(DEFAULT_PARENT_RING_COLOR);
+
         // Initialize and configure tree view
         treeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Cell factory
@@ -138,25 +125,59 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
     }
 
     @Override
-    protected void updatePanel() {
+    public TreeView<HierarchyItem> getTreeView() {
+        return treeView;
+    }
+
+    /**
+     * Returns the panel control scrollbar for the specified orientation.
+     *
+     * @param orientation the scrollbar orientation
+     * @return the panel control scrollbar for the specified orientation
+     * @treatAsPrivate
+     */
+    public ScrollBar getScrollBar(final Orientation orientation) {
+        final Control panelControl = getTreeView();
+        final Set<Node> scrollBars = panelControl.lookupAll(".scroll-bar"); //NOCHECK
+        for (Node node : scrollBars) {
+            if (node instanceof ScrollBar) {
+                final ScrollBar scrollBar = (ScrollBar) node;
+                if (scrollBar.getOrientation() == orientation) {
+                    return scrollBar;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setRooItem(TreeItem<HierarchyItem> newRoot) {
+
         if (treeView != null) {
-            // First update rootTreeItem + children TreeItems
-            updateTreeItems();
-            // Then update the TreeTableView with the updated rootTreeItem
-            stopListeningToTreeItemSelection();
-            treeView.setRoot(rootTreeItem);
-            startListeningToTreeItemSelection();
+            cellAssignments.clear();
+            treeView.setRoot(newRoot);
         }
     }
 
-    @Override
-    protected void clearSelection() {
+    public ObservableList<TreeItem<HierarchyItem>> getSelectedItems() {
+        return treeView.getSelectionModel().getSelectedItems();
+    }
+
+    public void clearSelection() {
         assert treeView != null;
         treeView.getSelectionModel().clearSelection();
     }
 
-    @Override
-    protected void select(final TreeItem<HierarchyItem> treeItem) {
+    /**
+     * @param treeItems the TreeItems
+     * @treatAsPrivate
+     */
+    public void select(final List<TreeItem<HierarchyItem>> treeItems) {
+        for (TreeItem<HierarchyItem> treeItem : treeItems) {
+            select(treeItem);
+        }
+    }
+
+    public void select(final TreeItem<HierarchyItem> treeItem) {
         assert treeView != null;
         // The select method of TreeView selection model will expand the selected TreeItem.
         // Keep the current expanded value to set it back after selection.
@@ -171,12 +192,13 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
         treeView.scrollTo(treeView.getRow(treeItem));
     }
 
-    @Override
-    public Cell<?> getCell(final TreeItem<?> treeItem) {
-        assert treeView != null;
-        final TreeCell<?> treeCell
-                = HierarchyTreeViewUtils.getTreeCell(treeView, treeItem);
-        return treeCell;
+    /**
+     * @param treeItem the TreeItem
+     * @return true if visible
+     * @treatAsPrivate
+     */
+    public boolean isVisible(final TreeItem<HierarchyItem> treeItem) {
+        return cellAssignments.getCell(treeItem).map(HierarchyCell::isVisible).orElse(false);
     }
 
     /**
@@ -184,6 +206,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
      * zone for auto scrolling.
      *
      * @return the Y coordinate of the panel content TOP
+     * @treatAsPrivate
      */
     @Override
     public double getContentTopY() {
@@ -197,6 +220,7 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
      * zone for auto scrolling.
      *
      * @return the Y coordinate of the panel content BOTTOM
+     * @treatAsPrivate
      */
     @Override
     public double getContentBottomY() {
@@ -214,130 +238,329 @@ public class HierarchyTreeViewController extends AbstractHierarchyPanelControlle
         return bottomY;
     }
 
+
+    /**
+     * @treatAsPrivate
+     */
     @Override
-    protected void startListeningToTreeItemSelection() {
-        treeView.getSelectionModel().getSelectedItems().addListener(treeItemSelectionListener);
+    public void controllerDidLoadFxml() {
+        assert getTreeView() != null;
+
+        // Initialize and configure the hierarchy panel
+        initializePanel();
+
     }
 
-    @Override
-    protected void stopListeningToTreeItemSelection() {
-        treeView.getSelectionModel().getSelectedItems().removeListener(treeItemSelectionListener);
-    }
-
-    @Override
-    protected void startEditingDisplayInfo() {
-        // Start inline editing the display info on ENTER key
-        final List<TreeItem<HierarchyItem>> selectedTreeItems
-                = treeView.getSelectionModel().getSelectedItems();
-        if (selectedTreeItems.size() == 1) {
-            final TreeItem<HierarchyItem> selectedTreeItem = selectedTreeItems.get(0);
-            final HierarchyItem item = selectedTreeItem.getValue();
-            final DisplayOption option = getDisplayOption();
-            if (item != null && !option.isReadOnly(item.getMask())) {
-                final TreeCell<?> tc = HierarchyTreeViewUtils.getTreeCell(treeView, selectedTreeItem);
-                assert tc instanceof HierarchyTreeCell;
-                final HierarchyTreeCell<?> htc = (HierarchyTreeCell<?>) tc;
-                logger.debug("Request edition of item {}/{}", item.getMask().getFxomObject(), item.getMask().hashCode());
-                htc.startEditingDisplayInfo();
+    public List<TreeItem<HierarchyItem>> lookupTreeItem(List<FXOMObject> fxomObjects) {
+        final List<TreeItem<HierarchyItem>> result = new ArrayList<>();
+        for (FXOMObject fxomObject : fxomObjects) {
+            final TreeItem<HierarchyItem> treeItem = lookupTreeItem(fxomObject);
+            // TreeItem may be null when selecting a GridPane column/row
+            // constraint in content panel
+            if (treeItem != null) {
+                result.add(treeItem);
             }
+        }
+        return result;
+    }
+
+    /**
+     * @param fxomObject the FXOMObject
+     * @return the TreeItem corresponding to the specified FXOMObject
+     * @treatAsPrivate
+     */
+    @Override
+    public TreeItem<HierarchyItem> lookupTreeItem(FXOMObject fxomObject) {
+        return lookupTreeItem(fxomObject, getRootItem());
+    }
+
+    private TreeItem<HierarchyItem> lookupTreeItem(FXOMObject fxomObject, TreeItem<HierarchyItem> fromTreeItem) {
+        TreeItem<HierarchyItem> result;
+        assert fxomObject != null;
+
+        // ROOT TreeItem may be null when no document is loaded
+        if (fromTreeItem != null) {
+            assert fromTreeItem.getValue() != null;
+            if (fromTreeItem.getValue().getFxomObject() == fxomObject) {
+                result = fromTreeItem;
+            } else {
+                Iterator<TreeItem<HierarchyItem>> it = fromTreeItem.getChildren().iterator();
+                result = null;
+                while ((result == null) && it.hasNext()) {
+                    TreeItem<HierarchyItem> childItem = it.next();
+                    result = lookupTreeItem(fxomObject, childItem);
+                }
+            }
+        } else {
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Returns the list of all descendant from the specified parent TreeItem.
+     * The specified parent TreeItem is excluded from the returned list.
+     *
+     * @param <T> type
+     * @param parentTreeItem the parent TreeItem
+     * @return the list of all descendant
+     */
+    private <T> List<TreeItem<T>> getAllTreeItems(final TreeItem<T> parentTreeItem) {
+        assert parentTreeItem != null;
+        final List<TreeItem<T>> treeItems = new ArrayList<>();
+        for (TreeItem<T> child : parentTreeItem.getChildren()) {
+            treeItems.add(child);
+            treeItems.addAll(getAllTreeItems(child));
+        }
+        return treeItems;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TreeItem<HierarchyItem> getLastVisibleTreeItem() {
+        return getLastVisibleTreeItem(getRootItem());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TreeItem<HierarchyItem> getLastVisibleTreeItem(final TreeItem<HierarchyItem> parentTreeItem) {
+        assert parentTreeItem != null;
+        TreeItem<HierarchyItem> result = parentTreeItem;
+        int size = result.getChildren().size();
+        while (size != 0) {
+            if (result.isExpanded()) {
+                result = result.getChildren().get(size - 1);
+                size = result.getChildren().size();
+            } else {
+                size = 0;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the next visible TreeItem of the specified TreeItem.
+     *
+     * @param <T> type
+     * @param treeItem the TreeItem
+     * @return the next visible TreeItem
+     * @treatAsPrivate
+     */
+    public <T> TreeItem<T> getNextVisibleTreeItem(final TreeItem<T> treeItem) {
+        assert treeItem != null;
+        if (treeItem == getRootItem()) {
+            // Root TreeItem has no next TreeItem
+            return null;
+        } else if (treeItem.isExpanded() && !treeItem.getChildren().isEmpty()) {
+            // Return first child
+            return treeItem.getChildren().get(0);
+        } else {
+            TreeItem<T> parentTreeItem = treeItem.getParent();
+            TreeItem<T> result = treeItem.nextSibling();
+            while (result == null && parentTreeItem != getRootItem()) {
+                result = parentTreeItem.nextSibling();
+                parentTreeItem = parentTreeItem.getParent();
+            }
+            return result;
         }
     }
 
     /**
-     * *************************************************************************
-     * Parent ring
-     * *************************************************************************
+     * Returns the previous visible TreeItem of the specified TreeItem.
+     *
+     * @param <T> type
+     * @param treeItem the TreeItem
+     * @return the previous visible TreeItem
+     * @treatAsPrivate
+     */
+    public <T> TreeItem<T> getPreviousVisibleTreeItem(final TreeItem<T> treeItem) {
+        assert treeItem != null;
+        if (treeItem == getRootItem()) {
+            // Root TreeItem has no previous TreeItem
+            return null;
+        } else {
+            TreeItem<T> parentTreeItem = treeItem.getParent();
+            TreeItem<T> result = treeItem.previousSibling();
+            while (result == null && parentTreeItem != getRootItem()) {
+                result = parentTreeItem.previousSibling();
+                parentTreeItem = parentTreeItem.getParent();
+            }
+            return result;
+        }
+    }
+
+    public <T> void expandAllTreeItems(final TreeItem<T> parentTreeItem) {
+        assert parentTreeItem != null;
+        parentTreeItem.setExpanded(true);
+        final List<TreeItem<T>> treeItems = getAllTreeItems(parentTreeItem);
+        assert treeItems != null;
+        for (TreeItem<T> treeItem : treeItems) {
+            treeItem.setExpanded(true);
+        }
+    }
+
+    public <T> void collapseAllTreeItems(final TreeItem<T> parentTreeItem) {
+        assert parentTreeItem != null;
+        parentTreeItem.setExpanded(false);
+        final List<TreeItem<T>> treeItems = getAllTreeItems(parentTreeItem);
+        assert treeItems != null;
+        for (TreeItem<T> treeItem : treeItems) {
+            treeItem.setExpanded(false);
+        }
+    }
+
+    /**
+     * Returns the cell ancestor of the specified event target. Indeed,
+     * depending on the mouse click position, the event target may be the cell
+     * node itself, the cell graphic or the cell labeled text.
+     *
+     * @param target
+     * @return
+     */
+    public Cell<?> lookupCell(EventTarget target) {
+        assert target instanceof Node;
+        Node node = (Node) target;
+        while ((node instanceof Cell) == false) {
+            node = node.getParent();
+        }
+        return (Cell<?>) node;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public void clearBorderColor() {
-        assert treeView != null;
-        final Set<Node> cells = HierarchyTreeViewUtils.getTreeCells(treeView);
-        assert cells != null;
-        for (Node node : cells) {
-            assert node instanceof Cell;
-            clearBorderColor((Cell<?>) node);
-        }
-    }
+    public TreeItem<HierarchyItem> getCommonParentTreeItem(final List<TreeItem<HierarchyItem>> treeItems) {
 
-    @Override
-    public void updateParentRing() {
-        assert treeView != null;
+        assert treeItems != null && !treeItems.isEmpty();
 
-        // Do not update parent ring while performing some operations
-        // like DND within the hierarchy panel
-        if (isParentRingEnabled() == false) {
-            return;
-        }
-
-        final Set<Node> treeCells = HierarchyTreeViewUtils.getTreeCells(treeView);
-        final List<TreeItem<HierarchyItem>> selectedTreeItems = treeView.getSelectionModel().getSelectedItems();
-
-        // First clear previous parent ring if any
-        clearBorderColor();
-
-        // Dirty selection
-        for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {
-            if (selectedTreeItem == null) {
-                return;
+        // TreeItems contains ROOT
+        // => return ROOT as the common parent
+        for (TreeItem<HierarchyItem> treeItem : treeItems) {
+            if (treeView.getTreeItemLevel(treeItem) == 0) {
+                return treeItem;
             }
         }
 
-        // Then update parent ring if selection is not empty
-        if (!selectedTreeItems.isEmpty()) {
-
-            // Single selection is ROOT TreeItem => no parent ring
-            final TreeItem<HierarchyItem> treeItemRoot = treeView.getRoot();
-            if (selectedTreeItems.size() == 1 && selectedTreeItems.get(0) == treeItemRoot) {
-                return;
-            }
-
-            int treeCellTopIndex, treeCellBottomIndex;
-
-            // TOP TreeItem is the common parent TreeItem
-            final TreeItem<HierarchyItem> treeItemTop
-                    = HierarchyTreeViewUtils.getCommonParentTreeItem(selectedTreeItems);
-            final TreeCell<?> treeCellTop
-                    = HierarchyTreeViewUtils.getTreeCell(treeCells, treeItemTop);
-            if (treeCellTop != null) {
-                setBorder(treeCellTop, BorderSide.TOP_RIGHT_LEFT);
-                treeCellTopIndex = treeCellTop.getIndex();
-            } else {
-                treeCellTopIndex = 0;
-            }
-
-            // BOTTOM TreeItem is the last child of the common parent TreeItem
-            final int size = treeItemTop.getChildren().size();
-            assert size >= 1;
-            final TreeItem<HierarchyItem> treeItemBottom = treeItemTop.getChildren().get(size - 1);
-            final TreeCell<?> treeCellBottom = HierarchyTreeViewUtils.getTreeCell(treeCells, treeItemBottom);
-            if (treeCellBottom != null) {
-                setBorder(treeCellBottom, BorderSide.RIGHT_BOTTOM_LEFT);
-                treeCellBottomIndex = treeCellBottom.getIndex();
-            } else {
-                treeCellBottomIndex = treeCells.size() - 1;
-            }
-
-            // MIDDLE TreeItems
-            for (Node node : treeCells) {
-                assert node instanceof TreeCell;
-                final TreeCell<?> treeCell = (TreeCell<?>) node;
-                final int index = treeCell.getIndex();
-                if (index > treeCellTopIndex && index < treeCellBottomIndex) {
-                    setBorder(treeCell, BorderSide.RIGHT_LEFT);
+        // TreeItem single selection
+        // => the common parent is the single TreeItem parent
+        if (treeItems.size() == 1) {
+            return treeItems.get(0).getParent();
+        } //
+        // TreeItem multi selection
+        else {
+            assert treeItems.size() >= 2;
+            TreeItem<HierarchyItem> parent = null;
+            TreeItem<HierarchyItem> child = treeItems.get(0);
+            for (int index = 1; index < treeItems.size(); index++) {
+                parent = getCommonParentTreeItem(treeView, child, treeItems.get(index));
+                // We reached the ROOT level
+                // => common parent is ROOT TreeItem
+                if (treeView.getTreeItemLevel(parent) == 0) {
+                    break;
+                } else {
+                    child = parent;
                 }
             }
+            return parent;
+        }
+    }
+
+    private static <T> TreeItem<T> getCommonParentTreeItem(
+            final TreeView<T> treeView,
+            final TreeItem<T> child1,
+            final TreeItem<T> child2) {
+
+        assert child1 != null && child2 != null;
+
+        int child1Level = treeView.getTreeItemLevel(child1);
+        int child2Level = treeView.getTreeItemLevel(child2);
+        // Neither child1 nor child2 is ROOT TreeItem
+        assert child1Level > 0 && child2Level > 0;
+
+        TreeItem<T> parent1 = child1.getParent();
+        TreeItem<T> parent2 = child2.getParent();
+
+        if (child1Level < child2Level) {
+            while (child1Level < child2Level) {
+                parent2 = parent2.getParent();
+                child2Level--;
+            }
+            // We reached the common parent TreeItem
+            if (parent1 == parent2) {
+                return parent1;
+            } else {
+                // At this step, parent1 and parent2 have same node level
+                // within the TreeView
+                while (parent1 != parent2) {
+                    parent1 = parent1.getParent();
+                    parent2 = parent2.getParent();
+                }
+                return parent1;
+            }
+        } else {
+            while (child1Level > child2Level) {
+                parent1 = parent1.getParent();
+                child1Level--;
+            }
+            // We reached the common parent TreeItem
+            if (parent1 == parent2) {
+                return parent1;
+            } else {
+                // At this step, parent1 and parent2 have same node level
+                // within the TreeView
+                while (parent1 != parent2) {
+                    parent1 = parent1.getParent();
+                    parent2 = parent2.getParent();
+                }
+                return parent1;
+            }
         }
     }
 
     @Override
-    public void updatePlaceHolder() {
-        assert treeView != null;
-        final Set<Node> cells = HierarchyTreeViewUtils.getTreeCells(treeView);
-        assert cells != null;
-        for (Node node : cells) {
-            assert node instanceof HierarchyTreeCell;
-            final HierarchyTreeCell<?> cell = (HierarchyTreeCell<?>) node;
-            cell.updatePlaceHolder();
+    public TreeItem<HierarchyItem> getRootItem() {
+        return treeView.getRoot();
+    }
+
+    public Map<ExpandedKey, Boolean> makeExpandedMap() {
+        final Map<ExpandedKey, Boolean> treeItemsExpandedMap = new HashMap<>();
+
+        if (getRootItem() != null) {
+            updateTreeItemsExpandedMap(getRootItem(), treeItemsExpandedMap);
+        }
+
+        return treeItemsExpandedMap;
+    }
+
+    private void updateTreeItemsExpandedMap(TreeItem<HierarchyItem> treeItem,
+            Map<ExpandedKey, Boolean> treeItemsExpandedMap) {
+        assert treeItem != null;
+        final HierarchyItem item = treeItem.getValue();
+
+        if (item.isPlaceHolder()) {
+            HierarchyItemAccessory accessoryItem = (HierarchyItemAccessory) item;
+            TreeItem<HierarchyItem> parentTreeItem = treeItem.getParent();
+            final FXOMObject fxomObject = parentTreeItem.getValue().getFxomObject();
+            assert fxomObject != null;
+            final Accessory accessory = accessoryItem.getAccessory();
+            assert accessory != null;
+            treeItemsExpandedMap.put(new ExpandedKey(fxomObject, accessory), treeItem.isExpanded());
+        } else {
+            if (!item.isEmpty()) {
+                final FXOMObject fxomObject = item.getFxomObject();
+                assert fxomObject != null;
+                treeItemsExpandedMap.put(new ExpandedKey(fxomObject, null), treeItem.isExpanded());
+            }
+        }
+
+        // Inspect TreeItem chidren
+        for (TreeItem<HierarchyItem> treeItemChild : treeItem.getChildren()) {
+            updateTreeItemsExpandedMap(treeItemChild, treeItemsExpandedMap);
         }
     }
 

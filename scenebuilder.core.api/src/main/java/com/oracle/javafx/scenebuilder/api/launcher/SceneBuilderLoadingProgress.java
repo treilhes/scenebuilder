@@ -43,34 +43,31 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class SceneBuilderLoadingProgress {
-    
+
     private static SceneBuilderLoadingProgress instance;
 
     public static SceneBuilderLoadingProgress get() {
         if (instance == null) {
-            instance = new SceneBuilderLoadingProgress(); 
+            instance = new SceneBuilderLoadingProgress();
         }
         return instance;
     }
-    
+
     private static final Logger log = LoggerFactory.getLogger(SceneBuilderLoadingProgress.class);
-    
+
     private static final Float START_PROGRESS = -1f;
     private static final Float INIT_CONTEXT_PROGRESS = -1f;
     private static final Float INIT_UI_PROGRESS = 0.95f;
     private static final Float DONE_PROGRESS = 1.0f;
-    
-    private @Getter final ProgressListener progressListener = new ProgressListener();
-    private @Setter TextChange onTextChange;
-    private @Setter ProgressChange onProgressChange;
-    private @Setter LoadingDone onLoadingDone;
-    
+
+    private final ProgressListener progressListener = new ProgressListener();
+    private TextChange onTextChange;
+    private ProgressChange onProgressChange;
+    private LoadingDone onLoadingDone;
+
     private float currentProgress;
-    
+
     private void step(Float value, String text) {
         if (onProgressChange != null && value != null) {
             currentProgress = value;
@@ -80,49 +77,65 @@ public class SceneBuilderLoadingProgress {
             onTextChange.onTextChange(text);
         }
     }
-    
+
     public void start() {
         step(START_PROGRESS, "Start loading");
     }
-    
+
     public void initContext() {
         step(INIT_CONTEXT_PROGRESS, "Scanning classpath");
     }
     public void initUI() {
         step(INIT_UI_PROGRESS, "Init UI");
     }
-    
+
     public void end() {
         step(DONE_PROGRESS, "");
         if (onLoadingDone != null) {
             onLoadingDone.loadingDone();
         }
     }
-    
+
+    public ProgressListener getProgressListener() {
+        return progressListener;
+    }
+
+    public void setOnTextChange(TextChange onTextChange) {
+        this.onTextChange = onTextChange;
+    }
+
+    public void setOnProgressChange(ProgressChange onProgressChange) {
+        this.onProgressChange = onProgressChange;
+    }
+
+    public void setOnLoadingDone(LoadingDone onLoadingDone) {
+        this.onLoadingDone = onLoadingDone;
+    }
+
     @FunctionalInterface
     public interface TextChange{
         void onTextChange(String text);
     }
-    
+
     @FunctionalInterface
     public interface ProgressChange{
         void onProgressChange(float progress);
     }
-    
+
     @FunctionalInterface
     public interface LoadingDone{
         void loadingDone();
     }
-    
+
     private class ProgressListener implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent>, BeanFactoryPostProcessor {
 
-        
+
         private DefaultListableBeanFactory beanFactory;
         //private int step;
         private float singletonDefinitionCount;
         private float createdBeanCount;
 
-        
+
         @Override
         public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
             return bean;
@@ -131,7 +144,7 @@ public class SceneBuilderLoadingProgress {
         @Override
         public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
             createdBeanCount++;
-            
+
             if (currentProgress < INIT_UI_PROGRESS &&  createdBeanCount < singletonDefinitionCount) {
                 float stepProgress = INIT_UI_PROGRESS;
                 stepProgress = (createdBeanCount / singletonDefinitionCount) * stepProgress;
@@ -153,7 +166,7 @@ public class SceneBuilderLoadingProgress {
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
             this.beanFactory = (DefaultListableBeanFactory)beanFactory;
-            
+
             singletonDefinitionCount = 0;
             String[] beanNames = this.beanFactory.getBeanDefinitionNames();
             for (String beanName : beanNames) {

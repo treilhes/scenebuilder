@@ -47,7 +47,6 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.core.fxom.control.NullReference;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.LoaderCapabilitiesManager;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueCursor;
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
@@ -109,7 +108,7 @@ class FXOMLoader implements LoadListener {
         fxmlLoader.setClassLoader(classloader);
         fxmlLoader.setLoadListener(this);
 
-        fxmlLoader.getNamespace().put("$sb_nullReference", new NullReference());
+        fxmlLoader.getNamespace().putAll(FXOMDocument.DEFAULT_NAMESPACE);
 
         if (loaderCapabilitiesManagers.size() == 0
                 || loaderCapabilitiesManagers.stream().anyMatch(l -> l.isStaticLoadingEnabled())) {
@@ -126,6 +125,7 @@ class FXOMLoader implements LoadListener {
             assert is.markSupported();
             is.reset();
             setSceneGraphRoot(fxmlLoader.load(is));
+            setNamespaces(fxmlLoader.getNamespace());
         } catch (RuntimeException | IOException x) {
             if (x.getCause() != null && x.getCause().getClass() == XMLStreamException.class) {
                 // TODO this exception was previously bubbled to the user
@@ -135,6 +135,13 @@ class FXOMLoader implements LoadListener {
             } else
                 throw new IOException("unable to load fxml", x);
         }
+    }
+
+    /**
+     * @param namespace
+     */
+    private void setNamespaces(ObservableMap<String, Object> namespaces) {
+        document.setNamespaces(namespaces);
     }
 
     private void setSceneGraphRoot(Object sceneGraphRoot) {
@@ -388,12 +395,19 @@ class FXOMLoader implements LoadListener {
             final TransientObject currentInstance = (TransientObject) currentTransientNode;
             final FXOMObject currentFxomObject = currentInstance.makeFxomObject(document);
             final TransientNode currentParent = currentInstance.getParentNode();
+
             if (currentParent instanceof TransientProperty) {
                 final TransientProperty parentProperty = (TransientProperty) currentParent;
                 parentProperty.getValues().add(currentFxomObject);
+
             } else if (currentParent instanceof TransientObject) {
                 final TransientObject parentInstance = (TransientObject) currentParent;
                 parentInstance.getCollectedItems().add(currentFxomObject);
+
+            } else if (currentParent instanceof TransientIntrinsic) {
+                final TransientIntrinsic parentInstance = (TransientIntrinsic) currentParent;
+                parentInstance.getCollectedItems().add(currentFxomObject);
+
             } else if (currentParent instanceof TransientIgnored) {
                 // currentObject is an object inside an fx:define section
                 // Nothing to do for now

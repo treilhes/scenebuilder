@@ -48,7 +48,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import javafx.beans.value.ChangeListener;
-import lombok.Getter;
 
 public interface DocumentManager {
 
@@ -244,21 +243,21 @@ public interface DocumentManager {
 
     public class DocumentSubjects extends SubjectManager {
 
-        private @Getter ReplaySubject<Boolean> dirty;
-        private @Getter ReplaySubject<Boolean> saved;
-        private @Getter ReplaySubject<Boolean> closed;
-        private @Getter ReplaySubject<Boolean> dependenciesLoaded;
-        private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
-        private @Getter ReplaySubject<I18nResourceProvider> i18nResourceConfig;
-        private @Getter ReplaySubject<FXOMDocument> fxomDocument;
-        private @Getter PublishSubject<SelectionState> selectionState;
+        private ReplaySubject<Boolean> dirty;
+        private ReplaySubject<Boolean> saved;
+        private ReplaySubject<Boolean> closed;
+        private ReplaySubject<Boolean> dependenciesLoaded;
+        private ReplaySubject<StylesheetProvider> stylesheetConfig;
+        private ReplaySubject<I18nResourceProvider> i18nResourceConfig;
+        private ReplaySubject<FXOMDocument> fxomDocument;
+        private PublishSubject<SelectionState> selectionState;
 
-        private @Getter PublishSubject<Integer> sceneGraphRevisionDidChange;
-        private @Getter PublishSubject<Integer> cssRevisionDidChange;
-        private @Getter ReplaySubject<ClassLoader> classLoaderDidChange;
+        private PublishSubject<Integer> sceneGraphRevisionDidChange;
+        private PublishSubject<Integer> cssRevisionDidChange;
+        private ReplaySubject<ClassLoader> classLoaderDidChange;
 
-        private @Getter ReplaySubject<AbstractCommonUiController> focused;
-        private @Getter ReplaySubject<AbstractFxmlViewController> focusedView;
+        private ReplaySubject<AbstractCommonUiController> focused;
+        private ReplaySubject<AbstractFxmlViewController> focusedView;
 
         public DocumentSubjects() {
             dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N
@@ -277,6 +276,59 @@ public interface DocumentManager {
             focused = wrap(DocumentSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
             focusedView = wrap(DocumentSubjects.class, "focusedView", ReplaySubject.create(1)); // NOI18N
         }
+
+        public ReplaySubject<Boolean> getDirty() {
+            return dirty;
+        }
+
+        public ReplaySubject<Boolean> getSaved() {
+            return saved;
+        }
+
+        public ReplaySubject<Boolean> getClosed() {
+            return closed;
+        }
+
+        public ReplaySubject<Boolean> getDependenciesLoaded() {
+            return dependenciesLoaded;
+        }
+
+        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
+            return stylesheetConfig;
+        }
+
+        public ReplaySubject<I18nResourceProvider> getI18nResourceConfig() {
+            return i18nResourceConfig;
+        }
+
+        public ReplaySubject<FXOMDocument> getFxomDocument() {
+            return fxomDocument;
+        }
+
+        public PublishSubject<SelectionState> getSelectionState() {
+            return selectionState;
+        }
+
+        public PublishSubject<Integer> getSceneGraphRevisionDidChange() {
+            return sceneGraphRevisionDidChange;
+        }
+
+        public PublishSubject<Integer> getCssRevisionDidChange() {
+            return cssRevisionDidChange;
+        }
+
+        public ReplaySubject<ClassLoader> getClassLoaderDidChange() {
+            return classLoaderDidChange;
+        }
+
+        public ReplaySubject<AbstractCommonUiController> getFocused() {
+            return focused;
+        }
+
+        public ReplaySubject<AbstractFxmlViewController> getFocusedView() {
+            return focusedView;
+        }
+
 
     }
 }

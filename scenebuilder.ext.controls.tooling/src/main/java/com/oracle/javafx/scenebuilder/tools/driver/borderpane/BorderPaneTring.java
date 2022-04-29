@@ -46,8 +46,8 @@ import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -108,7 +108,8 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
         logger.info("target accessory > {}", targetAccessory == null ? "null" : targetAccessory.getName().getName());
 
-        assert (getMask().getTopAccessory().equals(targetAccessory)
+        assert (targetAccessory == null
+                || getMask().getTopAccessory().equals(targetAccessory)
                 || getMask().getBottomAccessory().equals(targetAccessory)
                 || getMask().getLeftAccessory().equals(targetAccessory)
                 || getMask().getRightAccessory().equals(targetAccessory)
@@ -117,8 +118,6 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
     @Override
     public void initialize() {
-        assert this.targetAccessory != null;
-
         topLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         topLabel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         bottomLabel.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -148,11 +147,11 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
         centerLabel.getStyleClass().add(BorderPane.class.getSimpleName());
 
 
-        topLabel.setVisible(getMask().getAccessory(getMask().getTopAccessory()) == null);
-        bottomLabel.setVisible(getMask().getAccessory(getMask().getBottomAccessory()) == null);
-        leftLabel.setVisible(getMask().getAccessory(getMask().getLeftAccessory()) == null);
-        rightLabel.setVisible(getMask().getAccessory(getMask().getRightAccessory()) == null);
-        centerLabel.setVisible(getMask().getAccessory(getMask().getCenterAccessory()) == null);
+        topLabel.setVisible(getMask().getAccessories(getMask().getTopAccessory(), false).isEmpty());
+        bottomLabel.setVisible(getMask().getAccessories(getMask().getBottomAccessory(), false).isEmpty());
+        leftLabel.setVisible(getMask().getAccessories(getMask().getLeftAccessory(), false).isEmpty());
+        rightLabel.setVisible(getMask().getAccessories(getMask().getRightAccessory(), false).isEmpty());
+        centerLabel.setVisible(getMask().getAccessories(getMask().getCenterAccessory(), false).isEmpty());
 
         borderPane.setTop(topLabel);
         borderPane.setBottom(bottomLabel);
@@ -263,8 +262,11 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
     @Override
     protected void layoutDecoration() {
-
         super.layoutDecoration();
+
+        if (targetAccessory == null) {
+            return;
+        }
 
         final Bounds layoutBounds = getSceneGraphObject().getLayoutBounds();
         borderPane.setPrefWidth(layoutBounds.getWidth());

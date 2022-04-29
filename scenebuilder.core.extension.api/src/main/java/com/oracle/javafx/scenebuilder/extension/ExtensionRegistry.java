@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,20 +40,26 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.Data;
-
-@Data
 public class ExtensionRegistry {
-    
+
     protected static String EXTENSION_FILE_NAME = "extensions.json";
-    
+
     private List<ExtensionMetadata> extensions = new ArrayList<>();
     private File userExtensionsFolder;
+
     public ExtensionRegistry(File userExtensionsFolder, List<UUID> loadableExtensions) {
         this.userExtensionsFolder = userExtensionsFolder;
         load(userExtensionsFolder, loadableExtensions);
     }
-    
+
+    public List<ExtensionMetadata> getExtensions() {
+        return extensions;
+    }
+
+    public File getUserExtensionsFolder() {
+        return userExtensionsFolder;
+    }
+
     private void load(File userExtensionsFolder, List<UUID> loadableExtensions) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -66,17 +73,17 @@ public class ExtensionRegistry {
             e.printStackTrace();
         }
     }
-    
+
     public void save() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             for (ExtensionMetadata metadata:getExtensions()) {
                 File extensionFolder = new File(userExtensionsFolder, metadata.getId().toString());
                 File extensionFile = new File(extensionFolder, EXTENSION_FILE_NAME);
-                
+
                 extensionFile.mkdirs();
                 objectMapper.writeValue(extensionFile, metadata);
-                
+
                 ExtensionMetadata extensionMetadata = objectMapper.readValue(extensionFile, ExtensionMetadata.class);
                 extensions.add(extensionMetadata);
             }
@@ -87,13 +94,13 @@ public class ExtensionRegistry {
 
     public List<File> listRequiredJars() {
         List<File> jars = new ArrayList<>();
-        
+
         for (ExtensionMetadata ext:extensions) {
             jars.add(ext.getMain().getLocalFile());
         }
-        
+
         return jars;
     }
 
-    
+
 }

@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.draganddrop.droptarget;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
     private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
-    private FXOMInstance targetContainer;
+    private FXOMElement targetContainer;
     private Accessory accessory;
     private FXOMObject beforeChild;
     private HierarchyMask mask;
@@ -102,7 +103,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
         this.modifyObjectJobFactory = modifyObjectJobFactory;
     }
 
-    protected void setDropTargetParameters(FXOMInstance targetContainer, Accessory accessory, FXOMObject beforeChild) {
+    protected void setDropTargetParameters(FXOMElement targetContainer, Accessory accessory, FXOMObject beforeChild) {
         assert targetContainer != null;
         this.targetContainer = targetContainer;
         this.accessory = accessory;
@@ -144,7 +145,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
             return false;
         }
 
-        if (targetAccessory.isCollection()) {
+        //if (targetAccessory.isCollection()) {
             final FXOMObject draggedObject0 = dragSource.getDraggedObjects().get(0);
             final boolean sameContainer
                     = targetContainer == draggedObject0.getParentObject();
@@ -153,7 +154,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
                     || (beforeChild == draggedObject0.getNextSlibing());
 
             result &= ((sameContainer == false) || (sameIndex == false));
-        }
+        //}
 
         if (logger.isDebugEnabled()) {
             logger.debug("Drag source accepted {} with initial accessory {} and resolved accessory {} for objects {}", result,
@@ -205,17 +206,26 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
                 }
             }
 
+            int targetIndex = beforeChild == null ? -1 : beforeChild.getIndexInParentProperty();
+
             for (FXOMObject draggedObj : dragSource.getDraggedObjects()) {
-                final AbstractJob j = insertAsAccessoryJobFactory.getJob(draggedObj, targetContainer, targetAccessory);
-                result.addSubJob(j);
+
+                if (targetIndex == -1) {
+                    final AbstractJob j = insertAsAccessoryJobFactory.getJob(draggedObj, targetContainer, targetAccessory);
+                    result.addSubJob(j);
+                } else {
+                    final AbstractJob j = insertAsAccessoryJobFactory.getJob(draggedObj, targetContainer, targetAccessory, targetIndex++);
+                    result.addSubJob(j);
+                }
+
 
                 // TODO why specifying a default alignment
+                // FIXME specific case to borderpane :(
                 if ((targetContainer.getSceneGraphObject() instanceof BorderPane)
                         && (draggedObject instanceof FXOMInstance)) {
 
                     // We add a job which sets BorderPane.alignment=CENTER on draggedObject
-                    final FXOMInstance draggedInstance
-                            = (FXOMInstance) draggedObject;
+                    final FXOMInstance draggedInstance = (FXOMInstance) draggedObject;
                     final PropertyName alignmentName
                             = new PropertyName("alignment", BorderPane.class); //NOCHECK
 
@@ -246,17 +256,20 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
         if (draggedObject.isEmpty()) {
             return null;
         }
-        boolean needCollectionAccessory = draggedObject.size() > 1;
+
+        long nonVirtuals = draggedObject.stream().filter(Predicate.not(FXOMObject::isVirtual)).count();
+        boolean needCollectionAccessory = nonVirtuals > 1;
 
         Accessory targetAccessory = accessory;
+
 
         if (targetAccessory != null) { // accessory was provided so check it
             if (needCollectionAccessory && !targetAccessory.isCollection()) {
                 // we are dragging multiple objects but the required target is not a collection
                 return null;
             }
-            if (!targetAccessory.isCollection() && getMask().getAccessory(targetAccessory) != null ) {
-                // the target accessory is not a collection and already have an item into
+            if (nonVirtuals > 0 && !targetAccessory.isCollection() && getMask().getAccessories(targetAccessory, false).size() >= 1 ) {
+                // the target accessory is not a collection and already have an item into and we want to add a non virtual element
                 return null;
             }
             if (!getMask().isAcceptingAccessory(targetAccessory, draggedObject)) {
@@ -281,7 +294,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
                 // check if accessory is a valid candidate
                 if (!needCollectionAccessory || (needCollectionAccessory && candidate.isCollection())) {
                     // definition is ok, but is there some space left
-                    if (candidate.isCollection() || getMask().getAccessory(candidate) == null) {
+                    if (candidate.isCollection() || getMask().getAccessories(candidate, false).size() >= 1) {
                         // check if droped objects are all compatible
                         if (getMask().isAcceptingAccessory(candidate ,draggedObject)) {
                             targetAccessory = candidate;
@@ -341,13 +354,13 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
             super(sbContext);
         }
 
-        public AccessoryDropTarget getDropTarget(FXOMInstance targetContainer, Accessory accessory, FXOMObject beforeChild) {
+        public AccessoryDropTarget getDropTarget(FXOMElement targetContainer, Accessory accessory, FXOMObject beforeChild) {
             return create(AccessoryDropTarget.class, j -> j.setDropTargetParameters(targetContainer, accessory, beforeChild));
         }
-        public AccessoryDropTarget getDropTarget(FXOMInstance targetContainer, Accessory accessory) {
+        public AccessoryDropTarget getDropTarget(FXOMElement targetContainer, Accessory accessory) {
             return create(AccessoryDropTarget.class, j -> j.setDropTargetParameters(targetContainer, accessory, null));
         }
-        public AccessoryDropTarget getDropTarget(FXOMInstance targetContainer, FXOMObject beforeChild) {
+        public AccessoryDropTarget getDropTarget(FXOMElement targetContainer, FXOMObject beforeChild) {
             return create(AccessoryDropTarget.class, j -> j.setDropTargetParameters(targetContainer, null, beforeChild));
         }
         /**
@@ -358,7 +371,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
          * @param targetContainer the target container
          * @return the drop target
          */
-        public AccessoryDropTarget getDropTarget(FXOMInstance targetContainer) {
+        public AccessoryDropTarget getDropTarget(FXOMElement targetContainer) {
             return create(AccessoryDropTarget.class, j -> j.setDropTargetParameters(targetContainer, null, null));
         }
     }

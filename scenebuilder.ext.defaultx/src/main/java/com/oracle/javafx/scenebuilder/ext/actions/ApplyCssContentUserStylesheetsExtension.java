@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,25 +46,22 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreferen
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ApplyCssContentUserStylesheetsExtension extends AbstractActionExtension<ApplyCssContentAction> {
 
-	private final UserStylesheetsPreference userStylesheetsPreference;
+    private final UserStylesheetsPreference userStylesheetsPreference;
 
-	public ApplyCssContentUserStylesheetsExtension(
-			@Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference
-			) {
-		super();
-		this.userStylesheetsPreference = userStylesheetsPreference;
-	}
+    public ApplyCssContentUserStylesheetsExtension(
+            @Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference) {
+        super();
+        this.userStylesheetsPreference = userStylesheetsPreference;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return userStylesheetsPreference.getValue() != null && !userStylesheetsPreference.getValue().isEmpty();
-	}
+    @Override
+    public boolean canPerform() {
+        return userStylesheetsPreference.getValue() != null && !userStylesheetsPreference.getValue().isEmpty();
+    }
 
-	@Override
-	public void prePerform() {
-		getExtendedAction().getActionConfig().getStylesheets().addAll(userStylesheetsPreference.getValue());
-	}
-
-
+    @Override
+    public void prePerform() {
+        getExtendedAction().getActionConfig().getStylesheets().addAll(userStylesheetsPreference.getValue());
+    }
 
 }

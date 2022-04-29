@@ -68,21 +68,23 @@ public interface HierarchyMask {
 
     public boolean isAcceptingAccessory(Accessory accessory);
 
-    public FXOMObject getAccessory(Accessory accessory);
+    //public FXOMObject getAccessory(Accessory accessory);
 
     public Accessory getAccessory(PropertyName accessoryName);
 
-    public List<FXOMObject> getAccessories(Accessory accessory);
+    public List<FXOMObject> getAccessories(Accessory accessory, boolean includeVirtuals);
 
-    public boolean isAcceptingSubComponent();
+    public boolean hasMainAccessory();
 
-    public int getSubComponentCount(Accessory accessory);
+    public int getSubComponentCount(Accessory accessory, boolean includeVirtuals);
 
-    public int getSubComponentCount();
+    public int getSubComponentCount(boolean includeVirtuals);
 
-    public FXOMObject getSubComponentAtIndex(Accessory accessory, int i);
+    public FXOMObject getSubComponentAtIndex(Accessory accessory, int i, boolean includeVirtuals);
 
-    public FXOMObject getSubComponentAtIndex(int i);
+    public FXOMObject getSubComponentAtIndex(int i, boolean includeVirtuals);
+
+    public boolean isAcceptingAccessory(Accessory accessory, FXOMObject newObject);
 
     public FXOMObject getFxomObject();
 
@@ -107,7 +109,7 @@ public interface HierarchyMask {
 
     public String getDescription();
 
-    public boolean isAcceptingAccessory(Accessory accessory, FXOMObject newObject);
+
 
     public PropertyName getPropertyNameForAccessory(Accessory accessory);
 
@@ -117,7 +119,7 @@ public interface HierarchyMask {
 
     public boolean isAcceptingSubComponent(Collection<FXOMObject> fxomObjects);
 
-    public List<FXOMObject> getSubComponents();
+    public List<FXOMObject> getSubComponents(boolean includeVirtuals);
 
     public URL getClassNameIconURL();
 

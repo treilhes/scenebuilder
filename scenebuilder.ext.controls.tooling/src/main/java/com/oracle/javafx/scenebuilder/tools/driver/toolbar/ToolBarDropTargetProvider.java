@@ -76,8 +76,8 @@ public final class ToolBarDropTargetProvider extends AbstractDropTargetProvider 
         if (targetIndex == -1) {
             beforeChild = null;
         } else {
-            if (targetIndex < m.getSubComponentCount()) {
-                beforeChild = m.getSubComponentAtIndex(targetIndex);
+            if (targetIndex < m.getSubComponentCount(m.getMainAccessory(), false)) {
+                beforeChild = m.getSubComponentAtIndex(m.getMainAccessory(), targetIndex, false);
             } else {
                 beforeChild = null;
             }

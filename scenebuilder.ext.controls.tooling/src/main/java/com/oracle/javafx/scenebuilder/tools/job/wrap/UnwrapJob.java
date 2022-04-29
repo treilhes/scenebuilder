@@ -178,7 +178,7 @@ public final class UnwrapJob extends BatchSelectionJob {
             // Check that the num and type of children can be added to the parent container
             final HierarchyMask parentContainerMask = designMaskFactory.getMask(parentContainer);
 
-            if (parentContainerMask.isAcceptingSubComponent()) {
+            if (parentContainerMask.hasMainAccessory()) {
                 if (parentContainerMask.getMainAccessory().isCollection()) {
                     return childrenCount >= 1;
                 } else {
@@ -404,26 +404,21 @@ public final class UnwrapJob extends BatchSelectionJob {
     private List<FXOMObject> getChildren(final FXOMInstance container) {
         final HierarchyMask mask = designMaskFactory.getMask(container);
         final List<FXOMObject> result = new ArrayList<>();
-        if (mask.isAcceptingSubComponent()) {
+        if (mask.getMainAccessory() != null) {
             // TabPane => unwrap first Tab CONTENT
             if (TabPane.class.isAssignableFrom(container.getDeclaredClass())) {
-                final List<FXOMObject> tabs = mask.getSubComponents();
+                final List<FXOMObject> tabs = mask.getAccessories(mask.getMainAccessory(), false);
                 if (tabs.size() >= 1) {
                     final FXOMObject tab = tabs.get(0);
                     final HierarchyMask tabMask = designMaskFactory.getMask(tab);
                     assert tabMask.isAcceptingAccessory(tabMask.getMainAccessory());
-                    if (tabMask.getAccessory(tabMask.getMainAccessory()) != null) {
-                        result.add(tabMask.getAccessory(tabMask.getMainAccessory()));
+                    List<FXOMObject> content = tabMask.getAccessories(tabMask.getMainAccessory(), true);
+                    if (!content.isEmpty()) {
+                        result.addAll(content);
                     }
                 }
             } else {
-                result.addAll(mask.getSubComponents());
-            }
-        } else {
-            // BorderPane => unwrap CENTER accessory
-            if (mask.isAcceptingAccessory(mask.getMainAccessory())
-                    && mask.getAccessory(mask.getMainAccessory()) != null) {
-                result.add(mask.getAccessory(mask.getMainAccessory()));
+                result.addAll(mask.getAccessories(mask.getMainAccessory(), true));
             }
         }
         return result;

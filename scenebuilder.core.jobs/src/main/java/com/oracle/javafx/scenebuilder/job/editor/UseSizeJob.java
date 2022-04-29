@@ -115,9 +115,10 @@ public final class UseSizeJob extends AbstractJob {
                     HierarchyMask mask = designMaskFactory.getMask(fxomObject);
                     // TODO to check
                     Accessory accessory = mask.getAccessory(DesignHierarchyMask.AccessoryProperty.ROOT);
-                    fxomObject = mask.getAccessory(accessory);
+                    List<FXOMObject> fxomObjects = mask.getAccessories(accessory, false);
 
-                    assert fxomObject != null;
+                    assert fxomObjects.size() == 1;
+                    fxomObject = fxomObjects.get(0);
                 }
 
                 this.fxomObject = fxomObject;

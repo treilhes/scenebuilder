@@ -72,12 +72,14 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
         getProperties().add(${property.custom["memberName"]}PropertyMetadata);
         <#if property.raw.freeChildPositioning == true>
         setFreeChildPositioning(${property.custom["memberName"]}PropertyMetadata, true);
-
         </#if>
         <#if property.raw.childLabelMutation??>
         setChildLabelMutation(${property.custom["memberName"]}PropertyMetadata, (originalLabel, object, child) -> ${property.raw.childLabelMutation});
-
         </#if>
+        </#list>
+
+        <#list component.raw.shadows as shadowed>
+        getShadowedProperties().add(PropertyNames.${shadowed}Name);
         </#list>
 
         <#list component.raw.qualifiers as qualifier>

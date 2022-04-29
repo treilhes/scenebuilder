@@ -64,8 +64,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.application.Platform;
@@ -115,9 +113,6 @@ public class EditorController implements Editor {
     private FXOMDocument fxomDocument;
     private final SceneBuilderManager sceneBuilderManager;
 
-    private final GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory;
-    private final BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
-
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
      */
@@ -130,11 +125,7 @@ public class EditorController implements Editor {
             Selection selection,
             DocumentManager documentManager,
             ErrorReport errorReport,
-            InlineEdit inlineEditController,
-
-            GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory,
-            BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory
-
+            InlineEdit inlineEditController
         	) {
         // @formatter:on
         // this.api = api;
@@ -147,9 +138,6 @@ public class EditorController implements Editor {
         this.documentManager = documentManager;
         this.errorReport = errorReport;
         this.inlineEdit = inlineEditController;
-
-        this.gridPaneHierarchyMaskFactory = gridPaneHierarchyMaskFactory;
-        this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;
 
         fxmlLocationProperty = new SimpleObjectProperty<>();
 

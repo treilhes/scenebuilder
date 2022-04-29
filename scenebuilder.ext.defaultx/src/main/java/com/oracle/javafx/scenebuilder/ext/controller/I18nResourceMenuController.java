@@ -68,13 +68,10 @@ public class I18nResourceMenuController {
     private final Dialog dialog;
     private final I18NResourcePreference i18nResourcePreference;
 
-    public I18nResourceMenuController(
-    		@Autowired ActionFactory actionFactory,
-    		@Autowired @Lazy DocumentWindow document,
-    		@Autowired FileSystem fileSystem,
-    		@Autowired Dialog dialog,
-    		@Autowired @Lazy I18NResourcePreference i18nResourcePreference) {
-    	this.actionFactory = actionFactory;
+    public I18nResourceMenuController(@Autowired ActionFactory actionFactory, @Autowired @Lazy DocumentWindow document,
+            @Autowired FileSystem fileSystem, @Autowired Dialog dialog,
+            @Autowired @Lazy I18NResourcePreference i18nResourcePreference) {
+        this.actionFactory = actionFactory;
         this.document = document;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
@@ -89,8 +86,8 @@ public class I18nResourceMenuController {
 
         // Open a file chooser for *.properties & *.bss
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(I18N.getString("resource.filechooser.filter.msg"),
-                "*.properties")); //NOCHECK
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(I18N.getString("resource.filechooser.filter.msg"), "*.properties")); // NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());
@@ -102,28 +99,25 @@ public class I18nResourceMenuController {
 
             for (File f : selectedFiles) {
                 if (!i18nResourcePreference.getValue().contains(f.toURI().toString())) {
-                	i18nResourcePreference.getValue().add(f.toURI().toString());
+                    i18nResourcePreference.getValue().add(f.toURI().toString());
                 }
             }
         }
     }
 
     public void performRemoveResource(File toRemove) {
-    	if (i18nResourcePreference.getValue().contains(toRemove.toURI().toString())) {
-    		i18nResourcePreference.getValue().remove(toRemove.toURI().toString());
+        if (i18nResourcePreference.getValue().contains(toRemove.toURI().toString())) {
+            i18nResourcePreference.getValue().remove(toRemove.toURI().toString());
         }
     }
 
     public void performRevealResource(File resourceFile) {
         assert resourceFile != null;
         try {
-        	fileSystem.revealInFileBrowser(resourceFile);
+            fileSystem.revealInFileBrowser(resourceFile);
         } catch (IOException ioe) {
-        	dialog.showErrorAndWait(
-        			I18N.getString("error.file.reveal.title"),
-        			I18N.getString("error.file.reveal.message"),
-            		I18N.getString("error.filesystem.details"),
-            		ioe);
+            dialog.showErrorAndWait(I18N.getString("error.file.reveal.title"),
+                    I18N.getString("error.file.reveal.message"), I18N.getString("error.filesystem.details"), ioe);
         }
     }
 

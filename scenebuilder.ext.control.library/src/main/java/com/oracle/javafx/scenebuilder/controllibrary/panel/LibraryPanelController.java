@@ -264,7 +264,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         startListeningToDrop();
         populateLibraryPanel();
 
-        getName().bind(Bindings.createStringBinding(() -> {
+        nameProperty().bind(Bindings.createStringBinding(() -> {
 
             return userLibrary.exploringProperty().get() ? I18N.getString("library.exploring")
                     : I18N.getString("library");

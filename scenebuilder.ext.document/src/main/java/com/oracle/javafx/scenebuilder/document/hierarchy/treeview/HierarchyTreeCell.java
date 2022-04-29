@@ -41,42 +41,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry;
-import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry.CSSParsingReport;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
+import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
-import com.oracle.javafx.scenebuilder.document.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.hierarchy.AbstractHierarchyPanelController.BorderSide;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController.DroppingMouseLocation;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ObservableList;
-import javafx.css.CssParser;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
@@ -93,7 +83,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Line;
 import javafx.util.Callback;
 
 /**
@@ -105,11 +94,11 @@ import javafx.util.Callback;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<HierarchyItem> {
+public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<HierarchyItem> implements HierarchyCell {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyTreeCell.class);
 
-    private AbstractHierarchyPanelController panelController;
+    private HierarchyPanel panelController;
 
     static final String TREE_CELL_GRAPHIC = "tree-cell-graphic";
     public static final String HIERARCHY_FIRST_CELL = "hierarchy-first-cell";
@@ -117,6 +106,15 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     static final String HIERARCHY_READWRITE_LABEL = "hierarchy-readwrite-label";
     // Style class used for lookup
     static final String HIERARCHY_TREE_CELL = "hierarchy-tree-cell";
+
+
+    public static final String CSS_CLASS_PARENT_UNSELECTED = "cell-no-selection";
+    public static final String CSS_CLASS_PARENT_SELECTION_START = "parent-cell-selection-start";
+    public static final String CSS_CLASS_PARENT_SELECTION_MIDDLE = "parent-cell-selection-middle";
+    public static final String CSS_CLASS_PARENT_SELECTION_END = "parent-cell-selection-end";
+    public static final String CSS_CLASS_PARENT_SELECTION_SINGLE = "cell-selection-single";
+    public static final String CSS_CLASS_INSERT_LINE = "cell-insert-here";
+
 
     private final HBox graphic = new HBox();
     private final Label placeHolderLabel = new Label();
@@ -132,14 +130,6 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     // (StackPane does not allow to set tooltips)
     private final Label iconsLabel = new Label();
     private final Tooltip warningBadgeTooltip = new Tooltip();
-
-    // Vertical line used when inserting an item in order to indicate
-    // the parent into which the item will be inserted.
-    // Horizontal lines are handled directly by the cell and are built using CSS only.
-    //
-    // This line will be added to / removed from the skin of the panel control
-    // during DND gestures.
-    private final Line insertLineIndicator = new Line();
 
     // Listener for the display option used to update the display info label
     final ChangeListener<DisplayOption> displayOptionListener = (ov, t, t1) -> {
@@ -157,22 +147,27 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         }
     };
 
-    private final Drag drag;
     private final InlineEdit inlineEdit;
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
-
     private final ErrorReport errorReport;
+    private final Hierarchy hierarchy;
+    private final HierarchyCellAssignment cellAssignment;
+    private final HierarchyParentRing parentRing;
+    private final HierarchyDNDController dndController;
 
     protected HierarchyTreeCell(
             InlineEdit inlineEdit,
             ErrorReport errorReport,
-            Drag drag,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            Hierarchy hierarchy,
+            HierarchyCellAssignment cellAssignment,
+            HierarchyParentRing parentRing,
+            HierarchyDNDController dndController) {
         super();
-        this.drag = drag;
         this.inlineEdit = inlineEdit;
         this.errorReport = errorReport;
-        this.designHierarchyMaskFactory = designHierarchyMaskFactory;
+        this.cellAssignment = cellAssignment;
+        this.parentRing = parentRing;
+        this.dndController = dndController;
+        this.hierarchy = hierarchy;
 
         iconsStack.getChildren().setAll(
                 classNameImageView,
@@ -193,12 +188,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         // Add style class used when invoking lookupAll
         this.getStyleClass().add(HIERARCHY_TREE_CELL);
 
-        // Update vertical insert line indicator stroke width
-        insertLineIndicator.setStrokeWidth(2.0);
-
         // CSS
         graphic.getStyleClass().add(TREE_CELL_GRAPHIC);
-        updatePlaceHolder();
         displayInfoLabel.getStyleClass().add(HIERARCHY_READWRITE_LABEL);
         placeHolderLabel.getStyleClass().add(HIERARCHY_PLACE_HOLDER_LABEL);
         // Layout
@@ -217,270 +208,28 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         final EventHandler<MouseEvent> mouseEventHandler = e -> filterMouseEvent(e);
         this.addEventFilter(MouseEvent.ANY, mouseEventHandler);
 
-
     }
 
-    private void setCellParameters(AbstractHierarchyPanelController owner) {
+    private void setCellParameters(HierarchyPanel owner) {
         panelController = owner;
 
-        panelController.displayOptionProperty().addListener(
-                new WeakChangeListener<>(displayOptionListener));
+        hierarchy.displayOptionProperty().addListener(new WeakChangeListener<>(displayOptionListener));
 
-     // Drag events
+        // Drag events
         //----------------------------------------------------------------------
-        final HierarchyDNDController dndController = panelController.getDNDController();
 
-        setOnDragDropped(event -> {
-            final TreeItem<HierarchyItem> treeItem
-                    = HierarchyTreeCell.this.getTreeItem();
-            // Forward to the DND controller
-            dndController.handleOnDragDropped(treeItem, event);
-
-            // CSS
-            panelController.clearBorderColor(HierarchyTreeCell.this);
-            // Remove insert line indicator
-            panelController.removeFromPanelControlSkin(insertLineIndicator);
-        });
-        setOnDragEntered(event -> {
-            final TreeItem<HierarchyItem> treeItem
-                    = HierarchyTreeCell.this.getTreeItem();
-            // Forward to the DND controller
-            dndController.handleOnDragEntered(treeItem, event);
-        });
-        setOnDragExited(event -> {
-            final TreeItem<HierarchyItem> treeItem
-                    = HierarchyTreeCell.this.getTreeItem();
-            final Bounds bounds = HierarchyTreeCell.this.getLayoutBounds();
-            final Point2D point = HierarchyTreeCell.this.localToScene(bounds.getMinX(), bounds.getMinY(), true /* rootScene */);
-            final DroppingMouseLocation location;
-            if (event.getSceneY() <= point.getY()) {
-                location = DroppingMouseLocation.TOP;
-            } else {
-                location = DroppingMouseLocation.BOTTOM;
-            }
-
-            // Forward to the DND controller
-            dndController.handleOnDragExited(treeItem, event, location);
-
-            // CSS
-            panelController.clearBorderColor(HierarchyTreeCell.this);
-            // Remove insert line indicator
-            panelController.removeFromPanelControlSkin(insertLineIndicator);
-        });
-        setOnDragOver(event -> {
-            final TreeItem<HierarchyItem> treeItem
-                    = HierarchyTreeCell.this.getTreeItem();
-            final Drag dragController = drag;
-            final DroppingMouseLocation location = getDroppingMouseLocation(event);
-
-            // Forward to the DND controller
-            dndController.handleOnDragOver(treeItem, event, location); // (1)
-
-            panelController.clearBorderColor();
-            // Update vertical insert line indicator stroke color
-//            final Paint paint = panelController.getParentRingColor();
-//            insertLineIndicator.setStroke(paint);
-            // Remove insert line indicator
-            panelController.removeFromPanelControlSkin(insertLineIndicator);
-
-            // If an animation timeline is running
-            // (auto-scroll when DND to the top or bottom of the Hierarchy),
-            // we do not display insert indicators.
-            if (panelController.isTimelineRunning()) {
-                return;
-            }
-
-            // Drop target has been updated because of (1)
-            if (dragController.isDropAccepted()) {
-
-                final DropTarget dropTarget = dragController.getDropTarget();
-                final FXOMObject dropTargetObject = dropTarget.getTargetObject();
-                final TreeItem<?> rootTreeItem = getTreeView().getRoot();
-
-                if (dropTargetObject == null) {
-                    // No visual feedback in case of dropping the root node or no target defined
-                    return;
-                }
-
-                //==========================================================
-                // ACCESSORIES :
-                //
-                // No need to handle the insert line indicator.
-                // Border is set either on the accessory place holder cell
-                // or on the accessory owner cell.
-                //==========================================================
-
-                Accessory targetAccessory = dropTarget instanceof AccessoryDropTarget ? ((AccessoryDropTarget) dropTarget).findTargetAccessory(drag.getDragSource().getDraggedObjects()) : null;
-
-                if (dropTarget instanceof AccessoryDropTarget && targetAccessory != null && !targetAccessory.isCollection()) {
-
-                    //final AccessoryDropTarget accessoryDropTarget = (AccessoryDropTarget) dropTarget;
-                    final TreeCell<?> cell;
-
-                    // TreeItem is null when dropping below the datas
-                    // => the drop target is the root
-                    if (treeItem == null) {
-                        cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), rootTreeItem);
-                    } else {
-                        final HierarchyItem item = treeItem.getValue();
-                        assert item != null;
-
-                        if (item.isPlaceHolder()) {
-                            cell = HierarchyTreeCell.this;
-
-                            //TODO nothing to do like below
-//                        } else if (accessoryDropTarget.getAccessory() == Accessory.GRAPHIC) {
-//                            // Check if an empty graphic TreeItem has been added
-//                            final TreeItem<HierarchyItem> graphicTreeItem
-//                                    = dndController.getEmptyGraphicTreeItemFor(treeItem);
-//                            if (graphicTreeItem != null) {
-//                                cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), graphicTreeItem);
-//                            } else {
-//                                final TreeItem<HierarchyItem> accessoryOwnerTreeItem1
-//                                        = panelController.lookupTreeItem(dropTargetObject);
-//                                cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), accessoryOwnerTreeItem1);
-//                            }
-                        } else {
-                            final TreeItem<HierarchyItem> accessoryOwnerTreeItem2
-                                    = panelController.lookupTreeItem(dropTargetObject);
-                            cell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), accessoryOwnerTreeItem2);
-                        }
-                    }
-
-                    panelController.setBorder(cell, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                }//
-                //==========================================================
-                // SUB COMPONENTS :
-                //
-                // Need to handle the insert line indicator.
-                //==========================================================
-                else {
-
-                    TreeItem<?> startTreeItem;
-                    TreeCell<?> startCell, stopCell;
-
-                    // TreeItem is null when dropping below the datas
-                    // => the drop target is the root
-                    if (treeItem == null) {
-                        if (rootTreeItem.isLeaf() || !rootTreeItem.isExpanded()) {
-                            final TreeCell<?> rootCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), 0);
-                            panelController.setBorder(rootCell, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                        } else {
-                            final TreeItem<?> lastTreeItem = panelController.getLastVisibleTreeItem(rootTreeItem);
-                            final TreeCell<?> lastCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), lastTreeItem);
-                            // As we are dropping below the datas, the last cell is visible
-                            assert lastCell != null;
-                            panelController.setBorder(lastCell, BorderSide.BOTTOM);
-
-                            // Update vertical insert line
-                            startTreeItem = rootTreeItem;
-                            startCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), startTreeItem);
-                            stopCell = lastCell;
-                            updateInsertLineIndicator(startCell, stopCell);
-                            panelController.addToPanelControlSkin(insertLineIndicator);
-                        }
-
-                    } else {
-                        final HierarchyItem item = treeItem.getValue();
-                        assert item != null;
-
-                        if (item.isPlaceHolder() || item.getFxomObject() == dropTargetObject) {
-                            // The place holder item is filled with a container
-                            // accepting sub components
-                            panelController.setBorder(HierarchyTreeCell.this, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                        } else {
-                            // REORDERING :
-                            // To avoid visual movement of the horizontal border when
-                            // dragging from one cell to another,
-                            // we always set the border on the cell bottom location :
-                            // - if we handle REORDER BELOW gesture, just set the bottom
-                            // border on the current cell
-                            // - if we handle REORDER ABOVE gesture, we set the bottom
-                            // border on the previous cell
-                            //
-                            switch (location) {
-
-                                // REORDER ABOVE gesture
-                                case TOP:
-                                    if (treeItem == rootTreeItem) {
-                                        panelController.setBorder(HierarchyTreeCell.this, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                                    } else {
-                                        final int index = getIndex();
-                                        // Retrieve the previous cell
-                                        // Note : we set the border on the bottom of the previous cell
-                                        // instead of using the top of the current cell in order to avoid
-                                        // visual gap when DND from one cell to another
-                                        final TreeCell<?> previousCell
-                                                = HierarchyTreeViewUtils.getTreeCell(getTreeView(), index - 1);
-                                        // The previous cell is null when the item is not visible
-                                        if (previousCell != null) {
-                                            panelController.setBorder(previousCell, BorderSide.BOTTOM);
-                                        }
-
-                                        // Update vertical insert line
-                                        startTreeItem = panelController.lookupTreeItem(dropTarget.getTargetObject());
-                                        startCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), startTreeItem);
-                                        stopCell = previousCell;
-                                        updateInsertLineIndicator(startCell, stopCell);
-                                        panelController.addToPanelControlSkin(insertLineIndicator);
-                                    }
-                                    break;
-
-                                // REPARENT gesture
-                                case CENTER:
-                                    if (treeItem.isLeaf() || !treeItem.isExpanded()) {
-                                        panelController.setBorder(HierarchyTreeCell.this, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                                    } else {
-                                        // Reparent to the treeItem as last child
-                                        final TreeItem<?> lastTreeItem = panelController.getLastVisibleTreeItem(treeItem);
-                                        final TreeCell<?> lastCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), lastTreeItem);
-                                        // Last cell is null when the item is not visible
-                                        if (lastCell != null) {
-                                            panelController.setBorder(lastCell, BorderSide.BOTTOM);
-                                        }
-
-                                        // Update vertical insert line
-                                        startTreeItem = getTreeItem();
-                                        startCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), startTreeItem);
-                                        stopCell = lastCell;
-                                        updateInsertLineIndicator(startCell, stopCell);
-                                        panelController.addToPanelControlSkin(insertLineIndicator);
-                                    }
-                                    break;
-
-                                // REORDER BELOW gesture
-                                case BOTTOM:
-                                    if (treeItem == rootTreeItem
-                                            && (treeItem.isLeaf() || !treeItem.isExpanded())) {
-                                        panelController.setBorder(HierarchyTreeCell.this, BorderSide.TOP_RIGHT_BOTTOM_LEFT);
-                                    } else {
-                                        // Reparent to the treeItem as first child
-                                        panelController.setBorder(HierarchyTreeCell.this, BorderSide.BOTTOM);
-
-                                        // Update vertical insert line
-                                        startTreeItem = panelController.lookupTreeItem(dropTarget.getTargetObject());
-                                        startCell = HierarchyTreeViewUtils.getTreeCell(getTreeView(), startTreeItem);
-                                        stopCell = HierarchyTreeCell.this;
-                                        updateInsertLineIndicator(startCell, stopCell);
-                                        panelController.addToPanelControlSkin(insertLineIndicator);
-                                    }
-                                    break;
-
-                                default:
-                                    assert false;
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        setOnDragDropped(event -> dndController.handleCellOnDragDropped(HierarchyTreeCell.this, event));
+        setOnDragEntered(event -> dndController.handleCellOnDragEntered(HierarchyTreeCell.this, event));
+        setOnDragExited(event -> dndController.handleCellOnDragExited(HierarchyTreeCell.this, event));
+        setOnDragOver(event -> dndController.handleCellOnDragOver(HierarchyTreeCell.this, event));
 
     }
 
     @Override
     public void updateItem(HierarchyItem item, boolean empty) {
         super.updateItem(item, empty);
+
+        cellAssignment.assign(getTreeItem(), this);
 
         // The cell is not empty (TreeItem is not null)
         // AND the TreeItem value is not null
@@ -489,24 +238,16 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             setGraphic(graphic);
             setText(null);
             // Update parent ring when scrolling / resizing vertically / expanding and collapsing
-            panelController.updateParentRing();
+            parentRing.update();
         } else {
             assert item == null;
             setGraphic(null);
             setText(null);
             // Clear CSS for empty cells
-            panelController.clearBorderColor(this);
+            this.clearBorders();
         }
-    }
 
-    public final void updatePlaceHolder() {
-//        final Paint paint = panelController.getParentRingColor();
-//        placeHolderLabel.setTextFill(paint);
-//        final BorderWidths bw = new BorderWidths(1);
-//        final BorderStroke bs = new BorderStroke(paint, BorderStrokeStyle.SOLID,
-//                CornerRadii.EMPTY, bw);
-//        final Border b = new Border(bs);
-//        placeHolderLabel.setBorder(b);
+
     }
 
     private void filterKeyEvent(final KeyEvent ke) {
@@ -526,10 +267,10 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
                     // Double click over the class name label will end up with the native expand/collapse behavior
                     final HierarchyItem item = getItem();
                     assert item != null; // Because of (1)
-                    final DisplayOption option = panelController.getDisplayOption();
+                    final DisplayOption option = hierarchy.getDisplayOption();
                     if (item != null && !option.isReadOnly(item.getMask()) && displayInfoLabel.isHover()) {
                         logger.debug("Request edition of item {}/{}", item.getMask().getFxomObject(), item.getMask().getFxomObject().hashCode());
-                        startEditingDisplayInfo();
+                        startEditingDisplayOption();
                         // Consume the event so the native expand/collapse behavior is not performed
                         me.consume();
                     }
@@ -607,8 +348,10 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
      * simple mouse click
      * *************************************************************************
      */
-    public void startEditingDisplayInfo() {
-        DisplayOption displayOption = panelController.getDisplayOption();
+    @Override
+    public void startEditingDisplayOption() {
+
+        DisplayOption displayOption = hierarchy.getDisplayOption();
         final HierarchyMask mask = getItem().getMask();
 
         assert displayOption != null;
@@ -617,6 +360,9 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         assert !displayOption.isReadOnly(mask);
 
         final TextInputControl editor;
+
+        logger.debug("Request edition of item {}/{}", mask.getFxomObject(), mask.hashCode());
+
         // display option may use either a TextField or a TextArea
         final Type type = displayOption.isMultiline(mask) ? Type.TEXT_AREA : Type.TEXT_FIELD;
         final String initialValue = displayOption.getValue(mask);
@@ -642,7 +388,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             if (item != null) {
                 assert newValue != null;
 
-                final DisplayOption option = panelController.getDisplayOption();
+                final DisplayOption option = hierarchy.getDisplayOption();
                 option.setValue(mask, newValue);
             }
             logger.debug("Validate new value of {}/{}", mask.getFxomObject(), mask.getFxomObject().hashCode());
@@ -710,7 +456,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         classNameInfoLabel.setManaged(classNameInfo != null);
         classNameInfoLabel.setVisible(classNameInfo != null);
 
-        final DisplayOption option = panelController.getDisplayOption();
+        final DisplayOption option = hierarchy.getDisplayOption();
 
         HierarchyMask mask = getItem().getMask();
         final boolean hasInfo = option.hasValue(mask);
@@ -731,6 +477,14 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         displayInfoLabel.setVisible(hasInfo);
     }
 
+    /**
+     * @param entry
+     * @return
+     */
+    private String getErrorReport(ErrorReportEntry entry) {
+        return errorReport.getText(entry);
+    }
+
     private List<ErrorReportEntry> getErrorReportEntries(HierarchyItem item) {
         if (item == null || item.isEmpty()) {
             return null;
@@ -740,112 +494,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         return errorReport.query(fxomObject, !getTreeItem().isExpanded());
     }
 
-    public String getErrorReport(final ErrorReportEntry entry) {
-
-        final StringBuilder result = new StringBuilder();
-
-        final FXOMNode fxomNode = entry.getFxomNode();
-
-        switch (entry.getType()) {
-            case UNRESOLVED_CLASS:
-                result.append(I18N.getString("hierarchy.unresolved.class"));
-                break;
-            case UNRESOLVED_LOCATION:
-                result.append(I18N.getString("hierarchy.unresolved.location"));
-                break;
-            case UNRESOLVED_RESOURCE:
-                result.append(I18N.getString("hierarchy.unresolved.resource"));
-                break;
-            case INVALID_CSS_CONTENT:
-                assert entry.getCssParsingReport() != null;
-                result.append(makeCssParsingErrorString(entry.getCssParsingReport()));
-                break;
-            case UNSUPPORTED_EXPRESSION:
-                result.append(I18N.getString("hierarchy.unsupported.expression"));
-                break;
-        }
-        result.append(" "); //NOCHECK
-        if (fxomNode instanceof FXOMPropertyT) {
-            final FXOMPropertyT fxomProperty = (FXOMPropertyT) fxomNode;
-            result.append(fxomProperty.getValue());
-        } else if (fxomNode instanceof FXOMIntrinsic) {
-            final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomNode;
-            result.append(fxomIntrinsic.getSource());
-        } else if (fxomNode instanceof FXOMObject) {
-            final FXOMObject fxomObject = (FXOMObject) fxomNode;
-            final DesignHierarchyMask mask = designHierarchyMaskFactory.getMask(fxomObject);
-            //TODO check if an accessory, maybe the main one must be passed here
-            result.append(mask.getClassNameInfo(null));
-        }
-
-        return result.toString();
-    }
-
-    private void updateInsertLineIndicator(
-            final TreeCell<?> startTreeCell,
-            final TreeCell<?> stopTreeCell) {
-
-        //----------------------------------------------------------------------
-        // START POINT CALCULATION
-        //----------------------------------------------------------------------
-        // Retrieve the disclosure node from which the vertical line will start
-        double startX, startY;
-        if (startTreeCell != null) {
-            final Node disclosureNode = startTreeCell.getDisclosureNode();
-            final Bounds startBounds = startTreeCell.getLayoutBounds();
-            final Point2D startCellPoint = startTreeCell.localToParent(
-                    startBounds.getMinX(), startBounds.getMinY());
-
-            final Bounds disclosureNodeBounds = disclosureNode.getLayoutBounds();
-            final Point2D disclosureNodePoint = disclosureNode.localToParent(
-                    disclosureNodeBounds.getMinX(), disclosureNodeBounds.getMinY());
-
-            // Initialize start point to the disclosure node of the start cell
-            startX = startCellPoint.getX()
-                    + disclosureNodePoint.getX()
-                    + disclosureNodeBounds.getWidth() / 2 + 1; // +1 px tuning
-            startY = startCellPoint.getY()
-                    + disclosureNodePoint.getY()
-                    + disclosureNodeBounds.getHeight() - 6; // -6 px tuning
-        } else {
-            // The start cell is not visible :
-            // x is set to the current cell graphic
-            // y is set to the top of the TreeView / TreeTableView
-            final Bounds graphicBounds = getGraphic().getLayoutBounds();
-            final Point2D graphicPoint = getGraphic().localToParent(
-                    graphicBounds.getMinX(), graphicBounds.getMinY());
-
-            startX = graphicPoint.getX();
-            startY = panelController.getContentTopY();
-        }
-
-        //----------------------------------------------------------------------
-        // END POINT CALCULATION
-        //----------------------------------------------------------------------
-        double endX, endY;
-        endX = startX;
-        if (stopTreeCell != null) {
-            final Bounds stopBounds = stopTreeCell.getLayoutBounds();
-            final Point2D stopCellPoint = stopTreeCell.localToParent(
-                    stopBounds.getMinX(), stopBounds.getMinY());
-
-            // Initialize end point to the end cell
-            endY = stopCellPoint.getY()
-                    + stopBounds.getHeight() // Add the stop cell height
-                    - 1; // -1 px tuning
-        } else {
-            // The stop cell is not visisble :
-            // y is set to the bottom of the TreeView / TreeTableView
-            endY = panelController.getContentBottomY();
-        }
-
-        insertLineIndicator.setStartX(startX);
-        insertLineIndicator.setStartY(startY);
-        insertLineIndicator.setEndX(endX);
-        insertLineIndicator.setEndY(endY);
-    }
-
-    private DroppingMouseLocation getDroppingMouseLocation(final DragEvent event) {
+    @Override
+    public DroppingMouseLocation getDroppingMouseLocation(final DragEvent event) {
         final DroppingMouseLocation location;
         if (this.getTreeItem() != null) {
             if ((getHeight() * 0.25) > event.getY()) {
@@ -861,27 +511,76 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         return location;
     }
 
-    private String makeCssParsingErrorString(CSSParsingReport r) {
-        final StringBuilder result = new StringBuilder();
+    @Override
+    public void setBorder(BorderSide side) {
+        removeBorderClasses();
 
-        if (r.getIOException() != null) {
-            result.append(r.getIOException());
-        } else {
-            assert r.getParseErrors().isEmpty() == false;
-            int errorCount = 0;
-            for (CssParser.ParseError e : r.getParseErrors()) {
-                result.append(e.getMessage());
-                errorCount++;
-                if (errorCount < 5) {
-                    result.append('\n');
-                } else {
-                    result.append("...");
-                    break;
-                }
-            }
+//        boolean isFirstCell = cell.getStyleClass() != null
+//                && cell.getStyleClass().contains(HIERARCHY_FIRST_CELL);
+        //final Border border;
+        final String cssClass;
+        switch (side) {
+            case BOTTOM:
+                //border = isFirstCell ? firstCellBottomBorder : bottomBorder;
+                cssClass = CSS_CLASS_INSERT_LINE;
+                break;
+            case RIGHT_BOTTOM_LEFT:
+                //border = isFirstCell ? firstCellRightBottomLeftBorder : rightBottomLeftBorder;
+                cssClass = CSS_CLASS_PARENT_SELECTION_END;
+                break;
+            case RIGHT_LEFT:
+                //border = isFirstCell ? firstCellRightLeftBorder : rightLeftBorder;
+                cssClass = CSS_CLASS_PARENT_SELECTION_MIDDLE;
+                break;
+            case TOP_RIGHT_BOTTOM_LEFT:
+                //border = isFirstCell ? firstCellTopRightBottomLeftBorder : topRightBottomLeftBorder;
+                cssClass = CSS_CLASS_PARENT_SELECTION_SINGLE;
+                break;
+            case TOP_RIGHT_LEFT:
+                //border = isFirstCell ? firstCellTopRightLeftBorder : topRightLeftBorder;
+                cssClass = CSS_CLASS_PARENT_SELECTION_START;
+                break;
+            default:
+                cssClass = null;
+                assert false;
+                break;
+        }
+        //assert border != null;
+        assert cssClass != null;
+        //cell.setBorder(border);
+        if (cssClass != null) {
+            getStyleClass().add(cssClass);
         }
 
-        return result.toString();
+    }
+
+    private void removeBorderClasses() {
+        getStyleClass().removeAll(CSS_CLASS_PARENT_SELECTION_START,
+                CSS_CLASS_PARENT_SELECTION_MIDDLE, CSS_CLASS_PARENT_SELECTION_END, CSS_CLASS_PARENT_SELECTION_SINGLE,
+                CSS_CLASS_INSERT_LINE, CSS_CLASS_PARENT_UNSELECTED);
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void clearBorders() {
+        setTransparentBorder();
+    }
+
+    private void setTransparentBorder() {
+        removeBorderClasses();
+        getStyleClass().add(CSS_CLASS_PARENT_UNSELECTED);
+    }
+
+
+
+    @Override
+    public String toString() {
+        String superToString = super.toString();
+        String localToString = getItem() == null ? "" : getItem().toString();
+        return String.format("%s, item=%s, index=%s", superToString, localToString, getIndex());
     }
 
     @Component
@@ -892,7 +591,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             super(sbContext);
         }
 
-        public TreeCell<HierarchyItem> newCell(AbstractHierarchyPanelController owner) {
+        public TreeCell<HierarchyItem> newCell(HierarchyPanel owner) {
             return create(HierarchyTreeCell.class, c -> c.setCellParameters(owner));
         }
     }

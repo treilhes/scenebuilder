@@ -208,6 +208,8 @@ import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInTilePaneJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInTitledPaneJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInToolBarJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInVBoxJob;
+import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
+import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 public class BaseToolingExtension extends AbstractExtension {
 
@@ -238,6 +240,8 @@ public class BaseToolingExtension extends AbstractExtension {
                 ArcResizer.class,
                 BorderPaneDropTargetProvider.class,
                 BorderPaneTring.class,
+                BorderPaneHierarchyMask.class,
+                BorderPaneHierarchyMask.Factory.class,
                 CanvasResizer.class,
                 CircleResizer.class,
                 CubicCurveEditor.class,
@@ -262,6 +266,8 @@ public class BaseToolingExtension extends AbstractExtension {
                 GridPaneDropTarget.Factory.class,
                 GridPaneDropTargetProvider.class,
                 GridPaneHandles.class,
+                GridPaneHierarchyMask.class,
+                GridPaneHierarchyMask.Factory.class,
                 GridPanePring.class,
                 GridPaneTring.class,
                 GridSelectionGroup.class,

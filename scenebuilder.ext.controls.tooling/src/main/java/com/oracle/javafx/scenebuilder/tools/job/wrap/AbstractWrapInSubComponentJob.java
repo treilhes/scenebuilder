@@ -90,7 +90,7 @@ public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
         final List<AbstractJob> jobs = new ArrayList<>();
 
         final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
-        assert newContainerMask.isAcceptingSubComponent();
+        assert newContainerMask.hasMainAccessory();
 
         // Retrieve the new container property name to be used
         final PropertyName newContainerPropertyName

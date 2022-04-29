@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -137,20 +138,11 @@ public final class HierarchyDropTarget extends AbstractDropTarget {
         if (dragSource.getDraggedObjects().size() == 0) {
             return false;
         }
-        if (!accessory.isCollection() && dragSource.getDraggedObjects().size() > 1) {
+        if (!accessory.isCollection() && dragSource.getDraggedObjects().stream().filter(Predicate.not(FXOMObject::isVirtual)).count() > 1) {
             return false;
         }
 
-        for (FXOMObject fxomObject:dragSource.getDraggedObjects()) {
-            boolean accepted = m.isAcceptingAccessory(accessory, fxomObject)
-                    && m.getAccessory(accessory) == null;
-
-            if (!accepted){
-                return false;
-            }
-        }
-
-        return true;
+        return m.isAcceptingAccessory(accessory, dragSource.getDraggedObjects());
     }
 
     @Override
@@ -183,7 +175,7 @@ public final class HierarchyDropTarget extends AbstractDropTarget {
                 int targetIndex;
                 if (beforeChild == null) {
                     final HierarchyMask m = designMaskFactory.getMask(targetContainer);
-                    targetIndex = m.getSubComponentCount();
+                    targetIndex = m.getSubComponentCount(true);
                 } else {
                     targetIndex = beforeChild.getIndexInParentProperty();
                     assert targetIndex != -1;

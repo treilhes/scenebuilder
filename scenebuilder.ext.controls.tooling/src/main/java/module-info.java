@@ -80,7 +80,7 @@ open module scenebuilder.ext.controls.tooling {
     exports com.oracle.javafx.scenebuilder.tools.job.gridpane;
     exports com.oracle.javafx.scenebuilder.tools.job.wrap;
     exports com.oracle.javafx.scenebuilder.tools.job.togglegroup;
-
+    exports com.oracle.javafx.scenebuilder.tools.mask;
 
     requires scenebuilder.starter;
     requires scenebuilder.core.drag.and.drop;

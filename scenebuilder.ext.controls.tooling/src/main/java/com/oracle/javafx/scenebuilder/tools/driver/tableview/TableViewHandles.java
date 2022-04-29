@@ -131,7 +131,7 @@ public class TableViewHandles extends AbstractNodeHandles<Node> implements Initi
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
             final HierarchyMask m = maskFactory.getMask(getFxomInstance());
-            final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
+            final FXOMObject columnObject = m.getSubComponentAtIndex(m.getMainAccessory(), gripIndex, false);
             assert columnObject instanceof FXOMInstance;
             result = resizeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {

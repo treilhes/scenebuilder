@@ -56,7 +56,6 @@ import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGrou
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDefine;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -550,11 +549,11 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
                 return sameParent ? parent.getChildObjects() : Collections.emptyList();
             }
 
-            if (item.getParentDefine() != null) {
-                FXOMDefine parent = item.getParentDefine();
-                boolean sameParent = selectedItems.stream().allMatch(i -> parent.equals(i.getParentDefine()));
-                return sameParent ? parent.getChildObjects() : Collections.emptyList();
-            }
+//            if (item.getParentDefine() != null) {
+//                FXOMDefine parent = item.getParentDefine();
+//                boolean sameParent = selectedItems.stream().allMatch(i -> parent.equals(i.getParentDefine()));
+//                return sameParent ? parent.getChildObjects() : Collections.emptyList();
+//            }
 
             if (item.getParentProperty() != null) {
                 FXOMProperty parent = item.getParentProperty();
@@ -573,7 +572,7 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
                     return m.getAccessories().stream()
                         .peek(a -> {
                             if (a.isCollection()) {
-                                List<FXOMObject> list = m.getAccessories(a);
+                                List<FXOMObject> list = m.getAccessories(a, true);
                                 List<FXOMObject> remaining = new ArrayList<>(list);
                                 remaining.removeAll(selectedItems);
 
@@ -583,7 +582,7 @@ public class ObjectSelectionGroup extends AbstractSelectionGroup {
                             }
                         })
                         .filter(a -> a.isCollection() == false)
-                        .map(a -> m.getAccessory(a))
+                        .flatMap(a -> m.getAccessories(a, true).stream())
                         .filter(fx -> fx != null)
                         .collect(Collectors.toList());
                 } catch (Exception e) {

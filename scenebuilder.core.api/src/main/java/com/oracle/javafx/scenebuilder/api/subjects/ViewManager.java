@@ -45,69 +45,147 @@ import com.oracle.javafx.scenebuilder.api.dock.ViewAttachment;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 public interface ViewManager {
 
-	Subject<DockRequest> dock();
-	Subject<View> undock();
-	Subject<View> close();
+    Subject<DockRequest> dock();
 
-	@AllArgsConstructor
-	@RequiredArgsConstructor
-	@EqualsAndHashCode
-	public static class DockRequest {
-	    private final @Getter ViewAttachment viewAttachment;
-		private final @Getter View source;
-		private final @Getter UUID target;
-		private @Getter boolean select = true;;
+    Subject<View> undock();
 
-	}
+    Subject<View> close();
 
-	@Component
-	@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-	public class ViewManagerImpl implements InitializingBean, ViewManager {
+    public static class DockRequest {
+        private final ViewAttachment viewAttachment;
+        private final View source;
+        private final UUID target;
+        private boolean select = true;
 
-		private ViewSubjects subjects;
+        public DockRequest(ViewAttachment viewAttachment, View source, UUID target, boolean select) {
+            super();
+            this.viewAttachment = viewAttachment;
+            this.source = source;
+            this.target = target;
+            this.select = select;
+        }
 
-		public ViewManagerImpl() {
-			subjects = new ViewSubjects();
-		}
+        public DockRequest(ViewAttachment viewAttachment, View source, UUID target) {
+            super();
+            this.viewAttachment = viewAttachment;
+            this.source = source;
+            this.target = target;
+        }
 
-		@Override
-		public void afterPropertiesSet() throws Exception {
-		}
+        public ViewAttachment getViewAttachment() {
+            return viewAttachment;
+        }
 
-		@Override
-		public Subject<DockRequest> dock() {
-			return subjects.getDock();
-		}
+        public View getSource() {
+            return source;
+        }
 
-		@Override
-		public Subject<View> undock() {
-			return subjects.getUndock();
-		}
+        public UUID getTarget() {
+            return target;
+        }
 
-		@Override
-		public Subject<View> close() {
-			return subjects.getClose();
-		}
-	}
+        public boolean isSelect() {
+            return select;
+        }
 
-	public class ViewSubjects extends SubjectManager {
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (select ? 1231 : 1237);
+            result = prime * result + ((source == null) ? 0 : source.hashCode());
+            result = prime * result + ((target == null) ? 0 : target.hashCode());
+            result = prime * result + ((viewAttachment == null) ? 0 : viewAttachment.hashCode());
+            return result;
+        }
 
-		private @Getter PublishSubject<DockRequest> dock;
-		private @Getter PublishSubject<View> undock;
-		private @Getter PublishSubject<View> close;
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            DockRequest other = (DockRequest) obj;
+            if (select != other.select)
+                return false;
+            if (source == null) {
+                if (other.source != null)
+                    return false;
+            } else if (!source.equals(other.source))
+                return false;
+            if (target == null) {
+                if (other.target != null)
+                    return false;
+            } else if (!target.equals(other.target))
+                return false;
+            if (viewAttachment == null) {
+                if (other.viewAttachment != null)
+                    return false;
+            } else if (!viewAttachment.equals(other.viewAttachment))
+                return false;
+            return true;
+        };
 
-		public ViewSubjects() {
-			dock = wrap(ViewSubjects.class, "dock", PublishSubject.create()); // NOI18N
-			undock = wrap(ViewSubjects.class, "undock", PublishSubject.create()); // NOI18N
-			close = wrap(ViewSubjects.class, "close", PublishSubject.create()); // NOI18N
-		}
+    }
 
-	}
+    @Component
+    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    public class ViewManagerImpl implements InitializingBean, ViewManager {
+
+        private ViewSubjects subjects;
+
+        public ViewManagerImpl() {
+            subjects = new ViewSubjects();
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+        }
+
+        @Override
+        public Subject<DockRequest> dock() {
+            return subjects.getDock();
+        }
+
+        @Override
+        public Subject<View> undock() {
+            return subjects.getUndock();
+        }
+
+        @Override
+        public Subject<View> close() {
+            return subjects.getClose();
+        }
+    }
+
+    public class ViewSubjects extends SubjectManager {
+
+        private PublishSubject<DockRequest> dock;
+        private PublishSubject<View> undock;
+        private PublishSubject<View> close;
+
+        public ViewSubjects() {
+            dock = wrap(ViewSubjects.class, "dock", PublishSubject.create()); // NOI18N
+            undock = wrap(ViewSubjects.class, "undock", PublishSubject.create()); // NOI18N
+            close = wrap(ViewSubjects.class, "close", PublishSubject.create()); // NOI18N
+        }
+
+        public PublishSubject<DockRequest> getDock() {
+            return dock;
+        }
+
+        public PublishSubject<View> getUndock() {
+            return undock;
+        }
+
+        public PublishSubject<View> getClose() {
+            return close;
+        }
+
+    }
 }

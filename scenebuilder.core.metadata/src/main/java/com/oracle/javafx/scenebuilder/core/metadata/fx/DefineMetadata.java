@@ -37,11 +37,25 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDefine;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
 
 @Component
 public class DefineMetadata extends ComponentClassMetadata<FXOMDefine> {
+
+    private final com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata contentPropertyMetadata;
+
     protected DefineMetadata() {
         super(FXOMDefine.class, null);
+
+        contentPropertyMetadata = new com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata.Builder()
+                .withName(FXOMDefine.defineContentName)
+                .withIsCollection(true)
+                .withIsMain(true)
+                .withOrder(0)
+                .withVisibility(Visibility.STANDARD)
+                .build();
+
+        getProperties().add(contentPropertyMetadata);
 
         getQualifiers().put("default",
                 new Qualifier(
@@ -50,8 +64,7 @@ public class DefineMetadata extends ComponentClassMetadata<FXOMDefine> {
                         "",
                         getClass().getResource("Define.png"),
                         getClass().getResource("Define@2x.png"),
-                        "Fx",
-                        null
+                        "Fx"
                         ));
     }
 

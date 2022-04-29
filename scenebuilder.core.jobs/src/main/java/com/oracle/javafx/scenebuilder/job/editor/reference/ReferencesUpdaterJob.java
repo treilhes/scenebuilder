@@ -170,9 +170,10 @@ public final class ReferencesUpdaterJob extends InlineDocumentJob {
         if (instance.getFxId() != null) {
             declaredFxIds.add(instance.getFxId());
         }
-        final List<FXOMObject> values = instance.getChildObjects();
-        for (int i = 0, count = values.size(); i < count; i++) {
-            update(values.get(i), jobCollector);
+        final Map<PropertyName, FXOMProperty> properties = instance.getProperties();
+        final List<PropertyName> names = new LinkedList<>(properties.keySet());
+        for (PropertyName propertyName : names) {
+            update(properties.get(propertyName), jobCollector);
         }
     }
 
@@ -230,11 +231,14 @@ public final class ReferencesUpdaterJob extends InlineDocumentJob {
             }
 
             // 1
-            else if (FXOMNodes.isWeakReference(r) || (declarer == null)) {
+            else if (FXOMNodes.isWeakReference(r)) {
                 final AbstractJob removeJob = removeNodeJobFactory.getJob(r);
                 removeJob.execute();
                 jobCollector.add(removeJob);
+            }
+            else if (declarer == null) {
 
+                // TODO maybe add error in errorReport here
                 // 2)
             } else {
 

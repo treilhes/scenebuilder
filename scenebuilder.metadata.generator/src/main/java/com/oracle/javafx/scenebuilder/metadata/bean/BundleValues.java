@@ -43,6 +43,7 @@ public interface BundleValues {
 	final String CATEGORY = "category";
 	final String DESCRIPTION_PROPERTY = "descriptionProperty";
 	final String LABEL_MUTATION_LAMBDA = "labelMutation";
+	final String SHADOWS = "shadows";
 
 	//property level
 	final String INSPECTOR_SECTION = "section";

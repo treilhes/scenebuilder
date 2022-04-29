@@ -111,11 +111,11 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
         final List<AbstractJob> result = new ArrayList<>();
 
         final HierarchyMask m = GridPaneHierarchyMask.getMask(gridPaneObject);
-        assert m.isAcceptingSubComponent();
+        assert m.hasMainAccessory();
 
-        for (int i = 0, count = m.getSubComponentCount(); i <  count; i++) {
-            assert m.getSubComponentAtIndex(i) instanceof FXOMInstance; // Because children of GridPane are nodes
-            final FXOMInstance child = (FXOMInstance) m.getSubComponentAtIndex(i);
+        for (FXOMObject childObject:m.getAccessories(m.getMainAccessory(), false)) {
+            assert childObject instanceof FXOMInstance; // Because children of GridPane are nodes
+            final FXOMInstance child = (FXOMInstance) childObject;
             if (columnIndexMeta.getValue(child) == movingColumnIndex) {
                 // child belongs to column at movingColumnIndex
                 final AbstractJob subJob = moveCellContentJobFactory.getJob(child, columnIndexDelta, 0);

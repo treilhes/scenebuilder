@@ -142,7 +142,7 @@ public class SkeletonViewController extends AbstractFxmlViewController {
 
     private void updateTitle() {
         final String title = I18N.getString("skeleton.window.title", documentName);
-        getName().set(title);
+        setName(title);
     }
 
     private void update() {

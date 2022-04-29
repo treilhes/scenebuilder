@@ -76,7 +76,7 @@ public class WrapJobUtils {
         for (Accessory accessory:allAccessories) {
 
             final FXOMObject child = children.iterator().next();
-            final List<FXOMObject> obj = mask.getAccessories(accessory);
+            final List<FXOMObject> obj = mask.getAccessories(accessory, true);
             if (obj != null && obj.contains(child)) {
                 return mask.getPropertyNameForAccessory(accessory);
             }

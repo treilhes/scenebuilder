@@ -38,6 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -62,8 +63,10 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
-import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
@@ -150,6 +153,12 @@ class DocumentUiTest {
     ComponentClassMetadata ccm;
 
     @Mock
+    HierarchyCellAssignment cellAssignments;
+
+    @Mock
+    HierarchyParentRing parentRing;
+
+    @Mock
     Metadata metadata;
 
     //@Test
@@ -167,8 +176,8 @@ class DocumentUiTest {
         //Mockito.when(api.getMetadata().queryComponentMetadata(Panel.class)).thenReturn(ccm);
 
 
-        HierarchyPanelController controller = new HierarchyPanelController(scenebuilderManager, documentManager,
-                inlineEdit, contextMenuw, jobManager, drag, selection, showExpertByDefaultPreference,
+        HierarchyController controller = new HierarchyController(scenebuilderManager, documentManager,
+                inlineEdit, contextMenuw, jobManager, drag, selection, cellAssignments, parentRing, showExpertByDefaultPreference,
                 documentDragSourceFactory, externalDragSourceFactory, designHierarchyMaskFactory,
                 hierarchyTreeCellFactory, hierarchyDNDControllerFactory, metadataInfoDisplayOption);
 
@@ -206,7 +215,7 @@ class DocumentUiTest {
     }
 
 
-    //@Test
+    @Test
     void other() {
 
         ApplicationContext ctx = TestContext.get();
@@ -217,7 +226,7 @@ class DocumentUiTest {
         doc.setFxomRoot(inst);
         //documentManager.fxomDocument().set(doc);
 
-        HierarchyPanelController controller = ctx.getBean(HierarchyPanelController.class);
+        HierarchyController controller = ctx.getBean(HierarchyController.class);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setController(controller);

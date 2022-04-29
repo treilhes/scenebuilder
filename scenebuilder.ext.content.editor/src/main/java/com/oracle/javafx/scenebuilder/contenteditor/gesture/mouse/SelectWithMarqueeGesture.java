@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -256,25 +257,18 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
             }
         } else {
             final HierarchyMask m = maskFactory.getMask(scopeObject);
-            if (m.isAcceptingSubComponent()) {
-                final int count = m.getSubComponentCount();
-                for (int i = 0; i < count; i++) {
-                    candidates.add(m.getSubComponentAtIndex(i));
-                }
-            } else {
-//                final List<Accessory> accessories = Arrays.asList(
-//                        Accessory.CONTENT,
-//                        Accessory.CENTER,
-//                        Accessory.BOTTOM, Accessory.TOP,
-//                        Accessory.LEFT, Accessory.RIGHT,
-//                        Accessory.XAXIS, Accessory.YAXIS);
-                for (Accessory accessory : m.getAccessories()) {
-                    if (m.isAcceptingAccessory(accessory)) {
-                        final List<FXOMObject> fxomObjects = m.getAccessories(accessory);
-                        fxomObjects.stream()
-                            .filter(f -> f != null)
-                            .forEach(candidates::add);
-                    }
+
+            List<Accessory> allAccessories = new ArrayList<>(m.getAccessories());
+            if (m.getMainAccessory() != null && !allAccessories.contains(m.getMainAccessory())) {
+                allAccessories.add(0, m.getMainAccessory());
+            }
+
+            for (Accessory accessory : allAccessories) {
+                if (m.isAcceptingAccessory(accessory)) {
+                    final List<FXOMObject> fxomObjects = m.getAccessories(accessory, false);
+                    fxomObjects.stream()
+                        .filter(f -> f != null)
+                        .forEach(candidates::add);
                 }
             }
         }

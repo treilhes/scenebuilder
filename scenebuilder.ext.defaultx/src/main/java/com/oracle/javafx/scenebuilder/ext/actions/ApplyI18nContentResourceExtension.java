@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,33 +58,29 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class ApplyI18nContentResourceExtension extends AbstractActionExtension<ApplyI18nContentAction> {
 
-	private final I18NResourcePreference i18NResourcePreference;
+    private final I18NResourcePreference i18NResourcePreference;
 
-	public ApplyI18nContentResourceExtension(
-			@Autowired @Lazy I18NResourcePreference i18NResourcePreference
-			) {
-		super();
-		this.i18NResourcePreference = i18NResourcePreference;
-	}
+    public ApplyI18nContentResourceExtension(@Autowired @Lazy I18NResourcePreference i18NResourcePreference) {
+        super();
+        this.i18NResourcePreference = i18NResourcePreference;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return i18NResourcePreference.getValue() != null;
-	}
+    @Override
+    public boolean canPerform() {
+        return i18NResourcePreference.getValue() != null;
+    }
 
-	@Override
-	public void prePerform() {
-		List<ResourceBundle> bundles = i18NResourcePreference.getValue().stream()
-			.map(f -> new File(URI.create(f)))
-			.map(f -> readPropertyResourceBundle(f))
-			.collect(Collectors.toList());
-		getExtendedAction().getActionConfig().getBundles().addAll(bundles);
-	}
+    @Override
+    public void prePerform() {
+        List<ResourceBundle> bundles = i18NResourcePreference.getValue().stream().map(f -> new File(URI.create(f)))
+                .map(f -> readPropertyResourceBundle(f)).collect(Collectors.toList());
+        getExtendedAction().getActionConfig().getBundles().addAll(bundles);
+    }
 
-	private static PropertyResourceBundle readPropertyResourceBundle(File f) {
+    private static PropertyResourceBundle readPropertyResourceBundle(File f) {
         PropertyResourceBundle result;
-        try( Reader reader = new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8")) ) {
-            result = new PropertyResourceBundle(reader); //NOCHECK
+        try (Reader reader = new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8"))) {
+            result = new PropertyResourceBundle(reader); // NOCHECK
         } catch (IOException ex) {
             result = null;
         }

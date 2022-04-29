@@ -57,8 +57,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.test.JfxInitializer;
 
 /**
@@ -92,10 +90,6 @@ public class StaticLoadTest {
     ErrorReport errorReport;
     @Mock
     InlineEdit inlineEditController;
-    @Mock
-    GridPaneHierarchyMask.Factory gridPaneHierarchyMaskFactory;
-    @Mock
-    BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
 
     @InjectMocks
     private EditorController editorController;

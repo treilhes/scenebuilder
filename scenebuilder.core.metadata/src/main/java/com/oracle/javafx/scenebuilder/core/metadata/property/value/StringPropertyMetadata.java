@@ -301,4 +301,18 @@ public abstract class StringPropertyMetadata extends TextEncodablePropertyMetada
           }
       }
   }
+
+    public static class ResourceStringPropertyMetadata extends StringPropertyMetadata {
+
+        public ResourceStringPropertyMetadata(AbstractBuilder<?, ?> builder) {
+            super(builder);
+        }
+
+        public static final class Builder extends AbstractBuilder<Builder, ResourceStringPropertyMetadata> {
+            @Override
+            public ResourceStringPropertyMetadata build() {
+                return new ResourceStringPropertyMetadata(this);
+            }
+        }
+    }
 }

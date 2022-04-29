@@ -55,19 +55,22 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.MenuButton;
-import lombok.Getter;
 
 /**
- * AbstractViewFxmlPanelController is the abstract base class for all the
- * view controller which build their UI components from an FXML file.
+ * AbstractViewFxmlPanelController is the abstract base class for all the view
+ * controller which build their UI components from an FXML file.
  *
- * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
- * method in charge of finishing the initialization of the UI components
- * loaded from the FXML file.
+ * Subclasses should provide a
+ * {@link AbstractFxmlPanelController#controllerDidLoadFxml() } method in charge
+ * of finishing the initialization of the UI components loaded from the FXML
+ * file.
  *
- * It provides input controls for filtering, a placeholder menu and basic docking functionalities
+ * It provides input controls for filtering, a placeholder menu and basic
+ * docking functionalities
  */
-public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View, ViewContent { //, ViewMenuProvider {
+public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View, ViewContent { // ,
+                                                                                                                    // ViewMenuProvider
+                                                                                                                    // {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AbstractFxmlViewController.class);
@@ -76,34 +79,31 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
 //	@Autowired
 //	private @Getter ViewManager viewManager;
 
-	private @Getter StringProperty name;
+    private StringProperty nameProperty;
 
     private final DocumentManager documentManager;
 
     private ObjectProperty<Dock> parentDock = new SimpleObjectProperty<>();
     private BooleanProperty minimizedProperty = new SimpleBooleanProperty();
 
-	/*
+    /*
      * Public
      */
-	/**
+    /**
      * Base constructor for invocation by the subclasses.
-     * @param api api agregator
-     * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
+     *
+     * @param api       api agregator
+     * @param fxmlURL   the URL of the FXML file to be loaded (cannot be null)
      * @param resources I18n resource bundle
      */
-    public AbstractFxmlViewController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
-            ViewMenuController viewMenuController,
-            URL fxmlURL,
-            ResourceBundle resources) {
-        super(scenebuilderManager, documentManager, fxmlURL, resources); //NOCHECK
+    public AbstractFxmlViewController(SceneBuilderManager scenebuilderManager, DocumentManager documentManager,
+            ViewMenuController viewMenuController, URL fxmlURL, ResourceBundle resources) {
+        super(scenebuilderManager, documentManager, fxmlURL, resources); // NOCHECK
         this.viewMenuController = viewMenuController;
         this.documentManager = documentManager;
 
         String viewName = getViewName();
-        name = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
+        nameProperty = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
 
     }
 
@@ -129,34 +129,6 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
         return this;
     }
 
-
-
-//    @Override
-//    public ViewMenuProvider getViewMenus() {
-//        return this;
-//    }
-//
-//    @Override
-//    public List<MenuItem> getMenuItems() {
-//        return null;
-//    }
-
-//    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
-//    // maybe markAsShown
-//    @Override
-//    public void shown() {
-//        this.hidden = false;
-//        onShow();
-//    }
-//
-//    //TODO those methods are misleading and have a limited use. Need to limit the visibility ?
-//    // maybe markAsHidden
-//    @Override
-//    public void hidden() {
-//        this.hidden = true;
-//        onHidden();
-//    }
-
     private BooleanProperty visibleProperty;
 
     @Override
@@ -173,6 +145,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
         }
         return visibleProperty;
     }
+
     public abstract void onShow();
 
     public abstract void onHidden();
@@ -194,15 +167,20 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
 
     @Override
     public ViewSearch getSearchController() {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
+    public final StringProperty nameProperty() {
+        return this.nameProperty;
+    }
 
+    public final String getName() {
+        return this.nameProperty().get();
+    }
 
-
-
-
-
+    public final void setName(final String nameProperty) {
+        this.nameProperty().set(nameProperty);
+    }
 
 }

@@ -82,7 +82,7 @@ public class DockTypeTab implements DockType<Tab> {
 
         Tab tab = FXMLUtils.load(ctrl, DockTypeTab.class, VIEW_SOURCE);
 
-        tab.textProperty().bind(view.getName());
+        tab.textProperty().bind(view.nameProperty());
         tab.setOnSelectionChanged(e -> {
             if (tab.getTabPane() != null && tab.getTabPane().getScene() != null && tab.isSelected()) {
                 view.notifyFocused();

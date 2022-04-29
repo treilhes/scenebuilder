@@ -44,7 +44,6 @@ import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
-import lombok.Getter;
 
 public interface SceneBuilderManager {
 
@@ -119,13 +118,13 @@ public interface SceneBuilderManager {
 
     public class SceneBuilderSubjects extends SubjectManager {
 
-        private @Getter ReplaySubject<StylesheetProvider> stylesheetConfig;
-        private @Getter PublishSubject<Boolean> closed;
-        private @Getter PublishSubject<Document> documentOpened;
-        private @Getter PublishSubject<Document> documentClosed;
-        private @Getter ReplaySubject<Document> documentScoped;
-        private @Getter ReplaySubject<Boolean> debugMode;
-        private @Getter ReplaySubject<ClassLoader> classloader;
+        private ReplaySubject<StylesheetProvider> stylesheetConfig;
+        private PublishSubject<Boolean> closed;
+        private PublishSubject<Document> documentOpened;
+        private PublishSubject<Document> documentClosed;
+        private ReplaySubject<Document> documentScoped;
+        private ReplaySubject<Boolean> debugMode;
+        private ReplaySubject<ClassLoader> classloader;
 
         public SceneBuilderSubjects() {
             closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create()); // NOI18N
@@ -135,6 +134,34 @@ public interface SceneBuilderManager {
             documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create()); // NOI18N
             documentScoped = wrap(SceneBuilderSubjects.class, "documentScoped", ReplaySubject.create(1)); // NOI18N
             classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
+        }
+
+        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
+            return stylesheetConfig;
+        }
+
+        public PublishSubject<Boolean> getClosed() {
+            return closed;
+        }
+
+        public PublishSubject<Document> getDocumentOpened() {
+            return documentOpened;
+        }
+
+        public PublishSubject<Document> getDocumentClosed() {
+            return documentClosed;
+        }
+
+        public ReplaySubject<Document> getDocumentScoped() {
+            return documentScoped;
+        }
+
+        public ReplaySubject<Boolean> getDebugMode() {
+            return debugMode;
+        }
+
+        public ReplaySubject<ClassLoader> getClassloader() {
+            return classloader;
         }
 
     }

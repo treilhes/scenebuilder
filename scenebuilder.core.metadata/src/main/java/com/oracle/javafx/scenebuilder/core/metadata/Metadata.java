@@ -49,7 +49,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
@@ -295,7 +294,7 @@ public class Metadata {
         final Map<PropertyName, PropertyMetadata> result = new HashMap<>();
         ComponentClassMetadata<?> classMetadata = queryComponentMetadata(componentClass);
 
-        Set<PropertyMetadata> shadowed = new HashSet<>();
+        Set<PropertyName> shadowed = new HashSet<>();
         while (classMetadata != null) {
             for (PropertyMetadata pm : classMetadata.getProperties()) {
                 if (result.containsKey(pm.getName()) == false) {
@@ -305,7 +304,7 @@ public class Metadata {
             shadowed.addAll(classMetadata.getShadowedProperties());
             classMetadata = classMetadata.getParentMetadata();
         }
-        shadowed.stream().forEach(s -> result.remove(s.getName()));
+        shadowed.forEach(result::remove);
 
         return new HashSet<>(result.values());
     }
@@ -384,16 +383,11 @@ public class Metadata {
         assert fxomInstance != null;
         assert targetName != null;
 
-        if (fxomInstance.getSceneGraphObject() == null) {
+        if (fxomInstance.getMetadataClass() == null) {
             // FXOM object is unresolved
             result = null;
         } else {
-            final Class<?> componentClass;
-            if (fxomInstance.getDeclaredClass() == FXOMIntrinsic.class) {
-                componentClass = fxomInstance.getDeclaredClass();
-            } else {
-                componentClass = fxomInstance.getSceneGraphObject().getClass();
-            }
+            final Class<?> componentClass = fxomInstance.getMetadataClass();
 
             final PropertyMetadata m = queryProperty(componentClass, targetName);
             if (m instanceof ValuePropertyMetadata) {

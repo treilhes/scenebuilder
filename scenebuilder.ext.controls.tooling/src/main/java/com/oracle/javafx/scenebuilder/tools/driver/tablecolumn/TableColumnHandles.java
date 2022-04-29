@@ -194,7 +194,7 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
         if (gripIndex != -1) {
             final FXOMObject parentObject = getFxomInstance().getParentObject();
             final HierarchyMask m = maskFactory.getMask(parentObject);
-            final FXOMObject columnObject = m.getSubComponentAtIndex(gripIndex);
+            final FXOMObject columnObject = m.getSubComponentAtIndex(m.getMainAccessory(), gripIndex, false);
             assert columnObject instanceof FXOMInstance;
             result = resizeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {

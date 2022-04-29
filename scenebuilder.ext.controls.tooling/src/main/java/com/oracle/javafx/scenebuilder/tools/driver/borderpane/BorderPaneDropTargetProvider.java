@@ -45,9 +45,9 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.tools.driver.borderpane.BorderPaneTring.BorderPanePosition;
+import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

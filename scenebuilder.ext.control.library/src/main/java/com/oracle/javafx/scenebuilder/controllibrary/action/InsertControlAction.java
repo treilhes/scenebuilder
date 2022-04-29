@@ -46,6 +46,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
@@ -56,6 +57,7 @@ import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
@@ -68,7 +70,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItem
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
+import com.oracle.javafx.scenebuilder.selection.job.InsertAsAccessoryJob;
 import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 import javafx.scene.control.Menu;
@@ -84,10 +86,11 @@ public class InsertControlAction extends AbstractAction {
     private static Logger logger = LoggerFactory.getLogger(InsertControlAction.class);
 
     private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
-    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
+    private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final JobManager jobManager;
     private final DocumentManager documentManager;
     private final Selection selection;
+    private final DesignHierarchyMask.Factory designMaskFactory;
 
     private LibraryItem libraryItem;
 
@@ -96,14 +99,16 @@ public class InsertControlAction extends AbstractAction {
             DocumentManager documentManager,
             Selection selection,
             JobManager jobManager,
+            DesignHierarchyMask.Factory designMaskFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {
+            InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory) {
         super(extensionFactory);
         this.setDocumentRootJobFactory = setDocumentRootJobFactory;
-        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+        this.insertAsAccessoryJobFactory = insertAsAccessoryJobFactory;
         this.documentManager = documentManager;
         this.selection = selection;
         this.jobManager = jobManager;
+        this.designMaskFactory = designMaskFactory;
     }
 
     protected LibraryItem getLibraryItem() {
@@ -154,7 +159,14 @@ public class InsertControlAction extends AbstractAction {
                         // It might be null if selection holds some non FXOMObject entries
                         targetCandidate = selection.getAncestor();
                     }
-                    final AbstractJob job = insertAsSubComponentJobFactory.getJob(newItemRoot, targetCandidate, -1);
+
+                    Accessory targetAccessory = selection.getTargetAccessory();
+                    if (targetAccessory == null && targetCandidate != null) {
+                        targetAccessory = designMaskFactory.getMask(targetCandidate).getMainAccessory();
+                    }
+
+System.out.println();
+                    final AbstractJob job = insertAsAccessoryJobFactory.getJob(newItemRoot, targetCandidate, targetAccessory);
                     result = job.isExecutable();
                 }
             }
@@ -198,7 +210,14 @@ public class InsertControlAction extends AbstractAction {
                 // It might be null if selection holds some non FXOMObject entries
                 target = selection.getAncestor();
             }
-            job = insertAsSubComponentJobFactory.getJob(newObject, target, -1);
+
+            Accessory targetAccessory = selection.getTargetAccessory();
+            if (targetAccessory == null) {
+                targetAccessory = designMaskFactory.getMask(target).getMainAccessory();
+            }
+
+
+            job = insertAsAccessoryJobFactory.getJob(newObject, target, targetAccessory);
         }
 
         jobManager.push(job);

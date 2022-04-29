@@ -67,7 +67,7 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
     private DesignHierarchyMask.Factory maskFactory;
 
     public NodeResizeGuide(
-            DesignHierarchyMask.Factory maskFactory, 
+            DesignHierarchyMask.Factory maskFactory,
             Content contentPanelController,
             DocumentManager documentManager) {
         super(contentPanelController, documentManager, Node.class);
@@ -165,9 +165,9 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
             }
 
             final HierarchyMask m = maskFactory.getMask(fxomObject);
-            if (m.isAcceptingSubComponent()) {
-                for (int i = 0, count = m.getSubComponentCount(); i < count; i++) {
-                    addToResizingGuideController(m.getSubComponentAtIndex(i));
+            if (m.getMainAccessory() != null) {
+                for (FXOMObject child:m.getAccessories(m.getMainAccessory(), false)) {
+                    addToResizingGuideController(child);
                 }
             }
         }

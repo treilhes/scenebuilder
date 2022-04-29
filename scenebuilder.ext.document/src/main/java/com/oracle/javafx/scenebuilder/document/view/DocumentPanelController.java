@@ -48,8 +48,7 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
-import com.oracle.javafx.scenebuilder.document.hierarchy.AbstractHierarchyPanelController;
-import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyPanelController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
 import com.oracle.javafx.scenebuilder.document.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 
@@ -78,7 +77,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     public final static String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";
     public final static String VIEW_NAME = "document";
 
-	private final AbstractHierarchyPanelController hierarchyPanelController;
+	private final HierarchyController hierarchyController;
 	private final InfoPanelController infoPanelController;
 	private final DisplayOptionPreference displayOptionPreference;
 
@@ -106,13 +105,13 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     public DocumentPanelController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
-    		HierarchyPanelController hierarchyPanelController,
+            HierarchyController hierarchyPanelController,
     		InfoPanelController infoPanelController,
     		DisplayOptionPreference displayOptionPreference,
             ViewMenuController viewMenuController
     		) {
         super(scenebuilderManager, documentManager, viewMenuController, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
-        this.hierarchyPanelController = hierarchyPanelController;
+        this.hierarchyController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
         this.displayOptionPreference = displayOptionPreference;
 
@@ -142,7 +141,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
         assert documentAccordion != null;
         assert !documentAccordion.getPanes().isEmpty();
 
-		hierarchyPanelHost.getChildren().add(hierarchyPanelController.getRoot());
+		hierarchyPanelHost.getChildren().add(hierarchyController.getRoot());
         infoPanelHost.getChildren().add(infoPanelController.getRoot());
 
         documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
@@ -159,7 +158,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 	}
 
 	public void refreshHierarchyDisplayOption(DisplayOption option) {
-        hierarchyPanelController.setDisplayOption(option);
+        hierarchyController.setDisplayOption(option);
     }
 
     @Override

@@ -31,13 +31,13 @@
     </appender>
 
     <logger name="com.oracle.javafx.scenebuilder.ui.inlineedit" level="ERROR"/>
-    <logger name="com.oracle.javafx.scenebuilder.document.hierarchy" level="ERROR"/>
+    <logger name="com.oracle.javafx.scenebuilder.document.hierarchy" level="DEBUG"/>
     <logger name="com.oracle.javafx.scenebuilder.document.info" level="ERROR"/>
     <logger name="com.oracle.javafx.scenebuilder.api.action" level="ERROR"/>
     <logger name="com.oracle.javafx.scenebuilder.core.accelerator" level="ERROR"/>
     <logger name="com.oracle.javafx.scenebuilder.ui" level="DEBUG"/>
 
-    <root level="ERROR">
+    <root level="DEBUG">
         <!-- <appender-ref ref="async" /> -->
         <appender-ref ref="TIME_BASED_FILE" />
         <appender-ref ref="STDOUT" />

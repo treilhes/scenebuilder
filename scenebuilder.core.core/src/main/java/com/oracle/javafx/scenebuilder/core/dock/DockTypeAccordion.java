@@ -84,7 +84,7 @@ public class DockTypeAccordion implements DockType<TitledPane> {
 
         TitledPane titledPane = FXMLUtils.load(ctrl, DockTypeAccordion.class, VIEW_SOURCE);
 
-        ctrl.getViewLabel().textProperty().bind(view.getName());
+        ctrl.getViewLabel().textProperty().bind(view.nameProperty());
         titledPane.setOnMouseEntered(e -> view.notifyFocused());
 
         if (view.getSearchController() != null) {

@@ -47,15 +47,12 @@ import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.mask.BorderPaneHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.mask.GridPaneHierarchyMask;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;
@@ -81,9 +78,6 @@ public class SelectAllAction extends AbstractAction {
     private final DocumentWindow documentWindow;
     private final InlineEdit inlineEdit;
     private final DocumentManager documentManager;
-    private final DesignHierarchyMask.Factory designMaskFactory;
-    private final GridPaneHierarchyMask.Factory gridMaskFactory;
-    private final BorderPaneHierarchyMask.Factory borderPaneMaskFactory;
     private final Selection selection;
 
     public SelectAllAction(
@@ -91,17 +85,11 @@ public class SelectAllAction extends AbstractAction {
             @Autowired DocumentWindow documentWindow,
             @Autowired DocumentManager documentManager,
             @Autowired InlineEdit inlineEdit,
-            DesignHierarchyMask.Factory designMaskFactory,
-            GridPaneHierarchyMask.Factory gridMaskFactory,
-            BorderPaneHierarchyMask.Factory borderPaneMaskFactory,
             Selection selection) {
         super(extensionFactory);
         this.documentWindow = documentWindow;
         this.documentManager = documentManager;
         this.inlineEdit = inlineEdit;
-        this.designMaskFactory = designMaskFactory;
-        this.gridMaskFactory = gridMaskFactory;
-        this.borderPaneMaskFactory = borderPaneMaskFactory;
         this.selection = selection;
     }
 

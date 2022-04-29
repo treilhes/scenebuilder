@@ -196,8 +196,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         // no free child positioning is not needed here
         //assert hitParentMask.getMainAccessory() != null && hitParentMask.getMainAccessory().isFreeChildPositioning();
 
-        for (int i = 0, c = hitParentMask.getSubComponentCount(); i < c; i++) {
-            final FXOMObject child = hitParentMask.getSubComponentAtIndex(i);
+        for (final FXOMObject child:hitParentMask.getAccessories(hitParentMask.getMainAccessory(), false)) {
             final boolean isNode = child.getSceneGraphObject() instanceof Node;
             if (isNode && child != fxomInstance) {
                 final Node childNode = (Node) child.getSceneGraphObject();

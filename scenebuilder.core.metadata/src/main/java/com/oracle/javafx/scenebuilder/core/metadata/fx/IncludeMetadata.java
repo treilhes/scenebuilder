@@ -38,12 +38,49 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInclude;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic.Type;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.ResourceStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.SourceStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 
 @Component
 public class IncludeMetadata extends ComponentClassMetadata<FXOMInclude> {
-    protected IncludeMetadata() {
-        super(FXOMInclude.class, null);
+
+    private final SourceStringPropertyMetadata sourceMetadata = new SourceStringPropertyMetadata.Builder()
+            .withName(new PropertyName("source"))
+            .withReadWrite(true)
+            .withDefaultValue("")
+            .withInspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
+            .withVisibility(Visibility.STANDARD)
+            .withFileUrlDetection(true)
+            .build();
+
+    private final ResourceStringPropertyMetadata resourcesMetadata = new ResourceStringPropertyMetadata.Builder()
+            .withName(new PropertyName("resources"))
+            .withReadWrite(true)
+            .withDefaultValue("")
+            .withInspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
+            .withVisibility(Visibility.STANDARD)
+            .withFileUrlDetection(true)
+            .build();
+
+    private final CharsetStringPropertyMetadata charsetMetadata = new CharsetStringPropertyMetadata.Builder()
+            .withName(new PropertyName("charset"))
+            .withReadWrite(true)
+            .withDefaultValue("")
+            .withInspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
+            .withVisibility(Visibility.STANDARD)
+            .build();
+
+    protected IncludeMetadata(IntrinsicMetadata parent) {
+        super(FXOMInclude.class, parent);
+
+        getProperties().add(sourceMetadata);
+        getProperties().add(resourcesMetadata);
+        getProperties().add(charsetMetadata);
 
         getQualifiers().put("include",
                 new Qualifier(

@@ -106,7 +106,7 @@ public final class RelocateNodeJob extends AbstractJob {
         this.newLayoutX = newLayoutX; // Root scene coordinates
         this.newLayoutY = newLayoutY; // Root scene coordinates
 
-        final Class<?> sgoClass = fxomInstance.getSceneGraphObject().getClass();
+        final Class<?> sgoClass = fxomInstance.getMetadataClass();
         this.layoutXMeta = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, layoutXName);
         this.layoutYMeta = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, layoutYName);
         this.leftAnchorMeta   = (DoublePropertyMetadata) metadata.queryProperty(sgoClass, leftAnchorName  );

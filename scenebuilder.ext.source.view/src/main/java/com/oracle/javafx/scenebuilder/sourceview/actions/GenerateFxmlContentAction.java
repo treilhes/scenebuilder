@@ -47,58 +47,66 @@ import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@ActionMeta(
-		nameKey = "action.name.show.jar.analysis.report",
-		descriptionKey = "action.description.show.jar.analysis.report")
+@ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 public class GenerateFxmlContentAction extends AbstractAction implements InitWithDocument {
 
-	private ApplyCssContentConfig config;
+    private ApplyCssContentConfig config;
 
-	private final DocumentManager documentManager;
+    private final DocumentManager documentManager;
 
-	public GenerateFxmlContentAction(
-	        ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
-		super(extensionFactory);
-		this.documentManager = documentManager;
-	}
+    public GenerateFxmlContentAction(ActionExtensionFactory extensionFactory, DocumentManager documentManager) {
+        super(extensionFactory);
+        this.documentManager = documentManager;
+    }
 
-	public synchronized ApplyCssContentConfig getActionConfig() {
-		if (config == null) {
-			config = new ApplyCssContentConfig();
-		}
-		return config;
-	}
+    public synchronized ApplyCssContentConfig getActionConfig() {
+        if (config == null) {
+            config = new ApplyCssContentConfig();
+        }
+        return config;
+    }
 
-	public synchronized void resetActionConfig() {
-		config = null;
-	}
+    public synchronized void resetActionConfig() {
+        config = null;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return true;
-	}
+    @Override
+    public boolean canPerform() {
+        return true;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-		assert getActionConfig() != null;
-		documentManager.stylesheetConfig().set(getActionConfig());
-		return ActionStatus.DONE;
-	}
+    @Override
+    public ActionStatus doPerform() {
+        assert getActionConfig() != null;
+        documentManager.stylesheetConfig().set(getActionConfig());
+        return ActionStatus.DONE;
+    }
 
-	public static class ApplyCssContentConfig implements StylesheetProvider {
-		private @Getter @Setter String userAgentStylesheet;
-		private @Getter List<String> stylesheets = new ArrayList<>();
-	}
+    public static class ApplyCssContentConfig implements StylesheetProvider {
+        private String userAgentStylesheet;
+        private List<String> stylesheets = new ArrayList<>();
 
-	@Override
-	public void initWithDocument() {
-		checkAndPerform();
-	}
+        @Override
+        public String getUserAgentStylesheet() {
+            return userAgentStylesheet;
+        }
+
+        public void setUserAgentStylesheet(String userAgentStylesheet) {
+            this.userAgentStylesheet = userAgentStylesheet;
+        }
+
+        @Override
+        public List<String> getStylesheets() {
+            return stylesheets;
+        }
+
+    }
+
+    @Override
+    public void initWithDocument() {
+        checkAndPerform();
+    }
 
 }

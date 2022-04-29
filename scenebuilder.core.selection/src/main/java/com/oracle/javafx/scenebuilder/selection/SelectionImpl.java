@@ -42,6 +42,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
@@ -73,6 +74,7 @@ public class SelectionImpl implements Selection {
     private boolean lock;
     private long lastListenerInvocationTime;
     private int updateDepth;
+    private Accessory targetAccessory;
 
     public SelectionImpl(
             DocumentManager documentManager,
@@ -119,6 +121,7 @@ public class SelectionImpl implements Selection {
 
         if (Objects.equals(this.group, newGroup) == false) {
             beginUpdate();
+            clearTargetAccessory();
             this.group = newGroup;
             endUpdate();
         }
@@ -644,5 +647,18 @@ public class SelectionImpl implements Selection {
         return group == null ? Collections.emptyMap() : group.collectSelectedFxIds();
     }
 
+    @Override
+    public Accessory getTargetAccessory() {
+        return targetAccessory;
+    }
+
+    @Override
+    public void select(Accessory targetAccessory) {
+        this.targetAccessory = targetAccessory;
+    }
+
+    private void clearTargetAccessory() {
+        this.targetAccessory = null;
+    }
 }
 

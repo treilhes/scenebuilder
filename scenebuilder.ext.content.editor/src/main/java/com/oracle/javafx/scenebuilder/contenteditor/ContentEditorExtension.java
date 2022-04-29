@@ -63,7 +63,6 @@ import com.oracle.javafx.scenebuilder.contenteditor.gesture.mouse.SelectWithMarq
 import com.oracle.javafx.scenebuilder.contenteditor.i18n.I18NContentEditor;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.contenteditor.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.contenteditor.report.ErrorReportImpl;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
 
@@ -90,7 +89,6 @@ public class ContentEditorExtension extends AbstractExtension {
                 DragGesture.Factory.class,
                 EditModeController.class,
                 EditorController.class,
-                ErrorReportImpl.class,
                 FocusContentAction.class,
                 HudWindowController.class,
                 I18NContentEditor.class,

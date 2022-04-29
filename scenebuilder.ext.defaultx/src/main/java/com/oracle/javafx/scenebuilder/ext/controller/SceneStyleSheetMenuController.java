@@ -62,19 +62,16 @@ import javafx.stage.FileChooser;
 @Lazy
 public class SceneStyleSheetMenuController {
 
-	private final ActionFactory actionFactory;
+    private final ActionFactory actionFactory;
     private final DocumentWindow document;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final UserStylesheetsPreference userStylesheetsPreference;
 
-    public SceneStyleSheetMenuController(
-    		@Autowired ActionFactory actionFactory,
-    		@Autowired @Lazy DocumentWindow document,
-    		@Autowired FileSystem fileSystem,
-    		@Autowired Dialog dialog,
-    		@Autowired UserStylesheetsPreference userStylesheetsPreference) {
-    	this.actionFactory = actionFactory;
+    public SceneStyleSheetMenuController(@Autowired ActionFactory actionFactory,
+            @Autowired @Lazy DocumentWindow document, @Autowired FileSystem fileSystem, @Autowired Dialog dialog,
+            @Autowired UserStylesheetsPreference userStylesheetsPreference) {
+        this.actionFactory = actionFactory;
         this.document = document;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
@@ -90,8 +87,7 @@ public class SceneStyleSheetMenuController {
         // Open a file chooser for *.css & *.bss
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                I18N.getString("scenestylesheet.filechooser.filter.msg"),
-                "*.css", "*.bss")); //NOCHECK
+                I18N.getString("scenestylesheet.filechooser.filter.msg"), "*.css", "*.bss")); // NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());
 
@@ -102,27 +98,24 @@ public class SceneStyleSheetMenuController {
 
             for (File f : selectedFiles) {
                 if (!userStylesheetsPreference.getValue().contains(f.toURI().toString())) {
-                	userStylesheetsPreference.getValue().add(f.toURI().toString());
+                    userStylesheetsPreference.getValue().add(f.toURI().toString());
                 }
             }
         }
     }
 
     public void performRemoveSceneStyleSheet(File toRemove) {
-    	if (userStylesheetsPreference.getValue().contains(toRemove.toURI().toString())) {
-        	userStylesheetsPreference.getValue().remove(toRemove.toURI().toString());
+        if (userStylesheetsPreference.getValue().contains(toRemove.toURI().toString())) {
+            userStylesheetsPreference.getValue().remove(toRemove.toURI().toString());
         }
     }
 
     public void performOpenSceneStyleSheet(File toOpen) {
-		try {
-			fileSystem.open(toOpen.getPath());
+        try {
+            fileSystem.open(toOpen.getPath());
         } catch (IOException ioe) {
-        	dialog.showErrorAndWait(
-        			I18N.getString("error.file.open.title"),
-        			I18N.getString("error.file.open.message"),
-        			I18N.getString("error.filesystem.details"),
-        			ioe);
+            dialog.showErrorAndWait(I18N.getString("error.file.open.title"), I18N.getString("error.file.open.message"),
+                    I18N.getString("error.filesystem.details"), ioe);
         }
     }
 

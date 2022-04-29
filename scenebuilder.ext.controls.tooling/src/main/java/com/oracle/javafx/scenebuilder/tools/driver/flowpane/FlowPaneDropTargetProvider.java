@@ -37,6 +37,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
@@ -76,8 +77,9 @@ public final class FlowPaneDropTargetProvider extends AbstractDropTargetProvider
         if (targetIndex == -1) {
             beforeChild = null;
         } else {
-            if (targetIndex < m.getSubComponentCount()) {
-                beforeChild = m.getSubComponentAtIndex(targetIndex);
+            Accessory main = m.getMainAccessory();
+            if (targetIndex < m.getSubComponentCount(main, false)) {
+                beforeChild = m.getSubComponentAtIndex(main, targetIndex, false);
             } else {
                 beforeChild = null;
             }

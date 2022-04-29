@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.metadata.javafx.PropertyNames;
 import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.NodeMetadata;
 
 @Component
@@ -68,10 +69,10 @@ public class NodeMetadataAddin {
 //                ));
 
 
-        nodeMetadata.getShadowedProperties().add(nodeMetadata.AnchorPane_topAnchorPropertyMetadata);
-        nodeMetadata.getShadowedProperties().add(nodeMetadata.AnchorPane_rightAnchorPropertyMetadata);
-        nodeMetadata.getShadowedProperties().add(nodeMetadata.AnchorPane_bottomAnchorPropertyMetadata);
-        nodeMetadata.getShadowedProperties().add(nodeMetadata.AnchorPane_leftAnchorPropertyMetadata);
+        nodeMetadata.getShadowedProperties().add(PropertyNames.AnchorPane_topAnchorName);
+        nodeMetadata.getShadowedProperties().add(PropertyNames.AnchorPane_rightAnchorName);
+        nodeMetadata.getShadowedProperties().add(PropertyNames.AnchorPane_bottomAnchorName);
+        nodeMetadata.getShadowedProperties().add(PropertyNames.AnchorPane_leftAnchorName);
 
 
 

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
+import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  *
@@ -59,6 +60,10 @@ abstract class TransientIntrinsic extends TransientNode {
     public abstract FXOMIntrinsic makeFxomIntrinsicInstance(FXOMDocument fxomDocument);
 
     public FXOMIntrinsic makeFxomIntrinsic(FXOMDocument fxomDocument) {
+        if (getCollectedItems() != null && !getCollectedItems().isEmpty()) {
+            createDefaultProperty(FXOMIntrinsic.GENERIC_DEFAULT_PROPERTY, fxomDocument);
+        }
+
         final FXOMIntrinsic result = makeFxomIntrinsicInstance(fxomDocument);
         assert result.getType() == type;
         // need to deal with a charset property here
@@ -72,5 +77,48 @@ abstract class TransientIntrinsic extends TransientNode {
 
     public List<FXOMObject> getCollectedItems() {
         return collectedItems;
+    }
+
+    protected void createDefaultProperty(PropertyName defaultName, FXOMDocument fxomDocument) {
+        /*
+         * From :
+         *
+         *  <Pane>                          this.glueElement
+         *      ...
+         *      <Button text="B1" />        this.collectedItems.get(0).glueElement   //NOCHECK
+         *      <TextField />               this.collectedItems.get(1).glueElement
+         *      <Label text="Label" />      this.collectedItems.get(2).glueElement   //NOCHECK
+         *      ...
+         *  </Pane>
+         *
+         * go to:
+         *
+         *  <Pane>                          this.glueElement
+         *      ...
+         *      <children>                  syntheticElement
+         *          <Button text="B1" />    this.collectedItems.get(0).glueElement   //NOCHECK
+         *          <TextField />           this.collectedItems.get(1).glueElement
+         *          <Label text="Label" />  this.collectedItems.get(2).glueElement   //NOCHECK
+         *      </children>
+         *      ...
+         *  </Pane>
+         *
+         */
+
+        final GlueElement propertyElement
+                = new GlueElement(getGlueElement().getDocument(),
+                        defaultName.toString(),  getGlueElement());
+        propertyElement.setSynthetic(true);
+        propertyElement.addBefore(collectedItems.get(0).getGlueElement());
+
+        for (FXOMObject item : collectedItems) {
+            item.getGlueElement().addToParent(propertyElement);
+        }
+
+        final TransientProperty transientProperty
+                = new TransientProperty(this, defaultName, propertyElement);
+        transientProperty.getValues().addAll(collectedItems);
+
+        properties.add(transientProperty.makeFxomProperty(fxomDocument));
     }
 }

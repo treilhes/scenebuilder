@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,6 +42,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -52,6 +54,8 @@ import com.oracle.javafx.scenebuilder.util.URLUtils;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -61,6 +65,8 @@ import javafx.scene.Parent;
  *
  */
 public class FXOMDocument {
+
+    public static Map<String, Object> DEFAULT_NAMESPACE = new HashMap<>();
 
     private final GlueDocument glue;
     private URL location;
@@ -75,7 +81,7 @@ public class FXOMDocument {
     private final SimpleIntegerProperty cssRevision = new SimpleIntegerProperty();
     private SceneGraphHolder sceneGraphHolder;
     private int updateDepth;
-
+    private ObservableMap<String, Object> namespaces = FXCollections.observableHashMap();
     private String scriptingLanguage;
     //private boolean hasGluonControls;
 
@@ -203,7 +209,7 @@ public class FXOMDocument {
         } else {
             this.glue.setMainElement(this.fxomRoot.getGlueElement());
         }
-        this.sceneGraphRoot = sceneGraphRoot;
+        setSceneGraphRoot(sceneGraphRoot);
         this.displayNode = null;
         this.displayStylesheets.clear();
     }
@@ -213,7 +219,13 @@ public class FXOMDocument {
     }
 
     void setSceneGraphRoot(Object sceneGraphRoot) {
-        this.sceneGraphRoot = sceneGraphRoot;
+        if (getFxomRoot() != null && getFxomRoot().isVirtual()) {
+            // FXMLLoader.load return the first node element if fx:define is root
+            // so prevent editing this first element
+            this.sceneGraphRoot = null;
+        } else {
+            this.sceneGraphRoot = sceneGraphRoot;
+        }
     }
 
     /**
@@ -289,6 +301,10 @@ public class FXOMDocument {
         }
 
         return result;
+    }
+
+    public boolean isNamespaceFxId(String fxId) {
+        return getNamespaces().containsKey(fxId);
     }
 
     public Map<String, FXOMObject> collectFxIds() {
@@ -480,6 +496,20 @@ public class FXOMDocument {
     protected void setScriptingLanguage(String scriptingLanguage) {
         this.scriptingLanguage = scriptingLanguage;
     }
+
+
+    /**
+     * @param namespaces
+     */
+    protected void setNamespaces(ObservableMap<String, Object> namespaces) {
+        this.namespaces.putAll(namespaces);
+    }
+
+
+    public ObservableMap<String, Object> getNamespaces() {
+        return namespaces;
+    }
+
 
 
 }

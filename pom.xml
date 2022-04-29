@@ -74,6 +74,7 @@
         <module>scenebuilder.core.core</module>
         <module>scenebuilder.core.selection</module>
         <module>scenebuilder.ext.menu</module>
+        <module>scenebuilder.core.error</module>
     </modules>
 
     <properties>
@@ -94,7 +95,6 @@
         <spring.boot.version>2.5.0</spring.boot.version>
         <testfx.junit.version>4.0.16-alpha</testfx.junit.version>
         <mockserver.jupiter.version>5.11.2</mockserver.jupiter.version>
-        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <repositories>
@@ -107,16 +107,6 @@
             <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
-
-    <dependencies>
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -154,6 +144,11 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.extension.store</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.error</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -423,7 +418,7 @@
                                 <option>--add-exports</option>
                                 <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
                             </additionalOptions>
-                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated
+                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated 
                                 javadoc, see workaround below -->
                             <docfilessubdirs>true</docfilessubdirs>
                             <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
@@ -443,7 +438,7 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory
+                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory 
                             in github_pages -->
                         <groupId>org.codehaus.gmaven</groupId>
                         <artifactId>groovy-maven-plugin</artifactId>
@@ -486,13 +481,6 @@
                     <version>${maven.compiler.plugin.version}</version>
                     <configuration>
                         <useIncrementalCompilation>false</useIncrementalCompilation>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
                         <compilerArgs>
                             <arg>--add-exports</arg>
                             <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>

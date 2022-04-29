@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -96,6 +97,10 @@ class GlueSerializer {
     }
 
     private void serializeElement(GlueElement element, XMLBuffer xmlBuffer) {
+        if (element.getTagName().startsWith(GlueElement.IGNORED_PREFIX)) {
+            element.setSynthetic(true);
+        }
+
         if (element.isSynthetic()) {
             for (GlueElement child : element.getChildren()) {
                 serializeElement(child, xmlBuffer);
@@ -113,8 +118,10 @@ class GlueSerializer {
 //                    serializeAuxiliary(auxiliary, xmlBuffer);
 //                }
             } else {
+
                 xmlBuffer.beginElement(element.getTagName());
                 serializeAttributes(element, xmlBuffer);
+
                 if (element.getChildren().isEmpty()) {
                     for (GlueAuxiliary auxiliary : element.getContent()) {
                         serializeAuxiliary(auxiliary, xmlBuffer);
@@ -127,7 +134,9 @@ class GlueSerializer {
                         serializeAuxiliary(auxiliary, xmlBuffer);
                     }
                 }
+
                 xmlBuffer.endElement();
+
             }
 
         }

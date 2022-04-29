@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fx:copy source="$sb_nullReference" xmlns:fx="http://javafx.com/fxml/1" />
+<fx:copy source="sb_nullCopy" xmlns:fx="http://javafx.com/fxml/1" />

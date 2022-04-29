@@ -426,7 +426,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
      */
     private int getIndex(final FXOMInstance container, final List<FXOMObject> fxomObjects) {
         final HierarchyMask mask = designMaskFactory.getMask(container);
-        if (mask.isAcceptingSubComponent() == false) {
+        if (mask.hasMainAccessory() == false) {
             return -1;
         }
         // Use the smaller index of the specified FXOM objects

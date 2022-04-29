@@ -67,13 +67,10 @@ public class ThemeMenuController {
     private final FileSystem fileSystem;
     private final UserStylesheetsPreference userStylesheetsPreference;
 
-    public ThemeMenuController(
-    		@Autowired ActionFactory actionFactory,
-    		@Autowired DocumentWindow document,
-    		@Autowired Dialog dialog,
-    		@Autowired FileSystem fileSystem,
-    		@Autowired UserStylesheetsPreference userStylesheetsPreference) {
-    	this.actionFactory = actionFactory;
+    public ThemeMenuController(@Autowired ActionFactory actionFactory, @Autowired DocumentWindow document,
+            @Autowired Dialog dialog, @Autowired FileSystem fileSystem,
+            @Autowired UserStylesheetsPreference userStylesheetsPreference) {
+        this.actionFactory = actionFactory;
         this.document = document;
         this.dialog = dialog;
         this.fileSystem = fileSystem;
@@ -83,14 +80,12 @@ public class ThemeMenuController {
 
     public void performAddSceneStyleSheet() {
 
-
         boolean knownFilesModified = false;
 
         // Open a file chooser for *.css & *.bss
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                I18N.getString("scenestylesheet.filechooser.filter.msg"),
-                "*.css", "*.bss")); //NOCHECK
+                I18N.getString("scenestylesheet.filechooser.filter.msg"), "*.css", "*.bss")); // NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());
 
@@ -100,7 +95,7 @@ public class ThemeMenuController {
             fileSystem.updateNextInitialDirectory(selectedFiles.get(0));
             for (File f : selectedFiles) {
                 if (!userStylesheetsPreference.getValue().contains(f.getAbsolutePath())) {
-                	userStylesheetsPreference.getValue().add(f.getAbsolutePath());
+                    userStylesheetsPreference.getValue().add(f.getAbsolutePath());
                     knownFilesModified = true;
                 }
             }
@@ -113,21 +108,18 @@ public class ThemeMenuController {
     }
 
     public void performRemoveSceneStyleSheet(File toRemove) {
-    	if (userStylesheetsPreference.getValue().contains(toRemove.getAbsolutePath())) {
-        	userStylesheetsPreference.getValue().remove(toRemove.getAbsolutePath());
-        	actionFactory.create(ApplyCssContentAction.class).checkAndPerform();
+        if (userStylesheetsPreference.getValue().contains(toRemove.getAbsolutePath())) {
+            userStylesheetsPreference.getValue().remove(toRemove.getAbsolutePath());
+            actionFactory.create(ApplyCssContentAction.class).checkAndPerform();
         }
     }
 
     public void performOpenSceneStyleSheet(File toOpen) {
-		try {
-			fileSystem.open(toOpen.getPath());
+        try {
+            fileSystem.open(toOpen.getPath());
         } catch (IOException ioe) {
-        	dialog.showErrorAndWait(
-        			I18N.getString("error.file.open.title"),
-        			I18N.getString("error.file.open.message"),
-        			I18N.getString("error.filesystem.details"),
-        			ioe);
+            dialog.showErrorAndWait(I18N.getString("error.file.open.title"), I18N.getString("error.file.open.message"),
+                    I18N.getString("error.filesystem.details"), ioe);
         }
     }
 

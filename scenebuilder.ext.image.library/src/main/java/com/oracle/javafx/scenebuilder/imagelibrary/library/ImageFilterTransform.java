@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,14 +41,6 @@ import java.util.stream.Collectors;
 import com.oracle.javafx.scenebuilder.api.library.ReportEntry.Status;
 import com.oracle.javafx.scenebuilder.library.api.Transform;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-
 public class ImageFilterTransform implements Transform<ImageReport, ImageReport> {
     Map<String, StandardImage> imageSourceData = new HashMap<>();
     Map<String, FontImage> fontSourceData = new HashMap<>();
@@ -58,105 +51,105 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
 
     public FontImage getOrCreateFontImage(String fontName) {
         FontImage fontImage = fontSourceData.get(fontName);
-        
+
         if (fontImage == null) {
             fontImage = new FontImage(fontName);
             fontSourceData.put(fontName, fontImage);
         }
-        
+
         return fontImage;
     }
-    
+
     public FontImageItem getOrCreateFontImageItem(FontImage fontImage, Integer unicodePoint) {
         assert fontSourceData.containsValue(fontImage);
-        
+
         FontImageItem fontImageItem = fontImage.getItems().get(unicodePoint);
-        
+
         if (fontImageItem == null) {
             fontImageItem = new FontImageItem(unicodePoint);
             fontImage.getItems().put(unicodePoint, fontImageItem);
         }
-        
+
         return fontImageItem;
     }
-    
+
     public StandardImage getOrCreateStandardImage(String imageName) {
         StandardImage standardImage = imageSourceData.get(imageName);
-        
+
         if (standardImage == null) {
             standardImage = new StandardImage(imageName);
             imageSourceData.put(imageName, standardImage);
             getOrCreateStandardImageItem(standardImage, BoundingBox.FULL).setImported(true);
         }
-        
+
         return standardImage;
     }
-    
+
     public StandardImageItem getOrCreateStandardImageItem(StandardImage standardImage, BoundingBox boundingBox) {
         assert imageSourceData.containsValue(standardImage);
         String key = boundingBox.toString();
         StandardImageItem standardImageItem = standardImage.getItems().get(key);
-        
+
         if (standardImageItem == null) {
             standardImageItem = new StandardImageItem(boundingBox);
             standardImage.getItems().put(key, standardImageItem);
         }
-        
+
         return standardImageItem;
     }
-    
+
     @Override
     public List<ImageReport> filter(List<ImageReport> inputs) {
         return inputs.stream().map(r -> {
             try {
-                
+
                 ImageReport filteredReport = new ImageReport(r.getSource());
-                
+
                 r.getEntries().forEach(e -> {
                     if (e.getStatus() == Status.OK) {
-                        
+
                         switch (e.getType()) {
-                            case FONT_ICONS:
-                                FontImage fontSource = fontSourceData.get(e.getFontName());
-                                
-                                if (fontSource != null && fontSource.isImported()) {
-                                    e.getUnicodePoints().forEach(up -> {
-                                        FontImageItem item = fontSource.getItems().get(up);
-                                        if (item != null && item.isImported()) {
-                                            ImageReportEntry clone = e.clone();
-                                            clone.getUnicodePoints().add(up);
-                                            
+                        case FONT_ICONS:
+                            FontImage fontSource = fontSourceData.get(e.getFontName());
+
+                            if (fontSource != null && fontSource.isImported()) {
+                                e.getUnicodePoints().forEach(up -> {
+                                    FontImageItem item = fontSource.getItems().get(up);
+                                    if (item != null && item.isImported()) {
+                                        ImageReportEntry clone = e.clone();
+                                        clone.getUnicodePoints().add(up);
+
 //                                            if (item.getName() != null && !item.getName().isEmpty()) {
 //                                                clone.setName(item.getName());
 //                                            }
-                                            
-                                            filteredReport.getEntries().add(clone);
-                                        }
-                                    });
-                                }
-                                break;
-                            case IMAGE:
-                                StandardImage imageSource = imageSourceData.get(e.getName());
-                                
-                                if (imageSource != null && imageSource.isImported()) {
-                                    imageSource.getItems().values().forEach(item -> {
-                                        if (item != null && item.isImported()) {
-                                            ImageReportEntry clone = e.clone();
-                                            clone.setBoundingBox(item.getBoundingBox().clone());
-                                            
+
+                                        filteredReport.getEntries().add(clone);
+                                    }
+                                });
+                            }
+                            break;
+                        case IMAGE:
+                            StandardImage imageSource = imageSourceData.get(e.getName());
+
+                            if (imageSource != null && imageSource.isImported()) {
+                                imageSource.getItems().values().forEach(item -> {
+                                    if (item != null && item.isImported()) {
+                                        ImageReportEntry clone = e.clone();
+                                        clone.setBoundingBox(item.getBoundingBox().clone());
+
 //                                            if (item.getName() != null && !item.getName().isEmpty()) {
 //                                                clone.setName(item.getName());
 //                                            }
-                                            
-                                            filteredReport.getEntries().add(clone);
-                                        }
-                                    });
-                                }
-                                break;
-                            default:
-                                break;
+
+                                        filteredReport.getEntries().add(clone);
+                                    }
+                                });
+                            }
+                            break;
+                        default:
+                            break;
                         }
-                        
+
                     }
                 });
                 return filteredReport;
@@ -166,8 +159,6 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
         }).filter(r -> !r.getEntries().isEmpty()).collect(Collectors.toList());
 
     }
-
-    
 
     public Map<String, StandardImage> getImageSourceData() {
         return imageSourceData;
@@ -185,45 +176,168 @@ public class ImageFilterTransform implements Transform<ImageReport, ImageReport>
         this.fontSourceData = fontSourceData;
     }
 
-    @RequiredArgsConstructor
-    @NoArgsConstructor
     public static class FontImage {
-        @NonNull
-        private @Getter @Setter(AccessLevel.PRIVATE) String fontName;
-        private @Getter @Setter boolean imported = true;
-        private @Getter @Setter(AccessLevel.PRIVATE) Map<Integer, FontImageItem> items = new HashMap<>();
-        
+
+        private String fontName;
+        private boolean imported = true;
+        private Map<Integer, FontImageItem> items = new HashMap<>();
+
+        public FontImage() {
+            super();
+        }
+
+        public FontImage(String fontName) {
+            super();
+            this.fontName = fontName;
+        }
+
+        public String getFontName() {
+            return fontName;
+        }
+
+        public boolean isImported() {
+            return imported;
+        }
+
+        public Map<Integer, FontImageItem> getItems() {
+            return items;
+        }
+
+        private void setFontName(String fontName) {
+            this.fontName = fontName;
+        }
+
+        private void setItems(Map<Integer, FontImageItem> items) {
+            this.items = items;
+        }
+
+        public void setImported(boolean imported) {
+            this.imported = imported;
+        }
+
     }
-    
-    @RequiredArgsConstructor
-    @NoArgsConstructor
+
     public static class FontImageItem {
-        @NonNull
-        private @Getter @Setter(AccessLevel.PRIVATE) Integer unicodePoint;
-        private @Getter @Setter boolean imported = false;
-        private @Getter @Setter String name;
-        
+
+        private Integer unicodePoint;
+        private boolean imported = false;
+        private String name;
+
+        public FontImageItem(Integer unicodePoint) {
+            super();
+            this.unicodePoint = unicodePoint;
+        }
+
+        public FontImageItem() {
+            super();
+        }
+
+        public boolean isImported() {
+            return imported;
+        }
+
+        public void setImported(boolean imported) {
+            this.imported = imported;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getUnicodePoint() {
+            return unicodePoint;
+        }
+
+        private void setUnicodePoint(Integer unicodePoint) {
+            this.unicodePoint = unicodePoint;
+        }
+
     }
-    
-    @RequiredArgsConstructor
-    @NoArgsConstructor
+
     public static class StandardImage {
-        @NonNull
-        private @Getter @Setter(AccessLevel.PRIVATE) String imageName;
-        private @Getter @Setter boolean imported = true;
-        private @Getter @Setter(AccessLevel.PRIVATE) Map<String, StandardImageItem> items = new HashMap<>();
-        
+
+        private String imageName;
+        private boolean imported = true;
+        private Map<String, StandardImageItem> items = new HashMap<>();
+
+        public StandardImage() {
+            super();
+        }
+
+        public StandardImage(String imageName) {
+            super();
+            this.imageName = imageName;
+        }
+
+        public boolean isImported() {
+            return imported;
+        }
+
+        public void setImported(boolean imported) {
+            this.imported = imported;
+        }
+
+        public String getImageName() {
+            return imageName;
+        }
+
+        public Map<String, StandardImageItem> getItems() {
+            return items;
+        }
+
+        private void setImageName(String imageName) {
+            this.imageName = imageName;
+        }
+
+        private void setItems(Map<String, StandardImageItem> items) {
+            this.items = items;
+        }
+
     }
-    
-    @RequiredArgsConstructor
-    @NoArgsConstructor
+
     public static class StandardImageItem {
-        @NonNull
-        private @Getter @Setter(AccessLevel.PRIVATE) BoundingBox boundingBox;
-        private @Getter @Setter boolean imported = true;
-        private @Getter @Setter String name;
-        
+
+        private BoundingBox boundingBox;
+        private boolean imported = true;
+        private String name;
+
+        public StandardImageItem() {
+            super();
+        }
+
+        public StandardImageItem(BoundingBox boundingBox) {
+            super();
+            this.boundingBox = boundingBox;
+        }
+
+        public boolean isImported() {
+            return imported;
+        }
+
+        public void setImported(boolean imported) {
+            this.imported = imported;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public BoundingBox getBoundingBox() {
+            return boundingBox;
+        }
+
+        private void setBoundingBox(BoundingBox boundingBox) {
+            this.boundingBox = boundingBox;
+        }
+
     }
-    
-    
+
 }

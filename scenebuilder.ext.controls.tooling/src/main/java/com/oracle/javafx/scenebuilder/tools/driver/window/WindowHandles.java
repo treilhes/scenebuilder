@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.window;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -77,12 +79,18 @@ public class WindowHandles extends AbstractGenericHandles<Window> {
     public void initialize() {
 
         final HierarchyMask designHierarchyMask = maskFactory.getMask(getFxomObject());
-        FXOMObject scene = designHierarchyMask.getAccessory(designHierarchyMask.getMainAccessory());
-        if (scene == null) {
+        List<FXOMObject> sceneContent = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
+        if (sceneContent.isEmpty()) {
             sceneGraphObject = null;
         } else {
+            FXOMObject scene = sceneContent.get(0);
             HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
-            FXOMObject root = sceneDesignHierarchyMask.getAccessory(sceneDesignHierarchyMask.getMainAccessory());
+            List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
+
+            assert !rootContent.isEmpty();
+
+            FXOMObject root = rootContent.get(0);
+
             assert root != null;
             assert root instanceof FXOMInstance;
             assert root.getSceneGraphObject() instanceof Node;

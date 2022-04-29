@@ -135,7 +135,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
                     final AbstractJob insertSubJob = insertAsSubComponentJobFactory.getJob(
                             newFxomObject,
                             targetObject,
-                            targetMask.getSubComponentCount() + index++);
+                            targetMask.getSubComponentCount(true) + index++);
 
                     result.add(insertSubJob);
                     final Object selectedSceneGraphObject = selectedFxomObject.getSceneGraphObject();

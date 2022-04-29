@@ -20,22 +20,12 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.editors</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.controls.tooling</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.drag.and.drop</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.menu</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.starter.test</artifactId>
