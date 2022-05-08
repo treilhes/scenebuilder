@@ -82,16 +82,6 @@ public interface Document {
 
     void updateWithDefaultContent();
 
-
-    //ActionStatus performCloseAction();
-
-//    void performImportFxml();
-//    void performIncludeFxml();
-//    //void performRevealAction();
-//    void performImportMedia();
-    //boolean isRightPanelVisible();
-//    void performControlAction(DocumentControlAction toggleRightPanel);
-
     public static class TitleComparator implements Comparator<Document> {
 
         @Override
@@ -114,44 +104,6 @@ public interface Document {
             return result;
         }
 
-    }
-
-    public enum DocumentControlAction {
-        COPY,
-        SELECT_ALL,
-        SELECT_NONE,
-        //SAVE_FILE,
-        //SAVE_AS_FILE,
-        //REVERT_FILE,
-        CLOSE_FILE,
-        //REVEAL_FILE,
-        //GOTO_CONTENT,
-        GOTO_PROPERTIES,
-        GOTO_LAYOUT,
-        GOTO_CODE,
-        TOGGLE_LIBRARY_PANEL,
-        TOGGLE_DOCUMENT_PANEL,
-        TOGGLE_CSS_PANEL,
-        TOGGLE_LEFT_PANEL,
-        TOGGLE_RIGHT_PANEL,
-        //TOGGLE_OUTLINES_VISIBILITY,
-        //TOGGLE_GUIDES_VISIBILITY,
-        SHOW_PREVIEW_WINDOW,
-        SHOW_PREVIEW_DIALOG,
-        ADD_SCENE_STYLE_SHEET,
-        SET_RESOURCE,
-        REMOVE_RESOURCE,
-        REVEAL_RESOURCE
-        //,HELP
-    }
-
-    public enum DocumentEditAction {
-        DELETE,
-        CUT,
-        PASTE,
-        //IMPORT_FXML,
-        //IMPORT_MEDIA,
-        //INCLUDE_FXML
     }
 
     void close();

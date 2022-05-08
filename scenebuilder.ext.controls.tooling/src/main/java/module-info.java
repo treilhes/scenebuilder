@@ -98,7 +98,7 @@ open module scenebuilder.ext.controls.tooling {
 //    requires spring.core;
     requires scenebuilder.core.utils;
     requires scenebuilder.ext.menu;
-    requires scenebuilder.ext.content.editor;
+    requires scenebuilder.ext.editor.fxml;
     requires scenebuilder.metadata.javafx;
 
     provides Extension with BaseToolingExtension;

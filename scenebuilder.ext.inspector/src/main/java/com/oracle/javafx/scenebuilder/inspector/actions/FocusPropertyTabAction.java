@@ -60,7 +60,7 @@ public class FocusPropertyTabAction extends AbstractFocusTabAction {
 
     /**
      * This is the menu id where the insertion will take place
-     * It is a copy to prevent adding a direct dependecy to FocusContentAction in  scenebuilder.ext.content.editor module
+     * It is a copy to prevent adding a direct dependecy to FocusContentAction in  scenebuilder.ext.editor.fxml module
      * but is it the right choice, i'm wondering ?
      */
     // TODO reevaluate adding a direct dependency

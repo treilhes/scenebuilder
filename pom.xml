@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -23,7 +22,7 @@
         <module>scenebuilder.core.library</module>
         <module>scenebuilder.core.ui</module>
         <module>scenebuilder.ext.certificate.manager</module>
-        <module>scenebuilder.ext.content.editor</module>
+        <module>scenebuilder.ext.editor.fxml</module>
         <module>scenebuilder.ext.control.library</module>
         <module>scenebuilder.ext.controls.tooling</module>
         <module>scenebuilder.ext.controls</module>
@@ -75,7 +74,9 @@
         <module>scenebuilder.core.selection</module>
         <module>scenebuilder.ext.menu</module>
         <module>scenebuilder.core.error</module>
-    </modules>
+    <module>scenebuilder.core.editor</module>
+    <module>scenebuilder.ext.editor.script</module>
+  </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -213,7 +214,12 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.content.editor</artifactId>
+                <artifactId>scenebuilder.ext.editor.fxml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.editor.script</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -418,7 +424,7 @@
                                 <option>--add-exports</option>
                                 <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
                             </additionalOptions>
-                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated 
+                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated
                                 javadoc, see workaround below -->
                             <docfilessubdirs>true</docfilessubdirs>
                             <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
@@ -438,7 +444,7 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory 
+                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory
                             in github_pages -->
                         <groupId>org.codehaus.gmaven</groupId>
                         <artifactId>groovy-maven-plugin</artifactId>
@@ -580,7 +586,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

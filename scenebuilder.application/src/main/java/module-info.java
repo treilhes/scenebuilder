@@ -42,7 +42,7 @@ open module scenebuilder.application {
     requires transitive scenebuilder.core.api;
     requires scenebuilder.core.launcher;
 
-    requires org.openjdk.nashorn;
+    //requires org.openjdk.nashorn;
     //requires jdk.dynalink;
 
     provides Extension with AppExtension;

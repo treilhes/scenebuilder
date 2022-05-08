@@ -8,7 +8,7 @@ open module scenebuilder.ext.preview {
 
     requires transitive scenebuilder.core.api;
     requires transitive scenebuilder.core.core;
-    requires scenebuilder.ext.content.editor;
+    requires scenebuilder.ext.editor.fxml;
 
     provides Extension with PreviewExtension;
 }

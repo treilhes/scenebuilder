@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.content.editor</artifactId>
+            <artifactId>scenebuilder.ext.editor.fxml</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>

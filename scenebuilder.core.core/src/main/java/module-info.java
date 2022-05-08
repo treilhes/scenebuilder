@@ -58,7 +58,7 @@ open module scenebuilder.core.core {
     requires transitive scenebuilder.core.api;
     requires transitive scenebuilder.core.extension.api;
 
-    requires scenebuilder.metadata.javafx;
+    //requires scenebuilder.metadata.javafx;
 
     provides Extension with ScenebuilderCoreExtension;
 }

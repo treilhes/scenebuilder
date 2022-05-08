@@ -72,7 +72,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.launcher</artifactId>
         </dependency>
-        <!-- Here starts non core dependencies but required for a core start -->
+        <!-- Here starts non core dependencies but required for a core start
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.glossary</artifactId>
@@ -84,13 +84,19 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.content.editor</artifactId>
+            <artifactId>scenebuilder.ext.editor.fxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.ext.editor.script</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.preference.editor</artifactId>
         </dependency>
-        <!-- Here starts optional dependencies but transitive -->
+        -->
+
+        <!-- Here starts optional dependencies but transitive
 
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
@@ -101,8 +107,9 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.editors</artifactId>
         </dependency>
+        -->
         <!-- Here starts optional dependencies -->
-        <!-- -->
+        <!--
 
 
         <dependency>
@@ -217,18 +224,20 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.metadata.javafx15</artifactId>
         </dependency>
+-->
 
         <!-- SCRIPT ENGINE javascript START -->
         <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
         <!-- <dependency> <groupId>org.graalvm.js</groupId> <artifactId>js</artifactId> <version>21.3.0</version> </dependency>
             <dependency> <groupId>org.graalvm.js</groupId> <artifactId>js-scriptengine</artifactId> <version>21.3.0</version> </dependency> -->
         <!-- SCRIPT ENGINE javascript END -->
-        <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
+        <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core
         <dependency>
             <groupId>org.openjdk.nashorn</groupId>
             <artifactId>nashorn-core</artifactId>
             <version>15.3</version>
         </dependency>
+        -->
     </dependencies>
 
     <build>

@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.contenteditor.actions.SetRootSizeAction;
+import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

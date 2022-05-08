@@ -37,11 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-
 import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 public interface Editor {
 
@@ -52,9 +49,6 @@ public interface Editor {
      * @return null or the location of the fxml being edited.
      */
 	public URL getFxmlLocation();
-
-	//TODO to remove
-	public FXOMDocument getFxomDocument();
 
 	public Stage getOwnerWindow();
 
@@ -70,15 +64,15 @@ public interface Editor {
 
     public ObservableValue<Boolean> pickModeEnabledProperty();
 
-    public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd);
-
-    public void textEditingSessionDidEnd();
+//    public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd);
+//
+//    public void textEditingSessionDidEnd();
 
     public String getFxmlText(boolean wildcardImports);
 
     public void initialize();
 
-    public void setFxmlTextAndLocation(String fxmlText, URL fxmlURL, boolean b) throws IOException;
+    public void setFxmlTextAndLocation(String fxmlText, URL fxmlURL, boolean keepTrackOfLocation) throws IOException;
 
     public void setOwnerWindow(Stage stage);
 

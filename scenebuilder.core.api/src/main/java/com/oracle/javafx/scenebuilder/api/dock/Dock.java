@@ -68,7 +68,7 @@ public interface Dock {
     //void changedDockType(DockType<?> dockType, View view);
 
     ObjectProperty<DockType> dockTypeProperty();
-    default void setFocused(DockType dockType) {
+    default void setDockType(DockType dockType) {
         dockTypeProperty().set(dockType);
     }
     default DockType<?> getDockType() {
