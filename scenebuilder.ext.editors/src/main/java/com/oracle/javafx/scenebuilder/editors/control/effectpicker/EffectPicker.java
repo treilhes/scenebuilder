@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
+import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;

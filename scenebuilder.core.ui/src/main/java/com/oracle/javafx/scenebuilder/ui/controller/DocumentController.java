@@ -133,7 +133,7 @@ public class DocumentController implements Document, InitializingBean {
             @Autowired RecentItemsPreference recentItemsPreference,
             //@Autowired WildcardImportsPreference wildcardImportsPreference,
             @Autowired Preferences documentPreferencesController,
-            @Autowired Content contentPanelController,
+            @Autowired(required = false) Content contentPanelController,
             @Autowired Editor editorController,
             InlineEdit inlineEdit,
             MessageLogger messageLogger,

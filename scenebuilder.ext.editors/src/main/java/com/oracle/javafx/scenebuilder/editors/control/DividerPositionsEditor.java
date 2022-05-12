@@ -45,10 +45,10 @@ import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

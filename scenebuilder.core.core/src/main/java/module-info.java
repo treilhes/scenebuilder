@@ -41,7 +41,6 @@ open module scenebuilder.core.core {
     exports com.oracle.javafx.scenebuilder.core.action.editor;
     exports com.oracle.javafx.scenebuilder.core.clipboard.internal;
     exports com.oracle.javafx.scenebuilder.core.content.util;
-    exports com.oracle.javafx.scenebuilder.core.controls;
     exports com.oracle.javafx.scenebuilder.core.di;
     exports com.oracle.javafx.scenebuilder.core.doc;
     exports com.oracle.javafx.scenebuilder.core.dock;

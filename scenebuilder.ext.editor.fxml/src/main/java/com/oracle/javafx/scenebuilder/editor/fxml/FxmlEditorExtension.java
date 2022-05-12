@@ -52,7 +52,6 @@ import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomOutAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditorController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.HudWindowController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.DragGesture;
@@ -88,7 +87,6 @@ public class FxmlEditorExtension extends AbstractExtension {
                 DragGesture.class,
                 DragGesture.Factory.class,
                 EditModeController.class,
-                EditorController.class,
                 FocusContentAction.class,
                 HudWindowController.class,
                 I18NContentEditor.class,

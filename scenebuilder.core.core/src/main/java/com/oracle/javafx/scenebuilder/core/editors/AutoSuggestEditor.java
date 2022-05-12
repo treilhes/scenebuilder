@@ -42,11 +42,11 @@ import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.core.controls.DoubleField;
-import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
+import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField;
+import com.oracle.javafx.scenebuilder.javafx.controls.IntegerField;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

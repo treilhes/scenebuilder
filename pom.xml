@@ -74,7 +74,7 @@
         <module>scenebuilder.core.selection</module>
         <module>scenebuilder.ext.menu</module>
         <module>scenebuilder.core.error</module>
-    <module>scenebuilder.core.editor</module>
+
     <module>scenebuilder.ext.editor.script</module>
   </modules>
 

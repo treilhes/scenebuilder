@@ -40,8 +40,8 @@ import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.EnumC
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.ImageControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.LightControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.SliderControl;
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker.Mode;
+import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
+import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker.Mode;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

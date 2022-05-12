@@ -38,7 +38,7 @@ import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
+import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

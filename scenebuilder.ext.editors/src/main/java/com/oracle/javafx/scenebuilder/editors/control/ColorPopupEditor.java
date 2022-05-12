@@ -42,8 +42,8 @@ import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.PaintPopupEditor;
+import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 
 /**
  * The editor is shown as a MenuButton. This button then shows a popup

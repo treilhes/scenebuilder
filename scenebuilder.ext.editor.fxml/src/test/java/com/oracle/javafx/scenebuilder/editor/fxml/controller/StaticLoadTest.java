@@ -57,8 +57,8 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditorController;
 import com.oracle.javafx.scenebuilder.test.JfxInitializer;
+import com.oracle.javafx.scenebuilder.ui.controller.EditorController;
 
 /**
  * Unit test for {@link com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }

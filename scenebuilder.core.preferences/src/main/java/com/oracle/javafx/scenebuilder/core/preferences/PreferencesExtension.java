@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +41,7 @@ import com.oracle.javafx.scenebuilder.core.preferences.controller.DocumentPrefer
 import com.oracle.javafx.scenebuilder.core.preferences.controller.DocumentPreferencesNodeImpl;
 import com.oracle.javafx.scenebuilder.core.preferences.controller.PreferencesController;
 import com.oracle.javafx.scenebuilder.core.preferences.controller.RootPreferencesNodeImpl;
+import com.oracle.javafx.scenebuilder.core.preferences.edit.PreferenceEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.core.preferences.i18n.I18NPreferences;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
@@ -48,7 +50,7 @@ public class PreferencesExtension extends AbstractExtension {
     public UUID getId() {
         return UUID.fromString("d82c47c7-e3a7-483c-bb49-f1d3b086c2bf");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
@@ -57,6 +59,7 @@ public class PreferencesExtension extends AbstractExtension {
                 DocumentPreferencesController.class,
                 DocumentPreferencesNodeImpl.class,
                 PreferencesController.class,
+                PreferenceEditorFactoryImpl.class,
                 RootPreferencesNodeImpl.class
             );
      // @formatter:on

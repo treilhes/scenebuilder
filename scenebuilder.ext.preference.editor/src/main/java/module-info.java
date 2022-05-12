@@ -38,7 +38,6 @@ open module scenebuilder.ext.preference.editor {
 
     exports com.oracle.javafx.scenebuilder.prefedit.i18n;
     exports com.oracle.javafx.scenebuilder.prefedit;
-    exports com.oracle.javafx.scenebuilder.prefedit.editor;
     exports com.oracle.javafx.scenebuilder.prefedit.controller;
 
     //opens com.oracle.javafx.scenebuilder.prefedit.editor to spring.core;

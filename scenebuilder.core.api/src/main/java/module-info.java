@@ -92,6 +92,12 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.ui;
     exports com.oracle.javafx.scenebuilder.api.util;
 
+    exports com.oracle.javafx.scenebuilder.javafx.controls;
+    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker;
+    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.colorpicker;
+    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.gradientpicker;
+    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.rotator;
+    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.slider;
 
     requires transitive scenebuilder.starter;
     requires transitive scenebuilder.core.extension.api;

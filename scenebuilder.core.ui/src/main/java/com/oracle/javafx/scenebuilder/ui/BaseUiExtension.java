@@ -40,6 +40,7 @@ import java.util.UUID;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.ui.controller.EditorController;
 import com.oracle.javafx.scenebuilder.ui.controller.MainController;
 import com.oracle.javafx.scenebuilder.ui.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.ui.dialog.DialogController;
@@ -80,6 +81,7 @@ public class BaseUiExtension extends AbstractExtension {
                 DocumentController.class,
                 DocumentWindowController.class,
                 ErrorDialog.class,
+                EditorController.class,
                 I18NLayout.class,
                 InlineEditController.class,
                 LeftDividerHPosPreference.class,

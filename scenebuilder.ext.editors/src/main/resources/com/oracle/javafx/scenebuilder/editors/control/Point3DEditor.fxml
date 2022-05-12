@@ -33,7 +33,7 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import com.oracle.javafx.scenebuilder.core.controls.DoubleField?>
+<?import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>

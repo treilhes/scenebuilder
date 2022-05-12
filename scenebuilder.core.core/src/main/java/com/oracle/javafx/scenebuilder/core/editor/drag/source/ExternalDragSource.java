@@ -53,11 +53,6 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.javafx.controls.ImageViewMetadata;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -330,59 +325,59 @@ public final class ExternalDragSource extends AbstractDragSource {
     }
 
 
-    /*
-     * Private
-     */
-
-    /*
-     * Utilities that should probably go somewhere else.
-     */
-
-    static FXOMDocument makeFxomDocumentFromImageURL(Image image,
-            double fitSize) throws IOException {
-
-        assert image != null;
-        assert fitSize > 0.0;
-
-        final double imageWidth = image.getWidth();
-        final double imageHeight = image.getHeight();
-
-        final double fitWidth, fitHeight;
-        final double imageSize = Math.max(imageWidth, imageHeight);
-        if (imageSize < fitSize) {
-            fitWidth = 0;
-            fitHeight = 0;
-        } else {
-            final double widthScale  = fitSize / imageSize;
-            final double heightScale = fitSize / imageHeight;
-            final double scale = Math.min(widthScale, heightScale);
-            fitWidth = Math.floor(imageWidth * scale);
-            fitHeight = Math.floor(imageHeight * scale);
-        }
-
-        return makeFxomDocumentFromImageURL(image, fitWidth, fitHeight);
-    }
-
-    static final PropertyName imageName = new PropertyName("image"); //NOCHECK
-    static final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOCHECK
-    static final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
-
-    static FXOMDocument makeFxomDocumentFromImageURL(Image image, double fitWidth, double fitHeight) {
-        final FXOMDocument result = new FXOMDocument();
-        final FXOMInstance imageView = new FXOMInstance(result, ImageView.class);
-
-        final ImagePropertyMetadata imageMeta = ImageViewMetadata.imagePropertyMetadata;
-        final DoublePropertyMetadata fitWidthMeta = ImageViewMetadata.fitWidthPropertyMetadata;
-        final DoublePropertyMetadata fitHeightMeta = ImageViewMetadata.fitHeightPropertyMetadata;
-
-        imageMeta.setValue(imageView, new DesignImage(image));
-        fitWidthMeta.setValue(imageView, fitWidth);
-        fitHeightMeta.setValue(imageView, fitHeight);
-
-        result.setFxomRoot(imageView);
-
-        return result;
-    }
+//    /*
+//     * Private
+//     */
+//
+//    /*
+//     * Utilities that should probably go somewhere else.
+//     */
+//
+//    static FXOMDocument makeFxomDocumentFromImageURL(Image image,
+//            double fitSize) throws IOException {
+//
+//        assert image != null;
+//        assert fitSize > 0.0;
+//
+//        final double imageWidth = image.getWidth();
+//        final double imageHeight = image.getHeight();
+//
+//        final double fitWidth, fitHeight;
+//        final double imageSize = Math.max(imageWidth, imageHeight);
+//        if (imageSize < fitSize) {
+//            fitWidth = 0;
+//            fitHeight = 0;
+//        } else {
+//            final double widthScale  = fitSize / imageSize;
+//            final double heightScale = fitSize / imageHeight;
+//            final double scale = Math.min(widthScale, heightScale);
+//            fitWidth = Math.floor(imageWidth * scale);
+//            fitHeight = Math.floor(imageHeight * scale);
+//        }
+//
+//        return makeFxomDocumentFromImageURL(image, fitWidth, fitHeight);
+//    }
+//
+//    static final PropertyName imageName = new PropertyName("image"); //NOCHECK
+//    static final PropertyName fitWidthName = new PropertyName("fitWidth"); //NOCHECK
+//    static final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
+//
+//    static FXOMDocument makeFxomDocumentFromImageURL(Image image, double fitWidth, double fitHeight) {
+//        final FXOMDocument result = new FXOMDocument();
+//        final FXOMInstance imageView = new FXOMInstance(result, ImageView.class);
+//
+//        final ImagePropertyMetadata imageMeta = ImageViewMetadata.imagePropertyMetadata;
+//        final DoublePropertyMetadata fitWidthMeta = ImageViewMetadata.fitWidthPropertyMetadata;
+//        final DoublePropertyMetadata fitHeightMeta = ImageViewMetadata.fitHeightPropertyMetadata;
+//
+//        imageMeta.setValue(imageView, new DesignImage(image));
+//        fitWidthMeta.setValue(imageView, fitWidth);
+//        fitHeightMeta.setValue(imageView, fitHeight);
+//
+//        result.setFxomRoot(imageView);
+//
+//        return result;
+//    }
 
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)

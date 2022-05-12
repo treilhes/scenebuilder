@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.Utils;
-import com.oracle.javafx.scenebuilder.editors.control.paintpicker.PaintPicker;
+import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

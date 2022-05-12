@@ -61,7 +61,6 @@ import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonI
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImage;
@@ -70,6 +69,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageExplorerUtil;
+import com.oracle.javafx.scenebuilder.javafx.controls.IntegerField;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.application.Platform;
