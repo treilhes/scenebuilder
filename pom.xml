@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -13,70 +14,16 @@
     <modules>
         <module>dev.utils</module>
         <module>scenebuilder.application</module>
-        <module>scenebuilder.core.api</module>
-        <module>scenebuilder.core.drag.and.drop</module>
-        <module>scenebuilder.core.extension.api</module>
-        <module>scenebuilder.core.extension.store</module>
-        <module>scenebuilder.core.filesystem</module>
-        <module>scenebuilder.core.jobs</module>
-        <module>scenebuilder.core.library</module>
-        <module>scenebuilder.core.ui</module>
-        <module>scenebuilder.ext.certificate.manager</module>
-        <module>scenebuilder.ext.editor.fxml</module>
-        <module>scenebuilder.ext.control.library</module>
-        <module>scenebuilder.ext.controls.tooling</module>
-        <module>scenebuilder.ext.controls</module>
-        <module>scenebuilder.ext.css.analyser</module>
-        <module>scenebuilder.ext.debug.menu</module>
-        <module>scenebuilder.ext.defaultx</module>
-        <module>scenebuilder.ext.document</module>
-        <module>scenebuilder.ext.dummy</module>
-        <module>scenebuilder.ext.editors</module>
-        <module>scenebuilder.ext.exporter</module>
-        <module>scenebuilder.ext.extension.library</module>
-        <module>scenebuilder.ext.gluon</module>
-        <module>scenebuilder.ext.help.features</module>
-        <module>scenebuilder.ext.image.library</module>
-        <module>scenebuilder.ext.inspector</module>
-        <module>scenebuilder.ext.log.viewer</module>
-        <module>scenebuilder.ext.preference.editor</module>
-        <module>scenebuilder.ext.preview</module>
-        <module>scenebuilder.ext.sb</module>
-        <module>scenebuilder.ext.source.gen</module>
-        <module>scenebuilder.ext.source.view</module>
-        <module>scenebuilder.ext.templates</module>
-        <module>scenebuilder.ext.update.manager</module>
-        <module>scenebuilder.extension.archetype</module>
+        <module>scenebuilder.core</module>
+        <module>scenebuilder.core.ext</module>
+        <module>scenebuilder.fxml</module>
+        <module>scenebuilder.fxml.ext</module>
+        <module>scenebuilder.gluon</module>
+        <module>scenebuilder.maven</module>
+        <module>scenebuilder.metadata.generator</module>
         <module>scenebuilder.starter</module>
         <module>scenebuilder.starter.test</module>
-        <module>scenebuilder.ext.glossary</module>
-
-        <module>scenebuilder.core.clipboard</module>
-        <module>scenebuilder.core.preferences</module>
-        <module>scenebuilder.ext.about</module>
-        <module>scenebuilder.ext.welcome</module>
-        <module>scenebuilder.ext.scenicview</module>
-        <module>scenebuilder.core.launcher</module>
-
-        <module>scenebuilder.core.fxom</module>
-        <module>scenebuilder.core.metadata</module>
-        <module>scenebuilder.core.utils</module>
-        <module>scenebuilder.metadata.generator</module>
-        <module>scenebuilder.maven.client</module>
-        <module>scenebuilder.metadata-maven-plugin</module>
-        <module>scenebuilder.metadata.javafx</module>
-        <module>scenebuilder.metadata.gluon</module>
-        <module>scenebuilder.ext.javafx.customization</module>
-        <module>scenebuilder.ext.script.graalvm-javascript</module>
-        <module>scenebuilder.ext.script.graalvm-javascript-rt</module>
-        <module>scenebuilder.ext.script</module>
-        <module>scenebuilder.core.core</module>
-        <module>scenebuilder.core.selection</module>
-        <module>scenebuilder.ext.menu</module>
-        <module>scenebuilder.core.error</module>
-
-    <module>scenebuilder.ext.editor.script</module>
-  </modules>
+    </modules>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -209,7 +156,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.certificate.manager</artifactId>
+                <artifactId>scenebuilder.core.ext.certificate.manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -586,7 +533,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore/>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

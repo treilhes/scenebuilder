@@ -114,7 +114,7 @@
 
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.certificate.manager</artifactId>
+            <artifactId>scenebuilder.core.ext.certificate.manager</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
