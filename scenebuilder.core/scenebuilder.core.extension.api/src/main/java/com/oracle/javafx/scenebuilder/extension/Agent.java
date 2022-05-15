@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -55,27 +56,27 @@ public class Agent {
     private static void populateClasspath() throws Exception {
         File extensionFolder = DefaultFolders.getUserExtensionsFolder(ExtensionLibrary.ID);
         System.out.println("EXTFOLDER=" + extensionFolder.getAbsolutePath());
-        
+
         ExtensionStates extensionStates = ExtensionStates.load(extensionFolder);
         extensionStates.cleanDeletedExtensions();
         List<UUID> loadable = extensionStates.getLoadableExtensions();
         List<File> jars = listAllRequiredJars(extensionFolder, loadable);
-        
+
         for (File jar:jars) {
             addToClassPath(jar);
         }
     }
-    
+
     private static List<File> listAllRequiredJars(File userExtensionsFolder, List<UUID> loadableExtensions) {
         ExtensionRegistry registry = new ExtensionRegistry(userExtensionsFolder, loadableExtensions);
-        
+
         Dependency tmpMain = new Dependency("tmp", "tmp", "0.0.0");
-        tmpMain.setLocalFile(new File("C:/SSDDrive/git/scenebuilder/scenebuilder.ext.help.features/target/scenebuilder.ext.help.features-17.0.0-SNAPSHOT.jar"));
-        
+        tmpMain.setLocalFile(new File("C:/SSDDrive/git/scenebuilder/scenebuilder.fxml.ext/scenebuilder.ext.help.features/target/scenebuilder.ext.help.features-17.0.0-SNAPSHOT.jar"));
+
         ExtensionMetadata tmp = new ExtensionMetadata();
         tmp.setMain(tmpMain);
         registry.getExtensions().add(tmp);
-        
+
         return registry.listRequiredJars();
     }
 

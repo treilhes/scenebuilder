@@ -18,11 +18,9 @@
         <module>scenebuilder.core.extension.api</module>
         <module>scenebuilder.core.extension.store</module>
         <module>scenebuilder.core.filesystem</module>
-        <module>scenebuilder.core.fxom</module>
         <module>scenebuilder.core.jobs</module>
         <module>scenebuilder.core.launcher</module>
         <module>scenebuilder.core.library</module>
-        <module>scenebuilder.core.metadata</module>
         <module>scenebuilder.core.preferences</module>
         <module>scenebuilder.core.selection</module>
         <module>scenebuilder.core.ui</module>
