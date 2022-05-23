@@ -164,6 +164,7 @@
                                 <goal>clean</goal>
                                 <goal>install</goal>
                             </goals>
+                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
                         </configuration>
                         <executions>
                             <execution>

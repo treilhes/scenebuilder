@@ -11,12 +11,17 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oracle.javafx.scenebuilder.metadata.bean.BeanMetaData;
 import com.oracle.javafx.scenebuilder.metadata.bean.PropertyMetaData;
 import com.oracle.javafx.scenebuilder.metadata.model.Property.Type;
 
 public class MetadataFromJavafx {
 
+	private static Logger logger = LoggerFactory.getLogger(MetadataFromJavafx.class);
+	
     public static Map<Component, Set<Property>> load(Map<Class<?>, BeanMetaData<?>> classes, Map<Class<?>, Component> descriptorComponents) throws Exception {
         return new MetadataFromJavafx().internalLoad(classes, descriptorComponents);
     }
@@ -70,13 +75,17 @@ public class MetadataFromJavafx {
 
             for (PropertyMetaData propertyMetadata : properties) {
 
-                boolean isComponentProperty = classes.containsKey(propertyMetadata.getContentType())
+            	boolean isComponentProperty = classes.containsKey(propertyMetadata.getContentType())
                         || descriptorComponents.containsKey(propertyMetadata.getContentType());
 
-                if (propertyMetadata.isComponent().isPresent()) {
+            	if (propertyMetadata.isComponent().isPresent()) {
                     isComponentProperty = propertyMetadata.isComponent().get();
                 }
 
+				logger.debug("Property {} has content type of : {} and is component {} or component isPResent {}",
+						propertyMetadata.getName(), propertyMetadata.getContentType(), isComponentProperty,
+						propertyMetadata.isComponent().isPresent());
+            	
                 if (!propertyMetadata.isStatic() && !isComponentProperty) {
 
                     if (propertyMetadata.getMetadataClass() == null) {

@@ -12,7 +12,9 @@ toc: true
 
 Building the project is pretty straightforward, a simple `mvn clean install` will build the project.
 
-**Note:** In eclipse, the "scenebuilder.extension.archetype" project integration tests does not execute successfully if you're using the EMBEDDED maven. You need to use a custom install for the build to be successfull.
+**Note:** In eclipse, the "scenebuilder.extension.archetype" project integration tests does not execute successfully if you're using the EMBEDDED maven. 
+**Note:** In eclipse, the "scenebuilder.metadata.javafxdata" project forks a maven build and does not execute successfully if you're using the EMBEDDED maven. 
+You need to use a custom install for the build to be successfull instead of the EMBEDDED maven setup.
 
 ### Javadoc build
 

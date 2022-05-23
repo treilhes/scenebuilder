@@ -52,6 +52,7 @@ public class ClassCrawler {
                             }
                         }
                     } catch (Throwable e) {
+                    	logger.error("Unable to process class", e);
                         Report.error(cls, "Unable to process class", e);
                     }
                 }

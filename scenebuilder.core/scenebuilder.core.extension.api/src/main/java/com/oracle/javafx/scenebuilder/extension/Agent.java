@@ -71,7 +71,7 @@ public class Agent {
         ExtensionRegistry registry = new ExtensionRegistry(userExtensionsFolder, loadableExtensions);
 
         Dependency tmpMain = new Dependency("tmp", "tmp", "0.0.0");
-        tmpMain.setLocalFile(new File("C:/SSDDrive/git/scenebuilder/scenebuilder.fxml.ext/scenebuilder.ext.help.features/target/scenebuilder.ext.help.features-17.0.0-SNAPSHOT.jar"));
+        tmpMain.setLocalFile(new File("D:/Dev/eclipse/scenebuilderx/scenebuilder/scenebuilder.fxml.ext/scenebuilder.ext.help.features/target/scenebuilder.ext.help.features-17.0.0-SNAPSHOT.jar"));
 
         ExtensionMetadata tmp = new ExtensionMetadata();
         tmp.setMain(tmpMain);

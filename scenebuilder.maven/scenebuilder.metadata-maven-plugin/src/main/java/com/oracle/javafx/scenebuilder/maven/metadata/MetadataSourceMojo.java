@@ -145,6 +145,10 @@ public class MetadataSourceMojo extends AbstractMojo {
 
             Map<Class<?>, BeanMetaData<?>> found = returnValue.get();
             Map<Class<?>, Component> othersFound = descriptorReturnValue.get();
+            
+            found.forEach((k,v) -> getLog().debug("Crawled:" + k.getName()));
+            othersFound.forEach((k,v) -> getLog().debug("From descriptors:" + k.getName()));
+            
             try {
 
                 Map<Component, Set<Property>> components = MetadataFromJavafx.load(found, othersFound);

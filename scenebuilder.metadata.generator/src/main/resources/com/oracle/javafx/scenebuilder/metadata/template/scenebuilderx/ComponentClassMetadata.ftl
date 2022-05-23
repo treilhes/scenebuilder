@@ -17,7 +17,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 @Component
 public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends ComponentClassMetadata<${component.raw.type.name?replace("$", ".")}> {
 
-<#list properties as property>${logger.info("Processing " + component.raw.name + "." + property.raw.name)}
+<#list properties as property>${logger.info("Processing 1 " + component.raw.name + "." + property.raw.name + " : " + property.type)}
 <#if property.type == "VALUE">
     public static final ${property.raw.metadataClass.name?replace("$", ".")} ${property.custom["memberName"]}PropertyMetadata =
             new ${property.raw.metadataClass.name?replace("$", ".")}.Builder<#if property.raw.type.enum == true><>(${property.raw.type.name?replace("$", ".")}.class)<#else>()</#if>
@@ -46,7 +46,7 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
         super(${component.raw.type.name?replace("$", ".")}.class, <#if component.parent??>parent<#else>null</#if>);
         setResizeNeededWhenTopElement(${component.raw.resizeNeededWhenTopElement});
 
-        <#list properties as property>${logger.info("Processing " + component.raw.name + "." + property.raw.name)}
+        <#list properties as property>${logger.info("Processing 2 " + component.raw.name + "." + property.raw.name + " : " + property.type)}
 		<#if property.type == "COMPONENT">
 		    ${property.raw.name}PropertyMetadata = new ${property.raw.metadataClass.name?replace("$", ".")}.Builder()
 	                .withName(PropertyNames.${property.custom["memberName"]}Name)
